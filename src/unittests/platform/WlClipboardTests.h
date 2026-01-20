@@ -61,12 +61,6 @@ private:
   const std::string m_testString2 = "Another test string";
   const std::string m_testHtml = "<html><body>Test HTML</body></html>";
 
-  std::unique_ptr<WlClipboard> m_clipboard;
-  std::unique_ptr<WlClipboard> m_primaryClipboard;
-
-  WlClipboard &getClipboard();
-  WlClipboard &getPrimaryClipboard();
-
   // clang-format off
   // Helper methods for robust testing
   bool waitForClipboardCondition(WlClipboard &clipboard, std::function<bool()> condition, int timeoutMs = 2000);

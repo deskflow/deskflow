@@ -54,21 +54,44 @@ ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(even
 
 void ClientApp::parseArgs()
 {
-  // save server address
-  if (const auto address = Settings::value(Settings::Client::RemoteHost).toString(); !address.isEmpty()) {
-    try {
-      *m_serverAddress = NetworkAddress(address.toStdString(), Settings::value(Settings::Core::Port).toInt());
-      m_serverAddress->resolve();
-    } catch (SocketAddressException &e) {
-      // allow an address that we can't look up if we're restartable.
-      // we'll try to resolve the address each time we connect to the
-      // server.  a bad port will never get better.  patch by Brent
-      // Priddy.
-      if (e.getError() == SocketAddressException::SocketError::BadPort) {
-        LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
-        bye(s_exitFailed);
+  // save server addresses (comma-separated list supported)
+  if (const auto addressList = Settings::value(Settings::Client::RemoteHost).toString(); !addressList.isEmpty()) {
+    const int port = Settings::value(Settings::Core::Port).toInt();
+    const QStringList addresses = addressList.split(',', Qt::SkipEmptyParts);
+
+    for (const QString &addr : addresses) {
+      const QString trimmedAddr = addr.trimmed();
+      if (trimmedAddr.isEmpty()) {
+        continue;
+      }
+
+      try {
+        NetworkAddress netAddr(trimmedAddr.toStdString(), port);
+        netAddr.resolve();
+        m_serverAddresses.append(netAddr);
+        LOG_DEBUG("added server address: %s", qPrintable(trimmedAddr));
+      } catch (SocketAddressException &e) {
+        // allow an address that we can't look up if we're restartable.
+        // we'll try to resolve the address each time we connect to the
+        // server.  a bad port will never get better.
+        if (e.getError() == SocketAddressException::SocketError::BadPort) {
+          LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
+          bye(s_exitFailed);
+        } else {
+          // Still add it - we'll try to resolve later
+          NetworkAddress netAddr(trimmedAddr.toStdString(), port);
+          m_serverAddresses.append(netAddr);
+          LOG_WARN("could not resolve address '%s': %s (will retry later)", qPrintable(trimmedAddr), e.what());
+        }
       }
     }
+
+    if (m_serverAddresses.isEmpty()) {
+      LOG_CRIT("%s: no valid server addresses specified" BYE, qPrintable(processName()), qPrintable(processName()));
+      bye(s_exitFailed);
+    }
+
+    LOG_NOTE("configured %zu server address(es)", static_cast<size_t>(m_serverAddresses.size()));
   }
 }
 
@@ -158,23 +181,39 @@ void ClientApp::scheduleClientRestart(double retryTime)
   getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
 
-void ClientApp::handleClientConnected() const
+void ClientApp::handleClientConnected()
 {
   LOG_IPC("connected to server");
+  // Reset server index on successful connection
+  m_currentServerIndex = 0;
+  m_lastServerAddressIndex = 0;
 }
 
 void ClientApp::handleClientFailed(const Event &e)
 {
   if ((++m_lastServerAddressIndex) < m_client->getLastResolvedAddressesCount()) {
+    // Try next resolved address for current hostname
     std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-    LOG_WARN("failed to connect to server=%s, trying next address", info->m_what.c_str());
+    LOG_WARN("failed to connect to server=%s, trying next resolved address", info->m_what.c_str());
     if (!m_suspended) {
       scheduleClientRestart(s_retryTime);
     }
   } else {
+    // All resolved addresses exhausted, try next server in list
     m_lastServerAddressIndex = 0;
-    handleClientRefused(e);
+    tryNextServer();
+
+    if (m_currentServerIndex == 0) {
+      // We've cycled through all servers, treat as refused
+      handleClientRefused(e);
+    } else {
+      std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
+      LOG_WARN("failed to connect to server=%s, trying next server in list", info->m_what.c_str());
+      if (!m_suspended) {
+        scheduleClientRestart(s_retryTime);
+      }
+    }
   }
 }
 
@@ -248,12 +287,13 @@ bool ClientApp::startClient()
     if (m_clientScreen == nullptr) {
       clientScreen = openClientScreen();
       m_client = openClient(
-          Settings::value(Settings::Core::ScreenName).toString().toStdString(), *m_serverAddress, clientScreen
+          Settings::value(Settings::Core::ScreenName).toString().toStdString(), getCurrentServerAddress(), clientScreen
       );
       m_clientScreen = clientScreen;
       LOG_NOTE("started client");
     }
 
+    m_client->setServerAddress(getCurrentServerAddress());
     m_client->connect(m_lastServerAddressIndex);
 
     return true;
@@ -325,20 +365,31 @@ int ClientApp::start()
 
 int ClientApp::runInner(StartupFunc startup)
 {
-  // general initialization
-  m_serverAddress = new NetworkAddress;
-
   int result;
   try {
     // run
     result = startup();
   } catch (...) {
-    delete m_serverAddress;
-
     throw;
   }
 
   return result;
+}
+
+NetworkAddress &ClientApp::getCurrentServerAddress()
+{
+  if (m_serverAddresses.isEmpty()) {
+    throw std::runtime_error("No server addresses configured");
+  }
+  return m_serverAddresses[m_currentServerIndex];
+}
+
+void ClientApp::tryNextServer()
+{
+  if (m_serverAddresses.size() > 1) {
+    m_currentServerIndex = (m_currentServerIndex + 1) % m_serverAddresses.size();
+    LOG_DEBUG("switching to server %zu of %zu", m_currentServerIndex + 1, m_serverAddresses.size());
+  }
 }
 
 void ClientApp::startNode()

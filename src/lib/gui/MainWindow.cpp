@@ -104,10 +104,10 @@ MainWindow::MainWindow()
     m_actionTrayQuit->setShortcut(QKeySequence::Quit);
   }
 
-  m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionQuit->setIcon(QIcon::fromTheme("application-exit"));
   m_actionQuit->setMenuRole(QAction::QuitRole);
 
-  m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionTrayQuit->setIcon(QIcon::fromTheme("application-exit"));
   m_actionTrayQuit->setMenuRole(QAction::NoRole);
 
   m_actionClearSettings->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
@@ -126,7 +126,7 @@ MainWindow::MainWindow()
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
   m_actionStopCore->setMenuRole(QAction::NoRole);
 
-  m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
+  m_actionReportBug->setIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug")));
   m_actionReportBug->setMenuRole(QAction::NoRole);
 
   // Setup the Instance Checking
@@ -195,8 +195,6 @@ void MainWindow::restoreWindow()
 
 void MainWindow::setupControls()
 {
-  setWindowTitle(kAppName);
-
   secureSocket(false);
 
   ui->btnConfigureServer->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
@@ -429,7 +427,7 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
 void MainWindow::startCore()
 {
   // Save current IP state when server starts
-  if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).isNull()) {
+  if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
     m_serverStartIPs = m_networkMonitor->getAvailableIPv4Addresses();
     m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
@@ -486,7 +484,7 @@ void MainWindow::openHelpUrl() const
 
 void MainWindow::openGetNewVersionUrl() const
 {
-  QDesktopServices::openUrl(kUrlDownload);
+  QDesktopServices::openUrl(QUrl(kUrlDownload));
 }
 
 void MainWindow::openSettings()
@@ -702,8 +700,15 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  if (!Settings::value(Settings::Client::RemoteHost).isNull())
-    ui->lineHostname->setText(Settings::value(Settings::Client::RemoteHost).toString());
+  if (Settings::value(Settings::Gui::ShowVersionInTitle).toBool()) {
+    setWindowTitle(QStringLiteral("%1 - %2").arg(kAppName, kDisplayVersion));
+  } else {
+    setWindowTitle(kAppName);
+  }
+
+  if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
+    ui->lineHostname->setText(host);
+
   updateLocalFingerprint();
   setTrayIcon();
 
@@ -1223,7 +1228,7 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
   m_coreProcess.setAddress(newRemoteHost);
   toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());
   if (newRemoteHost.isEmpty()) {
-    Settings::setValue(Settings::Client::RemoteHost, QVariant());
+    Settings::setValue(Settings::Client::RemoteHost);
   } else {
     Settings::setValue(Settings::Client::RemoteHost, newRemoteHost);
   }
@@ -1255,7 +1260,7 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
 
   static const auto colorText = QStringLiteral(R"(<span style="color:%1;">%2</span>)");
   const bool serverStarted = m_coreProcess.isStarted();
-  const bool fixedIP = !Settings::value(Settings::Core::Interface).isNull();
+  const bool fixedIP = !Settings::value(Settings::Core::Interface).toString().isEmpty();
 
   if (!fixedIP && addresses.isEmpty()) {
     ui->lblIpAddresses->setText(colorText.arg("red", tr("No IP Detected")));

@@ -83,6 +83,8 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
 
+  cleanSettings();
+  cleanStateSettings();
   setupScreenName();
 }
 
@@ -90,9 +92,11 @@ void Settings::cleanSettings()
 {
   const QStringList keys = m_settings->allKeys();
   for (const QString &key : keys) {
+    if (key.startsWith(QStringLiteral("internalConfig")))
+      continue;
     if (!m_validKeys.contains(key))
       m_settings->remove(key);
-    if (m_settings->value(key).toString().isEmpty() && !m_settings->value(key).isValid())
+    if (m_settings->value(key).toString().isEmpty())
       m_settings->remove(key);
   }
 }
@@ -103,14 +107,14 @@ void Settings::cleanStateSettings()
   for (const QString &key : keys) {
     if (!m_stateKeys.contains(key))
       m_stateSettings->remove(key);
-    if (m_stateSettings->value(key).toString().isEmpty() && !m_stateSettings->value(key).isValid())
+    if (m_stateSettings->value(key).toString().isEmpty())
       m_stateSettings->remove(key);
   }
 }
 
 void Settings::setupScreenName()
 {
-  if (m_settings->value(Settings::Core::ScreenName).isNull())
+  if (m_settings->value(Settings::Core::ScreenName).toString().isEmpty())
     m_settings->setValue(Settings::Core::ScreenName, cleanScreenName(QSysInfo::machineHostName()));
 }
 
@@ -151,9 +155,6 @@ QVariant Settings::defaultValue(const QString &key)
 
   if (m_defaultTrueValues.contains(key))
     return true;
-
-  if (key == Gui::WindowGeometry)
-    return QRect();
 
   if (key == Security::Certificate)
     return QStringLiteral("%1/%2.pem").arg(Settings::tlsDir(), kAppId);

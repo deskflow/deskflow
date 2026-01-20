@@ -1308,7 +1308,7 @@ void Server::handleClientCloseTimeout(BaseClientProxy *client)
 
 void Server::handleSwitchToScreenEvent(const Event &event)
 {
-  auto *info = static_cast<SwitchToScreenInfo *>(event.getData());
+  const auto *info = static_cast<SwitchToScreenInfo *>(event.getData());
 
   ClientList::const_iterator index = m_clients.find(info->m_screen);
   if (index == m_clients.end()) {

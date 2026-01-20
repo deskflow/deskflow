@@ -885,6 +885,25 @@ Valid names:
     </message>
 </context>
 <context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">搜索</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">查找下一个</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">查找上一个</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">寻找...</translation>
+    </message>
+</context>
+<context>
     <name>ServerConfigDialog</name>
     <message>
         <source>Server Configuration</source>
@@ -1301,6 +1320,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Automatic</source>
         <translation type="unfinished">自动的</translation>
+    </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">在窗口标题中包含版本信息</translation>
     </message>
 </context>
 <context>

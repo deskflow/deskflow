@@ -17,7 +17,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://www.gnu.org/licenses/old-licenses/gpl-2.0.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#508ed8;&quot;&gt;Лицензия: GNU GPL Версия 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://www.gnu.org/licenses/old-licenses/gpl-2.0.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#508ed8;&quot;&gt;Лицензия: GNU GPL версии 2&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Version: </source>
@@ -25,8 +25,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Copy version info</source>
-        <translatorcomment>u can replace инфо with информация </translatorcomment>
-        <translation>Скопировать инфо о версии</translation>
+        <translation>Скопировать сведения о версии</translation>
     </message>
     <message>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -46,11 +45,10 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Important Developers</source>
-        <translation>Важные разроботчики</translation>
+        <translation>Ключевые разработчики</translation>
     </message>
     <message>
         <source>&amp;Close</source>
-        <translatorcomment>закрыть &amp; ???</translatorcomment>
         <translation>&amp;Закрыть</translation>
     </message>
 </context>
@@ -62,31 +60,31 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>When the hotkey is pressed</source>
-        <translation>Когда горячая клавиша нажата</translation>
+        <translation>При нажатии горячей клавиши</translation>
     </message>
     <message>
         <source>When the hotkey is released</source>
-        <translation>Когда горячая клавиша отпушена</translation>
+        <translation>При отпускании горячей клавиши</translation>
     </message>
     <message>
         <source>Press key(s)</source>
-        <translation>Нажатие клавиш(и)</translation>
+        <translation>Нажать клавишу(и)</translation>
     </message>
     <message>
         <source>Release key(s)</source>
-        <translation>Отжатие клавиш(и)</translation>
+        <translation>Отпустить клавишу(и)</translation>
     </message>
     <message>
         <source>Press and release key(s)</source>
-        <translation>Нажатие и отпуск клавиш(и)</translation>
+        <translation>Нажать и отпустить клавишу(и)</translation>
     </message>
     <message>
         <source>Switch to a computer</source>
-        <translation>Переключение на компьютер</translation>
+        <translation>Переключиться на компьютер</translation>
     </message>
     <message>
         <source>Switch in a direction</source>
-        <translation>Перейти в направление</translation>
+        <translation>Перейти в направлении</translation>
     </message>
     <message>
         <source>Switch to next computer</source>
@@ -94,7 +92,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Modify the cursor lock</source>
-        <translation>Настроить блокировку курсора</translation>
+        <translation>Изменить блокировку курсора</translation>
     </message>
     <message>
         <source>Restart the server</source>
@@ -102,7 +100,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Switch to the computer on the left</source>
-        <translation></translation>
+        <translation>Переключиться на компьютер слева</translation>
     </message>
     <message>
         <source>Switch to the computer on the right</source>
@@ -122,7 +120,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Enable the cursor lock</source>
-        <translation>Вырубить блокировку курсора</translation>
+        <translation>Включить блокировку курсора</translation>
     </message>
     <message>
         <source>Disable the cursor lock</source>
@@ -130,7 +128,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Computers to receive this event</source>
-        <translation>Компьютеры отправляют события</translation>
+        <translation>Компьютеры, получающие это событие</translation>
     </message>
     <message>
         <source>Switch to %1</source>
@@ -145,21 +143,21 @@ p, li { white-space: pre-wrap; }
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
-        <translation>Локальный отпечаток</translation>
+        <translation>Локальные отпечатки</translation>
     </message>
     <message>
         <source>Local computer&apos;s fingerprint</source>
-        <translation>Локальный отпечаток компьютера</translation>
+        <translation>Отпечаток локального компьютера</translation>
     </message>
     <message>
         <source>Compare the fingerprints in this dialog to those on the %1.
 Only connect if they match!</source>
-        <translation>Сравните отпечатки в диалоговм окне для %1. 
-Подключайтесь только в случаи совпадения!</translation>
+        <translation>Сравните отпечатки в этом окне с отпечатками на %1. 
+Подключайтесь только в случае их совпадения!</translation>
     </message>
     <message>
         <source>New client connecting</source>
-        <translation>Новое клиентское подключение</translation>
+        <translation>Подключение нового клиента</translation>
     </message>
     <message>
         <source>client</source>
@@ -170,16 +168,16 @@ Only connect if they match!</source>
 Trust client and allow connection?
 </source>
         <translation>
-Доверять клиенту и подвердит подключение?
+Доверять клиенту и разрешить подключение?
 </translation>
     </message>
     <message>
         <source>Connecting to a new server</source>
-        <translation>Подключитьсяк новому серверу</translation>
+        <translation>Подключение к новому серверу</translation>
     </message>
     <message>
         <source>server</source>
-        <translation>Сервер</translation>
+        <translation>сервер</translation>
     </message>
     <message>
         <source>
@@ -199,26 +197,26 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Show image</source>
-        <translation>Покозать изображение</translation>
+        <translation>Показать изображение</translation>
     </message>
     <message>
         <source>Show hash</source>
-        <translation>Показать кзш</translation>
+        <translation>Показать хэш</translation>
     </message>
     <message>
         <source>Display the fingerprint as an image</source>
-        <translation>Показать отпечаток как картинку</translation>
+        <translation>Показать отпечаток как изображение</translation>
     </message>
     <message>
         <source>Display the fingerprint as a hash</source>
-        <translation>Показать отпечаток как кэш</translation>
+        <translation>Показать отпечаток как хэш</translation>
     </message>
 </context>
 <context>
     <name>FingerprintPreview</name>
     <message>
         <source>Invalid hash format</source>
-        <translation>Неверный формат кэша</translation>
+        <translation>Неверный формат хэша</translation>
     </message>
 </context>
 <context>
@@ -229,14 +227,14 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Enter the specification for the hotkey:</source>
-        <translation>Выберите кнопку(и) для горячих клавиш:</translation>
+        <translation>Введите сочетание для горячей клавиши:</translation>
     </message>
 </context>
 <context>
     <name>LogDock</name>
     <message>
         <source>Log</source>
-        <translation>Лог</translation>
+        <translation>Журнал</translation>
     </message>
     <message>
         <source>Detach from window</source>
@@ -244,7 +242,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Close Log</source>
-        <translation>Закрыть лог</translation>
+        <translation>Закрыть журнал</translation>
     </message>
     <message>
         <source>Attach to window</source>
@@ -255,11 +253,11 @@ Do you want to connect to the server?
     <name>MainWindow</name>
     <message>
         <source>This computer&apos;s name:</source>
-        <translation>Имя компьютера:</translation>
+        <translation>Имя этого компьютера:</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Name can&apos;t have have spaces or special characters&lt;/p&gt;&lt;p&gt;Use Enter to save the name change.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Имя не может содержать пробелов или специальных символов.&lt;/p&gt;&lt;p&gt;Нажмите Enter, чтобы сохранить изменение.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Имя не может содержать пробелы или специальные символы.&lt;/p&gt;&lt;p&gt;Нажмите Enter, чтобы сохранить изменения.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Edit Computer Name</source>
@@ -268,34 +266,34 @@ Do you want to connect to the server?
     <message>
         <source>Use this computer&apos;s keyboard and mouse
 (make this computer the server)</source>
-        <translation>Использовать мышку и клавиатуру этого компьютера
-(Сделать этот компьютер сервером)</translation>
+        <translation>Использовать мышь и клавиатуру этого компьютера
+(сделать этот компьютер сервером)</translation>
     </message>
     <message>
         <source>Use another computer’s mouse and keyboard
 (make this computer the client)</source>
-        <translation>Исползовать другую мышку и клавиатуру другого компьютера
+        <translation>Использовать мышь и клавиатуру другого компьютера
 (сделать этот компьютер клиентом)</translation>
     </message>
     <message>
         <source>&amp;Configure Server</source>
-        <translation>&amp;Конфигурация сервера</translation>
+        <translation>&amp;Настроить сервер</translation>
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation>Экспортировать конфиг сервар</translation>
+        <translation>Экспортировать конфигурацию сервера</translation>
     </message>
     <message>
         <source>You must select a mode</source>
-        <translation>Ты должен выбрать режим</translation>
+        <translation>Необходимо выбрать режим</translation>
     </message>
     <message>
         <source>Server IP or hostname:</source>
-        <translation>Ip сервера или имя хоста:</translation>
+        <translation>IP-адрес или имя хоста сервера:</translation>
     </message>
     <message>
         <source>Hostname or IP address of the server computer.</source>
-        <translation>Имя хоста или IP адресс сервера.</translation>
+        <translation>Имя хоста или IP-адрес сервера.</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -307,39 +305,39 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Your current TLS key is smaller than the minimum allowed size, A new key 2048-bit key will be generated.</source>
-        <translation>Ваш нынешний TLS ключ меньше чем минимальный разрешимый размер , Новый ключ 2048-бит ключ будет сгенерирован.</translation>
+        <translation>Текущий ключ TLS меньше минимально допустимого размера. Будет создан новый 2048-битный ключ.</translation>
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation type="unfinished">недействительный сертификат, генерация нового</translation>
+        <translation>недействительный сертификат, создание нового</translation>
     </message>
     <message>
         <source>A new version v%1 is available</source>
-        <translation>Новая версия %1 доступна</translation>
+        <translation>Доступна новая версия v%1</translation>
     </message>
     <message>
         <source>Address missing</source>
-        <translation>Неверный адресс</translation>
+        <translation>Адрес не указан</translation>
     </message>
     <message>
         <source>Please enter the hostname or IP address of the other computer.</source>
-        <translation>Пожалуйста введите имя хоста или IP адресс остальных компьютеров.</translation>
+        <translation>Пожалуйста, введите имя хоста или IP-адрес другого компьютера.</translation>
     </message>
     <message>
         <source>Core cannot be started</source>
-        <translation>Ядро не может стартануть</translation>
+        <translation>Не удалось запустить ядро</translation>
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation>Сохранить конфиг сервера как...</translation>
+        <translation>Сохранить конфигурацию сервера как...</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation>Не удалось сохранить</translation>
+        <translation>Ошибка сохранения</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation>Не получилось сохранить конфигурационый файл сервера.</translation>
+        <translation>Не удалось сохранить файл конфигурации сервера.</translation>
     </message>
     <message>
         <source>Start</source>
@@ -359,31 +357,31 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>%1 Encryption Enabled</source>
-        <translation>%1 Шифрование включено</translation>
+        <translation>Шифрование %1 включено</translation>
     </message>
     <message>
         <source>Encryption Disabled</source>
-        <translation>Шифрование выключино</translation>
+        <translation>Шифрование отключено</translation>
     </message>
     <message>
         <source>No IP Detected</source>
-        <translation>IP адрес не найден</translation>
+        <translation>IP-адрес не обнаружен</translation>
     </message>
     <message>
         <source>Unable to detect an IP address. Check your network connection is active.</source>
-        <translation>Не получаеться найти Ip адресc. Проверте подключение к сети.</translation>
+        <translation>Не удалось определить IP-адрес. Проверьте сетевое соединение.</translation>
     </message>
     <message>
         <source>Using IP: </source>
-        <translation type="unfinished">Использование IP-адреса: </translation>
+        <translation>Использование IP-адреса: </translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Если подключение по имени хоста не получается, попробуй %1&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Если подключение по имени хоста не удается, попробуйте %1&lt;/p&gt;</translation>
     </message>
     <message>
         <source>the suggested IP.</source>
-        <translation>Ваш (рекомендаваный) IP адресс.</translation>
+        <translation>рекомендуемый IP-адрес.</translation>
     </message>
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
@@ -392,8 +390,8 @@ Do you want to connect to the server?
     <message>
         <source>
 A bound IP is now invalid, you may need to restart the server.</source>
-        <translation type="unfinished">
-Привязанный IP-адрес теперь недействителен, возможно, потребуется перезапустить сервер.</translation>
+        <translation>
+Привязанный IP-адрес стал недействительным. Возможно требуется перезапуск сервера.</translation>
     </message>
     <message>
         <source>%1 is starting...</source>
@@ -401,19 +399,19 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>%1 will retry in a moment...</source>
-        <translation>%1 пробует переподкючиться...</translation>
+        <translation>%1 скоро повторит попытку...</translation>
     </message>
     <message>
         <source>%1 is stopping...</source>
-        <translation>%1 выключается...</translation>
+        <translation>%1 останавливается...</translation>
     </message>
     <message>
         <source>%1 is not running</source>
-        <translation>%1 не включён</translation>
+        <translation>%1 не запущен</translation>
     </message>
     <message>
         <source>%1 is waiting for clients</source>
-        <translation>%1 ожидает клиент компьютер</translation>
+        <translation>%1 ожидает подключения клиентов</translation>
     </message>
     <message>
         <source>%1 is connecting...</source>
@@ -425,7 +423,7 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>%1 is disconnected</source>
-        <translation>%1 отключён</translation>
+        <translation>%1 отключен</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -433,7 +431,7 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Редактировать</translation>
+        <translation>&amp;Правка</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -449,7 +447,7 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>Report a Bug</source>
-        <translation>Сообщить об Ошибке</translation>
+        <translation>Сообщить об ошибке</translation>
     </message>
     <message>
         <source>&amp;Minimize to tray</source>
@@ -457,7 +455,7 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation>&amp;Выйти</translation>
+        <translation>&amp;Выход</translation>
     </message>
     <message>
         <source>&amp;Open %1</source>
@@ -474,7 +472,7 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>S&amp;top</source>
-        <translation>С&amp;топ</translation>
+        <translation>Ос&amp;тановить</translation>
     </message>
     <message>
         <source>About %1...</source>
@@ -506,11 +504,11 @@ A bound IP is now invalid, you may need to restart the server.</source>
     </message>
     <message>
         <source>Invalid Screen Name</source>
-        <translation>Неправильное имя экрана</translation>
+        <translation>Недопустимое имя экрана</translation>
     </message>
     <message>
         <source>Screen name already exists</source>
-        <translation>Экраное имя уже существует</translation>
+        <translation>Имя экрана уже существует</translation>
     </message>
     <message>
         <source>The name you have chosen is invalid.
@@ -519,35 +517,35 @@ Valid names:
 • Use letters and numbers
 • May also use _ or -
 • Are between 1 and 255 characters</source>
-        <translation>Выбранное вами имя недействительно.
+        <translation>Выбранное имя недопустимо.
 
-Допустимые имена:
-• Содержат буквы и цифры
-• Могут также содержать _ или -
-• Содержат от 1 до 255 символов</translation>
+Требования:
+• Используйте буквы и цифры
+• Можно использовать _ или -
+• Длина от 1 до 255 символов</translation>
     </message>
     <message numerus="yes">
         <source>%1 is connected, with %n client(s): %2</source>
         <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation type="unfinished">
-            <numerusform>%1 подключен %n к клиенту: %2</numerusform>
-            <numerusform>%1 подключен к %n клиентам:: %2</numerusform>
-            <numerusform>%1 подключен к %n клиентам:: %2</numerusform>
+        <translation>
+            <numerusform>%1 подключен к %n клиенту: %2</numerusform>
+            <numerusform>%1 подключен к %n клиентам: %2</numerusform>
+            <numerusform>%1 подключен к %n клиентам: %2</numerusform>
         </translation>
     </message>
     <message>
         <source>Clients:
  %1</source>
-        <translation>Клиент:
+        <translation>Клиенты:
  %1</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
-        <translation type="unfinished">Ваш (рекомендованый) IP адресс: </translation>
+        <translation>Рекомендуемый IP-адрес: </translation>
     </message>
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="unfinished">Не удалось запустить исполняемый файл Core, хотя он существует. Проверьте, есть ли у вас достаточные права для запуска этой программы.</translation>
+        <translation>Не удалось запустить исполняемый файл ядра, хотя он существует. Проверьте наличие прав на запуск программы.</translation>
     </message>
 </context>
 <context>
@@ -555,7 +553,7 @@ Valid names:
     <message>
         <source>Unnamed</source>
         <extracomment>Used as the hostname. Translation may not contain spaces</extracomment>
-        <translation>Безназвания</translation>
+        <translation>Без_имени</translation>
     </message>
 </context>
 <context>
@@ -566,7 +564,7 @@ Valid names:
     </message>
     <message>
         <source>fatal error</source>
-        <translation>фатальная ошибка</translation>
+        <translation>критическая ошибка</translation>
     </message>
     <message>
         <source>error</source>
@@ -575,38 +573,38 @@ Valid names:
     <message>
         <source>&lt;p&gt;Sorry, a fatal error has occurred and the application must now exit.&lt;/p&gt;
 </source>
-        <translation>&lt;p&gt;Извините, возникла критическая ошибка и приложение сейчас завершит работу.&lt;/p&gt;
+        <translation>&lt;p&gt;К сожалению, произошла критическая ошибка, приложение будет закрыто.&lt;/p&gt;
 </translation>
     </message>
     <message>
         <source>&lt;p&gt;Sorry, a critical error has occurred.&lt;/p&gt;
 </source>
-        <translation>&lt;p&gt;Извините, возникла критическая ошибка.&lt;/p&gt;
+        <translation>&lt;p&gt;К сожалению, произошла критическая ошибка.&lt;/p&gt;
 </translation>
     </message>
     <message>
         <source>&lt;p&gt;%1 will continue to run in the background and can be accessed via the %1 icon in your system notifications area. This setting can be disabled.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;%1 продолжит работу в фоновом режиме и может быть развернуто через %1 иконку на вашей панели уведомлений. Эту настройку можно отключить.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;%1 продолжит работу в фоновом режиме. Доступ к нему можно получить через иконку в области уведомлений. Эту настройку можно отключить.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%2
 %3
 %4&lt;/pre&gt;</source>
-        <translation>&lt;p&gt;Пожалуйста &lt;a href=&quot;%1&quot;&gt;сообщите об ошибке&lt;/a&gt;и скопируйте/вставьте следующее сообщение об ошибке:&lt;/p&gt;&lt;pre&gt;v%2
+        <translation>&lt;p&gt;Пожалуйста, &lt;a href=&quot;%1&quot;&gt;сообщите об ошибке&lt;/a&gt; и приложите следующий текст:&lt;/p&gt;&lt;pre&gt;v%2
 %3
 %4&lt;/pre&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot;&gt;enable an extension&lt;/a&gt; to see the %2 tray icon.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;На Linux (пингвинчики) системах, использующих GNOME 3, панель уведомлений может быть отключена. Вам может понадобиться &lt;a href=&quot;%1&quot;&gt;подключить расширение&lt;/a&gt;, чтобы увидеть %2 иконку.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;В системах Linux с GNOME 3 область уведомлений может быть отключена. Возможно, потребуется &lt;a href=&quot;%1&quot;&gt;включить расширение&lt;/a&gt;, чтобы видеть иконку %2.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Server</source>
-        <translation>%1 Сервер</translation>
+        <translation>Сервер %1</translation>
     </message>
     <message>
         <source>&lt;p&gt;Great, the %1 server is now running.&lt;/p&gt;&lt;p&gt;Now you can connect your client computers to this server. You should see a prompt here on the server when a new client tries to connect.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Отлично, %1 сервер запущен и функционирует.&lt;/p&gt;&lt;p&gt;Сейчас Вы можете подключить клиент-компьютеры к серверу. Вам также стоит прочитать промт сервера, когда новый клиент пытается подключиться.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Сервер %1 запущен.&lt;/p&gt;&lt;p&gt;Теперь вы можете подключить клиентские компьютеры к этому серверу. При попытке подключения нового клиента на сервере появится соответствующий запрос.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;%1 is now connected!&lt;/p&gt;</source>
@@ -614,47 +612,47 @@ Valid names:
     </message>
     <message>
         <source>&lt;p&gt;Try moving your mouse to your other computer. Once there, go ahead and type something.&lt;/p&gt;&lt;p&gt;Don&apos;t forget, you can copy and paste between computers too.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Попытайтесь переместить курсор на другой компьютер и напечатать что-нибудь.&lt;/p&gt;&lt;p&gt;Не забывайте, что буфер обмена также работает между компьютерами.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Попробуйте переместить курсор на другой компьютер и что-нибудь напечатать.&lt;/p&gt;&lt;p&gt;Не забывайте, что вы также можете использовать общий буфер обмена.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Try controlling this computer remotely.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Попробуйте контролировать работу этого компютера удаленно.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Попробуйте управлять этим компьютером удаленно.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;As you do not have the setting enabled to keep %1 running in the background, you&apos;ll need to keep this window open or minimized to keep %1 running.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Так как Вы не применили настройки для поддержания %1 в фоновом режиме, вам необходимо держать окно программы открытым для работы %1.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Так как работа в фоновом режиме отключена, необходимо держать это окно открытым или свернутым для работы %1.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;You can now close this window and %1 will continue to run in the background. This setting can be disabled.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Можете закрыть это окно и %1 продолжит работу в фоновом режиме. Эту настройку можно отключить.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Теперь вы можете закрыть это окно, %1 продолжит работу в фоне. Эту настройку можно отключить.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Connected</source>
-        <translation>%1 Подключено</translation>
+        <translation>%1 подключено</translation>
     </message>
     <message>
         <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Неудалось подключиться к серверу &apos;%1&apos;.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Не удалось подключиться к серверу &apos;%1&apos;.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Клиент с таким именем уже подключен к серверу.&lt;/p&gt;Пожалуйса, убедитесь, что Вы используете уникальное имя и что только один клиент-процесс в работе.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Клиент с таким именем уже подключен к серверу.&lt;/p&gt;Убедитесь, что вы используете уникальное имя и запущен только один процесс клиента.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Попробуйте подключиться к серверу, используя IP-адресс вместо имени хоста. &lt;/p&gt;&lt;p&gt;Если это не помогло, проверьте Ваши TLS и Firewall настройки.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Попробуйте подключиться к серверу по IP-адресу вместо имени хоста. &lt;/p&gt;&lt;p&gt;Если это не поможет, проверьте настройки TLS и брандмауэра.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Пожалуйста, проверьте Ваши TLS и Firewall настройки.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Пожалуйста, проверьте настройки TLS и брандмауэра.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Connection Error</source>
-        <translation>%1 Ошибка соединения</translation>
+        <translation>Ошибка соединения %1</translation>
     </message>
     <message>
         <source>Do not show this message again</source>
-        <translation>Не показывать это сообщение ещё раз</translation>
+        <translation>Больше не показывать это сообщение</translation>
     </message>
     <message>
         <source>%1 - New Client</source>
@@ -662,7 +660,7 @@ Valid names:
     </message>
     <message>
         <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation>Клиент с именем &apos;%1&apos; был принят. Вам нужно добавить его на макет сервера.</translation>
+        <translation>Новый клиент «%1» принят. Вам необходимо добавить его на макет экранов сервера.</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -670,7 +668,7 @@ Valid names:
     </message>
     <message>
         <source>Add client</source>
-        <translation>Добавить клиент</translation>
+        <translation>Добавить клиента</translation>
     </message>
     <message>
         <source>A new client called &apos;%1&apos; wants to connect</source>
@@ -678,70 +676,70 @@ Valid names:
     </message>
     <message>
         <source>%1 Clear Settings</source>
-        <translation>%1 Вернуть настройки</translation>
+        <translation>%1 Сброс настроек</translation>
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Вы уверены, что хотите вернуть все настройки по умолчанию и перезапустить %1?&lt;/p&gt;&lt;p&gt;Это действие нельзя обратить.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Вы уверены, что хотите сбросить все настройки и перезапустить %1?&lt;/p&gt;&lt;p&gt;Это действие нельзя отменить.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Read-only settings</source>
-        <translation>%1 Только чтение настроек</translation>
+        <translation>%1 Настройки только для чтения</translation>
     </message>
     <message>
         <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Вам разрешено только чтение настроек из-за ограничения доступа к файлу:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Настройки доступны только для чтения, так как у вас есть доступ только на чтение к файлу:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Извините, пока эта версия %1 поддерживает Wayland, эта сборка не связана с одной или несколькими необходимыми библиотеками.&lt;/p&gt;&lt;p&gt;Пожалуйста, либо перейдите в X, либо используйте сборку, которая поддерживает необходимые библиотеки.&lt;/p&gt;&lt;p&gt;Если Вы считаете, что это не работает, пожалуйста &lt;a href=&quot;%2&quot;&gt;сообщите о баге&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Проверьте лог для большей информации.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Хотя эта версия %1 поддерживает Wayland, данная сборка не была слинкована с необходимыми библиотеками.&lt;/p&gt;&lt;p&gt;Пожалуйста, переключитесь на сессию X11 или используйте сборку с поддержкой нужных библиотек.&lt;/p&gt;&lt;p&gt;Если вы считаете это ошибкой, пожалуйста, &lt;a href=&quot;%2&quot;&gt;сообщите о ней&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>
-        <translation>Нет спасибо</translation>
+        <translation>Нет, спасибо</translation>
     </message>
     <message>
         <source>Check for updates</source>
-        <translation>Проверка обновлений</translation>
+        <translation>Проверить обновления</translation>
     </message>
     <message>
         <source>&lt;p&gt;Would you like to check for updates when %1 starts?&lt;/p&gt;&lt;p&gt;Checking for updates requires an Internet connection.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Хотите проверять наличие обновлений при запуске %1 ?&lt;/p&gt;&lt;p&gt;Проверка обновлений требует Интернет соединение.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Проверять наличие обновлений при запуске %1?&lt;/p&gt;&lt;p&gt;Для проверки обновлений требуется интернет-соединение.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Background service offline</source>
-        <translation>Фоновый процесс не в сети</translation>
+        <translation>Фоновая служба отключена</translation>
     </message>
     <message>
         <source>Retry</source>
-        <translation>Попробовать снова</translation>
+        <translation>Повторить</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation>Запретить</translation>
+        <translation>Отключить</translation>
     </message>
     <message>
         <source>&lt;p&gt;There was a problem finding the %1 background service (daemon).&lt;/p&gt;&lt;p&gt;The background service makes %1 work with UAC prompts and the login screen.&lt;/p&gt;&lt;p&gt;If don&apos;t want to use the background service and intentionally stopped it, you can prevent it&apos;s use by disabling this feature.&lt;/p&gt;&lt;p&gt;If you did not stop the background service intentionally, there may be a problem with it. Please retry or try restarting the %1 service from the Windows services program.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Возникла проблема нахождения %1 фоновым процессом (daemon).&lt;/p&gt;&lt;p&gt;Сервис %1 работает с UAC промтом и экраном входа.&lt;/p&gt;&lt;p&gt;Если Вы не хотите использовать сервис в фоновом режиме и намеренно останавливать его, Вы можете предотвратить его использование после отключения опции.&lt;/p&gt;&lt;p&gt;Если Вы не останавливали сервис намеренно, проблема может заключаться нем. Попробуйте перезапустить сервис %1 из программы Windows services.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Возникла проблема с поиском фоновой службы (демона) %1.&lt;/p&gt;&lt;p&gt;Эта служба позволяет %1 работать с запросами UAC и на экране входа.&lt;/p&gt;&lt;p&gt;Если вы не хотите использовать службу, вы можете отключить эту функцию.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>failed to read key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">не удалось прочитать ключ из файла сертификата: %1</translation>
+        <translation>не удалось прочитать ключ из файла сертификата: %1</translation>
     </message>
     <message>
         <source>failed to parse certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">не удалось проанализировать файл сертификата: %1</translation>
+        <translation>не удалось разобрать файл сертификата: %1</translation>
     </message>
     <message>
         <source>key detected is the incorrect size</source>
-        <translation type="unfinished">обнаружен ключ неправильного размера</translation>
+        <translation>обнаружен ключ неверного размера</translation>
     </message>
     <message>
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">не удалось прочитать ключ RSA из файла сертификата: %1</translation>
+        <translation>не удалось прочитать RSA-ключ из файла сертификата: %1</translation>
     </message>
 </context>
 <context>
@@ -752,7 +750,7 @@ Valid names:
     </message>
     <message>
         <source>Computer Info</source>
-        <translation>Информация об компьютере</translation>
+        <translation>Информация о компьютере</translation>
     </message>
     <message>
         <source>Name</source>
@@ -760,7 +758,7 @@ Valid names:
     </message>
     <message>
         <source>Modifier Keys</source>
-        <translation>Клавиши модификаторы</translation>
+        <translation>Клавиши-модификаторы</translation>
     </message>
     <message>
         <source>M&amp;eta</source>
@@ -800,7 +798,7 @@ Valid names:
     </message>
     <message>
         <source>None</source>
-        <translation>Нету</translation>
+        <translation>Нет</translation>
     </message>
     <message>
         <source>&amp;Shift</source>
@@ -808,8 +806,7 @@ Valid names:
     </message>
     <message>
         <source>Dead Corners</source>
-        <translatorcomment>mayber мёртвая зона (area) сorners края</translatorcomment>
-        <translation>Мёртвые края</translation>
+        <translation>Мертвые зоны в углах</translation>
     </message>
     <message>
         <source>Top Left</source>
@@ -821,11 +818,11 @@ Valid names:
     </message>
     <message>
         <source>Corner si&amp;ze</source>
-        <translation>Раз&amp;мер края</translation>
+        <translation>Разм&amp;ер угла</translation>
     </message>
     <message>
         <source>Bottom Left</source>
-        <translation>Снмзу слева</translation>
+        <translation>Снизу слева</translation>
     </message>
     <message>
         <source>Bottom Right</source>
@@ -833,19 +830,19 @@ Valid names:
     </message>
     <message>
         <source>Fixes</source>
-        <translation>Исправление</translation>
+        <translation>Исправления</translation>
     </message>
     <message>
         <source>SCROLL LOCK key</source>
-        <translation>SCROLL LOCK клавиша</translation>
+        <translation>Клавиша SCROLL LOCK</translation>
     </message>
     <message>
         <source>CAPS LOCK key</source>
-        <translation>CAPS LOCK клавиша</translation>
+        <translation>Клавиша CAPS LOCK</translation>
     </message>
     <message>
         <source>NUM LOCK key</source>
-        <translation>NUM LOCK клавиша</translation>
+        <translation>Клавиша NUM LOCK</translation>
     </message>
     <message>
         <source>XTest for Xinerama</source>
@@ -853,7 +850,6 @@ Valid names:
     </message>
     <message>
         <source>Aliases</source>
-        <translatorcomment>maybe its no corect translate</translatorcomment>
         <translation>Псевдонимы</translation>
     </message>
     <message>
@@ -862,30 +858,49 @@ Valid names:
     </message>
     <message>
         <source>&amp;Remove</source>
-        <translation>&amp;Убрать</translation>
+        <translation>&amp;Удалить</translation>
     </message>
     <message>
         <source>Screen name is empty</source>
-        <translation>Имя экрана не заполнено</translation>
+        <translation>Имя экрана пустое</translation>
     </message>
     <message>
         <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>Поле с именим экрана должно быть заполнено. Пожалуйста сделайте это или закройте диалоговое окно.</translation>
+        <translation>Имя экрана не может быть пустым. Введите имя или закройте окно.</translation>
     </message>
     <message>
         <source>Screen name matches alias</source>
-        <translation>Имя экрана соответствует псевдониму</translation>
+        <translation>Имя экрана совпадает с псевдонимом</translation>
     </message>
     <message>
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>мя экрана не может совпадать с псевдонимом. Пожалуйста, удалите псевдоним или измените имя экрана.</translation>
+        <translation>Имя экрана не может совпадать с псевдонимом. Удалите псевдоним или измените имя экрана.</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;Экран: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Нажмите дважды для изменения настроек&lt;br&gt;Переместите окно в корзину, чтобы убрать его</translation>
+        <translation>&lt;center&gt;Экран: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Двойной клик для настроек&lt;br&gt;Перетащите экран в корзину для удаления</translation>
+    </message>
+</context>
+<context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Поиск</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">Найти следующее</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">Найти предыдущее</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">Поиск...</translation>
     </message>
 </context>
 <context>
@@ -900,15 +915,15 @@ Valid names:
     </message>
     <message>
         <source>Drag a computer from the grid to the trashcan to remove it.</source>
-        <translation>Переташи компьютер в мусорку чтобы убрать его.</translation>
+        <translation>Перетащите компьютер в корзину, чтобы удалить его.</translation>
     </message>
     <message>
         <source>Configure the layout of your computer displays by dragging to where you want.</source>
-        <translation>Настройте расположение своих экранов комьютеров перетаскивая иконку монитора.</translation>
+        <translation>Настройте расположение мониторов, перетаскивая их в нужные места.</translation>
     </message>
     <message>
         <source>Drag to the grid to add a new computer.</source>
-        <translation>Перетащи в сетку чтобы добавить новый компьютер.</translation>
+        <translation>Перетащите на сетку, чтобы добавить компьютер.</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -916,23 +931,23 @@ Valid names:
     </message>
     <message>
         <source>&amp;Hotkeys</source>
-        <translation>&amp;Горяче клавиши</translation>
+        <translation>&amp;Горячие клавиши</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Новое</translation>
+        <translation>&amp;Создать</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Редактировать</translation>
+        <translation>&amp;Правка</translation>
     </message>
     <message>
         <source>&amp;Remove</source>
-        <translation>&amp;Убрать</translation>
+        <translation>&amp;Удалить</translation>
     </message>
     <message>
         <source>A&amp;ctions</source>
-        <translation>Дей&amp;ствие</translation>
+        <translation>Дей&amp;ствия</translation>
     </message>
     <message>
         <source>Ne&amp;w</source>
@@ -944,15 +959,15 @@ Valid names:
     </message>
     <message>
         <source>Re&amp;move</source>
-        <translation>Убра&amp;ть</translation>
+        <translation>Уда&amp;лить</translation>
     </message>
     <message>
         <source>Advanced</source>
-        <translation>Расшириные</translation>
+        <translation>Расширенные</translation>
     </message>
     <message>
         <source>&amp;Dead corners (for this computer)</source>
-        <translation>&amp;Мёртвые края (для компьютера)</translation>
+        <translation>&amp;Мертвые зоны (для этого компьютера)</translation>
     </message>
     <message>
         <source>&amp;Bottom-left</source>
@@ -968,15 +983,15 @@ Valid names:
     </message>
     <message>
         <source>Top-rig&amp;ht</source>
-        <translation>Сверху спр&amp;ва</translation>
+        <translation>Сверху спр&amp;ава</translation>
     </message>
     <message>
         <source>Cor&amp;ner size</source>
-        <translation>Разме&amp;ры углов</translation>
+        <translation>Разме&amp;р угла</translation>
     </message>
     <message>
         <source>px</source>
-        <translation>px</translation>
+        <translation>пикс</translation>
     </message>
     <message>
         <source>&amp;Misc</source>
@@ -984,27 +999,27 @@ Valid names:
     </message>
     <message>
         <source>Disable lock to computer (scroll lock key)</source>
-        <translation>Отключить блокировку компьютера (клавиша scroll Lock)</translation>
+        <translation>Отключить привязку к компьютеру (Scroll Lock)</translation>
     </message>
     <message>
         <source>Use &amp;relative mouse movements</source>
-        <translation>Использовать &amp;относительные премещение курсора</translation>
+        <translation>Использовать &amp;относительные перемещения мыши</translation>
     </message>
     <message>
         <source>Don&apos;t take &amp;foreground window (Windows only)</source>
-        <translation>Не держать окно &amp;поверх всех окон (Только для windows)</translation>
+        <translation>Не захватывать &amp;переднее окно (только для Windows)</translation>
     </message>
     <message>
         <source>Enable clipboard sharing</source>
-        <translation>Включить передачу буфера обмена</translation>
+        <translation>Включить общий буфер обмена</translation>
     </message>
     <message>
         <source>Limit to:</source>
-        <translation>Лимит:</translation>
+        <translation>Ограничить до:</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation>MB</translation>
+        <translation>МБ</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -1012,23 +1027,23 @@ Valid names:
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables the network heartbeat to ping clients every &lt;span style=&quot; font-style:italic;&quot;&gt;n&lt;/span&gt; seconds. This may help to diagnose network problems by retrying the connection if the client becomes unresponsive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включает функцию сетевого пульса для отправки ping-запросов клиентам каждые &lt;span style=&quot; font-style:italic;&quot;&gt;n&lt;/span&gt; секунд. Это может помочь в диагностике сетевых проблем, повторяя попытки подключения, если клиент перестает отвечать.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включает сетевой пульс для проверки клиентов каждые &lt;span style=&quot; font-style:italic;&quot;&gt;n&lt;/span&gt; секунд. Это помогает диагностировать проблемы сети.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&amp;Check clients every</source>
-        <translation>&amp;Проверять клиент(ы) каждые</translation>
+        <translation>&amp;Проверять клиентов каждые</translation>
     </message>
     <message>
         <source>ms</source>
-        <translation>ms</translation>
+        <translation>мс</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables compatibility with programs that use either the Synergy or Barrier protocols:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Synergy 3 uses the Synergy protocol.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Barrier, Input-Leap and Synergy 1 uses the Barrier protocol.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;A Deskflow client will automatically use either the Synergy or Barrier protocol depending on the server protocol.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить совместимость с программы, использующие либо Synergy  или Barrier протоколы:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Synergy 3 используеть протокол Synergy.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Barrier, Input-Leap и Synergy 1 использует Barrier протокл.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Deskflow клиенты буду автоматически использовать Synergy или взависимотси от протокола сервера.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включает совместимость с протоколами Synergy или Barrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Network protocol</source>
-        <translation>Протокол сети</translation>
+        <translation>Сетевой протокол</translation>
     </message>
     <message>
         <source>&amp;Switching</source>
@@ -1036,11 +1051,11 @@ Valid names:
     </message>
     <message>
         <source>Switch &amp;after waiting</source>
-        <translation>Перключение &amp;после ожидания</translation>
+        <translation>Переключать &amp;после задержки</translation>
     </message>
     <message>
         <source>Switch on double &amp;tap within</source>
-        <translation>Переключение по двойному &amp;нажатию</translation>
+        <translation>Переключать по двойному &amp;касанию за</translation>
     </message>
     <message>
         <source>Config file</source>
@@ -1048,18 +1063,17 @@ Valid names:
     </message>
     <message>
         <source>Core server config file</source>
-        <translation>Файл конфигурации ядра сервера (Deskflow)</translation>
+        <translation>Файл конфигурации ядра сервера</translation>
     </message>
     <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>Используйте файл конфигурации сервера чтобы создать схему расположения комптютеров, которую невозможно создать в сеточном редакторе.
-Включая эту настройку, Вы выключите GUI редактор.</translation>
+        <translation>Используйте файл конфигурации для сложных макетов. Включение этой опции отключит графический редактор.</translation>
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation>Использовать для конфигурации сервера конфиг файл</translation>
+        <translation>Использовать файл конфигурации сервера</translation>
     </message>
     <message>
         <source>Config file path</source>
@@ -1068,15 +1082,15 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation>%1 Конфигруации (*.conf);;All-files (*.*)</translation>
+        <translation>Конфигурации %1 (*.conf);;Все файлы (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation>Выбрать файл для конфигурации</translation>
+        <translation>Выбор файла конфигурации</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>
-        <translation type="unfinished">Включить блокировку компьютера при запуске</translation>
+        <translation>Включать привязку к компьютеру при запуске</translation>
     </message>
 </context>
 <context>
@@ -1091,16 +1105,15 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Client mode</source>
-        <translatorcomment>режим - mode</translatorcomment>
         <translation>Режим клиента</translation>
     </message>
     <message>
         <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>Использовать языковую раскладку сервера на этом компьютере</translation>
+        <translation>Использовать язык клавиатуры сервера на этом компьютере</translation>
     </message>
     <message>
         <source>Invert scroll direction on this computer</source>
-        <translation>Инвертировать направление прокрутки на этом компьюторе</translation>
+        <translation>Инвертировать направление прокрутки на этом компьютере</translation>
     </message>
     <message>
         <source>Scroll Speed</source>
@@ -1112,35 +1125,35 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Check for updates on startup</source>
-        <translation>Проверять обновление при запуске</translation>
+        <translation>Проверять обновления при запуске</translation>
     </message>
     <message>
         <source>Hide the window when the app starts</source>
-        <translation>Скрывать окно при запуске программы</translation>
+        <translation>Скрывать окно при запуске</translation>
     </message>
     <message>
         <source>Prevent this computer from going to sleep</source>
-        <translation>Запретить этому компьютеру переходить в спящий режим</translation>
+        <translation>Запретить компьютеру переходить в спящий режим</translation>
     </message>
     <message>
         <source>Leave app running in notification area when the window is closed</source>
-        <translation>Переместить приложение в трей, при его закрытии</translation>
+        <translation>Оставлять приложение в области уведомлений при закрытии окна</translation>
     </message>
     <message>
         <source>Tray icon style</source>
-        <translation>Стиль иконки в трее</translation>
+        <translation>Стиль иконки трея</translation>
     </message>
     <message>
         <source>Colorful</source>
-        <translation>Цветная</translation>
+        <translation>Цветной</translation>
     </message>
     <message>
         <source>Monocolor</source>
-        <translation>Монохромная</translation>
+        <translation>Монохромный</translation>
     </message>
     <message>
         <source>Enable TLS Encryption</source>
-        <translation>Врубить TLS шифрование</translation>
+        <translation>Включить шифрование TLS</translation>
     </message>
     <message>
         <source>Certificate</source>
@@ -1152,15 +1165,15 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Regenerate certificate</source>
-        <translation>Пересоздать сертификат</translation>
+        <translation>Перевыпустить сертификат</translation>
     </message>
     <message>
         <source>Require client certificates</source>
-        <translation>Требовать сертификат у клиента</translation>
+        <translation>Требовать сертификаты клиентов</translation>
     </message>
     <message>
         <source>&amp;Advanced</source>
-        <translation>&amp;Расшириные</translation>
+        <translation>&amp;Расширенные</translation>
     </message>
     <message>
         <source>Networking</source>
@@ -1172,11 +1185,11 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Network IP</source>
-        <translation>IP адресс сети</translation>
+        <translation>Сетевой IP-адрес</translation>
     </message>
     <message>
         <source>Logs</source>
-        <translation>Логи</translation>
+        <translation>Журналы</translation>
     </message>
     <message>
         <source>Level</source>
@@ -1184,7 +1197,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Fatal</source>
-        <translation>Фатальная</translation>
+        <translation>Критический</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1200,7 +1213,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Info</source>
-        <translation>Инфа</translation>
+        <translation>Инфо</translation>
     </message>
     <message>
         <source>Debug</source>
@@ -1216,31 +1229,31 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Log path</source>
-        <translation>Путь лог файла</translation>
+        <translation>Путь к журналам</translation>
     </message>
     <message>
         <source>Log to file</source>
-        <translation>Запись отладки в файл</translation>
+        <translation>Записывать в файл</translation>
     </message>
     <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
-        <translation>Использование уровня логирования «Отладка» может повлиять на производительность. Используйте уровень «Отладка» только при поиске проблемы или сборе логов для отправки вместе с отчётом об ошибке.</translation>
+        <translation>Уровень отладки может повлиять на производительность. Используйте его только для поиска неисправностей.</translation>
     </message>
     <message>
         <source>Enable GUI debug messages</source>
-        <translation>Врубить GUI дебаг сообщение</translation>
+        <translation>Включить отладочные сообщения интерфейса</translation>
     </message>
     <message>
         <source>Use background service (daemon)</source>
-        <translation>Использовать сервис в фоне (демон)</translation>
+        <translation>Использовать фоновую службу (демон)</translation>
     </message>
     <message>
         <source>Always run as system (work at login screen and UAC)</source>
-        <translation>Всегда запускать при входе в систему (работает на экране входа в систему и UAC)</translation>
+        <translation>Всегда запускать от имени системы (работает на экране входа и UAC)</translation>
     </message>
     <message>
         <source>Force a language to be used for the GUI.</source>
-        <translation>Принудительно выбрать язык, используемый для графического интерфейса.</translation>
+        <translation>Принудительно использовать язык для интерфейса.</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1248,63 +1261,67 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Enable wl-clipboard support</source>
-        <translation>Врубить поддержку буфера обмена</translation>
+        <translation>Включить поддержку wl-clipboard</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>
-        <translation>Перегенерировать TLS Сертификат</translation>
+        <translation>Сертификат TLS перевыпущен</translation>
     </message>
     <message>
         <source>TLS certificate regenerated successfully.</source>
-        <translation>TLS Сертификат был перегенирирован.</translation>
+        <translation>Сертификат TLS успешно перевыпущен.</translation>
     </message>
     <message>
         <source>Select a TLS certificate to use...</source>
-        <translation>Выбрать TLS Сертификат для использования...</translation>
+        <translation>Выберите сертификат TLS...</translation>
     </message>
     <message>
         <source>Save log file to...</source>
-        <translation>Сохринить лог файл в...</translation>
+        <translation>Сохранить файл журнала в...</translation>
     </message>
     <message>
         <source>Required messages</source>
-        <translation>Обязательный сообщения</translation>
+        <translation>Обязательные сообщения</translation>
     </message>
     <message>
         <source>Non-fatal errors</source>
-        <translation>Не фатлаьные ошибки</translation>
+        <translation>Не критические ошибки</translation>
     </message>
     <message>
         <source>General warnings</source>
-        <translation>Главное предупреждение</translation>
+        <translation>Общие предупреждения</translation>
     </message>
     <message>
         <source>Notable events</source>
-        <translation>Известные события</translation>
+        <translation>Важные события</translation>
     </message>
     <message>
         <source>General events [Default]</source>
-        <translation>Главные события [Поумолчнию]</translation>
+        <translation>Общие события [По умолчанию]</translation>
     </message>
     <message>
         <source>Debug entries</source>
-        <translation>Откадачные записи</translation>
+        <translation>Записи отладки</translation>
     </message>
     <message>
         <source>More debug output</source>
-        <translation>Больше отладочный опций</translation>
+        <translation>Расширенный вывод отладки</translation>
     </message>
     <message>
         <source>Verbose debug output</source>
-        <translation>Подробный отладочный вывод</translation>
+        <translation>Подробный вывод отладки</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Для этого необходим пакет wl-clipboard.&lt;/p&gt;&lt;p&gt;Когда ты используешь wl-clipboard v2.2.1. Возникает ошибка перехвата фокуса, которая мешает использовать deskflowю. Это фиксется если использовать wl-clipboard из ветки master, если только ваш Compositor не поддерживает протокол wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Требуется пакет wl-clipboard. В версии 2.2.1 есть ошибка перехвата фокуса.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Automatic</source>
-        <translation type="unfinished">Автоматический</translation>
+        <translation>Автоматически</translation>
+    </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">Включить номер версии в заголовок окна</translation>
     </message>
 </context>
 <context>
@@ -1342,7 +1359,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Contains invalid characters or is too long</source>
-        <translation>Имя содержит недопосутмые символы или слишком длинное</translation>
+        <translation>Имя содержит недопустимые символы или слишком длинное</translation>
     </message>
     <message>
         <source>A computer with this name already exists</source>

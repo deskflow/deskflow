@@ -884,6 +884,25 @@ Nombres válidos:
     </message>
 </context>
 <context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Buscar</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">Buscar siguiente</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">Buscar anterior</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">Buscar...</translation>
+    </message>
+</context>
+<context>
     <name>ServerConfigDialog</name>
     <message>
         <source>Server Configuration</source>
@@ -1300,6 +1319,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Automatic</source>
         <translation type="unfinished">Automática</translation>
+    </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">Incluir la versión en el título de la ventana</translation>
     </message>
 </context>
 <context>

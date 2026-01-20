@@ -885,6 +885,25 @@ Valid names:
     </message>
 </context>
 <context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">検索</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">次を検索</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">前を検索</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">検索...</translation>
+    </message>
+</context>
+<context>
     <name>ServerConfigDialog</name>
     <message>
         <source>Server Configuration</source>
@@ -1301,6 +1320,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Automatic</source>
         <translation type="unfinished">自動</translation>
+    </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">ウィンドウタイトルにバージョン情報を含める</translation>
     </message>
 </context>
 <context>
