@@ -250,22 +250,6 @@ void WlClipboardTests::monitoring()
   // This test mainly verifies that monitoring doesn't crash
 }
 
-WlClipboard &WlClipboardTests::getClipboard()
-{
-  if (!m_clipboard) {
-    m_clipboard = std::make_unique<WlClipboard>(kClipboardClipboard);
-  }
-  return *m_clipboard;
-}
-
-WlClipboard &WlClipboardTests::getPrimaryClipboard()
-{
-  if (!m_primaryClipboard) {
-    m_primaryClipboard = std::make_unique<WlClipboard>(kClipboardSelection);
-  }
-  return *m_primaryClipboard;
-}
-
 void WlClipboardTests::primaryClipboard()
 {
   // Test that primary clipboard works independently from regular clipboard
@@ -331,7 +315,7 @@ void WlClipboardTests::getWithoutOpen()
   clipboard.close();
 }
 
-bool WlClipboardTests::waitForClipboardCondition(WlClipboard &clipboard, std::function<bool()> condition, int timeoutMs)
+bool WlClipboardTests::waitForClipboardCondition(WlClipboard &, std::function<bool()> condition, int timeoutMs)
 {
   auto startTime = std::chrono::steady_clock::now();
   auto timeout = std::chrono::milliseconds(timeoutMs);
