@@ -58,7 +58,7 @@ WlClipboard::~WlClipboard()
 {
   stopMonitoring();
   for (auto &cmd : m_runningWlCopies) {
-    cmd->kill();
+    cmd->close();
     cmd->waitForFinished(100);
   }
   m_runningWlCopies.clear();
