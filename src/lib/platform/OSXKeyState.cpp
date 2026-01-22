@@ -867,18 +867,18 @@ void OSXKeyState::setGroup(int32_t group)
 {
   TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
   if (!keyboardLayout) {
-    LOG_WARN("nedeed keyboard layout is null");
+    LOG_WARN("needed keyboard layout is null");
     return;
   }
   auto canBeSetted = (CFBooleanRef
   )TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
   if (!canBeSetted) {
-    LOG_WARN("nedeed keyboard layout is disabled for programmatically selection");
+    LOG_WARN("needed keyboard layout is disabled for programmatically selection");
     return;
   }
 
   if (TISSelectInputSource(keyboardLayout) != noErr) {
-    LOG_WARN("failed to set nedeed keyboard layout");
+    LOG_WARN("failed to set needed keyboard layout");
   }
 
   LOG_DEBUG1("keyboard layout change to %d", group);
