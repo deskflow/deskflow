@@ -107,7 +107,7 @@ void Settings::cleanStateSettings()
   for (const QString &key : keys) {
     if (!m_stateKeys.contains(key))
       m_stateSettings->remove(key);
-    if (m_stateSettings->value(key).toString().isEmpty())
+    if (m_stateSettings->value(key).toString().isEmpty() && !m_stateSettings->value(key).toRect().isValid())
       m_stateSettings->remove(key);
   }
 }
