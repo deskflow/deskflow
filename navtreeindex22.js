@@ -1,9 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6":[5,0,0,18,1],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0eadd8fb22f5ae32670ec0c5f24755b1":[5,0,0,18,37],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a14c10dffde99b1de817065ca715797c4":[5,0,0,18,11],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a17685eb2fb162dd47cafb15eebdbc01a":[5,0,0,18,20],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a1945785c9bf16b55bc856851f0bf8d9b":[5,0,0,18,10],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a1e4fdfae64abbc2300951bc4a8952afe":[5,0,0,18,26],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a22535e96afc49ba89c6380ba5ebf8a51":[5,0,0,18,44],
@@ -249,5 +245,9 @@ var NAVTREEINDEX22 =
 "structIArchNetwork_1_1PollEventMask.html#ac5d78f713bee0e3d288def3d5b737911":[6,0,104,0,1],
 "structIArchNetwork_1_1PollEventMask.html#adc3edc69b9ea00a4f6ea46cf7c45b22c":[6,0,104,0,2],
 "structIScreen_1_1ClipboardInfo.html":[6,0,128,0],
-"structIScreen_1_1ClipboardInfo.html#a7738ad80c618ba7007173d8bd0f23969":[6,0,128,0,0]
+"structIScreen_1_1ClipboardInfo.html#a7738ad80c618ba7007173d8bd0f23969":[6,0,128,0,0],
+"structIScreen_1_1ClipboardInfo.html#a90677c6ed442834e74f03f70aca39884":[6,0,128,0,1],
+"structKeyEntry.html":[6,0,135],
+"structKeyEntry.html#a02ebe770c6e8fbcf88c67b4f73493eb7":[6,0,135,0],
+"structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c":[6,0,135,1]
 };

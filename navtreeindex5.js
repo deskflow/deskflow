@@ -88,13 +88,9 @@ var NAVTREEINDEX5 =
 "XArchWindows_8cpp.html":[7,0,1,1,0,1,10],
 "XArchWindows_8cpp.html#a078ff948d8315a78de358d84f20bed1a":[7,0,1,1,0,1,10,0],
 "XArchWindows_8cpp.html#a2b35d1b9337a4df470bcd38d27177da8":[7,0,1,1,0,1,10,1],
-"XArchWindows_8cpp.html#aa138dd031cbf5ff24100e9692c356be5":[7,0,1,1,0,1,10,2],
-"XArchWindows_8cpp.html#aa8bc1ba0d5344a265d4093aef962dcab":[7,0,1,1,0,1,10,3],
 "XArchWindows_8h.html":[7,0,1,1,0,1,11],
 "XArchWindows_8h.html#a078ff948d8315a78de358d84f20bed1a":[7,0,1,1,0,1,11,1],
 "XArchWindows_8h.html#a2b35d1b9337a4df470bcd38d27177da8":[7,0,1,1,0,1,11,2],
-"XArchWindows_8h.html#aa138dd031cbf5ff24100e9692c356be5":[7,0,1,1,0,1,11,3],
-"XArchWindows_8h.html#aa8bc1ba0d5344a265d4093aef962dcab":[7,0,1,1,0,1,11,4],
 "XArchWindows_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,0,1,11,0],
 "XArchWindows_8h_source.html":[7,0,1,1,0,1,11],
 "XDGKeyUtil_8cpp.html":[7,0,1,1,9,90],
@@ -249,5 +245,9 @@ var NAVTREEINDEX5 =
 "classAppUtil.html#a8d56a438b43003ad64c03a2f08ee47b3":[6,0,7,9],
 "classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b":[6,0,7,3],
 "classAppUtil.html#ab25364eccf20280b7038ba939096fcc8":[6,0,7,10],
-"classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784":[6,0,7,8]
+"classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784":[6,0,7,8],
+"classAppUtil.html#ac93b079bc128e2513fc28862914cb89c":[6,0,7,2],
+"classAppUtil.html#ae085a35d29cc924390fc784d865fa3bd":[6,0,7,6],
+"classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53":[6,0,7,5],
+"classAppUtilUnix.html":[6,0,8]
 };

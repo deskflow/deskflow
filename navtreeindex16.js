@@ -1,9 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classWlClipboard.html#a1060583601436f85bbc7935832721274":[6,0,243,2],
-"classWlClipboard.html#a1b170edeb0ff71e832d11d37b28f52b3":[6,0,243,7],
-"classWlClipboard.html#a1de6669709f80841458ce64d20cd0562":[6,0,243,19],
-"classWlClipboard.html#a2310093097757fc6c3b07f05f7e13bd6":[6,0,243,1],
 "classWlClipboard.html#a240282a35f31db6269e12797b642e679":[6,0,243,8],
 "classWlClipboard.html#a2ca9659902bada07275e74c7848185c8":[6,0,243,9],
 "classWlClipboard.html#a2d60523b3e860f2e1b787cbf2c9840ab":[6,0,243,6],
@@ -249,5 +245,9 @@ var NAVTREEINDEX16 =
 "classXWindowsScreenSaver.html#a0eda0eed06e3b4abf3f325c5df70ea36":[6,0,257,12],
 "classXWindowsScreenSaver.html#a152cd7c8618fb7b8c47764d8d6e10b82":[6,0,257,6],
 "classXWindowsScreenSaver.html#a364d1bd816caa9ff21d4b960dd11b2a1":[6,0,257,0],
-"classXWindowsScreenSaver.html#a54016bcab0a0f55cc094c4885493d653":[6,0,257,4]
+"classXWindowsScreenSaver.html#a54016bcab0a0f55cc094c4885493d653":[6,0,257,4],
+"classXWindowsScreenSaver.html#a71eddfecbcea489840cfb2c77a4fc362":[6,0,257,3],
+"classXWindowsScreenSaver.html#a8f7244fd31ec98406543476d82c7232e":[6,0,257,5],
+"classXWindowsScreenSaver.html#a9e33b818e48fdba4cd077b045c33cd04":[6,0,257,9],
+"classXWindowsScreenSaver.html#aa07068b1d29488e49ee8464bcb8f74e8":[6,0,257,11]
 };

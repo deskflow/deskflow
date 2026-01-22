@@ -1,9 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a":[6,0,208,10],
-"classSettings.html#ae251f1cdec2bce2dbbf133c18550888c":[6,0,208,18],
-"classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d":[6,0,208,24],
-"classSettings.html#ae9e80e06caddd4c619dc286848b1f187":[6,0,208,13],
 "classSettings.html#afd0a8dbda15587467729da0b489dd97d":[6,0,208,22],
 "classSettingsDialog.html":[6,0,209],
 "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,209,3],
@@ -249,5 +245,9 @@ var NAVTREEINDEX15 =
 "classVersionChecker.html#a50c74a07497c4b2bf506f50647361472":[6,0,241,3],
 "classVersionChecker.html#acbfe2ec8122ff39fb65b67a014b2f855":[6,0,241,1],
 "classWlClipboard.html":[6,0,243],
-"classWlClipboard.html#a08322c9e6c1d88a85ce7618c16410692":[6,0,243,10]
+"classWlClipboard.html#a08322c9e6c1d88a85ce7618c16410692":[6,0,243,10],
+"classWlClipboard.html#a1060583601436f85bbc7935832721274":[6,0,243,2],
+"classWlClipboard.html#a1b170edeb0ff71e832d11d37b28f52b3":[6,0,243,7],
+"classWlClipboard.html#a1de6669709f80841458ce64d20cd0562":[6,0,243,19],
+"classWlClipboard.html#a2310093097757fc6c3b07f05f7e13bd6":[6,0,243,1]
 };
