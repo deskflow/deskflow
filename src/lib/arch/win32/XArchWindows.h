@@ -14,7 +14,5 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-QString winsockErrorToQString(int error);
 QString windowsErrorToQString(DWORD error);
-std::string winsockErrorToString(int error);
 std::string windowsErrorToString(DWORD error);
