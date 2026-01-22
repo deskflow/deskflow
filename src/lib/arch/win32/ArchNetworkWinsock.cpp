@@ -135,7 +135,7 @@ void ArchNetworkWinsock::initModule(HMODULE module)
   WSADATA data;
   int err = startup(version, &data);
   if (data.wVersion != version) {
-    throw ArchNetworkSupportException(winsockErrorToString(err));
+    throw ArchNetworkSupportException(windowsErrorToString(err));
   }
   if (err != 0) {
     // some other initialization error
@@ -819,12 +819,12 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
 {
   switch (err) {
   case WSAEACCES:
-    throw ArchNetworkAccessException(winsockErrorToString(err));
+    throw ArchNetworkAccessException(windowsErrorToString(err));
 
   case WSAEMFILE:
   case WSAENOBUFS:
   case WSAENETDOWN:
-    throw ArchNetworkResourceException(winsockErrorToString(err));
+    throw ArchNetworkResourceException(windowsErrorToString(err));
 
   case WSAEPROTOTYPE:
   case WSAEPROTONOSUPPORT:
@@ -838,50 +838,50 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
   case WSANOTINITIALISED:
   case WSAVERNOTSUPPORTED:
   case WSASYSNOTREADY:
-    throw ArchNetworkSupportException(winsockErrorToString(err));
+    throw ArchNetworkSupportException(windowsErrorToString(err));
 
   case WSAEADDRNOTAVAIL:
-    throw ArchNetworkNoAddressException(winsockErrorToString(err));
+    throw ArchNetworkNoAddressException(windowsErrorToString(err));
 
   case WSAEADDRINUSE:
-    throw ArchNetworkAddressInUseException(winsockErrorToString(err));
+    throw ArchNetworkAddressInUseException(windowsErrorToString(err));
 
   case WSAEHOSTUNREACH:
   case WSAENETUNREACH:
-    throw ArchNetworkNoRouteException(winsockErrorToString(err));
+    throw ArchNetworkNoRouteException(windowsErrorToString(err));
 
   case WSAENOTCONN:
-    throw ArchNetworkNotConnectedException(winsockErrorToString(err));
+    throw ArchNetworkNotConnectedException(windowsErrorToString(err));
 
   case WSAEDISCON:
-    throw ArchNetworkShutdownException(winsockErrorToString(err));
+    throw ArchNetworkShutdownException(windowsErrorToString(err));
 
   case WSAENETRESET:
   case WSAECONNABORTED:
   case WSAECONNRESET:
-    throw ArchNetworkDisconnectedException(winsockErrorToString(err));
+    throw ArchNetworkDisconnectedException(windowsErrorToString(err));
 
   case WSAECONNREFUSED:
-    throw ArchNetworkConnectionRefusedException(winsockErrorToString(err));
+    throw ArchNetworkConnectionRefusedException(windowsErrorToString(err));
 
   case WSAEHOSTDOWN:
   case WSAETIMEDOUT:
-    throw ArchNetworkTimedOutException(winsockErrorToString(err));
+    throw ArchNetworkTimedOutException(windowsErrorToString(err));
 
   case WSAHOST_NOT_FOUND:
-    throw ArchNetworkNameUnknownException(winsockErrorToString(err));
+    throw ArchNetworkNameUnknownException(windowsErrorToString(err));
 
   case WSANO_DATA:
-    throw ArchNetworkNameNoAddressException(winsockErrorToString(err));
+    throw ArchNetworkNameNoAddressException(windowsErrorToString(err));
 
   case WSANO_RECOVERY:
-    throw ArchNetworkNameFailureException(winsockErrorToString(err));
+    throw ArchNetworkNameFailureException(windowsErrorToString(err));
 
   case WSATRY_AGAIN:
-    throw ArchNetworkNameUnavailableException(winsockErrorToString(err));
+    throw ArchNetworkNameUnavailableException(windowsErrorToString(err));
 
   default:
-    throw ArchNetworkException(winsockErrorToString(err));
+    throw ArchNetworkException(windowsErrorToString(err));
   }
 }
 
@@ -889,18 +889,18 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
 {
   switch (err) {
   case WSAHOST_NOT_FOUND:
-    throw ArchNetworkNameUnknownException(winsockErrorToString(err));
+    throw ArchNetworkNameUnknownException(windowsErrorToString(err));
 
   case WSANO_DATA:
-    throw ArchNetworkNameNoAddressException(winsockErrorToString(err));
+    throw ArchNetworkNameNoAddressException(windowsErrorToString(err));
 
   case WSANO_RECOVERY:
-    throw ArchNetworkNameFailureException(winsockErrorToString(err));
+    throw ArchNetworkNameFailureException(windowsErrorToString(err));
 
   case WSATRY_AGAIN:
-    throw ArchNetworkNameUnavailableException(winsockErrorToString(err));
+    throw ArchNetworkNameUnavailableException(windowsErrorToString(err));
 
   default:
-    throw ArchNetworkNameException(winsockErrorToString(err));
+    throw ArchNetworkNameException(windowsErrorToString(err));
   }
 }
