@@ -67,7 +67,7 @@ We support all major operating systems, including Windows, macOS, Linux, and Uni
 
 Windows 10 v1809 or higher is required.
 
-macOS 13 or higher is requried to use our CI builds for Apple Silicon machines. macOS 12 or higher is required for Intel macs or local builds.
+macOS 13 or higher is required to use our CI builds for Apple Silicon machines. macOS 12 or higher is required for Intel macs or local builds.
 
 Linux requires libei 1.3+ and libportal 0.8+ for the server/client. Additionally, Qt 6.7+ is required for the GUI.
 Linux users with systems not meeting these requirements should use flatpak in place of a native package.
@@ -95,7 +95,7 @@ on the allowed list you will need to manually remove them before accessibility a
 
 macOS users who download directly from releases may need to run `xattr -c /Applications/Deskflow.app` after copying the app to the `Applications` dir.
 
-It is recommend to install Deskflow using [Homebrew](https://brew.sh) from our [homebrew-tap](https://github.com/deskflow/homebrew-tap)
+It is recommended to install Deskflow using [Homebrew](https://brew.sh) from our [homebrew-tap](https://github.com/deskflow/homebrew-tap)
 
 To add our tap, run:
 
