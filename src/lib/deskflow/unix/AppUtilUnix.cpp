@@ -106,7 +106,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
 
   XkbStateRec state;
   XkbGetState(display, XkbUseCoreKbd, &state);
-  auto nedeedGroupIndex = static_cast<int>(state.group);
+  auto neededGroupIndex = static_cast<int>(state.group);
 
   size_t groupIdx = 0;
   size_t groupStartI = 0;
@@ -118,7 +118,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
     if (auto group = rawLayouts.substr(groupStartI, strI - groupStartI);
         group.find("group", 0, 5) == std::string::npos && group.find("inet", 0, 4) == std::string::npos &&
         group.find("pc", 0, 2) == std::string::npos) {
-      if (nedeedGroupIndex == groupIdx) {
+      if (neededGroupIndex == groupIdx) {
         result = group.substr(0, std::min(group.find('(', 0), group.find(':', 0)));
         break;
       }
