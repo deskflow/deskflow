@@ -160,7 +160,7 @@ void ServerConfig::recall()
 
   haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
   setHeartbeat(settings().value("heartbeat", 5000).toInt());
-  setProtocol(static_cast<NetworkProtocol>(settings().value("protocol", static_cast<int>(protocol())).toInt()));
+  setProtocol(networkProtocolFromInt(settings().value("protocol", networkProtocolToInt(protocol())).toInt()));
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
@@ -220,8 +220,6 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 {
-  using enum NetworkProtocol;
-
   outStream << "section: screens" << Qt::endl;
 
   for (const Screen &s : config.screens()) {
@@ -261,13 +259,9 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   if (config.hasHeartbeat())
     outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
 
-  if (config.protocol() == Synergy) {
-    outStream << "\t" << "protocol = synergy" << Qt::endl;
-  } else if (config.protocol() == Barrier) {
-    outStream << "\t" << "protocol = barrier" << Qt::endl;
-  } else {
+  if (config.protocol() == NetworkProtocol::Unknown)
     qFatal("unrecognized protocol when writing config");
-  }
+  outStream << "\t" << "protocol = " << networkProtocolToOption(config.protocol()) << Qt::endl;
 
   outStream << "\t"
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
