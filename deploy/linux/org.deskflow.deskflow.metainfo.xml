@@ -9,12 +9,16 @@
 	</developer>
 	<summary>Software Keyboard and mouse sharing</summary>
 	<summary xml:lang="zh_CN">用软件共享键鼠</summary>
+	<summary xml:lang="ko">키보드 및 마우스 공유 소프트웨어</summary>
 	<description>
 		<p>
 			Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
 		</p>
 		<p xml:lang="zh_CN">
 			使用一台计算机的键盘、鼠标或触控板来控制附近的其它计算机，并在它们之间无缝工作。
+		</p>
+		<p xml:lang="ko">
+			한 대의 컴퓨터에 연결된 키보드, 마우스 또는 트랙패드로 주변의 다른 컴퓨터를 제어하고, 컴퓨터 사이를 끊김 없이 오가며 작업할 수 있습니다.
 		</p>
 	</description>
 	<launchable type="desktop-id">org.deskflow.deskflow.desktop</launchable>
@@ -57,8 +61,10 @@
 	<keywords>
 		<keyword>Input</keyword>
 		<keyword xml:lang="zh_CN">输入</keyword>
+		<keyword xml:lang="ko">입력</keyword>
 		<keyword>Sharing</keyword>
 		<keyword xml:lang="zh_CN">共享</keyword>
+		<keyword xml:lang="ko">공유</keyword>
 		<keyword translate="no">KVM</keyword>
 		<keyword translate="no">Synergy</keyword>
 	</keywords>
