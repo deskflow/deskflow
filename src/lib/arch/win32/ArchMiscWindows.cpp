@@ -17,6 +17,7 @@
 
 #include <array>
 #include <filesystem>
+#include <stdexcept>
 
 // Useful for debugging Windows specific bootstrapping code before the logging system is initialized.
 // This output can be viewed by attaching a Microsoft debugger or by using the DebugView program.
@@ -158,20 +159,16 @@ ArchMiscWindows::EValueType ArchMiscWindows::typeOfValue(HKEY key, const TCHAR *
 
 void ArchMiscWindows::setValue(HKEY key, const TCHAR *name, const std::string &value)
 {
-  assert(key != nullptr);
   if (key == nullptr) {
-    // TODO: throw exception
-    return;
+    throw std::invalid_argument("Registry key cannot be nullptr");
   }
   RegSetValueEx(key, name, 0, REG_SZ, reinterpret_cast<const BYTE *>(value.c_str()), (DWORD)value.size() + 1);
 }
 
 void ArchMiscWindows::setValue(HKEY key, const TCHAR *name, DWORD value)
 {
-  assert(key != nullptr);
   if (key == nullptr) {
-    // TODO: throw exception
-    return;
+    throw std::invalid_argument("Registry key cannot be nullptr");
   }
   RegSetValueEx(key, name, 0, REG_DWORD, reinterpret_cast<CONST BYTE *>(&value), sizeof(DWORD));
 }
