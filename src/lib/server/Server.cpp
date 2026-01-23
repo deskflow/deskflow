@@ -273,13 +273,9 @@ void Server::disconnect()
 
 std::string Server::protocolString() const
 {
-  using enum NetworkProtocol;
-  if (m_protocol == Synergy) {
-    return kSynergyProtocolName;
-  } else if (m_protocol == Barrier) {
-    return kBarrierProtocolName;
-  }
-  throw InvalidProtocolException();
+  if (m_protocol == NetworkProtocol::Unknown)
+    throw InvalidProtocolException();
+  return networkProtocolToName(m_protocol).toStdString();
 }
 
 uint32_t Server::getNumClients() const
@@ -1074,15 +1070,10 @@ void Server::processOptions()
     const OptionID id = optionId;
     const OptionValue value = optionValue;
     if (id == kOptionProtocol) {
-      using enum NetworkProtocol;
-      const auto enumValue = static_cast<NetworkProtocol>(value);
-      if (enumValue == Synergy) {
-        m_protocol = Synergy;
-      } else if (enumValue == Barrier) {
-        m_protocol = Barrier;
-      } else {
+      const auto enumValue = networkProtocolFromInt(value);
+      if (enumValue == NetworkProtocol::Unknown)
         throw InvalidProtocolException();
-      }
+      m_protocol = enumValue;
     } else if (id == kOptionScreenSwitchDelay) {
       m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);
       if (m_switchWaitDelay < 0.0) {

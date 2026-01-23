@@ -25,12 +25,6 @@
 using namespace deskflow::string;
 
 namespace deskflow::server {
-
-// Protocol options used in configuration files (lowercase).
-// Note that @ref kSynergyProtocolName / @ref kBarrierProtocolName use capitalized names.
-const auto kSynergyProtocolOption = "synergy";
-const auto kBarrierProtocolOption = "barrier";
-
 //
 // Config
 //
@@ -1321,15 +1315,10 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
     return result;
   }
   if (id == kOptionProtocol) {
-    using enum NetworkProtocol;
-    const auto enumValue = static_cast<NetworkProtocol>(value);
-    if (enumValue == Synergy) {
-      return kSynergyProtocolOption;
-    } else if (enumValue == Barrier) {
-      return kBarrierProtocolOption;
-    } else {
+    const auto enumValue = networkProtocolFromInt(value);
+    if (enumValue == NetworkProtocol::Unknown)
       throw InvalidProtocolException();
-    }
+    return networkProtocolToOption(enumValue).toStdString();
   }
 
   return "";
@@ -1808,12 +1797,10 @@ OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
 
 OptionValue ConfigReadContext::parseProtocol(const std::string &args) const
 {
-  if (CaselessCmp::equal(args, kSynergyProtocolOption)) {
-    return static_cast<OptionValue>(NetworkProtocol::Synergy);
-  } else if (CaselessCmp::equal(args, kBarrierProtocolOption)) {
-    return static_cast<OptionValue>(NetworkProtocol::Barrier);
-  }
-  throw ServerConfigReadException(*this, "invalid protocol argument \"%{1}\"", args);
+  const auto protoValue = networkProtocolFromString(QString::fromStdString(args));
+  if (protoValue == NetworkProtocol::Unknown)
+    throw ServerConfigReadException(*this, "invalid protocol argument \"%{1}\"", args);
+  return static_cast<OptionValue>(protoValue);
 }
 
 OptionValue ConfigReadContext::parseCorners(const std::string &args) const
