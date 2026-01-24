@@ -32,20 +32,9 @@ class DaemonApp : public QObject
   Q_OBJECT
 
 public:
-  enum class InitResult
-  {
-    Installed,
-    Uninstalled,
-    StartDaemon,
-    ShowHelp,
-    ArgsError,
-    FatalError,
-  };
-
   explicit DaemonApp(IEventQueue &events);
   ~DaemonApp() override;
 
-  InitResult init(int argc, char **argv);
   void run(QThread &daemonThread);
   void setForeground();
   void initLogging();
