@@ -50,8 +50,6 @@ add_library(${target} STATIC
   config/ServerConfig.h
   core/ClientConnection.cpp
   core/ClientConnection.h
-  core/CommandProcess.cpp
-  core/CommandProcess.h
   core/CoreProcess.cpp
   core/CoreProcess.h
   core/NetworkMonitor.cpp
