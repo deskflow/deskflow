@@ -21,10 +21,17 @@ jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
     runs-on: ubuntu-latest
-    needs: [test-results, unix, flatpak]
+    needs: [main-build, test-results, unix, flatpak]
+    if: always()
 
     steps:
-      - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
+      - name: Check all steps passed
+        run: |
+          if [[ ${{needs.main-build.result}} == 'success' && ${{needs.test-results.result}} == 'success' && ${{needs.unix.result}} == 'success' && ${{needs.flatpak.result}} == 'success' ]]; then
+            echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
+          else
+            exit 1
+          fi
 
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
