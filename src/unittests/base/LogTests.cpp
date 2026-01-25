@@ -24,7 +24,7 @@ QString sanitizeBuffer(const std::stringstream &in)
 
 void LogTests::initTestCase()
 {
-  m_log.setFilter(LogLevel::Debug2);
+  m_log.setFilter(LogLevel::Debug1);
 }
 
 void LogTests::printWithErrorValidOutput()
@@ -85,7 +85,7 @@ void LogTests::printLevelToHigh()
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  m_log.print(CLOG_DEBUG3 "test message");
+  m_log.print(CLOG_DEBUG2 "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);

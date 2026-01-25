@@ -535,7 +535,7 @@ void MSWindowsScreen::saveMousePosition(int32_t x, int32_t y)
   m_xCursor = x;
   m_yCursor = y;
 
-  LOG_DEBUG3("saved mouse position for next delta: %+d,%+d", x, y);
+  LOG_DEBUG2("saved mouse position for next delta: %+d,%+d", x, y);
 }
 
 uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
@@ -883,7 +883,7 @@ bool MSWindowsScreen::onPreDispatch(HWND hwnd, UINT message, WPARAM wParam, LPAR
 
 bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  LOG_DEBUG3("handling pre-dispatch primary");
+  LOG_DEBUG2("handling pre-dispatch primary");
 
   // handle event
   switch (message) {
@@ -1226,7 +1226,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
   int32_t x = mx - m_xCursor;
   int32_t y = my - m_yCursor;
 
-  LOG_DEBUG3("mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)", x, mx, m_xCursor, y, my, m_yCursor);
+  LOG_DEBUG2("mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)", x, mx, m_xCursor, y, my, m_yCursor);
 
   // ignore if the mouse didn't move or if message posted prior
   // to last mark change.
@@ -1245,7 +1245,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
     // center on the server screen. if we don't do this, then the mouse
     // will always try to return to the original entry point on the
     // secondary screen.
-    LOG_DEBUG3("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
+    LOG_DEBUG2("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
     warpCursorNoFlush(m_xCenter, m_yCenter);
 
     // examine the motion.  if it's about the distance
