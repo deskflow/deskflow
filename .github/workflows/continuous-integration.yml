@@ -32,7 +32,7 @@ jobs:
     needs: main-build
     if: always() && needs.main-build.result != 'skipped'
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     timeout-minutes: 5
 
     steps:
@@ -54,7 +54,7 @@ jobs:
 
   lint-clang:
     needs: [lint-reuse]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     timeout-minutes: 5
 
     steps:
