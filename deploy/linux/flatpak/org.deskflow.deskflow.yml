@@ -29,8 +29,12 @@ modules:
         --prefix=${FLATPAK_DEST} --no-build-isolation Jinja2
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/30/6d/6de6be2d02603ab56e72997708809e8a5b0fbfee080735109b40a3564843/Jinja2-3.1.3-py3-none-any.whl
-        sha256: 7d6d50dd97d52cbc355597bd845fabfbac3f551e1f99619e39a35ce8c370b5fa
+        url: https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl
+        sha256: 85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67
+        x-checker-data:
+          type: pypi
+          name: Jinja2
+          packagetype: bdist_wheel
       - type: file
         url: https://files.pythonhosted.org/packages/87/5b/aae44c6655f3801e81aa3eef09dbbf012431987ba564d7231722f68df02d/MarkupSafe-2.1.5.tar.gz
         sha256: d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709c6544b
@@ -45,8 +49,11 @@ modules:
     sources:
         - type: git
           url: https://gitlab.freedesktop.org/libinput/libei
-          tag: 1.4.1
-          commit: 9e0413cbc7d3ae6656266890425f152589ddf74d
+          tag: 1.5.0
+          commit: 19b64535408aa47abbc8151bc2c925afd6583851
+          x-checker-data:
+            type: git
+            tag-pattern: ^([\\d.]+)$
   - name: libportal
     buildsystem: meson
     config-opts:
@@ -67,8 +74,11 @@ modules:
     sources:
       - type: git
         url: https://github.com/google/googletest.git
-        tag: v1.15.2
-        commit: b514bdc898e2951020cbdca1304b75f5950d1f59
+        tag: v1.17.0
+        commit: 52eb8108c5bdec04579160ae17225d66034bd723
+        x-checker-data:
+          type: git
+          tag-pattern: ^([\\d.]+)$
     cleanup:
       - '*'
   - name: deskflow
