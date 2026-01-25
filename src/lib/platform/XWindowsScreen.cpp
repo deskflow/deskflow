@@ -846,7 +846,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
   }
 
   // open the display
-  LOG_DEBUG3("calling XOpenDisplay(\"%s\")", displayName);
+  LOG_DEBUG2("calling XOpenDisplay(\"%s\")", displayName);
   Display *display = XOpenDisplay(displayName);
   if (display == nullptr) {
     throw ScreenUnavailableException(60.0);

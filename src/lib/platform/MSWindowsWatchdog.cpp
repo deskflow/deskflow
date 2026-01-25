@@ -159,7 +159,7 @@ void MSWindowsWatchdog::mainLoop(const void *)
 
   LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
-    LOG_DEBUG3("locking process state mutex in watchdog main loop");
+    LOG_DEBUG2("locking process state mutex in watchdog main loop");
     std::unique_lock lock(m_processStateMutex);
 
     if (m_processState == Running && !m_command.empty() && !m_foreground && m_session.hasChanged()) {
@@ -170,11 +170,11 @@ void MSWindowsWatchdog::mainLoop(const void *)
 
     switch (m_processState) {
     case Idle:
-      LOG_DEBUG3("watchdog process state idle");
+      LOG_DEBUG2("watchdog process state idle");
       break;
 
     case StartScheduled: {
-      LOG_DEBUG3("watchdog process start scheduled");
+      LOG_DEBUG2("watchdog process start scheduled");
       if (m_nextStartTime.has_value() && m_nextStartTime.value() <= Arch::time()) {
         LOG_DEBUG("start time reached, queueing process start");
         m_processState = StartPending;
@@ -195,7 +195,7 @@ void MSWindowsWatchdog::mainLoop(const void *)
     } break;
 
     case Running: {
-      LOG_DEBUG3("watchdog process in running state");
+      LOG_DEBUG2("watchdog process in running state");
       if (!isProcessRunning()) {
         LOG_WARN("detected application not running, pid=%d", m_process->info().dwProcessId);
         m_processState = StartPending;
@@ -215,11 +215,11 @@ void MSWindowsWatchdog::mainLoop(const void *)
     } break;
     }
 
-    LOG_DEBUG3("unlocking process state mutex in watchdog main loop");
+    LOG_DEBUG2("unlocking process state mutex in watchdog main loop");
     lock.unlock();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
-    LOG_DEBUG3("watchdog main loop sleeping");
+    LOG_DEBUG2("watchdog main loop sleeping");
     Arch::sleep(0.1);
   }
 
@@ -499,7 +499,7 @@ void MSWindowsWatchdog::initSasFunc()
 
 void MSWindowsWatchdog::sasLoop(const void *) // NOSONAR - Thread entry point signature
 {
-  LOG_DEBUG3("watchdog creating sas event");
+  LOG_DEBUG2("watchdog creating sas event");
 
   if (m_sendSasFunc == nullptr) {
     throw std::runtime_error("SendSAS function not initialized");
