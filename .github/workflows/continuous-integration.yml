@@ -343,7 +343,7 @@ jobs:
     runs-on: ${{matrix.flatpak.runs-on}}
     timeout-minutes: 60
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.8
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.10
       options: --privileged
     strategy:
       fail-fast: false
