@@ -24,11 +24,10 @@
 const int kPriorityPrefixLength = 3;
 
 // names of priorities
-static const char *g_priority[] = {"FATAL", "ERROR",  "WARNING", "NOTE",   "INFO",
-                                   "DEBUG", "DEBUG1", "DEBUG2",  "DEBUG3", "DEBUG4"};
+static const char *g_priority[] = {"FATAL", "ERROR", "WARNING", "NOTE", "INFO", "DEBUG", "DEBUG1", "DEBUG2", "DEBUG3"};
 
 // number of priorities
-static const int g_numPriority = 10;
+static const int g_numPriority = 9;
 
 // if NDEBUG (not debug) is not specified, i.e. you're building in debug,
 // then set default log level to DEBUG, otherwise the max level is INFO.
