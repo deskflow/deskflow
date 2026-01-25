@@ -210,7 +210,6 @@ otherwise it expands to a call that doesn't.
 #define CLOG_DEBUG1 CLOG_TRACE "%z\066"
 #define CLOG_DEBUG2 CLOG_TRACE "%z\067"
 #define CLOG_DEBUG3 CLOG_TRACE "%z\070"
-#define CLOG_DEBUG4 CLOG_TRACE "%z\071" // char is '9'
 
 #define LOG_IPC(...) LOG((CLOG_IPC __VA_ARGS__))
 #define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))
@@ -223,4 +222,3 @@ otherwise it expands to a call that doesn't.
 #define LOG_DEBUG1(...) LOG((CLOG_DEBUG1 __VA_ARGS__))
 #define LOG_DEBUG2(...) LOG((CLOG_DEBUG2 __VA_ARGS__))
 #define LOG_DEBUG3(...) LOG((CLOG_DEBUG3 __VA_ARGS__))
-#define LOG_DEBUG4(...) LOG((CLOG_DEBUG4 __VA_ARGS__))

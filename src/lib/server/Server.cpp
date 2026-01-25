@@ -1609,7 +1609,7 @@ void Server::onMouseUp(ButtonID id)
 
 bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 {
-  LOG_DEBUG4("onMouseMovePrimary %d,%d", x, y);
+  LOG_DEBUG3("onMouseMovePrimary %d,%d", x, y);
 
   // mouse move on primary (server's) screen
   if (m_active != m_primaryClient) {
