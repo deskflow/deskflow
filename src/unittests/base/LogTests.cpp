@@ -85,7 +85,7 @@ void LogTests::printLevelToHigh()
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  m_log.print(CLOG_DEBUG5 "test message");
+  m_log.print(CLOG_DEBUG4 "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);

@@ -535,7 +535,7 @@ void MSWindowsScreen::saveMousePosition(int32_t x, int32_t y)
   m_xCursor = x;
   m_yCursor = y;
 
-  LOG_DEBUG5("saved mouse position for next delta: %+d,%+d", x, y);
+  LOG_DEBUG4("saved mouse position for next delta: %+d,%+d", x, y);
 }
 
 uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
@@ -883,7 +883,7 @@ bool MSWindowsScreen::onPreDispatch(HWND hwnd, UINT message, WPARAM wParam, LPAR
 
 bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  LOG_DEBUG5("handling pre-dispatch primary");
+  LOG_DEBUG4("handling pre-dispatch primary");
 
   // handle event
   switch (message) {
@@ -955,7 +955,8 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
   /* On windows 10 we don't receive WM_POWERBROADCAST after sleep.
    We receive only WM_TIMECHANGE hence this message is used to resume.*/
   case WM_TIMECHANGE:
-    m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+    m_events->addEvent( //
+        Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
     );
     break;
 
@@ -1244,7 +1245,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
     // center on the server screen. if we don't do this, then the mouse
     // will always try to return to the original entry point on the
     // secondary screen.
-    LOG_DEBUG5("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
+    LOG_DEBUG4("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
     warpCursorNoFlush(m_xCenter, m_yCenter);
 
     // examine the motion.  if it's about the distance
