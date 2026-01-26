@@ -203,26 +203,6 @@ enum class TransferState : uint8_t
  */
 
 /**
- * @brief Protocol name for Synergy compatibility
- *
- * Used in handshake messages to identify the protocol as Synergy-compatible.
- * Must be exactly 7 characters for backward compatibility.
- *
- * @since Protocol version 1.0
- */
-extern const char *const kSynergyProtocolName;
-
-/**
- * @brief Protocol name for Barrier compatibility
- *
- * Used in handshake messages to identify the protocol as Barrier-compatible.
- * Must be exactly 7 characters for backward compatibility.
- *
- * @since Protocol version 1.0
- */
-extern const char *const kBarrierProtocolName;
-
-/**
  * @brief Server hello message
  *
  * **Direction**: Primary → Secondary

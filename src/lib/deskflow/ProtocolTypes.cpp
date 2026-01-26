@@ -7,11 +7,6 @@
 
 #include "deskflow/ProtocolTypes.h"
 
-// Protocol names used in network handshake messages (capitalized, must be exactly 7 chars).
-// Note that @ref kSynergyProtocolOption / @ref kBarrierProtocolOption use lowercase names.
-const char *const kSynergyProtocolName = "Synergy";
-const char *const kBarrierProtocolName = "Barrier";
-
 // The protocol name string within the hello and hello back messages must be
 // 7 chars for backward compatibility (Synergy and Barrier are 7 chars).
 const char *const kMsgHello = "%7s%2i%2i";
