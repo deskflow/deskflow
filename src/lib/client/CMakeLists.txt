@@ -6,8 +6,6 @@
 add_library(client STATIC
   Client.cpp
   Client.h
-  HelloBack.cpp
-  HelloBack.h
   ServerProxy.cpp
   ServerProxy.h
 )
