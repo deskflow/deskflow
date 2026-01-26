@@ -51,7 +51,7 @@ To use Deskflow, download one of our [packages](https://github.com/deskflow/desk
 
 ## Contribute
 
-[![Good first issues](https://img.shields.io/github/issues/deskflow/deskflow/good%20first%20issue?label=good%20first%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/labels/good%20first%20issue) [![Open bounty issues](https://img.shields.io/github/issues/deskflow/deskflow/%F0%9F%92%8E%20bounty?label=💎%20open%20bounty%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%8E%20bounty%22) [![Rewarded bounties](https://img.shields.io/github/issues-search/deskflow/deskflow?query=label%3A%22%F0%9F%92%B0%20rewarded%22&label=%F0%9F%92%B0%20rewarded%20bounties&color=yellow)](https://github.com/deskflow/deskflow/issues?q=label%3A%22%F0%9F%92%B0%20rewarded%22%20sort%3Aupdated-desc)
+[![Good first issues](https://img.shields.io/github/issues/deskflow/deskflow/good%20first%20issue?label=good%20first%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/labels/good%20first%20issue)
 
 There are many ways to contribute to the Deskflow project.
 
