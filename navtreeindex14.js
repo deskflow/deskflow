@@ -1,8 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classSecureSocket.html#a37b0c5ea79473cf150c33935a2481f39":[6,0,201,0],
-"classSecureSocket.html#a49d45e3c16a8f9fe1e93f4f559dc2b2b":[6,0,201,16],
-"classSecureSocket.html#a4bbaa3801dbcf12837e85b48f5b1ae70":[6,0,201,2],
 "classSecureSocket.html#a56c55e64894f12d26ba9f10907083b71":[6,0,201,13],
 "classSecureSocket.html#a6f9e4d62bb51baa4a5ab5c8686db3e02":[6,0,201,18],
 "classSecureSocket.html#a76c9224c4c7f042bd584d4f36ff7cce3":[6,0,201,12],
@@ -249,5 +246,8 @@ var NAVTREEINDEX14 =
 "classSocketAddressException.html#a3623970eae722a9971e4822403fddec0":[6,0,210,1],
 "classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14":[6,0,210,0],
 "classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a38c300f4fc9ce8a77aad4a30de05cad8":[6,0,210,0,1],
-"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a88183b946cc5f0e8c96b2e66e1c74a7e":[6,0,210,0,0]
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a88183b946cc5f0e8c96b2e66e1c74a7e":[6,0,210,0,0],
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a8eadb6e14dc50f745fdb9a395ad30664":[6,0,210,0,4],
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14ab4080bdf74febf04d578ff105cce9d3f":[6,0,210,0,3],
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14ac949fa6a8e537897590559e98fc2acd9":[6,0,210,0,2]
 };

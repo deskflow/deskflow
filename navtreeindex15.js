@@ -1,8 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a8eadb6e14dc50f745fdb9a395ad30664":[6,0,210,0,4],
-"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14ab4080bdf74febf04d578ff105cce9d3f":[6,0,210,0,3],
-"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14ac949fa6a8e537897590559e98fc2acd9":[6,0,210,0,2],
 "classSocketAddressException.html#a7dc3056a71a965ea2d196b8a33b44345":[6,0,210,3],
 "classSocketAddressException.html#a8b49eed09b66f8156e2f4747a861f503":[6,0,210,5],
 "classSocketAddressException.html#ad20d2ea42b12c0edc1ea3596d75ea181":[6,0,210,4],
@@ -249,5 +246,8 @@ var NAVTREEINDEX15 =
 "classXDGPowerManager.html#a3874c5f01dc93d8e92907c9bfb81cbbc":[6,0,244,4],
 "classXDGPowerManager.html#a669247ba2ad324671a87898152203ad2":[6,0,244,1],
 "classXDGPowerManager.html#aa2195492c3945eeb9108982656404dad":[6,0,244,7],
-"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41":[6,0,244,0]
+"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41":[6,0,244,0],
+"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41aeafe4db45439529593e2e24973f8aed2":[6,0,244,0,1],
+"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41afcc5d3b9270f40eeadb502b8b7d785af":[6,0,244,0,0],
+"classXDGPowerManager.html#af1112fb71beb433fdd98d678b58ddcca":[6,0,244,5]
 };

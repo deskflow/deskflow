@@ -1,8 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classPlatformScreen.html#a3a12b9a7d481767898e431e381078a69":[6,0,182,14],
-"classPlatformScreen.html#a3aa9f36ef43c60659e5f8cb2e3b48f93":[6,0,182,7],
-"classPlatformScreen.html#a452f7f61275b317208b8980c0ef3461f":[6,0,182,4],
 "classPlatformScreen.html#a4ec6880993b9365d14ec52e3944e78bf":[6,0,182,41],
 "classPlatformScreen.html#a535ef2dc3db23517b0a82d6904cdb892":[6,0,182,52],
 "classPlatformScreen.html#a555dedbff35e03142e5e0220a28c001c":[6,0,182,29],
@@ -249,5 +246,8 @@ var NAVTREEINDEX13 =
 "classSecureListenSocket.html#aa5dca057acffeba4f8e050f574a0a9c5":[6,0,200,1],
 "classSecureSocket.html":[6,0,201],
 "classSecureSocket.html#a0370dbf6d7aecd42388a18ad5483dcd2":[6,0,201,14],
-"classSecureSocket.html#a0e31d35dbf1a157c061615b94402c0ce":[6,0,201,4]
+"classSecureSocket.html#a0e31d35dbf1a157c061615b94402c0ce":[6,0,201,4],
+"classSecureSocket.html#a37b0c5ea79473cf150c33935a2481f39":[6,0,201,0],
+"classSecureSocket.html#a49d45e3c16a8f9fe1e93f4f559dc2b2b":[6,0,201,16],
+"classSecureSocket.html#a4bbaa3801dbcf12837e85b48f5b1ae70":[6,0,201,2]
 };

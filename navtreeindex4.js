@@ -1,8 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXMediaKeySupport_8h_source.html":[7,0,1,1,9,67],
-"OSXMediaKeySupport_8m.html":[7,0,1,1,9,68],
-"OSXMediaKeySupport_8m.html#a3335d4beeebeaee57e9a206c10608cb0":[7,0,1,1,9,68,2],
 "OSXMediaKeySupport_8m.html#aa7616ecd13f91fc1ed9207263edda8e5":[7,0,1,1,9,68,1],
 "OSXMediaKeySupport_8m.html#ab5633be05317db6e44f853c5f3c4c9ac":[7,0,1,1,9,68,3],
 "OSXMediaKeySupport_8m.html#ae1eaec7091c38e6f9244b4d1ce756189":[7,0,1,1,9,68,0],
@@ -214,9 +211,9 @@ var NAVTREEINDEX4 =
 "ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
 "ServerMessage_8h.html":[7,0,1,1,5,1,9],
 "ServerMessage_8h_source.html":[7,0,1,1,5,1,9],
-"ServerProxy_8cpp.html":[7,0,1,1,2,4],
-"ServerProxy_8h.html":[7,0,1,1,2,5],
-"ServerProxy_8h_source.html":[7,0,1,1,2,5],
+"ServerProxy_8cpp.html":[7,0,1,1,2,2],
+"ServerProxy_8h.html":[7,0,1,1,2,3],
+"ServerProxy_8h_source.html":[7,0,1,1,2,3],
 "Server_8cpp.html":[7,0,1,1,10,32],
 "Server_8h.html":[7,0,1,1,10,33],
 "Server_8h_source.html":[7,0,1,1,10,33],
@@ -249,5 +246,8 @@ var NAVTREEINDEX4 =
 "StreamBuffer_8h_source.html":[7,0,1,1,6,4],
 "StreamChunker_8cpp.html":[7,0,1,1,4,55],
 "StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,55,0],
-"StreamChunker_8h.html":[7,0,1,1,4,56]
+"StreamChunker_8h.html":[7,0,1,1,4,56],
+"StreamChunker_8h_source.html":[7,0,1,1,4,56],
+"StreamFilter_8cpp.html":[7,0,1,1,6,5],
+"StreamFilter_8h.html":[7,0,1,1,6,6]
 };

@@ -47,7 +47,7 @@ var searchData=
   ['_7econst_5fiterator_44',['~const_iterator',['../classdeskflow_1_1server_1_1Config_1_1const__iterator.html#a0266e852d4144af90cadff8164a56ead',1,'deskflow::server::Config::const_iterator']]],
   ['_7edaemonapp_45',['~DaemonApp',['../classDaemonApp.html#a80a82b62f795b581b690e53ac2c1db23',1,'DaemonApp']]],
   ['_7edaemonipcserver_46',['~DaemonIpcServer',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#ae5f9f594abab1b9323a4c8d289f83736',1,'deskflow::core::ipc::DaemonIpcServer']]],
-  ['_7edeps_47',['~Deps',['../structArchNetworkBSD_1_1Deps.html#a5b7d0968b6834890722bb436f4d6d3e1',1,'ArchNetworkBSD::Deps::~Deps()'],['../structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#a2a8ef245067686204fe75a9ea95d9295',1,'deskflow::client::HelloBack::Deps::~Deps()']]],
+  ['_7edeps_47',['~Deps',['../structArchNetworkBSD_1_1Deps.html#a5b7d0968b6834890722bb436f4d6d3e1',1,'ArchNetworkBSD::Deps']]],
   ['_7eduplicateclientexception_48',['~DuplicateClientException',['../classDuplicateClientException.html#a14b35c64ab06aab74775037d67966910',1,'DuplicateClientException']]],
   ['_7eeieventqueuebuffer_49',['~EiEventQueueBuffer',['../classdeskflow_1_1EiEventQueueBuffer.html#a1db476fa50e35bbe809d0bd9d8d1530b',1,'deskflow::EiEventQueueBuffer']]],
   ['_7eeikeystate_50',['~EiKeyState',['../classdeskflow_1_1EiKeyState.html#aa7832070491b37c4ad44a1d8fba8cb31',1,'deskflow::EiKeyState']]],

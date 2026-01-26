@@ -1,8 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classAppUtilWindows.html#a7232855f44e385dd28a9440598aa667f":[6,0,9,10],
-"classAppUtilWindows.html#a83a430b7c403525433c751445b0dcf02":[6,0,9,2],
-"classAppUtilWindows.html#a9ed9ee4a7a868426c4134da6495cf96f":[6,0,9,7],
 "classAppUtilWindows.html#aa3e682db043261faf827019df0cfbf06":[6,0,9,4],
 "classAppUtilWindows.html#acd7d036e013de13ec013a8c96279f307":[6,0,9,0],
 "classAppUtilWindows.html#afb74e8fd3e8c912ac614aa9a77a81fe4":[6,0,9,3],
@@ -249,5 +246,8 @@ var NAVTREEINDEX6 =
 "classArchNetworkWinsock.html#adced9d12e61b87e933e095ff4a61e528":[6,0,48,18],
 "classArchNetworkWinsock.html#ade569f4d7712dc6cb02d4a866a769afb":[6,0,48,0],
 "classArchNetworkWinsock.html#af3d54dc165eaf08d9c4b47f0487be5bf":[6,0,48,26],
-"classArchNetworkWinsock.html#aff34317e98cd93a51b1ee691b7365008":[6,0,48,12]
+"classArchNetworkWinsock.html#aff34317e98cd93a51b1ee691b7365008":[6,0,48,12],
+"classArchSocketImpl.html":[6,0,49],
+"classArchSocketImpl.html#a0f3972810f53e980a72d14eb86bcb9d3":[6,0,49,2],
+"classArchSocketImpl.html#a2dbc9618067af1f083841b58bfda68cf":[6,0,49,0]
 };

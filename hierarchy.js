@@ -68,7 +68,6 @@ var hierarchy =
     [ "Settings::Daemon", "structSettings_1_1Daemon.html", null ],
     [ "deskflow::KeyMap::Keystroke::Data", "uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html", null ],
     [ "ArchNetworkBSD::Deps", "structArchNetworkBSD_1_1Deps.html", null ],
-    [ "deskflow::client::HelloBack::Deps", "structdeskflow_1_1client_1_1HelloBack_1_1Deps.html", null ],
     [ "IPrimaryScreen::EiConnectInfo", "classIPrimaryScreen_1_1EiConnectInfo.html", null ],
     [ "XWindowsUtil::ErrorLock", "classXWindowsUtil_1_1ErrorLock.html", null ],
     [ "deskflow::gui::messages::Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", null ],
@@ -97,7 +96,6 @@ var hierarchy =
     [ "FunctionEventJob", "classFunctionEventJob.html", null ],
     [ "deskflow::KeyMap::Keystroke::Group", "structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html", null ],
     [ "Settings::Gui", "structSettings_1_1Gui.html", null ],
-    [ "deskflow::client::HelloBack", "classdeskflow_1_1client_1_1HelloBack.html", null ],
     [ "Hotkey", "classHotkey.html", null ],
     [ "IPrimaryScreen::HotKeyInfo", "classIPrimaryScreen_1_1HotKeyInfo.html", null ],
     [ "IApp", "classIApp.html", [

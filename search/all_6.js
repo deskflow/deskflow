@@ -54,7 +54,7 @@ var searchData=
   ['deletetimer_51',['deleteTimer',['../classEventQueue.html#a4ca51efde4b04ae90a8b9c8420a7f5d6',1,'EventQueue::deleteTimer()'],['../classIEventQueue.html#a9a504772d2d2e06e4b5b831f5a12e7dc',1,'IEventQueue::deleteTimer()']]],
   ['deliverimmediately_52',['DeliverImmediately',['../structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8',1,'Event::EventFlags']]],
   ['deprecated_20list_53',['Deprecated List',['../deprecated.html',1,'']]],
-  ['deps_54',['Deps',['../structArchNetworkBSD_1_1Deps.html',1,'ArchNetworkBSD::Deps'],['../structdeskflow_1_1client_1_1HelloBack_1_1Deps.html',1,'deskflow::client::HelloBack::Deps'],['../structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#ac710209564b654cabc73151f799d80fe',1,'deskflow::client::HelloBack::Deps::Deps()=default'],['../structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#aaabb2a7780b6e5ceecf70c5772a5fafa',1,'deskflow::client::HelloBack::Deps::Deps(std::function&lt; void()&gt; invalidHello, std::function&lt; void(int, int)&gt; incompatible)']]],
+  ['deps_54',['Deps',['../structArchNetworkBSD_1_1Deps.html',1,'ArchNetworkBSD']]],
   ['descriptions_55',['State Descriptions',['../protocol_reference.html#autotoc_md17',1,'']]],
   ['deskflow_56',['Deskflow',['../md_doc_2dev_2build.html',1,'Building Deskflow'],['../contributing_guide.html',1,'Contributing to Deskflow'],['../index.html',1,'Deskflow']]],
   ['deskflow_57',['deskflow',['../namespacedeskflow.html',1,'']]],
