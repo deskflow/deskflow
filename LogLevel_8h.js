@@ -10,9 +10,6 @@ var LogLevel_8h =
       [ "Info", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a4059b0251f66a18cb56f544728796875", null ],
       [ "Debug", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9aa603905470e2a5b8c13e96b579ef0dba", null ],
       [ "Debug1", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a0f2feee123c861d4961c33fb507120cd", null ],
-      [ "Debug2", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d", null ],
-      [ "Debug3", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2b5ade85865041f059e709ff4bd8b46f", null ],
-      [ "Debug4", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a728da6dfe31960c897c80e0d00d4a856", null ],
-      [ "Debug5", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a1690cf637bcc872f10227c935b928d58", null ]
+      [ "Debug2", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d", null ]
     ] ]
 ];

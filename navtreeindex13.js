@@ -1,14 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classPlatformScreen.html#a18e30907f0eb1df9bd08a40281257547":[6,0,182,36],
-"classPlatformScreen.html#a1a402674a4c624e8d418d9ab98f077a8":[6,0,182,43],
-"classPlatformScreen.html#a1f93d6f395e02611f29e2cfae839d34b":[6,0,182,24],
-"classPlatformScreen.html#a26d2ac0e9f2e3f613b3e0918a8319759":[6,0,182,42],
-"classPlatformScreen.html#a29e4557d386b175f865a84afecc690c4":[6,0,182,5],
-"classPlatformScreen.html#a29f1229763b52bd4514f4d6cabdec437":[6,0,182,26],
-"classPlatformScreen.html#a2f288569bd4751fa8c75b08ffc237b85":[6,0,182,1],
-"classPlatformScreen.html#a33f7a5a5569dfe2db604048ad0e4e813":[6,0,182,50],
-"classPlatformScreen.html#a395adf1076033b25c832ff03c0ab0776":[6,0,182,34],
 "classPlatformScreen.html#a3a12b9a7d481767898e431e381078a69":[6,0,182,14],
 "classPlatformScreen.html#a3aa9f36ef43c60659e5f8cb2e3b48f93":[6,0,182,7],
 "classPlatformScreen.html#a452f7f61275b317208b8980c0ef3461f":[6,0,182,4],
@@ -249,5 +240,14 @@ var NAVTREEINDEX13 =
 "classScreenUnavailableException.html#aaa992bb802bf53bc06538a5533f22397":[6,0,197,1],
 "classScreenUnavailableException.html#ae5a8ddd2c4af8a91f8630f389889b1ae":[6,0,197,2],
 "classSearchWidget.html":[6,0,199],
-"classSearchWidget.html#a457c3287be5e370c3c4cf4babc1b8db6":[6,0,199,2]
+"classSearchWidget.html#a457c3287be5e370c3c4cf4babc1b8db6":[6,0,199,2],
+"classSearchWidget.html#a5111d286ce1807c9727dd4f1ae7d8291":[6,0,199,1],
+"classSearchWidget.html#a9088ad584a3678dd1f930a883bf44200":[6,0,199,3],
+"classSearchWidget.html#ae1ab8b6ccb682ec0e30104237c28ee7b":[6,0,199,0],
+"classSecureListenSocket.html":[6,0,200],
+"classSecureListenSocket.html#a5603395c557edf6f233e375a40db8ee6":[6,0,200,0],
+"classSecureListenSocket.html#aa5dca057acffeba4f8e050f574a0a9c5":[6,0,200,1],
+"classSecureSocket.html":[6,0,201],
+"classSecureSocket.html#a0370dbf6d7aecd42388a18ad5483dcd2":[6,0,201,14],
+"classSecureSocket.html#a0e31d35dbf1a157c061615b94402c0ce":[6,0,201,4]
 };

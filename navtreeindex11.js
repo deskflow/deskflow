@@ -1,14 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classKeySequenceWidget.html#a2994a08d930487cffe7cc8a8637024b8":[6,0,138,18],
-"classKeySequenceWidget.html#a457f9c5625db74938d8686052b5323b2":[6,0,138,0],
-"classKeySequenceWidget.html#a4a2c15bf2211f2d4b01acbda8a7b1cfd":[6,0,138,19],
-"classKeySequenceWidget.html#a6953067230f49e18003b28c7d7a93e7e":[6,0,138,11],
-"classKeySequenceWidget.html#a874350512d78ae8168fad15b660ed5df":[6,0,138,14],
-"classKeySequenceWidget.html#a890523da52ed9594b456c9634dca15c9":[6,0,138,17],
-"classKeySequenceWidget.html#a8eadba950a141ec3e095eb8b5935ebae":[6,0,138,13],
-"classKeySequenceWidget.html#a9a4e36e077c476e1201e0dc90281ae6d":[6,0,138,3],
-"classKeySequenceWidget.html#aa353f0bac9b913c199a2faa39cda7951":[6,0,138,6],
 "classKeySequenceWidget.html#aa39ac8748f477fd7419c4fa3c64beac5":[6,0,138,5],
 "classKeySequenceWidget.html#aaed70af2c856bba8efe62a73bb96943d":[6,0,138,12],
 "classKeySequenceWidget.html#ab27d2cad34f2b10de69380e9fdf04ac9":[6,0,138,16],
@@ -249,5 +240,14 @@ var NAVTREEINDEX11 =
 "classMSWindowsScreen.html#aa35676117e1959a6dff9ae4f19516fb7":[6,0,158,38],
 "classMSWindowsScreen.html#aa951776f036c122c0dd90ac1f426569e":[6,0,158,26],
 "classMSWindowsScreen.html#aaf87c5e3ea5be71d669611f59d97c9be":[6,0,158,11],
-"classMSWindowsScreen.html#ab1433b8143cd76b0f072ee9c11ffe147":[6,0,158,42]
+"classMSWindowsScreen.html#ab1433b8143cd76b0f072ee9c11ffe147":[6,0,158,42],
+"classMSWindowsScreen.html#ab32e21e2e6c0e15937d885ea9262bc9d":[6,0,158,19],
+"classMSWindowsScreen.html#abcd08e094dd4ec5fec232dbf193bf155":[6,0,158,9],
+"classMSWindowsScreen.html#abe2a295486fdb14d616f0970e83de6f2":[6,0,158,4],
+"classMSWindowsScreen.html#ac24993f975d6742baa218ab9b81c6d65":[6,0,158,44],
+"classMSWindowsScreen.html#ac8c111f268e4d91060a1eea4b6f70e22":[6,0,158,33],
+"classMSWindowsScreen.html#ad0009f06294d0234f4a98d3c0f908a46":[6,0,158,24],
+"classMSWindowsScreen.html#ad1cf207d3fef4cf5530c96a7321e0d81":[6,0,158,6],
+"classMSWindowsScreen.html#adc5133d4076059a32f150c01fd69b57f":[6,0,158,28],
+"classMSWindowsScreen.html#ae66913935fd283f2fcafd023cbcfcba0":[6,0,158,16]
 };

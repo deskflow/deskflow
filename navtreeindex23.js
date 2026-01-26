@@ -1,14 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structSettings_1_1Client.html#a50b1127b62ac5088157236dd298d623b":[6,0,207,0,1],
-"structSettings_1_1Client.html#aa09822d6262ecd66e109aa7ab4f46d84":[6,0,207,0,0],
-"structSettings_1_1Client.html#ad698d8035f8fb5bce2e895b5502a590e":[6,0,207,0,2],
-"structSettings_1_1Client.html#aea267370b8062d84f19f5bb57d07ef85":[6,0,207,0,4],
-"structSettings_1_1Core.html":[6,0,207,1],
-"structSettings_1_1Core.html#a22d636fbd1f06380f33e96831563a53b":[6,0,207,1,4],
-"structSettings_1_1Core.html#a2a0059d3e150af140d0c1760df2dffab":[6,0,207,1,1],
-"structSettings_1_1Core.html#a2a47e74b26eeb5e3f444a96c497860ab":[6,0,207,1,2],
-"structSettings_1_1Core.html#a2cbb9afa6b91c1199c6c63ae56712d99":[6,0,207,1,6],
 "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54":[6,0,207,1,9],
 "structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a":[6,0,207,1,3],
 "structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446":[6,0,207,1,0],

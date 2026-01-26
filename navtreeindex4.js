@@ -1,14 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXKeyState_8cpp.html#ac05df8405182a5111d542557ce205c64":[7,0,1,1,9,65,10],
-"OSXKeyState_8cpp.html#af34dcd5e47f5657f1e06bbaf48684af5":[7,0,1,1,9,65,4],
-"OSXKeyState_8cpp.html#affd353771c5f441401e17230a26431c0":[7,0,1,1,9,65,1],
-"OSXKeyState_8h.html":[7,0,1,1,9,66],
-"OSXKeyState_8h_source.html":[7,0,1,1,9,66],
-"OSXMediaKeySupport_8h.html":[7,0,1,1,9,67],
-"OSXMediaKeySupport_8h.html#a3335d4beeebeaee57e9a206c10608cb0":[7,0,1,1,9,67,0],
-"OSXMediaKeySupport_8h.html#aae250337d4f6eaef671fd86035c0c201":[7,0,1,1,9,67,1],
-"OSXMediaKeySupport_8h.html#ae6eaf0ad25f2b22025d5ceca4abcaabb":[7,0,1,1,9,67,2],
 "OSXMediaKeySupport_8h_source.html":[7,0,1,1,9,67],
 "OSXMediaKeySupport_8m.html":[7,0,1,1,9,68],
 "OSXMediaKeySupport_8m.html#a3335d4beeebeaee57e9a206c10608cb0":[7,0,1,1,9,68,2],
@@ -249,5 +240,14 @@ var NAVTREEINDEX4 =
 "SpacesValidator_8h_source.html":[7,0,1,1,5,4,17],
 "SslLogger_8cpp.html":[7,0,1,1,8,23],
 "SslLogger_8h.html":[7,0,1,1,8,24],
-"SslLogger_8h_source.html":[7,0,1,1,8,24]
+"SslLogger_8h_source.html":[7,0,1,1,8,24],
+"Stopwatch_8cpp.html":[7,0,1,1,1,26],
+"Stopwatch_8h.html":[7,0,1,1,1,27],
+"Stopwatch_8h_source.html":[7,0,1,1,1,27],
+"StreamBuffer_8cpp.html":[7,0,1,1,6,3],
+"StreamBuffer_8h.html":[7,0,1,1,6,4],
+"StreamBuffer_8h_source.html":[7,0,1,1,6,4],
+"StreamChunker_8cpp.html":[7,0,1,1,4,55],
+"StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,55,0],
+"StreamChunker_8h.html":[7,0,1,1,4,56]
 };

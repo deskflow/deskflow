@@ -1,14 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classSearchWidget.html#a5111d286ce1807c9727dd4f1ae7d8291":[6,0,199,1],
-"classSearchWidget.html#a9088ad584a3678dd1f930a883bf44200":[6,0,199,3],
-"classSearchWidget.html#ae1ab8b6ccb682ec0e30104237c28ee7b":[6,0,199,0],
-"classSecureListenSocket.html":[6,0,200],
-"classSecureListenSocket.html#a5603395c557edf6f233e375a40db8ee6":[6,0,200,0],
-"classSecureListenSocket.html#aa5dca057acffeba4f8e050f574a0a9c5":[6,0,200,1],
-"classSecureSocket.html":[6,0,201],
-"classSecureSocket.html#a0370dbf6d7aecd42388a18ad5483dcd2":[6,0,201,14],
-"classSecureSocket.html#a0e31d35dbf1a157c061615b94402c0ce":[6,0,201,4],
 "classSecureSocket.html#a37b0c5ea79473cf150c33935a2481f39":[6,0,201,0],
 "classSecureSocket.html#a49d45e3c16a8f9fe1e93f4f559dc2b2b":[6,0,201,16],
 "classSecureSocket.html#a4bbaa3801dbcf12837e85b48f5b1ae70":[6,0,201,2],
@@ -249,5 +240,14 @@ var NAVTREEINDEX14 =
 "classSimpleEventQueueBuffer.html#a555b82c38339b712737b0891ba66a913":[6,0,209,7],
 "classSimpleEventQueueBuffer.html#a6fb82670e416bc980b16788beb56353c":[6,0,209,9],
 "classSimpleEventQueueBuffer.html#a71d5d9347ce17280b77e220ffcaaf79b":[6,0,209,10],
-"classSimpleEventQueueBuffer.html#a7dc62f3f8e4e1124013553979e3d4a24":[6,0,209,1]
+"classSimpleEventQueueBuffer.html#a7dc62f3f8e4e1124013553979e3d4a24":[6,0,209,1],
+"classSimpleEventQueueBuffer.html#aad569290d8fc2f59d2974ab61291e2e0":[6,0,209,0],
+"classSimpleEventQueueBuffer.html#ade5199c5ee076af38f45533ac1c3c0d4":[6,0,209,6],
+"classSimpleEventQueueBuffer.html#af20926ec41631f61963675355fe8b3c6":[6,0,209,2],
+"classSocketAddressException.html":[6,0,210],
+"classSocketAddressException.html#a0efa60b613a4c9c302b86f98a0262afd":[6,0,210,6],
+"classSocketAddressException.html#a3623970eae722a9971e4822403fddec0":[6,0,210,1],
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14":[6,0,210,0],
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a38c300f4fc9ce8a77aad4a30de05cad8":[6,0,210,0,1],
+"classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a88183b946cc5f0e8c96b2e66e1c74a7e":[6,0,210,0,0]
 };

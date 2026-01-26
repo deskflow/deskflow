@@ -1,14 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"Stopwatch_8cpp.html":[7,0,1,1,1,26],
-"Stopwatch_8h.html":[7,0,1,1,1,27],
-"Stopwatch_8h_source.html":[7,0,1,1,1,27],
-"StreamBuffer_8cpp.html":[7,0,1,1,6,3],
-"StreamBuffer_8h.html":[7,0,1,1,6,4],
-"StreamBuffer_8h_source.html":[7,0,1,1,6,4],
-"StreamChunker_8cpp.html":[7,0,1,1,4,55],
-"StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,55,0],
-"StreamChunker_8h.html":[7,0,1,1,4,56],
 "StreamChunker_8h_source.html":[7,0,1,1,4,56],
 "StreamFilter_8cpp.html":[7,0,1,1,6,5],
 "StreamFilter_8h.html":[7,0,1,1,6,6],
@@ -249,5 +240,14 @@ var NAVTREEINDEX5 =
 "classAppUtilUnix.html#a38bb7cb0ef62a92541337051b103cd82":[6,0,8,3],
 "classAppUtilUnix.html#a5af7ccaa14cba7e6bc40d1cb9c0c3517":[6,0,8,1],
 "classAppUtilUnix.html#abdd106a8abd59dfcd692176881f72ac6":[6,0,8,2],
-"classAppUtilUnix.html#ad494eae903b08c6c6c43cdf01167c067":[6,0,8,0]
+"classAppUtilUnix.html#ad494eae903b08c6c6c43cdf01167c067":[6,0,8,0],
+"classAppUtilUnix.html#ae4bc733d6f992b07a9e83064e741aa9e":[6,0,8,6],
+"classAppUtilUnix.html#ae67c326a965f9af4a61ca531a3f2c314":[6,0,8,4],
+"classAppUtilUnix.html#aeb650f7d1e269ebb309a71dc6ccc9e96":[6,0,8,5],
+"classAppUtilWindows.html":[6,0,9],
+"classAppUtilWindows.html#a0bd450cbb1f31aaf6a247fd867fdbcb5":[6,0,9,6],
+"classAppUtilWindows.html#a0ed84a88f3bacd3535555d7fccb9825e":[6,0,9,8],
+"classAppUtilWindows.html#a12de52c15539207bbecc480b072ec323":[6,0,9,9],
+"classAppUtilWindows.html#a578d2325aaa58f333206f31ebb80abac":[6,0,9,5],
+"classAppUtilWindows.html#a5d8957076eb5dab3a88061daee4f16db":[6,0,9,1]
 };
