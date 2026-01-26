@@ -621,18 +621,26 @@ void EiScreen::onKeyEvent(ei_event *event)
   bool pressed = ei_event_keyboard_get_key_is_press(event);
   KeyID keyid = m_keyState->mapKeyFromKeyval(keyval);
   auto keybutton = static_cast<KeyButton>(keyval);
+  bool repeat;
 
   m_keyState->updateXkbState(keyval, pressed);
   KeyModifierMask mask = m_keyState->pollActiveModifiers();
 
-  LOG_DEBUG1("event: key %s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", keycode, keyid, mask);
+  repeat = pressed && m_lastPressed == keyid && keyid != kKeyNone;
+
+  m_lastPressed = pressed ? keyid : kKeyNone;
+
+  LOG_DEBUG1(
+      "event: key %s%s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", repeat ? " (repeat)" : "",
+      keycode, keyid, mask
+  );
 
   if (m_isPrimary && onHotkey(keyid, pressed, mask)) {
     return;
   }
 
   if (keyid != kKeyNone) {
-    m_keyState->sendKeyEvent(getEventTarget(), pressed, false, keyid, mask, 1, keybutton);
+    m_keyState->sendKeyEvent(getEventTarget(), pressed, repeat, keyid, mask, 1, keybutton);
   }
 }
 

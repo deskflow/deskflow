@@ -122,6 +122,8 @@ private:
   // keyboard stuff
   EiKeyState *m_keyState = nullptr;
 
+  KeyID m_lastPressed = kKeyNone;
+
   // clipboard stuff
   WlClipboardCollection *m_clipboard = nullptr;
 
