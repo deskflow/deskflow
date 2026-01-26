@@ -1,5 +1,12 @@
 var NAVTREEINDEX16 =
 {
+"classXDGPowerManager.html#a3874c5f01dc93d8e92907c9bfb81cbbc":[6,0,244,4],
+"classXDGPowerManager.html#a669247ba2ad324671a87898152203ad2":[6,0,244,1],
+"classXDGPowerManager.html#aa2195492c3945eeb9108982656404dad":[6,0,244,7],
+"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41":[6,0,244,0],
+"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41aeafe4db45439529593e2e24973f8aed2":[6,0,244,0,1],
+"classXDGPowerManager.html#abb68b2b84fe063546ac08561701d0b41afcc5d3b9270f40eeadb502b8b7d785af":[6,0,244,0,0],
+"classXDGPowerManager.html#af1112fb71beb433fdd98d678b58ddcca":[6,0,244,5],
 "classXDGPowerManager.html#af304118fff455b6cfa61365e5207653b":[6,0,244,3],
 "classXIOReadMismatch.html":[6,0,245],
 "classXIOReadMismatch.html#a6872704e7fe3e42c17432ddb535819d5":[6,0,245,0],
@@ -242,12 +249,5 @@ var NAVTREEINDEX16 =
 "classXWindowsUtil_1_1ErrorLock.html#a36fd47b60342baa436d5328f3cfa0676":[6,0,257,0,5],
 "classXWindowsUtil_1_1ErrorLock.html#a6e7f7e57e1237295eb993b57d6e61a62":[6,0,257,0,6],
 "classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2":[6,0,257,0,7],
-"classXWindowsUtil_1_1ErrorLock.html#aab75fa73bf4a731ea2515e16bbe01df9":[6,0,257,0,4],
-"classXWindowsUtil_1_1ErrorLock.html#abccc7ccfb39f10bb3340934ac3dd1d44":[6,0,257,0,3],
-"classXWindowsUtil_1_1ErrorLock.html#ad1f5fe77f5be4bfc7e6c7edc6011e983":[6,0,257,0,2],
-"classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6":[6,0,257,0,0],
-"classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d":[6,0,257,0,1],
-"classdeskflow_1_1EiEventQueueBuffer.html":[5,0,0,11],
-"classdeskflow_1_1EiEventQueueBuffer.html":[6,0,0,10],
-"classdeskflow_1_1EiEventQueueBuffer.html#a18a556d4ef575562da2414a2b77000ae":[5,0,0,11,3]
+"classXWindowsUtil_1_1ErrorLock.html#aab75fa73bf4a731ea2515e16bbe01df9":[6,0,257,0,4]
 };

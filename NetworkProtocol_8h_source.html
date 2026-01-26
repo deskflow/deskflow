@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.207</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.208</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,22 +96,89 @@ $(function(){initNavTree('NetworkProtocol_8h_source.html','',''); });
 <div class="contents">
 <a href="NetworkProtocol_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="foldopen" id="foldopen00009" data-start="{" data-end="};">
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">    9</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">   11</a></span>  <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">Synergy</a>,</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">   12</a></span>  <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">Barrier</a></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>};</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;QString&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5">   10</a></span><span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_variable" href="NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5">kSynergyProtocolOption</a> = <span class="stringliteral">&quot;synergy&quot;</span>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a">   11</a></span><span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_variable" href="NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a">kBarrierProtocolOption</a> = <span class="stringliteral">&quot;barrier&quot;</span>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">   13</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e">   15</a></span>  <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e">Unknown</a> = -1,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">   16</a></span>  <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">Synergy</a>,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">   17</a></span>  <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">Barrier</a></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
 </div>
-<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628e"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></div><div class="ttdeci">NetworkProtocol</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:10</div></div>
-<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">NetworkProtocol::Barrier</a></div><div class="ttdeci">@ Barrier</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:12</div></div>
-<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">NetworkProtocol::Synergy</a></div><div class="ttdeci">@ Synergy</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:11</div></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a1cad77a18bfdd050779e289705a87334">   20</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="NetworkProtocol_8h.html#a1cad77a18bfdd050779e289705a87334">networkProtocolToInt</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> proto)</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(proto);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>}</div>
+</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a07c91167a772c55886485b622bc3b6dd">   25</a></span><span class="keyword">static</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> <a class="code hl_function" href="NetworkProtocol_8h.html#a07c91167a772c55886485b622bc3b6dd">networkProtocolFromInt</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> value)</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a><span class="keyword">&gt;</span>(value);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
+</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a645dd7835ee18510650b4b381248e9c4">   30</a></span><span class="keyword">static</span> QString <a class="code hl_function" href="NetworkProtocol_8h.html#a645dd7835ee18510650b4b381248e9c4">networkProtocolToOption</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> proto)</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordflow">switch</span> (proto) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">NetworkProtocol::Synergy</a>:</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5">kSynergyProtocolOption</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">NetworkProtocol::Barrier</a>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a">kBarrierProtocolOption</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>}</div>
+</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#a4543da3e4c77c1592380f0728d26392b">   42</a></span><span class="keyword">static</span> QString <a class="code hl_function" href="NetworkProtocol_8h.html#a4543da3e4c77c1592380f0728d26392b">networkProtocolToName</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> proto)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordflow">switch</span> (proto) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">NetworkProtocol::Synergy</a>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> QStringLiteral(<span class="stringliteral">&quot;Synergy&quot;</span>);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">NetworkProtocol::Barrier</a>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">return</span> QStringLiteral(<span class="stringliteral">&quot;Barrier&quot;</span>);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
+</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="NetworkProtocol_8h.html#abc96b0c10d5ef48fb17141ba4b329303">   54</a></span><span class="keyword">static</span> <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> <a class="code hl_function" href="NetworkProtocol_8h.html#abc96b0c10d5ef48fb17141ba4b329303">networkProtocolFromString</a>(<span class="keyword">const</span> QString &amp;proto)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">using </span>enum <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keywordflow">if</span> (proto.compare(<a class="code hl_variable" href="NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a">kBarrierProtocolOption</a>, Qt::CaseInsensitive) == 0)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">Barrier</a>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keywordflow">if</span> (proto.compare(<a class="code hl_variable" href="NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5">kSynergyProtocolOption</a>, Qt::CaseInsensitive) == 0)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">Synergy</a>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e">Unknown</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+</div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a07c91167a772c55886485b622bc3b6dd"><div class="ttname"><a href="NetworkProtocol_8h.html#a07c91167a772c55886485b622bc3b6dd">networkProtocolFromInt</a></div><div class="ttdeci">static NetworkProtocol networkProtocolFromInt(const int value)</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:25</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a1cad77a18bfdd050779e289705a87334"><div class="ttname"><a href="NetworkProtocol_8h.html#a1cad77a18bfdd050779e289705a87334">networkProtocolToInt</a></div><div class="ttdeci">static int networkProtocolToInt(const NetworkProtocol proto)</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:20</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a4543da3e4c77c1592380f0728d26392b"><div class="ttname"><a href="NetworkProtocol_8h.html#a4543da3e4c77c1592380f0728d26392b">networkProtocolToName</a></div><div class="ttdeci">static QString networkProtocolToName(const NetworkProtocol proto)</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:42</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a645dd7835ee18510650b4b381248e9c4"><div class="ttname"><a href="NetworkProtocol_8h.html#a645dd7835ee18510650b4b381248e9c4">networkProtocolToOption</a></div><div class="ttdeci">static QString networkProtocolToOption(const NetworkProtocol proto)</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:30</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628e"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></div><div class="ttdeci">NetworkProtocol</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:14</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">NetworkProtocol::Barrier</a></div><div class="ttdeci">@ Barrier</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:17</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e">NetworkProtocol::Unknown</a></div><div class="ttdeci">@ Unknown</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:15</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">NetworkProtocol::Synergy</a></div><div class="ttdeci">@ Synergy</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:16</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_a96287885b63fef46fd881ab773561ae5"><div class="ttname"><a href="NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5">kSynergyProtocolOption</a></div><div class="ttdeci">static const auto kSynergyProtocolOption</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:10</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_abc96b0c10d5ef48fb17141ba4b329303"><div class="ttname"><a href="NetworkProtocol_8h.html#abc96b0c10d5ef48fb17141ba4b329303">networkProtocolFromString</a></div><div class="ttdeci">static NetworkProtocol networkProtocolFromString(const QString &amp;proto)</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:54</div></div>
+<div class="ttc" id="aNetworkProtocol_8h_html_af5fe4609c0bd507480b89eb8ab0ccd6a"><div class="ttname"><a href="NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a">kBarrierProtocolOption</a></div><div class="ttdeci">static const auto kBarrierProtocolOption</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -2,7 +2,7 @@ var searchData=
 [
   ['kackmessage_0',['kAckMessage',['../namespacedeskflow_1_1core_1_1ipc.html#ae8df3756ee143032db0c15044c875285',1,'deskflow::core::ipc']]],
   ['kbarrierprotocolname_1',['kBarrierProtocolName',['../group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7',1,'kBarrierProtocolName:&#160;ProtocolTypes.cpp'],['../group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7',1,'kBarrierProtocolName:&#160;ProtocolTypes.cpp']]],
-  ['kbarrierprotocoloption_2',['kBarrierProtocolOption',['../namespacedeskflow_1_1server.html#a5a51f32b98ec97b342b09ecc21e6dfa3',1,'deskflow::server']]],
+  ['kbarrierprotocoloption_2',['kBarrierProtocolOption',['../NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a',1,'NetworkProtocol.h']]],
   ['kbinary_3',['kBINARY',['../classArchMiscWindows.html#adfd1eff8096cb641a8d68eb465e63204add0acec34bffb18b1174560f1c3b55aa',1,'ArchMiscWindows']]],
   ['kbroadcast_4',['kBroadcast',['../classArchCondImpl.html#aadad8a498528bc66f24ade6bb7493a92ad011f0d9ab3ff0441f8b5971ab1266c0',1,'ArchCondImpl']]],
   ['kbuttonextra0_5',['kButtonExtra0',['../MouseTypes_8h.html#adc0e99885718b3cd428b9a1f16e60800',1,'MouseTypes.h']]],
@@ -383,7 +383,7 @@ var searchData=
   ['ksignal_380',['kSignal',['../classArchCondImpl.html#aadad8a498528bc66f24ade6bb7493a92a660c807ae45382dae1466b8184222d73',1,'ArchCondImpl']]],
   ['kstring_381',['kSTRING',['../classArchMiscWindows.html#adfd1eff8096cb641a8d68eb465e63204a02cdafaf8c5c3d167c09ecfafdacd201',1,'ArchMiscWindows']]],
   ['ksynergyprotocolname_382',['kSynergyProtocolName',['../group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1',1,'kSynergyProtocolName:&#160;ProtocolTypes.cpp'],['../group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1',1,'kSynergyProtocolName:&#160;ProtocolTypes.cpp']]],
-  ['ksynergyprotocoloption_383',['kSynergyProtocolOption',['../namespacedeskflow_1_1server.html#a5f7702a511027bc6ea306740cbb99d7c',1,'deskflow::server']]],
+  ['ksynergyprotocoloption_383',['kSynergyProtocolOption',['../NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5',1,'NetworkProtocol.h']]],
   ['ksystem_384',['kSYSTEM',['../classArchMiscWindows.html#a0338c2fb1a7194e19af8961ef0db4e24aee344497aaeab143ada6f7ccb783d407',1,'ArchMiscWindows']]],
   ['ktimeout_385',['kTimeout',['../namespacedeskflow_1_1gui_1_1ipc.html#ad676c7e7a9f7a12883b062972cb7be07',1,'deskflow::gui::ipc']]],
   ['ktoggle_386',['kToggle',['../classInputFilter_1_1LockCursorToScreenAction.html#ae328fd7d1efa2efe16c22265c924315badb97cdc991f0eccdd70183ea5dbe4f28',1,'InputFilter::LockCursorToScreenAction::kToggle'],['../classInputFilter_1_1KeyboardBroadcastAction.html#a7d4ee15361d42e7b8db01b88667271a2ad37281222f111d1a18c2f0c95661cac7',1,'InputFilter::KeyboardBroadcastAction::kToggle'],['../classServer_1_1LockCursorToScreenInfo.html#a14597b15d194a8ea5efd9f110535d7d5ae66039374b89e8584cc425a763b8ba4a',1,'Server::LockCursorToScreenInfo::kToggle'],['../classServer_1_1KeyboardBroadcastInfo.html#aef9139c166a7c1c8dd9ebf48d149b5ffaacc8b61cd187e3662c4e6c552a65524c',1,'Server::KeyboardBroadcastInfo::kToggle']]],

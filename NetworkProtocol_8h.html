@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.207</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.208</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,7 +94,18 @@ $(function(){initNavTree('NetworkProtocol_8h.html','',''); });
   <div class="headertitle"><div class="title">NetworkProtocol.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &lt;QString&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for NetworkProtocol.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="NetworkProtocol_8h__incl.png" border="0" usemap="#asrc_2lib_2base_2NetworkProtocol_8h" loading="lazy" alt=""/></div>
+<map name="asrc_2lib_2base_2NetworkProtocol_8h" id="asrc_2lib_2base_2NetworkProtocol_8h">
+<area shape="rect" title=" " alt="" coords="5,5,206,30"/>
+<area shape="rect" title=" " alt="" coords="73,78,138,103"/>
+<area shape="poly" title=" " alt="" coords="107,29,108,63,103,61,104,33"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="NetworkProtocol_8h__dep__incl.png" border="0" usemap="#asrc_2lib_2base_2NetworkProtocol_8hdep" loading="lazy" alt=""/></div>
@@ -147,9 +158,23 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a64645c414bdb6cc72fd76678220a628e" id="r_a64645c414bdb6cc72fd76678220a628e"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> { <a class="el" href="#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">Synergy</a>
+<tr class="memitem:a64645c414bdb6cc72fd76678220a628e" id="r_a64645c414bdb6cc72fd76678220a628e"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> { <a class="el" href="#a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e">Unknown</a> = -1
+, <a class="el" href="#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a">Synergy</a>
 , <a class="el" href="#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">Barrier</a>
  }</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a1cad77a18bfdd050779e289705a87334" id="r_a1cad77a18bfdd050779e289705a87334"><td class="memItemLeft">static <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight"><a class="el" href="#a1cad77a18bfdd050779e289705a87334">networkProtocolToInt</a> (const <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> proto)</td></tr>
+<tr class="memitem:a07c91167a772c55886485b622bc3b6dd" id="r_a07c91167a772c55886485b622bc3b6dd"><td class="memItemLeft">static <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a>&#160;</td><td class="memItemRight"><a class="el" href="#a07c91167a772c55886485b622bc3b6dd">networkProtocolFromInt</a> (const <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> value)</td></tr>
+<tr class="memitem:a645dd7835ee18510650b4b381248e9c4" id="r_a645dd7835ee18510650b4b381248e9c4"><td class="memItemLeft">static QString&#160;</td><td class="memItemRight"><a class="el" href="#a645dd7835ee18510650b4b381248e9c4">networkProtocolToOption</a> (const <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> proto)</td></tr>
+<tr class="memitem:a4543da3e4c77c1592380f0728d26392b" id="r_a4543da3e4c77c1592380f0728d26392b"><td class="memItemLeft">static QString&#160;</td><td class="memItemRight"><a class="el" href="#a4543da3e4c77c1592380f0728d26392b">networkProtocolToName</a> (const <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> proto)</td></tr>
+<tr class="memitem:abc96b0c10d5ef48fb17141ba4b329303" id="r_abc96b0c10d5ef48fb17141ba4b329303"><td class="memItemLeft">static <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a>&#160;</td><td class="memItemRight"><a class="el" href="#abc96b0c10d5ef48fb17141ba4b329303">networkProtocolFromString</a> (const QString &amp;proto)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a96287885b63fef46fd881ab773561ae5" id="r_a96287885b63fef46fd881ab773561ae5"><td class="memItemLeft">static const auto&#160;</td><td class="memItemRight"><a class="el" href="#a96287885b63fef46fd881ab773561ae5">kSynergyProtocolOption</a> = &quot;synergy&quot;</td></tr>
+<tr class="memitem:af5fe4609c0bd507480b89eb8ab0ccd6a" id="r_af5fe4609c0bd507480b89eb8ab0ccd6a"><td class="memItemLeft">static const auto&#160;</td><td class="memItemRight"><a class="el" href="#af5fe4609c0bd507480b89eb8ab0ccd6a">kBarrierProtocolOption</a> = &quot;barrier&quot;</td></tr>
 </table>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
 <a id="a64645c414bdb6cc72fd76678220a628e" name="a64645c414bdb6cc72fd76678220a628e"></a>
@@ -172,9 +197,181 @@ Enumerations</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a" name="a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a"></a>Synergy&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e" name="a64645c414bdb6cc72fd76678220a628ea88183b946cc5f0e8c96b2e66e1c74a7e"></a>Unknown&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a" name="a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a"></a>Synergy&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6" name="a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6"></a>Barrier&#160;</td><td class="fielddoc"></td></tr>
 </table>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a07c91167a772c55886485b622bc3b6dd" name="a07c91167a772c55886485b622bc3b6dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07c91167a772c55886485b622bc3b6dd">&#9670;&#160;</a></span>networkProtocolFromInt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> networkProtocolFromInt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abc96b0c10d5ef48fb17141ba4b329303" name="abc96b0c10d5ef48fb17141ba4b329303"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc96b0c10d5ef48fb17141ba4b329303">&#9670;&#160;</a></span>networkProtocolFromString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> networkProtocolFromString </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>proto</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1cad77a18bfdd050779e289705a87334" name="a1cad77a18bfdd050779e289705a87334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cad77a18bfdd050779e289705a87334">&#9670;&#160;</a></span>networkProtocolToInt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> networkProtocolToInt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></td>          <td class="paramname"><span class="paramname"><em>proto</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4543da3e4c77c1592380f0728d26392b" name="a4543da3e4c77c1592380f0728d26392b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4543da3e4c77c1592380f0728d26392b">&#9670;&#160;</a></span>networkProtocolToName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString networkProtocolToName </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></td>          <td class="paramname"><span class="paramname"><em>proto</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a645dd7835ee18510650b4b381248e9c4" name="a645dd7835ee18510650b4b381248e9c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a645dd7835ee18510650b4b381248e9c4">&#9670;&#160;</a></span>networkProtocolToOption()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString networkProtocolToOption </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a></td>          <td class="paramname"><span class="paramname"><em>proto</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="af5fe4609c0bd507480b89eb8ab0ccd6a" name="af5fe4609c0bd507480b89eb8ab0ccd6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5fe4609c0bd507480b89eb8ab0ccd6a">&#9670;&#160;</a></span>kBarrierProtocolOption</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto kBarrierProtocolOption = &quot;barrier&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a96287885b63fef46fd881ab773561ae5" name="a96287885b63fef46fd881ab773561ae5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96287885b63fef46fd881ab773561ae5">&#9670;&#160;</a></span>kSynergyProtocolOption</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto kSynergyProtocolOption = &quot;synergy&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -2,7 +2,7 @@ var searchData=
 [
   ['kackmessage_0',['kAckMessage',['../namespacedeskflow_1_1core_1_1ipc.html#ae8df3756ee143032db0c15044c875285',1,'deskflow::core::ipc']]],
   ['kbarrierprotocolname_1',['kBarrierProtocolName',['../group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7',1,'kBarrierProtocolName:&#160;ProtocolTypes.cpp'],['../group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7',1,'kBarrierProtocolName:&#160;ProtocolTypes.cpp']]],
-  ['kbarrierprotocoloption_2',['kBarrierProtocolOption',['../namespacedeskflow_1_1server.html#a5a51f32b98ec97b342b09ecc21e6dfa3',1,'deskflow::server']]],
+  ['kbarrierprotocoloption_2',['kBarrierProtocolOption',['../NetworkProtocol_8h.html#af5fe4609c0bd507480b89eb8ab0ccd6a',1,'NetworkProtocol.h']]],
   ['kbuttonextra0_3',['kButtonExtra0',['../MouseTypes_8h.html#adc0e99885718b3cd428b9a1f16e60800',1,'MouseTypes.h']]],
   ['kbuttonextra1_4',['kButtonExtra1',['../MouseTypes_8h.html#ac57186796c5017ced6404d31c6abc125',1,'MouseTypes.h']]],
   ['kbuttonleft_5',['kButtonLeft',['../MouseTypes_8h.html#a1841a2139e01b8bcc4db626bfd392761',1,'MouseTypes.h']]],
@@ -303,7 +303,7 @@ var searchData=
   ['kretrydelay_300',['kRetryDelay',['../namespacedeskflow_1_1gui.html#a5b38d733ad00fd5d2681a25a8c30e6da',1,'deskflow::gui']]],
   ['kretrylimit_301',['kRetryLimit',['../namespacedeskflow_1_1gui_1_1ipc.html#acea5bb86329ea7330f86ab8105096bae',1,'deskflow::gui::ipc']]],
   ['ksynergyprotocolname_302',['kSynergyProtocolName',['../group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1',1,'kSynergyProtocolName:&#160;ProtocolTypes.cpp'],['../group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1',1,'kSynergyProtocolName:&#160;ProtocolTypes.cpp']]],
-  ['ksynergyprotocoloption_303',['kSynergyProtocolOption',['../namespacedeskflow_1_1server.html#a5f7702a511027bc6ea306740cbb99d7c',1,'deskflow::server']]],
+  ['ksynergyprotocoloption_303',['kSynergyProtocolOption',['../NetworkProtocol_8h.html#a96287885b63fef46fd881ab773561ae5',1,'NetworkProtocol.h']]],
   ['ktimeout_304',['kTimeout',['../namespacedeskflow_1_1gui_1_1ipc.html#ad676c7e7a9f7a12883b062972cb7be07',1,'deskflow::gui::ipc']]],
   ['kurlapp_305',['kUrlApp',['../UrlConstants_8h.html#a70416d0a4f75ee7cc66b2de0bf6a5009',1,'UrlConstants.h']]],
   ['kurldownload_306',['kUrlDownload',['../UrlConstants_8h.html#a344fdc64934a0625b472461d401e6c5e',1,'UrlConstants.h']]],

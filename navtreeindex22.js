@@ -1,5 +1,12 @@
 var NAVTREEINDEX22 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a9b3e510654adce623b3c8c2149dacba7":[5,0,0,18,7],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa3a542765a6211cbe16fdf6722655963":[5,0,0,18,47],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a":[5,0,0,18,2],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aafcedfec63fc7f07f162450b4955ebdc":[5,0,0,18,35],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab0376836c1f8904ca702481e63f756d8":[5,0,0,18,8],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121":[5,0,0,18,54],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab6da58f2ed9f88ddbc4842fb5c1e7fcc":[5,0,0,18,5],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2abb549cd3e51bf0d5c3d6e3643042001d":[5,0,0,18,31],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2abeb2c179916e917c350d2dd1a8406291":[5,0,0,18,4],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac66cb6f7cff95301c5edc0f73d7cbf78":[5,0,0,18,16],
@@ -84,8 +91,6 @@ var NAVTREEINDEX22 =
 "namespacedeskflow_1_1server.html":[5,0,0,6],
 "namespacedeskflow_1_1server.html#a0386497f2a0ceae5d8f0895f172cd49d":[5,0,0,6,3],
 "namespacedeskflow_1_1server.html#a22056a718b59607a46ff33f10f1d6f6d":[5,0,0,6,4],
-"namespacedeskflow_1_1server.html#a5a51f32b98ec97b342b09ecc21e6dfa3":[5,0,0,6,5],
-"namespacedeskflow_1_1server.html#a5f7702a511027bc6ea306740cbb99d7c":[5,0,0,6,6],
 "namespacedeskflow_1_1string.html":[5,0,0,1],
 "namespacedeskflow_1_1string.html#a38d8f9480b99abd72865fddeafc2c5cf":[5,0,0,1,3],
 "namespacedeskflow_1_1string.html#a3ff26b112bf6d8074716bc48ffa1759e":[5,0,0,1,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX22 =
 "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54":[6,0,207,1,9],
 "structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a":[6,0,207,1,3],
 "structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446":[6,0,207,1,0],
-"structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d":[6,0,207,1,5],
-"structSettings_1_1Core.html#a809849b6eb37dc36a4e6dd9a3a899bda":[6,0,207,1,10],
-"structSettings_1_1Core.html#a891557b6bbca69ffa39ea6b46278ad5e":[6,0,207,1,7],
-"structSettings_1_1Core.html#aa9b297403710d920ab1182db9f551508":[6,0,207,1,8],
-"structSettings_1_1Daemon.html":[6,0,207,2],
-"structSettings_1_1Daemon.html#a771cef30da81388437b4565ce8c3ec21":[6,0,207,2,1]
+"structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d":[6,0,207,1,5]
 };
