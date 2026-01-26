@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.193</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.196</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -117,24 +117,10 @@ Collaboration diagram for DaemonApp:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a5afdaf6aac158592b91967337196a713" id="r_a5afdaf6aac158592b91967337196a713"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#a5afdaf6aac158592b91967337196a713">InitResult</a> { <br />
-&#160;&#160;<a class="el" href="#a5afdaf6aac158592b91967337196a713a98dd43dfae05b11befe1f140e0ec787a">Installed</a>
-, <a class="el" href="#a5afdaf6aac158592b91967337196a713ab78846123fdd78d5ab62451b855194e3">Uninstalled</a>
-, <a class="el" href="#a5afdaf6aac158592b91967337196a713a93d50575e86ae2d0517248aabd42af1d">StartDaemon</a>
-, <a class="el" href="#a5afdaf6aac158592b91967337196a713a6db523af5d0c9fa97e99e9dc72911a0a">ShowHelp</a>
-, <br />
-&#160;&#160;<a class="el" href="#a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057">ArgsError</a>
-, <a class="el" href="#a5afdaf6aac158592b91967337196a713af245a0dc66dc8cd7d835771034eb4b86">FatalError</a>
-<br />
- }</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae49af1be8b475b0c96e6c820f0a0e3a1" id="r_ae49af1be8b475b0c96e6c820f0a0e3a1"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae49af1be8b475b0c96e6c820f0a0e3a1">DaemonApp</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> &amp;events)</td></tr>
 <tr class="memitem:a80a82b62f795b581b690e53ac2c1db23" id="r_a80a82b62f795b581b690e53ac2c1db23"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a80a82b62f795b581b690e53ac2c1db23">~DaemonApp</a> () override</td></tr>
-<tr class="memitem:a8c1c0b43c6b01e1a27cb0c4de5fed7a0" id="r_a8c1c0b43c6b01e1a27cb0c4de5fed7a0"><td class="memItemLeft"><a class="el" href="#a5afdaf6aac158592b91967337196a713">InitResult</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8c1c0b43c6b01e1a27cb0c4de5fed7a0">init</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv)</td></tr>
 <tr class="memitem:aa4818fa610be8f37215cbc98f9eeb097" id="r_aa4818fa610be8f37215cbc98f9eeb097"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa4818fa610be8f37215cbc98f9eeb097">run</a> (QThread &amp;daemonThread)</td></tr>
 <tr class="memitem:a9760570352c929772dcd53a3acfff527" id="r_a9760570352c929772dcd53a3acfff527"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9760570352c929772dcd53a3acfff527">setForeground</a> ()</td></tr>
 <tr class="memitem:a17e867bf0353d9e0321d547b9234b5bf" id="r_a17e867bf0353d9e0321d547b9234b5bf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a17e867bf0353d9e0321d547b9234b5bf">initLogging</a> ()</td></tr>
@@ -144,37 +130,6 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a11bd3b2ec38da293a9a0dfebf873e62f" id="r_a11bd3b2ec38da293a9a0dfebf873e62f"><td class="memItemLeft">static QString&#160;</td><td class="memItemRight"><a class="el" href="#a11bd3b2ec38da293a9a0dfebf873e62f">logFilename</a> ()</td></tr>
 </table>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a5afdaf6aac158592b91967337196a713" name="a5afdaf6aac158592b91967337196a713"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5afdaf6aac158592b91967337196a713">&#9670;&#160;</a></span>InitResult</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#a5afdaf6aac158592b91967337196a713">DaemonApp::InitResult</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a5afdaf6aac158592b91967337196a713a98dd43dfae05b11befe1f140e0ec787a" name="a5afdaf6aac158592b91967337196a713a98dd43dfae05b11befe1f140e0ec787a"></a>Installed&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a5afdaf6aac158592b91967337196a713ab78846123fdd78d5ab62451b855194e3" name="a5afdaf6aac158592b91967337196a713ab78846123fdd78d5ab62451b855194e3"></a>Uninstalled&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a5afdaf6aac158592b91967337196a713a93d50575e86ae2d0517248aabd42af1d" name="a5afdaf6aac158592b91967337196a713a93d50575e86ae2d0517248aabd42af1d"></a>StartDaemon&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a5afdaf6aac158592b91967337196a713a6db523af5d0c9fa97e99e9dc72911a0a" name="a5afdaf6aac158592b91967337196a713a6db523af5d0c9fa97e99e9dc72911a0a"></a>ShowHelp&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057" name="a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057"></a>ArgsError&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a5afdaf6aac158592b91967337196a713af245a0dc66dc8cd7d835771034eb4b86" name="a5afdaf6aac158592b91967337196a713af245a0dc66dc8cd7d835771034eb4b86"></a>FatalError&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae49af1be8b475b0c96e6c820f0a0e3a1" name="ae49af1be8b475b0c96e6c820f0a0e3a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae49af1be8b475b0c96e6c820f0a0e3a1">&#9670;&#160;</a></span>DaemonApp()</h2>
@@ -238,27 +193,6 @@ Static Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html">deskflow::core::ipc::DaemonIpcServer</a> *</td>          <td class="paramname"><span class="paramname"><em>ipcServer</em></span></td><td>)</td>
           <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8c1c0b43c6b01e1a27cb0c4de5fed7a0" name="a8c1c0b43c6b01e1a27cb0c4de5fed7a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c1c0b43c6b01e1a27cb0c4de5fed7a0">&#9670;&#160;</a></span>init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a5afdaf6aac158592b91967337196a713">InitResult</a> DaemonApp::init </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char **</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -178,7 +178,7 @@ var searchData=
   ['showerrordialog_175',['showErrorDialog',['../namespacedeskflow_1_1gui_1_1messages.html#ae637f1327216dc1e3eb1401c84deb40c',1,'deskflow::gui::messages']]],
   ['showfirstconnectedmessage_176',['showFirstConnectedMessage',['../namespacedeskflow_1_1gui_1_1messages.html#aedad0d21c313ee2a3e62076024608d56',1,'deskflow::gui::messages']]],
   ['showfirstserverstartmessage_177',['showFirstServerStartMessage',['../namespacedeskflow_1_1gui_1_1messages.html#ae36c4e343b7e48e06e2a9005a5bf4eda',1,'deskflow::gui::messages']]],
-  ['showhelp_178',['showHelp',['../deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de',1,'showHelp(const CoreArgParser &amp;parser):&#160;deskflow-core.cpp'],['../DaemonApp_8cpp.html#a1038c7e9c69c9b35b686cafe290b7598',1,'showHelp(int argc, char **argv):&#160;DaemonApp.cpp']]],
+  ['showhelp_178',['showHelp',['../deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de',1,'deskflow-core.cpp']]],
   ['shown_179',['shown',['../classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0',1,'SettingsDialog']]],
   ['shownewclientprompt_180',['showNewClientPrompt',['../namespacedeskflow_1_1gui_1_1messages.html#a886ff5d104d6bbbf78d97902a184c477',1,'deskflow::gui::messages']]],
   ['showonce_181',['showOnce',['../classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html#a79a4ff929c34f4c93a3dbee568df3c1f',1,'deskflow::gui::core::WaylandWarnings']]],

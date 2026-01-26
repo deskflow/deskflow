@@ -1,9 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXKeyState_8cpp.html#a5d80ee8e879186619558806ad996f98d":[7,0,1,1,9,65,5],
-"OSXKeyState_8cpp.html#a5dc4072aac99d42048f4215cb937310a":[7,0,1,1,9,65,7],
-"OSXKeyState_8cpp.html#a8ad213e888adb067b810522d15d37c54":[7,0,1,1,9,65,8],
-"OSXKeyState_8cpp.html#ab2c0341815e734a6892a1ac00614773d":[7,0,1,1,9,65,9],
 "OSXKeyState_8cpp.html#ac05df8405182a5111d542557ce205c64":[7,0,1,1,9,65,10],
 "OSXKeyState_8cpp.html#af34dcd5e47f5657f1e06bbaf48684af5":[7,0,1,1,9,65,4],
 "OSXKeyState_8cpp.html#affd353771c5f441401e17230a26431c0":[7,0,1,1,9,65,1],
@@ -221,12 +217,12 @@ var NAVTREEINDEX4 =
 "ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,8,4],
 "ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,8,2],
 "ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
-"ServerConnection_8cpp.html":[7,0,1,1,5,1,8],
-"ServerConnection_8h.html":[7,0,1,1,5,1,9],
-"ServerConnection_8h_source.html":[7,0,1,1,5,1,9],
-"ServerMessage_8cpp.html":[7,0,1,1,5,1,10],
-"ServerMessage_8h.html":[7,0,1,1,5,1,11],
-"ServerMessage_8h_source.html":[7,0,1,1,5,1,11],
+"ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
+"ServerConnection_8h.html":[7,0,1,1,5,1,7],
+"ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
+"ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
+"ServerMessage_8h.html":[7,0,1,1,5,1,9],
+"ServerMessage_8h_source.html":[7,0,1,1,5,1,9],
 "ServerProxy_8cpp.html":[7,0,1,1,2,4],
 "ServerProxy_8h.html":[7,0,1,1,2,5],
 "ServerProxy_8h_source.html":[7,0,1,1,2,5],
@@ -249,5 +245,9 @@ var NAVTREEINDEX4 =
 "SocketMultiplexer_8h.html":[7,0,1,1,8,22],
 "SocketMultiplexer_8h_source.html":[7,0,1,1,8,22],
 "SpacesValidator_8cpp.html":[7,0,1,1,5,4,16],
-"SpacesValidator_8h.html":[7,0,1,1,5,4,17]
+"SpacesValidator_8h.html":[7,0,1,1,5,4,17],
+"SpacesValidator_8h_source.html":[7,0,1,1,5,4,17],
+"SslLogger_8cpp.html":[7,0,1,1,8,23],
+"SslLogger_8h.html":[7,0,1,1,8,24],
+"SslLogger_8h_source.html":[7,0,1,1,8,24]
 };

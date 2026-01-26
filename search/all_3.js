@@ -175,13 +175,12 @@ var searchData=
   ['archthread_172',['ArchThread',['../IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6',1,'IArchMultithread.h']]],
   ['archthreadimpl_173',['ArchThreadImpl',['../classArchThreadImpl.html',1,'ArchThreadImpl'],['../classArchThreadImpl.html#a27d30fcd7174707acacfa7bc64c29830',1,'ArchThreadImpl::ArchThreadImpl()=default'],['../classArchThreadImpl.html#a6bcfaf73a23d8de6240672f07c48d689',1,'ArchThreadImpl::ArchThreadImpl()']]],
   ['arglist_174',['ArgList',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a89767d219c814f2ba1e9e9e66ccdfa43',1,'deskflow::server::ConfigReadContext']]],
-  ['argserror_175',['ArgsError',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057',1,'DaemonApp']]],
-  ['assemble_176',['assemble',['../classClipboardChunk.html#aeac1042cc7887f085ad51f79fb126ea3',1,'ClipboardChunk']]],
-  ['atomstostring_177',['atomsToString',['../classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60',1,'XWindowsUtil']]],
-  ['atomtostring_178',['atomToString',['../classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f',1,'XWindowsUtil']]],
-  ['autohide_179',['Autohide',['../structSettings_1_1Gui.html#a2f5f638ae1ce82b3e05c58ccd721893f',1,'Settings::Gui']]],
-  ['autostartcore_180',['AutoStartCore',['../structSettings_1_1Gui.html#abb43a603fadbde9f7ba0ff2fca319817',1,'Settings::Gui']]],
-  ['autoupdatecheck_181',['AutoUpdateCheck',['../structSettings_1_1Gui.html#a8b6bb5f319f02e22b891a44253f6caf2',1,'Settings::Gui']]],
-  ['avoidhesitatingcursor_182',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
-  ['avoidsupression_183',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
+  ['assemble_175',['assemble',['../classClipboardChunk.html#aeac1042cc7887f085ad51f79fb126ea3',1,'ClipboardChunk']]],
+  ['atomstostring_176',['atomsToString',['../classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60',1,'XWindowsUtil']]],
+  ['atomtostring_177',['atomToString',['../classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f',1,'XWindowsUtil']]],
+  ['autohide_178',['Autohide',['../structSettings_1_1Gui.html#a2f5f638ae1ce82b3e05c58ccd721893f',1,'Settings::Gui']]],
+  ['autostartcore_179',['AutoStartCore',['../structSettings_1_1Gui.html#abb43a603fadbde9f7ba0ff2fca319817',1,'Settings::Gui']]],
+  ['autoupdatecheck_180',['AutoUpdateCheck',['../structSettings_1_1Gui.html#a8b6bb5f319f02e22b891a44253f6caf2',1,'Settings::Gui']]],
+  ['avoidhesitatingcursor_181',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
+  ['avoidsupression_182',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
 ];

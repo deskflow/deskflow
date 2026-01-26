@@ -7,8 +7,7 @@ var searchData=
   ['initializing_4',['Initializing',['../ServerApp_8h.html#aeee15ce451435cc7f2fdb211337d0694a32b169f72b293ef80d35435e9894f8e2',1,'ServerApp.h']]],
   ['initializingtostart_5',['InitializingToStart',['../ServerApp_8h.html#aeee15ce451435cc7f2fdb211337d0694a7412fcfc5f245855c8f69ff4661253b6',1,'ServerApp.h']]],
   ['inprogress_6',['InProgress',['../group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a12d868c18cb29bf58f02b504be9033fd',1,'ProtocolTypes.h']]],
-  ['installed_7',['Installed',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a98dd43dfae05b11befe1f140e0ec787a',1,'DaemonApp']]],
-  ['interrupt_8',['Interrupt',['../classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a1ce92afa20b1c7f6a4e5d0dc73e5c92a',1,'IArchMultithread']]],
-  ['ipc_9',['IPC',['../LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9ac8660c6d72e7323867ec800d6bb953df',1,'LogLevel.h']]],
-  ['item_10',['Item',['../classXWindowsClipboard.html#ab045f67769edfb0b2e262cc5cab82cf3a7d74f3b92b19da5e606d737d339a9679',1,'XWindowsClipboard']]]
+  ['interrupt_7',['Interrupt',['../classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a1ce92afa20b1c7f6a4e5d0dc73e5c92a',1,'IArchMultithread']]],
+  ['ipc_8',['IPC',['../LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9ac8660c6d72e7323867ec800d6bb953df',1,'LogLevel.h']]],
+  ['item_9',['Item',['../classXWindowsClipboard.html#ab045f67769edfb0b2e262cc5cab82cf3a7d74f3b92b19da5e606d737d339a9679',1,'XWindowsClipboard']]]
 ];

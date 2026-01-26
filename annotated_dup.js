@@ -140,7 +140,6 @@ var annotated_dup =
     [ "ClientProxyUnknown", "classClientProxyUnknown.html", "classClientProxyUnknown" ],
     [ "Clipboard", "classClipboard.html", "classClipboard" ],
     [ "ClipboardChunk", "classClipboardChunk.html", "classClipboardChunk" ],
-    [ "CommandProcess", "classCommandProcess.html", "classCommandProcess" ],
     [ "CondVar", "classCondVar.html", "classCondVar" ],
     [ "CondVarBase", "classCondVarBase.html", "classCondVarBase" ],
     [ "ConsoleLogOutputter", "classConsoleLogOutputter.html", "classConsoleLogOutputter" ],

@@ -340,7 +340,6 @@ var hierarchy =
       [ "MainWindow", "classMainWindow.html", null ]
     ] ],
     [ "QObject", null, [
-      [ "CommandProcess", "classCommandProcess.html", null ],
       [ "DaemonApp", "classDaemonApp.html", null ],
       [ "I18N", "classI18N.html", null ],
       [ "Settings", "classSettings.html", null ],
