@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "base/NetworkProtocol.h"
 #include "client/ServerProxy.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
@@ -578,7 +579,8 @@ void Client::handleHello()
   std::string protocolName;
   ProtocolUtil::readf(m_stream, kMsgHello, &protocolName, &serverMajor, &serverMinor);
 
-  if (protocolName != kSynergyProtocolName && protocolName != kBarrierProtocolName) {
+  if (const auto proto = networkProtocolFromString(QString::fromStdString(protocolName));
+      proto == NetworkProtocol::Unknown) {
     LOG_WARN("hello back received with protocol: '%s'", protocolName.c_str());
     sendConnectionFailedEvent("got invalid hello message from server");
     cleanupTimer();
