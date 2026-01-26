@@ -224,9 +224,10 @@ enum class EventTypes : uint32_t
   /// This event is sent whenever a clipboard chunk is transferred.
   ClipboardSending,
 
-  /// Start libEI
+  /// Start libei
   EIConnected,
-  /// Stop libEi
-  EISessionClosed
+
+  /// Stop libei
+  EISessionClosed,
 };
 } // namespace deskflow
