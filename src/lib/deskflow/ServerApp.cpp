@@ -567,7 +567,7 @@ int ServerApp::mainLoop()
 #endif
 
   // close down
-  LOG_DEBUG1("stopping server");
+  LOG_DEBUG("stopping server");
   getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
   getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
   cleanupServer();
