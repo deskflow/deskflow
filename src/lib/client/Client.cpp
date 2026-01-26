@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -14,9 +14,9 @@
 #include "client/ServerProxy.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
-#include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/PacketStreamFilter.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
@@ -27,9 +27,6 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <memory>
-
-using namespace deskflow::client;
 
 //
 // Client
@@ -52,19 +49,6 @@ Client::Client(
   // register suspend/resume event handlers
   m_events->addHandler(EventTypes::ScreenSuspend, getEventTarget(), [this](const auto &) { handleSuspend(); });
   m_events->addHandler(EventTypes::ScreenResume, getEventTarget(), [this](const auto &) { handleResume(); });
-
-  m_pHelloBack = std::make_unique<HelloBack>(std::make_shared<HelloBack::Deps>(
-      [this]() {
-        sendConnectionFailedEvent("got invalid hello message from server");
-        cleanupTimer();
-        cleanupConnection();
-      },
-      [this](int major, int minor) {
-        sendConnectionFailedEvent(IncompatibleClientException(major, minor).what());
-        cleanupTimer();
-        cleanupConnection();
-      }
-  ));
 }
 
 Client::~Client()
@@ -584,7 +568,32 @@ void Client::handleClipboardGrabbed(const Event &event)
 
 void Client::handleHello()
 {
-  m_pHelloBack->handleHello(m_stream, m_name);
+  int16_t serverMajor;
+  int16_t serverMinor;
+
+  // as luck would have it, both "Synergy" and "Barrier" are 7 chars,
+  // so we eat 7 chars and then test for either protocol name.
+  // we cannot re-use `readf` to check for various hello messages,
+  // as `readf` eats bytes (advances the stream position reference).
+  std::string protocolName;
+  ProtocolUtil::readf(m_stream, kMsgHello, &protocolName, &serverMajor, &serverMinor);
+
+  if (protocolName != kSynergyProtocolName && protocolName != kBarrierProtocolName) {
+    LOG_WARN("hello back received with protocol: '%s'", protocolName.c_str());
+    sendConnectionFailedEvent("got invalid hello message from server");
+    cleanupTimer();
+    cleanupConnection();
+    return;
+  }
+
+  LOG_DEBUG(
+      "saying hello back with version %s %d.%d", protocolName.c_str(), kProtocolMajorVersion, kProtocolMinorVersion
+  );
+
+  // dynamically build write format for hello back since `ProtocolUtil::writef`
+  // doesn't support formatting fixed length strings yet.
+  std::string helloBackMessage = protocolName + kMsgHelloBackArgs;
+  ProtocolUtil::writef(m_stream, helloBackMessage.c_str(), kProtocolMajorVersion, kProtocolMinorVersion, &m_name);
 
   // now connected but waiting to complete handshake
   setupScreen();
