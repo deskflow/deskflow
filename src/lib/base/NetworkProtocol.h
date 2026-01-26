@@ -6,6 +6,7 @@
 
 #pragma once
 #include <QString>
+#include "deskflow/ProtocolTypes.h"
 
 inline static const auto kSynergyProtocolOption = "synergy";
 inline static const auto kBarrierProtocolOption = "barrier";
@@ -43,9 +44,9 @@ static QString networkProtocolToName(const NetworkProtocol proto)
 {
   switch (proto) {
   case NetworkProtocol::Synergy:
-    return QStringLiteral("Synergy");
+    return QString::fromUtf8(kSynergyProtocolName);
   case NetworkProtocol::Barrier:
-    return QStringLiteral("Barrier");
+    return QString::fromUtf8(kBarrierProtocolName);
   default:
     return {};
   }
