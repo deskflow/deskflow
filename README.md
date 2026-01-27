@@ -81,8 +81,6 @@ versions across them and gathering other information.
 
 [![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?exclude_unsupported=1)](https://repology.org/project/deskflow/versions)
 
-**Note:** We are working with package maintainers to have our new package name adopted.
-
 ## Installing on macOS
 
 When you install Deskflow on macOS, you need to allow accessibility access (Privacy & Security) to both the `Deskflow` app and the `deskflow` process.
