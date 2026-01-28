@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ActionDialog</class>
  <widget class="QDialog" name="ActionDialog">
@@ -78,6 +78,11 @@
          <string>Restart the server</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Toggle screen</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
@@ -151,7 +156,7 @@
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
-      </sizepolicy>
+       </sizepolicy>
      </property>
      <property name="title">
       <string>Computers to receive this event</string>
@@ -167,6 +172,34 @@
      </layout>
     </widget>
    </item>
+    <item>
+     <widget class="QGroupBox" name="groupToggleScreenOrder">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Screen toggle order, drag to reorder</string>
+      </property>
+      <layout class="QHBoxLayout" name="_4">
+       <item>
+        <widget class="QListWidget" name="listToggleScreenOrder">
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::DragDropMode::InternalMove</enum>
+         </property>
+         <property name="defaultDropAction">
+          <enum>Qt::DropAction::MoveAction</enum>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">

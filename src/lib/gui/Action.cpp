@@ -38,6 +38,21 @@ QString Action::text() const
     text.append(m_commandTemplate.arg(commandArgs));
   } break;
 
+  case Type::toggleScreen: {
+    QString commandArgs;
+    const QStringList &screens = typeScreenNames();
+    if (haveScreens() && !screens.isEmpty()) {
+      for (int i = 0; i < screens.size(); i++) {
+        commandArgs.append(screens[i]);
+        if (i != screens.size() - 1)
+          commandArgs.append(QStringLiteral(","));
+      }
+    } else {
+      commandArgs.append(QStringLiteral(",*"));
+    }
+    text.append(m_commandTemplate.arg(commandArgs));
+  } break;
+
   case Type::switchToScreen:
     text.append(m_commandTemplate.arg(m_switchScreenName));
     break;
