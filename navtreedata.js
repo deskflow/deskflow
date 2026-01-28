@@ -149,8 +149,8 @@ var NAVTREEINDEX =
 "classdeskflow_1_1gui_1_1FileTail.html#a35e2143f45482810c79a6d1944e6a9d3",
 "classdeskflow_1_1server_1_1ConfigReadContext.html#a46bd7f50cbfbd54167302679043a21f7",
 "functions_func_x.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a9b3e510654adce623b3c8c2149dacba7",
-"structSettings_1_1Core.html#a809849b6eb37dc36a4e6dd9a3a899bda"
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a",
+"structSettings_1_1Core.html#aa9b297403710d920ab1182db9f551508"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -1,6 +1,5 @@
 var ProtocolTypes_8cpp =
 [
-    [ "kBarrierProtocolName", "group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7", null ],
     [ "kMsgCClipboard", "group__protocol__commands.html#gad64d30f8ea795e2b64f812f87152c749", null ],
     [ "kMsgCClose", "group__protocol__commands.html#ga666d7243ecfed71d4392be6cf6119a32", null ],
     [ "kMsgCEnter", "group__protocol__commands.html#gae826571a53b798c573418568f4397190", null ],
@@ -38,6 +37,5 @@ var ProtocolTypes_8cpp =
     [ "kMsgHelloArgs", "group__protocol__handshake.html#ga8b406d6f067791e9f4117d73f587c683", null ],
     [ "kMsgHelloBack", "group__protocol__handshake.html#gafc643c9a9e9f9daf5082657a4faf6575", null ],
     [ "kMsgHelloBackArgs", "group__protocol__handshake.html#gafb82d058b11b4cb463f49ce16bd6bb0f", null ],
-    [ "kMsgQInfo", "group__protocol__queries.html#gaa563a996c14cf572767d3698a36ee042", null ],
-    [ "kSynergyProtocolName", "group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1", null ]
+    [ "kMsgQInfo", "group__protocol__queries.html#gaa563a996c14cf572767d3698a36ee042", null ]
 ];

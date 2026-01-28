@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.210</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.212</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -109,10 +109,6 @@ Collaboration diagram for Handshake Messages:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gaa12cde1e2a95ec6f663c1a73b57f84d1" id="r_gaa12cde1e2a95ec6f663c1a73b57f84d1"><td class="memItemLeft">const char *const&#160;</td><td class="memItemRight"><a class="el" href="#gaa12cde1e2a95ec6f663c1a73b57f84d1">kSynergyProtocolName</a></td></tr>
-<tr class="memdesc:gaa12cde1e2a95ec6f663c1a73b57f84d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protocol name for Synergy compatibility.  <br /></td></tr>
-<tr class="memitem:ga023a1e0dc40921e040d7a816292f49c7" id="r_ga023a1e0dc40921e040d7a816292f49c7"><td class="memItemLeft">const char *const&#160;</td><td class="memItemRight"><a class="el" href="#ga023a1e0dc40921e040d7a816292f49c7">kBarrierProtocolName</a></td></tr>
-<tr class="memdesc:ga023a1e0dc40921e040d7a816292f49c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protocol name for Barrier compatibility.  <br /></td></tr>
 <tr class="memitem:ga7fe883657ad6c4ac7077705202493ff6" id="r_ga7fe883657ad6c4ac7077705202493ff6"><td class="memItemLeft">const char *const&#160;</td><td class="memItemRight"><a class="el" href="#ga7fe883657ad6c4ac7077705202493ff6">kMsgHello</a></td></tr>
 <tr class="memdesc:ga7fe883657ad6c4ac7077705202493ff6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classServer.html" title="Deskflow server.">Server</a> hello message.  <br /></td></tr>
 <tr class="memitem:ga8b406d6f067791e9f4117d73f587c683" id="r_ga8b406d6f067791e9f4117d73f587c683"><td class="memItemLeft">const char *const&#160;</td><td class="memItemRight"><a class="el" href="#ga8b406d6f067791e9f4117d73f587c683">kMsgHelloArgs</a></td></tr>
@@ -125,32 +121,6 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Connection establishment and version negotiation. </p>
 </div><a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="ga023a1e0dc40921e040d7a816292f49c7" name="ga023a1e0dc40921e040d7a816292f49c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga023a1e0dc40921e040d7a816292f49c7">&#9670;&#160;</a></span>kBarrierProtocolName</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kBarrierProtocolName</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Protocol name for Barrier compatibility. </p>
-<p>Used in handshake messages to identify the protocol as Barrier-compatible. Must be exactly 7 characters for backward compatibility.</p>
-<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
-
-</div>
-</div>
 <a id="ga7fe883657ad6c4ac7077705202493ff6" name="ga7fe883657ad6c4ac7077705202493ff6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga7fe883657ad6c4ac7077705202493ff6">&#9670;&#160;</a></span>kMsgHello</h2>
 
@@ -279,32 +249,6 @@ Variables</h2></td></tr>
 </ul>
 <p>Used as part of dynamic hello message construction.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#gafc643c9a9e9f9daf5082657a4faf6575" title="Client hello response message.">kMsgHelloBack</a> </dd></dl>
-<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
-
-</div>
-</div>
-<a id="gaa12cde1e2a95ec6f663c1a73b57f84d1" name="gaa12cde1e2a95ec6f663c1a73b57f84d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa12cde1e2a95ec6f663c1a73b57f84d1">&#9670;&#160;</a></span>kSynergyProtocolName</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kSynergyProtocolName</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Protocol name for Synergy compatibility. </p>
-<p>Used in handshake messages to identify the protocol as Synergy-compatible. Must be exactly 7 characters for backward compatibility.</p>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 
 </div>
