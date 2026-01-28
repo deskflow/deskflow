@@ -243,7 +243,7 @@ jobs:
       # Fancy checkout gets all the tags
       # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v1
+        uses: sithlord48/fancy-checkout@v2
 
       # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
       # VC++ as that's already pre-installed on the Windows runner.
@@ -329,7 +329,7 @@ jobs:
       # Fancy checkout gets all the tags
       # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v1
+        uses: sithlord48/fancy-checkout@v2
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
         uses: vmactions/freebsd-vm@v1
@@ -362,7 +362,7 @@ jobs:
             arch: aarch64
     steps:
       - name: Check out repository
-        uses: sithlord48/fancy-checkout@v1
+        uses: sithlord48/fancy-checkout@v2
 
       - run: git config --global protocol.file.allow always
 
@@ -400,7 +400,7 @@ jobs:
 
     steps:
       - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v1
+        uses: sithlord48/fancy-checkout@v2
 
       - name: Get version
         uses: ./.github/actions/get-version
@@ -455,7 +455,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v1
+        uses: sithlord48/fancy-checkout@v2
 
       - name: Get version
         uses: ./.github/actions/get-version
