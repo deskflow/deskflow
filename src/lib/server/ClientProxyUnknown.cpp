@@ -43,7 +43,7 @@ ClientProxyUnknown::ClientProxyUnknown(deskflow::IStream *stream, double timeout
   const auto protocol = m_server->protocolString();
   const auto helloMessage = protocol + kMsgHelloArgs;
 
-  LOG_DEBUG("saying hello as %s, protocol v%d.%d", protocol.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
+  LOG_INFO("saying hello as %s, protocol v%d.%d", protocol.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
   ProtocolUtil::writef(m_stream, helloMessage.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
 }
 
