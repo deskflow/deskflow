@@ -103,6 +103,11 @@ private:
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
+
+  /// Restore token for session persistence (Issue #8032)
+  /// When compositors implement XDG Portal persistence, this token allows
+  /// automatic permission restoration without user re-confirmation
+  char *m_sessionRestoreToken = nullptr;
 };
 
 } // namespace deskflow

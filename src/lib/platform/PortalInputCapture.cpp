@@ -11,6 +11,7 @@
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "common/Settings.h"
 
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
@@ -61,6 +62,8 @@ PortalInputCapture::~PortalInputCapture()
     g_object_unref(b);
   }
   m_barriers.clear();
+
+  free(m_sessionRestoreToken);
   g_object_unref(m_portal);
 }
 
@@ -93,6 +96,19 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   }
 
   m_session = session;
+
+  // Try to get and save restore token for session persistence (Issue #8032)
+  // This enables automatic permission restoration when compositor support is available
+  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
+  if (parentSession) {
+    char *newToken = xdp_session_get_restore_token(parentSession);
+    if (newToken) {
+      free(m_sessionRestoreToken);
+      m_sessionRestoreToken = newToken;
+      Settings::setValue(Settings::Server::XdpInputCaptureRestoreToken, QString(m_sessionRestoreToken));
+      LOG_INFO("input capture session restore token saved for future use");
+    }
+  }
 
   auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
   if (fd < 0) {
@@ -150,7 +166,16 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
 
 gboolean PortalInputCapture::initSession()
 {
-  LOG_DEBUG("setting up input capture session");
+  // Load restore token from settings (Issue #8032 - dialog persistence)
+  // This token allows automatic permission restoration when compositor support is available
+  if (auto sessionToken = Settings::value(Settings::Server::XdpInputCaptureRestoreToken).toByteArray();
+      !sessionToken.isEmpty()) {
+    free(m_sessionRestoreToken);
+    m_sessionRestoreToken = strdup(sessionToken.data());
+    LOG_DEBUG("loaded input capture restore token from settings");
+  }
+
+  LOG_DEBUG("setting up input capture session%s", m_sessionRestoreToken ? " with restore token" : "");
   xdp_portal_create_input_capture_session(
       m_portal,
       nullptr, // parent

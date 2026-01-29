@@ -95,6 +95,7 @@ public:
   {
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
+    inline static const auto XdpInputCaptureRestoreToken = QStringLiteral("server/xdpInputCaptureRestoreToken");
   };
 
   // Enums types used in settings
@@ -223,6 +224,7 @@ private:
     , Settings::Security::TlsEnabled
     , Settings::Server::ExternalConfig
     , Settings::Server::ExternalConfigFile
+    , Settings::Server::XdpInputCaptureRestoreToken
   };
 
   // When checking the default values this list contains the ones that default to false.
