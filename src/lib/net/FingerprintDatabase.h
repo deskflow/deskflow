@@ -10,6 +10,7 @@
 #include "Fingerprint.h"
 
 #include <QList>
+#include <QTextStream>
 
 class FingerprintDatabase
 {

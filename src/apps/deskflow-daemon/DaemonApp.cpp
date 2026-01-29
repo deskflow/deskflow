@@ -34,7 +34,7 @@ using namespace deskflow::core;
 
 DaemonApp::DaemonApp(IEventQueue &events) : m_events(events)
 {
-  // do nothing
+  m_events.setLoopHook([]() { QCoreApplication::processEvents(); });
 }
 
 DaemonApp::~DaemonApp() = default;

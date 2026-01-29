@@ -65,7 +65,12 @@ void EventQueue::loop()
   while (event.getType() != EventTypes::Quit) {
     dispatchEvent(event);
     Event::deleteData(event);
-    getEvent(event);
+
+    while (!getEvent(event, 0.05)) {
+      if (m_loopHook) {
+        m_loopHook();
+      }
+    }
   }
 }
 
@@ -462,4 +467,10 @@ void EventQueue::Timer::fillEvent(TimerEvent &event) const
   if (m_time <= 0.0) {
     event.m_count = static_cast<uint32_t>((m_timeout - m_time) / m_timeout);
   }
+}
+
+void EventQueue::setLoopHook(std::function<void()> hook)
+{
+  std::scoped_lock lock{m_mutex};
+  m_loopHook = std::move(hook);
 }

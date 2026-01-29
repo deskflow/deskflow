@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <QObject>
+
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "deskflow/IApp.h"
@@ -30,8 +32,9 @@ class FileLogOutputter;
 class IEventQueue;
 class SocketMultiplexer;
 
-class App : public IApp
+class App : public QObject, public IApp
 {
+  Q_OBJECT
 public:
   class XNoEiSupport : public std::runtime_error
   {
