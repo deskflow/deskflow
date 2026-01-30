@@ -1066,6 +1066,20 @@ void Config::parseAction(
     action = new InputFilter::SwitchToNextScreenAction(m_events);
   }
 
+  else if (name == "toggleScreen") {
+    std::vector<std::string> screens;
+    for (const auto &arg : args) {
+      std::string screen = arg;
+      if (isScreen(screen)) {
+        screen = getCanonicalName(screen);
+      } else {
+        throw ServerConfigReadException(s, "unknown screen name \"%{1}\" in toggleScreen", arg);
+      }
+      screens.push_back(screen);
+    }
+    action = new InputFilter::ToggleScreenAction(m_events, screens);
+  }
+
   else if (name == "lockCursorToScreen") {
     if (args.size() > 1) {
       throw ServerConfigReadException(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");

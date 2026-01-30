@@ -46,9 +46,10 @@ public:
     switchToNextScreen,
     lockCursorToScreen,
     restartAllConnections,
+    toggleScreen,
     mouseDown,
     mouseUp,
-    mousebutton,
+    mousebutton
   };
   enum class SwitchDirection
   {
@@ -172,6 +173,7 @@ private:
       QStringLiteral("switchToNextScreen"),
       QStringLiteral("lockCursorToScreen"),
       QStringLiteral("restartServer"),
+      QStringLiteral("toggleScreen"),
       QStringLiteral("mouseDown"),
       QStringLiteral("mouseUp"),
       QStringLiteral("mousebutton")

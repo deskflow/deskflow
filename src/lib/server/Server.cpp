@@ -1324,35 +1324,46 @@ void Server::handleSwitchInDirectionEvent(const Event &event)
   }
 }
 
-void Server::handleToggleScreenEvent(const Event &)
+void Server::handleToggleScreenEvent(const Event &event)
 {
-  // Get the list of connected screens in config order
   std::vector<std::string> screens;
-  getClients(screens);
+  const auto *info = static_cast<const ToggleScreenInfo *>(event.getData());
 
-  if (screens.size() < 2) {
+  if (info) {
+    screens = info->m_screens;
+  } else {
+    getClients(screens);
+  }
+
+  if (screens.size() == 1) {
+    std::string target = screens[0];
+    ClientList::const_iterator clientIt = m_clients.find(target);
+    if (clientIt != m_clients.end()) {
+      jumpToScreen(clientIt->second);
+    }
+    return;
+  } else if (screens.size() == 0) {
     LOG_ERR("not enough screens to toggle");
     return;
   }
 
-  // Find the current active screen
   std::string currentScreen = getName(m_active);
   auto it = std::ranges::find(screens, currentScreen);
+
+  std::string nextScreenName;
   if (it == screens.end()) {
-    LOG_ERR("current screen not found in list");
-    return;
+    nextScreenName = screens[0];
+  } else {
+    auto nextIt = it + 1;
+    if (nextIt == screens.end()) {
+      nextIt = screens.begin();
+    }
+    nextScreenName = *nextIt;
   }
 
-  // Find the next screen
-  auto nextIt = it + 1;
-  if (nextIt == screens.end()) {
-    nextIt = screens.begin();
-  }
-
-  // Find the client for the next screen
-  ClientList::const_iterator clientIt = m_clients.find(*nextIt);
+  ClientList::const_iterator clientIt = m_clients.find(nextScreenName);
   if (clientIt == m_clients.end()) {
-    LOG_ERR("next screen not active");
+    LOG_ERR("screen \"%s\" not active", nextScreenName.c_str());
     return;
   }
 

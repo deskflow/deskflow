@@ -138,6 +138,14 @@ p, li { white-space: pre-wrap; }
         <source>Switch to </source>
         <translation>に切り替える</translation>
     </message>
+    <message>
+        <source>Toggle screen</source>
+        <translation type="unfinished">画面を切り替える</translation>
+    </message>
+    <message>
+        <source>Screen toggle order, drag to reorder</source>
+        <translation type="unfinished">画面表示順序の切り替え、ドラッグして順序を変更</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>

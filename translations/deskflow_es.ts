@@ -138,6 +138,14 @@ p, li { white-space: pre-wrap; }
         <source>Switch to </source>
         <translation type="unfinished">Cambiar a </translation>
     </message>
+    <message>
+        <source>Toggle screen</source>
+        <translation type="unfinished">Alternar pantalla</translation>
+    </message>
+    <message>
+        <source>Screen toggle order, drag to reorder</source>
+        <translation type="unfinished">Orden de visualización de las pantallas, arrastre para reordenarlas.</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
