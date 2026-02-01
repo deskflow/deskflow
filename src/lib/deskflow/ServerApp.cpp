@@ -59,7 +59,7 @@ using namespace deskflow::server;
 
 ServerApp::ServerApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
-  m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
+  m_name = Settings::value(Settings::Core::ComputerName).toString().toStdString();
   // do nothing
 }
 

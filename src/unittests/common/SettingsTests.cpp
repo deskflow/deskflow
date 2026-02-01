@@ -56,7 +56,7 @@ void SettingsTests::checkValidSettings()
   QSignalSpy spy(Settings::instance(), &Settings::settingsChanged);
   QVERIFY(spy.isValid());
 
-  const auto keysToCheck = QRegularExpression(QLatin1String("[^%1]").arg(Settings::Core::ScreenName));
+  const auto keysToCheck = QRegularExpression(QLatin1String("[^%1]").arg(Settings::Core::ComputerName));
   const auto validKeys = Settings::validKeys().filter(keysToCheck);
   for (const auto &setting : validKeys) {
     const auto value = Settings::value(setting).toString();
@@ -82,9 +82,9 @@ void SettingsTests::checkCleanScreenName()
   const auto input = QStringLiteral("--!_ _-S@c#r$e%e^&*(n)= +Name\n[1]2|3?4--5>6<,7`~/8*90\\.lan--..    ..");
   const auto expected = QStringLiteral("Screen_Name_1234--567890.lan");
 
-  Settings::setValue(Settings::Core::ScreenName, input);
+  Settings::setValue(Settings::Core::ComputerName, input);
 
-  QCOMPARE(Settings::value(Settings::Core::ScreenName).toString(), expected);
+  QCOMPARE(Settings::value(Settings::Core::ComputerName).toString(), expected);
 }
 
 void SettingsTests::checkCleanScreenName_LongName()
@@ -96,9 +96,9 @@ void SettingsTests::checkCleanScreenName_LongName()
   QString expected;
   expected.fill('f', 255);
 
-  Settings::setValue(Settings::Core::ScreenName, input);
+  Settings::setValue(Settings::Core::ComputerName, input);
 
-  QCOMPARE(Settings::value(Settings::Core::ScreenName).toString(), expected);
+  QCOMPARE(Settings::value(Settings::Core::ComputerName).toString(), expected);
 }
 
 void SettingsTests::checkLogLevels_Valid()

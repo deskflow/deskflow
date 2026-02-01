@@ -375,7 +375,7 @@ void MainWindow::settingsChanged(const QString &key)
     return;
   }
 
-  if (key == Settings::Core::ScreenName)
+  if (key == Settings::Core::ComputerName)
     updateScreenName();
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
@@ -1104,7 +1104,7 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+  const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
   ui->lblComputerName->setText(screenName);
   ui->lineEditName->setText(screenName);
   m_serverConfig.updateServerName();
@@ -1140,7 +1140,7 @@ void MainWindow::setHostName()
   ui->btnEditName->show();
 
   QString text = ui->lineEditName->text();
-  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+  const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
 
   if (text == screenName)
     return;
@@ -1172,7 +1172,7 @@ void MainWindow::setHostName()
   }
 
   ui->lblComputerName->setText(ui->lineEditName->text());
-  Settings::setValue(Settings::Core::ScreenName, ui->lineEditName->text());
+  Settings::setValue(Settings::Core::ComputerName, ui->lineEditName->text());
   if (isServer)
     serverConfig().updateServerName();
   applyConfig();

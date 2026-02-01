@@ -128,9 +128,9 @@ void ServerConfig::commit()
     settings().setArrayIndex(i);
     const auto &screen = screens()[i];
     screen.saveSettings(settings());
-    auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+    auto screenName = Settings::value(Settings::Core::ComputerName).toString();
     if (screen.isServer() && screenName != screen.name()) {
-      Settings::setValue(Settings::Core::ScreenName, screen.name());
+      Settings::setValue(Settings::Core::ComputerName, screen.name());
     }
   }
   settings().endArray();
@@ -316,14 +316,14 @@ int ServerConfig::numScreens() const
 
 QString ServerConfig::getServerName() const
 {
-  return Settings::value(Settings::Core::ScreenName).toString();
+  return Settings::value(Settings::Core::ComputerName).toString();
 }
 
 void ServerConfig::updateServerName()
 {
   for (auto &screen : screens()) {
     if (screen.isServer()) {
-      screen.setName(Settings::value(Settings::Core::ScreenName).toString());
+      screen.setName(Settings::value(Settings::Core::ComputerName).toString());
       break;
     }
   }
@@ -370,7 +370,7 @@ bool ServerConfig::screenExists(const QString &screenName) const
 void ServerConfig::addClient(const QString &clientName)
 {
   int serverIndex = -1;
-  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+  const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
 
   if (findScreenName(screenName, serverIndex)) {
     m_Screens[serverIndex].markAsServer();

@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2016 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -48,11 +48,14 @@ public:
     inline static const auto Port = QStringLiteral("core/port");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto ProcessMode = QStringLiteral("core/processMode");
-    inline static const auto ScreenName = QStringLiteral("core/screenName");
+    inline static const auto ComputerName = QStringLiteral("core/computerName");
     inline static const auto Display = QStringLiteral("core/display");
     inline static const auto UseHooks = QStringLiteral("core/useHooks");
     inline static const auto Language = QStringLiteral("core/language");
     inline static const auto UseWlClipboard = QStringLiteral("core/wlClipboard");
+
+    // TODO: REMOVE In 2.0
+    inline static const auto ScreenName = QStringLiteral("core/screenName"); // Replaced By ComputerName
   };
   struct Daemon
   {
@@ -149,20 +152,27 @@ private:
   Settings *operator=(Settings &other) = delete;
   Settings(const Settings &other) = delete;
   ~Settings() override = default;
+
+  /**
+   * @brief This method uses the Settings::m_upgradeMap, keys are upgraded if the oldkey is found and the newKey is not
+   * This method is run when settings is created before cleaning the settings and when you change settings files
+   * It does not remove any keys, only copies the old value to the new setings key
+   */
+  void upgradeSettings();
   void cleanSettings();
   void cleanStateSettings();
 
   /**
-   * @brief write an initial screen name
+   * @brief write an initial computer name
    */
-  void setupScreenName();
+  void setupComputerName();
 
   /**
-   * @brief cleanScreenName ensure a valid screenName from the provided one
-   * @param name any string to be used as the screenName
-   * @return a valid screeName
+   * @brief cleanComputerName ensure a valid computerName from the provided one
+   * @param name any string to be used as the computerName
+   * @return a valid computerName
    */
-  static QString cleanScreenName(const QString &name);
+  static QString cleanComputerName(const QString &name);
 
   QSettings *m_settings = nullptr;
   QSettings *m_stateSettings = nullptr;
@@ -193,6 +203,7 @@ private:
     , Settings::Core::PreventSleep
     , Settings::Core::ProcessMode
     , Settings::Core::ScreenName
+    , Settings::Core::ComputerName
     , Settings::Core::Display
     , Settings::Core::UseHooks
     , Settings::Core::UseWlClipboard
@@ -255,5 +266,11 @@ private:
 
   // Settings saved in our State file
   inline static const QStringList m_stateKeys = { Settings::Gui::WindowGeometry };
+
+  // Contains settings keys to be upgraded.
+  inline static const QMap<QString, QString> m_upgradedMap = {
+    /*             OLD KEY                        NEW KEY          */
+    {QStringLiteral("core/screenName"), Settings::Core::ComputerName}
+  };
   // clang-format on
 };

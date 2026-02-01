@@ -469,7 +469,7 @@ int SecureSocket::secureConnect(int socket)
   LOG_DEBUG2("connecting secure socket");
 
   // enable hostname verification.
-  const auto name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
+  const auto name = Settings::value(Settings::Core::ComputerName).toString().toStdString();
   SSL_set1_host(m_ssl->m_ssl, name.c_str());
   int r = SSL_connect(m_ssl->m_ssl);
 
