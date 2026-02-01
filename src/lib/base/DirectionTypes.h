@@ -11,20 +11,20 @@
 #include <cstdint>
 
 /**
- * @brief Screen edge directions for mouse movement
+ * @brief Computer edge directions for mouse movement
  *
- * Used to specify which edge of a screen the mouse cursor crosses
- * when moving between primary and secondary screens.
+ * Used to specify which edge of a computer the mouse cursor crosses
+ * when moving between primary and secondary computers.
  *
  * @since Protocol version 1.0
  */
 enum class Direction : uint8_t
 {
   NoDirection,                                                             ///< No specific direction
-  Left,                                                                    ///< Left edge of screen
-  Right,                                                                   ///< Right edge of screen
-  Top,                                                                     ///< Top edge of screen
-  Bottom,                                                                  ///< Bottom edge of screen
+  Left,                                                                    ///< Left edge of computer
+  Right,                                                                   ///< Right edge of computer
+  Top,                                                                     ///< Top edge of computer
+  Bottom,                                                                  ///< Bottom edge of computer
   FirstDirection = Direction::Left,                                        ///< First valid direction value
   LastDirection = Direction::Bottom,                                       ///< Last valid direction value
   NumDirections = Direction::LastDirection - Direction::FirstDirection + 1 ///< Total number of directions

@@ -111,23 +111,23 @@ enum class EventTypes : uint32_t
   */
   ClientProxyUnknownFailure,
 
-  /** This event is sent when a client screen has connected.
-      The event data is a pointer to ScreenConnectedInfo that indicates the connected screen.
+  /** This event is sent when a client computer has connected.
+      The event data is a pointer to ScreenConnectedInfo that indicates the connected computer.
   */
   ServerConnected,
 
   /// This is event sent when all the clients have disconnected.
   ServerDisconnected,
 
-  /** This event is sent to inform the server to switch screens.
-      The event data is a pointer to SwitchToScreenInfo that indicates the target screen.
+  /** This event is sent to inform the server to switch computers.
+      The event data is a pointer to SwitchToScreenInfo that indicates the target computer.
   */
   ServerSwitchToScreen,
 
-  /// This event is sent to inform the server to toggle screens.  These is no event data.
+  /// This event is sent to inform the server to toggle computers.  These is no event data.
   ServerToggleScreen,
 
-  /** This event is sent to inform the server to switch screens.
+  /** This event is sent to inform the server to switch computers.
       The event data is a pointer to SwitchInDirectionInfo that indicates the target direction.
   */
   ServerSwitchInDirection,
@@ -137,12 +137,12 @@ enum class EventTypes : uint32_t
   */
   ServerKeyboardBroadcast,
 
-  /** This event is sent to inform the server to lock the cursor to the active screen or to
+  /** This event is sent to inform the server to lock the cursor to the active computer or to
       unlock it. The event data is a pointer to LockCursorToScreenInfo.
   */
   ServerLockCursorToScreen,
 
-  /// This event is sent when the screen has been switched to a client.
+  /// This event is sent when the computer has been switched to a client.
   ServerScreenSwitched,
 
   ServerAppReloadConfig,
@@ -162,12 +162,12 @@ enum class EventTypes : uint32_t
   /// This event is sent when button is up. Event data is a pointer to ButtonInfo
   PrimaryScreenButtonUp,
 
-  /** This event is sent when mouse moves on primary screen.
+  /** This event is sent when mouse moves on the server.
       Event data is a pointer to MotionInfo, the values are absolute position.
   */
   PrimaryScreenMotionOnPrimary,
 
-  /** This event is sent when mouse moves on secondary screen.
+  /** This event is sent when mouse moves on a client.
       Event data is a pointer to MotionInfo, the values are relative motion deltas.
   */
   PrimaryScreenMotionOnSecondary,
@@ -193,12 +193,12 @@ enum class EventTypes : uint32_t
   /// This event is sent when fake input ends.
   PrimaryScreenFakeInputEnd,
 
-  /** This event is sent whenever the screen has failed for some reason (e.g. the X Windows
+  /** This event is sent whenever the computer has failed for some reason (e.g. the X Windows
       server died).
   */
   ScreenError,
 
-  /// This event is sent whenever the screen's shape changes.
+  /// This event is sent whenever the computer's display shape changes.
   ScreenShapeChanged,
 
   /** This event is sent whenever the system goes to sleep or a user session is deactivated (fast
