@@ -72,7 +72,7 @@ This section contains general options it will begin with `[core]`
 | port          | port #            | Port to use when connecting [default: 24800 |
 | preventSleep  | `true` or `false` | Prevent sleep when Deskflow is active [default: false] |
 | processMode   | `1` or `0`        | The mode we use to start the process Service or Desktop |
-| screenName    | string            | Name used to identify the computer [default: machine's hostname] |
+| computerName  | string            | Name used to identify the computer [default: machine's hostname] |
 | useHooks      | `true` or `false` | If Windows uses hooks or not [default: true] |
 | language      | 639 language      | The language to display the GUI in [default: en] |
 | wlClipboard   | `true` or `false` | When true the wl-clipboard backend will be enabled [default: false] |

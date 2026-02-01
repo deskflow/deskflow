@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -34,7 +34,10 @@ void Settings::setSettingsFile(const QString &settingsFile)
   instance()->m_settingsProxy->load(settingsFile);
   qInfo().noquote() << "settings file changed:" << instance()->m_settings->fileName();
 
-  instance()->setupScreenName();
+  instance()->upgradeSettings();
+  instance()->cleanSettings();
+  instance()->cleanStateSettings();
+  instance()->setupComputerName();
 }
 
 void Settings::setStateFile(const QString &stateFile)
@@ -83,9 +86,19 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
 
+  upgradeSettings();
   cleanSettings();
   cleanStateSettings();
-  setupScreenName();
+  setupComputerName();
+}
+
+void Settings::upgradeSettings()
+{
+  for (const auto [oldKey, newKey] : m_upgradedMap.asKeyValueRange()) {
+    if (m_settings->contains(oldKey) && !m_settings->contains(newKey)) {
+      m_settings->setValue(newKey, m_settings->value(oldKey));
+    }
+  }
 }
 
 void Settings::cleanSettings()
@@ -112,13 +125,13 @@ void Settings::cleanStateSettings()
   }
 }
 
-void Settings::setupScreenName()
+void Settings::setupComputerName()
 {
-  if (m_settings->value(Settings::Core::ScreenName).toString().isEmpty())
-    m_settings->setValue(Settings::Core::ScreenName, cleanScreenName(QSysInfo::machineHostName()));
+  if (m_settings->value(Settings::Core::ComputerName).toString().isEmpty())
+    m_settings->setValue(Settings::Core::ComputerName, cleanComputerName(QSysInfo::machineHostName()));
 }
 
-QString Settings::cleanScreenName(const QString &name)
+QString Settings::cleanComputerName(const QString &name)
 {
   static const auto hyphen = QStringLiteral("-");
   static const auto space = QStringLiteral(" ");
@@ -136,7 +149,7 @@ QString Settings::cleanScreenName(const QString &name)
     cleanName.removeLast();
   if (cleanName.length() > 255) {
     cleanName.truncate(255);
-    cleanName = cleanScreenName(cleanName);
+    cleanName = cleanComputerName(cleanName);
   }
   return cleanName;
 }
@@ -272,8 +285,8 @@ void Settings::setValue(const QString &key, const QVariant &value)
   if (!value.isValid())
     settings->remove(key);
   else {
-    if (key == Settings::Core::ScreenName)
-      settings->setValue(key, cleanScreenName(value.toString()));
+    if (key == Settings::Core::ComputerName)
+      settings->setValue(key, cleanComputerName(value.toString()));
     else
       settings->setValue(key, value);
   }
