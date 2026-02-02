@@ -45,3 +45,7 @@ CMakeFiles/*
 
 # scripts folder
 /scripts
+
+# Ai helperfilers
+**/[cC]laude.[mM][dD]
+**/CLAUDE.[mM][dD]
