@@ -526,18 +526,34 @@ void ServerProxy::setClipboard()
 
   auto r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-  if (r == TransferState::Started) {
+  switch (r) {
+  case TransferState::Started: {
     size_t size = ClipboardChunk::getExpectedSize();
-    LOG_DEBUG("receiving clipboard %d size=%d", id, size);
-  } else if (r == TransferState::Finished) {
-    LOG_DEBUG("received clipboard %d size=%d", id, dataCached.size());
+    LOG_DEBUG("receiving clipboard %d from server, size=%zu", id, size);
+    break;
+  }
+
+  case TransferState::InProgress:
+    // still receiving chunks, nothing to do
+    break;
+
+  case TransferState::Finished:
+    LOG_DEBUG("received clipboard %d from server, size=%zu", id, dataCached.size());
 
     // forward
-    Clipboard clipboard;
-    clipboard.unmarshall(dataCached, 0);
-    m_client->setClipboard(id, &clipboard);
+    {
+      Clipboard clipboard;
+      clipboard.unmarshall(dataCached, 0);
+      m_client->setClipboard(id, &clipboard);
+    }
 
     LOG_INFO("clipboard was updated");
+    break;
+
+  case TransferState::Error:
+    LOG_ERR("clipboard transfer from server failed, discarding %zu bytes of cached data", dataCached.size());
+    dataCached.clear();
+    break;
   }
 }
 

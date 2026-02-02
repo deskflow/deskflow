@@ -11,6 +11,8 @@
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
+
+#include <cstddef>
 #include <cstring>
 
 size_t ClipboardChunk::s_expectedSize = 0;
@@ -70,29 +72,41 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
   std::string data;
 
   if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
+    LOG_ERR("clipboard: failed to read clipboard chunk from stream (protocol error or connection lost)");
     return Error;
   }
 
   if (mark == ChunkType::DataStart) {
-    s_expectedSize = QString::fromStdString(data).toULong();
-    LOG_DEBUG("start receiving clipboard data");
+    bool ok = false;
+    s_expectedSize = QString::fromStdString(data).toULong(&ok);
+    if (!ok || data.empty()) {
+      LOG_ERR("clipboard: invalid size in DataStart chunk, data='%s'", data.c_str());
+      return Error;
+    }
+    LOG_DEBUG("clipboard: start receiving clipboard %d, expected size=%zu", id, s_expectedSize);
     dataCached.clear();
     return Started;
   } else if (mark == ChunkType::DataChunk) {
     dataCached.append(data);
+    LOG_DEBUG2("clipboard: received data chunk, accumulated %zu of %zu bytes", dataCached.size(), s_expectedSize);
     return TransferState::InProgress;
   } else if (mark == ChunkType::DataEnd) {
     // validate
     if (id >= kClipboardEnd) {
+      LOG_ERR("clipboard: invalid clipboard id %d (max=%d)", id, kClipboardEnd - 1);
       return Error;
     } else if (s_expectedSize != dataCached.size()) {
-      LOG_ERR("corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size());
+      LOG_ERR(
+          "clipboard: corrupted data, expected size=%zu actual size=%zu (lost %zd bytes)", s_expectedSize,
+          dataCached.size(), static_cast<ssize_t>(s_expectedSize) - static_cast<ssize_t>(dataCached.size())
+      );
       return Error;
     }
+    LOG_DEBUG("clipboard: finished receiving clipboard %d, size=%zu", id, dataCached.size());
     return Finished;
   }
 
-  LOG_ERR("clipboard transmission failed: unknown error");
+  LOG_ERR("clipboard: unknown chunk mark type %d", mark);
   return Error;
 }
 

@@ -50,23 +50,39 @@ bool ClientProxy1_6::recvClipboard()
   ClipboardID id;
   uint32_t seq;
 
-  if (auto r = ClipboardChunk::assemble(getStream(), dataCached, id, seq); r == TransferState::Started) {
+  auto r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
+
+  switch (r) {
+  case TransferState::Started: {
     size_t size = ClipboardChunk::getExpectedSize();
-    LOG_DEBUG("receiving clipboard %d size=%d", id, size);
-  } else if (r == TransferState::Finished) {
-    LOG(
-        (CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seq,
-         dataCached.size())
-    );
+    LOG_DEBUG("receiving clipboard %d from client \"%s\", size=%zu", id, getName().c_str(), size);
+    break;
+  }
+
+  case TransferState::InProgress:
+    // still receiving chunks, nothing to do
+    break;
+
+  case TransferState::Finished:
+    LOG_DEBUG("received client \"%s\" clipboard %d seqnum=%d, size=%zu", getName().c_str(), id, seq, dataCached.size());
+
     // save clipboard
     m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
     m_clipboard[id].m_sequenceNumber = seq;
 
     // notify
-    auto *info = new ClipboardInfo;
-    info->m_id = id;
-    info->m_sequenceNumber = seq;
-    m_events->addEvent(Event(EventTypes::ClipboardChanged, getEventTarget(), info));
+    {
+      auto *info = new ClipboardInfo;
+      info->m_id = id;
+      info->m_sequenceNumber = seq;
+      m_events->addEvent(Event(EventTypes::ClipboardChanged, getEventTarget(), info));
+    }
+    break;
+
+  case TransferState::Error:
+    LOG_ERR("clipboard transfer from client \"%s\" failed, discarding %zu bytes", getName().c_str(), dataCached.size());
+    dataCached.clear();
+    return false;
   }
 
   return true;

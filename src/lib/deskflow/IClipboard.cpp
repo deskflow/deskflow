@@ -7,6 +7,8 @@
 
 #include "deskflow/IClipboard.h"
 
+#include "base/Log.h"
+
 #include <assert.h>
 #include <vector>
 
@@ -28,6 +30,10 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
     const uint32_t numFormats = readUInt32(index);
     index += 4;
 
+    LOG_DEBUG("clipboard: unmarshalling %u formats from %zu bytes", numFormats, data.size());
+
+    uint32_t formatsAdded = 0;
+
     // read each format
     for (uint32_t i = 0; i < numFormats; ++i) {
       // get the format id
@@ -43,12 +49,19 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
       // then one of them will get a format >= TotalFormats here.
       if (format < IClipboard::Format::TotalFormats) {
         clipboard->add(format, std::string(index, size));
+        ++formatsAdded;
+        LOG_DEBUG2("clipboard: added format %d with %u bytes", static_cast<int>(format), size);
+      } else {
+        LOG_DEBUG("clipboard: skipping unknown format %d with %u bytes", static_cast<int>(format), size);
       }
       index += size;
     }
 
     // done
     clipboard->close();
+    LOG_DEBUG("clipboard: unmarshall complete, added %u of %u formats", formatsAdded, numFormats);
+  } else {
+    LOG_ERR("clipboard: failed to open clipboard for unmarshalling");
   }
 }
 
