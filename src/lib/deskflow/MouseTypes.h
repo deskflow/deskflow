@@ -28,4 +28,4 @@ static const ButtonID kMacButtonRight = 2;
 static const ButtonID kMacButtonMiddle = 3;
 //@}
 
-static const uint8_t NumButtonIDs = 5;
+static const uint8_t NumButtonIDs = 6;

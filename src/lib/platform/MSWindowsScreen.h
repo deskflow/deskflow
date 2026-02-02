@@ -318,7 +318,7 @@ private:
   HotKeyToIDMap m_hotKeyToIDMap;
 
   // map of button state
-  bool m_buttons[1 + kButtonExtra0 + 1];
+  bool m_buttons[NumButtonIDs];
 
   // m_hasMouse is true if there's a mouse attached to the system or
   // mouse keys is simulating one.  we track this so we can force the

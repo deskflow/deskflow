@@ -1743,51 +1743,34 @@ KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const
 
 ButtonID XWindowsScreen::mapButtonFromX(const XButtonEvent *event) const
 {
-  unsigned int button = event->button;
-
-  // first three buttons map to 1, 2, 3 (kButtonLeft, Middle, Right)
-  if (button >= 1 && button <= 3) {
-    return static_cast<ButtonID>(button);
-  }
-
-  // buttons 4 and 5 are ignored here.  they're used for the wheel.
-  // buttons 6, 7, etc and up map to 4, 5, etc.
-  else if (button >= 6) {
-    return static_cast<ButtonID>(button - 2);
-  }
-
-  // unknown button
-  else {
+  switch (unsigned int button = event->button; button) {
+  case 1:
+  case 2:
+  case 3:
+    return static_cast<ButtonID>(button); // Handle Left, Middle and Right buttons
+  case 8:
+    return kButtonExtra0; // Mouse 4
+  case 9:
+    return kButtonExtra1; // Mouse 5
+  default:
     return kButtonNone;
   }
 }
 
 unsigned int XWindowsScreen::mapButtonToX(ButtonID id) const
 {
-  // map button -1 to button 4 (+wheel)
-  if (id == static_cast<ButtonID>(-1)) {
-    id = 4;
-  }
-
-  // map button -2 to button 5 (-wheel)
-  else if (id == static_cast<ButtonID>(-2)) {
-    id = 5;
-  }
-
-  // map buttons 4, 5, etc. to 6, 7, etc. to make room for buttons
-  // 4 and 5 used to simulate the mouse wheel.
-  else if (id >= 4) {
-    id += 2;
-  }
-
-  // check button is in legal range
-  if (id < 1 || id > m_buttons.size()) {
-    // out of range
+  switch (id) {
+  case kButtonLeft:
+  case kButtonRight:
+  case kButtonMiddle:
+    return static_cast<uint>(id);
+  case kButtonExtra0:
+    return 8;
+  case kButtonExtra1:
+    return 9;
+  default:
     return 0;
   }
-
-  // map button
-  return static_cast<unsigned int>(id);
 }
 
 void XWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)

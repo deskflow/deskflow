@@ -1506,13 +1506,13 @@ ButtonID MSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
     switch (button) {
     case XBUTTON1:
       if (GetSystemMetrics(SM_CMOUSEBUTTONS) >= 4) {
-        return kButtonExtra0 + 0;
+        return kButtonExtra0;
       }
       break;
 
     case XBUTTON2:
       if (GetSystemMetrics(SM_CMOUSEBUTTONS) >= 5) {
-        return kButtonExtra0 + 1;
+        return kButtonExtra1;
       }
       break;
     }

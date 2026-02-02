@@ -272,12 +272,12 @@ void MSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
     flags = press ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP;
     break;
 
-  case kButtonExtra0 + 0:
+  case kButtonExtra0:
     data = XBUTTON1;
     flags = press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
     break;
 
-  case kButtonExtra0 + 1:
+  case kButtonExtra1:
     data = XBUTTON2;
     flags = press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
     break;
