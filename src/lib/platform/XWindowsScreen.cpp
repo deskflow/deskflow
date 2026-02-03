@@ -800,7 +800,7 @@ void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
   yDelta = mapClientScrollDirection(yDelta);
 
   // choose button depending on rotation direction
-  const unsigned int xButton = mapButtonToX(static_cast<ButtonID>((yDelta >= 0) ? -1 : -2));
+  const unsigned int xButton = mapButtonToX(yDelta >= 0 ? kX11ScrollWheelUp : kX11ScrollWheelDown);
   if (xButton == 0) {
     // If we get here, then the XServer does not support the scroll
     // wheel buttons, so send PageUp/PageDown keystrokes instead.
@@ -1764,6 +1764,10 @@ unsigned int XWindowsScreen::mapButtonToX(ButtonID id) const
   case kButtonRight:
   case kButtonMiddle:
     return static_cast<uint>(id);
+  case kX11ScrollWheelUp:
+    return 4;
+  case kX11ScrollWheelDown:
+    return 5;
   case kButtonExtra0:
     return 8;
   case kButtonExtra1:
