@@ -142,7 +142,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Protocol violation. </p>
-<p><b>Message Code</b>: <span class="tt">"EBAD"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"EBAD"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Sent when the client violates the protocol in some way. This can include:</p><ul>
 <li>Sending malformed messages</li>
 <li>Sending messages in wrong order</li>
@@ -181,7 +181,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classClient.html" title="Deskflow client.">Client</a> name already in use. </p>
-<p><b>Message Code</b>: <span class="tt">"EBSY"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"EBSY"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Sent when the client name provided during connection is already in use by another connected client. <a class="el" href="classClient.html" title="Deskflow client.">Client</a> names must be unique within a Deskflow network.</p>
 <p>After receiving this message, the client should:</p><ol type="1">
 <li>Disconnect from the server</li>
@@ -214,7 +214,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Incompatible protocol versions. </p>
-<p><b>Message Code</b>: <span class="tt">"EICV"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"EICV%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"EICV"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"EICV%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Primary major version (2 bytes)</li>
 <li><span class="tt">$2</span>: Primary minor version (2 bytes)</li>
 </ul>
@@ -250,7 +250,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Unknown client name. </p>
-<p><b>Message Code</b>: <span class="tt">"EUNK"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"EUNK"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Sent when the client name provided during connection is not found in the server's screen configuration map. This means the server doesn't know about this client.</p>
 <p>This can happen when:</p><ul>
 <li><a class="el" href="classClient.html" title="Deskflow client.">Client</a> name is misspelled</li>

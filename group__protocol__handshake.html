@@ -142,7 +142,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classServer.html" title="Deskflow server.">Server</a> hello message. </p>
-<p><b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"%7s%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"%7s%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Protocol name (7 bytes, fixed-size) - A fixed-size field for the protocol identifier, used for backward compatibility. The supported values are "Synergy" or "Barrier". "Barrier" is the default protocol name, while "Synergy" is used only for backwards compatibility. This is an exception to the standard length-prefixed string format.</li>
 <li><span class="tt">$2</span>: <a class="el" href="classServer.html" title="Deskflow server.">Server</a> major version number (2 bytes)</li>
 <li><span class="tt">$3</span>: <a class="el" href="classServer.html" title="Deskflow server.">Server</a> minor version number (2 bytes)</li>
@@ -207,7 +207,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classClient.html" title="Deskflow client.">Client</a> hello response message. </p>
-<p><b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Secondary → Primary <b>Format</b>: <span class="tt">"%7s%2i%2is"</span> <b>Parameters</b>:</p><ul>
+<p><b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Secondary → Primary <b>Format</b>: <span class="tt">"%7s%2i%2is"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Protocol name (7 bytes, fixed-size) - A fixed-size field for the protocol identifier, which must match the server's. The supported values are "Synergy" or "Barrier". "Barrier" is the default protocol name, while "Synergy" is used only for backwards compatibility. This is an exception to the standard length-prefixed string format.</li>
 <li><span class="tt">$2</span>: <a class="el" href="classClient.html" title="Deskflow client.">Client</a> major version number (2 bytes)</li>
 <li><span class="tt">$3</span>: <a class="el" href="classClient.html" title="Deskflow client.">Client</a> minor version number (2 bytes)</li>

@@ -152,7 +152,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> grab notification. </p>
-<p><b>Message Code</b>: <span class="tt">"CCLP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary ↔ Secondary <b>Format</b>: <span class="tt">"CCLP%1i%4i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"CCLP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary ↔ Secondary <b>Format</b>: <span class="tt">"CCLP%1i%4i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> identifier (1 byte)</li>
 <li><span class="tt">$2</span>: Sequence number (4 bytes)</li>
 </ul>
@@ -189,7 +189,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Close connection command. </p>
-<p><b>Message Code</b>: <span class="tt">"CBYE"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"CBYE"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Instructs the client to close the connection gracefully. The client should clean up resources and disconnect.</p>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 
@@ -216,7 +216,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Enter screen command. </p>
-<p><b>Message Code</b>: <span class="tt">"CINN"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"CINN%2i%2i%4i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"CINN"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"CINN%2i%2i%4i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Entry X coordinate (2 bytes, signed)</li>
 <li><span class="tt">$2</span>: Entry Y coordinate (2 bytes, signed)</li>
 <li><span class="tt">$3</span>: Sequence number (4 bytes, unsigned)</li>
@@ -251,7 +251,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classScreen.html">Screen</a> information acknowledgment. </p>
-<p><b>Message Code</b>: <span class="tt">"CIAK"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"CIAK"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Sent by the primary in response to a secondary screen's kMsgDInfo message. This acknowledgment is sent for every kMsgDInfo, whether or not the primary had previously sent a kMsgQInfo query.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__protocol__info.html#ga86ae71f251fa22768bbe55892d763ca0" title="Client screen information.">kMsgDInfo</a>, <a class="el" href="group__protocol__queries.html#gaa563a996c14cf572767d3698a36ee042" title="Query screen information.">kMsgQInfo</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
@@ -279,7 +279,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Keep-alive message. </p>
-<p><b>Message Code</b>: <span class="tt">"CALV"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary ↔ Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"CALV"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary ↔ Secondary <b>Format</b>: No parameters</p>
 <p>Sent periodically by the server to verify that connections are still active. Clients must reply with the same message upon receipt.</p>
 <p><b>Timing</b>:</p><ul>
 <li>Default interval: 3 seconds (configurable)</li>
@@ -317,7 +317,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Leave screen command. </p>
-<p><b>Message Code</b>: <span class="tt">"COUT"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"COUT"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Sent when the mouse cursor leaves the secondary screen and returns to the primary. Upon receiving this message, the secondary screen should:</p><ol type="1">
 <li>Send clipboard data for any clipboards it has grabbed</li>
 <li>Only send clipboards that have changed since the last leave</li>
@@ -349,7 +349,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>No operation command. </p>
-<p><b>Message Code</b>: <span class="tt">"CNOP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Secondary → Primary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"CNOP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Secondary → Primary <b>Format</b>: No parameters</p>
 <p>A no-operation message that can be used for testing connectivity or as a placeholder. Has no effect on the receiving end.</p>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 
@@ -376,7 +376,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reset options command. </p>
-<p><b>Message Code</b>: <span class="tt">"CROP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p><b>Message Code</b>: <span class="tt">"CROP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: No parameters</p>
 <p>Instructs the client to reset all of its options to their default values. This is typically sent when the server configuration changes.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__protocol__info.html#ga67849a45cec6d87bf9228776b3dd876e" title="Set client options.">kMsgDSetOptions</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
@@ -404,7 +404,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Screensaver state change. </p>
-<p><b>Message Code</b>: <span class="tt">"CSEC"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"CSEC%1i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"CSEC"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"CSEC%1i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Screensaver state (1 byte): 1 = started, 0 = stopped <b>Examples</b>:</li>
 </ul>
 <p>Screensaver started </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CSEC\x01&quot;</span></div>

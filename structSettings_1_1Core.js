@@ -1,5 +1,6 @@
 var structSettings_1_1Core =
 [
+    [ "ComputerName", "structSettings_1_1Core.html#a1dca5c3929372601e8237ed5ec24e099", null ],
     [ "CoreMode", "structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446", null ],
     [ "Display", "structSettings_1_1Core.html#a2a0059d3e150af140d0c1760df2dffab", null ],
     [ "Interface", "structSettings_1_1Core.html#a2a47e74b26eeb5e3f444a96c497860ab", null ],

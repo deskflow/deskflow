@@ -146,7 +146,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Mouse button press event. </p>
-<p><b>Message Code</b>: <span class="tt">"DMDN"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMDN%1i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DMDN"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMDN%1i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee" title="Mouse button ID.">ButtonID</a> (1 byte) - Mouse button identifier</li>
 </ul>
 <p><b>Examples</b>:</p>
@@ -185,7 +185,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Absolute mouse movement. </p>
-<p><b>Message Code</b>: <span class="tt">"DMMV"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMMV%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DMMV"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMMV%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: X coordinate (2 bytes, signed) - Absolute screen position</li>
 <li><span class="tt">$2</span>: Y coordinate (2 bytes, signed) - Absolute screen position</li>
 </ul>
@@ -218,7 +218,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Relative mouse movement. </p>
-<p><b>Message Code</b>: <span class="tt">"DMRM"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMRM%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DMRM"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMRM%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: X delta (2 bytes, signed) - Horizontal movement</li>
 <li><span class="tt">$2</span>: Y delta (2 bytes, signed) - Vertical movement</li>
 </ul>
@@ -255,7 +255,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Mouse button release event. </p>
-<p><b>Message Code</b>: <span class="tt">"DMUP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMUP%1i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DMUP"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMUP%1i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee" title="Mouse button ID.">ButtonID</a> (1 byte) - Mouse button identifier</li>
 </ul>
 <p><b>Example</b>:</p>
@@ -287,7 +287,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Mouse wheel scroll event. </p>
-<p><b>Message Code</b>: <span class="tt">"DMWM"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMWM%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DMWM"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMWM%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: X delta (2 bytes, signed) - Horizontal scroll</li>
 <li><span class="tt">$2</span>: Y delta (2 bytes, signed) - Vertical scroll</li>
 </ul>
@@ -330,7 +330,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Mouse wheel scroll event (legacy v1.0-1.2). </p>
-<p><b>Message Code</b>: <span class="tt">"DMWM"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMWM%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DMWM"</span> <b><a class="el" href="DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6" title="Computer edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMWM%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Y delta (2 bytes, signed) - Vertical scroll only</li>
 </ul>
 <p>Legacy version that only supports vertical scrolling. Used when communicating with protocol versions 1.0-1.2.</p>

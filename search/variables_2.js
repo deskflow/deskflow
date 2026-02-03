@@ -6,6 +6,7 @@ var searchData=
   ['closetotray_3',['CloseToTray',['../structSettings_1_1Gui.html#ad13866ec8710e35b73149cd35baae69d',1,'Settings::Gui']]],
   ['cmd_4',['cmd',['../ArchNetworkWinsock_8cpp.html#a85092d82ab6ea85dad51ba78cbda36a0',1,'ArchNetworkWinsock.cpp']]],
   ['command_5',['Command',['../structSettings_1_1Daemon.html#af9e6842a07e56327dbdb16af6cb62873',1,'Settings::Daemon']]],
-  ['configoption_6',['configOption',['../structCoreArgs.html#a79230ec384dd83b877382b679948e189',1,'CoreArgs']]],
-  ['coremode_7',['CoreMode',['../structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446',1,'Settings::Core']]]
+  ['computername_6',['ComputerName',['../structSettings_1_1Core.html#a1dca5c3929372601e8237ed5ec24e099',1,'Settings::Core']]],
+  ['configoption_7',['configOption',['../structCoreArgs.html#a79230ec384dd83b877382b679948e189',1,'CoreArgs']]],
+  ['coremode_8',['CoreMode',['../structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446',1,'Settings::Core']]]
 ];
