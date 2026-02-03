@@ -59,7 +59,7 @@ runs:
         fi
 
         echo "$table" > $GITHUB_STEP_SUMMARY
-
+        wccount=$(echo $table | grep -o "❌" | wc -l)
         count=$(echo "$table" | awk -v RS='' '{gsub(/[^❌]/, ""); print length}')
 
         # Keep at this indentation level for heredoc.
@@ -73,6 +73,8 @@ runs:
         )
 
         file="ci-summary.md"
+        echo "$count Fails"
+        echo "$wccount WCFails"
         if [ $count -gt 0 ]; then
           echo "$fail_summary" | tee $file
           echo "file=$file" >> $GITHUB_OUTPUT
