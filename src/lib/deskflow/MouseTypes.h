@@ -26,6 +26,10 @@ static const ButtonID kButtonExtra1 = 5;
 
 static const ButtonID kMacButtonRight = 2;
 static const ButtonID kMacButtonMiddle = 3;
+
+// Only used for X11 Scroll Wheel
+static const ButtonID kX11ScrollWheelUp = 255;
+static const ButtonID kX11ScrollWheelDown = 254;
 //@}
 
 static const uint8_t NumButtonIDs = 6;
