@@ -20,7 +20,7 @@ env:
 jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [main-build, test-results, unix, flatpak]
     if: always()
 
