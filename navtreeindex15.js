@@ -1,5 +1,7 @@
 var NAVTREEINDEX15 =
 {
+"classSocketAddressException.html":[6,0,210],
+"classSocketAddressException.html#a0efa60b613a4c9c302b86f98a0262afd":[6,0,210,6],
 "classSocketAddressException.html#a3623970eae722a9971e4822403fddec0":[6,0,210,1],
 "classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14":[6,0,210,0],
 "classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a38c300f4fc9ce8a77aad4a30de05cad8":[6,0,210,0,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX15 =
 "classXDGKeyUtil.html":[6,0,243],
 "classXDGKeyUtil.html#a4c2f8d42050b721ad1868ebd338e3cf9":[6,0,243,0],
 "classXDGKeyUtil.html#a5eacc1972537b408537c4fb82b1c02f2":[6,0,243,1],
-"classXDGPowerManager.html":[6,0,244],
-"classXDGPowerManager.html#a009cda95efbd43dee43959bc79a2b5c9":[6,0,244,6],
-"classXDGPowerManager.html#a3643df54ce745f4e1fbc9ab32fbe2292":[6,0,244,2]
+"classXDGPowerManager.html":[6,0,244]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"classXDGPowerManager.html#a009cda95efbd43dee43959bc79a2b5c9":[6,0,244,6],
+"classXDGPowerManager.html#a3643df54ce745f4e1fbc9ab32fbe2292":[6,0,244,2],
 "classXDGPowerManager.html#a3874c5f01dc93d8e92907c9bfb81cbbc":[6,0,244,4],
 "classXDGPowerManager.html#a669247ba2ad324671a87898152203ad2":[6,0,244,1],
 "classXDGPowerManager.html#aa2195492c3945eeb9108982656404dad":[6,0,244,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "classXWindowsUtil_1_1ErrorLock.html":[6,0,257,0],
 "classXWindowsUtil_1_1ErrorLock.html#a0f672607eea2c0210a567bb6f0983cd3":[6,0,257,0,8],
 "classXWindowsUtil_1_1ErrorLock.html#a36fd47b60342baa436d5328f3cfa0676":[6,0,257,0,5],
-"classXWindowsUtil_1_1ErrorLock.html#a6e7f7e57e1237295eb993b57d6e61a62":[6,0,257,0,6],
-"classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2":[6,0,257,0,7],
-"classXWindowsUtil_1_1ErrorLock.html#aab75fa73bf4a731ea2515e16bbe01df9":[6,0,257,0,4]
+"classXWindowsUtil_1_1ErrorLock.html#a6e7f7e57e1237295eb993b57d6e61a62":[6,0,257,0,6]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX22 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a9b3e510654adce623b3c8c2149dacba7":[5,0,0,18,7],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa3a542765a6211cbe16fdf6722655963":[5,0,0,18,47],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a":[5,0,0,18,2],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aafcedfec63fc7f07f162450b4955ebdc":[5,0,0,18,35],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab0376836c1f8904ca702481e63f756d8":[5,0,0,18,8],
@@ -247,7 +249,5 @@ var NAVTREEINDEX22 =
 "structSettings_1_1Core.html#a2cbb9afa6b91c1199c6c63ae56712d99":[6,0,207,1,7],
 "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54":[6,0,207,1,10],
 "structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a":[6,0,207,1,4],
-"structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446":[6,0,207,1,1],
-"structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d":[6,0,207,1,6],
-"structSettings_1_1Core.html#a809849b6eb37dc36a4e6dd9a3a899bda":[6,0,207,1,11]
+"structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446":[6,0,207,1,1]
 };

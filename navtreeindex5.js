@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"StreamBuffer_8cpp.html":[7,0,1,1,6,3],
+"StreamBuffer_8h.html":[7,0,1,1,6,4],
 "StreamBuffer_8h_source.html":[7,0,1,1,6,4],
 "StreamChunker_8cpp.html":[7,0,1,1,4,55],
 "StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,55,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "classAppUtilUnix.html#ad494eae903b08c6c6c43cdf01167c067":[6,0,8,0],
 "classAppUtilUnix.html#ae4bc733d6f992b07a9e83064e741aa9e":[6,0,8,6],
 "classAppUtilUnix.html#ae67c326a965f9af4a61ca531a3f2c314":[6,0,8,4],
-"classAppUtilUnix.html#aeb650f7d1e269ebb309a71dc6ccc9e96":[6,0,8,5],
-"classAppUtilWindows.html":[6,0,9],
-"classAppUtilWindows.html#a0bd450cbb1f31aaf6a247fd867fdbcb5":[6,0,9,6]
+"classAppUtilUnix.html#aeb650f7d1e269ebb309a71dc6ccc9e96":[6,0,8,5]
 };

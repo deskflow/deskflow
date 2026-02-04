@@ -143,14 +143,16 @@ var NAVTREEINDEX3 =
 "Messages_8h_source.html":[7,0,1,1,5,21],
 "MouseTypes_8h.html":[7,0,1,1,4,39],
 "MouseTypes_8h.html#a0dacf3d04bfb24ad934f8438ec96fc36":[7,0,1,1,4,39,8],
+"MouseTypes_8h.html#a0f6cb9a79daffa5ba32e047eebc0a412":[7,0,1,1,4,39,9],
 "MouseTypes_8h.html#a1841a2139e01b8bcc4db626bfd392761":[7,0,1,1,4,39,3],
+"MouseTypes_8h.html#a1ad130ebde81a505d2eba96e4154475a":[7,0,1,1,4,39,10],
 "MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee":[7,0,1,1,4,39,0],
 "MouseTypes_8h.html#a5114055540e0aebb6c7cab74dc94d2ef":[7,0,1,1,4,39,4],
 "MouseTypes_8h.html#aa8775ba1478550252160954e88c58855":[7,0,1,1,4,39,7],
 "MouseTypes_8h.html#abd8056f1b5ed376191af830190ef9d7b":[7,0,1,1,4,39,6],
 "MouseTypes_8h.html#ac57186796c5017ced6404d31c6abc125":[7,0,1,1,4,39,2],
 "MouseTypes_8h.html#adc0e99885718b3cd428b9a1f16e60800":[7,0,1,1,4,39,1],
-"MouseTypes_8h.html#afb8283e11d4d520390cfdf6bae83f1cc":[7,0,1,1,4,39,9],
+"MouseTypes_8h.html#afb8283e11d4d520390cfdf6bae83f1cc":[7,0,1,1,4,39,11],
 "MouseTypes_8h.html#afcadf6ffa501541c7e8360bba3acd0b2":[7,0,1,1,4,39,5],
 "MouseTypes_8h_source.html":[7,0,1,1,4,39],
 "Mutex_8cpp.html":[7,0,1,1,7,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "OSXKeyState_8cpp.html#a8ad213e888adb067b810522d15d37c54":[7,0,1,1,9,65,8],
 "OSXKeyState_8cpp.html#ab2c0341815e734a6892a1ac00614773d":[7,0,1,1,9,65,9],
 "OSXKeyState_8cpp.html#ac05df8405182a5111d542557ce205c64":[7,0,1,1,9,65,10],
-"OSXKeyState_8cpp.html#af34dcd5e47f5657f1e06bbaf48684af5":[7,0,1,1,9,65,4],
-"OSXKeyState_8cpp.html#affd353771c5f441401e17230a26431c0":[7,0,1,1,9,65,1],
-"OSXKeyState_8h.html":[7,0,1,1,9,66]
+"OSXKeyState_8cpp.html#af34dcd5e47f5657f1e06bbaf48684af5":[7,0,1,1,9,65,4]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"OSXKeyState_8cpp.html#affd353771c5f441401e17230a26431c0":[7,0,1,1,9,65,1],
+"OSXKeyState_8h.html":[7,0,1,1,9,66],
 "OSXKeyState_8h_source.html":[7,0,1,1,9,66],
 "OSXMediaKeySupport_8h.html":[7,0,1,1,9,67],
 "OSXMediaKeySupport_8h.html#a3335d4beeebeaee57e9a206c10608cb0":[7,0,1,1,9,67,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "SslLogger_8h_source.html":[7,0,1,1,8,24],
 "Stopwatch_8cpp.html":[7,0,1,1,1,26],
 "Stopwatch_8h.html":[7,0,1,1,1,27],
-"Stopwatch_8h_source.html":[7,0,1,1,1,27],
-"StreamBuffer_8cpp.html":[7,0,1,1,6,3],
-"StreamBuffer_8h.html":[7,0,1,1,6,4]
+"Stopwatch_8h_source.html":[7,0,1,1,1,27]
 };
