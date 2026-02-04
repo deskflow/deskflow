@@ -1112,14 +1112,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Использовать язык клавиатуры сервера на этом компьютере</translation>
     </message>
     <message>
-        <source>Invert scroll direction on this computer</source>
-        <translation>Инвертировать направление прокрутки на этом компьютере</translation>
-    </message>
-    <message>
-        <source>Scroll Speed</source>
-        <translation>Скорость прокрутки</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>Приложение</translation>
     </message>
@@ -1322,6 +1314,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Включить номер версии в заголовок окна</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">Инвертировать направление вертикальной прокрутки на этом компьютере</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">Вертикальная шкала прокрутки</translation>
     </message>
 </context>
 <context>

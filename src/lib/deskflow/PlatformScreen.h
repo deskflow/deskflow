@@ -114,4 +114,11 @@ private:
    * This member is used only on client side.
    */
   bool m_invertScrollDirection = false;
+
+  /**
+   * @brief m_scrollScale
+   * This member is used to scale the scroll speed
+   * It is only used on the client side
+   */
+  double m_scrollScale = 1.0;
 };

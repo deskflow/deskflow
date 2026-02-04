@@ -204,8 +204,8 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Daemon::LogFile)
     return QStringLiteral("%1/%2-daemon.log").arg(Settings::settingsPath(), kAppId);
 
-  if (key == Client::ScrollSpeed)
-    return 120;
+  if (key == Client::YScrollScale)
+    return 1.0;
 
   return QVariant();
 }

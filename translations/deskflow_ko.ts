@@ -1112,14 +1112,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>이 컴퓨터에서 서버의 키보드 언어 사용</translation>
     </message>
     <message>
-        <source>Invert scroll direction on this computer</source>
-        <translation>이 컴퓨터의 스크롤 방향 반전</translation>
-    </message>
-    <message>
-        <source>Scroll Speed</source>
-        <translation>스크롤 속도</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>앱</translation>
     </message>
@@ -1322,6 +1314,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">창 제목에 버전 정보 포함</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">이 컴퓨터에서 세로 스크롤 방향을 반전합니다</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">수직 스크롤 스케일</translation>
     </message>
 </context>
 <context>

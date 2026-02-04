@@ -1113,14 +1113,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Utilice el idioma del teclado del servidor en esta computadora</translation>
     </message>
     <message>
-        <source>Invert scroll direction on this computer</source>
-        <translation type="unfinished">Invertir la dirección de desplazamiento en esta computadora</translation>
-    </message>
-    <message>
-        <source>Scroll Speed</source>
-        <translation type="unfinished">Velocidad de desplazamiento</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation type="unfinished">Aplicación</translation>
     </message>
@@ -1323,6 +1315,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Incluir la versión en el título de la ventana</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">Invertir la dirección del desplazamiento vertical en este ordenador</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">Escala de desplazamiento vertical</translation>
     </message>
 </context>
 <context>
