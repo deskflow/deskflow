@@ -74,9 +74,10 @@ void avoidHesitatingCursor();
 bool OSXScreen::s_testedForGHOM = false;
 bool OSXScreen::s_hasGHOM = false;
 
-OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync, bool invertScrolling)
+OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync, bool invertScrolling, int32_t scrollDelta)
     : PlatformScreen(events, invertScrolling),
       m_isPrimary(isPrimary),
+      m_scrollDelta(scrollDelta == 0 ? 120 : scrollDelta),
       m_isOnScreen(m_isPrimary),
       m_cursorPosValid(false),
       MouseButtonEventMap(NumButtonIDs),
@@ -1223,7 +1224,7 @@ int32_t OSXScreen::mapScrollWheelFromDeskflow(int32_t x) const
 {
   // use server's acceleration with a little boost since other platforms
   // take one wheel step as a larger step than the mac does.
-  auto result = static_cast<int32_t>(3.0 * x / 120.0);
+  auto result = static_cast<int32_t>(3.0 * x / static_cast<double>(m_scrollDelta));
   return mapClientScrollDirection(result);
 }
 

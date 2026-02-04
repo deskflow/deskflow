@@ -43,7 +43,7 @@ class Mutex;
 class OSXScreen : public PlatformScreen
 {
 public:
-  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false, bool invertScrolling = false);
+  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false, bool invertScrolling = false, int32_t scrollDelta = 120);
 
   virtual ~OSXScreen();
 
@@ -303,6 +303,7 @@ private:
   int32_t m_lastSingleClickYCursor;
 
   IEventQueue *m_events;
+  int32_t m_scrollDelta;
 
   std::unique_ptr<Thread> m_getDropTargetThread;
   std::string m_dropTarget;

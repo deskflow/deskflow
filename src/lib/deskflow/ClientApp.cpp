@@ -140,7 +140,7 @@ deskflow::Screen *ClientApp::createScreen()
 
 #if WINAPI_CARBON
   return new deskflow::Screen(
-      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool(), invertScrolling),
+      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool(), invertScrolling, Settings::value(Settings::Client::ScrollSpeed).toInt()),
       getEvents()
   );
 #endif
