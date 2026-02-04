@@ -57,6 +57,7 @@ It will begin with `[client]`
 | invertScrollDirection | `true` or `false`  | Invert scroll on this client [default: false] |
 | languageSync          | `true` or `false`  | Sync to server language [default: true] |
 | remoteHost            | `IP` or `hostname` | The remote host(s) to connect to. Use a comma seperated list when you want to try severial hosts |
+| yScrollScale          | Double 0.1 - 10.0  | Mouse scrolling will be scaled by this amount on the client [default: 1.0] |
 | xdpRestoreToken       | UUID               | Restore token provided by XDG portals |
 
 ### Core

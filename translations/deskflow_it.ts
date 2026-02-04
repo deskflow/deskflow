@@ -1113,14 +1113,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Usa la lingua della tastiera del server su questo computer</translation>
     </message>
     <message>
-        <source>Invert scroll direction on this computer</source>
-        <translation>Inverti la direzione di scorrimento su questo computer</translation>
-    </message>
-    <message>
-        <source>Scroll Speed</source>
-        <translation>Velocità di scorrimento</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>App</translation>
     </message>
@@ -1323,6 +1315,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Includi la versione nel titolo della finestra</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">Inverti la direzione dello scorrimento verticale su questo computer</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">Scala di scorrimento verticale</translation>
     </message>
 </context>
 <context>

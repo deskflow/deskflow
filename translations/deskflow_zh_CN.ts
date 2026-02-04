@@ -1114,14 +1114,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>在此计算机上使用服务器的键盘语言</translation>
     </message>
     <message>
-        <source>Invert scroll direction on this computer</source>
-        <translation>反转此计算机上的滚动方向</translation>
-    </message>
-    <message>
-        <source>Scroll Speed</source>
-        <translation>滚动速度</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>应用程序</translation>
     </message>
@@ -1324,6 +1316,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">在窗口标题中包含版本信息</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">在此计算机上反转垂直滚动方向</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">垂直滚动比例</translation>
     </message>
 </context>
 <context>
