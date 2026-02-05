@@ -14,7 +14,7 @@ PlatformScreen::PlatformScreen(IEventQueue *events, bool invertScrolling)
     : IPlatformScreen(events),
       m_invertScrollDirection(invertScrolling)
 {
-  m_scrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
+  m_yScrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
 }
 
 void PlatformScreen::updateKeyMap()
@@ -90,10 +90,11 @@ void PlatformScreen::clearStaleModifiers()
   getKeyState()->clearStaleModifiers();
 }
 
-int32_t PlatformScreen::mapClientScrollDirection(int32_t x) const
+PlatformScreen::ScrollDelta PlatformScreen::applyClientScrollModifier(const PlatformScreen::ScrollDelta rawDelta) const
 {
-  x *= m_scrollScale;
-  return (m_invertScrollDirection ? -x : x);
+  ScrollDelta correctedDelta = rawDelta;
+  correctedDelta.yDelta *= m_invertScrollDirection ? -m_yScrollScale : m_yScrollScale;
+  return correctedDelta;
 }
 
 std::string PlatformScreen::sidesMaskToString(uint32_t sides)

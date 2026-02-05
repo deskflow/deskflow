@@ -797,7 +797,7 @@ void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
     return;
   }
 
-  yDelta = mapClientScrollDirection(yDelta);
+  yDelta = applyClientScrollModifier({0, yDelta}).yDelta;
 
   // choose button depending on rotation direction
   const unsigned int xButton = mapButtonToX(yDelta >= 0 ? kX11ScrollWheelUp : kX11ScrollWheelDown);
