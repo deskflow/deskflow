@@ -130,8 +130,7 @@ deskflow::Screen *ClientApp::createScreen()
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(
-          qPrintable(Settings::value(Settings::Core::Display).toString()), false,
-          Settings::value(Settings::Client::ScrollSpeed).toInt(), getEvents(), invertScrolling
+          qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents(), invertScrolling
       ),
       getEvents()
   );

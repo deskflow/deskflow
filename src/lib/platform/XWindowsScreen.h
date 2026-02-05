@@ -28,9 +28,7 @@ class XWindowsScreenSaver;
 class XWindowsScreen : public PlatformScreen
 {
 public:
-  XWindowsScreen(
-      const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events, bool invertScrolling = false
-  );
+  XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events, bool invertScrolling = false);
   ~XWindowsScreen() override;
 
   //! @name manipulators
@@ -167,7 +165,6 @@ private:
 
   // true if screen is being used as a primary screen, false otherwise
   bool m_isPrimary;
-  int m_mouseScrollDelta;
 
   Display *m_display = nullptr;
   Window m_root = None;

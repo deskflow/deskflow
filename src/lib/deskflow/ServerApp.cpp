@@ -419,7 +419,7 @@ deskflow::Screen *ServerApp::createScreen()
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
-      new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, 0, getEvents()),
+      new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
       getEvents()
   );
 #elif WINAPI_CARBON
