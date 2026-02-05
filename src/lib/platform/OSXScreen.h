@@ -139,9 +139,6 @@ private:
   // map mac scroll wheel value to a deskflow scroll wheel value
   int32_t mapScrollWheelToDeskflow(int32_t) const;
 
-  // map deskflow scroll wheel value to a mac scroll wheel value
-  int32_t mapScrollWheelFromDeskflow(int32_t) const;
-
   // get the current scroll wheel speed
   double getScrollSpeed() const;
 

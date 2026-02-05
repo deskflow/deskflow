@@ -587,11 +587,15 @@ void OSXScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 void OSXScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
   if (xDelta != 0 || yDelta != 0) {
+    // use server's acceleration with a little boost since other platforms
+    // take one wheel step as a larger step than the mac does.
+    auto adjustedDeltas = applyClientScrollModifier(
+        {static_cast<int32_t>(3.0 * xDelta / 120.0), static_cast<int32_t>(3.0 * yDelta / 120.0)}
+    );
     // create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
     // is the right choice here over kCGScrollEventUnitPixel
-    CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
-        nullptr, kCGScrollEventUnitLine, 2, mapScrollWheelFromDeskflow(yDelta), mapScrollWheelFromDeskflow(xDelta)
-    );
+    CGEventRef scrollEvent =
+        CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, adjustedDeltas.yDelta, adjustedDeltas.xDelta);
 
     // Fix for sticky keys
     CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
@@ -1217,14 +1221,6 @@ int32_t OSXScreen::mapScrollWheelToDeskflow(int32_t x) const
   // return accelerated scrolling
   double d = (1.0 + getScrollSpeed()) * x;
   return static_cast<int32_t>(120.0 * d);
-}
-
-int32_t OSXScreen::mapScrollWheelFromDeskflow(int32_t x) const
-{
-  // use server's acceleration with a little boost since other platforms
-  // take one wheel step as a larger step than the mac does.
-  auto result = static_cast<int32_t>(3.0 * x / 120.0);
-  return mapClientScrollDirection(result);
 }
 
 double OSXScreen::getScrollSpeed() const

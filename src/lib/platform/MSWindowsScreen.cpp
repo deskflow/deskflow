@@ -710,9 +710,8 @@ void MSWindowsScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 
 void MSWindowsScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
-  xDelta = mapClientScrollDirection(xDelta);
-  yDelta = mapClientScrollDirection(yDelta);
-  m_desks->fakeMouseWheel(xDelta, yDelta);
+  auto adjustedDeltas = applyClientScrollModifier({xDelta, yDelta});
+  m_desks->fakeMouseWheel(adjustedDeltas.xDelta, adjustedDeltas.yDelta);
 }
 
 void MSWindowsScreen::updateKeys()
