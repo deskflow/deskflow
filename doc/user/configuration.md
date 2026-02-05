@@ -56,7 +56,7 @@ It will begin with `[client]`
 | binary                | Filename           | The filename of the binary to call for client mode. This binary exists in the same path as the GUI |
 | invertScrollDirection | `true` or `false`  | Invert scroll on this client [default: false] |
 | languageSync          | `true` or `false`  | Sync to server language [default: true] |
-| remoteHost            | `IP` or `hostname` | The remote host last connected to | 
+| remoteHost            | `IP` or `hostname` | The remote host(s) to connect to. Use a comma seperated list when you want to try severial hosts |
 | xdpRestoreToken       | UUID               | Restore token provided by XDG portals |
 
 ### Core
