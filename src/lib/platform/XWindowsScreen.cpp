@@ -82,19 +82,13 @@ static int xi_opcode;
 
 XWindowsScreen *XWindowsScreen::s_screen = nullptr;
 
-XWindowsScreen::XWindowsScreen(
-    const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events, bool invertScrolling
-)
+XWindowsScreen::XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events, bool invertScrolling)
     : PlatformScreen(events, invertScrolling),
       m_isPrimary(isPrimary),
-      m_mouseScrollDelta(mouseScrollDelta),
       m_isOnScreen(m_isPrimary),
       m_events(events)
 {
   assert(s_screen == nullptr);
-
-  if (mouseScrollDelta == 0)
-    m_mouseScrollDelta = 120;
   s_screen = this;
 
   if (XInitThreads() == 0) {
@@ -823,12 +817,11 @@ void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
     yDelta = -yDelta;
   }
 
-  if (yDelta < m_mouseScrollDelta) {
-    LOG_WARN("wheel scroll delta (%d) smaller than threshold (%d)", yDelta, m_mouseScrollDelta);
-  }
+  // Delta for a "click"
+  static const auto s_mouseDelta = 120;
 
   // send as many clicks as necessary
-  for (; yDelta >= m_mouseScrollDelta; yDelta -= m_mouseScrollDelta) {
+  for (; yDelta >= 0; yDelta -= s_mouseDelta) {
     XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
     XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
   }
