@@ -17,6 +17,8 @@ if(UNIX AND NOT APPLE)
   set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
   set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
   check_symbol_exists(xdp_input_capture_session_get_restore_token "libportal/inputcapture.h" HAVE_IC_RESTORE)
+  check_symbol_exists(xdp_session_is_clipboard_enabled "libportal/inputcapture.h" HAVE_IC_CLIPBOARD_ACCESS)
+
   cmake_pop_check_state()
 endif()
 
@@ -189,6 +191,9 @@ if(UNIX)
     target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
     if (HAVE_IC_RESTORE)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
+    endif()
+    if (HAVE_IC_CLIPBOARD_ACCESS)
+      target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
     endif()
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
     target_link_libraries(

@@ -59,6 +59,9 @@ PortalInputCapture::~PortalInputCapture()
     g_signal_handler_disconnect(m_session, m_signals.at(Activated));
     g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
     g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
+
+    g_signal_handler_disconnect(m_session, m_signals.at(SelectionOwnerChanged));
+    g_signal_handler_disconnect(m_session, m_signals.at(SelectionTransfer));
     g_object_unref(m_session);
   }
 
@@ -84,6 +87,52 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
+void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner)
+{
+#if HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
+  if (!mimeTypes || isowner)
+    return;
+
+  if (g_strv_contains(mimeTypes, "text/plain")) {
+    int fd = xdp_session_selection_read(session, "text/plain");
+    if (fd < 0)
+      return;
+
+    char clipboard_content[1024] = {};
+
+    if (read(fd, clipboard_content, sizeof(clipboard_content) - 1) < 0) {
+      LOG_WARN("Failed to read clipboard content: %m");
+      return;
+    }
+
+    LOG_INFO("Clipboard content is: %s", clipboard_content);
+
+    /* FIXME: send this to the remote I guess? */
+  }
+#endif
+}
+
+void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
+{
+#if HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
+  int fd;
+
+  fd = xdp_session_selection_write(session, serial);
+  if (fd < 0)
+    return;
+
+  /* FIXME: fill data with the clipboard from the remote */
+  char data[1024] = {};
+
+  int nbytes = write(fd, data, strlen(data));
+  if (nbytes < 0) {
+    LOG_WARN("Failed to read clipboard content: %m");
+  }
+
+  xdp_session_selection_write_done(session, serial, nbytes >= 0);
+#endif
+}
+
 void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
 {
   g_autoptr(GError) error = nullptr;
@@ -107,6 +156,18 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
   handleZonesChanged(m_session, nullptr);
+
+#if HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
+  if (xdp_session_is_clipboard_enabled(parentSession)) {
+    m_signals.at(SelectionOwnerChanged) =
+        g_signal_connect(G_OBJECT(parentSession), "selection-owner-changed", G_CALLBACK(selectionOwnerChanged), this);
+    m_signals.at(SelectionTransfer) =
+        g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
+
+    /* FIXME: do handleSelectionOwnerChanged() here to retrieve the
+     * current selection (if any) */
+  }
+#endif
 }
 
 void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
@@ -225,6 +286,7 @@ gboolean PortalInputCapture::initSession()
       return FALSE;
     }
     m_session = session;
+    xdp_session_request_clipboard(xdp_input_capture_session_get_session(session));
     xdp_input_capture_session_set_session_persistence(session, XDP_INPUT_CAPTURE_SESSION_PERSISTENCE_PERSISTENT);
     if (auto sessionToken = Settings::value(Settings::Server::XdpRestoreToken).toByteArray(); !sessionToken.isEmpty()) {
       xdp_input_capture_session_set_restore_token(session, strdup(sessionToken.data()));
