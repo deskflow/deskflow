@@ -11,6 +11,8 @@
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "deskflow/ClipboardTypes.h"
+#include "platform/EiClipboard.h"
 
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
 #include "common/Settings.h"
@@ -27,6 +29,9 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
       m_portalVersion(0),
       m_portal{xdp_portal_new()}
 {
+  // Create clipboard for primary clipboard ID
+  m_clipboard = new EiClipboard(kClipboardClipboard);
+
   m_glibMainLoop = g_main_loop_new(nullptr, true);
 
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
@@ -70,6 +75,17 @@ PortalInputCapture::~PortalInputCapture()
   }
   m_barriers.clear();
   g_object_unref(m_portal);
+
+  delete m_clipboard;
+}
+
+EiClipboard *PortalInputCapture::getClipboard(ClipboardID id) const
+{
+  // Currently only supporting primary clipboard
+  if (id == kClipboardClipboard) {
+    return m_clipboard;
+  }
+  return nullptr;
 }
 
 gboolean PortalInputCapture::timeoutHandler() const
@@ -98,16 +114,33 @@ void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv 
     if (fd < 0)
       return;
 
-    char clipboard_content[1024] = {};
+    char clipboardContent[1024] = {};
 
-    if (read(fd, clipboard_content, sizeof(clipboard_content) - 1) < 0) {
+    if (read(fd, clipboardContent, sizeof(clipboardContent) - 1) < 0) {
       LOG_WARN("Failed to read clipboard content: %m");
       return;
     }
 
-    LOG_INFO("Clipboard content is: %s", clipboard_content);
+    LOG_INFO("Clipboard content is: %s", clipboardContent);
 
-    /* FIXME: send this to the remote I guess? */
+    // Store clipboard data in our clipboard
+    // Note: kClipboardClipboard = 0 for primary clipboard
+    ClipboardID id = kClipboardClipboard;
+
+    // Open clipboard for writing
+    m_clipboard->open(0);
+
+    // Empty and take ownership
+    m_clipboard->empty();
+
+    // Add the text data
+    m_clipboard->add(IClipboard::Format::Text, std::string(clipboardContent));
+
+    // Close the clipboard
+    m_clipboard->close();
+
+    // Emit clipboard change event to notify the server
+    m_screen->sendClipboardEvent(EventTypes::ClipboardChanged, id);
   }
 #endif
 }
