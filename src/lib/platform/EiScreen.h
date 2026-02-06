@@ -23,10 +23,10 @@ struct ei_device;
 
 namespace deskflow {
 
-class WlClipboardCollection;
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
 
@@ -78,6 +78,9 @@ public:
   void setSequenceNumber(std::uint32_t) override;
   bool isPrimary() const override;
 
+  // Send clipboard event (needed by PortalInputCapture)
+  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
+
 protected:
   // IPlatformScreen overrides
   void handleSystemEvent(const Event &event) override;
@@ -93,7 +96,6 @@ private:
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
-  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);
@@ -125,7 +127,7 @@ private:
   KeyID m_lastPressed = kKeyNone;
 
   // clipboard stuff
-  WlClipboardCollection *m_clipboard = nullptr;
+  EiClipboard *m_clipboard = nullptr;
 
   std::vector<ei_device *> m_eiDevices;
 
