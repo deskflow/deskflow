@@ -82,9 +82,6 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="wrapping">
-               <bool>true</bool>
-              </property>
               <property name="accelerated">
                <bool>true</bool>
               </property>
@@ -98,7 +95,7 @@
                <double>10.000000000000000</double>
               </property>
               <property name="singleStep">
-               <double>0.500000000000000</double>
+               <double>0.100000000000000</double>
               </property>
               <property name="value">
                <double>1.000000000000000</double>
