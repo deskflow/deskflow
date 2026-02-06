@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -318,11 +318,11 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
   if (!m_eiPointer)
     return;
 
-  auto adjustedDeltas = applyClientScrollModifier({xDelta, yDelta});
+  auto adjustedDeltas = applyScrollModifier({xDelta, yDelta});
   // libei and deskflow seem to use opposite directions, so we have
   // to send EI the opposite of the value received if we want to remain
   // compatible with other platforms (including X11).
-  ei_device_scroll_discrete(m_eiPointer, -adjustedDeltas.xDelta, -adjustedDeltas.yDelta);
+  ei_device_scroll_discrete(m_eiPointer, -adjustedDeltas.x, -adjustedDeltas.y);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
 

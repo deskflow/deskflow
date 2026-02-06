@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,13 +8,11 @@
 
 #include "deskflow/PlatformScreen.h"
 #include "base/DirectionTypes.h"
-#include "common/Settings.h"
 #include "deskflow/App.h"
 
 PlatformScreen::PlatformScreen(IEventQueue *events) : IPlatformScreen(events)
 {
-  m_invertScrollDirection = Settings::value(Settings::Client::InvertScrollDirection).toBool();
-  m_yScrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
+  // do nothing
 }
 
 void PlatformScreen::updateKeyMap()
@@ -87,13 +86,6 @@ void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
 void PlatformScreen::clearStaleModifiers()
 {
   getKeyState()->clearStaleModifiers();
-}
-
-PlatformScreen::ScrollDelta PlatformScreen::applyClientScrollModifier(const PlatformScreen::ScrollDelta rawDelta) const
-{
-  ScrollDelta correctedDelta = rawDelta;
-  correctedDelta.yDelta *= m_invertScrollDirection ? -m_yScrollScale : m_yScrollScale;
-  return correctedDelta;
 }
 
 std::string PlatformScreen::sidesMaskToString(uint32_t sides)

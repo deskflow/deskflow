@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -791,7 +791,7 @@ void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
     return;
   }
 
-  yDelta = applyClientScrollModifier({0, yDelta}).yDelta;
+  yDelta = applyScrollModifier({0, yDelta}).y;
 
   // choose button depending on rotation direction
   const unsigned int xButton = mapButtonToX(yDelta >= 0 ? kX11ScrollWheelUp : kX11ScrollWheelDown);
