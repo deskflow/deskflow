@@ -28,7 +28,7 @@ class XWindowsScreenSaver;
 class XWindowsScreen : public PlatformScreen
 {
 public:
-  XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events, bool invertScrolling = false);
+  XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events);
   ~XWindowsScreen() override;
 
   //! @name manipulators

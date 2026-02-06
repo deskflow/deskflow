@@ -43,7 +43,7 @@ class Mutex;
 class OSXScreen : public PlatformScreen
 {
 public:
-  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false, bool invertScrolling = false);
+  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false);
 
   virtual ~OSXScreen();
 

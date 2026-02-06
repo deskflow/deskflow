@@ -10,10 +10,9 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 
-PlatformScreen::PlatformScreen(IEventQueue *events, bool invertScrolling)
-    : IPlatformScreen(events),
-      m_invertScrollDirection(invertScrolling)
+PlatformScreen::PlatformScreen(IEventQueue *events) : IPlatformScreen(events)
 {
+  m_invertScrollDirection = Settings::value(Settings::Client::InvertScrollDirection).toBool();
   m_yScrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
 }
 

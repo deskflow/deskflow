@@ -79,10 +79,8 @@
 HINSTANCE MSWindowsScreen::s_windowInstance = nullptr;
 MSWindowsScreen *MSWindowsScreen::s_screen = nullptr;
 
-MSWindowsScreen::MSWindowsScreen(
-    bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync, bool invertScrolling
-)
-    : PlatformScreen(events, invertScrolling),
+MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync)
+    : PlatformScreen(events),
       m_isPrimary(isPrimary),
       m_useHooks(useHooks),
       m_isOnScreen(m_isPrimary),

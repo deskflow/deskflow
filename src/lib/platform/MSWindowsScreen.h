@@ -29,9 +29,7 @@ class MSWindowsDropTarget;
 class MSWindowsScreen : public PlatformScreen
 {
 public:
-  MSWindowsScreen(
-      bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync = false, bool invetScrolling = false
-  );
+  MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync = false);
   ~MSWindowsScreen() override;
 
   //! @name manipulators
