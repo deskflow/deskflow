@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -589,13 +589,12 @@ void OSXScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
   if (xDelta != 0 || yDelta != 0) {
     // use server's acceleration with a little boost since other platforms
     // take one wheel step as a larger step than the mac does.
-    auto adjustedDeltas = applyClientScrollModifier(
-        {static_cast<int32_t>(3.0 * xDelta / 120.0), static_cast<int32_t>(3.0 * yDelta / 120.0)}
-    );
+    auto adjustedDeltas =
+        applyScrollModifier({static_cast<int32_t>(3.0 * xDelta / 120.0), static_cast<int32_t>(3.0 * y / 120.0)});
     // create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
     // is the right choice here over kCGScrollEventUnitPixel
     CGEventRef scrollEvent =
-        CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, adjustedDeltas.yDelta, adjustedDeltas.xDelta);
+        CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, adjustedDeltas.y, adjustedDeltas.x);
 
     // Fix for sticky keys
     CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();

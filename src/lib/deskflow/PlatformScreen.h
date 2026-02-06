@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -18,11 +19,6 @@ subclasses to implement the rest.
 class PlatformScreen : public IPlatformScreen
 {
 public:
-  struct ScrollDelta
-  {
-    int32_t xDelta;
-    int32_t yDelta;
-  };
   explicit PlatformScreen(IEventQueue *events);
   ~PlatformScreen() override = default;
 
@@ -99,13 +95,6 @@ protected:
 
   // IPlatformScreen overrides
   void handleSystemEvent(const Event &event) override = 0;
-
-  /*!
-   * \brief applyClientYScrollModifier
-   * Convert scroll according to client's scroll modifiers
-   * \return converted value according to the client's scroll modifiers
-   */
-  virtual ScrollDelta applyClientScrollModifier(const ScrollDelta rawDelta) const;
 
   /*!
   Converts a sides mask (e.g. LeftMask | RightMask) to a string representation (e.g. "LR").
