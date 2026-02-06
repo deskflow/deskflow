@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.222</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.228</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,10 +136,10 @@ $(function(){initNavTree('OSXScreen_8h_source.html','',''); });
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">class </span><a class="code hl_class" href="classMutex.html">Mutex</a>;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
 <div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classOSXScreen.html">   43</a></span><span class="keyword">class </span><a class="code hl_function" href="classOSXScreen.html#ae87e373005625f8e5a24da6591fe9158">OSXScreen</a> : <span class="keyword">public</span> <a class="code hl_function" href="classPlatformScreen.html#aba9e75f26033c13529997ae310eef840">PlatformScreen</a></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classOSXScreen.html">   43</a></span><span class="keyword">class </span><a class="code hl_function" href="classOSXScreen.html#a4aaa8ed6b7f0bed6ce740c0677e65578">OSXScreen</a> : <span class="keyword">public</span> <a class="code hl_function" href="classPlatformScreen.html#a7993f9c29cfb31017e27b684e260b6cc">PlatformScreen</a></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_function" href="classOSXScreen.html#ae87e373005625f8e5a24da6591fe9158">OSXScreen</a>(<a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events, <span class="keywordtype">bool</span> <a class="code hl_function" href="classOSXScreen.html#aca30212ec71dcf62789e7c002857490d">isPrimary</a>, <span class="keywordtype">bool</span> enableLangSync = <span class="keyword">false</span>, <span class="keywordtype">bool</span> invertScrolling = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_function" href="classOSXScreen.html#a4aaa8ed6b7f0bed6ce740c0677e65578">OSXScreen</a>(<a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events, <span class="keywordtype">bool</span> <a class="code hl_function" href="classOSXScreen.html#aca30212ec71dcf62789e7c002857490d">isPrimary</a>, <span class="keywordtype">bool</span> enableLangSync = <span class="keyword">false</span>);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classOSXScreen.html#a52a46101a17ecfe975876d8d8e4e3438">~OSXScreen</a>();</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
@@ -237,181 +237,178 @@ $(function(){initNavTree('OSXScreen_8h_source.html','',''); });
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <span class="comment">// map mac scroll wheel value to a deskflow scroll wheel value</span></div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  int32_t mapScrollWheelToDeskflow(int32_t) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="comment">// map deskflow scroll wheel value to a mac scroll wheel value</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  int32_t mapScrollWheelFromDeskflow(int32_t) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="comment">// get the current scroll wheel speed</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keywordtype">double</span> getScrollSpeed() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <span class="comment">// get the current scroll wheel speed</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <span class="keywordtype">double</span> getScrollSpeed() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <span class="comment">// Resolution switch callback</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> displayReconfigurationCallback(CGDirectDisplayID, CGDisplayChangeSummaryFlags, <span class="keywordtype">void</span> *);</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <span class="comment">// Resolution switch callback</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> displayReconfigurationCallback(CGDirectDisplayID, CGDisplayChangeSummaryFlags, <span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <span class="comment">// fast user switch callback</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <span class="keyword">static</span> pascal OSStatus userSwitchCallback(EventHandlerCallRef nextHandler, EventRef theEvent, <span class="keywordtype">void</span> *inUserData);</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  <span class="comment">// fast user switch callback</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="keyword">static</span> pascal OSStatus userSwitchCallback(EventHandlerCallRef nextHandler, EventRef theEvent, <span class="keywordtype">void</span> *inUserData);</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="comment">// sleep / wakeup support</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keywordtype">void</span> watchSystemPowerThread(<span class="keyword">const</span> <span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> testCanceled(CFRunLoopTimerRef timer, <span class="keywordtype">void</span> *info);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> powerChangeCallback(<span class="keywordtype">void</span> *refcon, io_service_t service, natural_t messageType, <span class="keywordtype">void</span> *messageArgument);</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keywordtype">void</span> handlePowerChangeRequest(natural_t messageType, <span class="keywordtype">void</span> *messageArgument);</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">void</span> handleConfirmSleep(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;event);</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="comment">// global hotkey operating mode</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> isGlobalHotKeyOperatingModeAvailable();</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> setGlobalHotKeysEnabled(<span class="keywordtype">bool</span> enabled);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> getGlobalHotKeysEnabled();</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="comment">// Quartz event tap support</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keyword">static</span> CGEventRef handleCGInputEvent(CGEventTapProxy proxy, CGEventType <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, CGEventRef event, <span class="keywordtype">void</span> *refcon);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keyword">static</span> CGEventRef</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, CGEventRef event, <span class="keywordtype">void</span> *refcon);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  <span class="comment">// sleep / wakeup support</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="keywordtype">void</span> watchSystemPowerThread(<span class="keyword">const</span> <span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> testCanceled(CFRunLoopTimerRef timer, <span class="keywordtype">void</span> *info);</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> powerChangeCallback(<span class="keywordtype">void</span> *refcon, io_service_t service, natural_t messageType, <span class="keywordtype">void</span> *messageArgument);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keywordtype">void</span> handlePowerChangeRequest(natural_t messageType, <span class="keywordtype">void</span> *messageArgument);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keywordtype">void</span> handleConfirmSleep(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;event);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  <span class="comment">// global hotkey operating mode</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> isGlobalHotKeyOperatingModeAvailable();</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> setGlobalHotKeysEnabled(<span class="keywordtype">bool</span> enabled);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> getGlobalHotKeysEnabled();</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="comment">// Quartz event tap support</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keyword">static</span> CGEventRef handleCGInputEvent(CGEventTapProxy proxy, CGEventType <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, CGEventRef event, <span class="keywordtype">void</span> *refcon);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="keyword">static</span> CGEventRef</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, CGEventRef event, <span class="keywordtype">void</span> *refcon);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="comment">// convert CFString to char*</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  <span class="keyword">static</span> <span class="keywordtype">char</span> *CFStringRefToUTF8String(CFStringRef aString);</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="comment">// convert CFString to char*</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keyword">static</span> <span class="keywordtype">char</span> *CFStringRefToUTF8String(CFStringRef aString);</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="keyword">struct </span>HotKeyItem</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  {</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    HotKeyItem(uint32_t, uint32_t);</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    HotKeyItem(EventHotKeyRef, uint32_t, uint32_t);</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    EventHotKeyRef getRef() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keywordtype">bool</span> operator&lt;(<span class="keyword">const</span> HotKeyItem &amp;) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    EventHotKeyRef m_ref;</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    uint32_t m_keycode;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    uint32_t m_mask;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  };</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  <span class="keyword">enum</span> EMouseButtonState</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  {</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    kMouseButtonUp = 0,</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    kMouseButtonDragged,</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    kMouseButtonDown,</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    kMouseButtonStateMax</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  };</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  <span class="keyword">class </span>MouseButtonState</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordtype">void</span> set(uint32_t button, EMouseButtonState state);</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">bool</span> any();</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">void</span> reset();</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">void</span> overwrite(uint32_t buttons);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keyword">struct </span>HotKeyItem</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  {</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    HotKeyItem(uint32_t, uint32_t);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    HotKeyItem(EventHotKeyRef, uint32_t, uint32_t);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    EventHotKeyRef getRef() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keywordtype">bool</span> operator&lt;(<span class="keyword">const</span> HotKeyItem &amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    EventHotKeyRef m_ref;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    uint32_t m_keycode;</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    uint32_t m_mask;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  };</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keyword">enum</span> EMouseButtonState</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  {</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    kMouseButtonUp = 0,</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    kMouseButtonDragged,</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    kMouseButtonDown,</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    kMouseButtonStateMax</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  };</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keyword">class </span>MouseButtonState</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">void</span> set(uint32_t button, EMouseButtonState state);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">bool</span> any();</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordtype">void</span> reset();</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordtype">void</span> overwrite(uint32_t buttons);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">bool</span> test(uint32_t button) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    int8_t getFirstButtonDown() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">bool</span> test(uint32_t button) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    int8_t getFirstButtonDown() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    std::bitset&lt;NumButtonIDs&gt; m_buttons;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  };</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="keyword">using </span>HotKeyMap = std::map&lt;uint32_t, HotKeyItem&gt;;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keyword">using </span>HotKeyIDList = std::vector&lt;uint32_t&gt;;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="keyword">using </span>ModifierHotKeyMap = std::map&lt;KeyModifierMask, uint32_t&gt;;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  <span class="keyword">using </span>HotKeyToIDMap = std::map&lt;HotKeyItem, uint32_t&gt;;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    std::bitset&lt;NumButtonIDs&gt; m_buttons;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  };</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  <span class="keyword">using </span>HotKeyMap = std::map&lt;uint32_t, HotKeyItem&gt;;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keyword">using </span>HotKeyIDList = std::vector&lt;uint32_t&gt;;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  <span class="keyword">using </span>ModifierHotKeyMap = std::map&lt;KeyModifierMask, uint32_t&gt;;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="keyword">using </span>HotKeyToIDMap = std::map&lt;HotKeyItem, uint32_t&gt;;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="comment">// true if screen is being used as a primary screen, false otherwise</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  <span class="keywordtype">bool</span> m_isPrimary;</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="comment">// true if screen is being used as a primary screen, false otherwise</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="keywordtype">bool</span> m_isPrimary;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="comment">// true if mouse has entered the screen</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="keywordtype">bool</span> m_isOnScreen;</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  <span class="comment">// true if mouse has entered the screen</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  <span class="keywordtype">bool</span> m_isOnScreen;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  <span class="comment">// the display</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  CGDirectDisplayID m_displayID;</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  <span class="comment">// the display</span></div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  CGDirectDisplayID m_displayID;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  uint32_t m_activeSides = 0;</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>  <span class="comment">// screen shape stuff</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  int32_t m_x, m_y;</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  int32_t m_w, m_h;</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  int32_t m_xCenter, m_yCenter;</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="comment">// mouse state</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="keyword">mutable</span> int32_t m_xCursor, m_yCursor;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="keyword">mutable</span> <span class="keywordtype">bool</span> m_cursorPosValid;</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  <span class="comment">/* FIXME: this data structure is explicitly marked mutable due</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="comment">     to a need to track the state of buttons since the remote</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment">     side only lets us know of change events, and because the</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="comment">     fakeMouseButton button method is marked &#39;const&#39;. This is</span></div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="comment">     Evil, and this should be moved to a place where it need not</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment">     be mutable as soon as possible. */</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="keyword">mutable</span> MouseButtonState m_buttonState;</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="keyword">using </span>MouseButtonEventMapType = std::map&lt;uint16_t, CGEventType&gt;;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  std::vector&lt;MouseButtonEventMapType&gt; MouseButtonEventMap;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>  <span class="keywordtype">bool</span> m_cursorHidden;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  uint32_t m_activeSides = 0;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  <span class="comment">// screen shape stuff</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  int32_t m_x, m_y;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  int32_t m_w, m_h;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>  int32_t m_xCenter, m_yCenter;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="comment">// mouse state</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keyword">mutable</span> int32_t m_xCursor, m_yCursor;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keyword">mutable</span> <span class="keywordtype">bool</span> m_cursorPosValid;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="comment">/* FIXME: this data structure is explicitly marked mutable due</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="comment">     to a need to track the state of buttons since the remote</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="comment">     side only lets us know of change events, and because the</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="comment">     fakeMouseButton button method is marked &#39;const&#39;. This is</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="comment">     Evil, and this should be moved to a place where it need not</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment">     be mutable as soon as possible. */</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>  <span class="keyword">mutable</span> MouseButtonState m_buttonState;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="keyword">using </span>MouseButtonEventMapType = std::map&lt;uint16_t, CGEventType&gt;;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  std::vector&lt;MouseButtonEventMapType&gt; MouseButtonEventMap;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="keywordtype">bool</span> m_cursorHidden;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  <span class="comment">// keyboard stuff</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>  OSXKeyState *m_keyState;</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  <span class="comment">// keyboard stuff</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  OSXKeyState *m_keyState;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <span class="comment">// clipboards</span></div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  OSXClipboard m_pasteboard;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  uint32_t m_sequenceNumber;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  <span class="comment">// screen saver stuff</span></div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  OSXScreenSaver *m_screensaver;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keywordtype">bool</span> m_screensaverNotify;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  <span class="comment">// clipboard stuff</span></div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  <span class="keywordtype">bool</span> m_ownClipboard;</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>  EventQueueTimer *m_clipboardTimer;</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  <span class="comment">// clipboards</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  OSXClipboard m_pasteboard;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  uint32_t m_sequenceNumber;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  <span class="comment">// screen saver stuff</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  OSXScreenSaver *m_screensaver;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>  <span class="keywordtype">bool</span> m_screensaverNotify;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="comment">// clipboard stuff</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keywordtype">bool</span> m_ownClipboard;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  EventQueueTimer *m_clipboardTimer;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  <span class="comment">// window object that gets user input events when the server</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>  <span class="comment">// has focus.</span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>  WindowRef m_hiddenWindow;</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  <span class="comment">// window object that gets user input events when the server</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>  <span class="comment">// has focus.</span></div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  WindowRef m_hiddenWindow;</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  <span class="comment">// window object that gets user input events when the server</span></div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  <span class="comment">// does not have focus.</span></div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>  WindowRef m_userInputWindow;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>  <span class="comment">// does not have focus.</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  WindowRef m_userInputWindow;</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  <span class="comment">// fast user switching</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>  EventHandlerRef m_switchEventHandlerRef;</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>  <span class="comment">// fast user switching</span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  EventHandlerRef m_switchEventHandlerRef;</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>  <span class="comment">// sleep / wakeup</span></div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>  Mutex *m_pmMutex;</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>  Thread *m_pmWatchThread;</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>  CondVar&lt;bool&gt; *m_pmThreadReady;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>  CFRunLoopRef m_pmRunloop;</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>  io_connect_t m_pmRootPort;</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>  <span class="comment">// hot key stuff</span></div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  HotKeyMap m_hotKeys;</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>  HotKeyIDList m_oldHotKeyIDs;</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>  ModifierHotKeyMap m_modifierHotKeys;</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>  uint32_t m_activeModifierHotKey;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>  <a class="code hl_typedef" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> m_activeModifierHotKeyMask;</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>  HotKeyToIDMap m_hotKeyToIDMap;</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>  <span class="comment">// global hotkey operating mode</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> s_testedForGHOM;</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> s_hasGHOM;</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>  <span class="comment">// Quartz input event support</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>  CFMachPortRef m_eventTapPort;</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>  CFRunLoopSourceRef m_eventTapRLSR;</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>  <span class="comment">// for double click coalescing.</span></div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>  <span class="keywordtype">double</span> m_lastClickTime;</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>  <span class="keywordtype">int</span> m_clickState;</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>  int32_t m_lastSingleClickXCursor;</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>  int32_t m_lastSingleClickYCursor;</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>  IEventQueue *m_events;</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>  <span class="comment">// sleep / wakeup</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  Mutex *m_pmMutex;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>  Thread *m_pmWatchThread;</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>  CondVar&lt;bool&gt; *m_pmThreadReady;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>  CFRunLoopRef m_pmRunloop;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>  io_connect_t m_pmRootPort;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>  <span class="comment">// hot key stuff</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>  HotKeyMap m_hotKeys;</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>  HotKeyIDList m_oldHotKeyIDs;</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>  ModifierHotKeyMap m_modifierHotKeys;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  uint32_t m_activeModifierHotKey;</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>  <a class="code hl_typedef" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> m_activeModifierHotKeyMask;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>  HotKeyToIDMap m_hotKeyToIDMap;</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>  <span class="comment">// global hotkey operating mode</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> s_testedForGHOM;</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> s_hasGHOM;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>  <span class="comment">// Quartz input event support</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>  CFMachPortRef m_eventTapPort;</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>  CFRunLoopSourceRef m_eventTapRLSR;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>  <span class="comment">// for double click coalescing.</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>  <span class="keywordtype">double</span> m_lastClickTime;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>  <span class="keywordtype">int</span> m_clickState;</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>  int32_t m_lastSingleClickXCursor;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>  int32_t m_lastSingleClickYCursor;</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>  IEventQueue *m_events;</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>  std::unique_ptr&lt;Thread&gt; m_getDropTargetThread;</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>  std::string m_dropTarget;</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>  std::unique_ptr&lt;Thread&gt; m_getDropTargetThread;</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>  std::string m_dropTarget;</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>  Mutex *m_carbonLoopMutex;</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>  CondVar&lt;bool&gt; *m_carbonLoopReady;</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>  Mutex *m_carbonLoopMutex;</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>  CondVar&lt;bool&gt; *m_carbonLoopReady;</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>  OSXPowerManager m_powerManager;</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>  <span class="keyword">class </span>OSXScreenImpl *m_impl;</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>};</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>  OSXPowerManager m_powerManager;</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>  <span class="keyword">class </span>OSXScreenImpl *m_impl;</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac765329451135abec74c45e1897abf26"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a></div><div class="ttdeci">static int type</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:45</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ad2573eea84512de995e58415e5512fec"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></div><div class="ttdeci">static int(PASCAL FAR *bind_winsock)(SOCKET s</div></div>
@@ -439,46 +436,46 @@ $(function(){initNavTree('OSXScreen_8h_source.html','',''); });
 <div class="ttc" id="aclassOSXKeyState_html"><div class="ttname"><a href="classOSXKeyState.html">OSXKeyState</a></div><div class="ttdoc">OS X key state.</div><div class="ttdef"><b>Definition</b> OSXKeyState.h:25</div></div>
 <div class="ttc" id="aclassOSXScreenSaver_html"><div class="ttname"><a href="classOSXScreenSaver.html">OSXScreenSaver</a></div><div class="ttdoc">OSX screen saver implementation.</div><div class="ttdef"><b>Definition</b> OSXScreenSaver.h:18</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a02989746f0e8b11a969fc6d22f1fa820"><div class="ttname"><a href="classOSXScreen.html#a02989746f0e8b11a969fc6d22f1fa820">OSXScreen::fakeMouseMove</a></div><div class="ttdeci">void fakeMouseMove(int32_t x, int32_t y) override</div><div class="ttdoc">Fake mouse move.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:549</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a07cbdbcdb68cc3a14ea106507867157c"><div class="ttname"><a href="classOSXScreen.html#a07cbdbcdb68cc3a14ea106507867157c">OSXScreen::getSecureInputApp</a></div><div class="ttdeci">std::string getSecureInputApp() const override</div><div class="ttdoc">Determine the name of the app causing a secure input state.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1775</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a07cbdbcdb68cc3a14ea106507867157c"><div class="ttname"><a href="classOSXScreen.html#a07cbdbcdb68cc3a14ea106507867157c">OSXScreen::getSecureInputApp</a></div><div class="ttdeci">std::string getSecureInputApp() const override</div><div class="ttdoc">Determine the name of the app causing a secure input state.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1771</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a0ba8893d8cb7e1a72988edc3950ef768"><div class="ttname"><a href="classOSXScreen.html#a0ba8893d8cb7e1a72988edc3950ef768">OSXScreen::unregisterHotKey</a></div><div class="ttdeci">void unregisterHotKey(uint32_t id) override</div><div class="ttdoc">Unregister a system hotkey.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:357</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a249bf3d9a2521593ef9195219b4ff615"><div class="ttname"><a href="classOSXScreen.html#a249bf3d9a2521593ef9195219b4ff615">OSXScreen::registerHotKey</a></div><div class="ttdeci">uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override</div><div class="ttdoc">Register a system hotkey.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:304</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a25a6221c6eb475b644f101abd3e28f84"><div class="ttname"><a href="classOSXScreen.html#a25a6221c6eb475b644f101abd3e28f84">OSXScreen::canLeave</a></div><div class="ttdeci">bool canLeave() override</div><div class="ttdoc">Leave screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:747</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a40563f010746ae747baa9cbaacc42160"><div class="ttname"><a href="classOSXScreen.html#a40563f010746ae747baa9cbaacc42160">OSXScreen::handleSystemEvent</a></div><div class="ttdeci">void handleSystemEvent(const Event &amp;e) override</div><div class="ttdoc">Handle system event.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:840</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a4219e31e73d530237f02af11d61f0c3d"><div class="ttname"><a href="classOSXScreen.html#a4219e31e73d530237f02af11d61f0c3d">OSXScreen::enter</a></div><div class="ttdeci">void enter() override</div><div class="ttdoc">Enter screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:723</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a25a6221c6eb475b644f101abd3e28f84"><div class="ttname"><a href="classOSXScreen.html#a25a6221c6eb475b644f101abd3e28f84">OSXScreen::canLeave</a></div><div class="ttdeci">bool canLeave() override</div><div class="ttdoc">Leave screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:751</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a40563f010746ae747baa9cbaacc42160"><div class="ttname"><a href="classOSXScreen.html#a40563f010746ae747baa9cbaacc42160">OSXScreen::handleSystemEvent</a></div><div class="ttdeci">void handleSystemEvent(const Event &amp;e) override</div><div class="ttdoc">Handle system event.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:844</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a4219e31e73d530237f02af11d61f0c3d"><div class="ttname"><a href="classOSXScreen.html#a4219e31e73d530237f02af11d61f0c3d">OSXScreen::enter</a></div><div class="ttdeci">void enter() override</div><div class="ttdoc">Enter screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:727</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a4aaa8ed6b7f0bed6ce740c0677e65578"><div class="ttname"><a href="classOSXScreen.html#a4aaa8ed6b7f0bed6ce740c0677e65578">OSXScreen::OSXScreen</a></div><div class="ttdeci">OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync=false)</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:77</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a52a46101a17ecfe975876d8d8e4e3438"><div class="ttname"><a href="classOSXScreen.html#a52a46101a17ecfe975876d8d8e4e3438">OSXScreen::~OSXScreen</a></div><div class="ttdeci">virtual ~OSXScreen()</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:177</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a592ac1f22de03da131e97c2077155a92"><div class="ttname"><a href="classOSXScreen.html#a592ac1f22de03da131e97c2077155a92">OSXScreen::activeSides</a></div><div class="ttdeci">uint32_t activeSides() override</div><div class="ttdoc">activeSides</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:254</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a595d3fea96bd9a5542eecf655e2304ca"><div class="ttname"><a href="classOSXScreen.html#a595d3fea96bd9a5542eecf655e2304ca">OSXScreen::getCursorCenter</a></div><div class="ttdeci">void getCursorCenter(int32_t &amp;x, int32_t &amp;y) const override</div><div class="ttdoc">Get cursor center position.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:298</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a5a93645e7a946ef891bb37e342b8ef54"><div class="ttname"><a href="classOSXScreen.html#a5a93645e7a946ef891bb37e342b8ef54">OSXScreen::fakeInputEnd</a></div><div class="ttdeci">void fakeInputEnd() override</div><div class="ttdoc">Done synthesizing input on primary screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:278</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a5e4f256e42a82f27932024583c121a38"><div class="ttname"><a href="classOSXScreen.html#a5e4f256e42a82f27932024583c121a38">OSXScreen::enable</a></div><div class="ttdeci">void enable() override</div><div class="ttdoc">Enable screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:651</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a5e4f256e42a82f27932024583c121a38"><div class="ttname"><a href="classOSXScreen.html#a5e4f256e42a82f27932024583c121a38">OSXScreen::enable</a></div><div class="ttdeci">void enable() override</div><div class="ttdoc">Enable screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:655</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a68c375519e33206026eb623989a6bc28"><div class="ttname"><a href="classOSXScreen.html#a68c375519e33206026eb623989a6bc28">OSXScreen::getEventTarget</a></div><div class="ttdeci">void * getEventTarget() const override</div><div class="ttdoc">Get event target.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:216</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a6f36f73c633f001195c1e676890bc00b"><div class="ttname"><a href="classOSXScreen.html#a6f36f73c633f001195c1e676890bc00b">OSXScreen::reconfigure</a></div><div class="ttdeci">void reconfigure(uint32_t activeSides) override</div><div class="ttdoc">Update configuration.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:247</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a730cb3f7b818af5e7bcd65809fbb6693"><div class="ttname"><a href="classOSXScreen.html#a730cb3f7b818af5e7bcd65809fbb6693">OSXScreen::disable</a></div><div class="ttdeci">void disable() override</div><div class="ttdoc">Disable screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:694</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a730cb3f7b818af5e7bcd65809fbb6693"><div class="ttname"><a href="classOSXScreen.html#a730cb3f7b818af5e7bcd65809fbb6693">OSXScreen::disable</a></div><div class="ttdeci">void disable() override</div><div class="ttdoc">Disable screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:698</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a7b59e3f1364bec5e64f0e565d7b4155d"><div class="ttname"><a href="classOSXScreen.html#a7b59e3f1364bec5e64f0e565d7b4155d">OSXScreen::fakeMouseRelativeMove</a></div><div class="ttdeci">void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override</div><div class="ttdoc">Fake mouse move.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:563</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a7c0fb5a2c9b979c530c6217944153163"><div class="ttname"><a href="classOSXScreen.html#a7c0fb5a2c9b979c530c6217944153163">OSXScreen::screensaver</a></div><div class="ttdeci">void screensaver(bool activate) override</div><div class="ttdoc">Activate/deactivate screen saver.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:798</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a8372f83dfd2df3abaad22c49ba4ebc0c"><div class="ttname"><a href="classOSXScreen.html#a8372f83dfd2df3abaad22c49ba4ebc0c">OSXScreen::setSequenceNumber</a></div><div class="ttdeci">void setSequenceNumber(uint32_t) override</div><div class="ttdoc">Set clipboard sequence number.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:817</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a7c0fb5a2c9b979c530c6217944153163"><div class="ttname"><a href="classOSXScreen.html#a7c0fb5a2c9b979c530c6217944153163">OSXScreen::screensaver</a></div><div class="ttdeci">void screensaver(bool activate) override</div><div class="ttdoc">Activate/deactivate screen saver.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:802</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a8372f83dfd2df3abaad22c49ba4ebc0c"><div class="ttname"><a href="classOSXScreen.html#a8372f83dfd2df3abaad22c49ba4ebc0c">OSXScreen::setSequenceNumber</a></div><div class="ttdeci">void setSequenceNumber(uint32_t) override</div><div class="ttdoc">Set clipboard sequence number.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:821</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a844fd85759735df238bbd48e50a9176e"><div class="ttname"><a href="classOSXScreen.html#a844fd85759735df238bbd48e50a9176e">OSXScreen::isAnyMouseButtonDown</a></div><div class="ttdeci">bool isAnyMouseButtonDown(uint32_t &amp;buttonID) const override</div><div class="ttdoc">Test if mouse is pressed.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:288</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a8f402f986943830b9926d2b5116aee8f"><div class="ttname"><a href="classOSXScreen.html#a8f402f986943830b9926d2b5116aee8f">OSXScreen::warpCursor</a></div><div class="ttdeci">void warpCursor(int32_t x, int32_t y) override</div><div class="ttdoc">Warp cursor.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:259</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a947052e85379398d928a7e8bd697dd64"><div class="ttname"><a href="classOSXScreen.html#a947052e85379398d928a7e8bd697dd64">OSXScreen::fakeMouseButton</a></div><div class="ttdeci">void fakeMouseButton(ButtonID id, bool press) override</div><div class="ttdoc">Fake mouse press/release.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:481</div></div>
 <div class="ttc" id="aclassOSXScreen_html_a981b69ed3160e02f825c1fedf017b6c8"><div class="ttname"><a href="classOSXScreen.html#a981b69ed3160e02f825c1fedf017b6c8">OSXScreen::fakeMouseWheel</a></div><div class="ttdeci">void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const override</div><div class="ttdoc">Fake mouse wheel.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:587</div></div>
-<div class="ttc" id="aclassOSXScreen_html_a9df6664d350e53377ff613adb90bd8a0"><div class="ttname"><a href="classOSXScreen.html#a9df6664d350e53377ff613adb90bd8a0">OSXScreen::leave</a></div><div class="ttdeci">void leave() override</div><div class="ttdoc">Leave screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:752</div></div>
-<div class="ttc" id="aclassOSXScreen_html_aa0c44b192824d21b1e088c9cc5d96bdf"><div class="ttname"><a href="classOSXScreen.html#aa0c44b192824d21b1e088c9cc5d96bdf">OSXScreen::openScreensaver</a></div><div class="ttdeci">void openScreensaver(bool notify) override</div><div class="ttdoc">Open screen saver.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:783</div></div>
+<div class="ttc" id="aclassOSXScreen_html_a9df6664d350e53377ff613adb90bd8a0"><div class="ttname"><a href="classOSXScreen.html#a9df6664d350e53377ff613adb90bd8a0">OSXScreen::leave</a></div><div class="ttdeci">void leave() override</div><div class="ttdoc">Leave screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:756</div></div>
+<div class="ttc" id="aclassOSXScreen_html_aa0c44b192824d21b1e088c9cc5d96bdf"><div class="ttname"><a href="classOSXScreen.html#aa0c44b192824d21b1e088c9cc5d96bdf">OSXScreen::openScreensaver</a></div><div class="ttdeci">void openScreensaver(bool notify) override</div><div class="ttdoc">Open screen saver.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:787</div></div>
 <div class="ttc" id="aclassOSXScreen_html_aa80e25911f77d21a72d70a0db274b9dc"><div class="ttname"><a href="classOSXScreen.html#aa80e25911f77d21a72d70a0db274b9dc">OSXScreen::getCursorPos</a></div><div class="ttdeci">void getCursorPos(int32_t &amp;x, int32_t &amp;y) const override</div><div class="ttdoc">Get cursor position.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:235</div></div>
 <div class="ttc" id="aclassOSXScreen_html_ab3f6fb838702f3a22e118ea73596a2bf"><div class="ttname"><a href="classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf">OSXScreen::getShape</a></div><div class="ttdeci">void getShape(int32_t &amp;x, int32_t &amp;y, int32_t &amp;width, int32_t &amp;height) const override</div><div class="ttdoc">Get screen shape.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:227</div></div>
-<div class="ttc" id="aclassOSXScreen_html_ab7489399034844a18628e1a3b3e76222"><div class="ttname"><a href="classOSXScreen.html#ab7489399034844a18628e1a3b3e76222">OSXScreen::checkClipboards</a></div><div class="ttdeci">void checkClipboards() override</div><div class="ttdoc">Check clipboard owner.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:773</div></div>
+<div class="ttc" id="aclassOSXScreen_html_ab7489399034844a18628e1a3b3e76222"><div class="ttname"><a href="classOSXScreen.html#ab7489399034844a18628e1a3b3e76222">OSXScreen::checkClipboards</a></div><div class="ttdeci">void checkClipboards() override</div><div class="ttdoc">Check clipboard owner.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:777</div></div>
 <div class="ttc" id="aclassOSXScreen_html_ab7974ba9d338aef7b19330b4acc85b39"><div class="ttname"><a href="classOSXScreen.html#ab7974ba9d338aef7b19330b4acc85b39">OSXScreen::getJumpZoneSize</a></div><div class="ttdeci">int32_t getJumpZoneSize() const override</div><div class="ttdoc">Get jump zone size.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:283</div></div>
-<div class="ttc" id="aclassOSXScreen_html_ac65894f8b956a08176b90612f6257760"><div class="ttname"><a href="classOSXScreen.html#ac65894f8b956a08176b90612f6257760">OSXScreen::setClipboard</a></div><div class="ttdeci">bool setClipboard(ClipboardID, const IClipboard *) override</div><div class="ttdoc">Set clipboard.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:764</div></div>
-<div class="ttc" id="aclassOSXScreen_html_aca30212ec71dcf62789e7c002857490d"><div class="ttname"><a href="classOSXScreen.html#aca30212ec71dcf62789e7c002857490d">OSXScreen::isPrimary</a></div><div class="ttdeci">bool isPrimary() const override</div><div class="ttdoc">Test if is primary screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:822</div></div>
+<div class="ttc" id="aclassOSXScreen_html_ac65894f8b956a08176b90612f6257760"><div class="ttname"><a href="classOSXScreen.html#ac65894f8b956a08176b90612f6257760">OSXScreen::setClipboard</a></div><div class="ttdeci">bool setClipboard(ClipboardID, const IClipboard *) override</div><div class="ttdoc">Set clipboard.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:768</div></div>
+<div class="ttc" id="aclassOSXScreen_html_aca30212ec71dcf62789e7c002857490d"><div class="ttname"><a href="classOSXScreen.html#aca30212ec71dcf62789e7c002857490d">OSXScreen::isPrimary</a></div><div class="ttdeci">bool isPrimary() const override</div><div class="ttdoc">Test if is primary screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:826</div></div>
 <div class="ttc" id="aclassOSXScreen_html_ad4f5ef0ef8a8ed9f4d8db93d6f65e47a"><div class="ttname"><a href="classOSXScreen.html#ad4f5ef0ef8a8ed9f4d8db93d6f65e47a">OSXScreen::getEvents</a></div><div class="ttdeci">IEventQueue * getEvents() const</div><div class="ttdef"><b>Definition</b> OSXScreen.h:50</div></div>
-<div class="ttc" id="aclassOSXScreen_html_ae0457e7e03a803d851c6bacf88f31d5e"><div class="ttname"><a href="classOSXScreen.html#ae0457e7e03a803d851c6bacf88f31d5e">OSXScreen::closeScreensaver</a></div><div class="ttdeci">void closeScreensaver() override</div><div class="ttdoc">Close screen saver.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:791</div></div>
+<div class="ttc" id="aclassOSXScreen_html_ae0457e7e03a803d851c6bacf88f31d5e"><div class="ttname"><a href="classOSXScreen.html#ae0457e7e03a803d851c6bacf88f31d5e">OSXScreen::closeScreensaver</a></div><div class="ttdeci">void closeScreensaver() override</div><div class="ttdoc">Close screen saver.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:795</div></div>
 <div class="ttc" id="aclassOSXScreen_html_ae05095cf275a3d7e55a8582044524f7a"><div class="ttname"><a href="classOSXScreen.html#ae05095cf275a3d7e55a8582044524f7a">OSXScreen::getClipboard</a></div><div class="ttdeci">bool getClipboard(ClipboardID id, IClipboard *) const override</div><div class="ttdoc">Get clipboard.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:221</div></div>
-<div class="ttc" id="aclassOSXScreen_html_ae87e373005625f8e5a24da6591fe9158"><div class="ttname"><a href="classOSXScreen.html#ae87e373005625f8e5a24da6591fe9158">OSXScreen::OSXScreen</a></div><div class="ttdeci">OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync=false, bool invertScrolling=false)</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:77</div></div>
-<div class="ttc" id="aclassOSXScreen_html_ae8afe3c0abf38a9739d96e26d165aa2d"><div class="ttname"><a href="classOSXScreen.html#ae8afe3c0abf38a9739d96e26d165aa2d">OSXScreen::setOptions</a></div><div class="ttdeci">void setOptions(const OptionsList &amp;options) override</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:812</div></div>
-<div class="ttc" id="aclassOSXScreen_html_aef6d8ae40939d3b684473035e12e1465"><div class="ttname"><a href="classOSXScreen.html#aef6d8ae40939d3b684473035e12e1465">OSXScreen::waitForCarbonLoop</a></div><div class="ttdeci">void waitForCarbonLoop() const</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1753</div></div>
-<div class="ttc" id="aclassOSXScreen_html_af3b4fde38f0632867c002d9d739dd74b"><div class="ttname"><a href="classOSXScreen.html#af3b4fde38f0632867c002d9d739dd74b">OSXScreen::getKeyState</a></div><div class="ttdeci">IKeyState * getKeyState() const override</div><div class="ttdoc">Get the key state.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1261</div></div>
+<div class="ttc" id="aclassOSXScreen_html_ae8afe3c0abf38a9739d96e26d165aa2d"><div class="ttname"><a href="classOSXScreen.html#ae8afe3c0abf38a9739d96e26d165aa2d">OSXScreen::setOptions</a></div><div class="ttdeci">void setOptions(const OptionsList &amp;options) override</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:816</div></div>
+<div class="ttc" id="aclassOSXScreen_html_aef6d8ae40939d3b684473035e12e1465"><div class="ttname"><a href="classOSXScreen.html#aef6d8ae40939d3b684473035e12e1465">OSXScreen::waitForCarbonLoop</a></div><div class="ttdeci">void waitForCarbonLoop() const</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1749</div></div>
+<div class="ttc" id="aclassOSXScreen_html_af3b4fde38f0632867c002d9d739dd74b"><div class="ttname"><a href="classOSXScreen.html#af3b4fde38f0632867c002d9d739dd74b">OSXScreen::getKeyState</a></div><div class="ttdeci">IKeyState * getKeyState() const override</div><div class="ttdoc">Get the key state.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1257</div></div>
 <div class="ttc" id="aclassOSXScreen_html_af52fd6e6987cae499ec4485056ff7097"><div class="ttname"><a href="classOSXScreen.html#af52fd6e6987cae499ec4485056ff7097">OSXScreen::fakeInputBegin</a></div><div class="ttdeci">void fakeInputBegin() override</div><div class="ttdoc">Prepare to synthesize input on primary screen.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:273</div></div>
-<div class="ttc" id="aclassOSXScreen_html_af5d59ebae67f0dff3f911e5d940dacee"><div class="ttname"><a href="classOSXScreen.html#af5d59ebae67f0dff3f911e5d940dacee">OSXScreen::resetOptions</a></div><div class="ttdeci">void resetOptions() override</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:807</div></div>
-<div class="ttc" id="aclassOSXScreen_html_aff443f078fd3876be90cf18cc8711e3d"><div class="ttname"><a href="classOSXScreen.html#aff443f078fd3876be90cf18cc8711e3d">OSXScreen::updateButtons</a></div><div class="ttdeci">void updateButtons() override</div><div class="ttdoc">Update mouse buttons.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1254</div></div>
-<div class="ttc" id="aclassPlatformScreen_html_aba9e75f26033c13529997ae310eef840"><div class="ttname"><a href="classPlatformScreen.html#aba9e75f26033c13529997ae310eef840">PlatformScreen::PlatformScreen</a></div><div class="ttdeci">PlatformScreen(IEventQueue *events, bool invertScrollDirection)</div><div class="ttdef"><b>Definition</b> PlatformScreen.cpp:12</div></div>
+<div class="ttc" id="aclassOSXScreen_html_af5d59ebae67f0dff3f911e5d940dacee"><div class="ttname"><a href="classOSXScreen.html#af5d59ebae67f0dff3f911e5d940dacee">OSXScreen::resetOptions</a></div><div class="ttdeci">void resetOptions() override</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:811</div></div>
+<div class="ttc" id="aclassOSXScreen_html_aff443f078fd3876be90cf18cc8711e3d"><div class="ttname"><a href="classOSXScreen.html#aff443f078fd3876be90cf18cc8711e3d">OSXScreen::updateButtons</a></div><div class="ttdeci">void updateButtons() override</div><div class="ttdoc">Update mouse buttons.</div><div class="ttdef"><b>Definition</b> OSXScreen.mm:1250</div></div>
+<div class="ttc" id="aclassPlatformScreen_html_a7993f9c29cfb31017e27b684e260b6cc"><div class="ttname"><a href="classPlatformScreen.html#a7993f9c29cfb31017e27b684e260b6cc">PlatformScreen::PlatformScreen</a></div><div class="ttdeci">PlatformScreen(IEventQueue *events)</div><div class="ttdef"><b>Definition</b> PlatformScreen.cpp:13</div></div>
 <div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
 <div class="ttc" id="anamespacedeskflow_html_a34787a880fd439e02383f336665d7bc2"><div class="ttname"><a href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">deskflow::EventTypes</a></div><div class="ttdeci">EventTypes</div><div class="ttdef"><b>Definition</b> EventTypes.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->

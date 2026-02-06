@@ -1,6 +1,6 @@
 var classXWindowsScreen =
 [
-    [ "XWindowsScreen", "classXWindowsScreen.html#a13c6a62c8edaf2b1c680dc44ee272e97", null ],
+    [ "XWindowsScreen", "classXWindowsScreen.html#a746b4045db696394a08e3eec20133592", null ],
     [ "~XWindowsScreen", "classXWindowsScreen.html#a7ffbe069f0b92febcdcb4bf8b97ebc61", null ],
     [ "activeSides", "classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad", null ],
     [ "canLeave", "classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086", null ],

@@ -1,8 +1,10 @@
 var classPlatformScreen =
 [
-    [ "PlatformScreen", "classPlatformScreen.html#aba9e75f26033c13529997ae310eef840", null ],
+    [ "ScrollDelta", "structPlatformScreen_1_1ScrollDelta.html", "structPlatformScreen_1_1ScrollDelta" ],
+    [ "PlatformScreen", "classPlatformScreen.html#a7993f9c29cfb31017e27b684e260b6cc", null ],
     [ "~PlatformScreen", "classPlatformScreen.html#a2f288569bd4751fa8c75b08ffc237b85", null ],
     [ "activeSides", "classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3", null ],
+    [ "applyClientScrollModifier", "classPlatformScreen.html#ac4876db3aef18cfde59ed2f218b82089", null ],
     [ "canLeave", "classPlatformScreen.html#af1f24d0dd3a6351567e323a99e94340c", null ],
     [ "checkClipboards", "classPlatformScreen.html#a452f7f61275b317208b8980c0ef3461f", null ],
     [ "clearStaleModifiers", "classPlatformScreen.html#a29e4557d386b175f865a84afecc690c4", null ],
@@ -34,7 +36,6 @@ var classPlatformScreen =
     [ "isKeyDown", "classPlatformScreen.html#aedf76ddd96b4c9132c325f41d9471d6b", null ],
     [ "isPrimary", "classPlatformScreen.html#a631d98e1343f54fec14b64f4490e397f", null ],
     [ "leave", "classPlatformScreen.html#ad5b9db90101111f95742d3b1c0a47117", null ],
-    [ "mapClientScrollDirection", "classPlatformScreen.html#a395adf1076033b25c832ff03c0ab0776", null ],
     [ "openScreensaver", "classPlatformScreen.html#a82b824293078398f3722e1d163b66275", null ],
     [ "pollActiveGroup", "classPlatformScreen.html#a18e30907f0eb1df9bd08a40281257547", null ],
     [ "pollActiveModifiers", "classPlatformScreen.html#aeab0114a82ffdbf595128b0aacd4b8d9", null ],

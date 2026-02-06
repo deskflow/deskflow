@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.222</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.228</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -144,9 +144,13 @@ Collaboration diagram for PlatformScreen:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:ScrollDelta" id="r_ScrollDelta"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structPlatformScreen_1_1ScrollDelta.html">ScrollDelta</a></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aba9e75f26033c13529997ae310eef840" id="r_aba9e75f26033c13529997ae310eef840"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aba9e75f26033c13529997ae310eef840">PlatformScreen</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events, bool invertScrollDirection)</td></tr>
+<tr class="memitem:a7993f9c29cfb31017e27b684e260b6cc" id="r_a7993f9c29cfb31017e27b684e260b6cc"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7993f9c29cfb31017e27b684e260b6cc">PlatformScreen</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events)</td></tr>
 <tr class="memitem:a2f288569bd4751fa8c75b08ffc237b85" id="r_a2f288569bd4751fa8c75b08ffc237b85"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2f288569bd4751fa8c75b08ffc237b85">~PlatformScreen</a> () override=default</td></tr>
 <tr class="memitem:ab8873e332c68b405d8c0a2c0e85336b3" id="r_ab8873e332c68b405d8c0a2c0e85336b3"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#ab8873e332c68b405d8c0a2c0e85336b3">getEventTarget</a> () const override=0</td></tr>
 <tr class="memdesc:ab8873e332c68b405d8c0a2c0e85336b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get event target.  <br /></td></tr>
@@ -264,8 +268,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a0c739f0f826b83f02f8b7973ba410226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the key state.  <br /></td></tr>
 <tr class="memitem:a555dedbff35e03142e5e0220a28c001c" id="r_a555dedbff35e03142e5e0220a28c001c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a555dedbff35e03142e5e0220a28c001c">handleSystemEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event) override=0</td></tr>
 <tr class="memdesc:a555dedbff35e03142e5e0220a28c001c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle system event.  <br /></td></tr>
-<tr class="memitem:a395adf1076033b25c832ff03c0ab0776" id="r_a395adf1076033b25c832ff03c0ab0776"><td class="memItemLeft">virtual int32_t&#160;</td><td class="memItemRight"><a class="el" href="#a395adf1076033b25c832ff03c0ab0776">mapClientScrollDirection</a> (int32_t) const</td></tr>
-<tr class="memdesc:a395adf1076033b25c832ff03c0ab0776"><td class="mdescLeft">&#160;</td><td class="mdescRight">mapClientScrollDirection Convert scroll according to client scroll directio  <br /></td></tr>
+<tr class="memitem:ac4876db3aef18cfde59ed2f218b82089" id="r_ac4876db3aef18cfde59ed2f218b82089"><td class="memItemLeft">virtual <a class="el" href="structPlatformScreen_1_1ScrollDelta.html">ScrollDelta</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac4876db3aef18cfde59ed2f218b82089">applyClientScrollModifier</a> (const <a class="el" href="structPlatformScreen_1_1ScrollDelta.html">ScrollDelta</a> rawDelta) const</td></tr>
+<tr class="memdesc:ac4876db3aef18cfde59ed2f218b82089"><td class="mdescLeft">&#160;</td><td class="mdescRight">applyClientYScrollModifier Convert scroll according to client's scroll modifiers  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -282,8 +286,8 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Base screen implementation. </p>
 <p>This screen implementation is the superclass of all other screen implementations. It implements a handful of methods and requires subclasses to implement the rest. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aba9e75f26033c13529997ae310eef840" name="aba9e75f26033c13529997ae310eef840"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba9e75f26033c13529997ae310eef840">&#9670;&#160;</a></span>PlatformScreen()</h2>
+<a id="a7993f9c29cfb31017e27b684e260b6cc" name="a7993f9c29cfb31017e27b684e260b6cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7993f9c29cfb31017e27b684e260b6cc">&#9670;&#160;</a></span>PlatformScreen()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -294,12 +298,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">PlatformScreen::PlatformScreen </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classIEventQueue.html">IEventQueue</a> *</td>          <td class="paramname"><span class="paramname"><em>events</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="classIEventQueue.html">IEventQueue</a> *</td>          <td class="paramname"><span class="paramname"><em>events</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>invertScrollDirection</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -366,6 +366,34 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classIPrimaryScreen.html#aee64b865789af789f8f6197245611fdd">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a49ec5fcf0eea67fe831518f428d61447">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#afa90fbdfd8819b92cd00ae0235904574">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a592ac1f22de03da131e97c2077155a92">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad">XWindowsScreen</a>.</p>
+
+</div>
+</div>
+<a id="ac4876db3aef18cfde59ed2f218b82089" name="ac4876db3aef18cfde59ed2f218b82089"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4876db3aef18cfde59ed2f218b82089">&#9670;&#160;</a></span>applyClientScrollModifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPlatformScreen_1_1ScrollDelta.html">PlatformScreen::ScrollDelta</a> PlatformScreen::applyClientScrollModifier </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structPlatformScreen_1_1ScrollDelta.html">ScrollDelta</a></td>          <td class="paramname"><span class="paramname"><em>rawDelta</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>applyClientYScrollModifier Convert scroll according to client's scroll modifiers </p>
+<dl class="section return"><dt>Returns</dt><dd>converted value according to the client's scroll modifiers </dd></dl>
 
 </div>
 </div>
@@ -1420,34 +1448,6 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classIPlatformScreen.html#a97f73810d43c5b6c8cd98fcebfb97599">IPlatformScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a0888fdbde1758fe32fb511b1983a42ad">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#a315bfcaed9e57b83d7dda52f198a093f">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a9df6664d350e53377ff613adb90bd8a0">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a9d34e7b8ec494fbbd8151276c189405e">XWindowsScreen</a>.</p>
-
-</div>
-</div>
-<a id="a395adf1076033b25c832ff03c0ab0776" name="a395adf1076033b25c832ff03c0ab0776"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a395adf1076033b25c832ff03c0ab0776">&#9670;&#160;</a></span>mapClientScrollDirection()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int32_t PlatformScreen::mapClientScrollDirection </td>
-          <td>(</td>
-          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>mapClientScrollDirection Convert scroll according to client scroll directio </p>
-<dl class="section return"><dt>Returns</dt><dd>converted value according to the client scroll direction </dd></dl>
 
 </div>
 </div>

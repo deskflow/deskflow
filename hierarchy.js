@@ -450,6 +450,7 @@ var hierarchy =
     [ "&lt;ScreenSaverControl&gt;", "protocolScreenSaverControl-p.html", [
       [ "ScreenSaverController", "interfaceScreenSaverController.html", null ]
     ] ],
+    [ "PlatformScreen::ScrollDelta", "structPlatformScreen_1_1ScrollDelta.html", null ],
     [ "ScrollRemainder", "structScrollRemainder.html", null ],
     [ "Settings::Security", "structSettings_1_1Security.html", null ],
     [ "Server", "classServer.html", null ],

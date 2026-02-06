@@ -1,5 +1,8 @@
 var NAVTREEINDEX23 =
 {
+"structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54":[6,0,207,1,10],
+"structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a":[6,0,207,1,4],
+"structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446":[6,0,207,1,1],
 "structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d":[6,0,207,1,6],
 "structSettings_1_1Core.html#a809849b6eb37dc36a4e6dd9a3a899bda":[6,0,207,1,11],
 "structSettings_1_1Core.html#a891557b6bbca69ffa39ea6b46278ad5e":[6,0,207,1,8],

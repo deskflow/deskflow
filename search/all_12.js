@@ -29,7 +29,7 @@ var searchData=
   ['plaintext_26',['PlainText',['../SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400ab7ebbf7f254ef646928dd58f62383a85',1,'SecurityLevel.h']]],
   ['platform_20specific_20implementations_27',['Platform-Specific Implementations',['../protocol_reference.html#autotoc_md38',1,'']]],
   ['platforminfo_2eh_28',['PlatformInfo.h',['../PlatformInfo_8h.html',1,'']]],
-  ['platformscreen_29',['PlatformScreen',['../classPlatformScreen.html',1,'PlatformScreen'],['../classPlatformScreen.html#aba9e75f26033c13529997ae310eef840',1,'PlatformScreen::PlatformScreen()']]],
+  ['platformscreen_29',['PlatformScreen',['../classPlatformScreen.html',1,'PlatformScreen'],['../classPlatformScreen.html#a7993f9c29cfb31017e27b684e260b6cc',1,'PlatformScreen::PlatformScreen()']]],
   ['platformscreen_2ecpp_30',['PlatformScreen.cpp',['../PlatformScreen_8cpp.html',1,'']]],
   ['platformscreen_2eh_31',['PlatformScreen.h',['../PlatformScreen_8h.html',1,'']]],
   ['pointer_32',['pointer',['../structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#a363eae962649cdf53016eb14a85201e4',1,'std::iterator_traits&lt; deskflow::server::Config &gt;']]],

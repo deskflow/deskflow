@@ -41,7 +41,7 @@ var searchData=
   ['osxeventqueuebuffer_38',['OSXEventQueueBuffer',['../classOSXEventQueueBuffer.html#aabea31add1b4f4cbb7b8a015970c92a6',1,'OSXEventQueueBuffer']]],
   ['osxkeystate_39',['OSXKeyState',['../classOSXKeyState.html#a2a633327067c0033fe88fcccee4e85b9',1,'OSXKeyState::OSXKeyState(IEventQueue *events, std::vector&lt; std::string &gt; layouts, bool isLangSyncEnabled)'],['../classOSXKeyState.html#ac1df4d07e10bedbe61355a0a923abf28',1,'OSXKeyState::OSXKeyState(IEventQueue *events, deskflow::KeyMap &amp;keyMap, std::vector&lt; std::string &gt; layouts, bool isLangSyncEnabled)']]],
   ['osxpowermanager_40',['OSXPowerManager',['../classOSXPowerManager.html#adbc7f203c3dd54576dd479e0d6cea94a',1,'OSXPowerManager::OSXPowerManager()=default'],['../classOSXPowerManager.html#a86231e979e91564fc5d03a21b6122853',1,'OSXPowerManager::OSXPowerManager(const OSXPowerManager &amp;)=delete']]],
-  ['osxscreen_41',['OSXScreen',['../classOSXScreen.html#ae87e373005625f8e5a24da6591fe9158',1,'OSXScreen']]],
+  ['osxscreen_41',['OSXScreen',['../classOSXScreen.html#a4aaa8ed6b7f0bed6ce740c0677e65578',1,'OSXScreen']]],
   ['osxscreensaver_42',['OSXScreenSaver',['../classOSXScreenSaver.html#adb26b45c6f6c6390b274397c3d607c0c',1,'OSXScreenSaver']]],
   ['osxuchrkeyresource_43',['OSXUchrKeyResource',['../classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f',1,'OSXUchrKeyResource']]],
   ['overlaps_44',['overlaps',['../classdeskflow_1_1server_1_1Config_1_1CellEdge.html#aaabd1986c60e7ba38471908fa7e1e4f0',1,'deskflow::server::Config::CellEdge']]]

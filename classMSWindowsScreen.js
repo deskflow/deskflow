@@ -1,6 +1,6 @@
 var classMSWindowsScreen =
 [
-    [ "MSWindowsScreen", "classMSWindowsScreen.html#a1d11dcb17137cd7850e8c39dd3cb853e", null ],
+    [ "MSWindowsScreen", "classMSWindowsScreen.html#a038c6c1e4cb6db6e07aebdf40ebd45e6", null ],
     [ "~MSWindowsScreen", "classMSWindowsScreen.html#a3eb0a27687fab4beded9e48c65b71ad7", null ],
     [ "activeSides", "classMSWindowsScreen.html#afa90fbdfd8819b92cd00ae0235904574", null ],
     [ "canLeave", "classMSWindowsScreen.html#a273da90310ba50e63e3654f8c6a83602", null ],

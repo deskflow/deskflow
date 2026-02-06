@@ -88,7 +88,7 @@ var searchData=
   ['osxpowermanager_85',['OSXPowerManager',['../classOSXPowerManager.html',1,'OSXPowerManager'],['../classOSXPowerManager.html#adbc7f203c3dd54576dd479e0d6cea94a',1,'OSXPowerManager::OSXPowerManager()=default'],['../classOSXPowerManager.html#a86231e979e91564fc5d03a21b6122853',1,'OSXPowerManager::OSXPowerManager(const OSXPowerManager &amp;)=delete']]],
   ['osxpowermanager_2ecpp_86',['OSXPowerManager.cpp',['../OSXPowerManager_8cpp.html',1,'']]],
   ['osxpowermanager_2eh_87',['OSXPowerManager.h',['../OSXPowerManager_8h.html',1,'']]],
-  ['osxscreen_88',['OSXScreen',['../classOSXScreen.html',1,'OSXScreen'],['../classOSXScreen.html#ae87e373005625f8e5a24da6591fe9158',1,'OSXScreen::OSXScreen()']]],
+  ['osxscreen_88',['OSXScreen',['../classOSXScreen.html',1,'OSXScreen'],['../classOSXScreen.html#a4aaa8ed6b7f0bed6ce740c0677e65578',1,'OSXScreen::OSXScreen()']]],
   ['osxscreen_2eh_89',['OSXScreen.h',['../OSXScreen_8h.html',1,'']]],
   ['osxscreen_2emm_90',['OSXScreen.mm',['../OSXScreen_8mm.html',1,'']]],
   ['osxscreenconfirmsleep_91',['OsxScreenConfirmSleep',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6ab94297a308225c53fd052a1d3e7477',1,'deskflow']]],
