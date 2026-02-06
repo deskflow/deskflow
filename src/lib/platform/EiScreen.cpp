@@ -313,16 +313,16 @@ void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
 
-void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
+void EiScreen::fakeMouseWheel(ScrollDelta delta) const
 {
   if (!m_eiPointer)
     return;
 
-  auto adjustedDeltas = applyScrollModifier({xDelta, yDelta});
+  delta = applyScrollModifier(delta);
   // libei and deskflow seem to use opposite directions, so we have
   // to send EI the opposite of the value received if we want to remain
   // compatible with other platforms (including X11).
-  ei_device_scroll_discrete(m_eiPointer, -adjustedDeltas.x, -adjustedDeltas.y);
+  ei_device_scroll_discrete(m_eiPointer, -delta.x, -delta.y);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
 

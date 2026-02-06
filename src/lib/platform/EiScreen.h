@@ -59,7 +59,7 @@ public:
   void fakeMouseButton(ButtonID id, bool press) override;
   void fakeMouseMove(std::int32_t x, std::int32_t y) override;
   void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const override;
-  void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const override;
+  void fakeMouseWheel(ScrollDelta delta) const override;
   void fakeKey(std::uint32_t keycode, bool isDown) const;
 
   // IPlatformScreen overrides

@@ -44,7 +44,7 @@ public:
   void fakeMouseButton(ButtonID id, bool press) override = 0;
   void fakeMouseMove(int32_t x, int32_t y) override = 0;
   void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override = 0;
-  void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const override = 0;
+  void fakeMouseWheel(ScrollDelta delta) const override = 0;
 
   // IKeyState overrides
   void updateKeyMap() override;
