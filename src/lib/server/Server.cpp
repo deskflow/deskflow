@@ -1708,20 +1708,6 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
   LOG_VERBOSE("mouse move on secondary: %+d,%+d", dx, dy);
-
-  // TODO: move this to client side and use a qt setting or cli arg instead of env var.
-  const static auto adjustEnv = "DESKFLOW_MOUSE_ADJUSTMENT";
-  if (const char *envVal = std::getenv(adjustEnv); envVal) {
-    try {
-      double multiplier = std::stod(envVal);
-      dx = static_cast<int32_t>(std::round(dx * multiplier));
-      dy = static_cast<int32_t>(std::round(dy * multiplier));
-      LOG_VERBOSE("adjusted mouse x %.2f: %+d,%+d", multiplier, dx, dy);
-    } catch (const std::exception &e) {
-      LOG_ERR("invalid %s value: %s", adjustEnv, e.what());
-    }
-  }
-
   // mouse move on secondary (client's) computer
   assert(m_active != nullptr);
   if (m_active == m_primaryClient) {

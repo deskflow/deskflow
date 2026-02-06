@@ -146,10 +146,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Usa la lingua della tastiera del server su questo computer</translation>
     </message>
     <message>
-        <source>Scroll Modifiers</source>
-        <translation type="unfinished">Modificatori di scorrimento</translation>
-    </message>
-    <message>
         <source>Invert</source>
         <translation type="unfinished">Invertire</translation>
     </message>
@@ -172,6 +168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Utilizza un tempo di riconnessione dinamico basato sui tentativi di connessione</translation>
+    </message>
+    <message>
+        <source>Mouse Modifiers</source>
+        <translation type="unfinished">Modificatori del mouse</translation>
+    </message>
+    <message>
+        <source>Cursor speed</source>
+        <translation type="unfinished">Velocità del cursore</translation>
     </message>
 </context>
 <context>
@@ -310,7 +314,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Computer name is empty</source>
-        <translation type="unfinished">Il nome del computer è vuoto.</translation>
+        <translation type="unfinished">Il nome del computer è vuoto</translation>
     </message>
     <message>
         <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>

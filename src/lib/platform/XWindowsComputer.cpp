@@ -784,7 +784,8 @@ void XWindowsComputer::fakeMouseMove(int32_t x, int32_t y)
 void XWindowsComputer::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 {
   // FIXME -- ignore xinerama for now
-  XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
+  auto delta = applyCursorScale({dx, dy});
+  XTestFakeRelativeMotionEvent(m_display, delta.x, delta.y, CurrentTime);
   XFlush(m_display);
 }
 

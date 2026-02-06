@@ -146,10 +146,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Использовать язык клавиатуры сервера на этом компьютере</translation>
     </message>
     <message>
-        <source>Scroll Modifiers</source>
-        <translation type="unfinished">Модификаторы прокрутки</translation>
-    </message>
-    <message>
         <source>Invert</source>
         <translation type="unfinished">Инвертировать</translation>
     </message>
@@ -172,6 +168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Использовать динамическое время переподключения в зависимости от попыток подключения</translation>
+    </message>
+    <message>
+        <source>Mouse Modifiers</source>
+        <translation type="unfinished">Модификаторы мыши</translation>
+    </message>
+    <message>
+        <source>Cursor speed</source>
+        <translation type="unfinished">Скорость курсора</translation>
     </message>
 </context>
 <context>

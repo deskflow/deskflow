@@ -146,10 +146,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Utilice el idioma del teclado del servidor en esta computadora</translation>
     </message>
     <message>
-        <source>Scroll Modifiers</source>
-        <translation type="unfinished">Modificadores de desplazamiento</translation>
-    </message>
-    <message>
         <source>Invert</source>
         <translation type="unfinished">Invertir</translation>
     </message>
@@ -172,6 +168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Utilizar un tiempo de reconexión dinámico basado en los intentos de conexión</translation>
+    </message>
+    <message>
+        <source>Mouse Modifiers</source>
+        <translation type="unfinished">Modificadores del ratón</translation>
+    </message>
+    <message>
+        <source>Cursor speed</source>
+        <translation type="unfinished">Velocidad del cursor</translation>
     </message>
 </context>
 <context>
@@ -310,7 +314,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Computer name is empty</source>
-        <translation type="unfinished">El nombre del equipo está vacío.</translation>
+        <translation type="unfinished">El nombre del equipo está vacío</translation>
     </message>
     <message>
         <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
@@ -318,7 +322,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Computer name matches alias</source>
-        <translation type="unfinished">El nombre del equipo coincide con el alias.</translation>
+        <translation type="unfinished">El nombre del equipo coincide con el alias</translation>
     </message>
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>

@@ -146,10 +146,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">在此计算机上使用服务器的键盘语言</translation>
     </message>
     <message>
-        <source>Scroll Modifiers</source>
-        <translation type="unfinished">滚动修饰符</translation>
-    </message>
-    <message>
         <source>Invert</source>
         <translation type="unfinished">倒置</translation>
     </message>
@@ -172,6 +168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">根据连接尝试次数，采用动态重连时间</translation>
+    </message>
+    <message>
+        <source>Mouse Modifiers</source>
+        <translation type="unfinished">鼠标修饰键</translation>
+    </message>
+    <message>
+        <source>Cursor speed</source>
+        <translation type="unfinished">光标速度</translation>
     </message>
 </context>
 <context>

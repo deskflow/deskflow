@@ -588,13 +588,14 @@ void OSXComputer::fakeMouseMove(int32_t x, int32_t y)
 {
   // synthesize event
   CGPoint pos;
-  pos.x = x;
-  pos.y = y;
+  auto delta = applyCursorScale({x, y});
+  pos.x = delta.x;
+  pos.y = delta.y;
   postMouseEvent(pos);
 
   // save new cursor position
-  m_xCursor = static_cast<int32_t>(pos.x);
-  m_yCursor = static_cast<int32_t>(pos.y);
+  m_xCursor = delta.x;
+  m_yCursor = delta.y;
   m_cursorPosValid = true;
 }
 
@@ -614,8 +615,9 @@ void OSXComputer::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
   CGPoint pos;
   m_xCursor = static_cast<int32_t>(oldPos.x);
   m_yCursor = static_cast<int32_t>(oldPos.y);
-  pos.x = oldPos.x + dx;
-  pos.y = oldPos.y + dy;
+  auto delta = applyCursorScale({dx, dy});
+  pos.x = oldPos.x + delta.x;
+  pos.y = oldPos.y + delta.y;
   postMouseEvent(pos);
 
   // we now assume we don't know the current cursor position

@@ -361,7 +361,8 @@ void EiComputer::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
     return;
 
   ensureEmulating();
-  ei_device_pointer_motion(m_eiPointer, dx, dy);
+  auto delta = applyCursorScale({dx, dy});
+  ei_device_pointer_motion(m_eiPointer, delta.x, delta.y);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
 

@@ -146,10 +146,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">이 컴퓨터에서 서버의 키보드 언어 사용</translation>
     </message>
     <message>
-        <source>Scroll Modifiers</source>
-        <translation>스크롤 제어자</translation>
-    </message>
-    <message>
         <source>Invert</source>
         <translation>반전</translation>
     </message>
@@ -172,6 +168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">연결 시도 횟수에 따라 동적 재연결 시간을 사용합니다</translation>
+    </message>
+    <message>
+        <source>Mouse Modifiers</source>
+        <translation type="unfinished">마우스 수정자</translation>
+    </message>
+    <message>
+        <source>Cursor speed</source>
+        <translation type="unfinished">커서 속도</translation>
     </message>
 </context>
 <context>
@@ -310,7 +314,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Computer name is empty</source>
-        <translation type="unfinished">컴퓨터 이름이 비어 있습니다.</translation>
+        <translation type="unfinished">컴퓨터 이름이 비어 있습니다</translation>
     </message>
     <message>
         <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
@@ -318,7 +322,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Computer name matches alias</source>
-        <translation type="unfinished">컴퓨터 이름이 별칭과 일치합니다.</translation>
+        <translation type="unfinished">컴퓨터 이름이 별칭과 일치합니다</translation>
     </message>
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>

@@ -146,10 +146,6 @@ p, li { white-space: pre-wrap; }
         <translation>サーバー側のキーボード言語をこのコンピューターで使用する</translation>
     </message>
     <message>
-        <source>Scroll Modifiers</source>
-        <translation>スクロール設定</translation>
-    </message>
-    <message>
         <source>Invert</source>
         <translation>反転</translation>
     </message>
@@ -172,6 +168,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation>接続試行回数に基づき、再接続時間を動的に調整する</translation>
+    </message>
+    <message>
+        <source>Mouse Modifiers</source>
+        <translation type="unfinished">マウスの修飾キー</translation>
+    </message>
+    <message>
+        <source>Cursor speed</source>
+        <translation type="unfinished">カーソル速度</translation>
     </message>
 </context>
 <context>

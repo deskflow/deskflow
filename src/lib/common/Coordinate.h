@@ -19,3 +19,4 @@ public:
 };
 
 using ScrollDelta = Coordinate;
+using MouseDelta = Coordinate;

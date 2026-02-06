@@ -705,7 +705,8 @@ void MSWindowsComputer::fakeMouseMove(int32_t x, int32_t y)
 
 void MSWindowsComputer::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 {
-  m_desks->fakeMouseRelativeMove(dx, dy);
+  auto delta = applyCursorScale({dx, dy});
+  m_desks->fakeMouseRelativeMove(delta.x, delta.y);
 }
 
 void MSWindowsComputer::fakeMouseWheel(ScrollDelta delta) const
