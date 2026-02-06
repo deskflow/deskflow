@@ -14,11 +14,11 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/IScreen.h"
+#include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
-#include "platform/WlClipboardCollection.h"
 
 #include <algorithm>
 #include <cmath>
@@ -40,7 +40,6 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
     : PlatformScreen{events},
       m_isPrimary{isPrimary},
       m_events{events},
-      m_clipboard{new WlClipboardCollection()},
       m_w{1},
       m_h{1},
       m_isOnScreen{isPrimary}
@@ -58,11 +57,14 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
     });
     if (isPrimary) {
       m_portalInputCapture = new PortalInputCapture(this, m_events);
+      // Portal input capture manages its own clipboard
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
       });
       m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
+      // Create clipboard for remote desktop (secondary screen)
+      m_clipboard = new EiClipboard(kClipboardClipboard);
     }
   } else {
     // Note: socket backend does not support reconnections
@@ -71,6 +73,8 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       LOG_ERR("ei init error: %s", strerror(-rc));
       throw std::runtime_error("failed to init ei context");
     }
+    // Create clipboard for socket backend
+    m_clipboard = new EiClipboard(kClipboardClipboard);
   }
 
   // disable sleep if the flag is set
@@ -165,16 +169,21 @@ void *EiScreen::getEventTarget() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  if (!m_clipboard || !m_clipboard->isAvailable()) {
+  // If using portal input capture, get clipboard from there
+  if (m_portalInputCapture) {
+    const auto sourceClipboard = m_portalInputCapture->getClipboard(id);
+    if (!sourceClipboard) {
+      return false;
+    }
+    return IClipboard::copy(clipboard, sourceClipboard);
+  }
+
+  // Otherwise use our own clipboard
+  if (!m_clipboard) {
     return false;
   }
 
-  const auto sourceClipboard = m_clipboard->getClipboard(id);
-  if (!sourceClipboard) {
-    return false;
-  }
-
-  return IClipboard::copy(clipboard, sourceClipboard);
+  return IClipboard::copy(clipboard, m_clipboard);
 }
 
 void EiScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
@@ -340,16 +349,15 @@ void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 void EiScreen::enable()
 {
   // Nothing really to be done here
-  if (m_clipboard && m_clipboard->isAvailable()) {
-    m_clipboard->startMonitoring();
-  }
+  // Portal-based clipboard gets notifications via events
+  // Socket-based clipboard is passive (no monitoring needed)
 }
 
 void EiScreen::disable()
 {
-  if (m_clipboard && m_clipboard->isAvailable()) {
-    m_clipboard->stopMonitoring();
-  }
+  // Nothing to do here
+  // Portal-based clipboard gets notifications via events
+  // Socket-based clipboard is passive (no monitoring needed)
 }
 
 void EiScreen::enter()
@@ -397,32 +405,32 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  if (!clipboard || !m_clipboard || !m_clipboard->isAvailable()) {
+  if (!clipboard) {
     return false;
   }
 
-  IClipboard *targetClipboard = m_clipboard->getClipboard(id);
-  if (!targetClipboard) {
+  // If using portal input capture, set clipboard there
+  if (m_portalInputCapture) {
+    IClipboard *targetClipboard = m_portalInputCapture->getClipboard(id);
+    if (!targetClipboard) {
+      return false;
+    }
+    return IClipboard::copy(targetClipboard, clipboard);
+  }
+
+  // Otherwise use our own clipboard
+  if (!m_clipboard) {
     return false;
   }
 
-  return IClipboard::copy(targetClipboard, clipboard);
+  return IClipboard::copy(m_clipboard, clipboard);
 }
 
 void EiScreen::checkClipboards()
 {
-  // do nothing, we're always up to date
-  if (!m_clipboard || !m_clipboard->isAvailable()) {
-    return;
-  }
-
-  if (m_clipboard->hasChanged()) {
-    // Send clipboard change events for all clipboard types
-    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-      sendClipboardEvent(EventTypes::ClipboardChanged, id);
-    }
-    m_clipboard->resetChanged();
-  }
+  // For portal-based input capture, clipboard changes come via portal events
+  // For socket-based, clipboard is passive and changes are sent explicitly
+  // Nothing to do here
 }
 
 void EiScreen::openScreensaver(bool notify)
