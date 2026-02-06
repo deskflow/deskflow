@@ -144,6 +144,8 @@ elseif(UNIX)
 
   if(LIBEI_FOUND)
     list(APPEND PLATFORM_SOURCES
+      EiClipboard.cpp
+      EiClipboard.h
       EiEventQueueBuffer.cpp
       EiEventQueueBuffer.h
       EiKeyState.cpp

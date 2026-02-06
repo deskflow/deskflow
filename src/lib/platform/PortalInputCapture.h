@@ -17,11 +17,16 @@
 
 namespace deskflow {
 
+class EiClipboard;
+
 class PortalInputCapture
 {
 public:
   PortalInputCapture(EiScreen *screen, IEventQueue *events);
   ~PortalInputCapture();
+
+  // Get the clipboard for the specified ID
+  EiClipboard *getClipboard(ClipboardID id) const;
   void enable();
   void disable();
   void release();
@@ -120,6 +125,9 @@ private:
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
+
+  // Clipboard storage
+  EiClipboard *m_clipboard = nullptr;
 };
 
 } // namespace deskflow
