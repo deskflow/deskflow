@@ -698,7 +698,8 @@ void MSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 
 void MSWindowsScreen::fakeMouseMove(int32_t x, int32_t y)
 {
-  m_desks->fakeMouseMove(x, y);
+  auto delta = applyCursorScale({x, y});
+  m_desks->fakeMouseMove(delta.x, delta.y);
 }
 
 void MSWindowsScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const

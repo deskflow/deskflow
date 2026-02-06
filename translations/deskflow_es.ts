@@ -1324,6 +1324,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Vertical Scroll Scale</source>
         <translation type="unfinished">Escala de desplazamiento vertical</translation>
     </message>
+    <message>
+        <source>Cursor Movement Scale</source>
+        <translation type="unfinished">Escala de movimiento del cursor</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

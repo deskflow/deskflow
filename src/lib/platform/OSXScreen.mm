@@ -550,13 +550,14 @@ void OSXScreen::fakeMouseMove(int32_t x, int32_t y)
 {
   // synthesize event
   CGPoint pos;
-  pos.x = x;
-  pos.y = y;
+  auto delta = applyCursorScale({x, y});
+  pos.x = delta.x;
+  pos.y = delta.y;
   postMouseEvent(pos);
 
   // save new cursor position
-  m_xCursor = static_cast<int32_t>(pos.x);
-  m_yCursor = static_cast<int32_t>(pos.y);
+  m_xCursor = delta.x;
+  m_yCursor = delta.y;
   m_cursorPosValid = true;
 }
 

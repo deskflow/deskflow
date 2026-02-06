@@ -769,10 +769,11 @@ void XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 
 void XWindowsScreen::fakeMouseMove(int32_t x, int32_t y)
 {
+  auto delta = applyCursorScale({x, y});
   if (m_xinerama && m_xtestIsXineramaUnaware) {
-    XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
+    XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, delta.x, delta.y);
   } else {
-    XTestFakeMotionEvent(m_display, DefaultScreen(m_display), x, y, CurrentTime);
+    XTestFakeMotionEvent(m_display, DefaultScreen(m_display), delta.x, delta.y, CurrentTime);
   }
   XFlush(m_display);
 }
