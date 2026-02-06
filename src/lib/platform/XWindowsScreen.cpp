@@ -82,8 +82,8 @@ static int xi_opcode;
 
 XWindowsScreen *XWindowsScreen::s_screen = nullptr;
 
-XWindowsScreen::XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events, bool invertScrolling)
-    : PlatformScreen(events, invertScrolling),
+XWindowsScreen::XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events)
+    : PlatformScreen(events),
       m_isPrimary(isPrimary),
       m_isOnScreen(m_isPrimary),
       m_events(events)

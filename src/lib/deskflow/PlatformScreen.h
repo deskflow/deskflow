@@ -23,7 +23,7 @@ public:
     int32_t xDelta;
     int32_t yDelta;
   };
-  explicit PlatformScreen(IEventQueue *events, bool invertScrollDirection);
+  explicit PlatformScreen(IEventQueue *events);
   ~PlatformScreen() override = default;
 
   // IScreen overrides

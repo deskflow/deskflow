@@ -36,8 +36,8 @@ struct ScrollRemainder
 
 namespace deskflow {
 
-EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, bool invertScrolling)
-    : PlatformScreen{events, invertScrolling},
+EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
+    : PlatformScreen{events},
       m_isPrimary{isPrimary},
       m_events{events},
       m_clipboard{new WlClipboardCollection()},
