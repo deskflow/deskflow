@@ -50,11 +50,10 @@ public:
 
   /**
    * @brief Synthesize a mouse wheel event of amount
-   * This method should include the use of `applyScrollModifier` before sending the delta
-   * @param xDelta
-   * @param yDelta
+   * This Implmentation for this method should call `applyScrollModifier` before sending the final delta to the system
+   * @param delta the raw delta to fake
    */
-  virtual void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const = 0;
+  virtual void fakeMouseWheel(ScrollDelta delta) const = 0;
 
   /**
    * @brief Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses
