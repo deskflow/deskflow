@@ -566,11 +566,13 @@ kern_return_t OSXKeyState::postHIDVirtualKey(uint8_t virtualKey, bool postDown)
   kern_return_t result = KERN_FAILURE;
 
   if (driver) {
+    // Gotcha: `keyCode` must be set for all event types (including modifier key press);
+    // the default zero value is interpreted as the 'a' key by some input methods (e.g. Chinese).
+    event.key.keyCode = virtualKey;
     if (isModifier(virtualKey)) {
       result =
           IOHIDPostEvent(driver, NX_FLAGSCHANGED, {0, 0}, &event, kNXEventDataVersion, getKeyboardEventFlags(), true);
     } else {
-      event.key.keyCode = virtualKey;
       const auto eventType = postDown ? NX_KEYDOWN : NX_KEYUP;
       result = IOHIDPostEvent(driver, eventType, {0, 0}, &event, kNXEventDataVersion, 0, false);
     }
