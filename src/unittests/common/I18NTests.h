@@ -31,6 +31,6 @@ private:
       {QStringLiteral("English"), QStringLiteral("en")},    {QStringLiteral("Español"), QStringLiteral("es")},
       {QStringLiteral("한국어"), QStringLiteral("ko")},     {QStringLiteral("Italiano"), QStringLiteral("it")},
       {QStringLiteral("日本語"), QStringLiteral("ja")},     {QStringLiteral("Русский"), QStringLiteral("ru")},
-      {QStringLiteral("简体中文"), QStringLiteral("zh_CN")}
+      {QStringLiteral("简体中文"), QStringLiteral("zh_CN")},     {QStringLiteral("Português (Brasil)"), QStringLiteral("pt_BR")}
   };
 };
