@@ -34,7 +34,7 @@ if(WIN32)
 
   install(
     TARGETS ${target}
-    RUNTIME_DEPENDENCY_SET deamonDeps
+    RUNTIME_DEPENDENCY_SET daemonDeps
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
   install(RUNTIME_DEPENDENCY_SET daemonDeps
