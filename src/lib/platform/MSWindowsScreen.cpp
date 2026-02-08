@@ -897,8 +897,7 @@ bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LP
     return onMouseMove(static_cast<int32_t>(wParam), static_cast<int32_t>(lParam));
 
   case DESKFLOW_MSG_MOUSE_WHEEL:
-    // XXX -- support x-axis scrolling
-    return onMouseWheel(0, static_cast<int32_t>(wParam));
+    return onMouseWheel(static_cast<int32_t>(lParam), static_cast<int32_t>(wParam));
 
   case DESKFLOW_MSG_PRE_WARP: {
     // save position to compute delta of next motion

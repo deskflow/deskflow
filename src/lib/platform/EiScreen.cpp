@@ -672,7 +672,7 @@ void EiScreen::onPointerScrollEvent(ei_event *event)
   // convert between the two and keep the remainders because
   // we will very likely get subpixel scroll events.
   // This means a single pixel is 120/s_pixelToWheelRation in wheel values.
-  const int s_pixelToWheelRatio = 120 / s_pixelsPerWheelClick;
+  const int s_pixelToWheelRatio = s_scrollDelta / s_pixelsPerWheelClick;
 
   assert(m_isPrimary);
 

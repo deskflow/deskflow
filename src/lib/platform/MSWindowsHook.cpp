@@ -10,6 +10,10 @@
 #include "base/Log.h"
 #include "deskflow/ScreenException.h"
 
+#ifndef WM_MOUSEHWHEEL
+#define WM_MOUSEHWHEEL 0x020E
+#endif
+
 static const char *g_name = "dfwhook";
 
 static DWORD g_processID = 0;
@@ -505,6 +509,13 @@ static bool mouseHookHandler(WPARAM wParam, int32_t x, int32_t y, int32_t data)
     }
     return (g_mode == kHOOK_RELAY_EVENTS);
 
+  case WM_MOUSEHWHEEL:
+    if (g_mode == kHOOK_RELAY_EVENTS) {
+      // relay event
+      PostThreadMessage(g_threadID, DESKFLOW_MSG_MOUSE_WHEEL, 0, data);
+    }
+    return (g_mode == kHOOK_RELAY_EVENTS);
+
   case WM_NCMOUSEMOVE:
   case WM_MOUSEMOVE:
     if (g_mode == kHOOK_RELAY_EVENTS) {
@@ -620,9 +631,10 @@ EHookResult MSWindowsHook::install()
     }
   }
 #endif
-
+  // clang-format off
   // check that we got all the hooks we wanted
-  if ((g_mouseLL == nullptr) ||
+  if (
+      (g_mouseLL == nullptr) ||
 #if !NO_GRAB_KEYBOARD
       (g_keyboardLL == nullptr)
 #endif
@@ -630,7 +642,7 @@ EHookResult MSWindowsHook::install()
     uninstall();
     return kHOOK_FAILED;
   }
-
+  // clang-format on
   if (g_keyboardLL != nullptr || g_mouseLL != nullptr) {
     g_hookThread = GetCurrentThreadId();
     return kHOOK_OKAY_LL;

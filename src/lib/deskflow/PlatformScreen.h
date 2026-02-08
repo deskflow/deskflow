@@ -100,4 +100,7 @@ protected:
   Converts a sides mask (e.g. LeftMask | RightMask) to a string representation (e.g. "LR").
    */
   static std::string sidesMaskToString(uint32_t sides);
+
+  // Delta for a "click"
+  static const auto s_scrollDelta = 120;
 };
