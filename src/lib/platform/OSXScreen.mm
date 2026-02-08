@@ -400,6 +400,7 @@ void OSXScreen::constructMouseButtonEventMap()
       {kCGEventRightMouseUp, kCGEventRightMouseDragged, kCGEventRightMouseDown},
       {kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
       {kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
+      {kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown},
       {kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
   };
 
@@ -589,8 +590,9 @@ void OSXScreen::fakeMouseWheel(ScrollDelta delta) const
   if (delta.x != 0 || delta.y != 0) {
     // use server's acceleration with a little boost since other platforms
     // take one wheel step as a larger step than the mac does.
-    delta =
-        applyScrollModifier({static_cast<int32_t>(3.0 * delta.x / 120.0), static_cast<int32_t>(3.0 * delta.y / 120.0)});
+    delta = applyScrollModifier(
+        {static_cast<int32_t>(3.0 * delta.x / s_scrollDelta), static_cast<int32_t>(3.0 * delta.y / s_scrollDelta)}
+    );
     // create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
     // is the right choice here over kCGScrollEventUnitPixel
     CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, delta.y, delta.x);

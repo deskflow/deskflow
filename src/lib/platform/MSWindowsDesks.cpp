@@ -34,6 +34,10 @@
 #define SPI_GETSCREENSAVERRUNNING 114
 #endif
 
+#if !defined(MOUSEEVENTF_HWHEEL)
+#define MOUSEEVENTF_HWHEEL 0x1000
+#endif
+
 // X button stuff
 #if !defined(WM_XBUTTONDOWN)
 #define WM_XBUTTONDOWN 0x020B
@@ -696,6 +700,9 @@ void MSWindowsDesks::deskThread(const void *vdesk)
       // XXX -- add support for x-axis scrolling
       if (msg.lParam != 0) {
         send_mouse_input(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam);
+      }
+      if (msg.wParam != 0) {
+        send_mouse_input(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD)msg.wParam);
       }
       break;
 
