@@ -1,5 +1,8 @@
 var NAVTREEINDEX3 =
 {
+"MSWindowsDesks_8cpp.html#a8ff6dc91b2706c1be762576867b4da7d":[7,0,1,1,9,23,22],
+"MSWindowsDesks_8cpp.html#a9677341965086eaabe0b77def04d51a8":[7,0,1,1,9,23,12],
+"MSWindowsDesks_8cpp.html#a9a25b6d41cf97e2859efc0cfeef1b094":[7,0,1,1,9,23,15],
 "MSWindowsDesks_8cpp.html#a9d5df0a70bb9ac15388bda51fd56115e":[7,0,1,1,9,23,26],
 "MSWindowsDesks_8cpp.html#a9fa75462d238de3eff1e044434c07f40":[7,0,1,1,9,23,0],
 "MSWindowsDesks_8cpp.html#aa089f675a38a27d6d7275ec57e80041d":[7,0,1,1,9,23,9],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "OSXKeyState_8cpp.html#a5c181c8c92422e7428a02f3ceee556c0":[7,0,1,1,9,65,12],
 "OSXKeyState_8cpp.html#a5d80ee8e879186619558806ad996f98d":[7,0,1,1,9,65,5],
 "OSXKeyState_8cpp.html#a5dc4072aac99d42048f4215cb937310a":[7,0,1,1,9,65,7],
-"OSXKeyState_8cpp.html#a8ad213e888adb067b810522d15d37c54":[7,0,1,1,9,65,8],
-"OSXKeyState_8cpp.html#ab2c0341815e734a6892a1ac00614773d":[7,0,1,1,9,65,9],
-"OSXKeyState_8cpp.html#ac05df8405182a5111d542557ce205c64":[7,0,1,1,9,65,10],
-"OSXKeyState_8cpp.html#af34dcd5e47f5657f1e06bbaf48684af5":[7,0,1,1,9,65,4]
+"OSXKeyState_8cpp.html#a8ad213e888adb067b810522d15d37c54":[7,0,1,1,9,65,8]
 };

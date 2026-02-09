@@ -16,7 +16,7 @@ var classdeskflow_1_1EiScreen =
     [ "fakeMouseButton", "classdeskflow_1_1EiScreen.html#ace046202ecb4e030061be123b274964a", null ],
     [ "fakeMouseMove", "classdeskflow_1_1EiScreen.html#ae534ce4bc0de0ebff278438948284dec", null ],
     [ "fakeMouseRelativeMove", "classdeskflow_1_1EiScreen.html#ac0a27056d17f948aa7557115f2effa12", null ],
-    [ "fakeMouseWheel", "classdeskflow_1_1EiScreen.html#a6d737d97b794f24c1d7f5ec454fbfc00", null ],
+    [ "fakeMouseWheel", "classdeskflow_1_1EiScreen.html#a583787da1039080a17b85da9aabff99c", null ],
     [ "getClipboard", "classdeskflow_1_1EiScreen.html#a9dab63c3aabe1864a39e5a8a47f472c1", null ],
     [ "getCursorCenter", "classdeskflow_1_1EiScreen.html#adb2ac310facaab5e910f371a425e34c3", null ],
     [ "getCursorPos", "classdeskflow_1_1EiScreen.html#a58dc761e566b304b79888aad99d70ccb", null ],

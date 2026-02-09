@@ -14,7 +14,7 @@ var classXWindowsScreen =
     [ "fakeMouseButton", "classXWindowsScreen.html#acd8d3403716eebd6b877f3940d2712bb", null ],
     [ "fakeMouseMove", "classXWindowsScreen.html#a92b282938b2583610a0a1940e6ef2998", null ],
     [ "fakeMouseRelativeMove", "classXWindowsScreen.html#a25a73a3077b6a30c1ed3402feb47463e", null ],
-    [ "fakeMouseWheel", "classXWindowsScreen.html#afd647f99c32a95d7e55292fbee7981fa", null ],
+    [ "fakeMouseWheel", "classXWindowsScreen.html#ae9b5912820f97b4ed0edcfa6405608bc", null ],
     [ "getClipboard", "classXWindowsScreen.html#a109acc9975299f416127a02e6264a3de", null ],
     [ "getCursorCenter", "classXWindowsScreen.html#a8fb29b0d9400b0b52cf973dc6337c33c", null ],
     [ "getCursorPos", "classXWindowsScreen.html#af0af20f62ff51b6bb250011ad592593c", null ],

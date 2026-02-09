@@ -44,9 +44,10 @@ var searchData=
   ['config_2ecpp_41',['Config.cpp',['../Config_8cpp.html',1,'']]],
   ['config_2eh_42',['Config.h',['../Config_8h.html',1,'']]],
   ['contributing_2emd_43',['contributing.md',['../contributing_8md.html',1,'']]],
-  ['coreargparser_2ecpp_44',['CoreArgParser.cpp',['../CoreArgParser_8cpp.html',1,'']]],
-  ['coreargparser_2eh_45',['CoreArgParser.h',['../CoreArgParser_8h.html',1,'']]],
-  ['coreargs_2eh_46',['CoreArgs.h',['../CoreArgs_8h.html',1,'']]],
-  ['coreprocess_2ecpp_47',['CoreProcess.cpp',['../CoreProcess_8cpp.html',1,'']]],
-  ['coreprocess_2eh_48',['CoreProcess.h',['../CoreProcess_8h.html',1,'']]]
+  ['coordinate_2eh_44',['Coordinate.h',['../Coordinate_8h.html',1,'']]],
+  ['coreargparser_2ecpp_45',['CoreArgParser.cpp',['../CoreArgParser_8cpp.html',1,'']]],
+  ['coreargparser_2eh_46',['CoreArgParser.h',['../CoreArgParser_8h.html',1,'']]],
+  ['coreargs_2eh_47',['CoreArgs.h',['../CoreArgs_8h.html',1,'']]],
+  ['coreprocess_2ecpp_48',['CoreProcess.cpp',['../CoreProcess_8cpp.html',1,'']]],
+  ['coreprocess_2eh_49',['CoreProcess.h',['../CoreProcess_8h.html',1,'']]]
 ];

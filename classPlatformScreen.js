@@ -1,10 +1,8 @@
 var classPlatformScreen =
 [
-    [ "ScrollDelta", "structPlatformScreen_1_1ScrollDelta.html", "structPlatformScreen_1_1ScrollDelta" ],
     [ "PlatformScreen", "classPlatformScreen.html#a7993f9c29cfb31017e27b684e260b6cc", null ],
     [ "~PlatformScreen", "classPlatformScreen.html#a2f288569bd4751fa8c75b08ffc237b85", null ],
     [ "activeSides", "classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3", null ],
-    [ "applyClientScrollModifier", "classPlatformScreen.html#ac4876db3aef18cfde59ed2f218b82089", null ],
     [ "canLeave", "classPlatformScreen.html#af1f24d0dd3a6351567e323a99e94340c", null ],
     [ "checkClipboards", "classPlatformScreen.html#a452f7f61275b317208b8980c0ef3461f", null ],
     [ "clearStaleModifiers", "classPlatformScreen.html#a29e4557d386b175f865a84afecc690c4", null ],
@@ -22,7 +20,7 @@ var classPlatformScreen =
     [ "fakeMouseButton", "classPlatformScreen.html#a8aa399e8a554c23555b552480e655d8f", null ],
     [ "fakeMouseMove", "classPlatformScreen.html#a8dda7dcea47792525240a11bcd486f01", null ],
     [ "fakeMouseRelativeMove", "classPlatformScreen.html#a9b2db025722e7b61c247aa75b823eef8", null ],
-    [ "fakeMouseWheel", "classPlatformScreen.html#afd0f02bc320731b63ff0bf145a423da3", null ],
+    [ "fakeMouseWheel", "classPlatformScreen.html#a48b99f214ac07346239fc6ac14d59b74", null ],
     [ "getActiveModifiers", "classPlatformScreen.html#af0e21c06ce09c33018808fb1b02c6c0e", null ],
     [ "getClipboard", "classPlatformScreen.html#a0a69cb71aa22405b41819ac09abaa23e", null ],
     [ "getCursorCenter", "classPlatformScreen.html#a744b9754082f1f65295d26e9fa59ac10", null ],

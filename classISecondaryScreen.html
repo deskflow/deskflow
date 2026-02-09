@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.228</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.231</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,21 +122,51 @@ Inheritance diagram for ISecondaryScreen:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ae7fb6229f5e982f0e27b79950d693a75" id="r_ae7fb6229f5e982f0e27b79950d693a75"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae7fb6229f5e982f0e27b79950d693a75">ISecondaryScreen</a> ()</td></tr>
 <tr class="memitem:a1370cd9fa4c8a0b81acbc12b5a627e0b" id="r_a1370cd9fa4c8a0b81acbc12b5a627e0b"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="#a1370cd9fa4c8a0b81acbc12b5a627e0b">~ISecondaryScreen</a> ()=default</td></tr>
-<tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
+accessors</h2></td></tr>
 <tr class="memitem:a8a1f62c1d6c2f45a63914dac3f147f1e" id="r_a8a1f62c1d6c2f45a63914dac3f147f1e"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a8a1f62c1d6c2f45a63914dac3f147f1e">fakeMouseButton</a> (<a class="el" href="MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee">ButtonID</a> id, bool press)=0</td></tr>
 <tr class="memdesc:a8a1f62c1d6c2f45a63914dac3f147f1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse press/release.  <br /></td></tr>
 <tr class="memitem:ab851383603211acc489ca0f87b6d243d" id="r_ab851383603211acc489ca0f87b6d243d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#ab851383603211acc489ca0f87b6d243d">fakeMouseMove</a> (int32_t <a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t <a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)=0</td></tr>
 <tr class="memdesc:ab851383603211acc489ca0f87b6d243d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse move.  <br /></td></tr>
 <tr class="memitem:a7a5573a06e4e70e7a3a218a709f322a3" id="r_a7a5573a06e4e70e7a3a218a709f322a3"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a7a5573a06e4e70e7a3a218a709f322a3">fakeMouseRelativeMove</a> (int32_t dx, int32_t dy) const =0</td></tr>
 <tr class="memdesc:a7a5573a06e4e70e7a3a218a709f322a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse move.  <br /></td></tr>
-<tr class="memitem:a7589cb1f2a7ceaf1b63ad73f45ad10e9" id="r_a7589cb1f2a7ceaf1b63ad73f45ad10e9"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a7589cb1f2a7ceaf1b63ad73f45ad10e9">fakeMouseWheel</a> (int32_t xDelta, int32_t yDelta) const =0</td></tr>
-<tr class="memdesc:a7589cb1f2a7ceaf1b63ad73f45ad10e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse wheel.  <br /></td></tr>
+<tr class="memitem:a068c8fa86136e95a417a83db513513e0" id="r_a068c8fa86136e95a417a83db513513e0"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a068c8fa86136e95a417a83db513513e0">fakeMouseWheel</a> (<a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a> delta) const =0</td></tr>
+<tr class="memdesc:a068c8fa86136e95a417a83db513513e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synthesize a mouse wheel event of amount This Implmentation for this method should call <span class="tt"><a class="el" href="#ab9839fd6efd3e24f0a171c02cb656aeb" title="Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fa...">applyScrollModifier</a></span> before sending the final delta to the system.  <br /></td></tr>
+<tr class="memitem:ab9839fd6efd3e24f0a171c02cb656aeb" id="r_ab9839fd6efd3e24f0a171c02cb656aeb"><td class="memItemLeft"><a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab9839fd6efd3e24f0a171c02cb656aeb">applyScrollModifier</a> (<a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a> delta) const</td></tr>
+<tr class="memdesc:ab9839fd6efd3e24f0a171c02cb656aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fakeMouseWheel impl.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Secondary screen interface. </p>
 <p>This interface defines the methods common to all platform dependent secondary screen implementations. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae7fb6229f5e982f0e27b79950d693a75" name="ae7fb6229f5e982f0e27b79950d693a75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7fb6229f5e982f0e27b79950d693a75">&#9670;&#160;</a></span>ISecondaryScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ISecondaryScreen::ISecondaryScreen </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1370cd9fa4c8a0b81acbc12b5a627e0b" name="a1370cd9fa4c8a0b81acbc12b5a627e0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1370cd9fa4c8a0b81acbc12b5a627e0b">&#9670;&#160;</a></span>~ISecondaryScreen()</h2>
 
@@ -163,6 +193,40 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ab9839fd6efd3e24f0a171c02cb656aeb" name="ab9839fd6efd3e24f0a171c02cb656aeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9839fd6efd3e24f0a171c02cb656aeb">&#9670;&#160;</a></span>applyScrollModifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a> ISecondaryScreen::applyScrollModifier </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a></td>          <td class="paramname"><span class="paramname"><em>delta</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fakeMouseWheel impl. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delta</td><td>a <a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a> to be modified </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the delta with inversion and scale applied </dd></dl>
+
+</div>
+</div>
 <a id="a8a1f62c1d6c2f45a63914dac3f147f1e" name="a8a1f62c1d6c2f45a63914dac3f147f1e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a1f62c1d6c2f45a63914dac3f147f1e">&#9670;&#160;</a></span>fakeMouseButton()</h2>
 
@@ -265,8 +329,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7589cb1f2a7ceaf1b63ad73f45ad10e9" name="a7589cb1f2a7ceaf1b63ad73f45ad10e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7589cb1f2a7ceaf1b63ad73f45ad10e9">&#9670;&#160;</a></span>fakeMouseWheel()</h2>
+<a id="a068c8fa86136e95a417a83db513513e0" name="a068c8fa86136e95a417a83db513513e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a068c8fa86136e95a417a83db513513e0">&#9670;&#160;</a></span>fakeMouseWheel()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,12 +341,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void ISecondaryScreen::fakeMouseWheel </td>
           <td>(</td>
-          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>xDelta</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>yDelta</em></span>&#160;) const</td>
+          <td class="paramtype"><a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a></td>          <td class="paramname"><span class="paramname"><em>delta</em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -292,10 +352,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Fake mouse wheel. </p>
-<p>Synthesize a mouse wheel event of amount <code>xDelta</code> and <code>yDelta</code>. </p>
+<p>Synthesize a mouse wheel event of amount This Implmentation for this method should call <span class="tt"><a class="el" href="#ab9839fd6efd3e24f0a171c02cb656aeb" title="Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fa...">applyScrollModifier</a></span> before sending the final delta to the system. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delta</td><td>the raw delta to fake </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Implemented in <a class="el" href="classMSWindowsScreen.html#ab32e21e2e6c0e15937d885ea9262bc9d">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a981b69ed3160e02f825c1fedf017b6c8">OSXScreen</a>, <a class="el" href="classPlatformScreen.html#afd0f02bc320731b63ff0bf145a423da3">PlatformScreen</a>, and <a class="el" href="classXWindowsScreen.html#afd647f99c32a95d7e55292fbee7981fa">XWindowsScreen</a>.</p>
+<p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a583787da1039080a17b85da9aabff99c">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#ab2e1c07805c3334fe8225c79bb3764e4">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#ad55d2f91f3893950200545b42eb715b0">OSXScreen</a>, <a class="el" href="classPlatformScreen.html#a48b99f214ac07346239fc6ac14d59b74">PlatformScreen</a>, and <a class="el" href="classXWindowsScreen.html#ae9b5912820f97b4ed0edcfa6405608bc">XWindowsScreen</a>.</p>
 
 </div>
 </div>

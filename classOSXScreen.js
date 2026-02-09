@@ -14,7 +14,7 @@ var classOSXScreen =
     [ "fakeMouseButton", "classOSXScreen.html#a947052e85379398d928a7e8bd697dd64", null ],
     [ "fakeMouseMove", "classOSXScreen.html#a02989746f0e8b11a969fc6d22f1fa820", null ],
     [ "fakeMouseRelativeMove", "classOSXScreen.html#a7b59e3f1364bec5e64f0e565d7b4155d", null ],
-    [ "fakeMouseWheel", "classOSXScreen.html#a981b69ed3160e02f825c1fedf017b6c8", null ],
+    [ "fakeMouseWheel", "classOSXScreen.html#ad55d2f91f3893950200545b42eb715b0", null ],
     [ "getClipboard", "classOSXScreen.html#ae05095cf275a3d7e55a8582044524f7a", null ],
     [ "getCursorCenter", "classOSXScreen.html#a595d3fea96bd9a5542eecf655e2304ca", null ],
     [ "getCursorPos", "classOSXScreen.html#aa80e25911f77d21a72d70a0db274b9dc", null ],

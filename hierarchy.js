@@ -62,6 +62,7 @@ var hierarchy =
     [ "deskflow::server::Config", "classdeskflow_1_1server_1_1Config.html", null ],
     [ "deskflow::server::ConfigReadContext", "classdeskflow_1_1server_1_1ConfigReadContext.html", null ],
     [ "IDataSocket::ConnectionFailedInfo", "classIDataSocket_1_1ConnectionFailedInfo.html", null ],
+    [ "Coordinate", "structCoordinate.html", null ],
     [ "Settings::Core", "structSettings_1_1Core.html", null ],
     [ "CoreArgParser", "classCoreArgParser.html", null ],
     [ "CoreArgs", "structCoreArgs.html", null ],
@@ -450,7 +451,6 @@ var hierarchy =
     [ "&lt;ScreenSaverControl&gt;", "protocolScreenSaverControl-p.html", [
       [ "ScreenSaverController", "interfaceScreenSaverController.html", null ]
     ] ],
-    [ "PlatformScreen::ScrollDelta", "structPlatformScreen_1_1ScrollDelta.html", null ],
     [ "ScrollRemainder", "structScrollRemainder.html", null ],
     [ "Settings::Security", "structSettings_1_1Security.html", null ],
     [ "Server", "classServer.html", null ],

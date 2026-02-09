@@ -37,8 +37,9 @@ var searchData=
   ['connectionfailedinfo_34',['ConnectionFailedInfo',['../classIDataSocket_1_1ConnectionFailedInfo.html',1,'IDataSocket']]],
   ['consolelogoutputter_35',['ConsoleLogOutputter',['../classConsoleLogOutputter.html',1,'']]],
   ['const_5fiterator_36',['const_iterator',['../classdeskflow_1_1server_1_1Config_1_1const__iterator.html',1,'deskflow::server::Config']]],
-  ['core_37',['Core',['../structSettings_1_1Core.html',1,'Settings']]],
-  ['coreargparser_38',['CoreArgParser',['../classCoreArgParser.html',1,'']]],
-  ['coreargs_39',['CoreArgs',['../structCoreArgs.html',1,'']]],
-  ['coreprocess_40',['CoreProcess',['../classdeskflow_1_1gui_1_1CoreProcess.html',1,'deskflow::gui']]]
+  ['coordinate_37',['Coordinate',['../structCoordinate.html',1,'']]],
+  ['core_38',['Core',['../structSettings_1_1Core.html',1,'Settings']]],
+  ['coreargparser_39',['CoreArgParser',['../classCoreArgParser.html',1,'']]],
+  ['coreargs_40',['CoreArgs',['../structCoreArgs.html',1,'']]],
+  ['coreprocess_41',['CoreProcess',['../classdeskflow_1_1gui_1_1CoreProcess.html',1,'deskflow::gui']]]
 ];

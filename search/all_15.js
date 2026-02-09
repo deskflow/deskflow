@@ -108,7 +108,7 @@ var searchData=
   ['screenssection_105',['screensSection',['../classScreen.html#a8399e3a0197115ccfa802774dd1d4c9c',1,'Screen']]],
   ['screensuspend_106',['ScreenSuspend',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aeb718c3a217f7d99ed6f049169ba554d',1,'deskflow']]],
   ['screenunavailableexception_107',['ScreenUnavailableException',['../classScreenUnavailableException.html',1,'ScreenUnavailableException'],['../classScreenUnavailableException.html#a185349a8f8fa458724b76b2f1ad1e419',1,'ScreenUnavailableException::ScreenUnavailableException()']]],
-  ['scrolldelta_108',['ScrollDelta',['../structPlatformScreen_1_1ScrollDelta.html',1,'PlatformScreen']]],
+  ['scrolldelta_108',['ScrollDelta',['../Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f',1,'Coordinate.h']]],
   ['scrolllock_109',['ScrollLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a7d7902d5e2998e4fb2b8694a2de4ff65',1,'ScreenConfig']]],
   ['scrollremainder_110',['ScrollRemainder',['../structScrollRemainder.html',1,'']]],
   ['scrollto_111',['scrollTo',['../classScreenSetupView.html#af806ecc89516920d4ca6730032187513',1,'ScreenSetupView']]],

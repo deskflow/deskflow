@@ -1,5 +1,8 @@
 var NAVTREEINDEX6 =
 {
+"classAppUtilUnix.html#ae4bc733d6f992b07a9e83064e741aa9e":[6,0,8,6],
+"classAppUtilUnix.html#ae67c326a965f9af4a61ca531a3f2c314":[6,0,8,4],
+"classAppUtilUnix.html#aeb650f7d1e269ebb309a71dc6ccc9e96":[6,0,8,5],
 "classAppUtilWindows.html":[6,0,9],
 "classAppUtilWindows.html#a0bd450cbb1f31aaf6a247fd867fdbcb5":[6,0,9,6],
 "classAppUtilWindows.html#a0ed84a88f3bacd3535555d7fccb9825e":[6,0,9,8],
@@ -246,8 +249,5 @@ var NAVTREEINDEX6 =
 "classArchNetworkWinsock.html#a82599cd8f917122c330252b700600154":[6,0,48,27],
 "classArchNetworkWinsock.html#a8f1b78763f0e6b9f8b8517a9b8ec94b3":[6,0,48,11],
 "classArchNetworkWinsock.html#a90e959252672ad3aa89a57cb65dabae0":[6,0,48,25],
-"classArchNetworkWinsock.html#a953e1d9ef4c182a17b976a460a36dede":[6,0,48,14],
-"classArchNetworkWinsock.html#ab84bfe5b7210e306308d47af9fd06d45":[6,0,48,29],
-"classArchNetworkWinsock.html#acb2271a6d6530cbb72d7c31ac383ab89":[6,0,48,23],
-"classArchNetworkWinsock.html#acb553714b596b29ca74ad6750d10c1e3":[6,0,48,20]
+"classArchNetworkWinsock.html#a953e1d9ef4c182a17b976a460a36dede":[6,0,48,14]
 };

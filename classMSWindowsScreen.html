@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.228</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.231</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -184,7 +184,10 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classIPrimaryScreen"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIPrimaryScreen')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIPrimaryScreen.html">IPrimaryScreen</a></td></tr>
 <tr class="memitem:a52a0a5a62240ef5e2ffc9279605cd74d inherit pub_methods_classIPrimaryScreen" id="r_a52a0a5a62240ef5e2ffc9279605cd74d"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classIPrimaryScreen.html#a52a0a5a62240ef5e2ffc9279605cd74d">~IPrimaryScreen</a> ()=default</td></tr>
 <tr class="inherit_header pub_methods_classISecondaryScreen"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classISecondaryScreen')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classISecondaryScreen.html">ISecondaryScreen</a></td></tr>
+<tr class="memitem:ae7fb6229f5e982f0e27b79950d693a75 inherit pub_methods_classISecondaryScreen" id="r_ae7fb6229f5e982f0e27b79950d693a75"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classISecondaryScreen.html#ae7fb6229f5e982f0e27b79950d693a75">ISecondaryScreen</a> ()</td></tr>
 <tr class="memitem:a1370cd9fa4c8a0b81acbc12b5a627e0b inherit pub_methods_classISecondaryScreen" id="r_a1370cd9fa4c8a0b81acbc12b5a627e0b"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classISecondaryScreen.html#a1370cd9fa4c8a0b81acbc12b5a627e0b">~ISecondaryScreen</a> ()=default</td></tr>
+<tr class="memitem:ab9839fd6efd3e24f0a171c02cb656aeb inherit pub_methods_classISecondaryScreen" id="r_ab9839fd6efd3e24f0a171c02cb656aeb"><td class="memItemLeft"><a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a>&#160;</td><td class="memItemRight"><a class="el" href="classISecondaryScreen.html#ab9839fd6efd3e24f0a171c02cb656aeb">applyScrollModifier</a> (<a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a> delta) const</td></tr>
+<tr class="memdesc:ab9839fd6efd3e24f0a171c02cb656aeb inherit pub_methods_classISecondaryScreen"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fakeMouseWheel impl.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIKeyState"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIKeyState')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIKeyState.html">IKeyState</a></td></tr>
 <tr class="memitem:a6ccc71dd0844bce866034fdcaf49ccc9 inherit pub_methods_classIKeyState" id="r_a6ccc71dd0844bce866034fdcaf49ccc9"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classIKeyState.html#a6ccc71dd0844bce866034fdcaf49ccc9">IKeyState</a> (const <a class="el" href="classIEventQueue.html">IEventQueue</a> *events)</td></tr>
 <tr class="memitem:ac251585dcf825cf3f6c70b94ff5121c3 inherit pub_methods_classIKeyState" id="r_ac251585dcf825cf3f6c70b94ff5121c3"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classIKeyState.html#ac251585dcf825cf3f6c70b94ff5121c3">~IKeyState</a> ()=default</td></tr>
@@ -237,8 +240,8 @@ accessors</h2></td></tr>
 <tr class="memdesc:a9d102cc1b8c4971f83c007d0649f8784"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse move.  <br /></td></tr>
 <tr class="memitem:a000c21d039ad26f6665e0fe043c0f6b7" id="r_a000c21d039ad26f6665e0fe043c0f6b7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a000c21d039ad26f6665e0fe043c0f6b7">fakeMouseRelativeMove</a> (int32_t dx, int32_t dy) const override</td></tr>
 <tr class="memdesc:a000c21d039ad26f6665e0fe043c0f6b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse move.  <br /></td></tr>
-<tr class="memitem:ab32e21e2e6c0e15937d885ea9262bc9d" id="r_ab32e21e2e6c0e15937d885ea9262bc9d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab32e21e2e6c0e15937d885ea9262bc9d">fakeMouseWheel</a> (int32_t xDelta, int32_t yDelta) const override</td></tr>
-<tr class="memdesc:ab32e21e2e6c0e15937d885ea9262bc9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake mouse wheel.  <br /></td></tr>
+<tr class="memitem:ab2e1c07805c3334fe8225c79bb3764e4" id="r_ab2e1c07805c3334fe8225c79bb3764e4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab2e1c07805c3334fe8225c79bb3764e4">fakeMouseWheel</a> (<a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a> delta) const override</td></tr>
+<tr class="memdesc:ab2e1c07805c3334fe8225c79bb3764e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synthesize a mouse wheel event of amount This Implmentation for this method should call <span class="tt"><a class="el" href="classISecondaryScreen.html#ab9839fd6efd3e24f0a171c02cb656aeb" title="Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fa...">applyScrollModifier</a></span> before sending the final delta to the system.  <br /></td></tr>
 <tr class="memitem:a76b1cb6e9c7d30e68b904c60d8acbd48" id="r_a76b1cb6e9c7d30e68b904c60d8acbd48"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a76b1cb6e9c7d30e68b904c60d8acbd48">updateKeys</a> ()</td></tr>
 <tr class="memitem:aeb07472c74becaba551445ed0fc5a693" id="r_aeb07472c74becaba551445ed0fc5a693"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aeb07472c74becaba551445ed0fc5a693">fakeKeyDown</a> (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> id, <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> mask, <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60">KeyButton</a> button, const std::string &amp;lang) override</td></tr>
 <tr class="memdesc:aeb07472c74becaba551445ed0fc5a693"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake a key press.  <br /></td></tr>
@@ -295,9 +298,6 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a0a0409190bff7ac81cf797d3f03a93d7 inherit pub_types_classIKeyState" id="r_a0a0409190bff7ac81cf797d3f03a93d7"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> = std::set&lt;<a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60">KeyButton</a>&gt;</td></tr>
 <tr class="inherit_header pub_static_attribs_classIKeyState"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_attribs_classIKeyState')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Attributes inherited from <a class="el" href="classIKeyState.html">IKeyState</a></td></tr>
 <tr class="memitem:a732e1848279a8454794b808b71a75d27 inherit pub_static_attribs_classIKeyState" id="r_a732e1848279a8454794b808b71a75d27"><td class="memItemLeft">static const auto&#160;</td><td class="memItemRight"><a class="el" href="classIKeyState.html#a732e1848279a8454794b808b71a75d27">s_numButtons</a> = 0x200</td></tr>
-<tr class="inherit_header pro_methods_classPlatformScreen"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classPlatformScreen')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classPlatformScreen.html">PlatformScreen</a></td></tr>
-<tr class="memitem:ac4876db3aef18cfde59ed2f218b82089 inherit pro_methods_classPlatformScreen" id="r_ac4876db3aef18cfde59ed2f218b82089"><td class="memItemLeft">virtual <a class="el" href="structPlatformScreen_1_1ScrollDelta.html">ScrollDelta</a>&#160;</td><td class="memItemRight"><a class="el" href="classPlatformScreen.html#ac4876db3aef18cfde59ed2f218b82089">applyClientScrollModifier</a> (const <a class="el" href="structPlatformScreen_1_1ScrollDelta.html">ScrollDelta</a> rawDelta) const</td></tr>
-<tr class="memdesc:ac4876db3aef18cfde59ed2f218b82089 inherit pro_methods_classPlatformScreen"><td class="mdescLeft">&#160;</td><td class="mdescRight">applyClientYScrollModifier Convert scroll according to client's scroll modifiers  <br /></td></tr>
 <tr class="inherit_header pro_static_methods_classPlatformScreen"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_static_methods_classPlatformScreen')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Protected Member Functions inherited from <a class="el" href="classPlatformScreen.html">PlatformScreen</a></td></tr>
 <tr class="memitem:aad93e758f3167bdfee85a57f5e27d40c inherit pro_static_methods_classPlatformScreen" id="r_aad93e758f3167bdfee85a57f5e27d40c"><td class="memItemLeft">static std::string&#160;</td><td class="memItemRight"><a class="el" href="classPlatformScreen.html#aad93e758f3167bdfee85a57f5e27d40c">sidesMaskToString</a> (uint32_t sides)</td></tr>
 </table>
@@ -915,8 +915,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ab32e21e2e6c0e15937d885ea9262bc9d" name="ab32e21e2e6c0e15937d885ea9262bc9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab32e21e2e6c0e15937d885ea9262bc9d">&#9670;&#160;</a></span>fakeMouseWheel()</h2>
+<a id="ab2e1c07805c3334fe8225c79bb3764e4" name="ab2e1c07805c3334fe8225c79bb3764e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2e1c07805c3334fe8225c79bb3764e4">&#9670;&#160;</a></span>fakeMouseWheel()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -927,12 +927,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void MSWindowsScreen::fakeMouseWheel </td>
           <td>(</td>
-          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>xDelta</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>yDelta</em></span>&#160;) const</td>
+          <td class="paramtype"><a class="el" href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a></td>          <td class="paramname"><span class="paramname"><em>delta</em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -942,10 +938,15 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Fake mouse wheel. </p>
-<p>Synthesize a mouse wheel event of amount <code>xDelta</code> and <code>yDelta</code>. </p>
+<p>Synthesize a mouse wheel event of amount This Implmentation for this method should call <span class="tt"><a class="el" href="classISecondaryScreen.html#ab9839fd6efd3e24f0a171c02cb656aeb" title="Applies any scroll modfifers to the provided delta, This should only be done inside the subclasses fa...">applyScrollModifier</a></span> before sending the final delta to the system. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delta</td><td>the raw delta to fake </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Implements <a class="el" href="classPlatformScreen.html#afd0f02bc320731b63ff0bf145a423da3">PlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classPlatformScreen.html#a48b99f214ac07346239fc6ac14d59b74">PlatformScreen</a>.</p>
 
 </div>
 </div>

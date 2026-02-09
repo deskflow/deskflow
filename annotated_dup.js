@@ -140,6 +140,7 @@ var annotated_dup =
     [ "CondVar", "classCondVar.html", "classCondVar" ],
     [ "CondVarBase", "classCondVarBase.html", "classCondVarBase" ],
     [ "ConsoleLogOutputter", "classConsoleLogOutputter.html", "classConsoleLogOutputter" ],
+    [ "Coordinate", "structCoordinate.html", "structCoordinate" ],
     [ "CoreArgParser", "classCoreArgParser.html", "classCoreArgParser" ],
     [ "CoreArgs", "structCoreArgs.html", "structCoreArgs" ],
     [ "DaemonApp", "classDaemonApp.html", "classDaemonApp" ],

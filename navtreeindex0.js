@@ -219,6 +219,9 @@ var NAVTREEINDEX0 =
 "Config_8cpp.html":[7,0,1,1,10,26],
 "Config_8h.html":[7,0,1,1,10,27],
 "Config_8h_source.html":[7,0,1,1,10,27],
+"Coordinate_8h.html":[7,0,1,1,3,0],
+"Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f":[7,0,1,1,3,0,1],
+"Coordinate_8h_source.html":[7,0,1,1,3,0],
 "CoreArgParser_8cpp.html":[7,0,1,0,0,0],
 "CoreArgParser_8h.html":[7,0,1,0,0,1],
 "CoreArgParser_8h_source.html":[7,0,1,0,0,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX0 =
 "Diagnostic_8cpp.html":[7,0,1,1,5,8],
 "Diagnostic_8h.html":[7,0,1,1,5,9],
 "Diagnostic_8h_source.html":[7,0,1,1,5,9],
-"DirectionTypes_8h.html":[7,0,1,1,1,2],
-"DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9":[7,0,1,1,1,2,1],
-"DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9a209d68cc56db4e67477bb78108b826a9":[7,0,1,1,1,2,1,2],
-"DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9a5fbb93d97c829f0d7e76f749d3af73c9":[7,0,1,1,1,2,1,4]
+"DirectionTypes_8h.html":[7,0,1,1,1,2]
 };
