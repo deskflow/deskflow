@@ -31,7 +31,9 @@
 #include "platform/OSXPasteboardPeeker.h"
 #include "platform/OSXScreenSaver.h"
 
+#include <AppKit/NSColor.h>
 #include <AppKit/NSEvent.h>
+#include <AppKit/NSWindow.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <libproc.h>
@@ -56,7 +58,20 @@ enum
   kDeskflowMouseScrollAxisY = 'saxy'
 };
 
+namespace {
+void dispatchOnMainThread(void (^fn)())
+{
+  if ([NSThread isMainThread]) {
+    fn();
+  } else {
+    dispatch_sync(dispatch_get_main_queue(), fn);
+  }
+}
+} // namespace
+
 static const double kCarbonLoopWaitTimeout = 10.0;
+static constexpr size_t kPreventHoverWindowSize = 150; // in pixels
+static constexpr unsigned long long kPreventHoverDelayToWarp = 10 * NSEC_PER_MSEC;
 
 int getSecureInputEventPID();
 std::string getProcessName(int pid);
@@ -652,6 +667,69 @@ void OSXScreen::hideCursor()
   m_cursorHidden = true;
 }
 
+void OSXScreen::showPreventHoverWindow()
+{
+  dispatchOnMainThread(^{
+    @try {
+      if (!m_pPreventHoverWindow) {
+        double windowX = m_xCenter - size_t(kPreventHoverWindowSize / 2);
+        double windowY = m_yCenter - size_t(kPreventHoverWindowSize / 2);
+        NSRect windowRect = NSMakeRect(windowX, windowY, kPreventHoverWindowSize, kPreventHoverWindowSize);
+
+        NSWindow *window = [[NSWindow alloc] initWithContentRect:windowRect
+                                                       styleMask:NSWindowStyleMaskBorderless
+                                                         backing:NSBackingStoreBuffered
+                                                           defer:NO];
+
+        if (window) {
+          const bool showRedBox = (CLOG->getFilter() >= LogLevel::Debug);
+          NSColor *windowColor = showRedBox ? [NSColor redColor] : [NSColor clearColor];
+          [window setBackgroundColor:windowColor];
+          [window setOpaque:NO];
+          [window setIgnoresMouseEvents:NO];
+          [window setCanHide:YES];
+          [window setLevel:kCGFloatingWindowLevel];
+          m_pPreventHoverWindow = window;
+          LOG_DEBUG(
+              "created hover capture window at %.f,%.f (size: %u, center at %d, %d)", windowX, windowY,
+              kPreventHoverWindowSize, m_xCenter, m_yCenter
+          );
+        }
+      }
+      if (m_preventHoverWindowState == EPreventHoverWindowState::Hidden && m_pPreventHoverWindow) {
+        setZeroSuppressionInterval();
+        [m_pPreventHoverWindow orderFrontRegardless];
+        m_preventHoverWindowState = EPreventHoverWindowState::JustShown;
+      }
+    } @catch (NSException *e) {
+      LOG_ERR("failed to show hover capture window: %s", [[e description] UTF8String]);
+    }
+  });
+}
+
+void OSXScreen::hidePreventHoverWindow()
+{
+  dispatchOnMainThread(^{
+    if (m_preventHoverWindowState != EPreventHoverWindowState::Hidden && m_pPreventHoverWindow) {
+      [m_pPreventHoverWindow orderOut:nil];
+      m_preventHoverWindowState = EPreventHoverWindowState::Hidden;
+      LOG_DEBUG("hid hover capture window");
+    }
+  });
+}
+
+void OSXScreen::destroyPreventHoverWindow()
+{
+  dispatchOnMainThread(^{
+    if (m_pPreventHoverWindow) {
+      NSWindow *windowToDestroy = m_pPreventHoverWindow;
+      m_pPreventHoverWindow = nullptr;
+      [windowToDestroy close];
+      LOG_DEBUG("destroyed hover capture window");
+    }
+  });
+}
+
 void OSXScreen::enable()
 {
   // watch the clipboard
@@ -699,6 +777,8 @@ void OSXScreen::disable()
 {
   showCursor();
 
+  destroyPreventHoverWindow();
+
   // FIXME -- stop watching jump zones, stop capturing input
 
   if (m_eventTapRLSR) {
@@ -728,6 +808,8 @@ void OSXScreen::enter()
 {
   m_isOnScreen = true;
   showCursor();
+
+  hidePreventHoverWindow();
 
   if (m_isPrimary) {
     setZeroSuppressionInterval();
@@ -945,9 +1027,19 @@ bool OSXScreen::onMouseMove()
     // motion on primary screen
     sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
-    // motion on secondary screen.  warp mouse back to
-    // center.
-    warpCursor(m_xCenter, m_yCenter);
+    showPreventHoverWindow();
+
+    // motion on secondary screen. warp mouse back to
+    // center, if allowed.
+    if (m_preventHoverWindowState == EPreventHoverWindowState::JustShown) {
+      m_preventHoverWindowState = EPreventHoverWindowState::WaitingForWarp;
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, kPreventHoverDelayToWarp), dispatch_get_main_queue(), ^{
+        warpCursor(m_xCenter, m_yCenter);
+        m_preventHoverWindowState = EPreventHoverWindowState::Displayed;
+      });
+    } else if (m_preventHoverWindowState != EPreventHoverWindowState::WaitingForWarp) {
+      warpCursor(m_xCenter, m_yCenter);
+    }
 
     // examine the motion.  if it's about the distance
     // from the center of the screen to an edge then
