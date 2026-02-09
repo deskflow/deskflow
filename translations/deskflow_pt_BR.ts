@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -1330,7 +1330,7 @@ Ativar esta configuração desativará a GUI de configuração do servidor.</tra
     <message>
         <source>LocalizedName</source>
         <extracomment>Replace with your Language name This is a required string</extracomment>
-        <translation>Português</translation>
+        <translation>Português (Brasil)</translation>
     </message>
 </context>
 <context>
