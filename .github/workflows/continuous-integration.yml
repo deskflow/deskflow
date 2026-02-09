@@ -298,6 +298,11 @@ jobs:
         with:
           job: ${{ matrix.target.name }}
 
+      - name: Test package
+        uses: ./.github/actions/test-package
+        with:
+          like: ${{ matrix.target.like }}
+
       - name: Update Development Documentation
         if: matrix.target.like == 'arch' && github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@v4.7.3
