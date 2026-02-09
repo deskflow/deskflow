@@ -100,19 +100,4 @@ protected:
   Converts a sides mask (e.g. LeftMask | RightMask) to a string representation (e.g. "LR").
    */
   static std::string sidesMaskToString(uint32_t sides);
-
-private:
-  /*!
-   * \brief m_clientScrollDirection
-   * This member contains client scroll direction.
-   * This member is used only on client side.
-   */
-  bool m_invertScrollDirection = false;
-
-  /**
-   * @brief m_yScrollScale
-   * This member is used to scale the y scroll speed
-   * It is only used on the client side
-   */
-  double m_yScrollScale = 1.0;
 };
