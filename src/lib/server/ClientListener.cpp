@@ -150,7 +150,7 @@ void ClientListener::handleClientAccepted(IDataSocket *socket)
   LOG_NOTE("accepted client connection");
 
   // filter socket messages, including a packetizing filter
-  deskflow::IStream *stream = new PacketStreamFilter(m_events, socket, false);
+  deskflow::IStream *stream = new PacketStreamFilter(m_events, socket);
   assert(m_server != nullptr);
 
   // create proxy for unknown client
