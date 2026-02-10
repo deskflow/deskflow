@@ -93,6 +93,12 @@ public:
   // this object converts from/to
   virtual UINT getWin32Format() const = 0;
 
+  // allows converters to select win32 format based on data content
+  virtual UINT getWin32FormatForData(const std::string &data) const
+  {
+    return getWin32Format();
+  }
+
   // convert from the IClipboard format to the win32 clipboard format.
   // the input data must be in the IClipboard format returned by
   // getFormat().  the return data will be in the win32 clipboard

@@ -62,6 +62,12 @@ CFStringRef OSXClipboardBMPConverter::getOSXFormat() const
 std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) const
 {
   LOG_DEBUG1("getting data from clipboard");
+
+  if (bmp.size() < 4) {
+    return std::string();
+  }
+  uint32_t headerSize = fromLEU32(reinterpret_cast<const uint8_t *>(bmp.data()));
+
   // create BMP image
   uint8_t header[14];
   uint8_t *dst = header;
@@ -70,14 +76,13 @@ std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) con
   toLE(dst, static_cast<uint32_t>(14 + bmp.size()));
   toLE(dst, static_cast<uint16_t>(0));
   toLE(dst, static_cast<uint16_t>(0));
-  toLE(dst, static_cast<uint32_t>(14 + 40));
+  toLE(dst, static_cast<uint32_t>(14 + headerSize));
   return std::string(reinterpret_cast<const char *>(header), 14) + bmp;
 }
 
 std::string OSXClipboardBMPConverter::toIClipboard(const std::string &bmp) const
 {
-  // make sure data is big enough for a BMP file
-  if (bmp.size() <= 14 + 40) {
+  if (bmp.size() <= 14 + 4) {
     return std::string();
   }
 
@@ -90,10 +95,14 @@ std::string OSXClipboardBMPConverter::toIClipboard(const std::string &bmp) const
   // get offset to image data
   uint32_t offset = fromLEU32(rawBMPHeader + 10);
 
-  // construct BMP
-  if (offset == 14 + 40) {
+  // biSize is read dynamically to support both BITMAPINFOHEADER and BITMAPV5HEADER
+  uint32_t headerSize = fromLEU32(rawBMPHeader + 14);
+  if (headerSize < 40 || bmp.size() <= 14 + headerSize) {
+    return std::string();
+  }
+  if (offset == 14 + headerSize) {
     return bmp.substr(14);
   } else {
-    return bmp.substr(14, 40) + bmp.substr(offset, bmp.size() - offset);
+    return bmp.substr(14, headerSize) + bmp.substr(offset, bmp.size() - offset);
   }
 }

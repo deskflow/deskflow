@@ -19,6 +19,7 @@ public:
   // IMSWindowsClipboardConverter overrides
   IClipboard::Format getFormat() const override;
   UINT getWin32Format() const override;
+  UINT getWin32FormatForData(const std::string &data) const override;
   HANDLE fromIClipboard(const std::string &) const override;
   std::string toIClipboard(HANDLE) const override;
 };

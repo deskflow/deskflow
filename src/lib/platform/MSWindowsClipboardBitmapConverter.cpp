@@ -23,6 +23,17 @@ UINT MSWindowsClipboardBitmapConverter::getWin32Format() const
   return CF_DIB;
 }
 
+UINT MSWindowsClipboardBitmapConverter::getWin32FormatForData(const std::string &data) const
+{
+  if (data.size() >= 4) {
+    uint32_t headerSize = *reinterpret_cast<const uint32_t *>(data.data());
+    if (headerSize == 124) {
+      return CF_DIBV5;
+    }
+  }
+  return CF_DIB;
+}
+
 HANDLE
 MSWindowsClipboardBitmapConverter::fromIClipboard(const std::string &data) const
 {

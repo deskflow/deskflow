@@ -98,7 +98,7 @@ void MSWindowsClipboard::add(Format format, const std::string &data)
       HANDLE win32Data = converter->fromIClipboard(data);
       if (win32Data != nullptr) {
         LOG_DEBUG("add %d bytes to clipboard format: %d", data.size(), format);
-        m_facade->write(win32Data, converter->getWin32Format());
+        m_facade->write(win32Data, converter->getWin32FormatForData(data));
         isSucceeded = true;
         break;
       } else {
