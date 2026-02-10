@@ -21,7 +21,7 @@ Filters a stream to read and write packets.
 class PacketStreamFilter : public StreamFilter
 {
 public:
-  PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
+  PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream);
   ~PacketStreamFilter() override = default;
 
   // IStream overrides
