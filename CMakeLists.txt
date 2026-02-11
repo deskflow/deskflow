@@ -11,6 +11,11 @@ cmake_policy(SET CMP0003 NEW)
 # Fix define escaping
 cmake_policy(SET CMP0005 NEW)
 
+# De-duplicate libraries on linker calls
+if(POLICY CMP0156)
+  cmake_policy(SET CMP0156 NEW)
+endif()
+
 # Set CXX Requirements
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
