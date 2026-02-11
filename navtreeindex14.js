@@ -1,5 +1,10 @@
 var NAVTREEINDEX14 =
 {
+"classScreenUnavailableException.html#a14e6003da282369f0f6ce48d25ed9227":[6,0,198,3],
+"classScreenUnavailableException.html#a185349a8f8fa458724b76b2f1ad1e419":[6,0,198,0],
+"classScreenUnavailableException.html#aaa992bb802bf53bc06538a5533f22397":[6,0,198,1],
+"classScreenUnavailableException.html#ae5a8ddd2c4af8a91f8630f389889b1ae":[6,0,198,2],
+"classSearchWidget.html":[6,0,200],
 "classSearchWidget.html#a457c3287be5e370c3c4cf4babc1b8db6":[6,0,200,2],
 "classSearchWidget.html#a5111d286ce1807c9727dd4f1ae7d8291":[6,0,200,1],
 "classSearchWidget.html#a9088ad584a3678dd1f930a883bf44200":[6,0,200,3],
@@ -244,10 +249,5 @@ var NAVTREEINDEX14 =
 "classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,209,2],
 "classSimpleEventQueueBuffer.html":[6,0,210],
 "classSimpleEventQueueBuffer.html#a1660098f79ed1c822ff0f8680e04da6a":[6,0,210,8],
-"classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,210,3],
-"classSimpleEventQueueBuffer.html#a2c01276cbb3afc0a8772e967e6da5d0f":[6,0,210,5],
-"classSimpleEventQueueBuffer.html#a34a5b80110085fe4f9e0b0a0a1089bcc":[6,0,210,4],
-"classSimpleEventQueueBuffer.html#a555b82c38339b712737b0891ba66a913":[6,0,210,7],
-"classSimpleEventQueueBuffer.html#a6fb82670e416bc980b16788beb56353c":[6,0,210,9],
-"classSimpleEventQueueBuffer.html#a71d5d9347ce17280b77e220ffcaaf79b":[6,0,210,10]
+"classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,210,3]
 };

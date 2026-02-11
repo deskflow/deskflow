@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.232</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.234</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -182,11 +182,9 @@ $(function(){initNavTree('PlatformScreen_8h_source.html','',''); });
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classPlatformScreen.html#aad93e758f3167bdfee85a57f5e27d40c">sidesMaskToString</a>(uint32_t sides);</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keywordtype">bool</span> m_invertScrollDirection = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keywordtype">double</span> m_yScrollScale = 1.0;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="comment">// Delta for a &quot;click&quot;</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classPlatformScreen.html#abfe6499eea8bd45294747dbb4a9ed5b0">  105</a></span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_variable" href="classPlatformScreen.html#abfe6499eea8bd45294747dbb4a9ed5b0">s_scrollDelta</a> = 120;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>};</div>
 </div>
 <div class="ttc" id="aClipboardTypes_8h_html_a63ca97102023d8f9ba64dcbe102a2647"><div class="ttname"><a href="ClipboardTypes_8h.html#a63ca97102023d8f9ba64dcbe102a2647">ClipboardID</a></div><div class="ttdeci">uint8_t ClipboardID</div><div class="ttdoc">Clipboard ID.</div><div class="ttdef"><b>Definition</b> ClipboardTypes.h:16</div></div>
 <div class="ttc" id="aCoordinate_8h_html_a926a72b0999cf3a9001b66c38aa4453f"><div class="ttname"><a href="Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f">ScrollDelta</a></div><div class="ttdeci">Coordinate ScrollDelta</div><div class="ttdef"><b>Definition</b> Coordinate.h:21</div></div>
@@ -244,6 +242,7 @@ $(function(){initNavTree('PlatformScreen_8h_source.html','',''); });
 <div class="ttc" id="aclassPlatformScreen_html_ab49aef2db78769f9f000da61275fc66b"><div class="ttname"><a href="classPlatformScreen.html#ab49aef2db78769f9f000da61275fc66b">PlatformScreen::updateButtons</a></div><div class="ttdeci">virtual void updateButtons()=0</div><div class="ttdoc">Update mouse buttons.</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ab8873e332c68b405d8c0a2c0e85336b3"><div class="ttname"><a href="classPlatformScreen.html#ab8873e332c68b405d8c0a2c0e85336b3">PlatformScreen::getEventTarget</a></div><div class="ttdeci">void * getEventTarget() const override=0</div><div class="ttdoc">Get event target.</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ab916de1c2ae7cfe9e4714d5572bd3ffc"><div class="ttname"><a href="classPlatformScreen.html#ab916de1c2ae7cfe9e4714d5572bd3ffc">PlatformScreen::unregisterHotKey</a></div><div class="ttdeci">void unregisterHotKey(uint32_t id) override=0</div><div class="ttdoc">Unregister a system hotkey.</div></div>
+<div class="ttc" id="aclassPlatformScreen_html_abfe6499eea8bd45294747dbb4a9ed5b0"><div class="ttname"><a href="classPlatformScreen.html#abfe6499eea8bd45294747dbb4a9ed5b0">PlatformScreen::s_scrollDelta</a></div><div class="ttdeci">static const auto s_scrollDelta</div><div class="ttdef"><b>Definition</b> PlatformScreen.h:105</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ac65f37b80e2d588a34fb9e459166dc5a"><div class="ttname"><a href="classPlatformScreen.html#ac65f37b80e2d588a34fb9e459166dc5a">PlatformScreen::fakeKeyUp</a></div><div class="ttdeci">bool fakeKeyUp(KeyButton button) override</div><div class="ttdoc">Fake a key release.</div><div class="ttdef"><b>Definition</b> PlatformScreen.cpp:46</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ac7c8caf95a18d5527fbde2acd3687571"><div class="ttname"><a href="classPlatformScreen.html#ac7c8caf95a18d5527fbde2acd3687571">PlatformScreen::fakeAllKeysUp</a></div><div class="ttdeci">void fakeAllKeysUp() override</div><div class="ttdoc">Fake key releases for all fake pressed keys.</div><div class="ttdef"><b>Definition</b> PlatformScreen.cpp:51</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ac8fcc45a4546ee38e8a02c5e63e710b4"><div class="ttname"><a href="classPlatformScreen.html#ac8fcc45a4546ee38e8a02c5e63e710b4">PlatformScreen::closeScreensaver</a></div><div class="ttdeci">void closeScreensaver() override=0</div><div class="ttdoc">Close screen saver.</div></div>

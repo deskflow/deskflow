@@ -1,5 +1,9 @@
 var NAVTREEINDEX8 =
 {
+"classClientProxy1__3.html#a02b20bb30b235e9b6b1d23d4b74d853a":[6,0,66,6],
+"classClientProxy1__3.html#a0fa3a11b2545761f71a01f55170d127a":[6,0,66,12],
+"classClientProxy1__3.html#a18983e156134478e4715e88ee10a1313":[6,0,66,11],
+"classClientProxy1__3.html#a3b1f7c3c5048c2fda127f97512589221":[6,0,66,3],
 "classClientProxy1__3.html#a4ced20634fd5d2f183b07d9c66357120":[6,0,66,2],
 "classClientProxy1__3.html#a55cecb1a0c351814f3f05381972e2107":[6,0,66,0],
 "classClientProxy1__3.html#a57ce10728d42564aa52939c26c683dce":[6,0,66,13],
@@ -245,9 +249,5 @@ var NAVTREEINDEX8 =
 "classIApp.html#ad8b76d3777672aa8d28cd9c847f87729":[6,0,100,2],
 "classIArchDaemon.html":[6,0,101],
 "classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab":[6,0,101,0],
-"classIArchDaemon.html#a6644e694fd49213342d4008cba60a516":[6,0,101,3],
-"classIArchDaemon.html#aad014dbecf0641b2873dc9f6fd86c93b":[6,0,101,2],
-"classIArchDaemon.html#abcf9e90b08623256d2e5df0efe9060e1":[6,0,101,1],
-"classIArchLog.html":[6,0,102],
-"classIArchLog.html#a419dbbe5623dbdc36fd34b62a78fcf56":[6,0,102,3]
+"classIArchDaemon.html#a6644e694fd49213342d4008cba60a516":[6,0,101,3]
 };

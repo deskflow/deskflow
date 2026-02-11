@@ -10,6 +10,8 @@ var MouseTypes_8h =
     [ "kMacButtonMiddle", "MouseTypes_8h.html#aa8775ba1478550252160954e88c58855", null ],
     [ "kMacButtonRight", "MouseTypes_8h.html#a0dacf3d04bfb24ad934f8438ec96fc36", null ],
     [ "kX11ScrollWheelDown", "MouseTypes_8h.html#a0f6cb9a79daffa5ba32e047eebc0a412", null ],
+    [ "kX11ScrollWheelLeft", "MouseTypes_8h.html#a07856288890c20aa3e9ec726c7e4e792", null ],
+    [ "kX11ScrollWheelRight", "MouseTypes_8h.html#aa2b726b8132b45c428b38b7a1a4d6278", null ],
     [ "kX11ScrollWheelUp", "MouseTypes_8h.html#a1ad130ebde81a505d2eba96e4154475a", null ],
     [ "NumButtonIDs", "MouseTypes_8h.html#afb8283e11d4d520390cfdf6bae83f1cc", null ]
 ];

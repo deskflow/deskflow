@@ -12,6 +12,7 @@ var MSWindowsDesks_8cpp =
     [ "DESKFLOW_MSG_SCREENSAVER", "MSWindowsDesks_8cpp.html#aa089f675a38a27d6d7275ec57e80041d", null ],
     [ "DESKFLOW_MSG_SWITCH", "MSWindowsDesks_8cpp.html#ada38a4fb9d53587af056e661b8c6de2d", null ],
     [ "DESKFLOW_MSG_SYNC_KEYS", "MSWindowsDesks_8cpp.html#a5888d7a67129edfea2f1298c57335c43", null ],
+    [ "MOUSEEVENTF_HWHEEL", "MSWindowsDesks_8cpp.html#ab04844c6f4514fc61bd80c1905749139", null ],
     [ "MOUSEEVENTF_XDOWN", "MSWindowsDesks_8cpp.html#a9677341965086eaabe0b77def04d51a8", null ],
     [ "MOUSEEVENTF_XUP", "MSWindowsDesks_8cpp.html#a764704869b58a8e99131a56720dfb1ac", null ],
     [ "SPI_GETMOUSESPEED", "MSWindowsDesks_8cpp.html#a229eb3cb01c581e4a20a2428af85df87", null ],

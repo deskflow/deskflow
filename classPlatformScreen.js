@@ -51,5 +51,6 @@ var classPlatformScreen =
     [ "updateButtons", "classPlatformScreen.html#ab49aef2db78769f9f000da61275fc66b", null ],
     [ "updateKeyMap", "classPlatformScreen.html#a33f7a5a5569dfe2db604048ad0e4e813", null ],
     [ "updateKeyState", "classPlatformScreen.html#a0bcdee139982e2cac2c7303e6cd0fe2f", null ],
-    [ "warpCursor", "classPlatformScreen.html#a535ef2dc3db23517b0a82d6904cdb892", null ]
+    [ "warpCursor", "classPlatformScreen.html#a535ef2dc3db23517b0a82d6904cdb892", null ],
+    [ "s_scrollDelta", "classPlatformScreen.html#abfe6499eea8bd45294747dbb4a9ed5b0", null ]
 ];

@@ -393,5 +393,7 @@ var searchData=
   ['kurlsourcequery_390',['kUrlSourceQuery',['../UrlConstants_8h.html#a489ad373c1f49fadaa40809221ecdb1f',1,'UrlConstants.h']]],
   ['kurlupdatecheck_391',['kUrlUpdateCheck',['../UrlConstants_8h.html#a757bc52675c18003a865c822080929e4',1,'UrlConstants.h']]],
   ['kx11scrollwheeldown_392',['kX11ScrollWheelDown',['../MouseTypes_8h.html#a0f6cb9a79daffa5ba32e047eebc0a412',1,'MouseTypes.h']]],
-  ['kx11scrollwheelup_393',['kX11ScrollWheelUp',['../MouseTypes_8h.html#a1ad130ebde81a505d2eba96e4154475a',1,'MouseTypes.h']]]
+  ['kx11scrollwheelleft_393',['kX11ScrollWheelLeft',['../MouseTypes_8h.html#a07856288890c20aa3e9ec726c7e4e792',1,'MouseTypes.h']]],
+  ['kx11scrollwheelright_394',['kX11ScrollWheelRight',['../MouseTypes_8h.html#aa2b726b8132b45c428b38b7a1a4d6278',1,'MouseTypes.h']]],
+  ['kx11scrollwheelup_395',['kX11ScrollWheelUp',['../MouseTypes_8h.html#a1ad130ebde81a505d2eba96e4154475a',1,'MouseTypes.h']]]
 ];

@@ -1,5 +1,10 @@
 var NAVTREEINDEX22 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a786d0034ff93ad270bacde98d603b3e9":[5,0,0,18,42],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a793b6080c7b0badaa569b76f0988d139":[5,0,0,18,38],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a80f4b125846735ec3a6e99f6b9d68f0b":[5,0,0,18,36],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a857586459050f8d2bc9dba9e99f0a41f":[5,0,0,18,12],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a87779aca6f652e7b1edb7a999ede22f3":[5,0,0,18,34],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e":[5,0,0,18,0],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a8ffc85a288b645aeb6e5d104f397215f":[5,0,0,18,46],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a911ba363fd1483b5b36fda7b0149cf76":[5,0,0,18,25],
@@ -244,10 +249,5 @@ var NAVTREEINDEX22 =
 "structScrollRemainder.html#a62da684f437beaa23780cac83f027fa9":[6,0,199,1],
 "structSettings_1_1Client.html":[6,0,208,0],
 "structSettings_1_1Client.html#a50b1127b62ac5088157236dd298d623b":[6,0,208,0,1],
-"structSettings_1_1Client.html#a78bf4a3446a0f91fd8375d89ea79c869":[6,0,208,0,4],
-"structSettings_1_1Client.html#aa09822d6262ecd66e109aa7ab4f46d84":[6,0,208,0,0],
-"structSettings_1_1Client.html#ad698d8035f8fb5bce2e895b5502a590e":[6,0,208,0,2],
-"structSettings_1_1Client.html#aea267370b8062d84f19f5bb57d07ef85":[6,0,208,0,3],
-"structSettings_1_1Core.html":[6,0,208,1],
-"structSettings_1_1Core.html#a1dca5c3929372601e8237ed5ec24e099":[6,0,208,1,0]
+"structSettings_1_1Client.html#a78bf4a3446a0f91fd8375d89ea79c869":[6,0,208,0,4]
 };

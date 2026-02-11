@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"classArchNetworkWinsock.html#a82599cd8f917122c330252b700600154":[6,0,48,27],
+"classArchNetworkWinsock.html#a8f1b78763f0e6b9f8b8517a9b8ec94b3":[6,0,48,11],
+"classArchNetworkWinsock.html#a90e959252672ad3aa89a57cb65dabae0":[6,0,48,25],
+"classArchNetworkWinsock.html#a953e1d9ef4c182a17b976a460a36dede":[6,0,48,14],
 "classArchNetworkWinsock.html#ab84bfe5b7210e306308d47af9fd06d45":[6,0,48,29],
 "classArchNetworkWinsock.html#acb2271a6d6530cbb72d7c31ac383ab89":[6,0,48,23],
 "classArchNetworkWinsock.html#acb553714b596b29ca74ad6750d10c1e3":[6,0,48,20],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "classClientProxy1__2.html#a184eeb8519518a9ba7cae3c1c7e16153":[6,0,65,2],
 "classClientProxy1__2.html#a8d89b3df4635c0dcf3b90487b6631ac2":[6,0,65,1],
 "classClientProxy1__2.html#a8fef5153c1b6623265c8baf60f1add11":[6,0,65,0],
-"classClientProxy1__3.html":[6,0,66],
-"classClientProxy1__3.html#a02b20bb30b235e9b6b1d23d4b74d853a":[6,0,66,6],
-"classClientProxy1__3.html#a0fa3a11b2545761f71a01f55170d127a":[6,0,66,12],
-"classClientProxy1__3.html#a18983e156134478e4715e88ee10a1313":[6,0,66,11],
-"classClientProxy1__3.html#a3b1f7c3c5048c2fda127f97512589221":[6,0,66,3]
+"classClientProxy1__3.html":[6,0,66]
 };

@@ -1,5 +1,10 @@
 var NAVTREEINDEX17 =
 {
+"classXWindowsUtil.html#aa225a3a10a43d139294773550eb65840":[6,0,258,7],
+"classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f":[6,0,258,4],
+"classXWindowsUtil.html#acd39bfb02176fa6028247ffbcbab3b6f":[6,0,258,9],
+"classXWindowsUtil.html#af24dc03672e63abbebd9730fd6b35e07":[6,0,258,8],
+"classXWindowsUtil.html#af63751ea085ff9852a68f309dccdae22":[6,0,258,6],
 "classXWindowsUtil_1_1ErrorLock.html":[6,0,258,0],
 "classXWindowsUtil_1_1ErrorLock.html#a0f672607eea2c0210a567bb6f0983cd3":[6,0,258,0,8],
 "classXWindowsUtil_1_1ErrorLock.html#a36fd47b60342baa436d5328f3cfa0676":[6,0,258,0,5],
@@ -244,10 +249,5 @@ var NAVTREEINDEX17 =
 "classdeskflow_1_1KeyMap.html#addf21f3314981192b3bc70cdb697e930":[6,0,0,7,24],
 "classdeskflow_1_1KeyMap.html#ae62de81a471437aedbdb97f9ff11ab68":[5,0,0,8,17],
 "classdeskflow_1_1KeyMap.html#ae62de81a471437aedbdb97f9ff11ab68":[6,0,0,7,17],
-"classdeskflow_1_1KeyMap.html#aef496d7565922670d636e590040eedef":[5,0,0,8,23],
-"classdeskflow_1_1KeyMap.html#aef496d7565922670d636e590040eedef":[6,0,0,7,23],
-"classdeskflow_1_1KeyMap_1_1Keystroke.html":[5,0,0,8,1],
-"classdeskflow_1_1KeyMap_1_1Keystroke.html":[6,0,0,7,1],
-"classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7":[5,0,0,8,1,3],
-"classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7":[6,0,0,7,1,3]
+"classdeskflow_1_1KeyMap.html#aef496d7565922670d636e590040eedef":[5,0,0,8,23]
 };
