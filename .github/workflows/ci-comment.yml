@@ -21,9 +21,12 @@ jobs:
     runs-on: ubuntu-slim
 
     steps:
+      # If the workflow fails before uploading summaries, no artifacts exist and this step fails.
+      # Allow failure so the "Delete PR comment" step still runs to clean up stale comments.
       - name: Download summaries
         id: download
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           run-id: ${{ github.event.workflow_run.id }}
           pattern: summary-*
