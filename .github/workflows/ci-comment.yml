@@ -57,10 +57,11 @@ jobs:
               console.log("Found PR:", pr.number);
               return pr.number;
             } else {
-              core.setFailed("PR not found");
+              core.warning("PR not found for SHA (maybe removed by force push)");
             }
 
       - name: Merge summaries
+        if: steps.get-pr-number.outputs.result
         id: summary
         run: |
           ls -R
@@ -88,7 +89,7 @@ jobs:
           } >> $GITHUB_OUTPUT
 
       - name: Set PR comment
-        if: steps.summary.outputs.message
+        if: steps.get-pr-number.outputs.result && steps.summary.outputs.message
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-pr-number.outputs.result }}
@@ -96,7 +97,7 @@ jobs:
           message: ${{ steps.summary.outputs.message }}
 
       - name: Delete PR comment
-        if: ${{ !steps.summary.outputs.message }}
+        if: ${{ steps.get-pr-number.outputs.result && !steps.summary.outputs.message }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.get-pr-number.outputs.result }}
