@@ -12,7 +12,7 @@
 void IKeyStateTests::allocDestination()
 {
   auto info = IKeyState::KeyInfo::alloc(1, 2, 3, 4, {"test1", "test2"});
-  QCOMPARE(info->m_screensBuffer, ":test1:test2:");
+  QCOMPARE(info->m_screens, ":test1:test2:");
 }
 
 QTEST_MAIN(IKeyStateTests)
