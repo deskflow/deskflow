@@ -60,7 +60,7 @@ runs:
 
         echo "$table" > $GITHUB_STEP_SUMMARY
 
-        count=$(echo "$table" | awk -v RS='' '{gsub(/[^❌]/, ""); print length}')
+        count=$(echo "$table" | { grep -o '❌' || true; } | wc -l)
 
         # Keep at this indentation level for heredoc.
         fail_summary=$(cat <<EOF
