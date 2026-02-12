@@ -1,3 +1,5 @@
+#TEST
+
 # Uses `workflow_run` to securely add a comment to the PR that triggered CI.
 #
 # Important: For security, the `workflow_run` trigger runs the workflow from the default branch,
