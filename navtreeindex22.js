@@ -1,5 +1,7 @@
 var NAVTREEINDEX22 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2":[5,0,0,18,56],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a731395388d62cd6067648dea2768653d":[5,0,0,18,43],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a786d0034ff93ad270bacde98d603b3e9":[5,0,0,18,42],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a793b6080c7b0badaa569b76f0988d139":[5,0,0,18,38],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a80f4b125846735ec3a6e99f6b9d68f0b":[5,0,0,18,36],
@@ -247,7 +249,5 @@ var NAVTREEINDEX22 =
 "structScrollRemainder.html":[6,0,199],
 "structScrollRemainder.html#a06a2eab3d5996e601896b38ea2649c15":[6,0,199,0],
 "structScrollRemainder.html#a62da684f437beaa23780cac83f027fa9":[6,0,199,1],
-"structSettings_1_1Client.html":[6,0,208,0],
-"structSettings_1_1Client.html#a50b1127b62ac5088157236dd298d623b":[6,0,208,0,1],
-"structSettings_1_1Client.html#a78bf4a3446a0f91fd8375d89ea79c869":[6,0,208,0,4]
+"structSettings_1_1Client.html":[6,0,208,0]
 };

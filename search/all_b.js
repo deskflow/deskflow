@@ -195,12 +195,13 @@ var searchData=
   ['isutf8_192',['isUTF8',['../classUnicode.html#a318adabcf876bf85a933412df0732c97',1,'Unicode']]],
   ['isvalid_193',['isValid',['../structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc',1,'Fingerprint::isValid()'],['../classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef',1,'NetworkAddress::isValid()'],['../classIOSXKeyResource.html#a58823379c0a3c7e6a307d0c937ca357f',1,'IOSXKeyResource::isValid()'],['../classOSXUchrKeyResource.html#a7fdc80f70d3f9fa3524f9c7ba5832304',1,'OSXUchrKeyResource::isValid()']]],
   ['isvalidscreenname_194',['isValidScreenName',['../classdeskflow_1_1server_1_1Config.html#af9e192946df0b469b826fec417cb2dfe',1,'deskflow::server::Config']]],
-  ['iswayland_195',['isWayland',['../namespacedeskflow_1_1platform.html#a6cc5995e010e4add146caf44c544d362',1,'deskflow::platform']]],
-  ['iswindows_196',['isWindows',['../namespacedeskflow_1_1platform.html#ac60e44b592386bef8068211fd84bb515',1,'deskflow::platform']]],
-  ['iswritable_197',['isWritable',['../classQSettingsProxy.html#a6735b3a2eda9ddff113992cf1845708a',1,'QSettingsProxy::isWritable()'],['../classSettings.html#acc77a634afaed3905e6545630c71d5f2',1,'Settings::isWritable()'],['../classISocketMultiplexerJob.html#adea7e7721312a1bb7147e12922ee1be5',1,'ISocketMultiplexerJob::isWritable()'],['../classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c',1,'TCPSocket::isWritable()'],['../classTSocketMultiplexerMethodJob.html#a1086333f93e3893cd662402268c06f5e',1,'TSocketMultiplexerMethodJob::isWritable()']]],
-  ['item_198',['Item',['../classXWindowsClipboard.html#ab045f67769edfb0b2e262cc5cab82cf3a7d74f3b92b19da5e606d737d339a9679',1,'XWindowsClipboard']]],
-  ['iterator_199',['iterator',['../classPriorityQueue.html#a5bafced7aaea079a6df66c54068fa5f6',1,'PriorityQueue']]],
-  ['iterator_5fcategory_200',['iterator_category',['../structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#ac5274c8b1f0413f89a626a54abe5d926',1,'std::iterator_traits&lt; deskflow::server::Config &gt;']]],
-  ['iterator_5ftraits_3c_20deskflow_3a_3aserver_3a_3aconfig_20_3e_201',['iterator_traits&lt; deskflow::server::Config &gt;',['../structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html',1,'std']]],
-  ['ixwindowsclipboardconverter_202',['IXWindowsClipboardConverter',['../classIXWindowsClipboardConverter.html',1,'']]]
+  ['isvirtualinterface_195',['isVirtualInterface',['../classdeskflow_1_1gui_1_1NetworkMonitor.html#a59f6fe6aab8944a0ca0a735aca627aee',1,'deskflow::gui::NetworkMonitor']]],
+  ['iswayland_196',['isWayland',['../namespacedeskflow_1_1platform.html#a6cc5995e010e4add146caf44c544d362',1,'deskflow::platform']]],
+  ['iswindows_197',['isWindows',['../namespacedeskflow_1_1platform.html#ac60e44b592386bef8068211fd84bb515',1,'deskflow::platform']]],
+  ['iswritable_198',['isWritable',['../classQSettingsProxy.html#a6735b3a2eda9ddff113992cf1845708a',1,'QSettingsProxy::isWritable()'],['../classSettings.html#acc77a634afaed3905e6545630c71d5f2',1,'Settings::isWritable()'],['../classISocketMultiplexerJob.html#adea7e7721312a1bb7147e12922ee1be5',1,'ISocketMultiplexerJob::isWritable()'],['../classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c',1,'TCPSocket::isWritable()'],['../classTSocketMultiplexerMethodJob.html#a1086333f93e3893cd662402268c06f5e',1,'TSocketMultiplexerMethodJob::isWritable()']]],
+  ['item_199',['Item',['../classXWindowsClipboard.html#ab045f67769edfb0b2e262cc5cab82cf3a7d74f3b92b19da5e606d737d339a9679',1,'XWindowsClipboard']]],
+  ['iterator_200',['iterator',['../classPriorityQueue.html#a5bafced7aaea079a6df66c54068fa5f6',1,'PriorityQueue']]],
+  ['iterator_5fcategory_201',['iterator_category',['../structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#ac5274c8b1f0413f89a626a54abe5d926',1,'std::iterator_traits&lt; deskflow::server::Config &gt;']]],
+  ['iterator_5ftraits_3c_20deskflow_3a_3aserver_3a_3aconfig_20_3e_202',['iterator_traits&lt; deskflow::server::Config &gt;',['../structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html',1,'std']]],
+  ['ixwindowsclipboardconverter_203',['IXWindowsClipboardConverter',['../classIXWindowsClipboardConverter.html',1,'']]]
 ];

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.240</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.243</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -137,6 +137,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a60e7fd9af440e7b9d6f5563c9c82e9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop network monitoring.  <br /></td></tr>
 <tr class="memitem:aa5f6d6e7a465766256ff667c57e57d22" id="r_aa5f6d6e7a465766256ff667c57e57d22"><td class="memItemLeft">QStringList&#160;</td><td class="memItemRight"><a class="el" href="#aa5f6d6e7a465766256ff667c57e57d22">getAvailableIPv4Addresses</a> () const</td></tr>
 <tr class="memdesc:aa5f6d6e7a465766256ff667c57e57d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of all available IPv4 addresses (excluding local and link-local addresses).  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a59f6fe6aab8944a0ca0a735aca627aee" id="r_a59f6fe6aab8944a0ca0a735aca627aee"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a59f6fe6aab8944a0ca0a735aca627aee">isVirtualInterface</a> (const QString &amp;interfaceName)</td></tr>
+<tr class="memdesc:a59f6fe6aab8944a0ca0a735aca627aee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a network interface is virtual.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Monitor network activity changes and provide IP address updates. </p>
@@ -253,6 +258,40 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a59f6fe6aab8944a0ca0a735aca627aee" name="a59f6fe6aab8944a0ca0a735aca627aee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59f6fe6aab8944a0ca0a735aca627aee">&#9670;&#160;</a></span>isVirtualInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool deskflow::gui::NetworkMonitor::isVirtualInterface </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>interfaceName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if a network interface is virtual. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interfaceName</td><td>Network interface name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if it's a virtual interface </dd></dl>
 
 </div>
 </div>
