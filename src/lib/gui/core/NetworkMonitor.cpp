@@ -65,7 +65,8 @@ QStringList NetworkMonitor::getAvailableIPv4Addresses() const
       continue;
     }
 
-    const bool isVirtual = isVirtualInterface(interface.name());
+    const bool isP2P = (interface.flags() & QNetworkInterface::IsPointToPoint);
+    const bool isVirtual = isVirtualInterface(interface.name()) || isP2P;
     const auto addressEntries = interface.addressEntries();
 
     for (const auto &entry : addressEntries) {
