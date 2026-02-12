@@ -32,8 +32,12 @@ bool NetworkMonitor::isVirtualInterface(const QString &interfaceName) const
       QStringLiteral("llw"),     // Link-local wireless
       QStringLiteral("anpi"),    // Apple network interface
   };
-
-  return virtualPatterns.contains(interfaceName, Qt::CaseInsensitive);
+  for (const auto &pattern : virtualPatterns) {
+    if (interfaceName.contains(pattern)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(new QTimer(this))
