@@ -52,6 +52,13 @@ public:
    */
   QStringList getAvailableIPv4Addresses() const;
 
+  /**
+   * @brief Check if a network interface is virtual
+   * @param interfaceName Network interface name
+   * @return true if it's a virtual interface
+   */
+  static bool isVirtualInterface(const QString &interfaceName);
+
 Q_SIGNALS:
   /**
    * @brief Emitted when IP addresses change
@@ -61,13 +68,6 @@ Q_SIGNALS:
 
 private:
   void setIpAddresses(const QStringList &newAddresses);
-
-  /**
-   * @brief Check if a network interface is virtual
-   * @param interfaceName Network interface name
-   * @return true if it's a virtual interface
-   */
-  bool isVirtualInterface(const QString &interfaceName) const;
 
   /**
    * @brief Update current network status
