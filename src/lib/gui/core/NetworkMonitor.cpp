@@ -89,7 +89,7 @@ QStringList NetworkMonitor::getAvailableIPv4Addresses() const
 
   std::ranges::sort(physicalIPs, [](const QHostAddress &a, const QHostAddress &b) {
     if (a.isPrivateUse() != b.isPrivateUse())
-      return true;
+      return a.isPrivateUse();
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
