@@ -45,8 +45,7 @@ public:
     KeyModifierMask m_mask;
     KeyButton m_button;
     int32_t m_count;
-    char *m_screens;
-    char m_screensBuffer[1];
+    std::string m_screens;
   };
 
   using KeyButtonSet = std::set<KeyButton>;
