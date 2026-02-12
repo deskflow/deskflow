@@ -11,6 +11,10 @@ on:
       - "v*"
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   PACKAGE_PREFIX: "deskflow"

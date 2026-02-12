@@ -23,6 +23,10 @@ on:
       - '!src/res/**'
       - '!src/unittests/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   sonar:
     # This job would fail for contributors who open PRs as the workflow runs outside of our repo
