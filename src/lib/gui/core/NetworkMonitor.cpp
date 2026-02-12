@@ -9,31 +9,20 @@
 #include <QAbstractSocket>
 #include <QList>
 #include <QNetworkInterface>
+#include <QRegularExpression>
 #include <QSet>
 #include <QTimer>
 
 namespace deskflow::gui {
 
-bool NetworkMonitor::isVirtualInterface(const QString &interfaceName) const
+bool NetworkMonitor::isVirtualInterface(const QString &interfaceName)
 {
   // Common virtual network interface patterns
-  static const QStringList virtualPatterns = {
-      QStringLiteral("vboxnet"), // VirtualBox host-only networks
-      QStringLiteral("vmnet"),   // VMware virtual networks
-      QStringLiteral("docker"),  // Docker bridge networks
-      QStringLiteral("virbr"),   // libvirt bridge networks
-      QStringLiteral("veth"),    // Virtual ethernet
-      QStringLiteral("br-"),     // Bridge interfaces (some are virtual)
-      QStringLiteral("tun"),     // Tunnel interfaces
-      QStringLiteral("tap"),     // TAP interfaces
-      QStringLiteral("utun"),    // User tunnel (macOS)
-      QStringLiteral("awdl"),    // Apple Wireless Direct Link
-      QStringLiteral("p2p"),     // Peer-to-peer
-      QStringLiteral("llw"),     // Link-local wireless
-      QStringLiteral("anpi"),    // Apple network interface
-  };
-
-  return virtualPatterns.contains(interfaceName, Qt::CaseInsensitive);
+  static const auto virtualRegEx = QRegularExpression(
+      QStringLiteral("^vboxnet|vmnet|docker|virbr|veth|br\\-|tun|utun|awdl|p2p|llw|anpi|tap"),
+      QRegularExpression::CaseInsensitiveOption
+  );
+  return virtualRegEx.match(interfaceName).hasMatch();
 }
 
 NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(new QTimer(this))
