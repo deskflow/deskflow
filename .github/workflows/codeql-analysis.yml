@@ -22,6 +22,10 @@ on:
       - '!src/res/**'
       - '!src/unittests/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   codeql:
     runs-on: ubuntu-latest
