@@ -140,6 +140,41 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">클라이언트 구성</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">이 컴퓨터에서 서버의 키보드 언어 사용</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">이 컴퓨터에서 세로 스크롤 방향을 반전합니다</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">수직 스크롤 스케일</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">닫기 및 변경 사항 저장</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">설정을 저장하고 나면 변경 사항은 더 이상 신경 쓸 필요가 없습니다</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">저장된 값으로 재설정</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">기본값으로 재설정</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -538,6 +573,10 @@ Valid names:
         <translation>코어 실행 파일은 존재하지만 정상적으로 시작할 수 없습니다. 이 프로그램을 실행할 권한이 충분한지 확인하세요.</translation>
     </message>
     <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">클라이언트 구성 (&amp;C)</translation>
+    </message>
+    <message>
         <source>Connect to:</source>
         <translation type="unfinished">연결 대상:</translation>
     </message>
@@ -556,10 +595,6 @@ Valid names:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1이(가) 이미 실행 중입니다</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>치명적 오류</translation>
@@ -738,6 +773,10 @@ Valid names:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">인증서 파일에서 RSA 키를 읽지 못했습니다: %1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1이(가) 이미 실행 중입니다</translation>
     </message>
 </context>
 <context>
@@ -1104,14 +1143,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>일반(&amp;R)</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>클라이언트 모드</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>이 컴퓨터에서 서버의 키보드 언어 사용</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>앱</translation>
     </message>
@@ -1314,14 +1345,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">창 제목에 버전 정보 포함</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">이 컴퓨터에서 세로 스크롤 방향을 반전합니다</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">수직 스크롤 스케일</translation>
     </message>
 </context>
 <context>
