@@ -145,6 +145,7 @@ private:
   void updateScreenName();
   void saveSettings() const;
   void showConfigureServer(const QString &message);
+  void showConfigureClient();
   void restoreWindow();
   void setupControls();
   void showFirstConnectedMessage();

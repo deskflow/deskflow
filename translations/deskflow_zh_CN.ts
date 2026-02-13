@@ -140,6 +140,41 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">客户端配置</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">在此计算机上使用服务器的键盘语言</translation>
+    </message>
+    <message>
+        <source>Invert vertical scroll direction on this computer</source>
+        <translation type="unfinished">在此计算机上反转垂直滚动方向</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll Scale</source>
+        <translation type="unfinished">垂直滚动比例</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">关闭并保存更改</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">关闭并忘记更改</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">重置为存储值</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">重置为默认值</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -538,6 +573,10 @@ Valid names:
         <translation type="unfinished">Core 可执行文件虽然存在，但无法成功启动。请检查您是否拥有运行此程序的足够权限。</translation>
     </message>
     <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">配置客户端(&amp;C)</translation>
+    </message>
+    <message>
         <source>Connect to:</source>
         <translation type="unfinished">连接到：</translation>
     </message>
@@ -556,10 +595,6 @@ Valid names:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1 已经在运行中</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>致命错误</translation>
@@ -740,6 +775,10 @@ Valid names:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">无法从证书文件中读取 RSA 密钥：%1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1 已经在运行中</translation>
     </message>
 </context>
 <context>
@@ -1106,14 +1145,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>常规(&amp;R)</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>客户端模式</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>在此计算机上使用服务器的键盘语言</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>应用程序</translation>
     </message>
@@ -1316,14 +1347,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">在窗口标题中包含版本信息</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">在此计算机上反转垂直滚动方向</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">垂直滚动比例</translation>
     </message>
 </context>
 <context>

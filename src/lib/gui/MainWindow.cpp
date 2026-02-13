@@ -14,6 +14,7 @@
 #include "StyleUtils.h"
 
 #include "dialogs/AboutDialog.h"
+#include "dialogs/ClientConfigDialog.h"
 #include "dialogs/FingerprintDialog.h"
 #include "dialogs/ServerConfigDialog.h"
 #include "dialogs/SettingsDialog.h"
@@ -198,6 +199,7 @@ void MainWindow::setupControls()
   secureSocket(false);
 
   ui->btnConfigureServer->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
+  ui->btnConfigureClient->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
 
   if (Settings::value(Settings::Core::LastVersion).toString() != kVersion) {
     Settings::setValue(Settings::Core::LastVersion, kVersion);
@@ -315,6 +317,7 @@ void MainWindow::connectSlots()
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
+  connect(ui->btnConfigureClient, &QPushButton::clicked, this, [this] { showConfigureClient(); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
   connect(m_btnFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
@@ -1095,6 +1098,14 @@ void MainWindow::showConfigureServer(const QString &message)
 {
   ServerConfigDialog dialog(this, serverConfig());
   dialog.message(message);
+  if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
+    m_coreProcess.restart();
+  }
+}
+
+void MainWindow::showConfigureClient()
+{
+  ClientConfigDialog dialog(this);
   if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
     m_coreProcess.restart();
   }
