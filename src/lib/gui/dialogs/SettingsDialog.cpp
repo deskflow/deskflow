@@ -182,7 +182,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   Settings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
-  Settings::setValue(Settings::Client::InvertScrollDirection, ui->cbScrollDirection->isChecked());
+  Settings::setValue(Settings::Client::InvertYScroll, ui->cbScrollDirection->isChecked());
   Settings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
@@ -211,7 +211,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
-  ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
+  ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertYScroll).toBool());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
   ui->cbElevateDaemon->setChecked(Settings::value(Settings::Daemon::Elevate).toBool());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
