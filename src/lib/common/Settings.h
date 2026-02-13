@@ -34,7 +34,7 @@ public:
 
   struct Client
   {
-    inline static const auto InvertScrollDirection = QStringLiteral("client/invertScrollDirection");
+    inline static const auto InvertYScroll = QStringLiteral("client/invertYScroll");
     inline static const auto YScrollScale = QStringLiteral("client/yScrollScale");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
@@ -191,7 +191,7 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Settings::Client::InvertScrollDirection
+      Settings::Client::InvertYScroll
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
     , Settings::Client::YScrollScale
@@ -246,7 +246,7 @@ private:
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
     , Settings::Server::ExternalConfig
-    , Settings::Client::InvertScrollDirection
+    , Settings::Client::InvertYScroll
     , Settings::Log::ToFile
     , Settings::Log::GuiDebug
   };
