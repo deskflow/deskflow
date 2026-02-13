@@ -22,7 +22,7 @@ class ISecondaryScreen
 public:
   ISecondaryScreen()
   {
-    m_invertScroll = Settings::value(Settings::Client::InvertScrollDirection).toBool();
+    m_invertScroll = Settings::value(Settings::Client::InvertYScroll).toBool();
     m_scrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
   }
 
