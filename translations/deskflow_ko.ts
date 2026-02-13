@@ -150,12 +150,24 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">이 컴퓨터에서 서버의 키보드 언어 사용</translation>
     </message>
     <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">이 컴퓨터에서 세로 스크롤 방향을 반전합니다</translation>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">스크롤 수정자</translation>
     </message>
     <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">수직 스크롤 스케일</translation>
+        <source>Invert</source>
+        <translation type="unfinished">거꾸로 하다</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">가로 스크롤</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">세로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">규모</translation>
     </message>
     <message>
         <source>Close and save changes</source>
