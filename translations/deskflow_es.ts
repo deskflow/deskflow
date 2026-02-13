@@ -150,12 +150,24 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Utilice el idioma del teclado del servidor en esta computadora</translation>
     </message>
     <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">Invertir la dirección del desplazamiento vertical en este ordenador</translation>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">Modificadores de desplazamiento</translation>
     </message>
     <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">Escala de desplazamiento vertical</translation>
+        <source>Invert</source>
+        <translation type="unfinished">Invertir</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">Desplazamiento horizontal</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">Desplazamiento vertical</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">Escala</translation>
     </message>
     <message>
         <source>Close and save changes</source>

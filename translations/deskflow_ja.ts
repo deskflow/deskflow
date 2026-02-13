@@ -150,12 +150,24 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">サーバー側のキーボード言語をこのコンピューターで使用する</translation>
     </message>
     <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">このコンピューターで垂直スクロールの方向を反転させる</translation>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">スクロール修飾子</translation>
     </message>
     <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">垂直スクロールスケール</translation>
+        <source>Invert</source>
+        <translation type="unfinished">反転</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">水平スクロール</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">垂直スクロール</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">規模</translation>
     </message>
     <message>
         <source>Close and save changes</source>

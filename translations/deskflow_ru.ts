@@ -150,12 +150,24 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Использовать язык клавиатуры сервера на этом компьютере</translation>
     </message>
     <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">Инвертировать направление вертикальной прокрутки на этом компьютере</translation>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">Модификаторы прокрутки</translation>
     </message>
     <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">Вертикальная шкала прокрутки</translation>
+        <source>Invert</source>
+        <translation type="unfinished">Инвертировать</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">Горизонтальная прокрутка</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">Вертикальная прокрутка</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">Шкала</translation>
     </message>
     <message>
         <source>Close and save changes</source>

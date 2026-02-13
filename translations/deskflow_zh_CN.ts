@@ -150,12 +150,24 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">在此计算机上使用服务器的键盘语言</translation>
     </message>
     <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">在此计算机上反转垂直滚动方向</translation>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">滚动修饰符</translation>
     </message>
     <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">垂直滚动比例</translation>
+        <source>Invert</source>
+        <translation type="unfinished">倒置</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">水平滚动</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">垂直滚动</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">规模</translation>
     </message>
     <message>
         <source>Close and save changes</source>
