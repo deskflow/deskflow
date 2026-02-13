@@ -55,20 +55,26 @@ void ClientConfigDialog::initConnections() const
   connect(ui->cbLanguageSync, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->cbYScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbXScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(ui->sbXScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
 }
 
 bool ClientConfigDialog::isModified() const
 {
   return (ui->cbLanguageSync->isChecked() != Settings::value(Settings::Client::LanguageSync).toBool()) ||
          (ui->cbYScrollInvert->isChecked() != Settings::value(Settings::Client::InvertYScroll).toBool()) ||
-         (ui->sbYScrollScale->value() != Settings::value(Settings::Client::YScrollScale).toDouble());
+         (ui->sbYScrollScale->value() != Settings::value(Settings::Client::YScrollScale).toDouble()) ||
+         (ui->cbXScrollInvert->isChecked() != Settings::value(Settings::Client::InvertXScroll).toBool()) ||
+         (ui->sbXScrollScale->value() != Settings::value(Settings::Client::XScrollScale).toDouble());
 }
 
 bool ClientConfigDialog::isDefault() const
 {
   return (ui->cbLanguageSync->isChecked() == Settings::defaultValue(Settings::Client::LanguageSync).toBool()) &&
          (ui->cbYScrollInvert->isChecked() == Settings::defaultValue(Settings::Client::InvertYScroll).toBool()) &&
-         (ui->sbYScrollScale->value() == Settings::defaultValue(Settings::Client::YScrollScale).toDouble());
+         (ui->sbYScrollScale->value() == Settings::defaultValue(Settings::Client::YScrollScale).toDouble()) &&
+         (ui->cbXScrollInvert->isChecked() == Settings::defaultValue(Settings::Client::InvertXScroll).toBool()) &&
+         (ui->sbXScrollScale->value() == Settings::defaultValue(Settings::Client::XScrollScale).toDouble());
 }
 
 void ClientConfigDialog::setButtonBoxEnabledButtons() const
@@ -84,6 +90,8 @@ void ClientConfigDialog::load()
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
   ui->cbYScrollInvert->setChecked(Settings::value(Settings::Client::InvertYScroll).toBool());
   ui->sbYScrollScale->setValue(Settings::value(Settings::Client::YScrollScale).toDouble());
+  ui->cbXScrollInvert->setChecked(Settings::value(Settings::Client::InvertXScroll).toBool());
+  ui->sbXScrollScale->setValue(Settings::value(Settings::Client::XScrollScale).toDouble());
 }
 
 void ClientConfigDialog::resetToDefault()
@@ -91,6 +99,8 @@ void ClientConfigDialog::resetToDefault()
   ui->cbLanguageSync->setChecked(Settings::defaultValue(Settings::Client::LanguageSync).toBool());
   ui->cbYScrollInvert->setChecked(Settings::defaultValue(Settings::Client::InvertYScroll).toBool());
   ui->sbYScrollScale->setValue(Settings::defaultValue(Settings::Client::YScrollScale).toDouble());
+  ui->cbXScrollInvert->setChecked(Settings::defaultValue(Settings::Client::InvertXScroll).toBool());
+  ui->sbXScrollScale->setValue(Settings::defaultValue(Settings::Client::XScrollScale).toDouble());
 }
 
 void ClientConfigDialog::save()
@@ -98,5 +108,7 @@ void ClientConfigDialog::save()
   Settings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
   Settings::setValue(Settings::Client::InvertYScroll, ui->cbYScrollInvert->isChecked());
   Settings::setValue(Settings::Client::YScrollScale, ui->sbYScrollScale->value());
+  Settings::setValue(Settings::Client::InvertXScroll, ui->cbXScrollInvert->isChecked());
+  Settings::setValue(Settings::Client::XScrollScale, ui->sbXScrollScale->value());
   QDialog::accept();
 }
