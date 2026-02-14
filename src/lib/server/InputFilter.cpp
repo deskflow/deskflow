@@ -469,8 +469,8 @@ std::string InputFilter::KeystrokeAction::format() const
     );
   } else {
     return deskflow::string::sprintf(
-        "%s(%s,%.*s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
-        strnlen(m_keyInfo->m_screens + 1, SIZE_MAX) - 1, m_keyInfo->m_screens + 1
+        "%s(%s,%s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
+        m_keyInfo->m_screens.c_str()
     );
   }
 }
