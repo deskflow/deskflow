@@ -125,7 +125,7 @@ private:
   void updateNetworkInfo();
 
   void coreModeToggled(bool checked);
-  void updateModeControls(bool serverMode);
+  void updateModeControls();
   void updateModeControlLabels();
   std::unique_ptr<Ui::MainWindow> ui;
 

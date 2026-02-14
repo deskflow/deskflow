@@ -544,28 +544,29 @@ void MainWindow::coreModeToggled(bool checked)
   Settings::setValue(Settings::Core::CoreMode, mode);
   Settings::save();
 
-  updateModeControls(mode == Settings::CoreMode::Server);
+  updateModeControls();
 }
 
-void MainWindow::updateModeControls(bool serverMode)
+void MainWindow::updateModeControls()
 {
-  ui->serverOptions->setVisible(serverMode);
-  ui->clientOptions->setVisible(!serverMode);
-  ui->lblNoMode->setVisible(false);
-  ui->btnToggleCore->setEnabled(true);
-  m_actionStartCore->setEnabled(true);
-  updateModeControlLabels();
+  const auto mode = m_coreProcess.mode();
+  const bool isServer = mode == Settings::CoreMode::Server;
+  const bool isClient = mode == Settings::CoreMode::Client;
+  ui->serverOptions->setVisible(isServer);
+  ui->lblIpAddresses->setVisible(isServer);
+  ui->clientOptions->setVisible(isClient);
+  ui->lblNoMode->setVisible(!isServer && !isClient);
+  toggleCanRunCore((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
 
-  toggleCanRunCore((!serverMode && !ui->lineHostname->text().isEmpty()) || serverMode);
-
-  ui->lblIpAddresses->setVisible(serverMode);
-  if (serverMode) {
-    // Initialize network monitoring
+  if (isServer) {
     updateNetworkInfo();
     m_networkMonitor->startMonitoring();
   } else {
     m_networkMonitor->stopMonitoring();
   }
+
+  if (isServer || isClient)
+    updateModeControlLabels();
 }
 
 void MainWindow::updateModeControlLabels()
