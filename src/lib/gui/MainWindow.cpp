@@ -523,8 +523,14 @@ void MainWindow::showMyFingerprint()
   fingerprintDialog.exec();
 }
 
-void MainWindow::coreModeToggled()
+void MainWindow::coreModeToggled(bool checked)
 {
+  // this method is called when rbClient or rbServer toggles
+  // with both being in the same group one must be turned on if the other is turned off
+  // only react to toggle on to avoid calling everything twice when the user switches modes
+  if (!checked)
+    return;
+
   auto serverMode = ui->rbModeServer->isChecked();
 
   const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
