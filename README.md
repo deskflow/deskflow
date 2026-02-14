@@ -25,7 +25,7 @@ TLS encryption is enabled by default. Wayland is supported. Clipboard sharing is
 > [!NOTE]
 > On Windows, you will need to install the
 > [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version).  
-> Download latest: [`vc_redist.x64.exe`](https://aka.ms/vs/17/release/vc_redist.x64.exe) [`vc_redist.arm64.exe`](https://aka.ms/vs/17/release/vc_redist.arm64.exe)
+> Download latest: [`vc_redist.x64.exe`](https://aka.ms/vc14/vc_redist.x64.exe) [`vc_redist.arm64.exe`](https://aka.ms/vc14/vc_redist.arm64.exe)
 
 > [!TIP]
 > For macOS users, the easiest way to install and stay up to date is to use [Homebrew](https://brew.sh) with our [homebrew-tap](https://github.com/deskflow/homebrew-tap).
