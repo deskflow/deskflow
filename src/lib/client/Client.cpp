@@ -103,7 +103,7 @@ void Client::connect(size_t addressIndex)
     bindNetworkInterface(socket);
 
     // filter socket messages, including a packetizing filter
-    m_stream = new PacketStreamFilter(m_events, socket, true);
+    m_stream = new PacketStreamFilter(m_events, socket);
 
     // connect
     LOG_DEBUG1("connecting to server");
