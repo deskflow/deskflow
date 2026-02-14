@@ -140,6 +140,53 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">클라이언트 구성</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">이 컴퓨터에서 서버의 키보드 언어 사용</translation>
+    </message>
+    <message>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">스크롤 수정자</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation type="unfinished">거꾸로 하다</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">가로 스크롤</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">세로 스크롤</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">규모</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">닫기 및 변경 사항 저장</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">설정을 저장하고 나면 변경 사항은 더 이상 신경 쓸 필요가 없습니다</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">저장된 값으로 재설정</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">기본값으로 재설정</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -286,14 +333,6 @@ Do you want to connect to the server?
     <message>
         <source>You must select a mode</source>
         <translation>모드를 선택해야 합니다</translation>
-    </message>
-    <message>
-        <source>Server IP or hostname:</source>
-        <translation>서버 IP 또는 호스트 이름:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -545,6 +584,18 @@ Valid names:
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>코어 실행 파일은 존재하지만 정상적으로 시작할 수 없습니다. 이 프로그램을 실행할 권한이 충분한지 확인하세요.</translation>
     </message>
+    <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">클라이언트 구성 (&amp;C)</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">연결 대상:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.&lt;br/&gt;쉼표로 구분된 목록을 포함할 수 있습니다.&lt;/html&gt;</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
@@ -556,10 +607,6 @@ Valid names:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1이(가) 이미 실행 중입니다</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>치명적 오류</translation>
@@ -738,6 +785,10 @@ Valid names:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">인증서 파일에서 RSA 키를 읽지 못했습니다: %1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1이(가) 이미 실행 중입니다</translation>
     </message>
 </context>
 <context>
@@ -1104,14 +1155,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>일반(&amp;R)</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>클라이언트 모드</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>이 컴퓨터에서 서버의 키보드 언어 사용</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>앱</translation>
     </message>
@@ -1314,14 +1357,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">창 제목에 버전 정보 포함</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">이 컴퓨터에서 세로 스크롤 방향을 반전합니다</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">수직 스크롤 스케일</translation>
     </message>
 </context>
 <context>

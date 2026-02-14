@@ -140,6 +140,53 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">クライアント構成</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">サーバー側のキーボード言語をこのコンピューターで使用する</translation>
+    </message>
+    <message>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">スクロール修飾子</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation type="unfinished">反転</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">水平スクロール</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">垂直スクロール</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">規模</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">閉じて変更を保存する</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">変更を閉じて忘れる</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">保存した値にリセット</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">デフォルト値にリセット</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -286,14 +333,6 @@ Do you want to connect to the server?
     <message>
         <source>You must select a mode</source>
         <translation>動作モードを選択してください</translation>
-    </message>
-    <message>
-        <source>Server IP or hostname:</source>
-        <translation>サーバーのIPアドレスかホスト名:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>サーバーのIPアドレスかホスト名</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -545,6 +584,18 @@ Valid names:
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>コア実行ファイルは存在していますが、起動できませんでした。このプログラムを実行するのに十分な権限があることを確認してください。</translation>
     </message>
+    <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">クライアントの設定 (&amp;C)</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">接続先:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;サーバー コンピューターのホスト名または IP アドレス。&lt;br/&gt;カンマ区切りのリストを含めることができます。&lt;/html&gt;</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
@@ -556,10 +607,6 @@ Valid names:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1 は既に起動中です</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>致命的なエラー</translation>
@@ -740,6 +787,10 @@ Valid names:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">証明書ファイルから RSA キーを読み取ることができませんでした: %1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1 は既に起動中です</translation>
     </message>
 </context>
 <context>
@@ -1106,14 +1157,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>基本(&amp;R)</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>クライアントモード</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>サーバー側のキーボード言語をこのコンピューターで使用する</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>アプリケーション</translation>
     </message>
@@ -1316,14 +1359,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">ウィンドウタイトルにバージョン情報を含める</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">このコンピューターで垂直スクロールの方向を反転させる</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">垂直スクロールスケール</translation>
     </message>
 </context>
 <context>

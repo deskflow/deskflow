@@ -322,6 +322,47 @@
               <number>0</number>
              </property>
              <item>
+              <widget class="QPushButton" name="btnConfigureClient">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>&amp;Configure Client</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>5</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
               <widget class="QLabel" name="m_pLabelServerName">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -330,7 +371,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Server IP or hostname:</string>
+                <string>Connect to:</string>
                </property>
                <property name="indent">
                 <number>0</number>
@@ -346,7 +387,7 @@
                 </size>
                </property>
                <property name="toolTip">
-                <string>Hostname or IP address of the server computer.</string>
+                <string>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</string>
                </property>
               </widget>
              </item>

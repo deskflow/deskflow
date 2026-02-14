@@ -140,6 +140,53 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">Конфигурация клиента</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">Использовать язык клавиатуры сервера на этом компьютере</translation>
+    </message>
+    <message>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">Модификаторы прокрутки</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation type="unfinished">Инвертировать</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">Горизонтальная прокрутка</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">Вертикальная прокрутка</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">Шкала</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">Закрыть и сохранить изменения</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">Закройте изменения и забудьте о них</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">Сбросить до сохраненных значений</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">Сбросить до значений по умолчанию</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -286,14 +333,6 @@ Do you want to connect to the server?
     <message>
         <source>You must select a mode</source>
         <translation>Необходимо выбрать режим</translation>
-    </message>
-    <message>
-        <source>Server IP or hostname:</source>
-        <translation>IP-адрес или имя хоста сервера:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>Имя хоста или IP-адрес сервера.</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -547,6 +586,18 @@ Valid names:
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>Не удалось запустить исполняемый файл ядра, хотя он существует. Проверьте наличие прав на запуск программы.</translation>
     </message>
+    <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">&amp;Настройка клиента</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">Подключиться к:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;Имя хоста или IP-адрес серверного компьютера.&lt;br/&gt;Может содержать список, разделенный запятыми.&lt;/html&gt;</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
@@ -558,10 +609,6 @@ Valid names:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1 уже запущен</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>критическая ошибка</translation>
@@ -740,6 +787,10 @@ Valid names:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation>не удалось прочитать RSA-ключ из файла сертификата: %1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1 уже запущен</translation>
     </message>
 </context>
 <context>
@@ -1104,14 +1155,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>&amp;Основные</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>Режим клиента</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>Использовать язык клавиатуры сервера на этом компьютере</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>Приложение</translation>
     </message>
@@ -1314,14 +1357,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Включить номер версии в заголовок окна</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">Инвертировать направление вертикальной прокрутки на этом компьютере</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">Вертикальная шкала прокрутки</translation>
     </message>
 </context>
 <context>

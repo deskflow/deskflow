@@ -140,6 +140,53 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">客户端配置</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">在此计算机上使用服务器的键盘语言</translation>
+    </message>
+    <message>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">滚动修饰符</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation type="unfinished">倒置</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">水平滚动</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">垂直滚动</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">规模</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">关闭并保存更改</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">关闭并忘记更改</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">重置为存储值</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">重置为默认值</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -286,14 +333,6 @@ Do you want to connect to the server?
     <message>
         <source>You must select a mode</source>
         <translation>您必须选择一种模式</translation>
-    </message>
-    <message>
-        <source>Server IP or hostname:</source>
-        <translation>服务器 IP 或主机名：</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>服务器计算机的主机名或 IP 地址。</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -545,6 +584,18 @@ Valid names:
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished">Core 可执行文件虽然存在，但无法成功启动。请检查您是否拥有运行此程序的足够权限。</translation>
     </message>
+    <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">配置客户端(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">连接到：</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;服务器计算机的主机名或 IP 地址。&lt;br/&gt;可以包含以逗号分隔的列表。&lt;/html&gt;</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
@@ -556,10 +607,6 @@ Valid names:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1 已经在运行中</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>致命错误</translation>
@@ -734,12 +781,16 @@ Valid names:
     </message>
     <message>
         <source>key detected is the incorrect size</source>
-        <translation type="unfinished">检测到的密钥大小不正确。</translation>
+        <translation type="unfinished">检测到的密钥大小不正确</translation>
     </message>
     <message>
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">无法从证书文件中读取 RSA 密钥：%1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1 已经在运行中</translation>
     </message>
 </context>
 <context>
@@ -1106,14 +1157,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>常规(&amp;R)</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>客户端模式</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>在此计算机上使用服务器的键盘语言</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>应用程序</translation>
     </message>
@@ -1316,14 +1359,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">在窗口标题中包含版本信息</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">在此计算机上反转垂直滚动方向</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">垂直滚动比例</translation>
     </message>
 </context>
 <context>

@@ -140,6 +140,53 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ClientConfigDialog</name>
+    <message>
+        <source>Client Configuration</source>
+        <translation type="unfinished">Configurazione del client</translation>
+    </message>
+    <message>
+        <source>Use server&apos;s keyboard language on this computer</source>
+        <translation type="unfinished">Usa la lingua della tastiera del server su questo computer</translation>
+    </message>
+    <message>
+        <source>Scroll Modifiers</source>
+        <translation type="unfinished">Modificatori di scorrimento</translation>
+    </message>
+    <message>
+        <source>Invert</source>
+        <translation type="unfinished">Invertire</translation>
+    </message>
+    <message>
+        <source>Horizontal Scroll</source>
+        <translation type="unfinished">Scorrimento orizzontale</translation>
+    </message>
+    <message>
+        <source>Vertical Scroll</source>
+        <translation type="unfinished">Scorrimento verticale</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation type="unfinished">Scala</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">Chiudi e salva le modifiche</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">Chiudi e dimentica le modifiche</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">Ripristina i valori memorizzati</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">Ripristina i valori predefiniti</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -270,14 +317,6 @@ Vuoi connetterti al server?
     <message>
         <source>You must select a mode</source>
         <translation>Devi selezionare una modalità</translation>
-    </message>
-    <message>
-        <source>Server IP or hostname:</source>
-        <translation>IP o hostname del server:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>Hostname o indirizzo IP del computer server.</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -546,6 +585,18 @@ Nomi validi:
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished">Non è stato possibile avviare correttamente l&apos;eseguibile Core, sebbene esista. Verifica di disporre delle autorizzazioni necessarie per eseguire questo programma.</translation>
     </message>
+    <message>
+        <source>&amp;Configure Client</source>
+        <translation type="unfinished">&amp;Configurare il client</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">Connettiti a:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;Nome host o indirizzo IP del computer server.&lt;br/&gt;Può contenere un elenco separato da virgole.&lt;/html&gt;</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
@@ -557,10 +608,6 @@ Nomi validi:
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>%1 is already running</source>
-        <translation>%1 è già in esecuzione</translation>
-    </message>
     <message>
         <source>fatal error</source>
         <translation>errore fatale</translation>
@@ -739,6 +786,10 @@ Nomi validi:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">impossibile leggere la chiave RSA dal file del certificato: %1</translation>
+    </message>
+    <message>
+        <source>%1 is already running</source>
+        <translation>%1 è già in esecuzione</translation>
     </message>
 </context>
 <context>
@@ -1105,14 +1156,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>&amp;Regolare</translation>
     </message>
     <message>
-        <source>Client mode</source>
-        <translation>Modalità client</translation>
-    </message>
-    <message>
-        <source>Use server&apos;s keyboard language on this computer</source>
-        <translation>Usa la lingua della tastiera del server su questo computer</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>App</translation>
     </message>
@@ -1315,14 +1358,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Includi la versione nel titolo della finestra</translation>
-    </message>
-    <message>
-        <source>Invert vertical scroll direction on this computer</source>
-        <translation type="unfinished">Inverti la direzione dello scorrimento verticale su questo computer</translation>
-    </message>
-    <message>
-        <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">Scala di scorrimento verticale</translation>
     </message>
 </context>
 <context>

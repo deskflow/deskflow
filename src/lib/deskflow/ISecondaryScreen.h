@@ -22,8 +22,10 @@ class ISecondaryScreen
 public:
   ISecondaryScreen()
   {
-    m_invertScroll = Settings::value(Settings::Client::InvertScrollDirection).toBool();
-    m_scrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
+    m_invertYScroll = Settings::value(Settings::Client::InvertYScroll).toBool();
+    m_yScrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
+    m_invertXScroll = Settings::value(Settings::Client::InvertXScroll).toBool();
+    m_xScrollScale = std::clamp(Settings::value(Settings::Client::XScrollScale).toDouble(), 0.1, 10.0);
   }
 
   virtual ~ISecondaryScreen() = default;
@@ -63,21 +65,34 @@ public:
    */
   ScrollDelta applyScrollModifier(ScrollDelta delta) const
   {
-    delta.y = static_cast<int32_t>(m_invertScroll ? delta.y * -m_scrollScale : delta.y * m_scrollScale);
+    delta.y = static_cast<int32_t>(m_invertYScroll ? delta.y * -m_yScrollScale : delta.y * m_yScrollScale);
+    delta.x = static_cast<int32_t>(m_invertXScroll ? delta.x * -m_xScrollScale : delta.x * m_xScrollScale);
     return delta;
   }
 
 private:
   /**
-   * @brief this member is used to modify the scroll direction.
+   * @brief this member is used to modify the verical scroll direction.
    * It is used in the applyScrollModifier method
    */
-  bool m_invertScroll = false;
+  bool m_invertYScroll = false;
 
   /**
-   * @brief this member is used to modify the scroll scale.
+   * @brief this member is used to modify the vertical scroll scale.
    * It is used in the applyScrollModifier method
    */
-  double m_scrollScale = 1.0;
+  double m_yScrollScale = 1.0;
+
+  /**
+   * @brief this member is used to modify the horizontal scroll direction.
+   * It is used in the applyScrollModifier method
+   */
+  bool m_invertXScroll = false;
+
+  /**
+   * @brief this member is used to modify the horizontal scroll scale.
+   * It is used in the applyScrollModifier method
+   */
+  double m_xScrollScale = 1.0;
   //@}
 };
