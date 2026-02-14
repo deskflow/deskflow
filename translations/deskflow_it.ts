@@ -272,14 +272,6 @@ Vuoi connetterti al server?
         <translation>Devi selezionare una modalità</translation>
     </message>
     <message>
-        <source>Server IP or hostname:</source>
-        <translation>IP o hostname del server:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>Hostname o indirizzo IP del computer server.</translation>
-    </message>
-    <message>
         <source>&amp;Start</source>
         <translation>&amp;Avvia</translation>
     </message>
@@ -545,6 +537,14 @@ Nomi validi:
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished">Non è stato possibile avviare correttamente l&apos;eseguibile Core, sebbene esista. Verifica di disporre delle autorizzazioni necessarie per eseguire questo programma.</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">Connettiti a:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;Nome host o indirizzo IP del computer server.&lt;br/&gt;Può contenere un elenco separato da virgole.&lt;/html&gt;</translation>
     </message>
 </context>
 <context>

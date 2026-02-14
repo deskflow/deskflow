@@ -284,14 +284,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Debes seleccionar un modo</translation>
     </message>
     <message>
-        <source>Server IP or hostname:</source>
-        <translation type="unfinished">IP del servidor o nombre de host:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation type="unfinished">Nombre de host o dirección IP del ordenador servidor.</translation>
-    </message>
-    <message>
         <source>&amp;Start</source>
         <translation type="unfinished">&amp;Comenzar</translation>
     </message>
@@ -545,6 +537,14 @@ Nombres válidos:
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished">No se pudo iniciar el archivo ejecutable principal, aunque existe. Compruebe si tiene permisos suficientes para ejecutar este programa.</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">Conectarse a:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;Nome host o indirizzo IP del computer server.&lt;br/&gt;Può contenere un elenco separato da virgole.&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
