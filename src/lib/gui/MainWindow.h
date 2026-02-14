@@ -124,8 +124,8 @@ private:
   void updateSecurityIcon(bool visible);
   void updateNetworkInfo();
 
-  void coreModeToggled();
-  void updateModeControls(bool serverMode);
+  void coreModeToggled(bool checked);
+  void updateModeControls();
   void updateModeControlLabels();
   std::unique_ptr<Ui::MainWindow> ui;
 
