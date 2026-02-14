@@ -734,7 +734,7 @@ Valid names:
     </message>
     <message>
         <source>key detected is the incorrect size</source>
-        <translation type="unfinished">检测到的密钥大小不正确。</translation>
+        <translation type="unfinished">检测到的密钥大小不正确</translation>
     </message>
     <message>
         <source>failed to read RSA key from certificate file: %1</source>
