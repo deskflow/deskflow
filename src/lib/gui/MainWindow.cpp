@@ -1230,10 +1230,11 @@ void MainWindow::daemonIpcClientConnectionFailed()
 
 void MainWindow::toggleCanRunCore(bool enableButtons)
 {
+  const bool isStarted = m_coreProcess.isStarted();
   ui->btnToggleCore->setEnabled(enableButtons);
-  ui->btnRestartCore->setEnabled(enableButtons && m_coreProcess.isStarted());
+  ui->btnRestartCore->setEnabled(enableButtons && isStarted);
   m_actionStartCore->setEnabled(enableButtons);
-  m_actionStopCore->setEnabled(enableButtons);
+  m_actionStopCore->setEnabled(enableButtons && isStarted);
 }
 
 void MainWindow::remoteHostChanged(const QString &newRemoteHost)
