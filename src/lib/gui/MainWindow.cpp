@@ -540,6 +540,10 @@ void MainWindow::coreModeToggled(bool checked)
 
   qDebug() << QStringLiteral("change mode to: %1").arg(QVariant::fromValue(mode).toString());
 
+  if (m_coreProcess.isStarted() && m_coreProcess.mode() != mode)
+    m_coreProcess.stop();
+  m_coreProcess.setMode(mode);
+
   Settings::setValue(Settings::Core::CoreMode, mode);
   Settings::save();
 
@@ -553,10 +557,6 @@ void MainWindow::updateModeControls(bool serverMode)
   ui->lblNoMode->setVisible(false);
   ui->btnToggleCore->setEnabled(true);
   m_actionStartCore->setEnabled(true);
-  auto expectedCoreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
-  if (m_coreProcess.isStarted() && m_coreProcess.mode() != expectedCoreMode)
-    m_coreProcess.stop();
-  m_coreProcess.setMode(expectedCoreMode);
   updateModeControlLabels();
 
   toggleCanRunCore((!serverMode && !ui->lineHostname->text().isEmpty()) || serverMode);
