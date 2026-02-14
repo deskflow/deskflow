@@ -34,11 +34,12 @@ public:
 
   struct Client
   {
+    inline static const auto CursorMovementScale = QStringLiteral("client/cursorMovementScale");
     inline static const auto InvertScrollDirection = QStringLiteral("client/invertScrollDirection");
-    inline static const auto YScrollScale = QStringLiteral("client/yScrollScale");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
+    inline static const auto YScrollScale = QStringLiteral("client/yScrollScale");
   };
   struct Core
   {
@@ -191,7 +192,8 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Settings::Client::InvertScrollDirection
+      Settings::Client::CursorMovementScale
+    , Settings::Client::InvertScrollDirection
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
     , Settings::Client::YScrollScale

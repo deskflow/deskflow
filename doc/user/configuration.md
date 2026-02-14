@@ -50,10 +50,10 @@ option=value
 This section contains options used when in client mode. 
 It will begin with `[client]`
 
-
 | Option                |    Valid Values    | Description |
 |:----------------------|:------------------:|:-----------|
 | binary                | Filename           | The filename of the binary to call for client mode. This binary exists in the same path as the GUI |
+| cursorMovementScale   | Double 0.1 - 10.0  | Cursor movement will be scaled by this amount on the client. [default: 1.0] |
 | invertScrollDirection | `true` or `false`  | Invert scroll on this client [default: false] |
 | languageSync          | `true` or `false`  | Sync to server language [default: true] |
 | remoteHost            | `IP` or `hostname` | The remote host(s) to connect to. Use a comma seperated list when you want to try severial hosts |

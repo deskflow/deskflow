@@ -292,8 +292,9 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
 {
   // We get one motion event before enter() with the target position
   if (!m_isOnScreen) {
-    m_cursorX = x;
-    m_cursorY = y;
+    auto delta = applyCursorScale({x, y});
+    m_cursorX = delta.x;
+    m_cursorY = delta.y;
     return;
   }
 

@@ -24,6 +24,7 @@ public:
   {
     m_invertScroll = Settings::value(Settings::Client::InvertScrollDirection).toBool();
     m_scrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
+    m_cursorScale = std::clamp(Settings::value(Settings::Client::CursorMovementScale).toDouble(), 0.1, 10.0);
   }
 
   virtual ~ISecondaryScreen() = default;
@@ -67,6 +68,19 @@ public:
     return delta;
   }
 
+  /**
+   * @brief Applies any scroll cursor movement scale to the provided delta, This should only be done inside the
+   * subclasses fakeMouseMove impl
+   * @param delta a ScrollDelta to be modified
+   * @return the delta with the scale applied
+   */
+  MouseDelta applyCursorScale(MouseDelta delta) const
+  {
+    delta.x = static_cast<int32_t>(delta.x * m_cursorScale);
+    delta.y = static_cast<int32_t>(delta.y * m_cursorScale);
+    return delta;
+  }
+
 private:
   /**
    * @brief this member is used to modify the scroll direction.
@@ -79,5 +93,11 @@ private:
    * It is used in the applyScrollModifier method
    */
   double m_scrollScale = 1.0;
+
+  /**
+   * @brief this member is used to modify the cursor scroll scale.
+   * It is used in the applyCursorScale method
+   */
+  double m_cursorScale = 1.0;
   //@}
 };

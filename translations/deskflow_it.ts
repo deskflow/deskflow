@@ -1324,6 +1324,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>Vertical Scroll Scale</source>
         <translation type="unfinished">Scala di scorrimento verticale</translation>
     </message>
+    <message>
+        <source>Cursor Movement Scale</source>
+        <translation type="unfinished">Scala di movimento del cursore</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

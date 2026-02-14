@@ -1323,6 +1323,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Vertical Scroll Scale</source>
         <translation type="unfinished">Вертикальная шкала прокрутки</translation>
     </message>
+    <message>
+        <source>Cursor Movement Scale</source>
+        <translation type="unfinished">Масштаб перемещения курсора</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

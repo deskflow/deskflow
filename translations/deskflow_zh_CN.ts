@@ -1323,7 +1323,11 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Vertical Scroll Scale</source>
-        <translation type="unfinished">垂直滚动比例</translation>
+        <translation>垂直滚动比例</translation>
+    </message>
+    <message>
+        <source>Cursor Movement Scale</source>
+        <translation type="unfinished">光标移动刻度</translation>
     </message>
 </context>
 <context>

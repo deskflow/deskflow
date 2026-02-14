@@ -1323,6 +1323,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Vertical Scroll Scale</source>
         <translation type="unfinished">수직 스크롤 스케일</translation>
     </message>
+    <message>
+        <source>Cursor Movement Scale</source>
+        <translation type="unfinished">커서 이동 규모</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>
