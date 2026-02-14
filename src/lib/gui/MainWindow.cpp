@@ -531,15 +531,19 @@ void MainWindow::coreModeToggled(bool checked)
   if (!checked)
     return;
 
-  auto serverMode = ui->rbModeServer->isChecked();
+  Settings::CoreMode mode = Settings::CoreMode::None;
 
-  const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
-  qDebug() << mode;
+  if (ui->rbModeServer->isChecked())
+    mode = Settings::CoreMode::Server;
+  if (ui->rbModeClient->isChecked())
+    mode = Settings::CoreMode::Client;
 
-  const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
-  Settings::setValue(Settings::Core::CoreMode, coreMode);
+  qDebug() << QStringLiteral("change mode to: %1").arg(QVariant::fromValue(mode).toString());
+
+  Settings::setValue(Settings::Core::CoreMode, mode);
   Settings::save();
-  updateModeControls(serverMode);
+
+  updateModeControls(mode == Settings::CoreMode::Server);
 }
 
 void MainWindow::updateModeControls(bool serverMode)
