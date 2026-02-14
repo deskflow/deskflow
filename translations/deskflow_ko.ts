@@ -288,14 +288,6 @@ Do you want to connect to the server?
         <translation>모드를 선택해야 합니다</translation>
     </message>
     <message>
-        <source>Server IP or hostname:</source>
-        <translation>서버 IP 또는 호스트 이름:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.</translation>
-    </message>
-    <message>
         <source>&amp;Start</source>
         <translation>시작(&amp;S)</translation>
     </message>
@@ -544,6 +536,14 @@ Valid names:
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>코어 실행 파일은 존재하지만 정상적으로 시작할 수 없습니다. 이 프로그램을 실행할 권한이 충분한지 확인하세요.</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">연결 대상:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.&lt;br/&gt;쉼표로 구분된 목록을 포함할 수 있습니다.&lt;/html&gt;</translation>
     </message>
 </context>
 <context>

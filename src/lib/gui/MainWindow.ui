@@ -330,7 +330,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Server IP or hostname:</string>
+                <string>Connect to:</string>
                </property>
                <property name="indent">
                 <number>0</number>
@@ -346,7 +346,7 @@
                 </size>
                </property>
                <property name="toolTip">
-                <string>Hostname or IP address of the server computer.</string>
+                <string>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</string>
                </property>
               </widget>
              </item>

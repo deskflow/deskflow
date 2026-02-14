@@ -288,14 +288,6 @@ Do you want to connect to the server?
         <translation>您必须选择一种模式</translation>
     </message>
     <message>
-        <source>Server IP or hostname:</source>
-        <translation>服务器 IP 或主机名：</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>服务器计算机的主机名或 IP 地址。</translation>
-    </message>
-    <message>
         <source>&amp;Start</source>
         <translation>启动(&amp;S)</translation>
     </message>
@@ -544,6 +536,14 @@ Valid names:
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished">Core 可执行文件虽然存在，但无法成功启动。请检查您是否拥有运行此程序的足够权限。</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">连接到：</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;服务器计算机的主机名或 IP 地址。&lt;br/&gt;可以包含以逗号分隔的列表。&lt;/html&gt;</translation>
     </message>
 </context>
 <context>

@@ -288,14 +288,6 @@ Do you want to connect to the server?
         <translation>Необходимо выбрать режим</translation>
     </message>
     <message>
-        <source>Server IP or hostname:</source>
-        <translation>IP-адрес или имя хоста сервера:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>Имя хоста или IP-адрес сервера.</translation>
-    </message>
-    <message>
         <source>&amp;Start</source>
         <translation>&amp;Запуск</translation>
     </message>
@@ -546,6 +538,14 @@ Valid names:
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>Не удалось запустить исполняемый файл ядра, хотя он существует. Проверьте наличие прав на запуск программы.</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">Подключиться к:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;Имя хоста или IP-адрес серверного компьютера.&lt;br/&gt;Может содержать список, разделенный запятыми.&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
