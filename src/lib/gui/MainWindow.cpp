@@ -214,9 +214,6 @@ void MainWindow::setupControls()
   ui->rbModeClient->setChecked(coreMode == Settings::CoreMode::Client);
   ui->rbModeServer->setChecked(coreMode == Settings::CoreMode::Server);
 
-  if (coreMode != Settings::CoreMode::None)
-    updateModeControls(coreMode == Settings::CoreMode::Server);
-
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
 
@@ -737,11 +734,7 @@ void MainWindow::applyConfig()
     m_serverStartSuggestedIP = ip;
   }
 
-  const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
-
-  if (coreMode == Settings::CoreMode::None)
-    return;
-  updateModeControls(coreMode == Settings::CoreMode::Server);
+  coreModeToggled(true);
 }
 
 void MainWindow::saveSettings() const
