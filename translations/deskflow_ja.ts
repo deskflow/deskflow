@@ -288,14 +288,6 @@ Do you want to connect to the server?
         <translation>動作モードを選択してください</translation>
     </message>
     <message>
-        <source>Server IP or hostname:</source>
-        <translation>サーバーのIPアドレスかホスト名:</translation>
-    </message>
-    <message>
-        <source>Hostname or IP address of the server computer.</source>
-        <translation>サーバーのIPアドレスかホスト名</translation>
-    </message>
-    <message>
         <source>&amp;Start</source>
         <translation>起動(&amp;S)</translation>
     </message>
@@ -544,6 +536,14 @@ Valid names:
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation>コア実行ファイルは存在していますが、起動できませんでした。このプログラムを実行するのに十分な権限があることを確認してください。</translation>
+    </message>
+    <message>
+        <source>Connect to:</source>
+        <translation type="unfinished">接続先:</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;サーバー コンピューターのホスト名または IP アドレス。&lt;br/&gt;カンマ区切りのリストを含めることができます。&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
