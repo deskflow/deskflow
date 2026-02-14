@@ -11,6 +11,12 @@
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "deskflow/ClipboardTypes.h"
+#include "platform/EiClipboard.h"
+
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
+#include "common/Settings.h"
+#endif
 
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
@@ -20,8 +26,12 @@ namespace deskflow {
 PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
     : m_screen{screen},
       m_events{events},
+      m_portalVersion(0),
       m_portal{xdp_portal_new()}
 {
+  // Create clipboard for primary clipboard ID
+  m_clipboard = new EiClipboard(kClipboardClipboard);
+
   m_glibMainLoop = g_main_loop_new(nullptr, true);
 
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
@@ -54,6 +64,9 @@ PortalInputCapture::~PortalInputCapture()
     g_signal_handler_disconnect(m_session, m_signals.at(Activated));
     g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
     g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
+
+    g_signal_handler_disconnect(m_session, m_signals.at(SelectionOwnerChanged));
+    g_signal_handler_disconnect(m_session, m_signals.at(SelectionTransfer));
     g_object_unref(m_session);
   }
 
@@ -62,6 +75,17 @@ PortalInputCapture::~PortalInputCapture()
   }
   m_barriers.clear();
   g_object_unref(m_portal);
+
+  delete m_clipboard;
+}
+
+EiClipboard *PortalInputCapture::getClipboard(ClipboardID id) const
+{
+  // Currently only supporting primary clipboard
+  if (id == kClipboardClipboard) {
+    return m_clipboard;
+  }
+  return nullptr;
 }
 
 gboolean PortalInputCapture::timeoutHandler() const
@@ -79,20 +103,72 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
-void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
+void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner)
 {
-  LOG_DEBUG("portal input capture session initialized");
-  g_autoptr(GError) error = nullptr;
-
-  auto session = xdp_portal_create_input_capture_session_finish(XDP_PORTAL(object), res, &error);
-  if (!session) {
-    LOG_ERR("failed to initialize input capture session, quitting: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
-    m_events->addEvent(Event(EventTypes::Quit));
+#if HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
+  if (!mimeTypes || isowner)
     return;
+
+  if (g_strv_contains(mimeTypes, "text/plain")) {
+    int fd = xdp_session_selection_read(session, "text/plain");
+    if (fd < 0)
+      return;
+
+    char clipboardContent[1024] = {};
+
+    if (read(fd, clipboardContent, sizeof(clipboardContent) - 1) < 0) {
+      LOG_WARN("Failed to read clipboard content: %m");
+      return;
+    }
+
+    LOG_INFO("Clipboard content is: %s", clipboardContent);
+
+    // Store clipboard data in our clipboard
+    // Note: kClipboardClipboard = 0 for primary clipboard
+    ClipboardID id = kClipboardClipboard;
+
+    // Open clipboard for writing
+    m_clipboard->open(0);
+
+    // Empty and take ownership
+    m_clipboard->empty();
+
+    // Add the text data
+    m_clipboard->add(IClipboard::Format::Text, std::string(clipboardContent));
+
+    // Close the clipboard
+    m_clipboard->close();
+
+    // Emit clipboard change event to notify the server
+    m_screen->sendClipboardEvent(EventTypes::ClipboardChanged, id);
+  }
+#endif
+}
+
+void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
+{
+#if HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
+  int fd;
+
+  fd = xdp_session_selection_write(session, serial);
+  if (fd < 0)
+    return;
+
+  /* FIXME: fill data with the clipboard from the remote */
+  char data[1024] = {};
+
+  int nbytes = write(fd, data, strlen(data));
+  if (nbytes < 0) {
+    LOG_WARN("Failed to read clipboard content: %m");
   }
 
-  m_session = session;
+  xdp_session_selection_write_done(session, serial, nbytes >= 0);
+#endif
+}
+
+void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
+{
+  g_autoptr(GError) error = nullptr;
 
   auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
   if (fd < 0) {
@@ -113,6 +189,58 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
   handleZonesChanged(m_session, nullptr);
+
+#if HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
+  if (xdp_session_is_clipboard_enabled(parentSession)) {
+    m_signals.at(SelectionOwnerChanged) =
+        g_signal_connect(G_OBJECT(parentSession), "selection-owner-changed", G_CALLBACK(selectionOwnerChanged), this);
+    m_signals.at(SelectionTransfer) =
+        g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
+
+    /* FIXME: do handleSelectionOwnerChanged() here to retrieve the
+     * current selection (if any) */
+  }
+#endif
+}
+
+void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
+{
+  g_autoptr(GError) error = nullptr;
+
+  LOG_DEBUG("portal input capture session initialized");
+
+  auto session = xdp_portal_create_input_capture_session_finish(XDP_PORTAL(object), res, &error);
+  if (!session) {
+    LOG_ERR("failed to initialize input capture session, quitting: %s", error->message);
+    g_main_loop_quit(m_glibMainLoop);
+    m_events->addEvent(Event(EventTypes::Quit));
+    return;
+  }
+
+  m_session = session;
+
+  setupSession(session);
+}
+
+void PortalInputCapture::handleStart(GObject *object, GAsyncResult *res)
+{
+  g_autoptr(GError) error = nullptr;
+
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
+  LOG_DEBUG("portal input capture session initialized");
+  if (!xdp_input_capture_session_start_finish(m_session, res, &error)) {
+    LOG_ERR("failed to start input capture session, quitting: %s", error->message);
+    g_main_loop_quit(m_glibMainLoop);
+    m_events->addEvent(Event(EventTypes::Quit));
+    return;
+  }
+
+  auto restoreToken = xdp_input_capture_session_get_restore_token(m_session);
+  if (restoreToken) {
+    Settings::setValue(Settings::Server::XdpRestoreToken, QString(restoreToken));
+  }
+#endif
+  setupSession(m_session);
 }
 
 void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult *res)
@@ -151,6 +279,64 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
 gboolean PortalInputCapture::initSession()
 {
   LOG_DEBUG("setting up input capture session");
+  XdpInputCaptureSession *session;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
+  g_autoptr(GError) error = nullptr;
+
+  m_portalVersion = xdp_portal_get_input_capture_version_sync(
+      m_portal,
+      nullptr, // Cancellable
+      nullptr
+  );
+  LOG_DEBUG("input capture version %d", m_portalVersion);
+
+  switch (m_portalVersion) {
+  case 0:
+    LOG_WARN("Portal bug: input capture version is %d", m_portalVersion);
+    // fallthrough
+  case 1:
+    xdp_portal_create_input_capture_session(
+        m_portal,
+        nullptr, // parent
+        static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
+        nullptr, // cancellable
+        [](GObject *obj, GAsyncResult *res, gpointer data) {
+          static_cast<PortalInputCapture *>(data)->handleInitSession(obj, res);
+        },
+        this
+    );
+    break;
+  default:
+    session = xdp_portal_create_input_capture_session2_sync(
+        m_portal,
+        nullptr, // Cancellable
+        &error
+    );
+    if (!session) {
+      LOG_ERR("failed to initialize input capture session, quitting: %s", error->message);
+      g_main_loop_quit(m_glibMainLoop);
+      m_events->addEvent(Event(EventTypes::Quit));
+      return FALSE;
+    }
+    m_session = session;
+    xdp_session_request_clipboard(xdp_input_capture_session_get_session(session));
+    xdp_input_capture_session_set_session_persistence(session, XDP_INPUT_CAPTURE_SESSION_PERSISTENCE_PERSISTENT);
+    if (auto sessionToken = Settings::value(Settings::Server::XdpRestoreToken).toByteArray(); !sessionToken.isEmpty()) {
+      xdp_input_capture_session_set_restore_token(session, strdup(sessionToken.data()));
+    }
+    xdp_input_capture_session_start(
+        m_session,
+        nullptr, // parent
+        static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
+        nullptr, // cancellable
+        [](GObject *obj, GAsyncResult *res, gpointer data) {
+          static_cast<PortalInputCapture *>(data)->handleStart(obj, res);
+        },
+        this
+    );
+    break;
+  }
+#else
   xdp_portal_create_input_capture_session(
       m_portal,
       nullptr, // parent
@@ -161,6 +347,7 @@ gboolean PortalInputCapture::initSession()
       },
       this
   );
+#endif
 
   return false;
 }
