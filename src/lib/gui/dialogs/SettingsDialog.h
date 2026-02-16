@@ -61,6 +61,18 @@ private:
   /// @brief update if the log level warning is shown
   void logLevelChanged();
 
+  /**
+   * @brief isModified
+   * @return true when any client settings in the gui do not match the stored settings values.
+   */
+  bool isModified() const;
+
+  /**
+   * @brief setButtonBoxEnabledButtons
+   * Enable / Disable the button box buttons based on the state of the gui
+   */
+  void setButtonBoxEnabledButtons() const;
+
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
 };
