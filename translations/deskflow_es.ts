@@ -1152,10 +1152,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Preferencias</translation>
     </message>
     <message>
-        <source>App</source>
-        <translation type="unfinished">Aplicación</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation type="unfinished">Buscar actualizaciones al iniciar</translation>
     </message>
@@ -1206,10 +1202,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&amp;Advanced</source>
         <translation type="unfinished">&amp;Avanzado</translation>
-    </message>
-    <message>
-        <source>Networking</source>
-        <translation type="unfinished">Redes</translation>
     </message>
     <message>
         <source>Port</source>
@@ -1374,6 +1366,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&amp;General</source>
         <translation type="unfinished">&amp;General</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>R&amp;ed</translation>
     </message>
 </context>
 <context>

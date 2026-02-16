@@ -1153,10 +1153,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>首选项</translation>
     </message>
     <message>
-        <source>App</source>
-        <translation>应用程序</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>启动时检查更新</translation>
     </message>
@@ -1207,10 +1203,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Advanced</source>
         <translation>高级(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Networking</source>
-        <translation>网络</translation>
     </message>
     <message>
         <source>Port</source>
@@ -1375,6 +1367,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;General</source>
         <translation>常规(&amp;G)</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>网络(&amp;N)</translation>
     </message>
 </context>
 <context>

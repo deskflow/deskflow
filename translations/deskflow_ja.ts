@@ -1153,10 +1153,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>設定</translation>
     </message>
     <message>
-        <source>App</source>
-        <translation>アプリケーション</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>起動時にソフトウェア更新を確認する</translation>
     </message>
@@ -1207,10 +1203,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Advanced</source>
         <translation>詳細(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Networking</source>
-        <translation>ネットワーク</translation>
     </message>
     <message>
         <source>Port</source>
@@ -1375,6 +1367,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;General</source>
         <translation>一般(&amp;G)</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>ネットワーク(&amp;N)</translation>
     </message>
 </context>
 <context>

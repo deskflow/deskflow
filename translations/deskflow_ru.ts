@@ -1151,10 +1151,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <source>App</source>
-        <translation>Приложение</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>Проверять обновления при запуске</translation>
     </message>
@@ -1205,10 +1201,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Advanced</source>
         <translation>&amp;Расширенные</translation>
-    </message>
-    <message>
-        <source>Networking</source>
-        <translation>Сеть</translation>
     </message>
     <message>
         <source>Port</source>
@@ -1373,6 +1365,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;General</source>
         <translation type="unfinished">&amp;Общий</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>&amp;Сеть</translation>
     </message>
 </context>
 <context>
