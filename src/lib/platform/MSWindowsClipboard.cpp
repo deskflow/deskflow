@@ -116,14 +116,23 @@ bool MSWindowsClipboard::open(Time time) const
 {
   LOG_DEBUG("open clipboard");
 
-  if (!OpenClipboard(m_window)) {
-    LOG_WARN("failed to open clipboard: %d", GetLastError());
-    return false;
+  static const int kMaxRetries = 5;
+  static const int kRetryDelayMs = 5;
+
+  for (int i = 0; i < kMaxRetries; ++i) {
+    if (OpenClipboard(m_window)) {
+      m_time = time;
+      return true;
+    }
+
+    if (i < kMaxRetries - 1) {
+      LOG_DEBUG("failed to open clipboard (attempt %d/%d, error=%d), retrying", i + 1, kMaxRetries, GetLastError());
+      Sleep(kRetryDelayMs);
+    }
   }
 
-  m_time = time;
-
-  return true;
+  LOG_WARN("failed to open clipboard after %d attempts: %d", kMaxRetries, GetLastError());
+  return false;
 }
 
 void MSWindowsClipboard::close() const

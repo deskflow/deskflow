@@ -37,6 +37,10 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
     std::string data = m_clipboard[id].m_clipboard.marshall();
 
     size_t size = data.size();
+    if (size == 0) {
+      LOG_DEBUG("skipping empty clipboard %d for \"%s\"", id, getName().c_str());
+      return;
+    }
     LOG_DEBUG("sending clipboard %d to \"%s\"", id, getName().c_str());
 
     StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
