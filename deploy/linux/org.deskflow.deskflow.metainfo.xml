@@ -74,6 +74,45 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.26.0" date="2026-02-16" urgency="high">
+			<description>
+				<p>This stable release fixes known issues and adds a few new features, For the full changelog, see the release page.</p>
+				<ul>
+					<li>New: Korean(ko) translation</li>
+					<li>New: Option to start in the "locked to computer" state</li>
+					<li>New: Option to show the version in the windows title</li>
+					<li>New: Clients can now use a list hostnames or ips for the server address</li>
+					<li>New: Client options are in a new client configuration dialog</li>
+					<li>New: Provide a more accurate suggested IP, Update as network info changes if needed.</li>
+					<li>New: Add a simple search to the log</li>
+					<li>New: Lookup host name with IP4 or IP6</li>
+					<li>New: Replace broken scroll speed with a scroll scaling options</li>
+					<li>Fix: Horizontal scrolling is working again on all platforms</li>
+					<li>Fix: Key repeat events are now sent as repeat not press and release</li>
+					<li>Fix: Deskflow-core correctly blocks new instances when run without the `--new-instance` option</li>
+					<li>Fix: Server Mode, Only use the external config path if the option is enabled</li>
+					<li>Fix: Allow comma and semicolon to be used in the hotkey configuration</li>
+					<li>Fix: Gui can crash when clearing settings in debug mode</li>
+					<li>Fix: Mouse Back and Forward buttons are now working (again) on all platforms</li>
+					<li>Fix: macOS, crash when the log is opened and the gui minimized</li>
+					<li>Fix: macOS, restore Preferences menu entry when the application is using non english language</li>
+					<li>Fix: macOS, try icon was not showing when in `Colorful` mode</li>
+					<li>Fix: macOS, do not allow the os to kill deskflow for memory reasons</li>
+					<li>Fix: macOS, possible server crash when a client disconnects abruptly</li>
+					<li>Fix: macOS, possible crash on screen wake / screen saver activation</li>
+					<li>Fix: macOS, Wrong keys send when using "RIME" input method</li>
+					<li>Fix: Windows, possible crash when the daemon is started for the first time</li>
+					<li>Use `Computer` in place of `Screen` to indicate we work with Computers display layout and not individual screens attached</li>
+					<li>Clean and update the settings when starting up.</li>
+					<li>Do not show client connection error messages dialogs if the gui is hidden</li>
+					<li>Use Qt 6.9.3 for Intel Mac builds.</li>
+					<li>Windows: Use ICU dlls from the host system</li>
+					<li>Code continues to be cleaned of unused methods and updated to modern C++</li>
+					<li>Consolidate Debug levels to remove DEBUG3-5 levels</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.26.0</url>
+		</release>
 		<release version="1.25.0" date="2025-11-21" urgency="high">
 			<description>
 				<p>This stable release fixes known issues and adds a few new features. Most notable symbolic icon support, I18N support and experimental support for wl-clipboard to access clipboards on wayland. This release also continues our trend of cleaning up the codebase. For the full changelog, see the release page.</p>
