@@ -10,7 +10,6 @@
 #include <QDialog>
 
 #include "gui/config/IServerConfig.h"
-#include "gui/core/CoreProcess.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -19,13 +18,12 @@ class SettingsDialog;
 class SettingsDialog : public QDialog
 {
   using IServerConfig = deskflow::gui::IServerConfig;
-  using CoreProcess = deskflow::gui::CoreProcess;
 
   Q_OBJECT
 
 public:
   void extracted();
-  SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess);
+  SettingsDialog(QWidget *parent, const IServerConfig &serverConfig);
   ~SettingsDialog() override;
 
 Q_SIGNALS:
@@ -65,5 +63,4 @@ private:
 
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
-  const CoreProcess &m_coreProcess;
 };
