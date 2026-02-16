@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classMSWindowsScreen.html#a9d102cc1b8c4971f83c007d0649f8784":[6,0,159,17],
 "classMSWindowsScreen.html#aa24f4bde73e65cd9f1ff59415b00a539":[6,0,159,41],
 "classMSWindowsScreen.html#aa35676117e1959a6dff9ae4f19516fb7":[6,0,159,38],
 "classMSWindowsScreen.html#aa951776f036c122c0dd90ac1f426569e":[6,0,159,26],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classPacketStreamFilter.html#a87680bb31ed8687fadc1faf10676a090":[6,0,182,0],
 "classPacketStreamFilter.html#ac1f871edf1de7a4e0ae830569f70cfd4":[6,0,182,8],
 "classPacketStreamFilter.html#ac7ded48078aa53086b8348f5632adc77":[6,0,182,1],
-"classPlatformScreen.html":[6,0,183]
+"classPlatformScreen.html":[6,0,183],
+"classPlatformScreen.html#a093a4c52fa3287d575986c88d66278b1":[6,0,183,12]
 };

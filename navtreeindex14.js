@@ -1,6 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classScreenUnavailableException.html#a14e6003da282369f0f6ce48d25ed9227":[6,0,198,3],
 "classScreenUnavailableException.html#a185349a8f8fa458724b76b2f1ad1e419":[6,0,198,0],
 "classScreenUnavailableException.html#aaa992bb802bf53bc06538a5533f22397":[6,0,198,1],
 "classScreenUnavailableException.html#ae5a8ddd2c4af8a91f8630f389889b1ae":[6,0,198,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX14 =
 "classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,209,2],
 "classSimpleEventQueueBuffer.html":[6,0,210],
 "classSimpleEventQueueBuffer.html#a1660098f79ed1c822ff0f8680e04da6a":[6,0,210,8],
-"classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,210,3]
+"classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,210,3],
+"classSimpleEventQueueBuffer.html#a2c01276cbb3afc0a8772e967e6da5d0f":[6,0,210,5]
 };

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.255</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.256</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -117,8 +117,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a2a6d7e6dd164e39dca43c49ee8c2602d" id="r_a2a6d7e6dd164e39dca43c49ee8c2602d"><td class="memItemLeft"><a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a>&#160;</td><td class="memItemRight"><a class="el" href="#a2a6d7e6dd164e39dca43c49ee8c2602d">m_mask</a></td></tr>
 <tr class="memitem:afa794e7a43e26b825ecc6d08fe56aad2" id="r_afa794e7a43e26b825ecc6d08fe56aad2"><td class="memItemLeft"><a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60">KeyButton</a>&#160;</td><td class="memItemRight"><a class="el" href="#afa794e7a43e26b825ecc6d08fe56aad2">m_button</a></td></tr>
 <tr class="memitem:ae22ec7b3d7f486d9f0eed06964c4a605" id="r_ae22ec7b3d7f486d9f0eed06964c4a605"><td class="memItemLeft">int32_t&#160;</td><td class="memItemRight"><a class="el" href="#ae22ec7b3d7f486d9f0eed06964c4a605">m_count</a></td></tr>
-<tr class="memitem:a514a9e2336eba844e10eadf0440d9d77" id="r_a514a9e2336eba844e10eadf0440d9d77"><td class="memItemLeft">char *&#160;</td><td class="memItemRight"><a class="el" href="#a514a9e2336eba844e10eadf0440d9d77">m_screens</a></td></tr>
-<tr class="memitem:a53712f92a935d69b2b52922a2d612b6c" id="r_a53712f92a935d69b2b52922a2d612b6c"><td class="memItemLeft">char&#160;</td><td class="memItemRight"><a class="el" href="#a53712f92a935d69b2b52922a2d612b6c">m_screensBuffer</a> [1]</td></tr>
+<tr class="memitem:a539b133ef30d21ed42843839b960524a" id="r_a539b133ef30d21ed42843839b960524a"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a539b133ef30d21ed42843839b960524a">m_screens</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Key event data. </p>
@@ -425,28 +424,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a514a9e2336eba844e10eadf0440d9d77" name="a514a9e2336eba844e10eadf0440d9d77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a514a9e2336eba844e10eadf0440d9d77">&#9670;&#160;</a></span>m_screens</h2>
+<a id="a539b133ef30d21ed42843839b960524a" name="a539b133ef30d21ed42843839b960524a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a539b133ef30d21ed42843839b960524a">&#9670;&#160;</a></span>m_screens</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* IKeyState::KeyInfo::m_screens</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a53712f92a935d69b2b52922a2d612b6c" name="a53712f92a935d69b2b52922a2d612b6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53712f92a935d69b2b52922a2d612b6c">&#9670;&#160;</a></span>m_screensBuffer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char IKeyState::KeyInfo::m_screensBuffer[1]</td>
+          <td class="memname">std::string IKeyState::KeyInfo::m_screens</td>
         </tr>
       </table>
 </div><div class="memdoc">
