@@ -65,6 +65,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   setFixedHeight(height());
   setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
 
+  setButtonBoxEnabledButtons();
   initConnections();
 }
 
@@ -96,6 +97,28 @@ void SettingsDialog::initConnections() const
     const auto shortName = I18N::nativeTo639Name(lang);
     I18N::setLanguage(shortName);
   });
+
+  // Connect modifiable controls
+  connect(ui->rbIconMono, &QRadioButton::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->sbPort, &QSpinBox::valueChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboInterface, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboLanguage, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbAutoHide, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbPreventSleep, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbCloseToTray, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbElevateDaemon, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbAutoUpdate, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbGuiDebug, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbUseWlClipboard, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbShowVersion, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbRequireClientCert, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineLogFilename, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineTlsCertPath, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
 }
 
 void SettingsDialog::regenCertificates()
@@ -339,6 +362,41 @@ void SettingsDialog::updateRequestedKeySize() const
 void SettingsDialog::logLevelChanged()
 {
   ui->lblDebugWarning->setVisible(ui->comboLogLevel->currentIndex() > 4);
+}
+
+bool SettingsDialog::isModified() const
+{
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  const auto interfaceSet = ui->comboInterface->currentIndex();
+
+  return (
+      (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
+      (ui->comboLogLevel->currentIndex() != Settings::value(Settings::Log::Level).toInt()) ||
+      (ui->cbLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
+      (ui->lineLogFilename->text() != Settings::value(Settings::Log::File).toString()) ||
+      (ui->cbAutoHide->isChecked() != Settings::value(Settings::Gui::Autohide).toBool()) ||
+      (ui->cbPreventSleep->isChecked() != Settings::value(Settings::Core::PreventSleep).toBool()) ||
+      (ui->cbCloseToTray->isChecked() != Settings::value(Settings::Gui::CloseToTray).toBool()) ||
+      (ui->cbElevateDaemon->isChecked() != Settings::value(Settings::Daemon::Elevate).toBool()) ||
+      (ui->cbAutoUpdate->isChecked() != Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) ||
+      (ui->cbGuiDebug->isChecked() != Settings::value(Settings::Log::GuiDebug).toBool()) ||
+      (ui->cbUseWlClipboard->isChecked() != Settings::value(Settings::Core::UseWlClipboard).toBool()) ||
+      (ui->cbShowVersion->isChecked() != Settings::value(Settings::Gui::ShowVersionInTitle).toBool()) ||
+      (ui->rbIconMono->isChecked() != Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) ||
+      (ui->groupService->isChecked() != (processMode == Settings::ProcessMode::Service)) ||
+      ((ui->comboInterface->currentText() != Settings::value(Settings::Core::Interface).toString()) && interfaceSet) ||
+      (ui->lineTlsCertPath->text() != Settings::value(Settings::Security::Certificate).toString()) ||
+      (ui->comboTlsKeyLength->currentText() != Settings::value(Settings::Security::KeySize).toString()) ||
+      (ui->groupSecurity->isChecked() != Settings::value(Settings::Security::TlsEnabled).toBool()) ||
+      (ui->cbRequireClientCert->isChecked() != Settings::value(Settings::Security::CheckPeers).toBool()) ||
+      (I18N::nativeTo639Name(ui->comboLanguage->currentText()) != Settings::value(Settings::Core::Language).toString())
+  );
+}
+
+void SettingsDialog::setButtonBoxEnabledButtons() const
+{
+  const bool modified = isModified();
+  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(modified);
 }
 
 SettingsDialog::~SettingsDialog() = default;
