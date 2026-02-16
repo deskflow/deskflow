@@ -1343,6 +1343,18 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>상세 디버그 출력</translation>
     </message>
     <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">닫기 및 변경 사항 저장</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">설정을 저장하고 나면 변경 사항은 더 이상 신경 쓸 필요가 없습니다</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">저장된 값으로 재설정</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>wl-clipboard 지원 사용</translation>
     </message>

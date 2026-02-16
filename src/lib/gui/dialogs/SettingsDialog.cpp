@@ -84,6 +84,7 @@ void SettingsDialog::initConnections() const
 
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(ui->buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, this, &SettingsDialog::loadFromConfig);
 
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
   connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::updateControls);
@@ -187,6 +188,9 @@ void SettingsDialog::updateText()
   ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
+  ui->buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
+  ui->buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(tr("Close and forget changes"));
+  ui->buttonBox->button(QDialogButtonBox::Reset)->setToolTip(tr("Reset to stored values"));
 }
 
 void SettingsDialog::accept()
@@ -397,6 +401,7 @@ void SettingsDialog::setButtonBoxEnabledButtons() const
 {
   const bool modified = isModified();
   ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(modified);
+  ui->buttonBox->button(QDialogButtonBox::Reset)->setEnabled(modified);
 }
 
 SettingsDialog::~SettingsDialog() = default;

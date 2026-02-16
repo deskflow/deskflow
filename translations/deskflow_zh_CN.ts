@@ -175,7 +175,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Close and forget changes</source>
-        <translation type="unfinished">关闭并忘记更改</translation>
+        <translation>关闭并放弃修改</translation>
     </message>
     <message>
         <source>Reset to stored values</source>
@@ -1343,6 +1343,18 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>详细调试输出</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">关闭并保存更改</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation>关闭并放弃修改</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">重置为存储值</translation>
     </message>
     <message>
         <source>Enable wl-clipboard support</source>

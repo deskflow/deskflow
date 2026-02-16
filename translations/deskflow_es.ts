@@ -1316,6 +1316,18 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Salida de depuración detallada</translation>
     </message>
     <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">Cerrar y guardar los cambios</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">Cerrar y olvidar los cambios</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">Restablecer los valores almacenados</translation>
+    </message>
+    <message>
         <source>TLS Certificate Regenerated</source>
         <translation type="unfinished">Certificado TLS regenerado</translation>
     </message>

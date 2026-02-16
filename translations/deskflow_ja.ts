@@ -1345,6 +1345,18 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>詳細なデバッグ出力</translation>
     </message>
     <message>
+        <source>Close and save changes</source>
+        <translation>変更を保存して閉じる</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation>変更を破棄して閉じる</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation>変更前の値にリセットする</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>wl-clipboard によるクリップボード対応を有効にする</translation>
     </message>
