@@ -815,7 +815,7 @@ void XWindowsScreen::fakeMouseWheel(ScrollDelta delta) const
   }
 
   // send as many clicks as necessary
-  while (axisDelta >= 0) {
+  while (axisDelta > 0) {
     XTestFakeButtonEvent(m_display, button, True, CurrentTime);
     XTestFakeButtonEvent(m_display, button, False, CurrentTime);
     axisDelta -= s_scrollDelta;
