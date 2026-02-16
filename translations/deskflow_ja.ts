@@ -1225,10 +1225,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>IPアドレス</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>ログ</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation>レベル</translation>
     </message>
@@ -1267,10 +1263,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Log path</source>
         <translation>ログファイルのパス</translation>
-    </message>
-    <message>
-        <source>Log to file</source>
-        <translation>ファイルにログを保存する</translation>
     </message>
     <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
@@ -1375,6 +1367,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation>ウィンドウタイトルにバージョン情報を含める</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>ファイルにログを保存する</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation>ログ(&amp;L)</translation>
     </message>
 </context>
 <context>

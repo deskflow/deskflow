@@ -1224,16 +1224,8 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">IP de red</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation type="unfinished">Registros</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation type="unfinished">Ruta de registro</translation>
-    </message>
-    <message>
-        <source>Log to file</source>
-        <translation type="unfinished">Registrar en archivo</translation>
     </message>
     <message>
         <source>Fatal</source>
@@ -1374,6 +1366,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Incluir la versión en el título de la ventana</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>Registrar en archivo</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation>&amp;Registro</translation>
     </message>
 </context>
 <context>
