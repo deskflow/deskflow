@@ -1357,6 +1357,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished">重置为存储值</translation>
     </message>
     <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">重置为默认值</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>启用 wl-clipboard 支持</translation>
     </message>

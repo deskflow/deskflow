@@ -1357,6 +1357,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>変更前の値にリセットする</translation>
     </message>
     <message>
+        <source>Reset to default values</source>
+        <translation>デフォルト値にリセットする</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>wl-clipboard によるクリップボード対応を有効にする</translation>
     </message>
