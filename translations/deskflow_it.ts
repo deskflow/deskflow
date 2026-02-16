@@ -1224,16 +1224,8 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>IP di rete</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>Log</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>Percorso log</translation>
-    </message>
-    <message>
-        <source>Log to file</source>
-        <translation>Salva log su file</translation>
     </message>
     <message>
         <source>Fatal</source>
@@ -1374,6 +1366,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Includi la versione nel titolo della finestra</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>Salva log su file</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation>&amp;Logs</translation>
     </message>
 </context>
 <context>

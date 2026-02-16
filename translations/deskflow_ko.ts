@@ -1223,10 +1223,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>네트워크 IP</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>로그</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation>레벨</translation>
     </message>
@@ -1265,10 +1261,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Log path</source>
         <translation>로그 경로</translation>
-    </message>
-    <message>
-        <source>Log to file</source>
-        <translation>파일로 로그 저장</translation>
     </message>
     <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
@@ -1373,6 +1365,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">창 제목에 버전 정보 포함</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>파일로 로그 저장</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation>로그 (&amp;L)</translation>
     </message>
 </context>
 <context>

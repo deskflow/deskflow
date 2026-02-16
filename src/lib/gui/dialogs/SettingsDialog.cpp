@@ -96,7 +96,7 @@ void SettingsDialog::initConnections() const
   connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::updateRequestedKeySize);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
-  connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
+  connect(ui->groupLogToFile, &QGroupBox::toggled, this, &SettingsDialog::setLogToFile);
   connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::logLevelChanged);
   connect(ui->comboLanguage, &QComboBox::currentTextChanged, this, [](const QString &lang) {
     const auto shortName = I18N::nativeTo639Name(lang);
@@ -110,7 +110,6 @@ void SettingsDialog::initConnections() const
   connect(ui->comboInterface, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->comboLanguage, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
-  connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbAutoHide, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbPreventSleep, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbCloseToTray, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
@@ -120,6 +119,7 @@ void SettingsDialog::initConnections() const
   connect(ui->cbUseWlClipboard, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbShowVersion, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbRequireClientCert, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupLogToFile, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineLogFilename, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
@@ -203,7 +203,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->comboInterface->currentData());
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
-  Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
+  Settings::setValue(Settings::Log::ToFile, ui->groupLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
@@ -234,7 +234,7 @@ void SettingsDialog::loadFromConfig()
 {
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
   ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
-  ui->cbLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
+  ui->groupLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
   ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
@@ -324,14 +324,14 @@ void SettingsDialog::updateControls()
 {
   const bool writable = Settings::isWritable();
   const bool serviceChecked = ui->groupService->isChecked();
-  const bool logToFile = ui->cbLogToFile->isChecked();
+  const bool logToFile = ui->groupLogToFile->isChecked();
 
   ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(writable);
 
   ui->sbPort->setEnabled(writable);
   ui->comboInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
-  ui->cbLogToFile->setEnabled(writable);
+  ui->groupLogToFile->setEnabled(writable);
   ui->cbAutoHide->setEnabled(writable);
   ui->cbAutoUpdate->setEnabled(writable);
   ui->cbPreventSleep->setEnabled(writable);
@@ -381,7 +381,7 @@ bool SettingsDialog::isModified() const
   return (
       (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
       (ui->comboLogLevel->currentIndex() != Settings::value(Settings::Log::Level).toInt()) ||
-      (ui->cbLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
+      (ui->groupLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
       (ui->lineLogFilename->text() != Settings::value(Settings::Log::File).toString()) ||
       (ui->cbAutoHide->isChecked() != Settings::value(Settings::Gui::Autohide).toBool()) ||
       (ui->cbPreventSleep->isChecked() != Settings::value(Settings::Core::PreventSleep).toBool()) ||
@@ -409,7 +409,7 @@ bool SettingsDialog::isDefault() const
   return (
       (ui->sbPort->value() == Settings::defaultValue(Settings::Core::Port).toInt()) &&
       (ui->comboLogLevel->currentIndex() == Settings::defaultValue(Settings::Log::Level).toInt()) &&
-      (ui->cbLogToFile->isChecked() == Settings::defaultValue(Settings::Log::ToFile).toBool()) &&
+      (ui->groupLogToFile->isChecked() == Settings::defaultValue(Settings::Log::ToFile).toBool()) &&
       (ui->lineLogFilename->text() == Settings::defaultValue(Settings::Log::File).toString()) &&
       (ui->cbAutoHide->isChecked() == Settings::defaultValue(Settings::Gui::Autohide).toBool()) &&
       (ui->cbPreventSleep->isChecked() == Settings::defaultValue(Settings::Core::PreventSleep).toBool()) &&
@@ -434,7 +434,7 @@ void SettingsDialog::resetToDefault()
 {
   ui->sbPort->setValue(Settings::defaultValue(Settings::Core::Port).toInt());
   ui->comboLogLevel->setCurrentIndex(Settings::defaultValue(Settings::Log::Level).toInt());
-  ui->cbLogToFile->setChecked(Settings::defaultValue(Settings::Log::ToFile).toBool());
+  ui->groupLogToFile->setChecked(Settings::defaultValue(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::defaultValue(Settings::Log::File).toString());
   ui->cbAutoHide->setChecked(Settings::defaultValue(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(Settings::defaultValue(Settings::Core::PreventSleep).toBool());

@@ -1223,10 +1223,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Сетевой IP-адрес</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>Журналы</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation>Уровень</translation>
     </message>
@@ -1265,10 +1261,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Log path</source>
         <translation>Путь к журналам</translation>
-    </message>
-    <message>
-        <source>Log to file</source>
-        <translation>Записывать в файл</translation>
     </message>
     <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
@@ -1373,6 +1365,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">Включить номер версии в заголовок окна</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>Записывать в файл</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation>&amp;Журнал</translation>
     </message>
 </context>
 <context>

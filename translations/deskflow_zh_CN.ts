@@ -1225,10 +1225,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>网络 IP</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>日志</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation>级别</translation>
     </message>
@@ -1267,10 +1263,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Log path</source>
         <translation>日志路径</translation>
-    </message>
-    <message>
-        <source>Log to file</source>
-        <translation>记录日志到文件</translation>
     </message>
     <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
@@ -1375,6 +1367,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">在窗口标题中包含版本信息</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>记录日志到文件</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation type="unfinished">日志(&amp;L)</translation>
     </message>
 </context>
 <context>
