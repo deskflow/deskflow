@@ -122,6 +122,7 @@ var annotated_dup =
     [ "ChunkType", "structChunkType.html", "structChunkType" ],
     [ "Client", "classClient.html", "classClient" ],
     [ "ClientApp", "classClientApp.html", "classClientApp" ],
+    [ "ClientConfigDialog", "classClientConfigDialog.html", "classClientConfigDialog" ],
     [ "ClientInfo", "classClientInfo.html", "classClientInfo" ],
     [ "ClientListener", "classClientListener.html", "classClientListener" ],
     [ "ClientProxy", "classClientProxy.html", "classClientProxy" ],

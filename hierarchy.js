@@ -316,6 +316,7 @@ var hierarchy =
     [ "QDialog", null, [
       [ "AboutDialog", "classAboutDialog.html", null ],
       [ "ActionDialog", "classActionDialog.html", null ],
+      [ "ClientConfigDialog", "classClientConfigDialog.html", null ],
       [ "FingerprintDialog", "classFingerprintDialog.html", null ],
       [ "HotkeyDialog", "classHotkeyDialog.html", null ],
       [ "ScreenSettingsDialog", "classScreenSettingsDialog.html", null ],

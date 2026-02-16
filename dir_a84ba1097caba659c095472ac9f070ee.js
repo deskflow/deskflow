@@ -4,6 +4,8 @@ var dir_a84ba1097caba659c095472ac9f070ee =
     [ "AboutDialog.h", "AboutDialog_8h.html", "AboutDialog_8h" ],
     [ "ActionDialog.cpp", "ActionDialog_8cpp.html", null ],
     [ "ActionDialog.h", "ActionDialog_8h.html", "ActionDialog_8h" ],
+    [ "ClientConfigDialog.cpp", "ClientConfigDialog_8cpp.html", null ],
+    [ "ClientConfigDialog.h", "ClientConfigDialog_8h.html", "ClientConfigDialog_8h" ],
     [ "FingerprintDialog.cpp", "FingerprintDialog_8cpp.html", null ],
     [ "FingerprintDialog.h", "FingerprintDialog_8h.html", "FingerprintDialog_8h" ],
     [ "HotkeyDialog.cpp", "HotkeyDialog_8cpp.html", null ],

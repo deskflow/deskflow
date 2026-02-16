@@ -155,6 +155,9 @@ var NAVTREEINDEX0 =
 "ClientApp_8cpp.html#a6e59e103de7331c3cf3800b48b592f09":[7,0,1,1,4,10,0],
 "ClientApp_8h.html":[7,0,1,1,4,11],
 "ClientApp_8h_source.html":[7,0,1,1,4,11],
+"ClientConfigDialog_8cpp.html":[7,0,1,1,5,2,4],
+"ClientConfigDialog_8h.html":[7,0,1,1,5,2,5],
+"ClientConfigDialog_8h_source.html":[7,0,1,1,5,2,5],
 "ClientConnection_8cpp.html":[7,0,1,1,5,1,0],
 "ClientConnection_8h.html":[7,0,1,1,5,1,1],
 "ClientConnection_8h_source.html":[7,0,1,1,5,1,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX0 =
 "DeskflowXkbKeyboard_8cpp.html":[7,0,1,1,4,2,2],
 "DeskflowXkbKeyboard_8h.html":[7,0,1,1,4,2,3],
 "DeskflowXkbKeyboard_8h_source.html":[7,0,1,1,4,2,3],
-"Diagnostic_8cpp.html":[7,0,1,1,5,8],
-"Diagnostic_8h.html":[7,0,1,1,5,9],
-"Diagnostic_8h_source.html":[7,0,1,1,5,9],
-"DirectionTypes_8h.html":[7,0,1,1,1,2]
+"Diagnostic_8cpp.html":[7,0,1,1,5,8]
 };
