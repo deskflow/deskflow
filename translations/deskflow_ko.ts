@@ -1151,10 +1151,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>환경설정</translation>
     </message>
     <message>
-        <source>App</source>
-        <translation>앱</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>시작 시 업데이트 확인</translation>
     </message>
@@ -1205,10 +1201,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Advanced</source>
         <translation>고급(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Networking</source>
-        <translation>네트워크</translation>
     </message>
     <message>
         <source>Port</source>
@@ -1373,6 +1365,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;General</source>
         <translation type="unfinished">일반적인 (&amp;G)</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>네트워크(&amp;N)</translation>
     </message>
 </context>
 <context>

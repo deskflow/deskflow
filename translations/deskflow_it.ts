@@ -1152,10 +1152,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Preferenze</translation>
     </message>
     <message>
-        <source>App</source>
-        <translation>App</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>Controlla aggiornamenti all&apos;avvio</translation>
     </message>
@@ -1206,10 +1202,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&amp;Advanced</source>
         <translation>&amp;Avanzate</translation>
-    </message>
-    <message>
-        <source>Networking</source>
-        <translation>Rete</translation>
     </message>
     <message>
         <source>Port</source>
@@ -1374,6 +1366,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&amp;General</source>
         <translation type="unfinished">&amp;Generale</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>&amp;Rete</translation>
     </message>
 </context>
 <context>
