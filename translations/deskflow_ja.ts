@@ -1153,10 +1153,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>設定</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation>基本(&amp;R)</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>アプリケーション</translation>
     </message>
@@ -1375,6 +1371,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Logs</source>
         <translation>ログ(&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation>一般(&amp;G)</translation>
     </message>
 </context>
 <context>

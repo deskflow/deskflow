@@ -1151,10 +1151,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>환경설정</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation>일반(&amp;R)</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>앱</translation>
     </message>
@@ -1373,6 +1369,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Logs</source>
         <translation>로그 (&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation type="unfinished">일반적인 (&amp;G)</translation>
     </message>
 </context>
 <context>
