@@ -46,6 +46,31 @@
         <number>12</number>
        </property>
        <item>
+        <widget class="QWidget" name="widgetLanguage" native="true">
+         <property name="toolTip">
+          <string>Force a language to be used for the GUI.</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="lblLanguage">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Language</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboLanguage"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="cbAutoUpdate">
          <property name="text">
           <string>Check for updates on startup</string>
@@ -125,6 +150,9 @@
        <string>&amp;Logs</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>9</number>
+       </property>
        <property name="leftMargin">
         <number>12</number>
        </property>
@@ -332,6 +360,9 @@
        <string>&amp;Network</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
+       <property name="spacing">
+        <number>9</number>
+       </property>
        <property name="leftMargin">
         <number>12</number>
        </property>
@@ -608,7 +639,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>79</height>
+           <height>32</height>
           </size>
          </property>
         </spacer>
@@ -626,6 +657,18 @@
        <string>&amp;Advanced</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>25</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupService">
          <property name="enabled">
@@ -656,31 +699,6 @@
              <bool>false</bool>
             </property>
            </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QWidget" name="widgetLanguage" native="true">
-         <property name="toolTip">
-          <string>Force a language to be used for the GUI.</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="lblLanguage">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Language</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboLanguage"/>
           </item>
          </layout>
         </widget>
