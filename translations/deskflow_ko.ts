@@ -1355,6 +1355,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished">저장된 값으로 재설정</translation>
     </message>
     <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">기본값으로 재설정</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>wl-clipboard 지원 사용</translation>
     </message>

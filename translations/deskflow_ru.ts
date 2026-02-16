@@ -1359,6 +1359,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished">Сбросить до сохраненных значений</translation>
     </message>
     <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">Сбросить до значений по умолчанию</translation>
+    </message>
+    <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Требуется пакет wl-clipboard. В версии 2.2.1 есть ошибка перехвата фокуса.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>

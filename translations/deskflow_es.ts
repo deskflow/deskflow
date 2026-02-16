@@ -1328,6 +1328,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Restablecer los valores almacenados</translation>
     </message>
     <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">Restablecer valores predeterminados</translation>
+    </message>
+    <message>
         <source>TLS Certificate Regenerated</source>
         <translation type="unfinished">Certificado TLS regenerado</translation>
     </message>

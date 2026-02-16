@@ -1328,6 +1328,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation type="unfinished">Ripristina i valori memorizzati</translation>
     </message>
     <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">Ripristina i valori predefiniti</translation>
+    </message>
+    <message>
         <source>TLS Certificate Regenerated</source>
         <translation>Certificato TLS rigenerato</translation>
     </message>

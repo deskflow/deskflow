@@ -68,6 +68,17 @@ private:
   bool isModified() const;
 
   /**
+   * @brief isDefault
+   * @return true if all client settings match the default values
+   */
+  bool isDefault() const;
+
+  /**
+   * @brief Set the gui values to the defalut values for all client settings
+   */
+  void resetToDefault();
+
+  /**
    * @brief setButtonBoxEnabledButtons
    * Enable / Disable the button box buttons based on the state of the gui
    */
