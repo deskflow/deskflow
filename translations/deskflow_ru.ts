@@ -1151,10 +1151,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation>&amp;Основные</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>Приложение</translation>
     </message>
@@ -1373,6 +1369,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Logs</source>
         <translation>&amp;Журнал</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation type="unfinished">&amp;Общий</translation>
     </message>
 </context>
 <context>

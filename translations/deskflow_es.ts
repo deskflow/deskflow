@@ -1152,10 +1152,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Preferencias</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation type="unfinished">&amp;Regular</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation type="unfinished">Aplicación</translation>
     </message>
@@ -1374,6 +1370,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&amp;Logs</source>
         <translation>&amp;Registro</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation type="unfinished">&amp;General</translation>
     </message>
 </context>
 <context>

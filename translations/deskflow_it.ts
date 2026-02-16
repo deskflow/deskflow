@@ -1152,10 +1152,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Preferenze</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation>&amp;Regolare</translation>
-    </message>
-    <message>
         <source>App</source>
         <translation>App</translation>
     </message>
@@ -1374,6 +1370,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&amp;Logs</source>
         <translation>&amp;Logs</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation type="unfinished">&amp;Generale</translation>
     </message>
 </context>
 <context>

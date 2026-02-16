@@ -22,7 +22,7 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <widget class="QWidget" name="tabRegular">
+     <widget class="QWidget" name="tabGeneral">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -30,9 +30,18 @@
        </sizepolicy>
       </property>
       <attribute name="title">
-       <string>&amp;Regular</string>
+       <string>&amp;General</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>25</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupApp">
          <property name="sizePolicy">
