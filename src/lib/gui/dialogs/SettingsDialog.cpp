@@ -23,11 +23,10 @@
 
 using namespace deskflow::gui;
 
-SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess)
+SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfig)
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
-      m_serverConfig(serverConfig),
-      m_coreProcess(coreProcess)
+      m_serverConfig(serverConfig)
 {
 
   ui->setupUi(this);
@@ -269,7 +268,7 @@ void SettingsDialog::updateTlsControlsEnabled()
 
 bool SettingsDialog::isClientMode() const
 {
-  return m_coreProcess.mode() == Settings::CoreMode::Client;
+  return Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Client;
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path)
