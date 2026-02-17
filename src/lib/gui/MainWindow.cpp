@@ -141,8 +141,6 @@ MainWindow::MainWindow()
   connectSlots();
   setupTrayIcon();
   updateScreenName();
-  applyConfig();
-  restoreWindow();
 
   qDebug().noquote() << "active settings path:" << Settings::settingsPath();
 
@@ -161,6 +159,9 @@ MainWindow::MainWindow()
       m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
     }
   }
+
+  applyConfig();
+  restoreWindow();
 }
 MainWindow::~MainWindow()
 {
