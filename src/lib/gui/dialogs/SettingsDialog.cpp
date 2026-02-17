@@ -31,6 +31,11 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 
   ui->setupUi(this);
 
+  // no advanced options on macOS
+  if (deskflow::platform::isMac()) {
+    ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAdvanced));
+  }
+
   // set up the language combo
   I18N::reDetectLanguages();
   ui->comboLanguage->addItems(I18N::detectedLanguages());
