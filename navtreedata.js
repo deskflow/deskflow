@@ -142,7 +142,7 @@ var NAVTREEINDEX =
 "classMSWindowsScreen.html#a7397e95f5ca1fdda74b53601089fcc12",
 "classPacketStreamFilter.html#a7d9a7d8dbba497a24f2fd352a52c78c8",
 "classScreenSetupView.html#a8624dca9318567301a2d27c87d1a8cd0",
-"classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0",
+"classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6",
 "classWlClipboard.html#a7058817b86ba58c0ed24375dbf70794e",
 "classXWindowsScreenSaver.html#afccd29c11574538c51c300269d8fa31d",
 "classdeskflow_1_1KeyMap.html#ad93d24211ea916c22c8a492e792114bf",

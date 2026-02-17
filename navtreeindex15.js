@@ -1,8 +1,8 @@
 var NAVTREEINDEX15 =
 {
-"classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,4],
 "classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,210,1],
 "classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,210,2],
+"classSettingsDialog.html#afe7b8a9203d29348c5dfd1a527b8b6a6":[6,0,210,0],
 "classSimpleEventQueueBuffer.html":[6,0,211],
 "classSimpleEventQueueBuffer.html#a1660098f79ed1c822ff0f8680e04da6a":[6,0,211,8],
 "classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,211,3],

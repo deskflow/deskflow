@@ -249,5 +249,5 @@ var NAVTREEINDEX14 =
 "classSettings.html#afd0a8dbda15587467729da0b489dd97d":[6,0,209,22],
 "classSettingsDialog.html":[6,0,210],
 "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,210,3],
-"classSettingsDialog.html#a45cdb6ea744257215afd5fed9d9030e0":[6,0,210,0]
+"classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,4]
 };

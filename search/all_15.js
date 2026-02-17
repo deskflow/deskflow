@@ -281,7 +281,7 @@ var searchData=
   ['settings_2ecpp_278',['Settings.cpp',['../Settings_8cpp.html',1,'']]],
   ['settings_2eh_279',['Settings.h',['../Settings_8h.html',1,'']]],
   ['settingschanged_280',['settingsChanged',['../classSettings.html#afd0a8dbda15587467729da0b489dd97d',1,'Settings']]],
-  ['settingsdialog_281',['SettingsDialog',['../classSettingsDialog.html',1,'SettingsDialog'],['../classMainWindow.html#ac35c75567108290ee50f30a0cf639526',1,'MainWindow::SettingsDialog()'],['../classSettingsDialog.html#a45cdb6ea744257215afd5fed9d9030e0',1,'SettingsDialog::SettingsDialog()']]],
+  ['settingsdialog_281',['SettingsDialog',['../classSettingsDialog.html',1,'SettingsDialog'],['../classMainWindow.html#ac35c75567108290ee50f30a0cf639526',1,'MainWindow::SettingsDialog()'],['../classSettingsDialog.html#afe7b8a9203d29348c5dfd1a527b8b6a6',1,'SettingsDialog::SettingsDialog()']]],
   ['settingsdialog_2ecpp_282',['SettingsDialog.cpp',['../SettingsDialog_8cpp.html',1,'']]],
   ['settingsdialog_2eh_283',['SettingsDialog.h',['../SettingsDialog_8h.html',1,'']]],
   ['settingsfile_284',['settingsFile',['../classSettings.html#a845b5a1d4042677a0d46c7a47bf2afdb',1,'Settings']]],

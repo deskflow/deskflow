@@ -159,7 +159,7 @@ var searchData=
   ['settablesize_156',['setTableSize',['../classScreenSetupView.html#a4896d0007772ac56ad00f2d803284c5c',1,'ScreenSetupView']]],
   ['setthiscursorpos_157',['setThisCursorPos',['../classMSWindowsScreen.html#ac24993f975d6742baa218ab9b81c6d65',1,'MSWindowsScreen']]],
   ['settingschanged_158',['settingsChanged',['../classSettings.html#afd0a8dbda15587467729da0b489dd97d',1,'Settings']]],
-  ['settingsdialog_159',['SettingsDialog',['../classSettingsDialog.html#a45cdb6ea744257215afd5fed9d9030e0',1,'SettingsDialog']]],
+  ['settingsdialog_159',['SettingsDialog',['../classSettingsDialog.html#afe7b8a9203d29348c5dfd1a527b8b6a6',1,'SettingsDialog']]],
   ['settingsfile_160',['settingsFile',['../classSettings.html#a845b5a1d4042677a0d46c7a47bf2afdb',1,'Settings']]],
   ['settingspath_161',['settingsPath',['../classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d',1,'Settings']]],
   ['settrigger_162',['setTrigger',['../classStopwatch.html#a9adf5317cf583108b0924794bfddbce1',1,'Stopwatch']]],
