@@ -143,47 +143,47 @@ p, li { white-space: pre-wrap; }
     <name>ClientConfigDialog</name>
     <message>
         <source>Client Configuration</source>
-        <translation type="unfinished">クライアント構成</translation>
+        <translation>クライアント設定</translation>
     </message>
     <message>
         <source>Use server&apos;s keyboard language on this computer</source>
-        <translation type="unfinished">サーバー側のキーボード言語をこのコンピューターで使用する</translation>
+        <translation>サーバー側のキーボード言語をこのコンピューターで使用する</translation>
     </message>
     <message>
         <source>Scroll Modifiers</source>
-        <translation type="unfinished">スクロール修飾子</translation>
+        <translation>スクロール設定</translation>
     </message>
     <message>
         <source>Invert</source>
-        <translation type="unfinished">反転</translation>
+        <translation>反転</translation>
     </message>
     <message>
         <source>Horizontal Scroll</source>
-        <translation type="unfinished">水平スクロール</translation>
+        <translation>水平スクロール</translation>
     </message>
     <message>
         <source>Vertical Scroll</source>
-        <translation type="unfinished">垂直スクロール</translation>
+        <translation>垂直スクロール</translation>
     </message>
     <message>
         <source>Scale</source>
-        <translation type="unfinished">規模</translation>
+        <translation>倍率</translation>
     </message>
     <message>
         <source>Close and save changes</source>
-        <translation type="unfinished">閉じて変更を保存する</translation>
+        <translation>変更を保存して閉じる</translation>
     </message>
     <message>
         <source>Close and forget changes</source>
-        <translation type="unfinished">変更を閉じて忘れる</translation>
+        <translation>変更を破棄して閉じる</translation>
     </message>
     <message>
         <source>Reset to stored values</source>
-        <translation type="unfinished">保存した値にリセット</translation>
+        <translation>変更前の値にリセットする</translation>
     </message>
     <message>
         <source>Reset to default values</source>
-        <translation type="unfinished">デフォルト値にリセット</translation>
+        <translation>デフォルト値にリセットする</translation>
     </message>
 </context>
 <context>
@@ -324,7 +324,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>&amp;Configure Server</source>
-        <translation>サーバーを設定(&amp;C)</translation>
+        <translation>サーバー設定(&amp;C)</translation>
     </message>
     <message>
         <source>Export server configuration</source>
@@ -348,7 +348,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation type="unfinished">無効な証明書、新しい証明書を生成しています</translation>
+        <translation>無効な証明書、新しい証明書を生成しています</translation>
     </message>
     <message>
         <source>A new version v%1 is available</source>
@@ -412,7 +412,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Using IP: </source>
-        <translation type="unfinished">IPアドレスを使用する： </translation>
+        <translation>使用IPアドレス： </translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -420,7 +420,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>the suggested IP.</source>
-        <translation>推奨IPアドレス</translation>
+        <translation>推奨するIPアドレス。</translation>
     </message>
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
@@ -429,7 +429,7 @@ Do you want to connect to the server?
     <message>
         <source>
 A bound IP is now invalid, you may need to restart the server.</source>
-        <translation type="unfinished">
+        <translation>
 割り当て済みのIPアドレスが無効になりました。サーバーを再起動する必要があるかもしれません。</translation>
     </message>
     <message>
@@ -578,7 +578,7 @@ Valid names:
     </message>
     <message>
         <source>Suggested IP: </source>
-        <translation type="unfinished">推奨IPアドレス: </translation>
+        <translation>推奨IPアドレス: </translation>
     </message>
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
@@ -586,15 +586,15 @@ Valid names:
     </message>
     <message>
         <source>&amp;Configure Client</source>
-        <translation type="unfinished">クライアントの設定 (&amp;C)</translation>
+        <translation>クライアント設定 (&amp;C)</translation>
     </message>
     <message>
         <source>Connect to:</source>
-        <translation type="unfinished">接続先:</translation>
+        <translation>接続先:</translation>
     </message>
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;サーバー コンピューターのホスト名または IP アドレス。&lt;br/&gt;カンマ区切りのリストを含めることができます。&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;サーバーコンピューターのホスト名または IP アドレス。&lt;br/&gt;カンマ区切りのリストを含めることができます。&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -772,21 +772,21 @@ Valid names:
     <message>
         <source>failed to read key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルからキーを読み取ることができませんでした: %1</translation>
+        <translation>証明書ファイルからキーを読み取ることができませんでした: %1</translation>
     </message>
     <message>
         <source>failed to parse certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルの解析に失敗しました: %1</translation>
+        <translation>証明書ファイルの解析に失敗しました: %1</translation>
     </message>
     <message>
         <source>key detected is the incorrect size</source>
-        <translation type="unfinished">検出されたキーのサイズが正しくありません</translation>
+        <translation>検出されたキーのサイズが正しくありません</translation>
     </message>
     <message>
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルから RSA キーを読み取ることができませんでした: %1</translation>
+        <translation>証明書ファイルから RSA キーを読み取ることができませんでした: %1</translation>
     </message>
     <message>
         <source>%1 is already running</source>
@@ -939,19 +939,19 @@ Valid names:
     <name>SearchWidget</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished">検索</translation>
+        <translation>検索</translation>
     </message>
     <message>
         <source>Find next</source>
-        <translation type="unfinished">次を検索</translation>
+        <translation>次を検索</translation>
     </message>
     <message>
         <source>Find previous</source>
-        <translation type="unfinished">前を検索</translation>
+        <translation>前を検索</translation>
     </message>
     <message>
         <source>Find...</source>
-        <translation type="unfinished">検索...</translation>
+        <translation>検索...</translation>
     </message>
 </context>
 <context>
@@ -1354,11 +1354,11 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Automatic</source>
-        <translation type="unfinished">自動</translation>
+        <translation>自動</translation>
     </message>
     <message>
         <source>Include version in the window title</source>
-        <translation type="unfinished">ウィンドウタイトルにバージョン情報を含める</translation>
+        <translation>ウィンドウタイトルにバージョン情報を含める</translation>
     </message>
 </context>
 <context>
