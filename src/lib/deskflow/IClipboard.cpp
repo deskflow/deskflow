@@ -65,8 +65,8 @@ std::string IClipboard::marshall(const IClipboard *clipboard)
 
   std::string data;
   static const auto totalClipboardFormats = static_cast<int>(Format::TotalFormats);
-  std::vector<std::string> formatData;
-  formatData.resize(totalClipboardFormats);
+  std::vector<std::string> formatData(totalClipboardFormats);
+  std::vector<bool> includeFormat(totalClipboardFormats, false);
   // FIXME -- use current time
   if (clipboard->open(0)) {
 
@@ -74,11 +74,22 @@ std::string IClipboard::marshall(const IClipboard *clipboard)
     uint32_t size = 4;
     uint32_t numFormats = 0;
     for (uint32_t format = 0; format != totalClipboardFormats; ++format) {
-      if (clipboard->has(static_cast<IClipboard::Format>(format))) {
-        ++numFormats;
-        formatData[format] = clipboard->get(static_cast<IClipboard::Format>(format));
-        size += 4 + 4 + (uint32_t)formatData[format].size();
+      const auto clipboardFormat = static_cast<IClipboard::Format>(format);
+      if (!clipboard->has(clipboardFormat)) {
+        continue;
       }
+
+      auto dataForFormat = clipboard->get(clipboardFormat);
+      if (dataForFormat.empty()) {
+        // Some backends expose transient zero-byte payloads (for example
+        // screenshot placeholders). Do not marshal empty format entries.
+        continue;
+      }
+
+      includeFormat[format] = true;
+      formatData[format] = std::move(dataForFormat);
+      ++numFormats;
+      size += 4 + 4 + static_cast<uint32_t>(formatData[format].size());
     }
 
     // allocate space
@@ -87,11 +98,13 @@ std::string IClipboard::marshall(const IClipboard *clipboard)
     // marshall the data
     writeUInt32(&data, numFormats);
     for (uint32_t format = 0; format != totalClipboardFormats; ++format) {
-      if (clipboard->has(static_cast<IClipboard::Format>(format))) {
-        writeUInt32(&data, format);
-        writeUInt32(&data, (uint32_t)formatData[format].size());
-        data += formatData[format];
+      if (!includeFormat[format]) {
+        continue;
       }
+
+      writeUInt32(&data, format);
+      writeUInt32(&data, static_cast<uint32_t>(formatData[format].size()));
+      data += formatData[format];
     }
     clipboard->close();
   }
@@ -119,7 +132,10 @@ bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time)
         for (int32_t format = 0; format != static_cast<int>(Format::TotalFormats); ++format) {
           auto eFormat = (IClipboard::Format)format;
           if (src->has(eFormat)) {
-            dst->add(eFormat, src->get(eFormat));
+            auto payload = src->get(eFormat);
+            if (!payload.empty()) {
+              dst->add(eFormat, payload);
+            }
           }
         }
         success = true;

@@ -12,20 +12,107 @@
 #include "base/Stopwatch.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
+#include "platform/XWindowsClipboardImageConverter.h"
 #include "platform/XWindowsClipboardTextConverter.h"
 #include "platform/XWindowsClipboardUCS2Converter.h"
 #include "platform/XWindowsClipboardUTF8Converter.h"
 #include "platform/XWindowsUtil.h"
 
+#include <QString>
+#include <QStringList>
 #include <X11/Xatom.h>
 #include <algorithm>
+#include <chrono>
 #include <cstring>
+#include <thread>
+#include <utility>
 
 #if HAVE_FORMAT
 #include <format>
 #endif
 
 #include <vector>
+
+namespace {
+
+const int kClipboardSettleChecks = 10;
+const int kClipboardSettleDelayMs = 50;
+
+QString trimText(QString text)
+{
+  text = text.trimmed();
+  if ((text.startsWith(QLatin1Char('"')) && text.endsWith(QLatin1Char('"'))) ||
+      (text.startsWith(QLatin1Char('\'')) && text.endsWith(QLatin1Char('\'')))) {
+    text = text.mid(1, text.size() - 2).trimmed();
+  }
+  return text;
+}
+
+QString sanitizeClipboardText(QString text)
+{
+  QString sanitized;
+  sanitized.reserve(text.size());
+  for (const auto ch : text) {
+    const auto category = ch.category();
+    if (category == QChar::Other_Format || category == QChar::Other_Control) {
+      continue;
+    }
+    sanitized.append(ch);
+  }
+  return sanitized.trimmed();
+}
+
+bool looksLikeScreenshotPlaceholder(const std::string &text)
+{
+  auto normalized = QString::fromUtf8(text.data(), static_cast<int>(text.size())).toLower();
+  normalized = sanitizeClipboardText(trimText(std::move(normalized)));
+  if (normalized.isEmpty()) {
+    return false;
+  }
+
+  static const QStringList imageExtensions = {QStringLiteral(".png"),  QStringLiteral(".jpg"),  QStringLiteral(".jpeg"),
+                                              QStringLiteral(".bmp"),  QStringLiteral(".gif"),  QStringLiteral(".tif"),
+                                              QStringLiteral(".tiff"), QStringLiteral(".webp"), QStringLiteral(".heic"),
+                                              QStringLiteral(".heif"), QStringLiteral(".avif")};
+
+  auto lines = normalized.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+  if (lines.isEmpty()) {
+    lines.push_back(normalized);
+  }
+
+  for (const auto &lineText : lines) {
+    auto line = sanitizeClipboardText(trimText(lineText));
+    if (line.isEmpty() || line.startsWith(QLatin1Char('#'))) {
+      continue;
+    }
+
+    bool hasImageExtension = false;
+    for (const auto &ext : imageExtensions) {
+      if (line.endsWith(ext) || line.contains(ext + QLatin1Char('"')) || line.contains(ext + QLatin1Char('\'')) ||
+          line.contains(ext + QLatin1Char('<'))) {
+        hasImageExtension = true;
+        break;
+      }
+    }
+
+    if (line.startsWith(QStringLiteral("screenshot")) || line.contains(QStringLiteral("screenshot from "))) {
+      return true;
+    }
+    if ((line.startsWith(QStringLiteral("file://")) || line.contains(QStringLiteral("file://"))) &&
+        (hasImageExtension || line.contains(QStringLiteral("screenshot")))) {
+      return true;
+    }
+    if ((line.startsWith(QLatin1Char('/')) || line.startsWith(QLatin1String("./")) ||
+         line.startsWith(QLatin1String("../"))) &&
+        hasImageExtension) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+} // namespace
 
 //
 // XWindowsClipboard
@@ -60,7 +147,12 @@ XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardI
   // add converters, most desired first
   m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display, "text/html"));
   m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display, "application/x-moz-nativehtml"));
+  m_converters.push_back(new XWindowsClipboardImageConverter(m_display, "image/png", "PNG"));
+  m_converters.push_back(new XWindowsClipboardImageConverter(m_display, "image/tiff", "TIFF"));
   m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
+  m_converters.push_back(new XWindowsClipboardBMPConverter(m_display, "image/x-bmp"));
+  m_converters.push_back(new XWindowsClipboardBMPConverter(m_display, "image/x-MS-bmp"));
+  m_converters.push_back(new XWindowsClipboardBMPConverter(m_display, "image/x-win-bitmap"));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "text/plain;charset=UTF-8", true));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "text/plain;charset=utf-8", true));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "UTF8_STRING"));
@@ -337,6 +429,31 @@ bool XWindowsClipboard::has(Format format) const
   assert(m_open);
 
   fillCache();
+  const auto hasPlaceholderText = [this]() {
+    return m_added[static_cast<int>(Format::Text)] &&
+           looksLikeScreenshotPlaceholder(m_data[static_cast<int>(Format::Text)]);
+  };
+
+  if (hasPlaceholderText() && !m_added[static_cast<int>(Format::Bitmap)]) {
+    for (int attempt = 0; attempt < kClipboardSettleChecks; ++attempt) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(kClipboardSettleDelayMs));
+      auto *self = const_cast<XWindowsClipboard *>(this);
+      self->doClearCache();
+      self->doFillCache();
+      if (m_added[static_cast<int>(Format::Bitmap)] || !hasPlaceholderText()) {
+        break;
+      }
+    }
+  }
+
+  const bool suppressPlaceholderText =
+      m_added[static_cast<int>(Format::Text)] && looksLikeScreenshotPlaceholder(m_data[static_cast<int>(Format::Text)]);
+  if ((format == Format::Text || format == Format::HTML) && suppressPlaceholderText) {
+    if (format == Format::Text) {
+      LOG_INFO("suppressing screenshot placeholder text on X11 clipboard");
+    }
+    return false;
+  }
   return m_added[static_cast<int>(format)];
 }
 
@@ -345,6 +462,27 @@ std::string XWindowsClipboard::get(Format format) const
   assert(m_open);
 
   fillCache();
+  const auto hasPlaceholderText = [this]() {
+    return m_added[static_cast<int>(Format::Text)] &&
+           looksLikeScreenshotPlaceholder(m_data[static_cast<int>(Format::Text)]);
+  };
+
+  if (hasPlaceholderText() && !m_added[static_cast<int>(Format::Bitmap)]) {
+    for (int attempt = 0; attempt < kClipboardSettleChecks; ++attempt) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(kClipboardSettleDelayMs));
+      auto *self = const_cast<XWindowsClipboard *>(this);
+      self->doClearCache();
+      self->doFillCache();
+      if (m_added[static_cast<int>(Format::Bitmap)] || !hasPlaceholderText()) {
+        break;
+      }
+    }
+  }
+
+  if ((format == Format::Text || format == Format::HTML) && m_added[static_cast<int>(Format::Text)] &&
+      looksLikeScreenshotPlaceholder(m_data[static_cast<int>(Format::Text)])) {
+    return {};
+  }
   return m_data[static_cast<int>(format)];
 }
 
@@ -500,8 +638,14 @@ void XWindowsClipboard::icccmFillCache()
       continue;
     }
 
-    // add to clipboard and note we've done it
-    m_data[formatID] = converter->toIClipboard(targetData);
+    // add to clipboard and note we've done it. if conversion fails (empty
+    // output from non-empty input), keep trying lower-priority converters.
+    auto converted = converter->toIClipboard(targetData);
+    if (converted.empty() && !targetData.empty()) {
+      LOG_DEBUG1("  converter produced no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+      continue;
+    }
+    m_data[formatID] = std::move(converted);
     m_added[formatID] = true;
     LOG(
         (CLOG_DEBUG "added format %d for target %s (%u %s)", formatID,
@@ -725,8 +869,14 @@ void XWindowsClipboard::motifFillCache()
       continue;
     }
 
-    // add to clipboard and note we've done it
-    m_data[formatID] = converter->toIClipboard(targetData);
+    // add to clipboard and note we've done it. if conversion fails (empty
+    // output from non-empty input), keep trying lower-priority converters.
+    auto converted = converter->toIClipboard(targetData);
+    if (converted.empty() && !targetData.empty()) {
+      LOG_DEBUG1("  converter produced no data for target %s", XWindowsUtil::atomToString(m_display, target).c_str());
+      continue;
+    }
+    m_data[formatID] = std::move(converted);
     m_added[formatID] = true;
     LOG_DEBUG("added format %d for target %s", format, XWindowsUtil::atomToString(m_display, target).c_str());
   }

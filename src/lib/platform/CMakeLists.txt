@@ -62,6 +62,8 @@ elseif(APPLE)
     OSXClipboardAnyTextConverter.h
     OSXClipboardBMPConverter.cpp
     OSXClipboardBMPConverter.h
+    OSXClipboardImageConverter.cpp
+    OSXClipboardImageConverter.h
     OSXClipboardHTMLConverter.cpp
     OSXClipboardHTMLConverter.h
     OSXClipboardTextConverter.cpp
@@ -109,6 +111,8 @@ elseif(UNIX)
       XWindowsClipboardAnyBitmapConverter.h
       XWindowsClipboardBMPConverter.cpp
       XWindowsClipboardBMPConverter.h
+      XWindowsClipboardImageConverter.cpp
+      XWindowsClipboardImageConverter.h
       XWindowsClipboardHTMLConverter.cpp
       XWindowsClipboardHTMLConverter.h
       XWindowsClipboardTextConverter.cpp
@@ -157,9 +161,18 @@ elseif(UNIX)
 endif()
 
 # wayland.h is included to check for wayland support
-add_library(platform STATIC ${PLATFORM_SOURCES})
+add_library(platform STATIC
+  ClipboardImageConverter.cpp
+  ClipboardImageConverter.h
+  ${PLATFORM_SOURCES}
+)
 
-target_link_libraries(platform client ${libs})
+target_link_libraries(
+  platform
+  client
+  Qt6::Gui
+  ${libs}
+)
 
 if(UNIX)
   target_link_libraries(
