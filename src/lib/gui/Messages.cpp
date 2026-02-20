@@ -186,7 +186,8 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
 void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address)
 {
   using enum deskflow::client::ErrorType;
-  if (error == NoError)
+
+  if (error == NoError || error == GenericError || error == HostnameError)
     return;
 
   auto message = QObject::tr("<p>Failed to connect to the server '%1'.</p>").arg(address);
@@ -199,17 +200,6 @@ void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, 
             "single instance of the client process is running.</p>"
         )
     );
-  } else if (error == HostnameError) {
-    message.append(
-        QObject::tr( //
-            "<p>Please try to connect to the server using the server IP address "
-            "instead of the hostname. </p>"
-            "<p>If that doesn't work, please check your TLS and "
-            "firewall settings.</p>"
-        )
-    );
-  } else if (error == GenericError) {
-    message.append(QObject::tr("<p>Please check your TLS and firewall settings.</p>"));
   } else {
     qFatal("unknown client error");
   }
@@ -226,14 +216,6 @@ void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, 
   dialog.setText(message);
   dialog.setWindowModality(Qt::ApplicationModal);
   dialog.setIcon(QMessageBox::Information);
-
-  auto cbNoShowAgain = new QCheckBox(QObject::tr("Do not show this message again"));
-
-  QObject::connect(cbNoShowAgain, &QCheckBox::toggled, [](bool enabled) {
-    Settings::setValue(Settings::Gui::ShowGenericClientFailureDialog, !enabled);
-  });
-
-  dialog.setCheckBox(cbNoShowAgain);
   dialog.setDefaultButton(QMessageBox::Ok);
   dialog.exec();
 }

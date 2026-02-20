@@ -684,20 +684,8 @@ Valid names:
         <translation>&lt;p&gt;같은 이름의 클라이언트가 이미 서버에 연결되어 있습니다.&lt;/p&gt;&lt;p&gt;고유한 이름을 사용하고, 클라이언트 프로세스가 하나만 실행 중인지 확인하세요.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;호스트 이름 대신 서버 IP 주소로 연결해 보세요.&lt;/p&gt;&lt;p&gt;문제가 계속되면 TLS 및 방화벽 설정을 확인하세요.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;TLS 및 방화벽 설정을 확인하세요.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Connection Error</source>
         <translation>%1 연결 오류</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation>다시 표시하지 않기</translation>
     </message>
     <message>
         <source>%1 - New Client</source>
