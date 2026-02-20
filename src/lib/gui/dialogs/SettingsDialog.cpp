@@ -31,8 +31,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 
   ui->setupUi(this);
 
-  // no advanced options on macOS
-  if (deskflow::platform::isMac()) {
+  // hide advanced options on macOS and portable windows
+  if (deskflow::platform::isMac() || (deskflow::platform::isWindows() && Settings::isPortableMode())) {
     ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabAdvanced));
   }
 
