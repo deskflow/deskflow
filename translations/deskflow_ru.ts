@@ -686,20 +686,8 @@ Valid names:
         <translation>&lt;p&gt;Клиент с таким именем уже подключен к серверу.&lt;/p&gt;Убедитесь, что вы используете уникальное имя и запущен только один процесс клиента.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Попробуйте подключиться к серверу по IP-адресу вместо имени хоста. &lt;/p&gt;&lt;p&gt;Если это не поможет, проверьте настройки TLS и брандмауэра.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Пожалуйста, проверьте настройки TLS и брандмауэра.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Connection Error</source>
         <translation>Ошибка соединения %1</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation>Больше не показывать это сообщение</translation>
     </message>
     <message>
         <source>%1 - New Client</source>

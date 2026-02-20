@@ -686,20 +686,8 @@ Valid names:
         <translation type="unfinished">&lt;p&gt;一个同名的客户端已连接到服务器。&lt;/p&gt;请确保您使用的名称唯一，且只有一个客户端进程实例在运行。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;请尝试使用服务器 IP 地址而不是主机名来连接服务器。&lt;/p&gt;&lt;p&gt;如果不起作用，请检查您的 TLS 和防火墙设置。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;请检查您的 TLS 和防火墙设置。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Connection Error</source>
         <translation>%1 连接错误</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation>不再显示此消息</translation>
     </message>
     <message>
         <source>%1 - New Client</source>

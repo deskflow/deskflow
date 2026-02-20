@@ -686,20 +686,8 @@ Valid names:
         <translation>&lt;p&gt;同じ名前のクライアントがサーバーに接続済です。&lt;/p&gt;&lt;p&gt;名前の重複がないことと、クライアントプロセスが多重起動していない事を確認してください。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;サーバーのホスト名ではなくIPアドレスで接続してみてください。&lt;/p&gt;&lt;p&gt;それでも接続できない場合は、TLSとファイアウォールの設定を確認してください。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;TLSとファイアウォールの設定を確認してください。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Connection Error</source>
         <translation>%1 接続エラー</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation>このメッセージを再表示しない</translation>
     </message>
     <message>
         <source>%1 - New Client</source>
