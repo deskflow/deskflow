@@ -54,8 +54,10 @@ void NetworkMonitor::stopMonitoring()
 
 QStringList NetworkMonitor::validAddresses() const
 {
-  QList<QHostAddress> physicalIPs;
-  QList<QHostAddress> virtualIPs;
+  QList<QHostAddress> physicalIP4;
+  QList<QHostAddress> physicalIP6;
+  QList<QHostAddress> virtualIP4;
+  QList<QHostAddress> virtualIP6;
   QSet<QHostAddress> uniqueAddresses;
 
   const auto allInterfaces = QNetworkInterface::allInterfaces();
@@ -72,33 +74,50 @@ QStringList NetworkMonitor::validAddresses() const
     for (const auto &entry : addressEntries) {
       const QHostAddress address = entry.ip();
 
-      if (address.protocol() != QAbstractSocket::IPv4Protocol || address.isLinkLocal() || address.isLoopback() ||
-          uniqueAddresses.contains(address)) {
+      if (address.isLinkLocal() || address.isLoopback() || uniqueAddresses.contains(address)) {
         continue;
       }
 
       uniqueAddresses.insert(address);
 
-      if (isVirtual) {
-        virtualIPs.append(address);
+      if (address.protocol() == QHostAddress::IPv6Protocol) {
+        if (isVirtual)
+          virtualIP6.append(address);
+        else
+          physicalIP6.append(address);
       } else {
-        physicalIPs.append(address);
+        if (isVirtual)
+          virtualIP4.append(address);
+        else
+          physicalIP4.append(address);
       }
     }
   }
 
-  std::ranges::sort(physicalIPs, [](const QHostAddress &a, const QHostAddress &b) {
+  std::ranges::sort(physicalIP4, [](const QHostAddress &a, const QHostAddress &b) {
     if (a.isPrivateUse() != b.isPrivateUse())
       return a.isPrivateUse();
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
-  std::ranges::sort(virtualIPs, [](const QHostAddress &a, const QHostAddress &b) {
+  std::ranges::sort(virtualIP4, [](const QHostAddress &a, const QHostAddress &b) {
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
-  auto result = physicalIPs;
-  result.append(virtualIPs);
+  std::ranges::sort(physicalIP6, [](const QHostAddress &a, const QHostAddress &b) {
+    if (a.isPrivateUse() != b.isPrivateUse())
+      return a.isPrivateUse();
+    return a.toString() < b.toString();
+  });
+
+  std::ranges::sort(virtualIP6, [](const QHostAddress &a, const QHostAddress &b) {
+    return a.toString() < b.toString();
+  });
+
+  auto result = physicalIP4;
+  result.append(virtualIP4);
+  result.append(physicalIP6);
+  result.append(virtualIP6);
 
   QStringList ipList;
   for (const auto &host : result) {
