@@ -403,10 +403,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Introduzca el nombre de host o la dirección IP de la otra computadora.</translation>
     </message>
     <message>
-        <source>Core cannot be started</source>
-        <translation type="unfinished">No se puede iniciar el núcleo</translation>
-    </message>
-    <message>
         <source>Save server configuration as...</source>
         <translation type="unfinished">Guardar la configuración del servidor como...</translation>
     </message>
@@ -524,10 +520,6 @@ Nombres válidos:
         <translation type="unfinished">Nombre de esta computadora:</translation>
     </message>
     <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="unfinished">No se pudo iniciar el archivo ejecutable principal, aunque existe. Compruebe si tiene permisos suficientes para ejecutar este programa.</translation>
-    </message>
-    <message>
         <source>&amp;Configure Client</source>
         <translation type="unfinished">&amp;Configurar cliente</translation>
     </message>
@@ -538,6 +530,26 @@ Nombres válidos:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;Nome host o indirizzo IP del computer server.&lt;br/&gt;Può contenere un elenco separato da virgole.&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">leer</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">leer y escribir</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">No se pudo iniciar el ejecutable Core.
+Verifique si tiene permisos suficientes para ejecutar %1.</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+Además, verifique que puede %1 el archivo de configuración del servidor: %2</translation>
     </message>
 </context>
 <context>

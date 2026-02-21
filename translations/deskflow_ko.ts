@@ -359,10 +359,6 @@ Do you want to connect to the server?
         <translation>다른 컴퓨터의 호스트 이름 또는 IP 주소를 입력하세요.</translation>
     </message>
     <message>
-        <source>Core cannot be started</source>
-        <translation>코어를 시작할 수 없습니다</translation>
-    </message>
-    <message>
         <source>Save server configuration as...</source>
         <translation>서버 설정을 다른 이름으로 저장...</translation>
     </message>
@@ -524,10 +520,6 @@ Valid names:
         <translation type="unfinished">추천 IP: </translation>
     </message>
     <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation>코어 실행 파일이 존재하지만 정상적으로 시작할 수 없습니다. 이 프로그램을 실행할 권한이 충분한지 확인하세요.</translation>
-    </message>
-    <message>
         <source>&amp;Configure Client</source>
         <translation type="unfinished">클라이언트 구성 (&amp;C)</translation>
     </message>
@@ -538,6 +530,26 @@ Valid names:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation>&lt;html&gt;서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.&lt;br/&gt;목록 요소는 쉼표로 구분됩니다.&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">읽기</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">읽기 및 쓰기</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">Core 실행 파일을 시작할 수 없습니다.
+%1을 실행할 수 있는 충분한 권한이 있는지 확인하세요.</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+또한 서버 구성 파일을 %1할 수 있는지 확인하세요: %2</translation>
     </message>
 </context>
 <context>

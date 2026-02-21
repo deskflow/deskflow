@@ -383,12 +383,17 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
     );
   } else if (error == CoreProcess::Error::StartFailed) {
     show();
-    QMessageBox::warning(
-        this, tr("Core cannot be started"),
-        tr("The Core executable could not be successfully started, "
-           "although it does exist. "
-           "Please check if you have sufficient permissions to run this program.")
-    );
+    auto message = tr("The Core executable could not be started.\n"
+                      "Please check if you have sufficient permissions to run %1.")
+                       .arg(kCoreBinName);
+
+    if (Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server) {
+      const auto mode =
+          Settings::value(Settings::Server::ExternalConfigFile).toBool() ? tr("read") : tr("read and write");
+      message.append(tr("\nAdditionally, check you are able to %1 the server config file: %2")
+                         .arg(mode, Settings::serverConfigFile()));
+    }
+    QMessageBox::warning(this, kAppName, message);
   }
 }
 

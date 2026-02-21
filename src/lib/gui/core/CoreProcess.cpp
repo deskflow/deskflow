@@ -330,9 +330,15 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   QStringList args = {coreMode};
 
   if (m_mode == Settings::CoreMode::Server) {
-    const auto configFilename = persistServerConfig();
+    const auto [hasNeededPermissions, configFilename] = persistServerConfig();
     if (configFilename.isEmpty()) {
       qFatal("config file name empty for server args");
+      return;
+    }
+    if (!hasNeededPermissions) {
+      setProcessState(ProcessState::Stopped);
+      setConnectionState(ConnectionState::Disconnected);
+      Q_EMIT error(Error::StartFailed);
       return;
     }
     qInfo("core config file: %s", qPrintable(configFilename));
@@ -417,21 +423,22 @@ void CoreProcess::cleanup()
   }
 }
 
-QString CoreProcess::persistServerConfig() const
+QPair<bool, QString> CoreProcess::persistServerConfig() const
 {
   if (Settings::value(Settings::Server::ExternalConfig).toBool()) {
-    return Settings::value(Settings::Server::ExternalConfigFile).toString();
+    return {Settings::isServerConfigFileReadable(), Settings::value(Settings::Server::ExternalConfigFile).toString()};
   }
 
   const auto configFilePath = Settings::defaultValue(Settings::Server::ExternalConfigFile).toString();
   QFile configFile(configFilePath);
   if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    qFatal("failed to open core config file for write: %s", qPrintable(configFile.fileName()));
+    qWarning() << "failed to open core config file for write:" << configFilePath;
+    return {false, configFile.fileName()};
   }
 
   m_serverConfig.save(configFile);
   configFile.close();
-  return configFile.fileName();
+  return {Settings::isServerConfigFileReadable(), configFile.fileName()};
 }
 
 void CoreProcess::setConnectionState(ConnectionState state)

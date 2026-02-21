@@ -391,10 +391,6 @@ Vuoi connetterti al server?
         <translation>Inserisci l&apos;hostname o l&apos;indirizzo IP dell&apos;altro computer.</translation>
     </message>
     <message>
-        <source>Core cannot be started</source>
-        <translation>Impossibile avviare il core</translation>
-    </message>
-    <message>
         <source>Save server configuration as...</source>
         <translation>Salva configurazione server come...</translation>
     </message>
@@ -524,10 +520,6 @@ Nomi validi:
 (imposta questo computer come client)</translation>
     </message>
     <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="unfinished">Non è stato possibile avviare correttamente l&apos;eseguibile Core, sebbene esista. Verifica di disporre delle autorizzazioni necessarie per eseguire questo programma.</translation>
-    </message>
-    <message>
         <source>&amp;Configure Client</source>
         <translation type="unfinished">&amp;Configurare il client</translation>
     </message>
@@ -538,6 +530,26 @@ Nomi validi:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;Nome host o indirizzo IP del computer server.&lt;br/&gt;Può contenere un elenco separato da virgole.&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">leggere</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">leggere e scrivere</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">Impossibile avviare l&apos;eseguibile Core.
+Verifica di avere i permessi sufficienti per eseguire %1.</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+Inoltre, verifica di poter %1 il file di configurazione del server: %2</translation>
     </message>
 </context>
 <context>

@@ -359,10 +359,6 @@ Do you want to connect to the server?
         <translation>Пожалуйста, введите имя хоста или IP-адрес другого компьютера.</translation>
     </message>
     <message>
-        <source>Core cannot be started</source>
-        <translation>Не удалось запустить ядро</translation>
-    </message>
-    <message>
         <source>Save server configuration as...</source>
         <translation>Сохранить конфигурацию сервера как...</translation>
     </message>
@@ -524,10 +520,6 @@ Valid names:
         <translation>Рекомендуемый IP-адрес: </translation>
     </message>
     <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation>Не удалось запустить исполняемый файл ядра, хотя он существует. Проверьте наличие прав на запуск программы.</translation>
-    </message>
-    <message>
         <source>&amp;Configure Client</source>
         <translation type="unfinished">&amp;Настройка клиента</translation>
     </message>
@@ -538,6 +530,26 @@ Valid names:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;Имя хоста или IP-адрес серверного компьютера.&lt;br/&gt;Может содержать список, разделенный запятыми.&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">прочитать</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">читать и записывать</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">Не удалось запустить исполняемый файл Core.
+Проверьте, достаточно ли у вас прав для запуска %1.</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+Также убедитесь, что вы можете %1 файл конфигурации сервера: %2</translation>
     </message>
 </context>
 <context>

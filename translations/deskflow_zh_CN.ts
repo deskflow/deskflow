@@ -359,10 +359,6 @@ Do you want to connect to the server?
         <translation>请输入另一台计算机的主机名或 IP 地址。</translation>
     </message>
     <message>
-        <source>Core cannot be started</source>
-        <translation>核心服务无法启动</translation>
-    </message>
-    <message>
         <source>Save server configuration as...</source>
         <translation>另存服务器配置为...</translation>
     </message>
@@ -524,10 +520,6 @@ Valid names:
         <translation type="unfinished">建议 IP： </translation>
     </message>
     <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="unfinished">Core 可执行文件虽然存在，但无法成功启动。请检查您是否拥有运行此程序的足够权限。</translation>
-    </message>
-    <message>
         <source>&amp;Configure Client</source>
         <translation type="unfinished">配置客户端(&amp;C)</translation>
     </message>
@@ -538,6 +530,26 @@ Valid names:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;服务器计算机的主机名或 IP 地址。&lt;br/&gt;可以包含以逗号分隔的列表。&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">读取</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">读取和写入</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">无法启动Core可执行文件。
+请检查您是否有足够的权限来运行%1。</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+另外，请检查您是否能够%1服务器配置文件：%2</translation>
     </message>
 </context>
 <context>

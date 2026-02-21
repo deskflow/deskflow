@@ -359,10 +359,6 @@ Do you want to connect to the server?
         <translation>他のコンピューターのIPアドレスかホスト名を入力してください。</translation>
     </message>
     <message>
-        <source>Core cannot be started</source>
-        <translation>コアが起動できません</translation>
-    </message>
-    <message>
         <source>Save server configuration as...</source>
         <translation>サーバー設定を保存…</translation>
     </message>
@@ -524,10 +520,6 @@ Valid names:
         <translation>推奨IPアドレス: </translation>
     </message>
     <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation>コア実行ファイルは存在していますが、起動できませんでした。このプログラムを実行するのに十分な権限があることを確認してください。</translation>
-    </message>
-    <message>
         <source>&amp;Configure Client</source>
         <translation>クライアント設定 (&amp;C)</translation>
     </message>
@@ -538,6 +530,26 @@ Valid names:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation>&lt;html&gt;サーバーコンピューターのホスト名または IP アドレス。&lt;br/&gt;カンマ区切りのリストを含めることができます。&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">読み取り</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">読み書き</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">Coreの実行ファイルを起動できませんでした。
+%1を実行するための十分な権限があるか確認してください。</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+また、サーバー設定ファイルを%1できることを確認してください: %2</translation>
     </message>
 </context>
 <context>
