@@ -685,20 +685,8 @@ Nombres válidos:
         <translation type="unfinished">&lt;p&gt;Ya hay un cliente conectado al servidor con su nombre.&lt;/p&gt;Asegúrese de utilizar un nombre único y de que solo se esté ejecutando una única instancia del proceso del cliente.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Intente conectarse al servidor usando la dirección IP del servidor en lugar del nombre de host.&lt;/p&gt;&lt;p&gt;Si eso no funciona, verifique la configuración de TLS y firewall.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Por favor revise su configuración de TLS y firewall.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Connection Error</source>
         <translation type="unfinished">%1 Error de conexión</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation type="unfinished">No volver a mostrar este mensaje</translation>
     </message>
     <message>
         <source>%1 - New Client</source>

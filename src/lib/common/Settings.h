@@ -77,7 +77,6 @@ public:
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
     inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
-    inline static const auto ShowGenericClientFailureDialog = QStringLiteral("gui/showGenericClientFailureDialog");
     inline static const auto ShownFirstConnectedMessage = QStringLiteral("gui/shownFirstConnectedMessage");
     inline static const auto ShownServerFirstStartMessage = QStringLiteral("gui/shownServerFirstStartMessage");
     inline static const auto ShowVersionInTitle = QStringLiteral("gui/showVersionInTitle");
@@ -228,7 +227,6 @@ private:
     , Settings::Gui::LogExpanded
     , Settings::Gui::SymbolicTrayIcon
     , Settings::Gui::WindowGeometry
-    , Settings::Gui::ShowGenericClientFailureDialog
     , Settings::Gui::ShownFirstConnectedMessage
     , Settings::Gui::ShownServerFirstStartMessage
     , Settings::Gui::ShowVersionInTitle
@@ -264,7 +262,6 @@ private:
     , Settings::Gui::CloseReminder
     , Settings::Gui::LogExpanded
     , Settings::Gui::SymbolicTrayIcon
-    , Settings::Gui::ShowGenericClientFailureDialog
     , Settings::Security::TlsEnabled
     , Settings::Security::CheckPeers
   };
