@@ -19,6 +19,8 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 void raiseCriticalDialog();
 
+void showCriticalDialog(QWidget *parent, const QString &message);
+
 void showFirstServerStartMessage(QWidget *parent);
 
 void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableService, bool isServer);
