@@ -238,6 +238,12 @@ QString Settings::serverConfigFile()
   return useExt ? value(Server::ExternalConfigFile).toString() : defaultValue(Server::ExternalConfigFile).toString();
 }
 
+bool Settings::isServerConfigFileReadable()
+{
+  auto file = QFile(serverConfigFile());
+  return file.open(QFile::ReadOnly);
+}
+
 bool Settings::isWritable()
 {
   return instance()->m_settings->isWritable();
