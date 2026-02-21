@@ -9,6 +9,15 @@ if(UNIX AND NOT APPLE)
 
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+
+  # Check if we have the restore ability in the IC portal
+  include(CMakePushCheckState)
+  include(CheckSymbolExists)
+  cmake_push_check_state(RESET)
+  set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
+  set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
+  check_symbol_exists(xdp_input_capture_session_get_restore_token "libportal/inputcapture.h" HAVE_IC_RESTORE)
+  cmake_pop_check_state()
 endif()
 
 if(WIN32)
@@ -178,6 +187,9 @@ if(UNIX)
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
     target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+    if (HAVE_IC_RESTORE)
+      target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
+    endif()
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
     target_link_libraries(
       platform
