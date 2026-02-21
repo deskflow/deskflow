@@ -131,6 +131,7 @@ public:
   static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
+  static bool isExternalConfigFileAccessible();
   static bool isWritable();
   static bool isPortableMode();
   static QString settingsFile();

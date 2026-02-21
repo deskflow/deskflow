@@ -233,6 +233,18 @@ QStringList Settings::validKeys()
   return Settings::m_validKeys;
 }
 
+bool Settings::isExternalConfigFileAccessible()
+{
+  const auto configFile = Settings::value(Settings::Server::ExternalConfigFile).toString();
+  if (configFile.isEmpty()) {
+    return false;
+  }
+  auto file = QFile(configFile);
+  if (!file.exists())
+    return true;
+  return file.open(QFile::ReadWrite | QFile::Append);
+}
+
 bool Settings::isWritable()
 {
   return instance()->m_settings->isWritable();
