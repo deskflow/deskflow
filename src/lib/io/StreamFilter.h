@@ -20,11 +20,10 @@ class StreamFilter : public deskflow::IStream
 {
 public:
   /*!
-  Create a wrapper around \c stream.  Iff \c adoptStream is true then
-  this object takes ownership of the stream and will delete it in the
-  d'tor.
+  Create a wrapper around \c stream.
+  this object takes ownership of the stream and will delete it in the d'tor.
   */
-  StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
+  StreamFilter(IEventQueue *events, deskflow::IStream *stream);
   StreamFilter(StreamFilter const &) = delete;
   StreamFilter(StreamFilter &&) = delete;
   ~StreamFilter() override;
@@ -60,7 +59,6 @@ protected:
   virtual void filterEvent(const Event &);
 
 private:
-  deskflow::IStream *m_stream;
-  bool m_adopted;
-  IEventQueue *m_events;
+  deskflow::IStream *m_stream = nullptr;
+  IEventQueue *m_events = nullptr;
 };

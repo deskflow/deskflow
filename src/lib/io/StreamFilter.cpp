@@ -13,10 +13,7 @@
 // StreamFilter
 //
 
-StreamFilter::StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream)
-    : m_stream(stream),
-      m_adopted(adoptStream),
-      m_events(events)
+StreamFilter::StreamFilter(IEventQueue *events, deskflow::IStream *stream) : m_stream(stream), m_events(events)
 {
   // replace handlers for m_stream
   m_events->removeHandlers(m_stream->getEventTarget());
@@ -26,7 +23,7 @@ StreamFilter::StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool 
 StreamFilter::~StreamFilter()
 {
   m_events->removeHandler(EventTypes::Unknown, m_stream->getEventTarget());
-  if (m_adopted) {
+  if (m_stream) {
     delete m_stream;
   }
 }
