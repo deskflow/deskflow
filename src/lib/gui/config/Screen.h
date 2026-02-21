@@ -42,7 +42,8 @@ class Screen : public ScreenConfig
 
 public:
   explicit Screen(const QString &name = QString());
-
+  std::optional<QString> m_enterScreenCommand;
+  std::optional<QString> m_exitScreenCommand;
   [[nodiscard]] const QPixmap &pixmap() const
   {
     return m_Pixmap;
