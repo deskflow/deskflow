@@ -792,6 +792,10 @@ Valid names:
         <source>%1 is already running</source>
         <translation>%1 已经在运行中</translation>
     </message>
+    <message>
+        <source>&lt;p&gt;The server configuration file at &quot;%1&quot; is not accessible.&lt;/p&gt;&lt;p&gt;Please check that you have read and write permissions.&lt;/p&gt;</source>
+        <translation type="unfinished">&lt;p&gt;服务器配置文件 &quot;%1&quot; 不可访问。&lt;/p&gt;&lt;p&gt;请检查您是否具有读取和写入权限。&lt;/p&gt;</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>

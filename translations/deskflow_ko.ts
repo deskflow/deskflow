@@ -790,6 +790,10 @@ Valid names:
         <source>%1 is already running</source>
         <translation>%1이(가) 이미 실행 중입니다</translation>
     </message>
+    <message>
+        <source>&lt;p&gt;The server configuration file at &quot;%1&quot; is not accessible.&lt;/p&gt;&lt;p&gt;Please check that you have read and write permissions.&lt;/p&gt;</source>
+        <translation type="unfinished">&lt;p&gt;서버 구성 파일(주소: &quot;%1&quot;)에 접근할 수 없습니다.&lt;/p&gt;&lt;p&gt;읽기 및 쓰기 권한이 있는지 확인하십시오..&lt;/p&gt;</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>

@@ -115,6 +115,7 @@ private:
   void openHelpUrl() const;
   void openGetNewVersionUrl() const;
   void openSettings();
+  bool canStartCore();
   void startCore();
   void stopCore();
   bool saveServerConfig();

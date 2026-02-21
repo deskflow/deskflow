@@ -791,6 +791,10 @@ Nomi validi:
         <source>%1 is already running</source>
         <translation>%1 è già in esecuzione</translation>
     </message>
+    <message>
+        <source>&lt;p&gt;The server configuration file at &quot;%1&quot; is not accessible.&lt;/p&gt;&lt;p&gt;Please check that you have read and write permissions.&lt;/p&gt;</source>
+        <translation type="unfinished">&lt;p&gt;Il file di configurazione del server in &quot;%1&quot; non è accessibile.&lt;/p&gt;&lt;p&gt;Verifica di avere i permessi di lettura e scrittura.&lt;/p&gt;</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>
