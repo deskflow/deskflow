@@ -51,8 +51,8 @@ static void toLE(uint8_t *&dst, uint32_t src)
 // XWindowsClipboardBMPConverter
 //
 
-XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(Display *display)
-    : m_atom(XInternAtom(display, "image/bmp", False))
+XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(Display *display, const char *atomName)
+    : m_atom(XInternAtom(display, atomName, False))
 {
   // do nothing
 }

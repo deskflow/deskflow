@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 class QProcess;
 //! Wayland clipboard implementation using wl-copy/wl-paste
@@ -68,11 +69,26 @@ public:
   std::string get(Format format) const override;
 
 private:
-  //! Convert IClipboard format to MIME type
+  //! Convert IClipboard format to the preferred MIME type for writing.
   QString formatToMimeType(Format format) const;
 
-  //! Convert MIME type to IClipboard format
-  Format mimeTypeToFormat(const QString &mimeType) const;
+  //! Convert IClipboard format to acceptable MIME types for reading (ordered by preference).
+  QStringList formatToMimeTypes(Format format) const;
+
+  //! Return true if a MIME type matches the requested clipboard format.
+  bool mimeTypeMatchesFormat(Format format, const QString &mimeType) const;
+
+  //! Pick the best available MIME type for reading the requested format.
+  QString getBestMimeTypeForRead(Format format, const QStringList &availableTypes) const;
+
+  //! Read raw clipboard data for the given MIME type.
+  std::string readMimeData(const QString &mimeType) const;
+
+  //! Return true when bitmap data advertised by the clipboard can be decoded.
+  bool isBitmapDataReady(const QStringList &availableTypes) const;
+
+  //! Return true if clipboard text/html/uri data looks like a temporary screenshot label/path.
+  bool hasScreenshotPlaceholderText(const QStringList &availableTypes) const;
 
   //! Get available MIME types from clipboard
   QStringList getAvailableMimeTypes() const;

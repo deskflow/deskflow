@@ -13,7 +13,7 @@
 class XWindowsClipboardBMPConverter : public IXWindowsClipboardConverter
 {
 public:
-  explicit XWindowsClipboardBMPConverter(Display *display);
+  explicit XWindowsClipboardBMPConverter(Display *display, const char *atomName = "image/bmp");
   ~XWindowsClipboardBMPConverter() override = default;
 
   // IXWindowsClipboardConverter overrides

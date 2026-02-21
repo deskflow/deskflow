@@ -11,9 +11,33 @@
 #include "base/Log.h"
 #include "platform/OSXClipboardBMPConverter.h"
 #include "platform/OSXClipboardHTMLConverter.h"
+#include "platform/OSXClipboardImageConverter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardUTF8Converter.h"
+
+#include <chrono>
+#include <thread>
+
+namespace {
+
+bool readPasteboardFlavorData(PasteboardRef pasteboard, PasteboardItemID item, CFStringRef flavorType, std::string &out)
+{
+  CFDataRef buffer = nullptr;
+  OSStatus err = PasteboardCopyItemFlavorData(pasteboard, item, flavorType, &buffer);
+  if (err != noErr || buffer == nullptr) {
+    if (buffer != nullptr) {
+      CFRelease(buffer);
+    }
+    return false;
+  }
+
+  out.assign(reinterpret_cast<const char *>(CFDataGetBytePtr(buffer)), static_cast<size_t>(CFDataGetLength(buffer)));
+  CFRelease(buffer);
+  return true;
+}
+
+} // namespace
 
 //
 // OSXClipboard
@@ -22,6 +46,9 @@
 OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
+  m_converters.push_back(new OSXClipboardImageConverter(CFSTR("public.tiff"), "TIFF"));
+  m_converters.push_back(new OSXClipboardImageConverter(CFSTR("public.png"), "PNG"));
+  m_converters.push_back(new OSXClipboardImageConverter(CFSTR("NeXT TIFF v4.0 pasteboard type"), "TIFF"));
   m_converters.push_back(new OSXClipboardBMPConverter);
   m_converters.push_back(new OSXClipboardUTF8Converter);
   m_converters.push_back(new OSXClipboardUTF16Converter);
@@ -136,18 +163,27 @@ bool OSXClipboard::has(Format format) const
   if (m_pboard == nullptr)
     return false;
 
-  PasteboardItemID item;
-  PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
+  ItemCount itemCount = 0;
+  if (PasteboardGetItemCount(m_pboard, &itemCount) != noErr || itemCount <= 0) {
+    return false;
+  }
 
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    IOSXClipboardConverter *converter = *index;
-    if (converter->getFormat() == format) {
+  for (ItemCount i = 1; i <= itemCount; ++i) {
+    PasteboardItemID item = 0;
+    if (PasteboardGetItemIdentifier(m_pboard, i, &item) != noErr) {
+      continue;
+    }
+
+    for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
+      IOSXClipboardConverter *converter = *index;
+      if (converter->getFormat() != format) {
+        continue;
+      }
+
       PasteboardFlavorFlags flags;
       CFStringRef type = converter->getOSXFormat();
 
-      OSStatus res;
-
-      if ((res = PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags)) == noErr) {
+      if (PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr) {
         return true;
       }
     }
@@ -158,56 +194,65 @@ bool OSXClipboard::has(Format format) const
 
 std::string OSXClipboard::get(Format format) const
 {
-  CFStringRef type;
-  PasteboardItemID item;
-  std::string result;
-
   if (m_pboard == nullptr)
-    return result;
+    return {};
 
-  PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
-
-  // find the converter for the first clipboard format we can handle
-  IOSXClipboardConverter *converter = nullptr;
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    converter = *index;
-
-    PasteboardFlavorFlags flags;
-    type = converter->getOSXFormat();
-
-    if (converter->getFormat() == format && PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr) {
-      break;
-    }
-    converter = nullptr;
+  ItemCount itemCount = 0;
+  if (PasteboardGetItemCount(m_pboard, &itemCount) != noErr || itemCount <= 0) {
+    return {};
   }
 
-  // if no converter then we don't recognize any formats
-  if (converter == nullptr) {
-    LOG_DEBUG("unable to find converter for data");
-    return result;
-  }
-
-  // get the clipboard data.
-  CFDataRef buffer = nullptr;
-  try {
-    OSStatus err = PasteboardCopyItemFlavorData(m_pboard, item, type, &buffer);
-
-    if (err != noErr) {
-      throw err;
+  for (ItemCount i = 1; i <= itemCount; ++i) {
+    PasteboardItemID item = 0;
+    if (PasteboardGetItemIdentifier(m_pboard, i, &item) != noErr) {
+      continue;
     }
 
-    result = std::string((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
-  } catch (OSStatus err) {
-    LOG_DEBUG("exception thrown in OSXClipboard::get MacError (%d)", err);
-  } catch (...) {
-    LOG_DEBUG("unknown exception in OSXClipboard::get");
-    RETHROW_THREADEXCEPTION
+    // try converters in order and keep going if a converter cannot decode
+    // non-empty data. this allows fallback between TIFF/PNG/BMP flavors.
+    for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
+      IOSXClipboardConverter *converter = *index;
+
+      if (converter->getFormat() != format) {
+        continue;
+      }
+
+      CFStringRef type = converter->getOSXFormat();
+      PasteboardFlavorFlags flags;
+      if (PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) != noErr) {
+        continue;
+      }
+
+      // Some providers advertise image flavors before data is ready.
+      // Retry briefly to avoid user-visible copy retries.
+      const int maxAttempts = (format == IClipboard::Format::Bitmap) ? 3 : 1;
+      for (int attempt = 0; attempt < maxAttempts; ++attempt) {
+        std::string rawData;
+        if (!readPasteboardFlavorData(m_pboard, item, type, rawData)) {
+          break;
+        }
+
+        try {
+          const auto converted = converter->toIClipboard(rawData);
+          if (!converted.empty() || rawData.empty()) {
+            return converted;
+          }
+        } catch (...) {
+          LOG_DEBUG("exception while converting pasteboard flavor");
+          break;
+        }
+
+        if (attempt + 1 < maxAttempts) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(35));
+        }
+      }
+
+      LOG_DEBUG("converter returned no data for available flavor, trying next");
+    }
   }
 
-  if (buffer != nullptr)
-    CFRelease(buffer);
-
-  return converter->toIClipboard(result);
+  LOG_DEBUG("unable to find converter for data");
+  return {};
 }
 
 void OSXClipboard::clearConverters()
