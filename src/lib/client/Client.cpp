@@ -338,6 +338,11 @@ void Client::sendClipboard(ClipboardID id)
                      " contents exceeds the %i MB size limit set by the server",
            m_maximumClipboardSize / 1024)
       );
+      // Update the timestamp so we don't re-read and re-marshall the
+      // same oversized clipboard on every subsequent screen transition.
+      // Without this, every screen switch triggers a full clipboard read
+      // from the OS just to discover it's still too large.
+      m_timeClipboard[id] = clipboard.getTime();
       return;
     }
 
