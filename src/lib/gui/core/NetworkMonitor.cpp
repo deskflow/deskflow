@@ -19,7 +19,7 @@ bool NetworkMonitor::isVirtualInterface(const QString &interfaceName)
 {
   // Common virtual network interface patterns
   static const auto virtualRegEx = QRegularExpression(
-      QStringLiteral("^vboxnet|vmnet|docker|virbr|veth|br\\-|tun|utun|awdl|p2p|llw|anpi|tap"),
+      QStringLiteral("^vboxnet|vmnet|docker|virbr|veth|br\\-|tun|utun|awdl|p2p|llw|anpi|tap|vEth"),
       QRegularExpression::CaseInsensitiveOption
   );
   return virtualRegEx.match(interfaceName).hasMatch();
@@ -68,7 +68,8 @@ QStringList NetworkMonitor::validAddresses() const
     }
 
     const bool isP2P = (interface.flags() & QNetworkInterface::IsPointToPoint);
-    const bool isVirtual = isVirtualInterface(interface.name()) || isP2P;
+    const bool isVirtualType = interface.type() == QNetworkInterface::Virtual;
+    const bool isVirtual = isVirtualInterface(interface.humanReadableName()) || isP2P || isVirtualType;
     const auto addressEntries = interface.addressEntries();
 
     for (const auto &entry : addressEntries) {
