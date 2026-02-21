@@ -50,15 +50,15 @@ option=value
 This section contains options used when in client mode. 
 It will begin with `[client]`
 
-
-| Option                |    Valid Values    | Description |
-|:----------------------|:------------------:|:-----------|
-| binary                | Filename           | The filename of the binary to call for client mode. This binary exists in the same path as the GUI |
-| invertScrollDirection | `true` or `false`  | Invert scroll on this client [default: false] |
-| languageSync          | `true` or `false`  | Sync to server language [default: true] |
-| remoteHost            | `IP` or `hostname` | The remote host(s) to connect to. Use a comma seperated list when you want to try severial hosts |
-| yScrollScale          | Double 0.1 - 10.0  | Mouse scrolling will be scaled by this amount on the client [default: 1.0] |
-| xdpRestoreToken       | UUID               | Restore token provided by XDG portals |
+| Option            |    Valid Values    | Description |
+|:------------------|:------------------:|:-----------|
+| languageSync      | `true` or `false`  | Sync to server language [default: true] |
+| remoteHost        | `IP` or `hostname` | The remote host(s) to connect to. Use a comma separated list when you want to try several hosts |
+| yScrollScale      | Double 0.1 - 10.0  | Vertical mouse scrolling will be scaled by this amount on the client [default: 1.0] |
+| xScrollScale      | Double 0.1 - 10.0  | Horizontal mouse scrolling will be scaled by this amount on the client [default: 1.0] |
+| invertYScroll     | `true` or `false`  | Invert vertical scroll on this client [default: false] |
+| invertXScroll     | `true` or `false`  | Invert horizontal scroll on this client [default: false] |
+| xdpRestoreToken   | UUID               | Restore token provided by XDG portals |
 
 ### Core
 

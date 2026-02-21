@@ -47,10 +47,10 @@ public:
   void stopMonitoring();
 
   /**
-   * @brief Get list of all available IPv4 addresses (excluding local and link-local addresses)
-   * @return IPv4 address list
+   * @brief Get list of all available IP addresses (excluding local and link-local addresses)
+   * @return IP address list
    */
-  QStringList getAvailableIPv4Addresses() const;
+  QStringList validAddresses() const;
 
   /**
    * @brief Check if a network interface is virtual
