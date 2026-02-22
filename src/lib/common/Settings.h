@@ -215,6 +215,7 @@ private:
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile
+    , Settings::Daemon::LogLevel
     , Settings::Log::File
     , Settings::Log::Level
     , Settings::Log::ToFile
