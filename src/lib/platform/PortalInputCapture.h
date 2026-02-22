@@ -30,12 +30,13 @@ public:
   {
     return m_isActive;
   }
+  void restoreSession(const std::string &token);
 
 private:
   void glibThread(const void *);
   gboolean timeoutHandler() const;
-  gboolean initSession();
-  void handleInitSession(GObject *object, GAsyncResult *res);
+  gboolean initSession(bool restore);
+  void handleInitSession(GObject *object, GAsyncResult *res, bool restore);
   void handleSetPointerBarriers(const GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
   void handleDisabled(const XdpInputCaptureSession *session, const GVariant *option);
@@ -43,6 +44,7 @@ private:
   void
   handleDeactivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, const GVariant *options);
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
+  void handleSaveSession(GObject *object, GAsyncResult *res);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)
@@ -69,6 +71,10 @@ private:
   static void zonesChanged(XdpInputCaptureSession *session, const GVariant *options, const gpointer data)
   {
     static_cast<PortalInputCapture *>(data)->handleZonesChanged(session, options);
+  }
+  static void saveSession(XdpSession *session, GAsyncResult *res, gpointer data)
+  {
+    static_cast<PortalInputCapture *>(data)->handleSaveSession(session, res);
   }
 
 private:
@@ -101,6 +107,7 @@ private:
   bool m_enabled = false;
   bool m_isActive = false;
   std::uint32_t m_activationId = 0;
+  std::string m_restoreToken;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
 };

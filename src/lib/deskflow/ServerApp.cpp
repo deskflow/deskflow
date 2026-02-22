@@ -405,7 +405,7 @@ deskflow::Screen *ServerApp::createScreen()
   );
 #endif
 
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
@@ -547,6 +547,10 @@ int ServerApp::mainLoop()
   // the option to reset the state of the server.
   getEvents()->addHandler(EventTypes::ServerAppResetServer, getEvents()->getSystemTarget(), [this](const auto &) {
     resetServer();
+  });
+
+  getEvents()->addHandler(EventTypes::EISessionSaved, m_serverScreen->getEventTarget(), [this](const auto &e) {
+    Settings::setValue(Settings::Client::XdpRestoreToken, e.get<EiScreen::EiSessionInfo>()->token.c_str());
   });
 
   // run event loop.  if startServer() failed we're supposed to retry

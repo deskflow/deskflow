@@ -27,7 +27,7 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
 #include "platform/XDGPortalRegistry.h"
 #endif
 
@@ -47,7 +47,7 @@ App::App(IEventQueue *events, const QString &processName)
 {
   assert(s_instance == nullptr);
   s_instance = this;
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#if defined(WINAPI_XWINDOWS) || defined(WINAPI_LIBEI)
   deskflow::platform::setAppId();
 #endif
 }

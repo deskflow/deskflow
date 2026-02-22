@@ -27,7 +27,7 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
   m_glibThread = new Thread(tMethodJob);
 
-  auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
+  auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(false); };
 
   g_idle_add(captureCallback, this);
 }
@@ -79,7 +79,7 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
-void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
+void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res, bool restore)
 {
   LOG_DEBUG("portal input capture session initialized");
   g_autoptr(GError) error = nullptr;
@@ -113,6 +113,16 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
   handleZonesChanged(m_session, nullptr);
+
+  if (!restore) {
+    g_autoptr(GVariant) options = g_variant_new_dict_entry("persistent", g_variant_new_boolean(true));
+    xdp_session_set_option(parentSession, options);
+    xdp_session_save(parentSession, nullptr,
+                     [](GObject *obj, GAsyncResult *res, gpointer data) {
+                       static_cast<PortalInputCapture *>(data)->handleSaveSession(obj, res);
+                     },
+                     this);
+  }
 }
 
 void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult *res)
@@ -148,21 +158,48 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
   enable();
 }
 
-gboolean PortalInputCapture::initSession()
+gboolean PortalInputCapture::initSession(bool restore)
 {
   LOG_DEBUG("setting up input capture session");
+  g_autoptr(GVariantBuilder) options = g_variant_builder_new(G_VARIANT_TYPE_VARDICT);
+  if (restore) {
+    g_variant_builder_add(options, "{sv}", "restore", g_variant_new_string(m_restoreToken.c_str()));
+  }
+
   xdp_portal_create_input_capture_session(
       m_portal,
       nullptr, // parent
       static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
+      g_variant_builder_end(options),
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
-        static_cast<PortalInputCapture *>(data)->handleInitSession(obj, res);
+        static_cast<PortalInputCapture *>(data)->handleInitSession(obj, res, false);
       },
       this
   );
 
   return false;
+}
+
+void PortalInputCapture::restoreSession(const std::string &token)
+{
+  m_restoreToken = token;
+  auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(true); };
+  g_idle_add(captureCallback, this);
+}
+
+void PortalInputCapture::handleSaveSession(GObject *object, GAsyncResult *res)
+{
+  g_autoptr(GError) error = nullptr;
+  g_autofree gchar *token = nullptr;
+
+  if (!xdp_session_save_finish(XDP_SESSION(object), res, &token, &error)) {
+    LOG_ERR("failed to save input capture session: %s", error->message);
+    return;
+  }
+
+  m_events->addEvent(Event(EventTypes::EISessionSaved, m_screen->getEventTarget(),
+                           EiScreen::EiSessionInfo::alloc(token)));
 }
 
 void PortalInputCapture::enable()
