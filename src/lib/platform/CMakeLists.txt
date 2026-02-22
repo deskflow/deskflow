@@ -10,22 +10,26 @@ if(UNIX AND NOT APPLE)
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
 
-  # Check for InputCapture clipboard API (requires patched libportal).
-  # Guard with HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD to allow building
-  # against stock libportal releases while enabling the feature when
-  # the updated version is present.
+  # Feature checks for extended libportal APIs (clipboard + session persistence).
+  # Both are guarded by ifdefs so the code builds against stock libportal.
   include(CMakePushCheckState)
   include(CheckSymbolExists)
   cmake_push_check_state(RESET)
   set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
   set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
   check_symbol_exists(xdp_session_request_clipboard "libportal/portal.h;libportal/clipboard.h" HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
+  check_symbol_exists(xdp_input_capture_session_get_restore_token "libportal/inputcapture.h" HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
   cmake_pop_check_state()
 
   if(HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
     message(STATUS "libportal: InputCapture clipboard API available")
   else()
-    message(STATUS "libportal: InputCapture clipboard API not available (upgrade libportal for clipboard support)")
+    message(STATUS "libportal: InputCapture clipboard API not available")
+  endif()
+  if(HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
+    message(STATUS "libportal: InputCapture session restore available")
+  else()
+    message(STATUS "libportal: InputCapture session restore not available")
   endif()
 endif()
 
@@ -200,6 +204,9 @@ if(UNIX)
     target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
     if(HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
+    endif()
+    if(HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
+      target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
     endif()
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
     target_link_libraries(

@@ -48,7 +48,12 @@ private:
   void glibThread(const void *);
   gboolean timeoutHandler() const;
   gboolean initSession();
+  void setupSession(XdpInputCaptureSession *session);
   void handleInitSession(GObject *object, GAsyncResult *res);
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
+  void handleInitSession2(GObject *object, GAsyncResult *res);
+  void handleStart(GObject *object, GAsyncResult *res);
+#endif
   void handleSetPointerBarriers(const GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
   void handleDisabled(const XdpInputCaptureSession *session, const GVariant *option);
@@ -113,6 +118,7 @@ private:
 
   EiScreen *m_screen = nullptr;
   IEventQueue *m_events = nullptr;
+  int m_portalVersion = 0;
 
   Thread *m_glibThread = nullptr;
   GMainLoop *m_glibMainLoop = nullptr;
