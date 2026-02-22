@@ -29,8 +29,10 @@ endif()
 add_custom_target(docs
   SOURCES
     LICENSE
+    Readme.md
     Security.md
 )
 
-install(FILES Security.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
+install(FILES Security.md Readme.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
 install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_LICENSE_DIR})
