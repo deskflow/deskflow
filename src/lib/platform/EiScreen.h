@@ -27,6 +27,7 @@ class WlClipboardCollection;
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
 
@@ -78,6 +79,9 @@ public:
   void setSequenceNumber(std::uint32_t) override;
   bool isPrimary() const override;
 
+  //! Fire a clipboard event on behalf of the portal clipboard integration.
+  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
+
 protected:
   // IPlatformScreen overrides
   void handleSystemEvent(const Event &event) override;
@@ -93,7 +97,6 @@ private:
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
-  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);

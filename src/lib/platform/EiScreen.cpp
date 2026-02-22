@@ -14,6 +14,7 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/IScreen.h"
+#include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
@@ -40,14 +41,12 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
     : PlatformScreen{events},
       m_isPrimary{isPrimary},
       m_events{events},
-      m_clipboard{new WlClipboardCollection()},
       m_w{1},
       m_h{1},
       m_isOnScreen{isPrimary}
 {
   initEi();
   m_keyState = new EiKeyState(this, events);
-  // install event handlers
   m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
     handleSystemEvent(e);
   });
@@ -57,15 +56,21 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
+      // InputCapture portal manages its own clipboard via portal signals;
+      // WlClipboardCollection is not needed for this path.
       m_portalInputCapture = new PortalInputCapture(this, m_events);
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
       });
       m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
+      // RemoteDesktop path still uses wl-clipboard for now; portal clipboard
+      // support for RemoteDesktop sessions is a follow-up.
+      m_clipboard = new WlClipboardCollection();
     }
   } else {
-    // Note: socket backend does not support reconnections
+    // Socket backend: no portal, use wl-clipboard directly.
+    m_clipboard = new WlClipboardCollection();
     auto rc = ei_setup_backend_socket(m_ei, nullptr);
     if (rc != 0) {
       LOG_ERR("ei init error: %s", strerror(-rc));
@@ -165,16 +170,21 @@ void *EiScreen::getEventTarget() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  if (!m_clipboard || !m_clipboard->isAvailable()) {
-    return false;
+  if (m_portalInputCapture) {
+    const auto *src = m_portalInputCapture->getClipboard(id);
+    if (!src)
+      return false;
+    return IClipboard::copy(clipboard, src);
   }
 
-  const auto sourceClipboard = m_clipboard->getClipboard(id);
-  if (!sourceClipboard) {
+  if (!m_clipboard || !m_clipboard->isAvailable())
     return false;
-  }
 
-  return IClipboard::copy(clipboard, sourceClipboard);
+  const auto *src = m_clipboard->getClipboard(id);
+  if (!src)
+    return false;
+
+  return IClipboard::copy(clipboard, src);
 }
 
 void EiScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
@@ -339,17 +349,14 @@ void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 
 void EiScreen::enable()
 {
-  // Nothing really to be done here
-  if (m_clipboard && m_clipboard->isAvailable()) {
+  if (m_clipboard && m_clipboard->isAvailable())
     m_clipboard->startMonitoring();
-  }
 }
 
 void EiScreen::disable()
 {
-  if (m_clipboard && m_clipboard->isAvailable()) {
+  if (m_clipboard && m_clipboard->isAvailable())
     m_clipboard->stopMonitoring();
-  }
 }
 
 void EiScreen::enter()
@@ -397,30 +404,42 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  if (!clipboard || !m_clipboard || !m_clipboard->isAvailable()) {
+  if (!clipboard)
     return false;
+
+  if (m_portalInputCapture) {
+    auto *dst = m_portalInputCapture->getClipboard(id);
+    if (!dst)
+      return false;
+    const bool ok = IClipboard::copy(dst, clipboard);
+    if (ok)
+      m_portalInputCapture->notifySelectionChanged();
+    return ok;
   }
 
-  IClipboard *targetClipboard = m_clipboard->getClipboard(id);
-  if (!targetClipboard) {
+  if (!m_clipboard || !m_clipboard->isAvailable())
     return false;
-  }
 
-  return IClipboard::copy(targetClipboard, clipboard);
+  auto *dst = m_clipboard->getClipboard(id);
+  if (!dst)
+    return false;
+
+  return IClipboard::copy(dst, clipboard);
 }
 
 void EiScreen::checkClipboards()
 {
-  // do nothing, we're always up to date
-  if (!m_clipboard || !m_clipboard->isAvailable()) {
+  // Portal InputCapture: clipboard events come in via portal signals
+  // (SelectionOwnerChanged), so there's nothing to poll here.
+  if (m_portalInputCapture)
     return;
-  }
+
+  if (!m_clipboard || !m_clipboard->isAvailable())
+    return;
 
   if (m_clipboard->hasChanged()) {
-    // Send clipboard change events for all clipboard types
-    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+    for (ClipboardID id = 0; id < kClipboardEnd; ++id)
       sendClipboardEvent(EventTypes::ClipboardChanged, id);
-    }
     m_clipboard->resetChanged();
   }
 }

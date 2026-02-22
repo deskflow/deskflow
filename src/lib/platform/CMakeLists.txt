@@ -9,6 +9,24 @@ if(UNIX AND NOT APPLE)
 
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+
+  # Check for InputCapture clipboard API (requires patched libportal).
+  # Guard with HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD to allow building
+  # against stock libportal releases while enabling the feature when
+  # the updated version is present.
+  include(CMakePushCheckState)
+  include(CheckSymbolExists)
+  cmake_push_check_state(RESET)
+  set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${LIBPORTAL_INCLUDE_DIRS};${GLIB2_INCLUDE_DIRS}")
+  set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES};${LIBPORTAL_LINK_LIBRARIES};${GLIB2_LINK_LIBRARIES}")
+  check_symbol_exists(xdp_session_request_clipboard "libportal/portal.h;libportal/clipboard.h" HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
+  cmake_pop_check_state()
+
+  if(HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
+    message(STATUS "libportal: InputCapture clipboard API available")
+  else()
+    message(STATUS "libportal: InputCapture clipboard API not available (upgrade libportal for clipboard support)")
+  endif()
 endif()
 
 if(WIN32)
@@ -133,6 +151,8 @@ elseif(UNIX)
 
   if(LIBEI_FOUND)
     list(APPEND PLATFORM_SOURCES
+      EiClipboard.cpp
+      EiClipboard.h
       EiEventQueueBuffer.cpp
       EiEventQueueBuffer.h
       EiKeyState.cpp
@@ -178,6 +198,9 @@ if(UNIX)
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
     target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+    if(HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
+      target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD)
+    endif()
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
     target_link_libraries(
       platform
