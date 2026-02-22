@@ -351,10 +351,6 @@ Do you want to connect to the server?
         <translation type="unfinished">证书无效，正在生成新证书</translation>
     </message>
     <message>
-        <source>A new version v%1 is available</source>
-        <translation>新版本 v%1 可用</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>缺少地址</translation>
     </message>
@@ -395,14 +391,6 @@ Do you want to connect to the server?
         <translation>断开</translation>
     </message>
     <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>%1 加密已启用</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>加密已禁用</translation>
-    </message>
-    <message>
         <source>No IP Detected</source>
         <translation>未检测到 IP</translation>
     </message>
@@ -431,38 +419,6 @@ Do you want to connect to the server?
 A bound IP is now invalid, you may need to restart the server.</source>
         <translation type="unfinished">
 绑定的IP地址现在无效，您可能需要重启服务器。</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 正在启动...</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 将稍后重试...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 正在停止...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 未在运行</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 正在等待客户端连接</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 正在连接...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1 已作为 %2 的客户端连接</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 已断开连接</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -534,14 +490,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>查看本地指纹</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>有可用更新</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation>无效的屏幕名称</translation>
     </message>
@@ -562,19 +510,6 @@ Valid names:
 • 使用字母和数字
 • 可以使用 _ 或 -
 • 长度在 1 到 255 个字符之间</translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1 已连接，共有 %n 个客户端：%2</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Clients:
- %1</source>
-        <translation>客户端：
- %1</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
@@ -1359,6 +1294,74 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Network</source>
         <translation>网络(&amp;N)</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 未在运行</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 正在启动...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 将稍后重试...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 正在停止...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 正在等待客户端连接</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 正在连接...</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1 已作为 %2 的客户端连接</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 已断开连接</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1 已连接，共有 %n 个客户端：%2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>客户端：
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>新版本 v%1 可用</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>查看本地指纹</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>有可用更新</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>%1 加密已启用</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>加密已禁用</translation>
     </message>
 </context>
 <context>

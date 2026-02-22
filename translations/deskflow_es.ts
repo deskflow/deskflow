@@ -391,18 +391,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Su clave TLS actual es más pequeña que el tamaño mínimo permitido. Se generará una nueva clave de 2048 bits.</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation type="unfinished">Ver huella digital local</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation type="unfinished">Actualización disponible</translation>
-    </message>
-    <message>
-        <source>A new version v%1 is available</source>
-        <translation type="unfinished">Ya está disponible una nueva versión v%1</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation type="unfinished">Dirección faltante</translation>
     </message>
@@ -441,14 +429,6 @@ Do you want to connect to the server?
     <message>
         <source>Disconnect</source>
         <translation type="unfinished">Desconectar</translation>
-    </message>
-    <message>
-        <source>%1 Encryption Enabled</source>
-        <translation type="unfinished">%1 Cifrado habilitado</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation type="unfinished">Cifrado deshabilitado</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -501,40 +481,8 @@ La dirección IP asignada ahora no es válida; es posible que deba reiniciar el 
         <translation type="unfinished">&amp;Ayuda</translation>
     </message>
     <message>
-        <source>%1 is starting...</source>
-        <translation type="unfinished">%1 está iniciando...</translation>
-    </message>
-    <message>
         <source>invalid certificate, generating a new one</source>
         <translation type="unfinished">certificado no válido, generando uno nuevo</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation type="unfinished">%1 lo intentará nuevamente en un momento...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation type="unfinished">%1 se está deteniendo...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation type="unfinished">%1 no se está ejecutando</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation type="unfinished">%1 está esperando clientes</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation type="unfinished">%1 se está conectando...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation type="unfinished">%1 está conectado como cliente de %2</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation type="unfinished">%1 está desconectado</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -562,20 +510,6 @@ Nombres válidos:
 • Use letras y números
 • También puede usar _ o -
 • Tengan entre 1 y 255 caracteres</translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation type="unfinished">
-            <numerusform>%1 está conectado, con un cliente: %2</numerusform>
-            <numerusform>%1 está conectado, con %n clientes: %2</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Clients:
- %1</source>
-        <translation type="unfinished">Clientes:
- %1</translation>
     </message>
     <message>
         <source>This computer&apos;s name:</source>
@@ -1358,6 +1292,75 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&amp;Network</source>
         <translation>R&amp;ed</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation type="unfinished">%1 no se está ejecutando</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation type="unfinished">%1 está iniciando...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation type="unfinished">%1 lo intentará nuevamente en un momento...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation type="unfinished">%1 se está deteniendo...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation type="unfinished">%1 está esperando clientes</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation type="unfinished">%1 se está conectando...</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation type="unfinished">%1 está conectado como cliente de %2</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation type="unfinished">%1 está desconectado</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1 está conectado, con un cliente: %2</numerusform>
+            <numerusform>%1 está conectado, con %n clientes: %2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation type="unfinished">Clientes:
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation type="unfinished">Ya está disponible una nueva versión v%1</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation type="unfinished">Ver huella digital local</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation type="unfinished">Actualización disponible</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation type="unfinished">%1 Cifrado habilitado</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation type="unfinished">Cifrado deshabilitado</translation>
     </message>
 </context>
 <context>

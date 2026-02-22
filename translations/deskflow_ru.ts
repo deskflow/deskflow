@@ -351,10 +351,6 @@ Do you want to connect to the server?
         <translation>недействительный сертификат, создание нового</translation>
     </message>
     <message>
-        <source>A new version v%1 is available</source>
-        <translation>Доступна новая версия v%1</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>Адрес не указан</translation>
     </message>
@@ -395,14 +391,6 @@ Do you want to connect to the server?
         <translation>Отключиться</translation>
     </message>
     <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>Шифрование %1 включено</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>Шифрование отключено</translation>
-    </message>
-    <message>
         <source>No IP Detected</source>
         <translation>IP-адрес не обнаружен</translation>
     </message>
@@ -431,38 +419,6 @@ Do you want to connect to the server?
 A bound IP is now invalid, you may need to restart the server.</source>
         <translation>
 Привязанный IP-адрес стал недействительным. Возможно требуется перезапуск сервера.</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 запускается...</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 скоро повторит попытку...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 останавливается...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 не запущен</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 ожидает подключения клиентов</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 подключается...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1 подключен как клиент к %2</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 отключен</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -534,14 +490,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>Показать локальный отпечаток</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>Доступно обновление</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation>Недопустимое имя экрана</translation>
     </message>
@@ -562,21 +510,6 @@ Valid names:
 • Используйте буквы и цифры
 • Можно использовать _ или -
 • Длина от 1 до 255 символов</translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1 подключен к %n клиенту: %2</numerusform>
-            <numerusform>%1 подключен к %n клиентам: %2</numerusform>
-            <numerusform>%1 подключен к %n клиентам: %2</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Clients:
- %1</source>
-        <translation>Клиенты:
- %1</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
@@ -1357,6 +1290,76 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Сеть</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 не запущен</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 запускается...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 скоро повторит попытку...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 останавливается...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 ожидает подключения клиентов</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 подключается...</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1 подключен как клиент к %2</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 отключен</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1 подключен к %n клиенту: %2</numerusform>
+            <numerusform>%1 подключен к %n клиентам: %2</numerusform>
+            <numerusform>%1 подключен к %n клиентам: %2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>Клиенты:
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>Доступна новая версия v%1</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>Показать локальный отпечаток</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>Доступно обновление</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>Шифрование %1 включено</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>Шифрование отключено</translation>
     </message>
 </context>
 <context>

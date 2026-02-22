@@ -351,10 +351,6 @@ Do you want to connect to the server?
         <translation type="unfinished">유효하지 않은 인증서입니다. 새 인증서를 생성하는 중입니다</translation>
     </message>
     <message>
-        <source>A new version v%1 is available</source>
-        <translation>새 버전(v%1)을 사용할 수 있습니다</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>주소가 없습니다</translation>
     </message>
@@ -395,14 +391,6 @@ Do you want to connect to the server?
         <translation>연결 해제</translation>
     </message>
     <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>%1 암호화 사용</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>암호화 사용 안 함</translation>
-    </message>
-    <message>
         <source>No IP Detected</source>
         <translation>IP를 감지하지 못했습니다</translation>
     </message>
@@ -431,38 +419,6 @@ Do you want to connect to the server?
 A bound IP is now invalid, you may need to restart the server.</source>
         <translation>
 연결된 IP가 이제 유효하지 않습니다. 서버를 재시작해야 합니다.</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 시작 중...</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 잠시 후 재시도합니다...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 중지 중...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 실행 중이 아닙니다</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 클라이언트를 기다리는 중</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 연결 중...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1이(가) %2의 클라이언트로 연결되었습니다</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 연결이 해제되었습니다</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -534,14 +490,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>로컬 핑거프린팅 보기</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>업데이트 사용 가능</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation>잘못된 컴퓨터 이름</translation>
     </message>
@@ -562,19 +510,6 @@ Valid names:
 • 영문자와 숫자 사용
 • _ 또는 - 사용 가능
 • 1~255자</translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1이(가) %n대의 클라이언트와 연결됨: %2</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Clients:
- %1</source>
-        <translation>클라이언트:
- %1</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
@@ -1357,6 +1292,74 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Network</source>
         <translation>네트워크(&amp;N)</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 실행 중이 아닙니다</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 시작 중...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 잠시 후 재시도합니다...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 중지 중...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 클라이언트를 기다리는 중</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 연결 중...</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1이(가) %2의 클라이언트로 연결되었습니다</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 연결이 해제되었습니다</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1이(가) %n대의 클라이언트와 연결됨: %2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>클라이언트:
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>새 버전(v%1)을 사용할 수 있습니다</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>로컬 핑거프린팅 보기</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>업데이트 사용 가능</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>%1 암호화 사용</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>암호화 사용 안 함</translation>
     </message>
 </context>
 <context>

@@ -379,18 +379,6 @@ Vuoi connetterti al server?
         <translation>La tua chiave TLS attuale è più piccola della dimensione minima consentita. Verrà generata una nuova chiave a 2048 bit.</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>Visualizza impronta digitale locale</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>Aggiornamento disponibile</translation>
-    </message>
-    <message>
-        <source>A new version v%1 is available</source>
-        <translation>È disponibile una nuova versione v%1</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>Indirizzo mancante</translation>
     </message>
@@ -429,14 +417,6 @@ Vuoi connetterti al server?
     <message>
         <source>Disconnect</source>
         <translation>Disconnetti</translation>
-    </message>
-    <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>%1 Crittografia abilitata</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>Crittografia disabilitata</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -503,46 +483,8 @@ Nomi validi:
 • Deve essere compreso tra 1 e 255 caratteri</translation>
     </message>
     <message>
-        <source>Clients:
- %1</source>
-        <translation>Client:
- %1</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 si sta avviando...</translation>
-    </message>
-    <message>
         <source>invalid certificate, generating a new one</source>
         <translation type="unfinished">certificato non valido, ne viene generato uno nuovo</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 riproverà tra un momento...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 si sta arrestando...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 non è in esecuzione</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 è in attesa di client</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 è in connessione...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1 è connesso come client di %2</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 è disconnesso</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
@@ -556,14 +498,6 @@ Nomi validi:
     <message>
         <source>Screen name already exists</source>
         <translation>Il nome dello schermo esiste già</translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1 è connesso con un client %2</numerusform>
-            <numerusform>%1 è connesso con %n client: %2</numerusform>
-        </translation>
     </message>
     <message>
         <source>This computer&apos;s name:</source>
@@ -1358,6 +1292,75 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Rete</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 non è in esecuzione</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 si sta avviando...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 riproverà tra un momento...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 si sta arrestando...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 è in attesa di client</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 è in connessione...</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1 è connesso come client di %2</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 è disconnesso</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1 è connesso con un client %2</numerusform>
+            <numerusform>%1 è connesso con %n client: %2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>Client:
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>È disponibile una nuova versione v%1</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>Visualizza impronta digitale locale</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>Aggiornamento disponibile</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>%1 Crittografia abilitata</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>Crittografia disabilitata</translation>
     </message>
 </context>
 <context>

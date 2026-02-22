@@ -351,10 +351,6 @@ Do you want to connect to the server?
         <translation>無効な証明書、新しい証明書を生成しています</translation>
     </message>
     <message>
-        <source>A new version v%1 is available</source>
-        <translation>新しいバージョン(v%1)が利用できます</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>アドレスが指定されていません</translation>
     </message>
@@ -395,14 +391,6 @@ Do you want to connect to the server?
         <translation>切断</translation>
     </message>
     <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>%1 暗号化有効</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>暗号化無効</translation>
-    </message>
-    <message>
         <source>No IP Detected</source>
         <translation>IPアドレスが見つかりません</translation>
     </message>
@@ -431,38 +419,6 @@ Do you want to connect to the server?
 A bound IP is now invalid, you may need to restart the server.</source>
         <translation>
 割り当て済みのIPアドレスが無効になりました。サーバーを再起動する必要があるかもしれません。</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 は起動処理中です…</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 はまもなく再試行します…</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 は停止処理中です…</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 は起動していません</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 はクライアント接続を待機中</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 は接続処理中…</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1 は %2 にクライアントとして接続中</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 は切断しました</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -534,14 +490,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>自分の指紋を表示</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>ソフトウェア更新あり</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation>不正なコンピューター名</translation>
     </message>
@@ -562,19 +510,6 @@ Valid names:
 ・英数字
 ・_ と -
 ・1から255文字まで</translation>
-    </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1 は%n台のクライアントと接続中: %2</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Clients:
- %1</source>
-        <translation>クライアント:
- %1</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
@@ -1359,6 +1294,74 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Network</source>
         <translation>ネットワーク(&amp;N)</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 は起動していません</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 は起動処理中です…</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 はまもなく再試行します…</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 は停止処理中です…</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 はクライアント接続を待機中</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 は接続処理中…</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1 は %2 にクライアントとして接続中</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 は切断しました</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1 は%n台のクライアントと接続中: %2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>クライアント:
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>新しいバージョン(v%1)が利用できます</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>自分の指紋を表示</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>ソフトウェア更新あり</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>%1 暗号化有効</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>暗号化無効</translation>
     </message>
 </context>
 <context>
