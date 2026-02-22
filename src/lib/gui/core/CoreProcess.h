@@ -27,6 +27,7 @@ class CoreProcess : public QObject
 {
   using ConnectionState = deskflow::core::ConnectionState;
   using ProcessMode = Settings::ProcessMode;
+  using ProcessState = deskflow::core::ProcessState;
   using IServerConfig = deskflow::gui::IServerConfig;
 
   Q_OBJECT
@@ -37,15 +38,6 @@ public:
     AddressMissing,
     StartFailed
   };
-  enum class ProcessState
-  {
-    Starting,
-    Started,
-    Stopping,
-    Stopped,
-    RetryPending
-  };
-  Q_ENUM(ProcessState)
 
   explicit CoreProcess(const IServerConfig &serverConfig);
 
@@ -93,7 +85,7 @@ Q_SIGNALS:
   void error(deskflow::gui::CoreProcess::Error error);
   void logLine(const QString &line);
   void connectionStateChanged(deskflow::core::ConnectionState state);
-  void processStateChanged(deskflow::gui::CoreProcess::ProcessState state);
+  void processStateChanged(deskflow::core::ProcessState state);
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
 

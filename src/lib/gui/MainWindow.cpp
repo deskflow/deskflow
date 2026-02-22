@@ -54,8 +54,6 @@
 
 using namespace deskflow::gui;
 
-using CoreProcessState = CoreProcess::ProcessState;
-
 MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
       m_coreProcess(m_serverConfig),
@@ -908,7 +906,7 @@ void MainWindow::updateStatus()
 
   updateSecurityIcon(false);
   switch (process) {
-    using enum CoreProcessState;
+    using enum ProcessState;
 
   case Starting:
     setStatus(tr("%1 is starting...").arg(kAppName));
@@ -962,11 +960,11 @@ void MainWindow::updateStatus()
   }
 }
 
-void MainWindow::coreProcessStateChanged(CoreProcessState state)
+void MainWindow::coreProcessStateChanged(ProcessState state)
 {
+  using enum ProcessState;
   updateStatus();
-
-  if (state == CoreProcessState::Started) {
+  if (state == Started) {
     qDebug() << "recording that core has started";
     Settings::setValue(Settings::Gui::AutoStartCore, true);
     if (m_coreProcess.mode() == CoreMode::Server &&
@@ -977,8 +975,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     }
   }
 
-  if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
-      state == CoreProcessState::RetryPending) {
+  if (state == Started || state == Starting || state == RetryPending) {
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
@@ -987,7 +984,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     m_actionRestartCore->setVisible(true);
     m_actionStopCore->setEnabled(true);
 
-    if (state == CoreProcessState::Starting) {
+    if (state == Starting) {
       if (deskflow::platform::isWayland()) {
         m_waylandWarnings.showOnce(this);
       }

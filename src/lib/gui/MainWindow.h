@@ -63,6 +63,7 @@ class MainWindow : public QMainWindow
   using CoreMode = Settings::CoreMode;
   using CoreProcess = deskflow::gui::CoreProcess;
   using NetworkMonitor = deskflow::gui::NetworkMonitor;
+  using ProcessState = deskflow::core::ProcessState;
 
   Q_OBJECT
 
@@ -106,7 +107,7 @@ private:
   void serverConfigSaving();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(ConnectionState state);
-  void coreProcessStateChanged(CoreProcess::ProcessState state);
+  void coreProcessStateChanged(ProcessState state);
   void versionCheckerUpdateFound(const QString &version);
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void serverConnectionConfigureClient(const QString &clientName);
