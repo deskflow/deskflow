@@ -177,7 +177,7 @@ else()
   set(CMAKE_INSTALL_I18N_DIR ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/translations)
 endif()
 
-add_subdirectory(doc)
+add_subdirectory(docs)
 
 # build translations before source, I18N unit tests fail if they are missing
 add_subdirectory(translations)
