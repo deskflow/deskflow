@@ -1,9 +1,8 @@
 # SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
-# Copy License with txt ext for picky package creation tools
 file(COPY_FILE
-  ${CMAKE_SOURCE_DIR}/LICENSE
+  ${CMAKE_SOURCE_DIR}/docs/LICENSE
   ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt
   ONLY_IF_DIFFERENT
 )

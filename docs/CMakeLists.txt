@@ -28,6 +28,9 @@ endif()
 # Show our documents in the IDE
 add_custom_target(docs
   SOURCES
+    LICENSE
     Security.md
 )
+
 install(FILES Security.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
+install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_LICENSE_DIR})
