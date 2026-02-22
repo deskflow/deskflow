@@ -177,7 +177,7 @@ else()
   set(CMAKE_INSTALL_I18N_DIR ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/translations)
 endif()
 
-add_subdirectory(doc)
+add_subdirectory(docs)
 
 # build translations before source, I18N unit tests fail if they are missing
 add_subdirectory(translations)
@@ -190,8 +190,9 @@ if(BUILD_INSTALLER)
 endif()
 
 install(
-  FILES ${PROJECT_SOURCE_DIR}/LICENSE
+  FILES ${PROJECT_SOURCE_DIR}/LICENSES/GPL-2.0-only.txt
   DESTINATION ${CMAKE_INSTALL_LICENSE_DIR}
+  RENAME LICENSE
 )
 
 install(
