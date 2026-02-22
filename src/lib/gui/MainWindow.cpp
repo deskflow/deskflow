@@ -54,7 +54,6 @@
 
 using namespace deskflow::gui;
 
-using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
 MainWindow::MainWindow()
@@ -931,7 +930,7 @@ void MainWindow::updateStatus()
   case Started: {
     updateNetworkInfo();
     switch (connection) {
-      using enum CoreConnectionState;
+      using enum ConnectionState;
 
     case Listening: {
       if (isServer) {
@@ -1007,7 +1006,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
   updateModeControlLabels();
 }
 
-void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
+void MainWindow::coreConnectionStateChanged(ConnectionState state)
 {
   qDebug() << "core connection state changed: " << static_cast<int>(state);
 
@@ -1016,7 +1015,7 @@ void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
   // always assume connection is not secure when connection changes
   // to anything except connected. the only way the padlock shows is
   // when the correct TLS version string is detected.
-  if (state != CoreConnectionState::Connected) {
+  if (state != ConnectionState::Connected) {
     secureSocket(false);
   } else if (isVisible()) {
     showFirstConnectedMessage();

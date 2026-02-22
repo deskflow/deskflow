@@ -21,3 +21,15 @@ enum class ErrorType : uint8_t
 };
 Q_ENUM_NS(ErrorType)
 } // namespace deskflow::client
+
+namespace deskflow::core {
+Q_NAMESPACE
+enum class ConnectionState
+{
+  Disconnected,
+  Connecting,
+  Connected,
+  Listening
+};
+Q_ENUM_NS(ConnectionState)
+} // namespace deskflow::core

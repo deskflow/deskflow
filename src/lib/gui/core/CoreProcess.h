@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "common/Enums.h"
 #include "common/Settings.h"
 #include "gui/FileTail.h"
 #include "gui/config/IServerConfig.h"
@@ -24,6 +25,7 @@ class DaemonIpcClient;
 
 class CoreProcess : public QObject
 {
+  using ConnectionState = deskflow::core::ConnectionState;
   using ProcessMode = Settings::ProcessMode;
   using IServerConfig = deskflow::gui::IServerConfig;
 
@@ -44,14 +46,6 @@ public:
     RetryPending
   };
   Q_ENUM(ProcessState)
-
-  enum class ConnectionState
-  {
-    Disconnected,
-    Connecting,
-    Connected,
-    Listening
-  };
 
   explicit CoreProcess(const IServerConfig &serverConfig);
 
@@ -98,7 +92,7 @@ public:
 Q_SIGNALS:
   void error(deskflow::gui::CoreProcess::Error error);
   void logLine(const QString &line);
-  void connectionStateChanged(deskflow::gui::CoreProcess::ConnectionState state);
+  void connectionStateChanged(deskflow::core::ConnectionState state);
   void processStateChanged(deskflow::gui::CoreProcess::ProcessState state);
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
