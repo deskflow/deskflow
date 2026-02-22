@@ -792,6 +792,10 @@ Valid names:
         <source>%1 is already running</source>
         <translation>%1 уже запущен</translation>
     </message>
+    <message>
+        <source>&lt;p&gt;The server configuration file at &quot;%1&quot; is not accessible.&lt;/p&gt;&lt;p&gt;Please check that you have read and write permissions.&lt;/p&gt;</source>
+        <translation type="unfinished">&lt;p&gt;Файл конфигурации сервера по адресу &quot;%1&quot; недоступен.&lt;/p&gt;&lt;p&gt;Пожалуйста, убедитесь, что у вас есть права на чтение и запись.&lt;/p&gt;</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>

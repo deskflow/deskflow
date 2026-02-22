@@ -425,6 +425,21 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
   }
 }
 
+bool MainWindow::canStartCore()
+{
+  if (m_coreProcess.mode() == CoreMode::Server && !Settings::isExternalConfigFileAccessible()) {
+    messages::showCriticalDialog(
+        this, QObject::tr(
+                  "<p>The server configuration file at \"%1\" is not accessible.</p>"
+                  "<p>Please check that you have read and write permissions.</p>"
+              )
+                  .arg(Settings::value(Settings::Server::ExternalConfigFile).toString())
+    );
+    return false;
+  }
+  return true;
+}
+
 void MainWindow::startCore()
 {
   // Save current IP state when server starts
@@ -432,10 +447,11 @@ void MainWindow::startCore()
     m_serverStartIPs = m_networkMonitor->getAvailableIPv4Addresses();
     m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
-
-  m_coreProcess.start();
-  m_actionStartCore->setVisible(false);
-  m_actionRestartCore->setVisible(true);
+  if (canStartCore()) {
+    m_coreProcess.start();
+    m_actionStartCore->setVisible(false);
+    m_actionRestartCore->setVisible(true);
+  }
 }
 
 void MainWindow::stopCore()
@@ -515,7 +531,11 @@ void MainWindow::openSettings()
 
 void MainWindow::resetCore()
 {
-  m_coreProcess.restart();
+  if (canStartCore()) {
+    m_coreProcess.restart();
+  } else {
+    stopCore();
+  }
 }
 
 void MainWindow::showMyFingerprint()

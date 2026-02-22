@@ -13,6 +13,7 @@
 #include "base/LogOutputters.h"
 #include "base/TMethodJob.h"
 #include "common/Constants.h"
+#include "common/ExitCodes.h"
 #include "deskflow/App.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsHandle.h"
@@ -290,8 +291,15 @@ void MSWindowsWatchdog::startProcess()
     LOG_DEBUG("watchdog waiting for process start result");
     Arch::sleep(1);
 
-    if (!isProcessRunning()) {
+    DWORD exitCode;
+    GetExitCodeProcess(m_process->info().hProcess, &exitCode);
+    if (exitCode != STILL_ACTIVE) {
       m_process.reset();
+      if (exitCode == s_exitConfig) {
+        m_processState = ProcessState::Idle;
+        LOG_CRIT("process immediately stopped due to config error, will not retry");
+        return;
+      }
       throw std::runtime_error("process immediately stopped");
     }
 

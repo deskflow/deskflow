@@ -36,6 +36,13 @@ void raiseCriticalDialog()
   }
 }
 
+void showCriticalDialog(QWidget *parent, const QString &message)
+{
+  auto title = QStringLiteral("%1 error").arg(kAppName);
+  QMessageBox::critical(parent, title, message, QMessageBox::Ok);
+  return;
+}
+
 void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType type)
 {
   auto errorType = QtFatalMsg ? QObject::tr("fatal error") : QObject::tr("error");
