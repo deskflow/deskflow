@@ -59,6 +59,7 @@ class DaemonIpcClient;
 
 class MainWindow : public QMainWindow
 {
+  using ConnectionState = deskflow::core::ConnectionState;
   using CoreMode = Settings::CoreMode;
   using CoreProcess = deskflow::gui::CoreProcess;
   using NetworkMonitor = deskflow::gui::NetworkMonitor;
@@ -104,7 +105,7 @@ private:
   void settingsChanged(const QString &key = QString());
   void serverConfigSaving();
   void coreProcessError(CoreProcess::Error error);
-  void coreConnectionStateChanged(CoreProcess::ConnectionState state);
+  void coreConnectionStateChanged(ConnectionState state);
   void coreProcessStateChanged(CoreProcess::ProcessState state);
   void versionCheckerUpdateFound(const QString &version);
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
