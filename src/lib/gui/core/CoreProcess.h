@@ -27,6 +27,7 @@ class CoreProcess : public QObject
 {
   using ConnectionState = deskflow::core::ConnectionState;
   using ProcessMode = Settings::ProcessMode;
+  using ProcessState = deskflow::core::ProcessState;
   using IServerConfig = deskflow::gui::IServerConfig;
 
   Q_OBJECT
@@ -37,15 +38,6 @@ public:
     AddressMissing,
     StartFailed
   };
-  enum class ProcessState
-  {
-    Starting,
-    Started,
-    Stopping,
-    Stopped,
-    RetryPending
-  };
-  Q_ENUM(ProcessState)
 
   explicit CoreProcess(const IServerConfig &serverConfig);
 
