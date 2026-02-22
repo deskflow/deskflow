@@ -56,20 +56,17 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
-      // InputCapture portal manages its own clipboard via portal signals;
-      // WlClipboardCollection is not needed for this path.
+      // clipboard arrives via portal SelectionOwnerChanged, no WlClipboardCollection needed
       m_portalInputCapture = new PortalInputCapture(this, m_events);
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
       });
       m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
-      // RemoteDesktop path still uses wl-clipboard for now; portal clipboard
-      // support for RemoteDesktop sessions is a follow-up.
+      // TODO: portal clipboard for RemoteDesktop sessions
       m_clipboard = new WlClipboardCollection();
     }
   } else {
-    // Socket backend: no portal, use wl-clipboard directly.
     m_clipboard = new WlClipboardCollection();
     auto rc = ei_setup_backend_socket(m_ei, nullptr);
     if (rc != 0) {
@@ -429,9 +426,7 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 
 void EiScreen::checkClipboards()
 {
-  // Portal InputCapture: clipboard events come in via portal signals
-  // (SelectionOwnerChanged), so there's nothing to poll here.
-  if (m_portalInputCapture)
+  if (m_portalInputCapture) // events arrive via SelectionOwnerChanged signal
     return;
 
   if (!m_clipboard || !m_clipboard->isAvailable())

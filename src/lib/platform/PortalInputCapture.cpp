@@ -96,7 +96,6 @@ void PortalInputCapture::notifySelectionChanged()
   if (!xdp_session_is_clipboard_enabled(parentSession))
     return;
 
-  // Build the list of MIME types we currently hold.
   std::vector<const char *> mimeTypes;
   m_clipboard->open(0);
   if (m_clipboard->has(IClipboard::Format::Text)) {
@@ -149,7 +148,6 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
 
   m_session = session;
 
-  // Get the parent XdpSession once; used throughout this function.
   XdpSession *parentSession = xdp_input_capture_session_get_session(session);
 
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE_CLIPBOARD
@@ -196,8 +194,7 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
 
 void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean sessionIsOwner)
 {
-  // We only care when *someone else* owns the clipboard (i.e. the server).
-  if (sessionIsOwner || !mimeTypes)
+  if (sessionIsOwner || !mimeTypes) // ignore our own selection changes
     return;
 
   // Pick the best available format. Prefer UTF-8 text, fall back to plain.
@@ -268,7 +265,6 @@ void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv 
 
 void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, guint32 serial)
 {
-  // The compositor is asking us to provide clipboard content for mimeType.
   IClipboard::Format format;
 
   if (g_str_equal(mimeType, "text/plain;charset=utf-8") || g_str_equal(mimeType, "text/plain")) {
