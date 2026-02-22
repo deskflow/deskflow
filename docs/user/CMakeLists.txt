@@ -16,5 +16,4 @@ target_sources(user-docs PRIVATE
 install(
   DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html"
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
-  COMPONENT deskflow_user_docs
 )
