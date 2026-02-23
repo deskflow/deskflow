@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.21</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.25</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -135,8 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6385ceb106fbe5394c55cd2336adc216"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start network monitoring.  <br /></td></tr>
 <tr class="memitem:a60e7fd9af440e7b9d6f5563c9c82e9d6" id="r_a60e7fd9af440e7b9d6f5563c9c82e9d6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a60e7fd9af440e7b9d6f5563c9c82e9d6">stopMonitoring</a> ()</td></tr>
 <tr class="memdesc:a60e7fd9af440e7b9d6f5563c9c82e9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop network monitoring.  <br /></td></tr>
-<tr class="memitem:aa5f6d6e7a465766256ff667c57e57d22" id="r_aa5f6d6e7a465766256ff667c57e57d22"><td class="memItemLeft">QStringList&#160;</td><td class="memItemRight"><a class="el" href="#aa5f6d6e7a465766256ff667c57e57d22">getAvailableIPv4Addresses</a> () const</td></tr>
-<tr class="memdesc:aa5f6d6e7a465766256ff667c57e57d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of all available IPv4 addresses (excluding local and link-local addresses).  <br /></td></tr>
+<tr class="memitem:abb5187f5ef66fe041d9e479cc0b91b6d" id="r_abb5187f5ef66fe041d9e479cc0b91b6d"><td class="memItemLeft">QStringList&#160;</td><td class="memItemRight"><a class="el" href="#abb5187f5ef66fe041d9e479cc0b91b6d">validAddresses</a> () const</td></tr>
+<tr class="memdesc:abb5187f5ef66fe041d9e479cc0b91b6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of all available IP addresses (excluding local and link-local addresses).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -208,26 +208,6 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="aa5f6d6e7a465766256ff667c57e57d22" name="aa5f6d6e7a465766256ff667c57e57d22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5f6d6e7a465766256ff667c57e57d22">&#9670;&#160;</a></span>getAvailableIPv4Addresses()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QStringList deskflow::gui::NetworkMonitor::getAvailableIPv4Addresses </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get list of all available IPv4 addresses (excluding local and link-local addresses). </p>
-<dl class="section return"><dt>Returns</dt><dd>IPv4 address list </dd></dl>
-
-</div>
-</div>
 <a id="ad4663600ff5a3e9f822cb2345043d052" name="ad4663600ff5a3e9f822cb2345043d052"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4663600ff5a3e9f822cb2345043d052">&#9670;&#160;</a></span>ipAddressesChanged</h2>
 
@@ -336,6 +316,26 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Stop network monitoring. </p>
+
+</div>
+</div>
+<a id="abb5187f5ef66fe041d9e479cc0b91b6d" name="abb5187f5ef66fe041d9e479cc0b91b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb5187f5ef66fe041d9e479cc0b91b6d">&#9670;&#160;</a></span>validAddresses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList deskflow::gui::NetworkMonitor::validAddresses </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get list of all available IP addresses (excluding local and link-local addresses). </p>
+<dl class="section return"><dt>Returns</dt><dd>IP address list </dd></dl>
 
 </div>
 </div>

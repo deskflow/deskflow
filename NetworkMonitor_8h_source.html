@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.21</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.25</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -123,7 +123,7 @@ $(function(){initNavTree('NetworkMonitor_8h_source.html','',''); });
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a60e7fd9af440e7b9d6f5563c9c82e9d6">stopMonitoring</a>();</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  QStringList <a class="code hl_function" href="classdeskflow_1_1gui_1_1NetworkMonitor.html#aa5f6d6e7a465766256ff667c57e57d22">getAvailableIPv4Addresses</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  QStringList <a class="code hl_function" href="classdeskflow_1_1gui_1_1NetworkMonitor.html#abb5187f5ef66fe041d9e479cc0b91b6d">validAddresses</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a59f6fe6aab8944a0ca0a735aca627aee">isVirtualInterface</a>(<span class="keyword">const</span> QString &amp;interfaceName);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
@@ -147,7 +147,7 @@ $(function(){initNavTree('NetworkMonitor_8h_source.html','',''); });
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a60e7fd9af440e7b9d6f5563c9c82e9d6"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a60e7fd9af440e7b9d6f5563c9c82e9d6">deskflow::gui::NetworkMonitor::stopMonitoring</a></div><div class="ttdeci">void stopMonitoring()</div><div class="ttdoc">Stop network monitoring.</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:45</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a6385ceb106fbe5394c55cd2336adc216"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a6385ceb106fbe5394c55cd2336adc216">deskflow::gui::NetworkMonitor::startMonitoring</a></div><div class="ttdeci">void startMonitoring(int intervalMs=3000)</div><div class="ttdoc">Start network monitoring.</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:33</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a9124f9fbc3fff0faa038c281688dd57a"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a9124f9fbc3fff0faa038c281688dd57a">deskflow::gui::NetworkMonitor::NetworkMonitor</a></div><div class="ttdeci">NetworkMonitor(QObject *parent=nullptr)</div><div class="ttdoc">Construct a new NetworkMonitor object.</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:28</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_aa5f6d6e7a465766256ff667c57e57d22"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#aa5f6d6e7a465766256ff667c57e57d22">deskflow::gui::NetworkMonitor::getAvailableIPv4Addresses</a></div><div class="ttdeci">QStringList getAvailableIPv4Addresses() const</div><div class="ttdoc">Get list of all available IPv4 addresses (excluding local and link-local addresses).</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:55</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_abb5187f5ef66fe041d9e479cc0b91b6d"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#abb5187f5ef66fe041d9e479cc0b91b6d">deskflow::gui::NetworkMonitor::validAddresses</a></div><div class="ttdeci">QStringList validAddresses() const</div><div class="ttdoc">Get list of all available IP addresses (excluding local and link-local addresses).</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:55</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_ad4663600ff5a3e9f822cb2345043d052"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#ad4663600ff5a3e9f822cb2345043d052">deskflow::gui::NetworkMonitor::ipAddressesChanged</a></div><div class="ttdeci">void ipAddressesChanged(const QStringList &amp;addresses)</div><div class="ttdoc">Emitted when IP addresses change.</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
