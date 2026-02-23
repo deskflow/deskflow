@@ -233,6 +233,12 @@ QStringList Settings::validKeys()
   return Settings::m_validKeys;
 }
 
+QString Settings::serverConfigFile()
+{
+  bool useExt = value(Server::ExternalConfig).toBool();
+  return useExt ? value(Server::ExternalConfigFile).toString() : defaultValue(Server::ExternalConfigFile).toString();
+}
+
 bool Settings::isWritable()
 {
   return instance()->m_settings->isWritable();

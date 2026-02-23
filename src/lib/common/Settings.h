@@ -135,6 +135,7 @@ public:
   static bool isPortableMode();
   static QString settingsFile();
   static QString settingsPath();
+  static QString serverConfigFile();
   static QString tlsDir();
   static QString tlsTrustedServersDb();
   static QString tlsTrustedClientsDb();
