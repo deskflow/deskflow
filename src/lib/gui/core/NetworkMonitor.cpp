@@ -52,7 +52,7 @@ void NetworkMonitor::stopMonitoring()
   m_isMonitoring = false;
 }
 
-QStringList NetworkMonitor::getAvailableIPv4Addresses() const
+QStringList NetworkMonitor::validAddresses() const
 {
   QList<QHostAddress> physicalIPs;
   QList<QHostAddress> virtualIPs;
@@ -117,7 +117,7 @@ void NetworkMonitor::setIpAddresses(const QStringList &newAddresses)
 
 void NetworkMonitor::updateNetworkState()
 {
-  setIpAddresses(getAvailableIPv4Addresses());
+  setIpAddresses(validAddresses());
 }
 
 } // namespace deskflow::gui

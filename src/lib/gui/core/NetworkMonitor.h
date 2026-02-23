@@ -50,7 +50,7 @@ public:
    * @brief Get list of all available IPv4 addresses (excluding local and link-local addresses)
    * @return IPv4 address list
    */
-  QStringList getAvailableIPv4Addresses() const;
+  QStringList validAddresses() const;
 
   /**
    * @brief Check if a network interface is virtual

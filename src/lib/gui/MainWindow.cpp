@@ -429,7 +429,7 @@ void MainWindow::startCore()
 {
   // Save current IP state when server starts
   if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
-    m_serverStartIPs = m_networkMonitor->getAvailableIPv4Addresses();
+    m_serverStartIPs = m_networkMonitor->validAddresses();
     m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
 
@@ -627,7 +627,7 @@ void MainWindow::updateSecurityIcon(bool visible)
 
 void MainWindow::updateNetworkInfo()
 {
-  updateIpLabel(m_networkMonitor->getAvailableIPv4Addresses());
+  updateIpLabel(m_networkMonitor->validAddresses());
 }
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
