@@ -88,6 +88,7 @@ Q_SIGNALS:
   void processStateChanged(deskflow::core::ProcessState state);
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
+  void securityLevelChanged(QString securityLevel);
 
 private Q_SLOTS:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
