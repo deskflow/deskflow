@@ -317,7 +317,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
           branch: gh-pages
-          folder: build/doc/dev/html
+          folder: build/docs/dev/html
 
       - name: Upload
         uses: actions/upload-artifact@v4
