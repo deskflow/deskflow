@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['packages_0',['Making Deskflow packages',['../md_doc_2dev_2build.html#autotoc_md9',1,'']]],
+  ['packages_0',['Making Deskflow packages',['../md_docs_2dev_2build.html#autotoc_md9',1,'']]],
   ['packetstreamfilter_1',['PacketStreamFilter',['../classPacketStreamFilter.html',1,'PacketStreamFilter'],['../classPacketStreamFilter.html#a87680bb31ed8687fadc1faf10676a090',1,'PacketStreamFilter::PacketStreamFilter()']]],
   ['packetstreamfilter_2ecpp_2',['PacketStreamFilter.cpp',['../PacketStreamFilter_8cpp.html',1,'']]],
   ['packetstreamfilter_2eh_3',['PacketStreamFilter.h',['../PacketStreamFilter_8h.html',1,'']]],
@@ -75,9 +75,9 @@ var searchData=
   ['processmode_72',['ProcessMode',['../classSettings.html#aac26728c616513838b3f9efb70a5cdd5',1,'Settings::ProcessMode'],['../structSettings_1_1Core.html#a891557b6bbca69ffa39ea6b46278ad5e',1,'Settings::Core::ProcessMode']]],
   ['processname_73',['processName',['../classApp.html#a975d935098b0a08ef69b1af32d85a499',1,'App']]],
   ['processrequest_74',['processRequest',['../classXWindowsClipboard.html#a7f1db99d5f8feebcb2e443717d63a3aa',1,'XWindowsClipboard']]],
-  ['processstate_75',['ProcessState',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8c',1,'deskflow::gui::CoreProcess']]],
+  ['processstate_75',['ProcessState',['../namespacedeskflow_1_1core.html#a368b81c385b88a65d4ade1da45949480',1,'deskflow::core::ProcessState'],['../StatusBar_8h.html#a2c61bdc878f442f4efbefb327251d895',1,'ProcessState:&#160;StatusBar.h']]],
   ['processstate_76',['processState',['../classdeskflow_1_1gui_1_1CoreProcess.html#a689253f2679161ad8ca04f07a1e67004',1,'deskflow::gui::CoreProcess']]],
-  ['processstatechanged_77',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#a0b7f6621de591092bee640af186c6853',1,'deskflow::gui::CoreProcess']]],
+  ['processstatechanged_77',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae7fb7d3a914aeca7b5c57edb4c1f9695',1,'deskflow::gui::CoreProcess']]],
   ['protocol_78',['protocol',['../classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956',1,'ServerConfig::protocol()'],['../ArchNetworkWinsock_8cpp.html#a00b6b4ede6be4f05c59f106b34ec4043',1,'protocol:&#160;ArchNetworkWinsock.cpp']]],
   ['protocol_20architecture_79',['Protocol Architecture',['../protocol_reference.html#autotoc_md15',1,'']]],
   ['protocol_20constants_80',['Protocol Constants',['../group__protocol__constants.html',1,'']]],

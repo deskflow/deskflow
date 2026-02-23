@@ -6,6 +6,6 @@ var searchData=
   ['implementation_20files_3',['Key Implementation Files',['../protocol_reference.html#autotoc_md14',1,'']]],
   ['implementations_4',['Platform-Specific Implementations',['../protocol_reference.html#autotoc_md38',1,'']]],
   ['info_5',['More info',['../index.html#autotoc_md12',1,'']]],
-  ['install_6',['Install',['../md_doc_2dev_2build.html#autotoc_md8',1,'']]],
+  ['install_6',['Install',['../md_docs_2dev_2build.html#autotoc_md8',1,'']]],
   ['issues_7',['Common Issues',['../protocol_reference.html#autotoc_md36',1,'']]]
 ];

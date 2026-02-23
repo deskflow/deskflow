@@ -14,7 +14,7 @@ var searchData=
   ['clipboardchanged_11',['ClipboardChanged',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db',1,'deskflow']]],
   ['clipboardgrabbed_12',['ClipboardGrabbed',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121',1,'deskflow']]],
   ['clipboardsending_13',['ClipboardSending',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2',1,'deskflow']]],
-  ['connected_14',['Connected',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9a2ec0d16e4ca169baedb9b2d50ec5c6d7',1,'deskflow::gui::CoreProcess']]],
-  ['connecting_15',['Connecting',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9ae321c53b354930ba96f0243e652df458',1,'deskflow::gui::CoreProcess']]],
+  ['connected_14',['Connected',['../namespacedeskflow_1_1core.html#a040d74fafe28c4c63082a60335b81c27a2ec0d16e4ca169baedb9b2d50ec5c6d7',1,'deskflow::core']]],
+  ['connecting_15',['Connecting',['../namespacedeskflow_1_1core.html#a040d74fafe28c4c63082a60335b81c27ae321c53b354930ba96f0243e652df458',1,'deskflow::core']]],
   ['ctrl_16',['Ctrl',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a2b61e0d5977f2e38f06e16281c802b47',1,'ScreenConfig']]]
 ];

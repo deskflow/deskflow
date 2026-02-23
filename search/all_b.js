@@ -76,7 +76,7 @@ var searchData=
   ['insert_73',['insert',['../classLog.html#a6c175d8f7e551245fe983ef74aafb333',1,'Log']]],
   ['insertmultiplereply_74',['insertMultipleReply',['../classXWindowsClipboard.html#a0e158b20dce20222c5a9e9d4ae36c1d9',1,'XWindowsClipboard']]],
   ['insertreply_75',['insertReply',['../classXWindowsClipboard.html#ab76c2e6fd86dcbea17ec365b54472d60',1,'XWindowsClipboard']]],
-  ['install_76',['Install',['../md_doc_2dev_2build.html#autotoc_md8',1,'']]],
+  ['install_76',['Install',['../md_docs_2dev_2build.html#autotoc_md8',1,'']]],
   ['install_77',['install',['../classMSWindowsHook.html#a95fb747852dd2b4a30c56a24912fd82c',1,'MSWindowsHook']]],
   ['installscreensaver_78',['installScreenSaver',['../classMSWindowsHook.html#a7e07eca0cf679784a5cd4f1da78a1c7f',1,'MSWindowsHook']]],
   ['installscreensaverhooks_79',['installScreensaverHooks',['../classMSWindowsDesks.html#aab6bb29648272c03a4d07c1fab386eb1',1,'MSWindowsDesks']]],

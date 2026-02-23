@@ -285,6 +285,7 @@ var annotated_dup =
     [ "SocketWithWhatException", "classSocketWithWhatException.html", "classSocketWithWhatException" ],
     [ "Ssl", "structSsl.html", "structSsl" ],
     [ "SslLogger", "classSslLogger.html", "classSslLogger" ],
+    [ "StatusBar", "classStatusBar.html", "classStatusBar" ],
     [ "StopLogOutputter", "classStopLogOutputter.html", "classStopLogOutputter" ],
     [ "Stopwatch", "classStopwatch.html", "classStopwatch" ],
     [ "StreamBuffer", "classStreamBuffer.html", "classStreamBuffer" ],

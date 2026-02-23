@@ -39,7 +39,7 @@ var searchData=
   ['processname_36',['processName',['../classApp.html#a975d935098b0a08ef69b1af32d85a499',1,'App']]],
   ['processrequest_37',['processRequest',['../classXWindowsClipboard.html#a7f1db99d5f8feebcb2e443717d63a3aa',1,'XWindowsClipboard']]],
   ['processstate_38',['processState',['../classdeskflow_1_1gui_1_1CoreProcess.html#a689253f2679161ad8ca04f07a1e67004',1,'deskflow::gui::CoreProcess']]],
-  ['processstatechanged_39',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#a0b7f6621de591092bee640af186c6853',1,'deskflow::gui::CoreProcess']]],
+  ['processstatechanged_39',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae7fb7d3a914aeca7b5c57edb4c1f9695',1,'deskflow::gui::CoreProcess']]],
   ['protocol_40',['protocol',['../classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956',1,'ServerConfig']]],
   ['protocolstring_41',['protocolString',['../classServer.html#a8195b7d8e6d9030d92b66a77e99774bf',1,'Server']]],
   ['proxy_42',['proxy',['../classSettings.html#a6debf0cebe43970f836cd1969ded08e9',1,'Settings']]],

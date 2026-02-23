@@ -18,7 +18,7 @@ var dir_1e2980927ba7513c665ee0bc67e39bcf =
     [ "KeySequence.h", "KeySequence_8h.html", "KeySequence_8h" ],
     [ "Logger.cpp", "Logger_8cpp.html", "Logger_8cpp" ],
     [ "Logger.h", "Logger_8h.html", "Logger_8h" ],
-    [ "MainWindow.cpp", "MainWindow_8cpp.html", "MainWindow_8cpp" ],
+    [ "MainWindow.cpp", "MainWindow_8cpp.html", null ],
     [ "MainWindow.h", "MainWindow_8h.html", "MainWindow_8h" ],
     [ "Messages.cpp", "Messages_8cpp.html", "Messages_8cpp" ],
     [ "Messages.h", "Messages_8h.html", "Messages_8h" ],

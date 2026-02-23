@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.25</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.38</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -180,7 +180,7 @@ $(function(){initNavTree('MSWindowsWatchdog_8h_source.html','',''); });
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  std::wstring m_activeDesktop = {};</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  std::unique_ptr&lt;deskflow::platform::MSWindowsProcess&gt; m_process;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  std::optional&lt;double&gt; m_nextStartTime = std::nullopt;</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  ProcessState m_processState = ProcessState::Idle;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_typedef" href="StatusBar_8h.html#a2c61bdc878f442f4efbefb327251d895">ProcessState</a> m_processState = ProcessState::Idle;</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  std::wstring m_command = {};</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <a class="code hl_typedef" href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">SendSas</a> m_sendSasFunc = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  std::mutex m_processStateMutex;</div>
@@ -190,6 +190,7 @@ $(function(){initNavTree('MSWindowsWatchdog_8h_source.html','',''); });
 <div class="ttc" id="aMSWindowsProcess_8h_html"><div class="ttname"><a href="MSWindowsProcess_8h.html">MSWindowsProcess.h</a></div></div>
 <div class="ttc" id="aMSWindowsSession_8h_html"><div class="ttname"><a href="MSWindowsSession_8h.html">MSWindowsSession.h</a></div></div>
 <div class="ttc" id="aMSWindowsWatchdog_8h_html_a7bc356bdf6c2476015756a426984f00f"><div class="ttname"><a href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">SendSas</a></div><div class="ttdeci">VOID(WINAPI * SendSas)(BOOL asUser)</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.h:21</div></div>
+<div class="ttc" id="aStatusBar_8h_html_a2c61bdc878f442f4efbefb327251d895"><div class="ttname"><a href="StatusBar_8h.html#a2c61bdc878f442f4efbefb327251d895">ProcessState</a></div><div class="ttdeci">deskflow::core::ProcessState ProcessState</div><div class="ttdef"><b>Definition</b> StatusBar.h:16</div></div>
 <div class="ttc" id="aThread_8h_html"><div class="ttname"><a href="Thread_8h.html">Thread.h</a></div></div>
 <div class="ttc" id="aclassFileLogOutputter_html"><div class="ttname"><a href="classFileLogOutputter.html">FileLogOutputter</a></div><div class="ttdoc">Write log to file.</div><div class="ttdef"><b>Definition</b> LogOutputters.h:57</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html"><div class="ttname"><a href="classMSWindowsSession.html">MSWindowsSession</a></div><div class="ttdef"><b>Definition</b> MSWindowsSession.h:15</div></div>

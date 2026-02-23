@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['packages_0',['Making Deskflow packages',['../md_doc_2dev_2build.html#autotoc_md9',1,'']]],
+  ['packages_0',['Making Deskflow packages',['../md_docs_2dev_2build.html#autotoc_md9',1,'']]],
   ['platform_20specific_20implementations_1',['Platform-Specific Implementations',['../protocol_reference.html#autotoc_md38',1,'']]],
   ['protocol_20architecture_2',['Protocol Architecture',['../protocol_reference.html#autotoc_md15',1,'']]],
   ['protocol_20constraints_3',['Protocol Constraints',['../protocol_reference.html#autotoc_md21',1,'']]],

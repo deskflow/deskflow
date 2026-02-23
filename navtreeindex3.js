@@ -142,8 +142,6 @@ var NAVTREEINDEX3 =
 "MTException_8h.html":[7,0,1,1,7,5],
 "MTException_8h_source.html":[7,0,1,1,7,5],
 "MainWindow_8cpp.html":[7,0,1,1,5,18],
-"MainWindow_8cpp.html#a0a8c6cef72b3fd9ad89258b8d7f6ee79":[7,0,1,1,5,18,0],
-"MainWindow_8cpp.html#a52fe3c0eb356cbf29818c0edbc83da3c":[7,0,1,1,5,18,1],
 "MainWindow_8h.html":[7,0,1,1,5,19],
 "MainWindow_8h_source.html":[7,0,1,1,5,19],
 "Messages_8cpp.html":[7,0,1,1,5,20],
@@ -249,5 +247,7 @@ var NAVTREEINDEX3 =
 "OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,23,0],
 "OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,23,2],
 "OSXKeyState_8cpp.html":[7,0,1,1,9,65],
-"OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,65,6]
+"OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,65,6],
+"OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,65,3],
+"OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,65,2]
 };

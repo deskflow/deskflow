@@ -359,6 +359,9 @@ var hierarchy =
       [ "KeySequenceWidget", "classKeySequenceWidget.html", null ]
     ] ],
     [ "QSettingsProxy", "classQSettingsProxy.html", null ],
+    [ "QStatusBar", null, [
+      [ "StatusBar", "classStatusBar.html", null ]
+    ] ],
     [ "QTableView", null, [
       [ "ScreenSetupView", "classScreenSetupView.html", null ]
     ] ],
