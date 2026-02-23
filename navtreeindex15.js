@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,4],
 "classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,210,1],
 "classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,210,2],
 "classSettingsDialog.html#afe7b8a9203d29348c5dfd1a527b8b6a6":[6,0,210,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classWlClipboard.html#a2310093097757fc6c3b07f05f7e13bd6":[6,0,244,1],
 "classWlClipboard.html#a240282a35f31db6269e12797b642e679":[6,0,244,8],
 "classWlClipboard.html#a2ca9659902bada07275e74c7848185c8":[6,0,244,9],
-"classWlClipboard.html#a2d60523b3e860f2e1b787cbf2c9840ab":[6,0,244,6],
-"classWlClipboard.html#a5b9416cd75a951eae35cac4814be4907":[6,0,244,12]
+"classWlClipboard.html#a2d60523b3e860f2e1b787cbf2c9840ab":[6,0,244,6]
 };

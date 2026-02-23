@@ -26,6 +26,7 @@ var classSettings =
     [ "proxy", "classSettings.html#a6debf0cebe43970f836cd1969ded08e9", null ],
     [ "restoreDefaultSettings", "classSettings.html#aa6e367eea7196300fc008ca44c727a92", null ],
     [ "save", "classSettings.html#ae251f1cdec2bce2dbbf133c18550888c", null ],
+    [ "serverConfigFile", "classSettings.html#ace87ffc019dee661124504049eae06c9", null ],
     [ "serverSettingsChanged", "classSettings.html#abcc759b17caec78486a4b8a8fc87fb79", null ],
     [ "setSettingsFile", "classSettings.html#a40d35b59575553c8357e59fb13df7207", null ],
     [ "setStateFile", "classSettings.html#a6a7d767b5a31d3d15c7fdb212fb07c69", null ],
