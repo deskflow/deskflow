@@ -859,8 +859,10 @@ void MainWindow::updateStatus()
   const auto connection = m_coreProcess.connectionState();
   const auto process = m_coreProcess.processState();
   const bool isServer = (m_coreProcess.mode() == CoreMode::Server);
-  if (process == Stopped || process == Started)
+  if (process == Stopped || process == Started) {
     updateNetworkInfo();
+    ui->btnEditName->setVisible(process == Stopped);
+  }
   m_statusBar->setStatus(connection, process, isServer);
 }
 
