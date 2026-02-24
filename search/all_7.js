@@ -58,7 +58,7 @@ var searchData=
   ['event_55',['event',['../classKeySequenceWidget.html#a9a4e36e077c476e1201e0dc90281ae6d',1,'KeySequenceWidget']]],
   ['event_2eh_56',['Event.h',['../Event_8h.html',1,'']]],
   ['eventdata_57',['EventData',['../classEventData.html',1,'EventData'],['../classEventData.html#af3b2887aee6312e35a2df0d621930b75',1,'EventData::EventData()']]],
-  ['eventfilter_58',['eventFilter',['../classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb',1,'LogDock']]],
+  ['eventfilter_58',['eventFilter',['../classMainWindow.html#aeaecedc36266ab4571b7af2a9fcd5b08',1,'MainWindow::eventFilter()'],['../classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb',1,'LogDock::eventFilter()']]],
   ['eventflags_59',['EventFlags',['../structEvent_1_1EventFlags.html',1,'Event']]],
   ['eventhandler_60',['EventHandler',['../classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8',1,'IEventQueue']]],
   ['eventqueue_61',['EventQueue',['../classEventQueue.html',1,'EventQueue'],['../classEventQueue.html#ab7de5a41befc94aac0f461391e67f14a',1,'EventQueue::EventQueue()'],['../classEventQueue.html#a28691f56ac27312585b11a8711b8188e',1,'EventQueue::EventQueue(EventQueue const &amp;)=delete'],['../classEventQueue.html#a2c2ede9173de1737b96100f1cc95360a',1,'EventQueue::EventQueue(EventQueue &amp;&amp;)=delete']]],

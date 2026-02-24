@@ -32,7 +32,7 @@ var searchData=
   ['event_29',['Event',['../classEvent.html#aee6a4269152dcdb7a11de3e24d90c229',1,'Event::Event()=default'],['../classEvent.html#a852478c107cec155148edb3ed1c74d13',1,'Event::Event(const Event &amp;)=delete'],['../classEvent.html#a545f9fd32826c052f8cb428341b0ba95',1,'Event::Event(Event &amp;&amp;other)=default'],['../classEvent.html#a565bf8a816edbed2ad3072f57e03f688',1,'Event::Event(EventTypes type, void *target=nullptr, void *data=nullptr, Flags flags=EventFlags::NoFlags)'],['../classEvent.html#ab478412608853061117a54d6398ddbda',1,'Event::Event(EventTypes type, void *target, EventData *dataObject)']]],
   ['event_30',['event',['../classKeySequenceWidget.html#a9a4e36e077c476e1201e0dc90281ae6d',1,'KeySequenceWidget']]],
   ['eventdata_31',['EventData',['../classEventData.html#af3b2887aee6312e35a2df0d621930b75',1,'EventData']]],
-  ['eventfilter_32',['eventFilter',['../classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb',1,'LogDock']]],
+  ['eventfilter_32',['eventFilter',['../classMainWindow.html#aeaecedc36266ab4571b7af2a9fcd5b08',1,'MainWindow::eventFilter()'],['../classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb',1,'LogDock::eventFilter()']]],
   ['eventqueue_33',['EventQueue',['../classEventQueue.html#ab7de5a41befc94aac0f461391e67f14a',1,'EventQueue::EventQueue()'],['../classEventQueue.html#a28691f56ac27312585b11a8711b8188e',1,'EventQueue::EventQueue(EventQueue const &amp;)=delete'],['../classEventQueue.html#a2c2ede9173de1737b96100f1cc95360a',1,'EventQueue::EventQueue(EventQueue &amp;&amp;)=delete']]],
   ['events_34',['events',['../classTCPListenSocket.html#a27a6c9596bda2d60832740ce7d7d984b',1,'TCPListenSocket']]],
   ['exit_35',['exit',['../classThread.html#a3bc7f9f6557f62734432d1421525cf68',1,'Thread']]],

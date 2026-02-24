@@ -140,17 +140,17 @@ var NAVTREEINDEX =
 "classIPlatformScreen.html#a3893b318acf4129cb0961d1a5bc46ea1",
 "classKeySequence.html#a698579551c4f6c97e0cb584de244b5ff",
 "classMSWindowsScreen.html#a6e0b5eaee052cd2e7c23a057a1787146",
-"classPacketStreamFilter.html#a24af02b73cc41d55848226edb7c8f8df",
-"classScreenSetupView.html#a5d961a6170b235b199a3a1999bc25908",
-"classSettings.html#afd0a8dbda15587467729da0b489dd97d",
-"classUnknownClientException.html#ac7609989daccff293c204c39204fd954",
-"classXWindowsScreen.html#ae9b5912820f97b4ed0edcfa6405608bc",
+"classPacketStreamFilter.html#a2183ca880c637afe67e384e37f81f4dd",
+"classScreenSetupView.html#a4896d0007772ac56ad00f2d803284c5c",
+"classSettings.html#ae9e80e06caddd4c619dc286848b1f187",
+"classUnknownClientException.html#ab7fe867664f6c955d5ab0634579f8607",
+"classXWindowsScreen.html#ae63168f2ac727cbbb96cf63a9313ba86",
 "classdeskflow_1_1KeyMap.html#aa80f9c7cc6e58ef0949f30bc7742be46",
 "classdeskflow_1_1gui_1_1CoreProcess.html#ada98633f251627e02fa40042399bc49b",
 "classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe",
-"functions_func_f.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a5c10b238cd32de63b15d003b782b081e",
-"structKeyModifierNameMapEntry.html"
+"functions_func_e.html",
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a587c10af51b81a49ef10720736364cd4",
+"structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
