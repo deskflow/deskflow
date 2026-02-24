@@ -1,12 +1,11 @@
 <map id="src/lib/gui/validators/ComputerNameValidator.cpp" name="src/lib/gui/validators/ComputerNameValidator.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="61,5,254,44"/>
-<area shape="rect" id="Node000002" href="$ComputerNameValidator_8h.html" title=" " alt="" coords="9,92,183,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,47,117,81,113,78,144,42"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="150,165,290,189"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="170,42,197,91,216,150,211,149,192,93,169,47"/>
-<area shape="rect" id="Node000003" href="$IStringValidator_8h.html" title=" " alt="" coords="5,165,126,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,115,79,151,74,149,90,120"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="117,115,189,156,184,158,116,120"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="33,237,98,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="67,188,68,222,63,221,64,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="87,5,279,44"/>
+<area shape="rect" id="Node000002" href="$ComputerNameValidator_8h.html" title=" " alt="" coords="5,92,180,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,47,120,84,116,80,163,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="204,92,344,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="205,42,251,81,246,82,205,47"/>
+<area shape="rect" id="Node000003" href="$IStringValidator_8h.html" title=" " alt="" coords="32,165,153,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,115,95,150,90,149,91,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="60,237,125,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,188,95,223,90,221,91,192"/>
 </map>

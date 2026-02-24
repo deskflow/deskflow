@@ -6,5 +6,5 @@ var classdeskflow_1_1gui_1_1NetworkMonitor =
     [ "isVirtualInterface", "classdeskflow_1_1gui_1_1NetworkMonitor.html#a59f6fe6aab8944a0ca0a735aca627aee", null ],
     [ "startMonitoring", "classdeskflow_1_1gui_1_1NetworkMonitor.html#a6385ceb106fbe5394c55cd2336adc216", null ],
     [ "stopMonitoring", "classdeskflow_1_1gui_1_1NetworkMonitor.html#a60e7fd9af440e7b9d6f5563c9c82e9d6", null ],
-    [ "validAddresses", "classdeskflow_1_1gui_1_1NetworkMonitor.html#abb5187f5ef66fe041d9e479cc0b91b6d", null ]
+    [ "validAddresses", "classdeskflow_1_1gui_1_1NetworkMonitor.html#a88c5f87de3770d34879988b2378fdc0c", null ]
 ];

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.41</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.48</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -95,41 +95,42 @@ $(function(){initNavTree('ScreenDuplicationsValidator_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="ScreenDuplicationsValidator_8h_source.html">ScreenDuplicationsValidator.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ScreenList_8h_source.html">gui/config/ScreenList.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ScreenDuplicationsValidator.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="ScreenDuplicationsValidator_8cpp__incl.png" border="0" usemap="#asrc_2lib_2gui_2validators_2ScreenDuplicationsValidator_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2gui_2validators_2ScreenDuplicationsValidator_8cpp" id="asrc_2lib_2gui_2validators_2ScreenDuplicationsValidator_8cpp">
-<area shape="rect" title=" " alt="" coords="57,5,270,44"/>
-<area shape="rect" href="ScreenDuplicationsValidator_8h.html" title=" " alt="" coords="66,92,261,117"/>
-<area shape="poly" title=" " alt="" coords="164,42,166,77,161,76,163,47"/>
-<area shape="rect" href="IStringValidator_8h.html" title=" " alt="" coords="43,237,164,262"/>
-<area shape="poly" title=" " alt="" coords="156,120,136,166,114,224,109,222,132,164,158,115"/>
-<area shape="rect" href="ScreenList_8h.html" title=" " alt="" coords="145,165,299,189"/>
-<area shape="poly" title=" " alt="" coords="173,115,205,152,200,153,173,120"/>
-<area shape="rect" title=" " alt="" coords="5,383,71,407"/>
-<area shape="poly" title=" " alt="" coords="85,265,66,284,47,311,39,339,38,368,33,367,34,339,42,309,62,281,88,260"/>
-<area shape="rect" href="gui_2config_2Screen_8h.html" title=" " alt="" coords="245,237,319,262"/>
-<area shape="poly" title=" " alt="" coords="232,187,265,225,260,226,232,193"/>
-<area shape="poly" title=" " alt="" coords="243,256,169,273,128,289,90,312,66,339,50,369,45,367,62,336,87,308,126,285,168,268,247,253"/>
-<area shape="rect" href="ScreenConfig_8h.html" title=" " alt="" coords="101,310,212,335"/>
-<area shape="poly" title=" " alt="" coords="259,264,192,304,189,300,263,261"/>
-<area shape="rect" href="QSettingsProxy_8h.html" title=" " alt="" coords="189,383,367,407"/>
-<area shape="poly" title=" " alt="" coords="282,260,278,310,278,368,274,366,273,310,279,264"/>
-<area shape="rect" title=" " alt="" coords="287,310,344,335"/>
-<area shape="poly" title=" " alt="" coords="288,260,306,296,301,296,287,265"/>
-<area shape="rect" title=" " alt="" coords="368,310,420,335"/>
-<area shape="poly" title=" " alt="" coords="301,260,365,301,360,302,300,265"/>
-<area shape="rect" title=" " alt="" coords="444,310,520,335"/>
-<area shape="poly" title=" " alt="" coords="315,260,437,304,432,305,315,265"/>
-<area shape="rect" title=" " alt="" coords="544,310,630,335"/>
-<area shape="poly" title=" " alt="" coords="319,257,532,306,527,309,319,262"/>
-<area shape="poly" title=" " alt="" coords="136,338,72,377,69,372,138,333"/>
-<area shape="rect" title=" " alt="" coords="94,383,166,407"/>
-<area shape="poly" title=" " alt="" coords="154,333,142,370,137,367,151,337"/>
-<area shape="poly" title=" " alt="" coords="177,333,248,374,243,375,176,338"/>
-<area shape="rect" title=" " alt="" coords="238,455,318,480"/>
-<area shape="poly" title=" " alt="" coords="280,406,280,441,276,438,276,410"/>
+<area shape="rect" title=" " alt="" coords="95,5,308,44"/>
+<area shape="rect" href="ScreenDuplicationsValidator_8h.html" title=" " alt="" coords="5,92,201,117"/>
+<area shape="poly" title=" " alt="" coords="176,47,132,84,128,80,179,42"/>
+<area shape="rect" href="ScreenList_8h.html" title=" " alt="" coords="234,92,388,117"/>
+<area shape="poly" title=" " alt="" coords="228,42,285,82,280,83,228,47"/>
+<area shape="rect" href="IStringValidator_8h.html" title=" " alt="" coords="24,165,144,189"/>
+<area shape="poly" title=" " alt="" coords="101,115,94,150,89,149,99,120"/>
+<area shape="rect" title=" " alt="" coords="40,310,105,335"/>
+<area shape="poly" title=" " alt="" coords="84,187,82,238,77,295,72,294,76,237,82,192"/>
+<area shape="rect" href="gui_2config_2Screen_8h.html" title=" " alt="" coords="280,165,353,189"/>
+<area shape="poly" title=" " alt="" coords="313,115,317,150,312,148,311,120"/>
+<area shape="poly" title=" " alt="" coords="277,183,204,201,162,217,125,239,100,267,84,297,80,294,96,264,121,235,160,212,202,196,281,180"/>
+<area shape="rect" href="ScreenConfig_8h.html" title=" " alt="" coords="135,237,247,262"/>
+<area shape="poly" title=" " alt="" coords="293,191,226,232,223,227,298,188"/>
+<area shape="rect" href="QSettingsProxy_8h.html" title=" " alt="" coords="224,310,401,335"/>
+<area shape="poly" title=" " alt="" coords="316,187,312,237,313,296,308,293,307,237,313,192"/>
+<area shape="rect" title=" " alt="" coords="322,237,378,262"/>
+<area shape="poly" title=" " alt="" coords="323,187,340,224,335,223,321,192"/>
+<area shape="rect" title=" " alt="" coords="402,237,454,262"/>
+<area shape="poly" title=" " alt="" coords="335,187,400,228,394,229,334,193"/>
+<area shape="rect" title=" " alt="" coords="479,237,554,262"/>
+<area shape="poly" title=" " alt="" coords="350,187,471,231,466,232,349,193"/>
+<area shape="rect" title=" " alt="" coords="578,237,665,262"/>
+<area shape="poly" title=" " alt="" coords="353,184,566,234,561,236,353,189"/>
+<area shape="poly" title=" " alt="" coords="170,265,106,304,103,300,173,261"/>
+<area shape="rect" title=" " alt="" coords="129,310,200,335"/>
+<area shape="poly" title=" " alt="" coords="188,261,176,297,172,294,185,265"/>
+<area shape="poly" title=" " alt="" coords="211,260,282,302,277,303,211,265"/>
+<area shape="rect" title=" " alt="" coords="273,383,352,407"/>
+<area shape="poly" title=" " alt="" coords="314,333,315,369,310,366,310,337"/>
 </map>
 </div>
 </div><table class="memberdecls">

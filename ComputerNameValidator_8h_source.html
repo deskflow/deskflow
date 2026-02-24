@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.41</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.48</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -104,29 +104,23 @@ $(function(){initNavTree('ComputerNameValidator_8h_source.html','',''); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="IStringValidator_8h.html">IStringValidator.h</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;QRegularExpression&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacevalidators.html">validators</a> {</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacevalidators.html">validators</a> {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classvalidators_1_1ComputerNameValidator.html">   15</a></span><span class="keyword">class </span><a class="code hl_function" href="classvalidators_1_1ComputerNameValidator.html#ac1da2d42616c9b2d985c66766c918197">ComputerNameValidator</a> : <span class="keyword">public</span> <a class="code hl_function" href="classvalidators_1_1IStringValidator.html#a1319ce09a6ee80742c32621c16ba7436">IStringValidator</a></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>{</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classvalidators_1_1ComputerNameValidator.html#ac1da2d42616c9b2d985c66766c918197">ComputerNameValidator</a>(<span class="keyword">const</span> QString &amp;message);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classvalidators_1_1ComputerNameValidator.html#ab1bc0dd4f495e81b532cdf2193bf064e">validate</a>(<span class="keyword">const</span> QString &amp;input) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> QRegularExpression m_nameValidator =</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>      QRegularExpression(QStringLiteral(<span class="stringliteral">&quot;^[\\w\\._-]{0,255}$&quot;</span>), QRegularExpression::CaseInsensitiveOption);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classvalidators_1_1ComputerNameValidator.html">   13</a></span><span class="keyword">class </span><a class="code hl_function" href="classvalidators_1_1ComputerNameValidator.html#ac1da2d42616c9b2d985c66766c918197">ComputerNameValidator</a> : <span class="keyword">public</span> <a class="code hl_function" href="classvalidators_1_1IStringValidator.html#a1319ce09a6ee80742c32621c16ba7436">IStringValidator</a></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classvalidators_1_1ComputerNameValidator.html#ac1da2d42616c9b2d985c66766c918197">ComputerNameValidator</a>(<span class="keyword">const</span> QString &amp;message);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classvalidators_1_1ComputerNameValidator.html#ab1bc0dd4f495e81b532cdf2193bf064e">validate</a>(<span class="keyword">const</span> QString &amp;input) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
 </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>} <span class="comment">// namespace validators</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>} <span class="comment">// namespace validators</span></div>
 <div class="ttc" id="aIStringValidator_8h_html"><div class="ttname"><a href="IStringValidator_8h.html">IStringValidator.h</a></div></div>
 <div class="ttc" id="aclassvalidators_1_1ComputerNameValidator_html_ab1bc0dd4f495e81b532cdf2193bf064e"><div class="ttname"><a href="classvalidators_1_1ComputerNameValidator.html#ab1bc0dd4f495e81b532cdf2193bf064e">validators::ComputerNameValidator::validate</a></div><div class="ttdeci">bool validate(const QString &amp;input) const override</div><div class="ttdef"><b>Definition</b> ComputerNameValidator.cpp:18</div></div>
 <div class="ttc" id="aclassvalidators_1_1ComputerNameValidator_html_ac1da2d42616c9b2d985c66766c918197"><div class="ttname"><a href="classvalidators_1_1ComputerNameValidator.html#ac1da2d42616c9b2d985c66766c918197">validators::ComputerNameValidator::ComputerNameValidator</a></div><div class="ttdeci">ComputerNameValidator(const QString &amp;message)</div><div class="ttdef"><b>Definition</b> ComputerNameValidator.cpp:13</div></div>
 <div class="ttc" id="aclassvalidators_1_1IStringValidator_html_a1319ce09a6ee80742c32621c16ba7436"><div class="ttname"><a href="classvalidators_1_1IStringValidator.html#a1319ce09a6ee80742c32621c16ba7436">validators::IStringValidator::IStringValidator</a></div><div class="ttdeci">IStringValidator()=default</div></div>
-<div class="ttc" id="anamespacevalidators_html"><div class="ttname"><a href="namespacevalidators.html">validators</a></div><div class="ttdef"><b>Definition</b> AliasValidator.cpp:15</div></div>
+<div class="ttc" id="anamespacevalidators_html"><div class="ttname"><a href="namespacevalidators.html">validators</a></div><div class="ttdef"><b>Definition</b> AliasValidator.cpp:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
