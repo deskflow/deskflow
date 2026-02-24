@@ -375,6 +375,10 @@ Vuoi connetterti al server?
         <translation>Ctrl+F</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Impossibile connettersi al server &quot;%1&quot;.&lt;/p&gt;&lt;p&gt;Un client con il tuo nome è già connesso al server.&lt;/p&gt;Assicurati di utilizzare un nome univoco e che sia in esecuzione una sola istanza del processo client.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>Your current TLS key is smaller than the minimum allowed size, A new key 2048-bit key will be generated.</source>
         <translation>La tua chiave TLS attuale è più piccola della dimensione minima consentita. Verrà generata una nuova chiave a 2048 bit.</translation>
     </message>
@@ -417,6 +421,10 @@ Vuoi connetterti al server?
     <message>
         <source>Disconnect</source>
         <translation>Disconnetti</translation>
+    </message>
+    <message>
+        <source>%1 Connection Error</source>
+        <translation>Errore di connessione %1</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -609,18 +617,6 @@ Nomi validi:
     <message>
         <source>%1 Connected</source>
         <translation>%1 Connesso</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Impossibile connettersi al server &quot;%1&quot;.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Un client con il tuo nome è già connesso al server.&lt;/p&gt;Assicurati di utilizzare un nome univoco e che sia in esecuzione una sola istanza del processo client.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 Connection Error</source>
-        <translation>Errore di connessione %1</translation>
     </message>
     <message>
         <source>%1 - New Client</source>

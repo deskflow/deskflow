@@ -183,43 +183,6 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
   QMessageBox::information(parent, title, message);
 }
 
-void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address)
-{
-  using enum deskflow::client::ErrorType;
-
-  if (error == NoError || error == GenericError || error == HostnameError)
-    return;
-
-  auto message = QObject::tr("<p>Failed to connect to the server '%1'.</p>").arg(address);
-
-  if (error == AlreadyConnected) {
-    message.append(
-        QObject::tr( //
-            "<p>A Client with your name is already connected to the server.</p>"
-            "Please ensure that you're using a unique name and that only a "
-            "single instance of the client process is running.</p>"
-        )
-    );
-  } else {
-    qFatal("unknown client error");
-  }
-
-  auto title = QObject::tr("%1 Connection Error").arg(kAppName);
-
-  if (error != HostnameError) {
-    QMessageBox::warning(parent, title, message);
-    return;
-  }
-
-  auto dialog = QMessageBox(parent);
-  dialog.setWindowTitle(title);
-  dialog.setText(message);
-  dialog.setWindowModality(Qt::ApplicationModal);
-  dialog.setIcon(QMessageBox::Information);
-  dialog.setDefaultButton(QMessageBox::Ok);
-  dialog.exec();
-}
-
 bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
 {
   if (serverRequiresPeerAuth) {

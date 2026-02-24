@@ -391,6 +391,10 @@ Do you want to connect to the server?
         <translation>断开</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;连接到服务器“%1”失败。&lt;/p&gt;&lt;p&gt;一个同名的客户端已连接到服务器。&lt;/p&gt;请确保您使用的名称唯一，且只有一个客户端进程实例在运行。&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>未检测到 IP</translation>
     </message>
@@ -512,6 +516,10 @@ Valid names:
 • 长度在 1 到 255 个字符之间</translation>
     </message>
     <message>
+        <source>%1 Connection Error</source>
+        <translation>%1 连接错误</translation>
+    </message>
+    <message>
         <source>Suggested IP: </source>
         <translation type="unfinished">建议 IP： </translation>
     </message>
@@ -611,18 +619,6 @@ Valid names:
     <message>
         <source>%1 Connected</source>
         <translation>%1 已连接</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;连接到服务器“%1”失败。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;一个同名的客户端已连接到服务器。&lt;/p&gt;请确保您使用的名称唯一，且只有一个客户端进程实例在运行。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 Connection Error</source>
-        <translation>%1 连接错误</translation>
     </message>
     <message>
         <source>%1 - New Client</source>

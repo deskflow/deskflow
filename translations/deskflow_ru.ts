@@ -391,6 +391,10 @@ Do you want to connect to the server?
         <translation>Отключиться</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Не удалось подключиться к серверу &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;Клиент с таким именем уже подключен к серверу.&lt;/p&gt;Убедитесь, что вы используете уникальное имя и запущен только один процесс клиента.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>IP-адрес не обнаружен</translation>
     </message>
@@ -512,6 +516,10 @@ Valid names:
 • Длина от 1 до 255 символов</translation>
     </message>
     <message>
+        <source>%1 Connection Error</source>
+        <translation>Ошибка соединения %1</translation>
+    </message>
+    <message>
         <source>Suggested IP: </source>
         <translation>Рекомендуемый IP-адрес: </translation>
     </message>
@@ -609,18 +617,6 @@ Valid names:
     <message>
         <source>%1 Connected</source>
         <translation>%1 подключено</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Не удалось подключиться к серверу &apos;%1&apos;.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Клиент с таким именем уже подключен к серверу.&lt;/p&gt;Убедитесь, что вы используете уникальное имя и запущен только один процесс клиента.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 Connection Error</source>
-        <translation>Ошибка соединения %1</translation>
     </message>
     <message>
         <source>%1 - New Client</source>

@@ -25,8 +25,6 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
 
 void showCloseReminder(QWidget *parent);
 
-void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address);
-
 bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false);
 
 bool showClearSettings(QWidget *parent);

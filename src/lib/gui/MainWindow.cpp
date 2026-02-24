@@ -1165,12 +1165,22 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 
 void MainWindow::showClientError(deskflow::client::ErrorType error, const QString &address)
 {
-  if (!isVisible() || m_clientErrorVisible)
+  if (!isVisible() || m_clientErrorVisible || error != deskflow::client::ErrorType::AlreadyConnected)
     return;
 
   m_clientErrorVisible = true;
+
   showAndActivate();
-  deskflow::gui::messages::showClientConnectError(this, error, address);
+
+  QMessageBox::warning(
+      this, tr("%1 Connection Error").arg(kAppName),
+      tr("<p>Failed to connect to the server '%1'.</p>"
+         "<p>A Client with your name is already connected to the server.</p>"
+         "Please ensure that you're using a unique name and that only a "
+         "single instance of the client process is running.</p>")
+          .arg(address)
+  );
+
   m_clientErrorVisible = false;
 }
 

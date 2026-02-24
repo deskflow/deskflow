@@ -387,6 +387,10 @@ Do you want to connect to the server?
         <translation type="unfinished">Ctrl+T</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Error al conectar con el servidor &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>Your current TLS key is smaller than the minimum allowed size, A new key 2048-bit key will be generated.</source>
         <translation type="unfinished">Su clave TLS actual es más pequeña que el tamaño mínimo permitido. Se generará una nueva clave de 2048 bits.</translation>
     </message>
@@ -429,6 +433,10 @@ Do you want to connect to the server?
     <message>
         <source>Disconnect</source>
         <translation type="unfinished">Desconectar</translation>
+    </message>
+    <message>
+        <source>%1 Connection Error</source>
+        <translation>%1 Error de conexión</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -609,18 +617,6 @@ Nombres válidos:
     <message>
         <source>%1 Connected</source>
         <translation type="unfinished">%1 Conectado</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Error al conectar con el servidor &apos;%1&apos;.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Ya hay un cliente conectado al servidor con su nombre.&lt;/p&gt;Asegúrese de utilizar un nombre único y de que solo se esté ejecutando una única instancia del proceso del cliente.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 Connection Error</source>
-        <translation type="unfinished">%1 Error de conexión</translation>
     </message>
     <message>
         <source>%1 - New Client</source>
