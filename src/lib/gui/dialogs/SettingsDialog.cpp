@@ -55,8 +55,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->tabWidget->setCurrentIndex(0);
 
   // Populate the list of IP addresses
-  NetworkMonitor networkMonitor(this);
-  for (const auto &address : networkMonitor.validAddresses()) {
+  const auto validAddresses = NetworkMonitor::validAddresses();
+  for (const auto &address : validAddresses) {
     QString ipString = address;
     if (ui->comboInterface->findText(ipString) == -1) {
       ui->comboInterface->addItem(ipString, ipString);

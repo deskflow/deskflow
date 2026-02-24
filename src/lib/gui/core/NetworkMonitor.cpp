@@ -52,7 +52,7 @@ void NetworkMonitor::stopMonitoring()
   m_isMonitoring = false;
 }
 
-QStringList NetworkMonitor::validAddresses() const
+QStringList NetworkMonitor::validAddresses()
 {
   QList<QHostAddress> physicalIP4;
   QList<QHostAddress> physicalIP6;
