@@ -5,7 +5,6 @@ var namespacedeskflow_1_1gui_1_1messages =
     [ "messageHandler", "namespacedeskflow_1_1gui_1_1messages.html#a277abda2c3390810def8d1d2e4bff73b", null ],
     [ "raiseCriticalDialog", "namespacedeskflow_1_1gui_1_1messages.html#aeaa785620dafb9bb8fd52f785f3c1016", null ],
     [ "showClearSettings", "namespacedeskflow_1_1gui_1_1messages.html#a3cef3788e3fae6bc7ebb84ef4969bca3", null ],
-    [ "showClientConnectError", "namespacedeskflow_1_1gui_1_1messages.html#a10809d0fc10a0db8c68b2b644479bfe1", null ],
     [ "showCloseReminder", "namespacedeskflow_1_1gui_1_1messages.html#aefd2a689c47cf3fefb5d844fd8ed327f", null ],
     [ "showDaemonOffline", "namespacedeskflow_1_1gui_1_1messages.html#a60dc73cee3be7ef255a925127c1fa2b6", null ],
     [ "showErrorDialog", "namespacedeskflow_1_1gui_1_1messages.html#ae637f1327216dc1e3eb1401c84deb40c", null ],
