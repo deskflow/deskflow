@@ -137,12 +137,11 @@ QString Settings::cleanComputerName(const QString &name)
   static const auto space = QStringLiteral(" ");
   static const auto underscore = QStringLiteral("_");
   static const auto period = QStringLiteral(".");
-  static const auto nothing = QStringLiteral("");
   static const auto nameRegex = QRegularExpression(QStringLiteral("[^\\w\\-\\.]"));
 
   QString cleanName = name.simplified();
   cleanName.replace(space, underscore);
-  cleanName.replace(nameRegex, nothing);
+  cleanName.replace(nameRegex, {});
   while (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(period))
     cleanName.removeFirst();
   while (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(period))
