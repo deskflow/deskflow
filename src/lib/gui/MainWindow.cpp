@@ -214,6 +214,7 @@ void MainWindow::setupControls()
 
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
+  ui->lineEditName->installEventFilter(this);
 
   if (deskflow::platform::isMac()) {
     ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -958,6 +959,21 @@ void MainWindow::changeEvent(QEvent *e)
   }
 }
 
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+  if (obj != ui->lineEditName || event->type() != QEvent::KeyPress)
+    return false;
+  const auto keyEvent = static_cast<QKeyEvent *>(event);
+  if (keyEvent->key() != Qt::Key_Escape)
+    return false;
+  ui->lineEditName->hide();
+  ui->lblComputerName->show();
+  ui->btnEditName->show();
+  ui->lineEditName->setText(Settings::value(Settings::Core::ComputerName).toString());
+  toggleCanRunCore(canRunCore());
+  return true;
+}
+
 void MainWindow::updateText()
 {
   m_menuFile->setTitle(tr("&File"));
@@ -1044,6 +1060,7 @@ void MainWindow::showHostNameEditor()
   ui->lineEditName->show();
   ui->lblComputerName->hide();
   ui->btnEditName->hide();
+  toggleCanRunCore(false);
   ui->lineEditName->setFocus();
 }
 
@@ -1052,6 +1069,7 @@ void MainWindow::setHostName()
   ui->lineEditName->hide();
   ui->lblComputerName->show();
   ui->btnEditName->show();
+  toggleCanRunCore(canRunCore());
 
   QString text = ui->lineEditName->text();
   const auto screenName = Settings::value(Settings::Core::ComputerName).toString();

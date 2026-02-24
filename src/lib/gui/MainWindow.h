@@ -96,6 +96,7 @@ public:
 
 protected:
   void changeEvent(QEvent *e) override;
+  bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
   /**
