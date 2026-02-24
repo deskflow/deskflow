@@ -9,7 +9,9 @@
 #include "ComputerNameValidator.h"
 #include "IpAddressValidator.h"
 #include "SpacesValidator.h"
+#include "ValidationError.h"
 
+#include <QLineEdit>
 #include <QRegularExpression>
 
 namespace validators {

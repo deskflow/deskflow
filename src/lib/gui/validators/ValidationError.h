@@ -7,9 +7,10 @@
 
 #pragma once
 
-#include <QLabel>
 #include <QObject>
 #include <QString>
+
+class QLabel;
 
 namespace validators {
 

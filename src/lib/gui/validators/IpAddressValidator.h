@@ -7,7 +7,6 @@
 #pragma once
 
 #include "IStringValidator.h"
-#include <QRegularExpression>
 
 namespace validators {
 

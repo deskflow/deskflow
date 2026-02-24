@@ -8,15 +8,14 @@
 
 #include "IStringValidator.h"
 
-#include <QLabel>
-#include <QLineEdit>
 #include <QValidator>
 #include <memory>
 #include <vector>
 
-#include "ValidationError.h"
+class QLineEdit;
 
 namespace validators {
+class ValidationError;
 
 class LineEditValidator : public QValidator
 {
