@@ -161,6 +161,7 @@ private:
   void handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth);
   void updateIpLabel(const QStringList &addresses);
 
+  bool canRunCore() const;
   /**
    * @brief showClientError
    * @param error Error Type

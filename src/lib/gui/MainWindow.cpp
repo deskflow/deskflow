@@ -525,7 +525,7 @@ void MainWindow::updateModeControls()
   ui->lblIpAddresses->setVisible(isServer);
   ui->clientOptions->setVisible(isClient);
   ui->lblNoMode->setVisible(!isServer && !isClient);
-  toggleCanRunCore((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  toggleCanRunCore(canRunCore());
 
   if (isServer) {
     updateNetworkInfo();
@@ -1206,4 +1206,12 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
 
   ui->lblIpAddresses->setText(labelText);
   ui->lblIpAddresses->setToolTip(toolTipText);
+}
+
+bool MainWindow::canRunCore() const
+{
+  const auto mode = m_coreProcess.mode();
+  const bool isServer = mode == Settings::CoreMode::Server;
+  const bool isClient = mode == Settings::CoreMode::Client;
+  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
 }
