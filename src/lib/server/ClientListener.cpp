@@ -171,7 +171,15 @@ void ClientListener::handleClientAccepted(IDataSocket *socket)
     handleUnknownClient(client);
   });
   m_events->addHandler(EventTypes::ClientProxyUnknownFailure, client, [this, client](const auto &) {
+    auto *filter = dynamic_cast<StreamFilter *>(client->getStream());
+    IDataSocket *socket = nullptr;
+    if (filter && !filter->adoptedStream()) {
+      socket = dynamic_cast<IDataSocket *>(filter->getStream());
+    }
     removeUnknownClient(client);
+    if (socket) {
+      removeClientSocket(socket);
+    }
   });
 }
 

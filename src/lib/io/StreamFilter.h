@@ -51,6 +51,8 @@ public:
   */
   deskflow::IStream *getStream() const;
 
+  bool adoptedStream() const;
+
 protected:
   //! Handle events from source stream
   /*!
