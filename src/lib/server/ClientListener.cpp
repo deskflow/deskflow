@@ -138,6 +138,14 @@ void ClientListener::handleClientConnecting()
       [this, rawSocketPointer](const auto &) { handleClientAccepted(rawSocketPointer); }
   );
 
+  m_events->addHandler(
+      EventTypes::ClientListenerDisconnectedOnAccept, rawSocketPointer->getEventTarget(),
+      [this, rawSocketPointer](const auto &) {
+        LOG_DEBUG("disconnected client before accept");
+        removeClientSocket(rawSocketPointer);
+      }
+  );
+
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
   if (m_securityLevel == SecurityLevel::PlainText) {
@@ -205,12 +213,18 @@ void ClientListener::handleClientDisconnected(ClientProxy *client)
       // we know which socket we no longer need
       auto *socket = static_cast<IDataSocket *>(client->getStream());
       delete client;
-      m_clientSockets.erase(socket);
-      delete socket;
+      removeClientSocket(socket);
 
       break;
     }
   }
+}
+
+void ClientListener::removeClientSocket(IDataSocket *socket)
+{
+  m_clientSockets.erase(socket);
+  m_events->removeHandlers(socket->getEventTarget());
+  delete socket;
 }
 
 void ClientListener::cleanupListenSocket()

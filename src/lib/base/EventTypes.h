@@ -91,6 +91,11 @@ enum class EventTypes : uint32_t
   /// This event is sent whenever a server accepts a client.
   ClientListenerAccepted,
 
+  /**  This event is sent whenever a client disconnects/errors out before the connection
+       is fully accepted.
+  */
+  ClientListenerDisconnectedOnAccept,
+
   /** This event is sent when the client has completed the initial handshake.  Until it is sent,
       the client is not fully connected.
   */
