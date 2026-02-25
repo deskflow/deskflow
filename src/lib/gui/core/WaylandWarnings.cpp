@@ -15,9 +15,8 @@ namespace deskflow::gui::core {
 void WaylandWarnings::showOnce(QWidget *parent)
 {
   const auto mode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
-  const bool portalIcProblem = !m_hasPortalInputCapture && mode == Settings::CoreMode::Server;
 
-  if (!m_hasEi || !m_hasPortal || portalIcProblem) {
+  if (!m_hasEi || !m_hasPortal || mode == Settings::CoreMode::Server) {
     if (!m_errorShown) {
       m_errorShown = true;
       messages::showWaylandLibraryError(parent);

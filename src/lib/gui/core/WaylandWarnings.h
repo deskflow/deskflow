@@ -32,12 +32,6 @@ private:
 #else
   const bool m_hasPortal = false;
 #endif
-
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-  const bool m_hasPortalInputCapture = true;
-#else
-  const bool m_hasPortalInputCapture = false;
-#endif
 };
 
 } // namespace deskflow::gui::core
