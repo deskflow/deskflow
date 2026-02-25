@@ -655,10 +655,6 @@ Nomi validi:
         <translation>&lt;p&gt;Le impostazioni sono di sola lettura perché hai solo accesso in lettura al file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Siamo spiacenti, sebbene questa versione di %1 supporti Wayland, questa build non è stata collegata a una o più librerie richieste.&lt;/p&gt;&lt;p&gt;Passa a X dalla schermata di accesso o usa una build che utilizzi le librerie corrette.&lt;/p&gt;&lt;p&gt;Se ritieni che ciò sia errato, &lt;a href=&quot;%2&quot;&gt;segnala un bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Controlla i log per maggiori informazioni.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>No thanks</source>
         <translation>No, grazie</translation>
     </message>

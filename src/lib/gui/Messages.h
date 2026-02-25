@@ -31,8 +31,6 @@ bool showClearSettings(QWidget *parent);
 
 void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
 
-void showWaylandLibraryError(QWidget *parent);
-
 bool showUpdateCheckOption(QWidget *parent);
 
 bool showDaemonOffline(QWidget *parent);

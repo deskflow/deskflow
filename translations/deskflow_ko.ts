@@ -655,10 +655,6 @@ Valid names:
         <translation>&lt;p&gt;다음 파일에 대한 쓰기 권한이 없어 설정이 읽기 전용입니다:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;이 버전의 %1은(는) Wayland를 지원하지만, 이 빌드는 하나 이상의 필수 라이브러리와 연결되어 있지 않습니다.&lt;/p&gt;&lt;p&gt;로그인 화면에서 X로 전환하거나 올바른 라이브러리를 사용한 빌드를 이용하세요.&lt;/p&gt;&lt;p&gt;이 안내가 잘못되었다고 생각되면 &lt;a href=&quot;%2&quot;&gt;버그를 신고&lt;/a&gt;해 주세요.&lt;/p&gt;&lt;p&gt;자세한 내용은 로그를 확인하세요.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>No thanks</source>
         <translation>아니요</translation>
     </message>

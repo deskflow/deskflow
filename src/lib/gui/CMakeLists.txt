@@ -58,8 +58,6 @@ add_library(${target} STATIC
   core/ServerConnection.h
   core/ServerMessage.cpp
   core/ServerMessage.h
-  core/WaylandWarnings.cpp
-  core/WaylandWarnings.h
   dialogs/AboutDialog.cpp
   dialogs/AboutDialog.h
   dialogs/AboutDialog.ui

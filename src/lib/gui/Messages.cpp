@@ -8,7 +8,6 @@
 
 #include "Logger.h"
 
-#include "common/Enums.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "common/VersionInfo.h"
@@ -223,24 +222,6 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath)
   )
                            .arg(QDir::toNativeSeparators(systemSettingsPath));
   QMessageBox::information(parent, title, message);
-}
-
-void showWaylandLibraryError(QWidget *parent)
-{
-  QMessageBox::critical(
-      parent, kAppName,
-      QObject::tr(
-          "<p>Sorry, while this version of %1 does support Wayland, "
-          "this build was not linked with one or more of the required "
-          "libraries.</p>"
-          "<p>Please either switch to X from your login screen or use a build "
-          "that uses the correct libraries.</p>"
-          "<p>If you think this is incorrect, please "
-          R"(<a href="%2">report a bug</a>.</p>)"
-          "<p>Please check the logs for more information.</p>"
-      )
-          .arg(kAppName, kUrlHelp)
-  );
 }
 
 bool showUpdateCheckOption(QWidget *parent)

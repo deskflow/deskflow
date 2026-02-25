@@ -24,7 +24,6 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/core/NetworkMonitor.h"
 #include "gui/core/ServerConnection.h"
-#include "gui/core/WaylandWarnings.h"
 #include "net/Fingerprint.h"
 
 #ifdef Q_OS_MACOS
@@ -193,7 +192,6 @@ private:
   bool m_secureSocket = false;
   bool m_saveOnExit = true;
   bool m_clientErrorVisible = false;
-  deskflow::gui::core::WaylandWarnings m_waylandWarnings;
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
   deskflow::gui::ServerConnection m_serverConnection;

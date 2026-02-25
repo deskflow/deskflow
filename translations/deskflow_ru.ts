@@ -655,10 +655,6 @@ Valid names:
         <translation>&lt;p&gt;Настройки доступны только для чтения, так как у вас есть доступ только на чтение к файлу:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Хотя эта версия %1 поддерживает Wayland, данная сборка не была слинкована с необходимыми библиотеками.&lt;/p&gt;&lt;p&gt;Пожалуйста, переключитесь на сессию X11 или используйте сборку с поддержкой нужных библиотек.&lt;/p&gt;&lt;p&gt;Если вы считаете это ошибкой, пожалуйста, &lt;a href=&quot;%2&quot;&gt;сообщите о ней&lt;/a&gt;.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>No thanks</source>
         <translation>Нет, спасибо</translation>
     </message>

@@ -657,10 +657,6 @@ Valid names:
         <translation>&lt;p&gt;设置是只读的，因为您对该文件只有读取权限：&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;抱歉，虽然此版本的 %1 支持 Wayland，但此构建版本未链接一个或多个所需的库。&lt;/p&gt;&lt;p&gt;请从登录屏幕切换到 X，或者使用链接了正确库的构建版本。&lt;/p&gt;&lt;p&gt;如果您认为存在问题，请 &lt;a href=&quot;%2&quot;&gt;报告 Bug&lt;/a&gt;。&lt;/p&gt;&lt;p&gt;请查看日志以获取更多信息。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>No thanks</source>
         <translation>不，谢谢</translation>
     </message>

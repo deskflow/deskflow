@@ -655,10 +655,6 @@ Nombres válidos:
         <translation type="unfinished">&lt;p&gt;Las configuraciones son de solo lectura porque solo tiene acceso de lectura al archivo:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Lo sentimos, aunque esta versión de %1 es compatible con Wayland, esta compilación no se vinculó con una o más de las bibliotecas requeridas.&lt;/p&gt;&lt;p&gt;Cambie a X desde su pantalla de inicio de sesión o use una compilación que use las bibliotecas correctas.&lt;/p&gt;&lt;p&gt;Si cree que esto es incorrecto, &lt;a href=&quot;%2&quot;&gt;informe un error&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Consulte los registros para obtener más información.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>No thanks</source>
         <translation type="unfinished">No, gracias</translation>
     </message>

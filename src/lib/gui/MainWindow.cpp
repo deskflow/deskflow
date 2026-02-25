@@ -892,9 +892,6 @@ void MainWindow::coreProcessStateChanged(ProcessState state)
     m_actionStopCore->setEnabled(true);
 
     if (state == Starting) {
-      if (deskflow::platform::isWayland()) {
-        m_waylandWarnings.showOnce(this);
-      }
       saveSettings();
     }
 

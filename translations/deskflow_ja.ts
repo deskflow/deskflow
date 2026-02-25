@@ -657,10 +657,6 @@ Valid names:
         <translation>&lt;p&gt;以下のファイルへの書き込み権限がないため、設定は読み取り専用です:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;申し訳ありません、このバージョンの %1 は Wayland に対応していますが、このビルドには必要なライブラリがリンクされていません。&lt;/p&gt;&lt;p&gt;ログイン画面から X に切り替えるか、正しいライブラリをリンクしたビルドを使用してください。&lt;/p&gt;&lt;p&gt;もしこの説明が正しくないと思われる場合は、&lt;a href=&quot;%2&quot;&gt;バグレポート&lt;/a&gt;してください。&lt;/p&gt;&lt;p&gt;詳細はログを確認してください。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>No thanks</source>
         <translation>不要です</translation>
     </message>
