@@ -400,9 +400,9 @@ void MainWindow::startCore()
     m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
 
-  m_coreProcess.start();
   m_actionStartCore->setVisible(false);
   m_actionRestartCore->setVisible(true);
+  m_coreProcess.start();
 }
 
 void MainWindow::stopCore()
