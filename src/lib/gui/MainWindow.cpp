@@ -156,6 +156,7 @@ MainWindow::MainWindow()
   }
 
   applyConfig();
+  m_statusBar->setSecurityIcon(TlsUtility::isEnabled());
   restoreWindow();
 }
 MainWindow::~MainWindow()
