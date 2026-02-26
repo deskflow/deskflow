@@ -9,6 +9,5 @@ var Messages_8h =
     [ "deskflow::gui::messages::showFirstServerStartMessage", "namespacedeskflow_1_1gui_1_1messages.html#ae36c4e343b7e48e06e2a9005a5bf4eda", null ],
     [ "deskflow::gui::messages::showNewClientPrompt", "namespacedeskflow_1_1gui_1_1messages.html#a886ff5d104d6bbbf78d97902a184c477", null ],
     [ "deskflow::gui::messages::showReadOnlySettings", "namespacedeskflow_1_1gui_1_1messages.html#a3ee57c3c76be1f5eb084883f65fbf93e", null ],
-    [ "deskflow::gui::messages::showUpdateCheckOption", "namespacedeskflow_1_1gui_1_1messages.html#ae073516dca7103f8d26cd3b7c5e69a13", null ],
-    [ "deskflow::gui::messages::showWaylandLibraryError", "namespacedeskflow_1_1gui_1_1messages.html#a34e786cc3b79a0ecc6fd3384d7d92f40", null ]
+    [ "deskflow::gui::messages::showUpdateCheckOption", "namespacedeskflow_1_1gui_1_1messages.html#ae073516dca7103f8d26cd3b7c5e69a13", null ]
 ];

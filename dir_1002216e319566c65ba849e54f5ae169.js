@@ -9,7 +9,5 @@ var dir_1002216e319566c65ba849e54f5ae169 =
     [ "ServerConnection.cpp", "ServerConnection_8cpp.html", null ],
     [ "ServerConnection.h", "ServerConnection_8h.html", "ServerConnection_8h" ],
     [ "ServerMessage.cpp", "ServerMessage_8cpp.html", null ],
-    [ "ServerMessage.h", "ServerMessage_8h.html", "ServerMessage_8h" ],
-    [ "WaylandWarnings.cpp", "WaylandWarnings_8cpp.html", null ],
-    [ "WaylandWarnings.h", "WaylandWarnings_8h.html", "WaylandWarnings_8h" ]
+    [ "ServerMessage.h", "ServerMessage_8h.html", "ServerMessage_8h" ]
 ];

@@ -19,9 +19,6 @@ var annotated_dup =
         [ "ipc", "namespacedeskflow_1_1gui_1_1ipc.html", [
           [ "DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient" ]
         ] ],
-        [ "core", "namespacedeskflow_1_1gui_1_1core.html", [
-          [ "WaylandWarnings", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings" ]
-        ] ],
         [ "messages", "namespacedeskflow_1_1gui_1_1messages.html", [
           [ "Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", "structdeskflow_1_1gui_1_1messages_1_1Errors" ]
         ] ],

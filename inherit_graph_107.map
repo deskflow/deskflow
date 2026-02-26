@@ -1,19 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,179,74,203"/>
-<area shape="rect" id="Node000001" href="$classAboutDialog.html" title=" " alt="" coords="149,5,242,30"/>
-<area shape="poly" id="edge137_Node000000_Node000001" title=" " alt="" coords="46,163,73,102,94,69,120,41,150,26,147,30,123,45,98,73,77,105,51,165"/>
-<area shape="rect" id="Node000002" href="$classActionDialog.html" title=" " alt="" coords="148,55,243,79"/>
-<area shape="poly" id="edge138_Node000000_Node000002" title=" " alt="" coords="54,164,82,126,120,90,149,77,145,81,123,95,86,129,59,166"/>
-<area shape="rect" id="Node000003" href="$classClientConfigDialog.html" title="The ClientConfigDialog class Simple dialog to allow users to configure the Client settings." alt="" coords="130,104,260,129"/>
-<area shape="poly" id="edge139_Node000000_Node000003" title=" " alt="" coords="70,168,121,139,154,127,150,131,123,144,74,172"/>
-<area shape="rect" id="Node000004" href="$classFingerprintDialog.html" title=" " alt="" coords="135,153,256,178"/>
-<area shape="poly" id="edge140_Node000000_Node000004" title=" " alt="" coords="88,181,137,174,133,177,90,185"/>
-<area shape="rect" id="Node000005" href="$classHotkeyDialog.html" title=" " alt="" coords="146,203,245,227"/>
-<area shape="poly" id="edge141_Node000000_Node000005" title=" " alt="" coords="88,196,147,206,143,209,90,201"/>
-<area shape="rect" id="Node000006" href="$classScreenSettingsDialog.html" title=" " alt="" coords="122,252,269,277"/>
-<area shape="poly" id="edge142_Node000000_Node000006" title=" " alt="" coords="73,209,123,237,155,251,150,252,121,241,73,215"/>
-<area shape="rect" id="Node000007" href="$classServerConfigDialog.html" title=" " alt="" coords="128,301,262,326"/>
-<area shape="poly" id="edge143_Node000000_Node000007" title=" " alt="" coords="57,214,86,252,123,286,148,300,143,301,120,291,82,255,56,219"/>
-<area shape="rect" id="Node000008" href="$classSettingsDialog.html" title=" " alt="" coords="142,351,248,375"/>
-<area shape="poly" id="edge144_Node000000_Node000008" title=" " alt="" coords="50,216,78,277,98,308,123,336,145,350,139,350,120,340,94,312,73,279,48,221"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,109,30"/>
+<area shape="rect" id="Node000001" href="$classLogDock.html" title=" " alt="" coords="157,5,230,30"/>
+<area shape="poly" id="edge145_Node000000_Node000001" title=" " alt="" coords="124,15,159,17,154,18,125,20"/>
 </map>

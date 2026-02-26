@@ -1,7 +1,6 @@
 var namespacedeskflow_1_1gui =
 [
     [ "ipc", "namespacedeskflow_1_1gui_1_1ipc.html", "namespacedeskflow_1_1gui_1_1ipc" ],
-    [ "core", "namespacedeskflow_1_1gui_1_1core.html", "namespacedeskflow_1_1gui_1_1core" ],
     [ "diagnostic", "namespacedeskflow_1_1gui_1_1diagnostic.html", [
       [ "clearSettings", "namespacedeskflow_1_1gui_1_1diagnostic.html#a6c2840f65dad3f842913674285b842af", null ],
       [ "restart", "namespacedeskflow_1_1gui_1_1diagnostic.html#a8e73d7e253216211e943a85140eb9e62", null ]
