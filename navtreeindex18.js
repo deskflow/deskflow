@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"classdeskflow_1_1KeyMap.html#aa22a6d7a665c36d1f4fb04925918f309":[6,0,0,7,34],
 "classdeskflow_1_1KeyMap.html#aa80f9c7cc6e58ef0949f30bc7742be46":[5,0,0,8,25],
 "classdeskflow_1_1KeyMap.html#aa80f9c7cc6e58ef0949f30bc7742be46":[6,0,0,7,25],
 "classdeskflow_1_1KeyMap.html#abffaa0f00b4408c26c4be014517c91d6":[5,0,0,8,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "classdeskflow_1_1gui_1_1CoreProcess.html#aa9f5fda4469cd9cb57613d1b6cd940b2":[6,0,0,4,5,3],
 "classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f":[5,0,0,5,7,7],
 "classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f":[6,0,0,4,5,7],
-"classdeskflow_1_1gui_1_1CoreProcess.html#acab885490826c34af4e1414ef061f87a":[5,0,0,5,7,20],
-"classdeskflow_1_1gui_1_1CoreProcess.html#acab885490826c34af4e1414ef061f87a":[6,0,0,4,5,20]
+"classdeskflow_1_1gui_1_1CoreProcess.html#acab885490826c34af4e1414ef061f87a":[5,0,0,5,7,20]
 };

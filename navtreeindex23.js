@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"structKeyEntry.html#a02ebe770c6e8fbcf88c67b4f73493eb7":[6,0,136,0],
+"structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c":[6,0,136,1],
 "structKeyModifierNameMapEntry.html":[6,0,137],
 "structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa":[6,0,137,1],
 "structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08":[6,0,137,0],

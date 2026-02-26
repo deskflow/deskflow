@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.49</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.51</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,15 +136,17 @@ $(function(){initNavTree('StreamFilter_8h_source.html','',''); });
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <a class="code hl_class" href="classdeskflow_1_1IStream.html">deskflow::IStream</a> *<a class="code hl_function" href="classStreamFilter.html#a11e36e0e48c6ade89f1adc912ea36448">getStream</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classStreamFilter.html#a44dfdbe3c896681259145628088fde05">filterEvent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <a class="code hl_class" href="classdeskflow_1_1IStream.html">deskflow::IStream</a> *m_stream;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordtype">bool</span> m_adopted;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classStreamFilter.html#ab2f3463bc2481f9684349f8deedace94">adoptedStream</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classStreamFilter.html#a44dfdbe3c896681259145628088fde05">filterEvent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_class" href="classdeskflow_1_1IStream.html">deskflow::IStream</a> *m_stream;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">bool</span> m_adopted;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>};</div>
 </div>
 <div class="ttc" id="aIEventQueue_8h_html"><div class="ttname"><a href="IEventQueue_8h.html">IEventQueue.h</a></div></div>
 <div class="ttc" id="aIStream_8h_html"><div class="ttname"><a href="IStream_8h.html">IStream.h</a></div></div>
@@ -152,13 +154,14 @@ $(function(){initNavTree('StreamFilter_8h_source.html','',''); });
 <div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:29</div></div>
 <div class="ttc" id="aclassStreamFilter_html_a11e36e0e48c6ade89f1adc912ea36448"><div class="ttname"><a href="classStreamFilter.html#a11e36e0e48c6ade89f1adc912ea36448">StreamFilter::getStream</a></div><div class="ttdeci">deskflow::IStream * getStream() const</div><div class="ttdoc">Get the stream.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:79</div></div>
 <div class="ttc" id="aclassStreamFilter_html_a3862e0d8ebc8e657aff0941d83a5411f"><div class="ttname"><a href="classStreamFilter.html#a3862e0d8ebc8e657aff0941d83a5411f">StreamFilter::getSize</a></div><div class="ttdeci">uint32_t getSize() const override</div><div class="ttdoc">Get bytes available to read.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:74</div></div>
-<div class="ttc" id="aclassStreamFilter_html_a44dfdbe3c896681259145628088fde05"><div class="ttname"><a href="classStreamFilter.html#a44dfdbe3c896681259145628088fde05">StreamFilter::filterEvent</a></div><div class="ttdeci">virtual void filterEvent(const Event &amp;)</div><div class="ttdoc">Handle events from source stream.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:84</div></div>
+<div class="ttc" id="aclassStreamFilter_html_a44dfdbe3c896681259145628088fde05"><div class="ttname"><a href="classStreamFilter.html#a44dfdbe3c896681259145628088fde05">StreamFilter::filterEvent</a></div><div class="ttdeci">virtual void filterEvent(const Event &amp;)</div><div class="ttdoc">Handle events from source stream.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:89</div></div>
 <div class="ttc" id="aclassStreamFilter_html_a48fd8a45964bff40873ef5884321e9e6"><div class="ttname"><a href="classStreamFilter.html#a48fd8a45964bff40873ef5884321e9e6">StreamFilter::StreamFilter</a></div><div class="ttdeci">StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream=true)</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:16</div></div>
 <div class="ttc" id="aclassStreamFilter_html_a4e86a9a65da77e9662c57d42c54cd4b8"><div class="ttname"><a href="classStreamFilter.html#a4e86a9a65da77e9662c57d42c54cd4b8">StreamFilter::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdoc">Flush the stream.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:49</div></div>
 <div class="ttc" id="aclassStreamFilter_html_a87bf1f465da7894f154ac0678e28b39b"><div class="ttname"><a href="classStreamFilter.html#a87bf1f465da7894f154ac0678e28b39b">StreamFilter::isReady</a></div><div class="ttdeci">bool isReady() const override</div><div class="ttdoc">Test if read() will succeed.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:69</div></div>
 <div class="ttc" id="aclassStreamFilter_html_aa446127f940c2f18510e8ea973235a72"><div class="ttname"><a href="classStreamFilter.html#aa446127f940c2f18510e8ea973235a72">StreamFilter::~StreamFilter</a></div><div class="ttdeci">~StreamFilter() override</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:26</div></div>
 <div class="ttc" id="aclassStreamFilter_html_aaa744b1fb864ebf719b0355e0ce837eb"><div class="ttname"><a href="classStreamFilter.html#aaa744b1fb864ebf719b0355e0ce837eb">StreamFilter::operator=</a></div><div class="ttdeci">StreamFilter &amp; operator=(StreamFilter &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclassStreamFilter_html_ab01422a84eeb69166645c967f161007e"><div class="ttname"><a href="classStreamFilter.html#ab01422a84eeb69166645c967f161007e">StreamFilter::write</a></div><div class="ttdeci">void write(const void *buffer, uint32_t n) override</div><div class="ttdoc">Write to stream.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:44</div></div>
+<div class="ttc" id="aclassStreamFilter_html_ab2f3463bc2481f9684349f8deedace94"><div class="ttname"><a href="classStreamFilter.html#ab2f3463bc2481f9684349f8deedace94">StreamFilter::adoptedStream</a></div><div class="ttdeci">bool adoptedStream() const</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:84</div></div>
 <div class="ttc" id="aclassStreamFilter_html_ab775a3b0389ccae1b470ec4dbf252b6e"><div class="ttname"><a href="classStreamFilter.html#ab775a3b0389ccae1b470ec4dbf252b6e">StreamFilter::close</a></div><div class="ttdeci">void close() override</div><div class="ttdoc">Close the stream.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:34</div></div>
 <div class="ttc" id="aclassStreamFilter_html_abadd913fba63ab98a83efaa8bd45d1f0"><div class="ttname"><a href="classStreamFilter.html#abadd913fba63ab98a83efaa8bd45d1f0">StreamFilter::shutdownOutput</a></div><div class="ttdeci">void shutdownOutput() override</div><div class="ttdoc">Shutdown output.</div><div class="ttdef"><b>Definition</b> StreamFilter.cpp:59</div></div>
 <div class="ttc" id="aclassStreamFilter_html_abcf83b24f38171d5f24b4e8c27031812"><div class="ttname"><a href="classStreamFilter.html#abcf83b24f38171d5f24b4e8c27031812">StreamFilter::operator=</a></div><div class="ttdeci">StreamFilter &amp; operator=(StreamFilter const &amp;)=delete</div></div>

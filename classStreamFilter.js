@@ -4,6 +4,7 @@ var classStreamFilter =
     [ "StreamFilter", "classStreamFilter.html#acca906f795f81bb463c3f21b244f121f", null ],
     [ "StreamFilter", "classStreamFilter.html#ac5b3ad7187d9275530e9b8ab42622629", null ],
     [ "~StreamFilter", "classStreamFilter.html#aa446127f940c2f18510e8ea973235a72", null ],
+    [ "adoptedStream", "classStreamFilter.html#ab2f3463bc2481f9684349f8deedace94", null ],
     [ "close", "classStreamFilter.html#ab775a3b0389ccae1b470ec4dbf252b6e", null ],
     [ "filterEvent", "classStreamFilter.html#a44dfdbe3c896681259145628088fde05", null ],
     [ "flush", "classStreamFilter.html#a4e86a9a65da77e9662c57d42c54cd4b8", null ],
