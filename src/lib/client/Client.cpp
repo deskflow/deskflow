@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -330,6 +330,10 @@ void Client::sendClipboard(ClipboardID id)
 
   // check time
   if (m_timeClipboard[id] == 0 || clipboard.getTime() != m_timeClipboard[id]) {
+    // Always update the timestamp so we don't re-read and re-marshall the
+    // same oversized clipboard on every subsequent screen transition.
+    m_timeClipboard[id] = clipboard.getTime();
+
     // marshall the data
     std::string data = clipboard.marshall();
     if (data.size() >= m_maximumClipboardSize * 1024) {
@@ -341,8 +345,6 @@ void Client::sendClipboard(ClipboardID id)
       return;
     }
 
-    // save new time
-    m_timeClipboard[id] = clipboard.getTime();
     // save and send data if different or not yet sent
     if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
       m_sentClipboard[id] = true;
