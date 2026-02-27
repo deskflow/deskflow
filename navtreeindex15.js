@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classSettingsDialog.html":[6,0,210],
 "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,210,3],
 "classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,4],
 "classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,210,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classUnicode.html#a6cf183d92569cbd9d50211908810ffec":[6,0,241,3],
 "classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c":[6,0,241,1],
 "classUnknownClientException.html":[6,0,242],
-"classUnknownClientException.html#ab7fe867664f6c955d5ab0634579f8607":[6,0,242,3],
-"classUnknownClientException.html#ac7609989daccff293c204c39204fd954":[6,0,242,1]
+"classUnknownClientException.html#ab7fe867664f6c955d5ab0634579f8607":[6,0,242,3]
 };
