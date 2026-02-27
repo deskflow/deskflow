@@ -19,6 +19,21 @@
 
 namespace deskflow {
 
+/* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
+#ifndef XKB_VMOD_NAME_ALT
+static constexpr const char* XKB_VMOD_NAME_ALT = "Alt";
+static constexpr const char* XKB_VMOD_NAME_LEVEL3 = "LevelThree";
+static constexpr const char* XKB_VMOD_NAME_LEVEL5 = "LevelFive";
+static constexpr const char* XKB_VMOD_NAME_META = "Meta";
+static constexpr const char* XKB_VMOD_NAME_NUM = "NumLock";
+static constexpr const char* XKB_VMOD_NAME_SCROLL = "ScrollLock";
+static constexpr const char* XKB_VMOD_NAME_SUPER = "Super";
+static constexpr const char* XKB_VMOD_NAME_HYPER = "Hyper";
+static constexpr const char* XKB_MOD_NAME_MOD2 = "Mod2";
+static constexpr const char* XKB_MOD_NAME_MOD3 = "Mod3";
+static constexpr const char* XKB_MOD_NAME_MOD5 = "Mod5";
+#endif
+
 EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
     : KeyState(
           events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
@@ -134,21 +149,6 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
     // incorrectly pass the test (0 & 0 == 0) and get processed as "active".
     if (xkbModMask == 0 || (xkbModMaskIn & xkbModMask) != xkbModMask)
       continue;
-
-    /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
-#ifndef XKB_VMOD_NAME_ALT
-    static const auto XKB_VMOD_NAME_ALT = "Alt";
-    static const auto XKB_VMOD_NAME_LEVEL3 = "LevelThree";
-    static const auto XKB_VMOD_NAME_LEVEL5 = "LevelFive";
-    static const auto XKB_VMOD_NAME_META = "Meta";
-    static const auto XKB_VMOD_NAME_NUM = "NumLock";
-    static const auto XKB_VMOD_NAME_SCROLL = "ScrollLock";
-    static const auto XKB_VMOD_NAME_SUPER = "Super";
-    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
-    static const auto XKB_MOD_NAME_MOD2 = "Mod2";
-    static const auto XKB_MOD_NAME_MOD3 = "Mod3";
-    static const auto XKB_MOD_NAME_MOD5 = "Mod5";
-#endif
 
     // From wismill (xkbcommon maintainer):
     // Meta is usually encoded like Alt, i.e. to Mod1. In that case, both share the same state.
