@@ -623,7 +623,7 @@ void EiScreen::onKeyEvent(ei_event *event)
   bool repeat;
 
   m_keyState->updateXkbState(keyval, pressed);
-  KeyModifierMask mask = m_keyState->pollActiveModifiers();
+  KeyModifierMask mask = pollActiveModifiers();
 
   repeat = pressed && m_lastPressed == keyid && keyid != kKeyNone;
 
