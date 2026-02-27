@@ -961,8 +961,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (obj != ui->lineEditName || event->type() != QEvent::KeyPress)
     return false;
-  const auto keyEvent = static_cast<QKeyEvent *>(event);
-  if (keyEvent->key() != Qt::Key_Escape)
+  if (const auto keyEvent = static_cast<QKeyEvent *>(event); keyEvent->key() != Qt::Key_Escape)
     return false;
   ui->lineEditName->hide();
   ui->lblComputerName->show();
