@@ -280,7 +280,21 @@ jobs:
         shell: bash
         run: |
           if [[ "${{matrix.target.like}}" != "arch" ]]; then
-            cmake --build build --config Release -j8 --target package
+            if [ "$RUNNER_OS" != "macOS" ]; then
+              cmake --build build --config Release -j8 --target package
+            else
+              cmake --build build --config Release -j8
+              for i in $(seq 1 5); do
+                cmake --build build --config Release -j8 --target package
+                if [ $? -eq 0 ]; then
+                  echo "Package successful"
+                  break
+                else
+                  echo "Package attempt $i failed"
+                  sleep 1
+                fi
+              done
+            fi
           else
             cmake --build build --config Release -j8
             useradd -m build
