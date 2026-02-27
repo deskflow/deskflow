@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -1441,6 +1441,10 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
   sender->getClipboard(id, &clipboard.m_clipboard);
 
   std::string data = clipboard.m_clipboard.marshall();
+  if (data.empty()) {
+    LOG_DEBUG("ignoring clipboard %d update from \"%s\": failed to read clipboard data", id, getName(sender).c_str());
+    return;
+  }
   if (data.size() > m_maximumClipboardSize * 1024) {
     LOG_NOTE(
         "not updating clipboard because it's over the size limit (%i KB) configured by the server",
