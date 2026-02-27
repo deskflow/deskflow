@@ -31,9 +31,10 @@ void OSXEventQueueBuffer::waitForEvent(double timeout)
 {
   std::unique_lock lock(m_mutex);
   if (m_dataQueue.empty()) {
-    auto duration = std::chrono::duration<double>(timeout);
     LOG_DEBUG2("waiting for event, timeout: %f seconds", timeout);
-    m_cond.wait_for(lock, duration, [this] { return !m_dataQueue.empty(); });
+    auto end = timeout < 0 ? std::chrono::steady_clock::time_point::max()
+                           : std::chrono::steady_clock::now() + std::chrono::duration<double>(timeout);
+    m_cond.wait_until(lock, end, [this] { return !m_dataQueue.empty(); });
   } else {
     LOG_DEBUG2("found events in the queue");
   }
