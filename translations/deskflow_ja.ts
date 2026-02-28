@@ -1072,6 +1072,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation>起動時にコンピューター間移動のロックを有効にする</translation>
     </message>
+    <message>
+        <source>Force NumLock enabled on clients (Linux only)</source>
+        <translation type="unfinished">クライアントで NumLock を強制的に有効にする (Linux のみ)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

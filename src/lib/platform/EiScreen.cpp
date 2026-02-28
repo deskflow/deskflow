@@ -14,6 +14,7 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/IScreen.h"
+#include "deskflow/OptionTypes.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
@@ -443,12 +444,17 @@ void EiScreen::screensaver(bool activate)
 void EiScreen::resetOptions()
 {
   // Should reset options to neutral, see setOptions().
-  // We don't have ei-specific options, nothing to do here
+  m_keyState->setForceNumLock(false);
 }
 
 void EiScreen::setOptions(const OptionsList &options)
 {
-  // We don't have ei-specific options, nothing to do here
+  for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
+    if (options[i] == kOptionForceNumLock) {
+      m_keyState->setForceNumLock(options[i + 1]);
+      LOG_DEBUG1("force NumLock state to on: %s", (options[i + 1]) ? "enabled" : "disabled");
+    }
+  }
 }
 
 bool EiScreen::isPrimary() const

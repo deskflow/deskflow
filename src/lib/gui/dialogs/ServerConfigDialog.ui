@@ -524,6 +524,13 @@
            </layout>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbForceNumLock">
+            <property name="text">
+             <string>Force NumLock enabled on clients (Linux only)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer_6">
             <property name="orientation">
              <enum>Qt::Orientation::Vertical</enum>

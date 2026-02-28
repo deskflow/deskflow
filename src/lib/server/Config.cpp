@@ -665,6 +665,8 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionRelativeMouseMoves, s.parseBoolean(value));
     } else if (name == "win32KeepForeground") {
       addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
+    } else if (name == "forceNumLock") {
+      addOption("", kOptionForceNumLock, s.parseBoolean(value));
     } else if (name == "defaultLockToScreenState") {
       addOption("", kOptionDefaultLockToScreenState, s.parseBoolean(value));
     } else if (name == "disableLockToScreen") {
@@ -1242,6 +1244,9 @@ const char *Config::getOptionName(OptionID id)
   if (id == kOptionWin32KeepForeground) {
     return "win32KeepForeground";
   }
+  if (id == kOptionForceNumLock) {
+    return "forceNumLock";
+  }
   if (id == kOptionScreenPreserveFocus) {
     return "preserveFocus";
   }
@@ -1265,7 +1270,7 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
   if (id == kOptionHalfDuplexCapsLock || id == kOptionHalfDuplexNumLock || id == kOptionHalfDuplexScrollLock ||
       id == kOptionScreenSwitchNeedsShift || id == kOptionScreenSwitchNeedsControl ||
       id == kOptionScreenSwitchNeedsAlt || id == kOptionXTestXineramaUnaware || id == kOptionRelativeMouseMoves ||
-      id == kOptionWin32KeepForeground || id == kOptionScreenPreserveFocus || id == kOptionClipboardSharing ||
+      id == kOptionWin32KeepForeground || id == kOptionForceNumLock || id == kOptionScreenPreserveFocus || id == kOptionClipboardSharing ||
       id == kOptionClipboardSharingSize) {
     return (value != 0) ? "true" : "false";
   }

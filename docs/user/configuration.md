@@ -274,6 +274,7 @@ switchCornerSize=0
 switchDelay=250
 switchDoubleTap=250
 win32KeepForeground=false
+forceNumLock=false
 ```
 
 
@@ -405,6 +406,7 @@ end
 |clipboardSharing| `true` or `false`|If set to ''true'' then clipboard sharing will be enabled and the ''clipboardSharingSize'' setting will be used. If set to false, then clipboard sharing will be disabled and the the ''clipboardSharingSize'' setting will be ignored.|
 |clipboardSharingSize| integer (N)| Deskflow will send a maximum of `N` kilobytes of clipboard data to another computer when the mouse transitions to that computer.|
 |win32KeepForeground | `true` or `false`| If set to ''true'' (the default), Deskflow will grab the foreground focus on a Windows server (thereby putting all other windows in the background) upon switching to a client. If set to ''false'', it will leave the currently foreground window in the foreground. Deskflow grabs the focus to avoid issues with other apps interfering with Deskflow's ability to read the hardware inputs. |
+|forceNumLock | `true` or `false`| If set to ''true'', Deskflow will always send keystrokes to clients as if NumLock were activated. This only applies on Linux Deskflow servers. If set to ''false'', it will defer to the normally-detected key state. **NOTE**: This is intended as a workaround for Wayland servers that are unable to properly detect key modifier states. Hopefully, it will eventually become mostly obsolete and remain as a convenience setting for some users. |
 |keystroke(key) | actions | Binds the ''key'' combination key to the given ''actions''. ''key'' is an optional list of modifiers (''shift'', ''control'', ''alt'', ''meta'' or ''super'') optionally followed by a character or a key name, all separated by + (plus signs). You must have either modifiers or a character/key name or both. See below for `valid key names` and `actions`. Keyboard hot keys are handled while the cursor any computer. Separate actions can be assigned to press and release.|
 |mousebutton(button) | actions| Binds the modifier and mouse button combination ''button'' to the given ''actions''. ''button'' is an optional list of modifiers (''shift'', ''control'', ''alt'', ''meta'' or ''super'') followed by a button number. The primary button (the left button for right handed users) is button 1, the middle button is 2, etc. Actions can be found below. Mouse button actions are not handled while the cursor is on the server. You cannot use these to perform an action while on the server. Separate actions can be assigned to press and release.|
 

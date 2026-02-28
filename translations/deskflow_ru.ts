@@ -1068,6 +1068,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation>Включать привязку к компьютеру при запуске</translation>
     </message>
+    <message>
+        <source>Force NumLock enabled on clients (Linux only)</source>
+        <translation type="unfinished">Принудительное включение NumLock на клиентских компьютерах (только в Linux)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

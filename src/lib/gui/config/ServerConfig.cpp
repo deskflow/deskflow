@@ -61,6 +61,7 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
          m_Protocol == sc.m_Protocol &&                                 //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
+         m_ForceNumLock == sc.m_ForceNumLock &&                         //
          m_HasSwitchDelay == sc.m_HasSwitchDelay &&                     //
          m_SwitchDelay == sc.m_SwitchDelay &&                           //
          m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&             //
@@ -111,6 +112,7 @@ void ServerConfig::commit()
   settings().setValue("protocol", static_cast<int>(protocol()));
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
+  settings().setValue("forceNumLock", forceNumLock());
   settings().setValue("hasSwitchDelay", hasSwitchDelay());
   settings().setValue("switchDelay", switchDelay());
   settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
@@ -163,6 +165,7 @@ void ServerConfig::recall()
   setProtocol(networkProtocolFromInt(settings().value("protocol", networkProtocolToInt(protocol())).toInt()));
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
+  setForceNumLock(settings().value("forceNumLock", false).toBool());
   haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
   setSwitchDelay(settings().value("switchDelay", 250).toInt());
   haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
@@ -267,6 +270,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
+  outStream << "\t"
+            << "forceNumLock = " << (config.forceNumLock() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "defaultLockToScreenState = " << (config.defaultLockToScreenState() ? "true" : "false") << Qt::endl;
   outStream << "\t"

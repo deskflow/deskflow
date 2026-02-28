@@ -1070,6 +1070,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Activar el bloqueo del ordenador al iniciar</translation>
     </message>
+    <message>
+        <source>Force NumLock enabled on clients (Linux only)</source>
+        <translation type="unfinished">Forzar NumLock habilitado en los clientes (solo Linux)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

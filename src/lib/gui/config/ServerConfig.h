@@ -81,6 +81,10 @@ public:
   {
     return m_Win32KeepForeground;
   }
+  bool forceNumLock() const
+  {
+    return m_ForceNumLock;
+  }
   bool hasSwitchDelay() const
   {
     return m_HasSwitchDelay;
@@ -194,6 +198,10 @@ private:
   {
     m_Win32KeepForeground = on;
   }
+  void setForceNumLock(bool on)
+  {
+    m_ForceNumLock = on;
+  }
   void haveSwitchDelay(bool on)
   {
     m_HasSwitchDelay = on;
@@ -251,6 +259,7 @@ private:
   NetworkProtocol m_Protocol = deskflow::gui::kDefaultProtocol;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
+  bool m_ForceNumLock = false;
   bool m_HasSwitchDelay = false;
   int m_SwitchDelay = 0;
   bool m_HasSwitchDoubleTap = false;

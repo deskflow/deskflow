@@ -1072,6 +1072,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">启动时启用锁定到计算机</translation>
     </message>
+    <message>
+        <source>Force NumLock enabled on clients (Linux only)</source>
+        <translation type="unfinished">强制客户端启用数字锁定键 (仅限 Linux)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

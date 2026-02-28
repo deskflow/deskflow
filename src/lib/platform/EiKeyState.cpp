@@ -314,6 +314,11 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
 
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 {
+  if (m_forceNumLock)
+  {
+    xkb_state_update_latched_locked(m_xkbState, 0, 0, 0, 0, xkb_keymap_mod_get_mask(m_xkbKeymap, XKB_VMOD_NAME_NUM), xkb_keymap_mod_get_mask(m_xkbKeymap, XKB_VMOD_NAME_NUM), false, 0);
+  }
+
   // Get the base keysym from level 0, ignoring current modifiers.
   // We need this because with newer xkeyboard-config, function keys use CTRL+ALT type,
   // and xkb_state_key_get_one_sym() would return XF86_Switch_VT_* when Ctrl+Alt are
@@ -352,5 +357,10 @@ void EiKeyState::clearStaleModifiers()
     xkb_state_unref(m_xkbState);
   }
   m_xkbState = xkb_state_new(m_xkbKeymap);
+}
+
+void EiKeyState::setForceNumLock(bool enabled)
+{
+  m_forceNumLock = enabled;
 }
 } // namespace deskflow

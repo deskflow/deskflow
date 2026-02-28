@@ -85,6 +85,12 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
   connect(ui->cbWin32KeepForeground, &QCheckBox::toggled, this, &ServerConfigDialog::toggleWin32Foreground);
 
+  if (!deskflow::platform::isWayland())
+    ui->cbForceNumLock->setVisible(false);
+
+  ui->cbForceNumLock->setChecked(serverConfig().forceNumLock());
+  connect(ui->cbForceNumLock, &QCheckBox::toggled, this, &ServerConfigDialog::toggleForceNumLock);
+
   ui->cbSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
   connect(ui->cbSwitchDelay, &QCheckBox::toggled, this, &ServerConfigDialog::toggleSwitchDelay);
 
@@ -446,6 +452,12 @@ void ServerConfigDialog::toggleLockToScreen(bool disabled)
 void ServerConfigDialog::toggleWin32Foreground(bool enabled)
 {
   serverConfig().setWin32KeepForeground(enabled);
+  onChange();
+}
+
+void ServerConfigDialog::toggleForceNumLock(bool enabled)
+{
+  serverConfig().setForceNumLock(enabled);
   onChange();
 }
 

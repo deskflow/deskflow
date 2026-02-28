@@ -1070,6 +1070,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Abilita il blocco al computer all&apos;avvio</translation>
     </message>
+    <message>
+        <source>Force NumLock enabled on clients (Linux only)</source>
+        <translation type="unfinished">Forza l&apos;attivazione di NumLock sui client (solo Linux)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

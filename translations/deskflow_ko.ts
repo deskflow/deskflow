@@ -1070,6 +1070,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation>시작 시 컴퓨터 잠금 사용</translation>
     </message>
+    <message>
+        <source>Force NumLock enabled on clients (Linux only)</source>
+        <translation type="unfinished">클라이언트에서 NumLock을 강제로 활성화합니다(Linux에만 해당).</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

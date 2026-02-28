@@ -62,6 +62,7 @@ protected:
   void toggleDefaultLockToScreenState(bool state);
   void toggleLockToScreen(bool disabled);
   void toggleWin32Foreground(bool enabled);
+  void toggleForceNumLock(bool enabled);
 
   void toggleClipboard(bool enabled);
   void setClipboardLimit(int limit);

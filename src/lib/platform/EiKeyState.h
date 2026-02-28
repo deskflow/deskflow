@@ -37,6 +37,8 @@ public:
   void updateXkbState(std::uint32_t keyval, bool isPressed);
   void clearStaleModifiers() override;
 
+  void setForceNumLock(bool enabled);
+
 protected:
   // KeyState overrides
   void getKeyMap(KeyMap &keyMap) override;
@@ -51,6 +53,8 @@ private:
   xkb_context *m_xkb = nullptr;
   xkb_keymap *m_xkbKeymap = nullptr;
   xkb_state *m_xkbState = nullptr;
+
+  bool m_forceNumLock = false;
 };
 
 } // namespace deskflow
