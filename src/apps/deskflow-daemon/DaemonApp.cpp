@@ -157,7 +157,7 @@ int DaemonApp::daemonLoop()
 #if SYSAPI_WIN32
   // Runs the daemon through the Windows service controller, which controls the program lifecycle.
   return ArchDaemonWindows::runDaemon([this]() { return mainLoop(); });
-#elif SYSAPI_UNIX
+#else
   return mainLoop();
 #endif
 }

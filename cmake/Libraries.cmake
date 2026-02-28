@@ -163,9 +163,6 @@ macro(configure_unix_libs)
       message(WARNING "pkg-config not found, skipping wayland libraries")
     endif()
   endif()
-
-  add_definitions(-DSYSAPI_UNIX=1)
-
 endmacro()
 
 #
