@@ -1258,10 +1258,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Idioma</translation>
     </message>
     <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation type="unfinished">Fuerza el uso de un idioma para la interfaz gráfica de usuario.</translation>
-    </message>
-    <message>
         <source>Enable GUI debug messages</source>
         <translation type="unfinished">Habilitar mensajes de depuración de la interfaz gráfica de usuario</translation>
     </message>
