@@ -1258,10 +1258,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Lingua</translation>
     </message>
     <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation>Forza l&apos;utilizzo di una lingua per la GUI.</translation>
-    </message>
-    <message>
         <source>Enable GUI debug messages</source>
         <translation>Abilita i messaggi di debug della GUI</translation>
     </message>

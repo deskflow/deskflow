@@ -1196,10 +1196,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished">始终以系统身份运行 (在登录屏幕和 UAC 下工作)</translation>
     </message>
     <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation>强制 GUI 使用特定语言。</translation>
-    </message>
-    <message>
         <source>Language</source>
         <translation>语言</translation>
     </message>

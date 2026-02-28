@@ -1192,10 +1192,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Всегда запускать от имени системы (работает на экране входа и UAC)</translation>
     </message>
     <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation>Принудительно использовать язык для интерфейса.</translation>
-    </message>
-    <message>
         <source>Language</source>
         <translation>Язык</translation>
     </message>

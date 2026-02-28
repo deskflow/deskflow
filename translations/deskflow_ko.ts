@@ -1194,10 +1194,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>항상 시스템 권한으로 실행(로그인 화면 및 UAC에서 동작)</translation>
     </message>
     <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation>GUI에서 사용할 언어를 강제로 지정합니다.</translation>
-    </message>
-    <message>
         <source>Language</source>
         <translation>언어</translation>
     </message>
