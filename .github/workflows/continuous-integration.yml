@@ -285,7 +285,7 @@ jobs:
             else
               cmake --build build --config Release -j8
               for i in $(seq 1 5); do
-                cmake --build build --config Release -j8 --target package
+                cmake --build build --config Release -j8 --target package 2>&1
                 if [ $? -eq 0 ]; then
                   echo "Package successful"
                   break
