@@ -15,7 +15,7 @@
 
 #if SYSAPI_WIN32
 #include "deskflow/win32/AppUtilWindows.h"
-#elif SYSAPI_UNIX
+#else
 #include "deskflow/unix/AppUtilUnix.h"
 #endif
 

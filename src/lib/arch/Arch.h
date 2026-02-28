@@ -32,7 +32,7 @@
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/ArchNetworkWinsock.h"
 
-#elif SYSAPI_UNIX
+#else
 
 #include "arch/ArchDaemonNone.h"
 #include "arch/unix/ArchLogUnix.h"
