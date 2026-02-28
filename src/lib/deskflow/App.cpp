@@ -16,7 +16,7 @@
 #include "common/Settings.h"
 #include "deskflow/DeskflowException.h"
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 #include "base/IEventQueue.h"
 #endif
 

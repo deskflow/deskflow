@@ -21,7 +21,7 @@ namespace deskflow::core::ipc {
 class DaemonIpcServer;
 }
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 class MSWindowsWatchdog;
 #endif
 
@@ -56,7 +56,7 @@ private:
 
   static void showConsole();
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   std::unique_ptr<MSWindowsWatchdog> m_pWatchdog;
 #endif
 

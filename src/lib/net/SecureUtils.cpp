@@ -92,7 +92,7 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   X509_sign(cert, privateKey, EVP_sha256());
 
   const std::filesystem::path fsPath = path.toStdString();
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   auto fp = _wfopen(fsPath.native().c_str(), L"w");
 #else
   auto fp = std::fopen(fsPath.native().c_str(), "w");
