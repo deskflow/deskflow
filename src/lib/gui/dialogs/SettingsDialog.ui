@@ -101,25 +101,25 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <item>
-          <widget class="QLabel" name="lblTrayIconStyle">
-           <property name="text">
-            <string>Tray icon style</string>
-           </property>
-          </widget>
-         </item>
-         <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="1" column="1">
           <widget class="QRadioButton" name="rbIconColorful">
            <property name="text">
             <string>Colorful</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="1">
           <widget class="QRadioButton" name="rbIconMono">
            <property name="text">
             <string>Monocolor</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lblTrayIconStyle">
+           <property name="text">
+            <string>Tray icon style</string>
            </property>
           </widget>
          </item>
