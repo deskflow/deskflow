@@ -36,7 +36,7 @@
 #include "platform/EiScreen.h"
 #endif
 
-#if WINAPI_CARBON
+#if defined(Q_OS_MAC)
 #include "base/TMethodJob.h"
 #include "mt/Thread.h"
 #include "platform/OSXCocoaApp.h"
@@ -112,9 +112,11 @@ deskflow::Screen *ClientApp::createScreen()
       ),
       getEvents()
   );
-#endif
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#elif defined(Q_OS_MAC)
+  return new deskflow::Screen(
+      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool()), getEvents()
+  );
+#else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
@@ -123,22 +125,14 @@ deskflow::Screen *ClientApp::createScreen()
     throw XNoEiSupport();
 #endif
   }
-#endif
-
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents()),
       getEvents()
   );
-
 #endif
-
-#if WINAPI_CARBON
-  return new deskflow::Screen(
-      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool()), getEvents()
-  );
-#endif
+#endif // end os check
 }
 
 deskflow::Screen *ClientApp::openClientScreen()
@@ -332,8 +326,7 @@ int ClientApp::mainLoop()
   // later.  the timer installed by startClient() will take care of
   // that.
 
-#if WINAPI_CARBON
-
+#if defined(Q_OS_MAC)
   Thread thread(new TMethodJob<ClientApp>(this, &ClientApp::runEventsLoop, nullptr));
 
   // wait until carbon loop is ready

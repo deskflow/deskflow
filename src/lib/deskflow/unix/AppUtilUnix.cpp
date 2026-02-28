@@ -12,7 +12,7 @@
 #if WINAPI_XWINDOWS
 #include "deskflow/unix/X11LayoutsParser.h"
 #include <X11/XKBlib.h>
-#elif WINAPI_CARBON
+#elif defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
 #include <platform/OSXAutoTypes.h>
 #endif
@@ -50,7 +50,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
     m_evdev = "/usr/share/X11/xkb/rules/evdev.xml";
   layoutLangCodes = X11LayoutsParser::getX11LanguageList(m_evdev);
 
-#elif WINAPI_CARBON
+#elif defined(Q_OS_MAC)
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
   AutoCFDictionary dict(
@@ -134,7 +134,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
 
   result = X11LayoutsParser::convertLayoutToISO(m_evdev, result);
 
-#elif WINAPI_CARBON
+#elif defined(Q_OS_MAC)
   auto layoutLanguages =
       (CFArrayRef)TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceLanguages);
   char temporaryCString[128] = {0};
