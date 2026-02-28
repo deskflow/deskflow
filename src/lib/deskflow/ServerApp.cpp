@@ -42,7 +42,7 @@
 #include "platform/EiScreen.h"
 #endif
 
-#if WINAPI_CARBON
+#if defined(Q_OS_MAC)
 #include "base/TMethodJob.h"
 #include "mt/Thread.h"
 #include "platform/OSXCocoaApp.h"
@@ -396,9 +396,9 @@ deskflow::Screen *ServerApp::createScreen()
   return new deskflow::Screen(
       new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
-#endif
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#elif defined(Q_OS_MAC)
+  return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
+#else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
@@ -407,17 +407,14 @@ deskflow::Screen *ServerApp::createScreen()
     throw XNoEiSupport();
 #endif
   }
-#endif
-
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
       getEvents()
   );
-#elif WINAPI_CARBON
-  return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
 #endif
+#endif // end os check
 }
 
 PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::Screen *screen)
@@ -546,7 +543,7 @@ int ServerApp::mainLoop()
   // later.  the timer installed by startServer() will take care of
   // that.
 
-#if WINAPI_CARBON
+#if defined(Q_OS_MAC)
 
   Thread thread(new TMethodJob<ServerApp>(this, &ServerApp::runEventsLoop, nullptr));
 
