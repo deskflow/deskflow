@@ -32,7 +32,7 @@
 #include <QLoggingCategory>
 #endif
 
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#if !defined(Q_OS_MAC) && !defined(Q_OS_WIN)
 #include "platform/XDGPortalRegistry.h"
 #endif
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
 #endif
 
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#if !defined(Q_OS_MAC) && !defined(Q_OS_WIN)
   deskflow::platform::setAppId();
 #endif
 
