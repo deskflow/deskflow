@@ -30,7 +30,7 @@
 // must be before screen header includes
 #include <QFileInfo>
 
-#if WINAPI_MSWINDOWS
+#if defined(Q_OS_WIN)
 #include "platform/MSWindowsScreen.h"
 #endif
 
@@ -392,7 +392,7 @@ bool ServerApp::startServer()
 
 deskflow::Screen *ServerApp::createScreen()
 {
-#if WINAPI_MSWINDOWS
+#if defined(Q_OS_WIN)
   return new deskflow::Screen(
       new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
