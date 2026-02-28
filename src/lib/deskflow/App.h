@@ -13,7 +13,7 @@
 #include "deskflow/IApp.h"
 #include "net/SocketMultiplexer.h"
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 #include "deskflow/win32/AppUtilWindows.h"
 #else
 #include "deskflow/unix/AppUtilUnix.h"

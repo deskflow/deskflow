@@ -658,7 +658,7 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *const
   Lock lock(&getMutex());
 
   int status = 0;
-#ifdef SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   status = secureConnect(static_cast<int>(getSocket()->m_socket));
 #else
   status = secureConnect(getSocket()->m_fd);
@@ -686,7 +686,7 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *const,
   Lock lock(&getMutex());
 
   int status = 0;
-#ifdef SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   status = secureAccept(static_cast<int>(getSocket()->m_socket));
 #else
   status = secureAccept(getSocket()->m_fd);

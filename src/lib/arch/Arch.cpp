@@ -10,7 +10,7 @@
 
 #include <thread>
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
@@ -26,7 +26,7 @@ Arch::Arch()
   s_instance = this;
 }
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 void Arch::init()
 {
   ARCH_NETWORK::init();

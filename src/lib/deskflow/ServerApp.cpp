@@ -116,7 +116,7 @@ bool ServerApp::loadConfig(const QString &filename)
   try {
     // load configuration
     LOG_DEBUG("opening configuration \"%s\"", path.c_str());
-#ifdef SYSAPI_WIN32
+#if defined(Q_OS_WIN)
     std::ifstream configStream(filename.toStdWString());
 #else
     std::ifstream configStream(path);
