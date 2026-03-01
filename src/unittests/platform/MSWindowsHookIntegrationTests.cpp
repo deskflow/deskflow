@@ -239,7 +239,9 @@ QString charsToDebugString(const QList<WCHAR> &chars)
   return out;
 }
 
-void assertSequenceProducesComposed(const ComposePair &pair, const std::initializer_list<std::pair<WORD, bool>> &sequence)
+void assertSequenceProducesComposed(
+    const ComposePair &pair, const std::initializer_list<std::pair<WORD, bool>> &sequence
+)
 {
   clearHookMessageQueue();
 
@@ -267,13 +269,12 @@ void MSWindowsHookIntegrationTests::deadKeyIsPreservedAcrossUnrelatedKeyUpUntilN
     QSKIP("No suitable dead-key + compose-key pair found for current keyboard layout");
   }
   assertSequenceProducesComposed(
-      pair,
-      {{'N', false},
-       {static_cast<WORD>(pair.deadVK), false},
-       {'N', true},
-       {static_cast<WORD>(pair.composeVK), false},
-       {static_cast<WORD>(pair.composeVK), true},
-       {static_cast<WORD>(pair.deadVK), true}}
+      pair, {{'N', false},
+             {static_cast<WORD>(pair.deadVK), false},
+             {'N', true},
+             {static_cast<WORD>(pair.composeVK), false},
+             {static_cast<WORD>(pair.composeVK), true},
+             {static_cast<WORD>(pair.deadVK), true}}
   );
 }
 
@@ -284,13 +285,12 @@ void MSWindowsHookIntegrationTests::deadKeyCompose_whenDeadReleasedBeforeCompose
     QSKIP("No suitable dead-key + compose-key pair found for current keyboard layout");
   }
   assertSequenceProducesComposed(
-      pair,
-      {{'N', false},
-       {static_cast<WORD>(pair.deadVK), false},
-       {'N', true},
-       {static_cast<WORD>(pair.deadVK), true},
-       {static_cast<WORD>(pair.composeVK), false},
-       {static_cast<WORD>(pair.composeVK), true}}
+      pair, {{'N', false},
+             {static_cast<WORD>(pair.deadVK), false},
+             {'N', true},
+             {static_cast<WORD>(pair.deadVK), true},
+             {static_cast<WORD>(pair.composeVK), false},
+             {static_cast<WORD>(pair.composeVK), true}}
   );
 }
 
@@ -301,13 +301,12 @@ void MSWindowsHookIntegrationTests::deadKeyCompose_whenDeadReleasedBetweenCompos
     QSKIP("No suitable dead-key + compose-key pair found for current keyboard layout");
   }
   assertSequenceProducesComposed(
-      pair,
-      {{'N', false},
-       {static_cast<WORD>(pair.deadVK), false},
-       {'N', true},
-       {static_cast<WORD>(pair.composeVK), false},
-       {static_cast<WORD>(pair.deadVK), true},
-       {static_cast<WORD>(pair.composeVK), true}}
+      pair, {{'N', false},
+             {static_cast<WORD>(pair.deadVK), false},
+             {'N', true},
+             {static_cast<WORD>(pair.composeVK), false},
+             {static_cast<WORD>(pair.deadVK), true},
+             {static_cast<WORD>(pair.composeVK), true}}
   );
 }
 
@@ -326,18 +325,16 @@ void MSWindowsHookIntegrationTests::deadKeyDoesNotLeakToNextCharacter_afterCompo
   const auto installResult = MSWindowsHook::install();
   QVERIFY2(installResult != kHOOK_FAILED, "Failed to install low-level Windows hook");
 
-  runSequence(
-      {
-          {'N', false},
-          {static_cast<WORD>(pair.deadVK), false},
-          {'N', true},
-          {'A', false},
-          {'A', true},
-          {'O', false},
-          {'O', true},
-          {static_cast<WORD>(pair.deadVK), true},
-      }
-  );
+  runSequence({
+      {'N', false},
+      {static_cast<WORD>(pair.deadVK), false},
+      {'N', true},
+      {'A', false},
+      {'A', true},
+      {'O', false},
+      {'O', true},
+      {static_cast<WORD>(pair.deadVK), true},
+  });
 
   const auto keyMsgs = collectHookMessages(DESKFLOW_MSG_KEY, 350);
   MSWindowsHook::uninstall();
@@ -386,18 +383,16 @@ void MSWindowsHookIntegrationTests::deadKeyDoesNotLeak_whenNextKeyDownBeforeComp
   const auto installResult = MSWindowsHook::install();
   QVERIFY2(installResult != kHOOK_FAILED, "Failed to install low-level Windows hook");
 
-  runSequence(
-      {
-          {'N', false},
-          {static_cast<WORD>(pair.deadVK), false},
-          {'N', true},
-          {'A', false},
-          {static_cast<WORD>(pair.deadVK), true},
-          {'O', false},
-          {'A', true},
-          {'O', true},
-      }
-  );
+  runSequence({
+      {'N', false},
+      {static_cast<WORD>(pair.deadVK), false},
+      {'N', true},
+      {'A', false},
+      {static_cast<WORD>(pair.deadVK), true},
+      {'O', false},
+      {'A', true},
+      {'O', true},
+  });
 
   const auto keyMsgs = collectHookMessages(DESKFLOW_MSG_KEY, 350);
   MSWindowsHook::uninstall();
@@ -433,7 +428,9 @@ void MSWindowsHookIntegrationTests::deadKeyDoesNotLeak_whenNextKeyDownBeforeComp
       qPrintable(QStringLiteral("Dead key leaked in fast-overlap sequence (relay mode). Captured: %1").arg(debugChars))
   );
   if (!plainOAfterCompose) {
-    QWARN(qPrintable(QStringLiteral("No plain 'o' observed in overlap sequence (relay mode). Captured: %1").arg(debugChars)));
+    QWARN(qPrintable(
+        QStringLiteral("No plain 'o' observed in overlap sequence (relay mode). Captured: %1").arg(debugChars)
+    ));
   }
 }
 

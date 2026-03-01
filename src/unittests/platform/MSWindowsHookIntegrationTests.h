@@ -19,4 +19,3 @@ private Q_SLOTS:
   void deadKeyDoesNotLeakToNextCharacter_afterCompose();
   void deadKeyDoesNotLeak_whenNextKeyDownBeforeComposeKeyUp();
 };
-

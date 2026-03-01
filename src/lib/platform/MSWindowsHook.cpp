@@ -383,8 +383,7 @@ static bool keyboardHookHandlerLegacy(WPARAM wParam, LPARAM lParam)
     }
   }
 
-  TranslationResult translation =
-      translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu, true);
+  TranslationResult translation = translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu, true);
   WCHAR *wc = translation.m_chars;
   int n = translation.m_count;
   bool noAltGr = translation.m_noAltGr;
@@ -551,8 +550,8 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   );
 
   deskflow::win32::DeadKeyTransitionInput transitionInput;
-  transitionInput.m_eventType = isKeyUpEvent ? deskflow::win32::DeadKeyEventType::KeyUp
-                                             : deskflow::win32::DeadKeyEventType::KeyDown;
+  transitionInput.m_eventType =
+      isKeyUpEvent ? deskflow::win32::DeadKeyEventType::KeyUp : deskflow::win32::DeadKeyEventType::KeyDown;
   transitionInput.m_toUnicodeResult = n;
   transitionInput.m_vk = static_cast<UINT>(wParam);
   transitionInput.m_button = button;
@@ -989,5 +988,3 @@ int MSWindowsHook::uninstallScreenSaver()
 
   return 1;
 }
-
-
