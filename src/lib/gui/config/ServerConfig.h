@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "base/NetworkProtocol.h"
+#include "common/NetworkProtocol.h"
 #include "gui/Hotkey.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"
