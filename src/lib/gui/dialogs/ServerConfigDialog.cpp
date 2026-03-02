@@ -10,8 +10,8 @@
 #include "common/PlatformInfo.h"
 #include "ui_ServerConfigDialog.h"
 
-#include "base/NetworkProtocol.h"
 #include "common/Constants.h"
+#include "common/NetworkProtocol.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"

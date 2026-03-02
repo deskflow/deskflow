@@ -9,8 +9,8 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/NetworkProtocol.h"
 #include "base/Stopwatch.h"
+#include "common/NetworkProtocol.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
