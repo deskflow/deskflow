@@ -40,10 +40,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>25</number>
+        <number>20</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>20</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -152,10 +155,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>25</number>
+        <number>20</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>20</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -362,10 +368,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>25</number>
+        <number>20</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>20</number>
        </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
@@ -659,10 +668,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>25</number>
+        <number>20</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>20</number>
        </property>
        <item>
         <widget class="QGroupBox" name="groupService">
