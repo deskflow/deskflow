@@ -41,6 +41,7 @@ public:
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
+    inline static const auto ExponentialBackoff = QStringLiteral("client/exponentialBackoff");
   };
   struct Core
   {
@@ -201,6 +202,7 @@ private:
     , Settings::Client::YScrollScale
     , Settings::Client::XScrollScale
     , Settings::Client::XdpRestoreToken
+    , Settings::Client::ExponentialBackoff
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion
@@ -253,6 +255,7 @@ private:
     , Settings::Server::ExternalConfig
     , Settings::Client::InvertYScroll
     , Settings::Client::InvertXScroll
+    , Settings::Client::ExponentialBackoff
     , Settings::Log::ToFile
     , Settings::Log::GuiDebug
   };

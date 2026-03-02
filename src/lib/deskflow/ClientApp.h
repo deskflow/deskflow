@@ -83,10 +83,14 @@ private:
   NetworkAddress &getCurrentServerAddress();
   void tryNextServer();
 
+  double nextRetryTime();
+
   bool m_suspended = false;
   Client *m_client = nullptr;
   deskflow::Screen *m_clientScreen = nullptr;
   QList<NetworkAddress> m_serverAddresses;
   size_t m_currentServerIndex = 0;
   size_t m_lastServerAddressIndex = 0;
+  double m_currentRetryTime = 1.0;
+  bool m_useExponentialBackoff = false;
 };

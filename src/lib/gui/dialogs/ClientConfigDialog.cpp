@@ -53,6 +53,10 @@ void ClientConfigDialog::initConnections() const
   );
 
   connect(ui->cbLanguageSync, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(
+      ui->cbExponentialBackoff, &QCheckBox::checkStateChanged, this,
+      &ClientConfigDialog::setButtonBoxEnabledButtons
+  );
   connect(ui->cbYScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->cbXScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
@@ -62,6 +66,8 @@ void ClientConfigDialog::initConnections() const
 bool ClientConfigDialog::isModified() const
 {
   return (ui->cbLanguageSync->isChecked() != Settings::value(Settings::Client::LanguageSync).toBool()) ||
+         (ui->cbExponentialBackoff->isChecked() !=
+          Settings::value(Settings::Client::ExponentialBackoff).toBool()) ||
          (ui->cbYScrollInvert->isChecked() != Settings::value(Settings::Client::InvertYScroll).toBool()) ||
          (ui->sbYScrollScale->value() != Settings::value(Settings::Client::YScrollScale).toDouble()) ||
          (ui->cbXScrollInvert->isChecked() != Settings::value(Settings::Client::InvertXScroll).toBool()) ||
@@ -71,6 +77,8 @@ bool ClientConfigDialog::isModified() const
 bool ClientConfigDialog::isDefault() const
 {
   return (ui->cbLanguageSync->isChecked() == Settings::defaultValue(Settings::Client::LanguageSync).toBool()) &&
+         (ui->cbExponentialBackoff->isChecked() ==
+          Settings::defaultValue(Settings::Client::ExponentialBackoff).toBool()) &&
          (ui->cbYScrollInvert->isChecked() == Settings::defaultValue(Settings::Client::InvertYScroll).toBool()) &&
          (ui->sbYScrollScale->value() == Settings::defaultValue(Settings::Client::YScrollScale).toDouble()) &&
          (ui->cbXScrollInvert->isChecked() == Settings::defaultValue(Settings::Client::InvertXScroll).toBool()) &&
@@ -88,6 +96,7 @@ void ClientConfigDialog::setButtonBoxEnabledButtons() const
 void ClientConfigDialog::load()
 {
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
+  ui->cbExponentialBackoff->setChecked(Settings::value(Settings::Client::ExponentialBackoff).toBool());
   ui->cbYScrollInvert->setChecked(Settings::value(Settings::Client::InvertYScroll).toBool());
   ui->sbYScrollScale->setValue(Settings::value(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::value(Settings::Client::InvertXScroll).toBool());
@@ -97,6 +106,7 @@ void ClientConfigDialog::load()
 void ClientConfigDialog::resetToDefault()
 {
   ui->cbLanguageSync->setChecked(Settings::defaultValue(Settings::Client::LanguageSync).toBool());
+  ui->cbExponentialBackoff->setChecked(Settings::defaultValue(Settings::Client::ExponentialBackoff).toBool());
   ui->cbYScrollInvert->setChecked(Settings::defaultValue(Settings::Client::InvertYScroll).toBool());
   ui->sbYScrollScale->setValue(Settings::defaultValue(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::defaultValue(Settings::Client::InvertXScroll).toBool());
@@ -106,6 +116,7 @@ void ClientConfigDialog::resetToDefault()
 void ClientConfigDialog::save()
 {
   Settings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
+  Settings::setValue(Settings::Client::ExponentialBackoff, ui->cbExponentialBackoff->isChecked());
   Settings::setValue(Settings::Client::InvertYScroll, ui->cbYScrollInvert->isChecked());
   Settings::setValue(Settings::Client::YScrollScale, ui->sbYScrollScale->value());
   Settings::setValue(Settings::Client::InvertXScroll, ui->cbXScrollInvert->isChecked());

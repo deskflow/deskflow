@@ -20,6 +20,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="cbExponentialBackoff">
+     <property name="text">
+      <string>Use exponential backoff for reconnection</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Scroll Modifiers</string>

@@ -45,7 +45,8 @@
 
 #include <memory>
 
-constexpr static auto s_retryTime = 1.0;
+static constexpr double kRetryTime = 1.0;
+static constexpr double kMaxRetryTime = 64.0;
 
 ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
@@ -93,6 +94,8 @@ void ClientApp::parseArgs()
 
     LOG_NOTE("configured %zu server address(es)", static_cast<size_t>(m_serverAddresses.size()));
   }
+
+  m_useExponentialBackoff = Settings::value(Settings::Client::ExponentialBackoff).toBool();
 }
 
 const char *ClientApp::daemonName() const
@@ -176,12 +179,25 @@ void ClientApp::scheduleClientRestart(double retryTime)
   getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
 
+double ClientApp::nextRetryTime()
+{
+  if (!m_useExponentialBackoff)
+    return kRetryTime;
+
+  const double retryTime = m_currentRetryTime;
+  m_currentRetryTime *= 2.0;
+  if (m_currentRetryTime > kMaxRetryTime)
+    m_currentRetryTime = kMaxRetryTime;
+  return retryTime;
+}
+
 void ClientApp::handleClientConnected()
 {
   LOG_IPC("connected to server");
-  // Reset server index on successful connection
+  // Reset server index and retry backoff on successful connection
   m_currentServerIndex = 0;
   m_lastServerAddressIndex = 0;
+  m_currentRetryTime = kRetryTime;
 }
 
 void ClientApp::handleClientFailed(const Event &e)
@@ -192,7 +208,7 @@ void ClientApp::handleClientFailed(const Event &e)
 
     LOG_WARN("failed to connect to server=%s, trying next resolved address", info->m_what.c_str());
     if (!m_suspended) {
-      scheduleClientRestart(s_retryTime);
+      scheduleClientRestart(kRetryTime);
     }
   } else {
     // All resolved addresses exhausted, try next server in list
@@ -206,7 +222,7 @@ void ClientApp::handleClientFailed(const Event &e)
       std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
       LOG_WARN("failed to connect to server=%s, trying next server in list", info->m_what.c_str());
       if (!m_suspended) {
-        scheduleClientRestart(s_retryTime);
+        scheduleClientRestart(kRetryTime);
       }
     }
   }
@@ -222,7 +238,7 @@ void ClientApp::handleClientRefused(const Event &e)
   } else {
     LOG_WARN("failed to connect to server: %s", info->m_what.c_str());
     if (!m_suspended) {
-      scheduleClientRestart(s_retryTime);
+      scheduleClientRestart(nextRetryTime());
     }
   }
 }
@@ -231,7 +247,8 @@ void ClientApp::handleClientDisconnected()
 {
   LOG_IPC("disconnected from server");
   if (!m_suspended) {
-    scheduleClientRestart(s_retryTime);
+    m_currentRetryTime = kRetryTime;
+    scheduleClientRestart(nextRetryTime());
   }
 }
 
