@@ -29,10 +29,26 @@ static int32_t g_xScreen = 0;
 static int32_t g_yScreen = 0;
 static int32_t g_wScreen = 0;
 static int32_t g_hScreen = 0;
-static WPARAM g_deadVirtKey = 0;
-static WPARAM g_deadRelease = 0;
-static LPARAM g_deadLParam = 0;
-static BYTE g_deadKeyState[256] = {0};
+
+struct DeadRuntimeState
+{
+  WPARAM m_virtKey = 0;
+  WPARAM m_releaseVirtKey = 0;
+  LPARAM m_lParam = 0;
+  BYTE m_keyState[256] = {0};
+
+  void reset()
+  {
+    m_virtKey = 0;
+    m_releaseVirtKey = 0;
+    m_lParam = 0;
+    for (size_t i = 0; i < 256; ++i) {
+      m_keyState[i] = 0;
+    }
+  }
+};
+
+static DeadRuntimeState g_dead;
 static BYTE g_keyState[256] = {0};
 static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
@@ -188,20 +204,20 @@ static WPARAM makeKeyMsg(UINT virtKey, WCHAR wc, bool noAltGr)
 
 static void setDeadKey(WCHAR wc[], int size, UINT flags)
 {
-  if (g_deadVirtKey != 0) {
-    auto virtualKey = static_cast<UINT>(g_deadVirtKey);
-    auto scanCode = static_cast<UINT>((g_deadLParam & 0x10ff0000u) >> 16);
-    if (ToUnicode(virtualKey, scanCode, g_deadKeyState, wc, size, flags) >= 2) {
+  if (g_dead.m_virtKey != 0) {
+    auto virtualKey = static_cast<UINT>(g_dead.m_virtKey);
+    auto scanCode = static_cast<UINT>((g_dead.m_lParam & 0x10ff0000u) >> 16);
+    if (ToUnicode(virtualKey, scanCode, g_dead.m_keyState, wc, size, flags) >= 2) {
       // If ToUnicode returned >=2, it means that we accidentally removed
       // a double dead key instead of restoring it. Thus, we call
       // ToUnicode again with the same parameters to restore the
       // internal dead key state.
-      ToUnicode(virtualKey, scanCode, g_deadKeyState, wc, size, flags);
+      ToUnicode(virtualKey, scanCode, g_dead.m_keyState, wc, size, flags);
 
-      // We need to keep track of this because g_deadVirtKey will be
+      // We need to keep track of this because g_dead.m_virtKey will be
       // cleared later on; this would cause the dead key release to
       // incorrectly restore the dead key state.
-      g_deadRelease = g_deadVirtKey;
+      g_dead.m_releaseVirtKey = g_dead.m_virtKey;
     }
   }
 }
@@ -241,8 +257,8 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam, lParam);
 
   // ignore dead key release
-  if ((g_deadVirtKey == wParam || g_deadRelease == wParam) && (lParam & 0x80000000u) != 0) {
-    g_deadRelease = 0;
+  if ((g_dead.m_virtKey == wParam || g_dead.m_releaseVirtKey == wParam) && (lParam & 0x80000000u) != 0) {
+    g_dead.m_releaseVirtKey = 0;
     PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
     return false;
   }
@@ -345,10 +361,10 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
       // key.
       break;
 
-    g_deadVirtKey = wParam;
-    g_deadLParam = lParam;
+    g_dead.m_virtKey = wParam;
+    g_dead.m_lParam = lParam;
     for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
-      g_deadKeyState[i] = keys[i];
+      g_dead.m_keyState[i] = keys[i];
     }
     break;
 
@@ -367,9 +383,9 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   case 2: {
     // previous dead key not composed.  send a fake key press
     // and release for the dead key to our window.
-    WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam | 0x80000000u);
+    WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_dead.m_virtKey, wc[0], noAltGr);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam & 0x7fffffffu);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam | 0x80000000u);
 
     // use uncomposed character
     charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
@@ -379,14 +395,14 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   }
 
   // put back the dead key, if any, for the application to use
-  if (g_deadVirtKey != 0) {
-    ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState, wc, 2, flags);
+  if (g_dead.m_virtKey != 0) {
+    ToUnicode((UINT)g_dead.m_virtKey, (g_dead.m_lParam & 0x10ff0000u) >> 16, g_dead.m_keyState, wc, 2, flags);
   }
 
   // clear out old dead key state
   if (clearDeadKey) {
-    g_deadVirtKey = 0;
-    g_deadLParam = 0;
+    g_dead.m_virtKey = 0;
+    g_dead.m_lParam = 0;
   }
 
   // forward message to our window.  do this whether or not we're
@@ -610,8 +626,7 @@ EHookResult MSWindowsHook::install()
   }
 
   // discard old dead keys
-  g_deadVirtKey = 0;
-  g_deadLParam = 0;
+  g_dead.reset();
 
   // reset fake input flag
   g_fakeServerInput = false;
@@ -654,8 +669,7 @@ EHookResult MSWindowsHook::install()
 int MSWindowsHook::uninstall()
 {
   // discard old dead keys
-  g_deadVirtKey = 0;
-  g_deadLParam = 0;
+  g_dead.reset();
 
   // uninstall hooks
   if (g_keyboardLL != nullptr) {
