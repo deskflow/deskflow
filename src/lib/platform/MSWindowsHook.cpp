@@ -222,6 +222,80 @@ static void setDeadKey(WCHAR wc[], int size, UINT flags)
   }
 }
 
+static void normalizeControlAltForTranslation(BYTE keys[256], UINT &control, UINT &menu)
+{
+  control = keys[VK_CONTROL] | keys[VK_LCONTROL] | keys[VK_RCONTROL];
+  menu = keys[VK_MENU] | keys[VK_LMENU] | keys[VK_RMENU];
+  if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
+    keys[VK_LCONTROL] = 0;
+    keys[VK_RCONTROL] = 0;
+    keys[VK_CONTROL] = 0;
+  } else {
+    keys[VK_LCONTROL] = 0x80;
+    keys[VK_RCONTROL] = 0x80;
+    keys[VK_CONTROL] = 0x80;
+    keys[VK_LMENU] = 0x80;
+    keys[VK_RMENU] = 0x80;
+    keys[VK_MENU] = 0x80;
+  }
+}
+
+static UINT getTranslationFlags(UINT menu)
+{
+  UINT flags = 0;
+  if ((menu & 0x80) != 0) {
+    flags |= 1;
+  }
+  return flags;
+}
+
+struct TranslationResult
+{
+  int m_count = 0;
+  WCHAR m_chars[2] = {0, 0};
+  bool m_noAltGr = false;
+};
+
+static TranslationResult translateToUnicodeWithAltGrFallback(
+    WPARAM wParam, LPARAM lParam, const BYTE keys[256], UINT flags, UINT control, UINT menu
+)
+{
+  TranslationResult result;
+
+  // map the key event to a character.  we have to put the dead
+  // key back first and this has the side effect of removing it.
+  setDeadKey(result.m_chars, 2, flags);
+
+  const UINT scanCode = static_cast<UINT>((lParam & 0x10ff0000u) >> 16);
+  result.m_count = ToUnicode((UINT)wParam, scanCode, keys, result.m_chars, 2, flags);
+
+  // if mapping failed and ctrl and alt are pressed then try again
+  // with both not pressed.  this handles the case where ctrl and
+  // alt are being used as individual modifiers rather than AltGr.
+  // we note that's the case in the message sent back to deskflow
+  // because there's no simple way to deduce it after the fact.
+  // we have to put the dead key back first, if there was one.
+  if (result.m_count == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
+    result.m_noAltGr = true;
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
+    setDeadKey(result.m_chars, 2, flags);
+
+    BYTE keys2[256];
+    for (size_t i = 0; i < sizeof(keys2) / sizeof(keys2[0]); ++i) {
+      keys2[i] = keys[i];
+    }
+    keys2[VK_LCONTROL] = 0;
+    keys2[VK_RCONTROL] = 0;
+    keys2[VK_CONTROL] = 0;
+    keys2[VK_LMENU] = 0;
+    keys2[VK_RMENU] = 0;
+    keys2[VK_MENU] = 0;
+    result.m_count = ToUnicode((UINT)wParam, scanCode, keys2, result.m_chars, 2, flags);
+  }
+
+  return result;
+}
+
 static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
   DWORD vkCode = static_cast<DWORD>(wParam);
@@ -271,29 +345,16 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   // and ctrl+backspace to delete.  we don't want those translations
   // so clear the control modifier state.  however, if we want to
   // simulate AltGr (which is ctrl+alt) then we must not clear it.
-  UINT control = keys[VK_CONTROL] | keys[VK_LCONTROL] | keys[VK_RCONTROL];
-  UINT menu = keys[VK_MENU] | keys[VK_LMENU] | keys[VK_RMENU];
-  if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
-    keys[VK_LCONTROL] = 0;
-    keys[VK_RCONTROL] = 0;
-    keys[VK_CONTROL] = 0;
-  } else {
-    keys[VK_LCONTROL] = 0x80;
-    keys[VK_RCONTROL] = 0x80;
-    keys[VK_CONTROL] = 0x80;
-    keys[VK_LMENU] = 0x80;
-    keys[VK_RMENU] = 0x80;
-    keys[VK_MENU] = 0x80;
-  }
+  UINT control = 0;
+  UINT menu = 0;
+  normalizeControlAltForTranslation(keys, control, menu);
 
   // ToAscii() needs to know if a menu is active for some reason.
   // we don't know and there doesn't appear to be any way to find
   // out.  so we'll just assume a menu is active if the menu key
   // is down.
   // FIXME -- figure out some way to check if a menu is active
-  UINT flags = 0;
-  if ((menu & 0x80) != 0)
-    flags |= 1;
+  UINT flags = getTranslationFlags(menu);
 
   // if we're on the server screen then just pass numpad keys with alt
   // key down as-is.  we won't pick up the resulting character but the
@@ -310,38 +371,10 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     }
   }
 
-  // map the key event to a character.  we have to put the dead
-  // key back first and this has the side effect of removing it.
-  WCHAR wc[] = {0, 0};
-  setDeadKey(wc, 2, flags);
-
-  UINT scanCode = ((lParam & 0x10ff0000u) >> 16);
-  int n = ToUnicode((UINT)wParam, scanCode, keys, wc, 2, flags);
-
-  // if mapping failed and ctrl and alt are pressed then try again
-  // with both not pressed.  this handles the case where ctrl and
-  // alt are being used as individual modifiers rather than AltGr.
-  // we note that's the case in the message sent back to deskflow
-  // because there's no simple way to deduce it after the fact.
-  // we have to put the dead key back first, if there was one.
-  bool noAltGr = false;
-  if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
-    noAltGr = true;
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
-    setDeadKey(wc, 2, flags);
-
-    BYTE keys2[256];
-    for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
-      keys2[i] = keys[i];
-    }
-    keys2[VK_LCONTROL] = 0;
-    keys2[VK_RCONTROL] = 0;
-    keys2[VK_CONTROL] = 0;
-    keys2[VK_LMENU] = 0;
-    keys2[VK_RMENU] = 0;
-    keys2[VK_MENU] = 0;
-    n = ToUnicode((UINT)wParam, scanCode, keys2, wc, 2, flags);
-  }
+  TranslationResult translation = translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu);
+  WCHAR *wc = translation.m_chars;
+  int n = translation.m_count;
+  bool noAltGr = translation.m_noAltGr;
 
   PostThreadMessage(
       g_threadID, DESKFLOW_MSG_DEBUG, (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) | 0x60000000,
