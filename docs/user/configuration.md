@@ -144,6 +144,7 @@ This section contains options used when in server mode it will begin with `[serv
 |:-------------------|:-----------------:|:-----------|
 | externalConfig     | `true` or `false` | When true use the external config path |
 | externalConfigFile | Filepath          | Path the server config file if it does not exist the GUI will it generated based on the `internalConfig` section.|
+| protocol           | `barrier` or `synergy` | The protocol to use when saying hello to clients. Can be set to barrier or synergy. If not set barrier is used as the default |
 
 ### InternalConfig
 
@@ -176,7 +177,6 @@ hotkeys\1\keys\size=1
 hotkeys\size=1
 numColumns=5
 numRows=3
-protocol=1
 relativeMouseMoves=false
 screens\1\name=
 screens\10\aliasArray\size=0
@@ -389,7 +389,6 @@ Note that links do not have to be symmetrical; for instance, here the edge betwe
 
 ```
 section: options
-	protocol = barrier
 	heartbeat = 5000
 	switchDelay = 500
 end
@@ -399,7 +398,6 @@ end
 
 | Options | Value Values| Description|
 |:--------|:-----------:|:-----------|
-|protocol | barrier or synergy| The protocol to use when saying hello to clients. Can be set to barrier or synergy. If not set barrier is used as the default |
 |heartbeat| integer (N) | The server will expect each client to send a message no less than every `N` milliseconds. If no message arrives from a client within `3N` seconds the server forces that client to disconnect. If deskflow fails to detect clients disconnecting while the server is sleeping or vice versa, try using this option. |
 |switchCorners | none top-left top-right bottom-left bottom-right left right top bottom all | Deskflow won't switch computers when the mouse reaches the edge of the computer if it's in a listed corner. The size of all corners is given by the `switchCornerSize` option. The first name in the list is one of the above names and defines the initial set of corners. Subsequent names are prefixed with + or - to add the corner to or remove the corner from the set, respectively. For example: `all -left +top-left` starts will all corners, removes the left corners (top and bottom) then adds the top-left back in, resulting in the top-left, bottom-left and bottom-right corners.|
 |switchCornerSize | integer (N) | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|

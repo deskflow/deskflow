@@ -7,11 +7,12 @@
  */
 
 #include "ServerConfigDialog.h"
-#include "common/PlatformInfo.h"
 #include "ui_ServerConfigDialog.h"
 
 #include "common/Constants.h"
 #include "common/NetworkProtocol.h"
+#include "common/PlatformInfo.h"
+#include "common/Settings.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
@@ -32,6 +33,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 {
   ui->setupUi(this);
 
+  m_originalProtocol = Settings::value(Settings::Server::Protocol).value<NetworkProtocol>();
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::reject);
 
@@ -365,6 +367,7 @@ void ServerConfigDialog::toggleProtocol()
 {
   auto proto = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
   serverConfig().setProtocol(proto);
+  Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(proto));
   onChange();
 }
 
@@ -506,8 +509,10 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 
 void ServerConfigDialog::onChange()
 {
-  bool isAppConfigDataEqual = m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
-                              m_originalServerConfigUsesExternalFile == serverConfig().configFile();
+  bool isAppConfigDataEqual =
+      m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
+      m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
+      m_originalProtocol == Settings::value(Settings::Server::Protocol).value<NetworkProtocol>();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }

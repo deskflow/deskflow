@@ -107,7 +107,6 @@ void ServerConfig::commit()
 
   settings().setValue("hasHeartbeat", hasHeartbeat());
   settings().setValue("heartbeat", heartbeat());
-  settings().setValue("protocol", static_cast<int>(protocol()));
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
   settings().setValue("hasSwitchDelay", hasSwitchDelay());
@@ -159,7 +158,7 @@ void ServerConfig::recall()
 
   haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
   setHeartbeat(settings().value("heartbeat", 5000).toInt());
-  setProtocol(networkProtocolFromInt(settings().value("protocol", networkProtocolToInt(protocol())).toInt()));
+  setProtocol(Settings::value(Settings::Server::Protocol).value<NetworkProtocol>());
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
