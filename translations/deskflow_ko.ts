@@ -1090,10 +1090,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>이 컴퓨터를 절전 모드로 전환하지 않음</translation>
     </message>
     <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>창을 닫아도 알림 영역에서 앱을 계속 실행</translation>
-    </message>
-    <message>
         <source>Tray icon style</source>
         <translation>트레이 아이콘 스타일</translation>
     </message>
@@ -1296,6 +1292,18 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">창문(&amp;W)</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">메인 창이 닫혔을 때</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">출구</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">백그라운드로 보내기</translation>
     </message>
 </context>
 <context>

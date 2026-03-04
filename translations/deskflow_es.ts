@@ -1090,10 +1090,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Evitar que esta computadora entre en modo de suspensión</translation>
     </message>
     <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation type="unfinished">Dejar la aplicación ejecutándose en el área de notificación cuando la ventana esté cerrada</translation>
-    </message>
-    <message>
         <source>Tray icon style</source>
         <translation type="unfinished">Estilo de icono de bandeja</translation>
     </message>
@@ -1296,6 +1292,18 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">&amp;Ventana</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">Cuando la ventana principal está cerrada</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Salir</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">Enviar a segundo plano</translation>
     </message>
 </context>
 <context>

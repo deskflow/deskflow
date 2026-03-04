@@ -1092,10 +1092,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>防止此计算机进入睡眠状态</translation>
     </message>
     <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>窗口关闭时让应用在通知区域运行</translation>
-    </message>
-    <message>
         <source>Tray icon style</source>
         <translation>托盘图标样式</translation>
     </message>
@@ -1298,6 +1294,18 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">窗户(&amp;W)</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">主窗口关闭时</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">出口</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">发送到后台</translation>
     </message>
 </context>
 <context>
