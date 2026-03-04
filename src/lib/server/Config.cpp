@@ -635,7 +635,12 @@ void Config::readSectionOptions(ConfigReadContext &s)
     ++i;
     s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
 
+    // Skip old protocol name
+    if (name == "protocol")
+      continue;
+
     bool handled = true;
+
     if (name == "address") {
       try {
         m_deskflowAddress = NetworkAddress(value, kDefaultPort);
@@ -645,8 +650,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       }
     } else if (name == "heartbeat") {
       addOption("", kOptionHeartbeat, s.parseInt(value));
-    } else if (name == "protocol") {
-      addOption("", kOptionProtocol, s.parseProtocol(value));
     } else if (name == "switchCorners") {
       addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
     } else if (name == "switchCornerSize") {
@@ -1314,13 +1317,6 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
     }
     return result;
   }
-  if (id == kOptionProtocol) {
-    const auto enumValue = networkProtocolFromInt(value);
-    if (enumValue == NetworkProtocol::Unknown)
-      throw InvalidProtocolException();
-    return networkProtocolToOption(enumValue).toStdString();
-  }
-
   return "";
 }
 
@@ -1793,14 +1789,6 @@ OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
     return s_allCornersMask;
   }
   throw ServerConfigReadException(*this, "invalid argument \"%{1}\"", arg);
-}
-
-OptionValue ConfigReadContext::parseProtocol(const std::string &args) const
-{
-  const auto protoValue = networkProtocolFromString(QString::fromStdString(args));
-  if (protoValue == NetworkProtocol::Unknown)
-    throw ServerConfigReadException(*this, "invalid protocol argument \"%{1}\"", args);
-  return static_cast<OptionValue>(protoValue);
 }
 
 OptionValue ConfigReadContext::parseCorners(const std::string &args) const

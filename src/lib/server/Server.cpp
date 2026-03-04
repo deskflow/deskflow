@@ -1085,12 +1085,7 @@ void Server::processOptions()
   for (auto [optionId, optionValue] : *options) {
     const OptionID id = optionId;
     const OptionValue value = optionValue;
-    if (id == kOptionProtocol) {
-      const auto enumValue = networkProtocolFromInt(value);
-      if (enumValue == NetworkProtocol::Unknown)
-        throw InvalidProtocolException();
-      m_protocol = enumValue;
-    } else if (id == kOptionScreenSwitchDelay) {
+    if (id == kOptionScreenSwitchDelay) {
       m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);
       if (m_switchWaitDelay < 0.0) {
         m_switchWaitDelay = 0.0;
@@ -1135,6 +1130,7 @@ void Server::processOptions()
     stopRelativeMoves();
   }
   m_relativeMoves = newRelativeMoves;
+  m_protocol = Settings::value(Settings::Server::Protocol).value<NetworkProtocol>();
 }
 
 void Server::handleShapeChanged(BaseClientProxy *client)
