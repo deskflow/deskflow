@@ -1082,10 +1082,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Buscar actualizaciones al iniciar</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation type="unfinished">Ocultar la ventana cuando se inicia la aplicación</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation type="unfinished">Evitar que esta computadora entre en modo de suspensión</translation>
     </message>
@@ -1304,6 +1300,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Send to background</source>
         <translation type="unfinished">Enviar a segundo plano</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">Cuando se inicia la aplicación</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">Mostrar la ventana principal</translation>
     </message>
 </context>
 <context>

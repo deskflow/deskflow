@@ -1084,10 +1084,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>起動時にソフトウェア更新を確認する</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation>アプリの起動時にウィンドウを隠す</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation>このコンピューターがスリープしないようにする</translation>
     </message>
@@ -1306,6 +1302,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Send to background</source>
         <translation type="unfinished">バックグラウンドに送信</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">アプリケーションが起動すると</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">メインウィンドウを表示する</translation>
     </message>
 </context>
 <context>
