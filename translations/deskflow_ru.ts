@@ -1080,10 +1080,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Проверять обновления при запуске</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation>Скрывать окно при запуске</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation>Запретить компьютеру переходить в спящий режим</translation>
     </message>
@@ -1302,6 +1298,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Send to background</source>
         <translation type="unfinished">Отправить в фоновый режим</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">Когда приложение запускается</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">Показать главное окно</translation>
     </message>
 </context>
 <context>

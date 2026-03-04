@@ -1082,10 +1082,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Controlla aggiornamenti all&apos;avvio</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation>Nascondi la finestra all&apos;avvio dell&apos;app</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation>Impedisci a questo computer di andare in sospensione</translation>
     </message>
@@ -1304,6 +1300,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Send to background</source>
         <translation type="unfinished">Invia in background</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">Quando l&apos;applicazione si avvia</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">Mostra la finestra principale</translation>
     </message>
 </context>
 <context>

@@ -1082,10 +1082,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>시작 시 업데이트 확인</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation>앱 시작 시 창 숨기기</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation>이 컴퓨터를 절전 모드로 전환하지 않음</translation>
     </message>
@@ -1304,6 +1300,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Send to background</source>
         <translation type="unfinished">백그라운드로 보내기</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">애플리케이션이 시작될 때</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">메인 창을 표시합니다</translation>
     </message>
 </context>
 <context>
