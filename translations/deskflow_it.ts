@@ -1090,10 +1090,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Impedisci a questo computer di andare in sospensione</translation>
     </message>
     <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>Lascia l&apos;app in esecuzione nell&apos;area di notifica quando la finestra viene chiusa</translation>
-    </message>
-    <message>
         <source>Tray icon style</source>
         <translation>Stile icona di notifica</translation>
     </message>
@@ -1296,6 +1292,18 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">&amp;Finestra</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">Quando la finestra principale è chiusa</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Esci</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">Invia in background</translation>
     </message>
 </context>
 <context>

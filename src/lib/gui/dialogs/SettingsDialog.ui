@@ -141,7 +141,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
-        <number>9</number>
+        <number>20</number>
        </property>
        <property name="leftMargin">
         <number>12</number>
@@ -169,6 +169,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QCheckBox" name="cbShowVersion">
+         <property name="text">
+          <string>Include version in the window title</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="cbAutoHide">
          <property name="text">
           <string>Hide the window when the app starts</string>
@@ -176,18 +183,32 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbCloseToTray">
-         <property name="text">
-          <string>Leave app running in notification area when the window is closed</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="cbShowVersion">
-         <property name="text">
-          <string>Include version in the window title</string>
-         </property>
-        </widget>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>When the main window is closed</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="rbExitOnClose">
+           <property name="text">
+            <string>Exit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QRadioButton" name="rbCloseToTray">
+           <property name="text">
+            <string>Send to background</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="verticalSpacer_11">

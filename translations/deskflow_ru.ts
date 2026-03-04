@@ -1088,10 +1088,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Запретить компьютеру переходить в спящий режим</translation>
     </message>
     <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>Оставлять приложение в области уведомлений при закрытии окна</translation>
-    </message>
-    <message>
         <source>Tray icon style</source>
         <translation>Стиль иконки трея</translation>
     </message>
@@ -1294,6 +1290,18 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">&amp;Окно</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">Когда главное окно закрыто</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">Выход</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">Отправить в фоновый режим</translation>
     </message>
 </context>
 <context>

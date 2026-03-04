@@ -1092,10 +1092,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>このコンピューターがスリープしないようにする</translation>
     </message>
     <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>ウィンドウを閉じてもアプリを通知領域で実行し続ける</translation>
-    </message>
-    <message>
         <source>Tray icon style</source>
         <translation>トレイアイコン</translation>
     </message>
@@ -1298,6 +1294,18 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">ウィンドウ(&amp;W)</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">メインウィンドウが閉じられているとき</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">終了</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">バックグラウンドに送信</translation>
     </message>
 </context>
 <context>
