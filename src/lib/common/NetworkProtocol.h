@@ -19,16 +19,6 @@ enum class NetworkProtocol
 };
 Q_DECLARE_METATYPE(NetworkProtocol);
 
-static int networkProtocolToInt(const NetworkProtocol proto)
-{
-  return static_cast<int>(proto);
-}
-
-static NetworkProtocol networkProtocolFromInt(const int value)
-{
-  return static_cast<NetworkProtocol>(value);
-}
-
 static QString networkProtocolToOption(const NetworkProtocol proto)
 {
   switch (proto) {
