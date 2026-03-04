@@ -1293,6 +1293,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>&amp;Network</source>
         <translation>&amp;Rete</translation>
     </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">&amp;Finestra</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>

@@ -1293,6 +1293,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>&amp;Network</source>
         <translation>네트워크(&amp;N)</translation>
     </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">창문(&amp;W)</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>
