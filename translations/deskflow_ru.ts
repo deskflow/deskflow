@@ -1291,6 +1291,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>&amp;Network</source>
         <translation>&amp;Сеть</translation>
     </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">&amp;Окно</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>

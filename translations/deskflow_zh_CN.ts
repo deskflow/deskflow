@@ -1295,6 +1295,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>&amp;Network</source>
         <translation>网络(&amp;N)</translation>
     </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">窗户(&amp;W)</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>

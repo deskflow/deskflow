@@ -1293,6 +1293,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>&amp;Network</source>
         <translation>R&amp;ed</translation>
     </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">&amp;Ventana</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>
