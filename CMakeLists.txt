@@ -162,6 +162,10 @@ endif()
 include(cmake/Libraries.cmake)
 configure_libs()
 
+if(BUILD_OSX_BUNDLE AND APPLE_CODESIGN_DEV)
+  include(cmake/MacCodesign.cmake)
+endif()
+
 # setup install paths
 include(GNUInstallDirs)
 if (WIN32)

@@ -50,6 +50,9 @@ if(BUILD_OSX_BUNDLE)
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
     RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS
   )
+  if (APPLE_CODESIGN_DEV)
+    configure_mac_codesign(${target})
+  endif()
 elseif (WIN32)
   install(RUNTIME_DEPENDENCY_SET coreDeps
     PRE_EXCLUDE_REGEXES ${WIN32_PRE_EXCLUDE_REGEXES}
