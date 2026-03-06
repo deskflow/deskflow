@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.72</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.77</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,7 +94,21 @@ $(function(){initNavTree('OSXAutoTypes_8h.html','',''); });
   <div class="headertitle"><div class="title">OSXAutoTypes.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &lt;Carbon/Carbon.h&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for OSXAutoTypes.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="OSXAutoTypes_8h__incl.png" border="0" usemap="#asrc_2lib_2platform_2OSXAutoTypes_8h" loading="lazy" alt=""/></div>
+<map name="asrc_2lib_2platform_2OSXAutoTypes_8h" id="asrc_2lib_2platform_2OSXAutoTypes_8h">
+<area shape="rect" title=" " alt="" coords="41,5,207,44"/>
+<area shape="rect" title=" " alt="" coords="5,92,126,117"/>
+<area shape="poly" title=" " alt="" coords="112,43,85,81,81,78,108,46"/>
+<area shape="rect" title=" " alt="" coords="150,92,219,117"/>
+<area shape="poly" title=" " alt="" coords="140,42,169,80,163,79,138,47"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="OSXAutoTypes_8h__dep__incl.png" border="0" usemap="#asrc_2lib_2platform_2OSXAutoTypes_8hdep" loading="lazy" alt=""/></div>
@@ -110,6 +124,71 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="OSXAutoTypes_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ae5f9f8e9afa02e2ea1aa5df9e3afe2fb" id="r_ae5f9f8e9afa02e2ea1aa5df9e3afe2fb"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a> = decltype(&amp;CFRelease)</td></tr>
+<tr class="memitem:ac5410631aa19cb29242cf0d46ad7f051" id="r_ac5410631aa19cb29242cf0d46ad7f051"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a> = std::unique_ptr&lt;const __CFArray, <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a>&gt;</td></tr>
+<tr class="memitem:af6316859a71bafcd659ac153533c29ca" id="r_af6316859a71bafcd659ac153533c29ca"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#af6316859a71bafcd659ac153533c29ca">AutoCFDictionary</a> = std::unique_ptr&lt;const __CFDictionary, <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a>&gt;</td></tr>
+<tr class="memitem:a8d56dea041278f9829995b8ca09345b0" id="r_a8d56dea041278f9829995b8ca09345b0"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a8d56dea041278f9829995b8ca09345b0">AutoTISInputSourceRef</a> = std::unique_ptr&lt;__TISInputSource, <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a>&gt;</td></tr>
+</table>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="ac5410631aa19cb29242cf0d46ad7f051" name="ac5410631aa19cb29242cf0d46ad7f051"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5410631aa19cb29242cf0d46ad7f051">&#9670;&#160;</a></span>AutoCFArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a> = std::unique_ptr&lt;const __CFArray, <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af6316859a71bafcd659ac153533c29ca" name="af6316859a71bafcd659ac153533c29ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6316859a71bafcd659ac153533c29ca">&#9670;&#160;</a></span>AutoCFDictionary</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#af6316859a71bafcd659ac153533c29ca">AutoCFDictionary</a> = std::unique_ptr&lt;const __CFDictionary, <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8d56dea041278f9829995b8ca09345b0" name="a8d56dea041278f9829995b8ca09345b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d56dea041278f9829995b8ca09345b0">&#9670;&#160;</a></span>AutoTISInputSourceRef</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a8d56dea041278f9829995b8ca09345b0">AutoTISInputSourceRef</a> = std::unique_ptr&lt;__TISInputSource, <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae5f9f8e9afa02e2ea1aa5df9e3afe2fb" name="ae5f9f8e9afa02e2ea1aa5df9e3afe2fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">&#9670;&#160;</a></span>CFDeallocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a> = decltype(&amp;CFRelease)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.72</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.77</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,7 +94,66 @@ $(function(){initNavTree('Arch_8h.html','',''); });
   <div class="headertitle"><div class="title">Arch.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &lt;QtSystemDetection&gt;</code><br />
+<code>#include &quot;<a class="el" href="ArchDaemonNone_8h_source.html">arch/ArchDaemonNone.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ArchLogUnix_8h_source.html">arch/unix/ArchLogUnix.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ArchMultithreadPosix_8h_source.html">arch/unix/ArchMultithreadPosix.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ArchNetworkBSD_8h_source.html">arch/unix/ArchNetworkBSD.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for Arch.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="Arch_8h__incl.png" border="0" usemap="#asrc_2lib_2arch_2Arch_8h" loading="lazy" alt=""/></div>
+<map name="asrc_2lib_2arch_2Arch_8h" id="asrc_2lib_2arch_2Arch_8h">
+<area shape="rect" title=" " alt="" coords="375,5,502,30"/>
+<area shape="rect" title=" " alt="" coords="5,85,141,110"/>
+<area shape="poly" title=" " alt="" coords="380,33,154,81,141,83,138,79,152,75,382,28"/>
+<area shape="rect" href="ArchDaemonNone_8h.html" title=" " alt="" coords="165,85,333,110"/>
+<area shape="poly" title=" " alt="" coords="408,32,293,81,290,76,412,29"/>
+<area shape="rect" href="ArchLogUnix_8h.html" title=" " alt="" coords="357,85,520,110"/>
+<area shape="poly" title=" " alt="" coords="440,28,441,71,436,68,437,33"/>
+<area shape="rect" href="ArchMultithreadPosix_8h.html" title=" " alt="" coords="1030,78,1199,117"/>
+<area shape="poly" title=" " alt="" coords="503,24,1016,83,1012,86,502,29"/>
+<area shape="rect" href="ArchNetworkBSD_8h.html" title=" " alt="" coords="572,85,766,110"/>
+<area shape="poly" title=" " alt="" coords="473,28,623,79,617,80,473,33"/>
+<area shape="rect" href="IArchDaemon_8h.html" title=" " alt="" coords="151,165,291,189"/>
+<area shape="poly" title=" " alt="" coords="247,108,233,152,228,148,243,112"/>
+<area shape="rect" title=" " alt="" coords="255,237,320,262"/>
+<area shape="poly" title=" " alt="" coords="233,187,269,226,264,226,231,192"/>
+<area shape="rect" title=" " alt="" coords="153,237,230,262"/>
+<area shape="poly" title=" " alt="" coords="218,188,204,225,200,221,214,191"/>
+<area shape="rect" href="IArchLog_8h.html" title=" " alt="" coords="315,165,428,189"/>
+<area shape="poly" title=" " alt="" coords="431,109,393,155,390,151,426,111"/>
+<area shape="poly" title=" " alt="" coords="360,189,314,230,311,225,355,191"/>
+<area shape="rect" href="LogLevel_8h.html" title=" " alt="" coords="345,237,460,262"/>
+<area shape="poly" title=" " alt="" coords="378,188,394,224,389,222,375,192"/>
+<area shape="rect" href="IArchMultithread_8h.html" title=" " alt="" coords="906,165,1062,189"/>
+<area shape="poly" title=" " alt="" coords="1085,117,1017,159,1015,154,1080,118"/>
+<area shape="rect" title=" " alt="" coords="1167,165,1206,189"/>
+<area shape="poly" title=" " alt="" coords="1133,115,1168,154,1163,152,1131,120"/>
+<area shape="rect" title=" " alt="" coords="1086,165,1143,189"/>
+<area shape="poly" title=" " alt="" coords="1116,115,1116,151,1112,147,1113,119"/>
+<area shape="rect" title=" " alt="" coords="1230,165,1305,189"/>
+<area shape="poly" title=" " alt="" coords="1152,115,1234,158,1228,157,1151,120"/>
+<area shape="rect" title=" " alt="" coords="930,237,990,262"/>
+<area shape="poly" title=" " alt="" coords="982,188,970,225,967,220,978,191"/>
+<area shape="poly" title=" " alt="" coords="717,108,924,160,919,161,716,113"/>
+<area shape="poly" title=" " alt="" coords="758,108,901,129,1073,164,1068,164,900,135,758,113"/>
+<area shape="rect" href="IArchNetwork_8h.html" title=" " alt="" coords="740,165,881,189"/>
+<area shape="poly" title=" " alt="" coords="690,107,778,157,773,156,689,113"/>
+<area shape="rect" title=" " alt="" coords="453,165,522,189"/>
+<area shape="poly" title=" " alt="" coords="644,109,530,161,528,156,639,111"/>
+<area shape="rect" title=" " alt="" coords="547,165,599,189"/>
+<area shape="poly" title=" " alt="" coords="657,109,600,157,598,152,652,111"/>
+<area shape="rect" title=" " alt="" coords="623,165,715,189"/>
+<area shape="poly" title=" " alt="" coords="671,108,671,151,667,147,667,112"/>
+<area shape="poly" title=" " alt="" coords="836,187,924,231,919,230,834,192"/>
+<area shape="rect" title=" " alt="" coords="806,237,860,262"/>
+<area shape="poly" title=" " alt="" coords="816,188,827,224,822,221,813,192"/>
+<area shape="rect" title=" " alt="" coords="726,237,782,262"/>
+<area shape="poly" title=" " alt="" coords="803,189,774,228,771,223,799,191"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="Arch_8h__dep__incl.png" border="0" usemap="#asrc_2lib_2arch_2Arch_8hdep" loading="lazy" alt=""/></div>

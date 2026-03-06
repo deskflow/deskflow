@@ -7,5 +7,8 @@ var searchData=
   ['archnetaddress_4',['ArchNetAddress',['../IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107',1,'IArchNetwork.h']]],
   ['archsocket_5',['ArchSocket',['../IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635',1,'IArchNetwork.h']]],
   ['archthread_6',['ArchThread',['../IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6',1,'IArchMultithread.h']]],
-  ['arglist_7',['ArgList',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a89767d219c814f2ba1e9e9e66ccdfa43',1,'deskflow::server::ConfigReadContext']]]
+  ['arglist_7',['ArgList',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a89767d219c814f2ba1e9e9e66ccdfa43',1,'deskflow::server::ConfigReadContext']]],
+  ['autocfarray_8',['AutoCFArray',['../OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051',1,'OSXAutoTypes.h']]],
+  ['autocfdictionary_9',['AutoCFDictionary',['../OSXAutoTypes_8h.html#af6316859a71bafcd659ac153533c29ca',1,'OSXAutoTypes.h']]],
+  ['autotisinputsourceref_10',['AutoTISInputSourceRef',['../OSXAutoTypes_8h.html#a8d56dea041278f9829995b8ca09345b0',1,'OSXAutoTypes.h']]]
 ];

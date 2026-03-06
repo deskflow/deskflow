@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.72</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.77</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -101,16 +101,17 @@ $(function(){initNavTree('OSXAutoTypes_8h_source.html','',''); });
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#if WINAPI_CARBON</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;Carbon/Carbon.h&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using </span>CFDeallocator = <span class="keyword">decltype</span>(&amp;CFRelease);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">using </span>AutoCFArray = std::unique_ptr&lt;const __CFArray, CFDeallocator&gt;;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">using </span>AutoCFDictionary = std::unique_ptr&lt;const __CFDictionary, CFDeallocator&gt;;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using </span>AutoTISInputSourceRef = std::unique_ptr&lt;__TISInputSource, CFDeallocator&gt;;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;Carbon/Carbon.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="OSXAutoTypes_8h.html#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">   11</a></span><span class="keyword">using </span><a class="code hl_typedef" href="OSXAutoTypes_8h.html#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a> = <span class="keyword">decltype</span>(&amp;CFRelease);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051">   12</a></span><span class="keyword">using </span><a class="code hl_typedef" href="OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a> = std::unique_ptr&lt;const __CFArray, CFDeallocator&gt;;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="OSXAutoTypes_8h.html#af6316859a71bafcd659ac153533c29ca">   13</a></span><span class="keyword">using </span><a class="code hl_typedef" href="OSXAutoTypes_8h.html#af6316859a71bafcd659ac153533c29ca">AutoCFDictionary</a> = std::unique_ptr&lt;const __CFDictionary, CFDeallocator&gt;;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="OSXAutoTypes_8h.html#a8d56dea041278f9829995b8ca09345b0">   14</a></span><span class="keyword">using </span><a class="code hl_typedef" href="OSXAutoTypes_8h.html#a8d56dea041278f9829995b8ca09345b0">AutoTISInputSourceRef</a> = std::unique_ptr&lt;__TISInputSource, CFDeallocator&gt;;</div>
+<div class="ttc" id="aOSXAutoTypes_8h_html_a8d56dea041278f9829995b8ca09345b0"><div class="ttname"><a href="OSXAutoTypes_8h.html#a8d56dea041278f9829995b8ca09345b0">AutoTISInputSourceRef</a></div><div class="ttdeci">std::unique_ptr&lt; __TISInputSource, CFDeallocator &gt; AutoTISInputSourceRef</div><div class="ttdef"><b>Definition</b> OSXAutoTypes.h:14</div></div>
+<div class="ttc" id="aOSXAutoTypes_8h_html_ac5410631aa19cb29242cf0d46ad7f051"><div class="ttname"><a href="OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a></div><div class="ttdeci">std::unique_ptr&lt; const __CFArray, CFDeallocator &gt; AutoCFArray</div><div class="ttdef"><b>Definition</b> OSXAutoTypes.h:12</div></div>
+<div class="ttc" id="aOSXAutoTypes_8h_html_ae5f9f8e9afa02e2ea1aa5df9e3afe2fb"><div class="ttname"><a href="OSXAutoTypes_8h.html#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb">CFDeallocator</a></div><div class="ttdeci">decltype(&amp;CFRelease) CFDeallocator</div><div class="ttdef"><b>Definition</b> OSXAutoTypes.h:11</div></div>
+<div class="ttc" id="aOSXAutoTypes_8h_html_af6316859a71bafcd659ac153533c29ca"><div class="ttname"><a href="OSXAutoTypes_8h.html#af6316859a71bafcd659ac153533c29ca">AutoCFDictionary</a></div><div class="ttdeci">std::unique_ptr&lt; const __CFDictionary, CFDeallocator &gt; AutoCFDictionary</div><div class="ttdef"><b>Definition</b> OSXAutoTypes.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

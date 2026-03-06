@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.72</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.77</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -169,7 +169,7 @@ $(function(){initNavTree('OSXKeyState_8h_source.html','',''); });
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classOSXKeyState.html#a2e4287548b9a1ef20904ef18ceb3fbeb">getKeyMap</a>(<a class="code hl_class" href="classdeskflow_1_1KeyMap.html">deskflow::KeyMap</a> &amp;keyMap, int32_t group, <span class="keyword">const</span> <a class="code hl_class" href="classIOSXKeyResource.html">IOSXKeyResource</a> &amp;r) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="comment">// Get the available keyboard groups</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordtype">bool</span> getGroups(AutoCFArray &amp;) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordtype">bool</span> getGroups(<a class="code hl_typedef" href="OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a> &amp;) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="comment">// Change active keyboard group to group</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keywordtype">void</span> setGroup(int32_t group);</div>
@@ -223,7 +223,7 @@ $(function(){initNavTree('OSXKeyState_8h_source.html','',''); });
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  VirtualKeyMap m_virtualKeyMap;</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keyword">mutable</span> uint32_t m_deadKeyState;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  AutoCFArray m_groups{<span class="keyword">nullptr</span>, CFRelease};</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <a class="code hl_typedef" href="OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a> m_groups{<span class="keyword">nullptr</span>, CFRelease};</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  GroupMap m_groupMap;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">bool</span> m_shiftPressed;</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">bool</span> m_controlPressed;</div>
@@ -238,6 +238,7 @@ $(function(){initNavTree('OSXKeyState_8h_source.html','',''); });
 <div class="ttc" id="aKeyTypes_8h_html_a65108f2128c351ed94a2cfa247da1e60"><div class="ttname"><a href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60">KeyButton</a></div><div class="ttdeci">uint16_t KeyButton</div><div class="ttdoc">Key Code.</div><div class="ttdef"><b>Definition</b> KeyTypes.h:34</div></div>
 <div class="ttc" id="aKeyTypes_8h_html_aaaeb68ca75dd837e4de1a5d73bb12a13"><div class="ttname"><a href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a></div><div class="ttdeci">uint32_t KeyModifierMask</div><div class="ttdoc">Modifier key mask.</div><div class="ttdef"><b>Definition</b> KeyTypes.h:44</div></div>
 <div class="ttc" id="aOSXAutoTypes_8h_html"><div class="ttname"><a href="OSXAutoTypes_8h.html">OSXAutoTypes.h</a></div></div>
+<div class="ttc" id="aOSXAutoTypes_8h_html_ac5410631aa19cb29242cf0d46ad7f051"><div class="ttname"><a href="OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051">AutoCFArray</a></div><div class="ttdeci">std::unique_ptr&lt; const __CFArray, CFDeallocator &gt; AutoCFArray</div><div class="ttdef"><b>Definition</b> OSXAutoTypes.h:12</div></div>
 <div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:29</div></div>
 <div class="ttc" id="aclassIKeyState_html_a0a0409190bff7ac81cf797d3f03a93d7"><div class="ttname"><a href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">IKeyState::KeyButtonSet</a></div><div class="ttdeci">std::set&lt; KeyButton &gt; KeyButtonSet</div><div class="ttdef"><b>Definition</b> IKeyState.h:51</div></div>
 <div class="ttc" id="aclassIOSXKeyResource_html"><div class="ttname"><a href="classIOSXKeyResource.html">IOSXKeyResource</a></div><div class="ttdef"><b>Definition</b> IOSXKeyResource.h:15</div></div>

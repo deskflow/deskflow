@@ -44,7 +44,7 @@ var dir_9d41f2d9dd9f152ba43e738700883d1e =
     [ "MSWindowsSession.h", "MSWindowsSession_8h.html", "MSWindowsSession_8h" ],
     [ "MSWindowsWatchdog.cpp", "MSWindowsWatchdog_8cpp.html", "MSWindowsWatchdog_8cpp" ],
     [ "MSWindowsWatchdog.h", "MSWindowsWatchdog_8h.html", "MSWindowsWatchdog_8h" ],
-    [ "OSXAutoTypes.h", "OSXAutoTypes_8h.html", null ],
+    [ "OSXAutoTypes.h", "OSXAutoTypes_8h.html", "OSXAutoTypes_8h" ],
     [ "OSXClipboard.cpp", "OSXClipboard_8cpp.html", null ],
     [ "OSXClipboard.h", "OSXClipboard_8h.html", "OSXClipboard_8h" ],
     [ "OSXClipboardAnyBitmapConverter.cpp", "OSXClipboardAnyBitmapConverter_8cpp.html", null ],

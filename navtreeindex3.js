@@ -189,6 +189,10 @@ var NAVTREEINDEX3 =
 "NewScreenWidget_8h.html":[7,0,1,1,5,5,9],
 "NewScreenWidget_8h_source.html":[7,0,1,1,5,5,9],
 "OSXAutoTypes_8h.html":[7,0,1,1,9,44],
+"OSXAutoTypes_8h.html#a8d56dea041278f9829995b8ca09345b0":[7,0,1,1,9,44,2],
+"OSXAutoTypes_8h.html#ac5410631aa19cb29242cf0d46ad7f051":[7,0,1,1,9,44,0],
+"OSXAutoTypes_8h.html#ae5f9f8e9afa02e2ea1aa5df9e3afe2fb":[7,0,1,1,9,44,3],
+"OSXAutoTypes_8h.html#af6316859a71bafcd659ac153533c29ca":[7,0,1,1,9,44,1],
 "OSXAutoTypes_8h_source.html":[7,0,1,1,9,44],
 "OSXClipboardAnyBitmapConverter_8cpp.html":[7,0,1,1,9,47],
 "OSXClipboardAnyBitmapConverter_8h.html":[7,0,1,1,9,48],
@@ -245,9 +249,5 @@ var NAVTREEINDEX3 =
 "OSXHelpers_8mm.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,23,1],
 "OSXHelpers_8mm.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,23,3],
 "OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,23,0],
-"OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,23,2],
-"OSXKeyState_8cpp.html":[7,0,1,1,9,65],
-"OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,65,6],
-"OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,65,3],
-"OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,65,2]
+"OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,23,2]
 };
