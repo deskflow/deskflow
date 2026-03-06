@@ -18,8 +18,10 @@
 function(configure_mac_codesign target)
   set_property(GLOBAL APPEND PROPERTY _MAC_CODESIGN_DEPENDS $<TARGET_FILE:${target}>)
 
-  if(NOT _MAC_CODESIGN_DEFERRED)
-    set(_MAC_CODESIGN_DEFERRED TRUE CACHE INTERNAL "")
+  get_property(deferred GLOBAL PROPERTY _MAC_CODESIGN_DEFERRED)
+
+  if(NOT deferred)
+    set_property(GLOBAL PROPERTY _MAC_CODESIGN_DEFERRED TRUE)
     message(STATUS "Apple codesign ID for development only: ${APPLE_CODESIGN_DEV}")
     cmake_language(DEFER DIRECTORY ${CMAKE_SOURCE_DIR} CALL _finalize_mac_codesign)
   endif()
