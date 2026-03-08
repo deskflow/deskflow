@@ -63,6 +63,11 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
     }
   }
 
+  if (const auto interface = Settings::value(Settings::Core::Interface).toString();
+      !interface.isEmpty() && (ui->comboInterface->findData(interface) == -1)) {
+    ui->comboInterface->addItem(interface, interface);
+  }
+
   loadFromConfig();
 
   adjustSize();
