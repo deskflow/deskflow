@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -9,6 +10,7 @@
 
 #include <gui/Logger.h>
 
+#include <QKeyEvent>
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
 
@@ -32,9 +34,28 @@ LogWidget::LogWidget(QWidget *parent) : QWidget{parent}, m_textLog{new QPlainTex
 
   setLayout(layout);
 
+  // On Windows, rapid Ctrl+C presses can cause clipboard mutex contention
+  // between the Qt GUI and Deskflow core, so throttle copy events.
+  if (deskflow::platform::isWindows())
+    m_textLog->installEventFilter(this);
+
   connect(
       deskflow::gui::Logger::instance(), &deskflow::gui::Logger::newLine, m_textLog, &QPlainTextEdit::appendPlainText
   );
+}
+
+bool LogWidget::eventFilter(QObject *watched, QEvent *event)
+{
+  if (watched == m_textLog && event->type() == QEvent::KeyPress) {
+    auto *keyEvent = static_cast<QKeyEvent *>(event);
+    if (keyEvent->matches(QKeySequence::Copy)) {
+      if (m_copyThrottle.isValid() && !m_copyThrottle.hasExpired(200)) {
+        return true;
+      }
+      m_copyThrottle.start();
+    }
+  }
+  return QWidget::eventFilter(watched, event);
 }
 
 void LogWidget::appendLine(const QString &msg)
