@@ -9,6 +9,7 @@
 #include "base/DirectionTypes.h"
 #include "base/Log.h"
 #include "deskflow/ScreenException.h"
+#include "platform/MSWindowsDeadKeyUtils.h"
 
 #ifndef WM_MOUSEHWHEEL
 #define WM_MOUSEHWHEEL 0x020E
@@ -35,6 +36,8 @@ struct DeadRuntimeState
   WPARAM m_virtKey = 0;
   WPARAM m_releaseVirtKey = 0;
   LPARAM m_lParam = 0;
+  WCHAR m_char = 0;
+  UINT m_ownerButton = 0;
   BYTE m_keyState[256] = {0};
 
   void reset()
@@ -42,6 +45,8 @@ struct DeadRuntimeState
     m_virtKey = 0;
     m_releaseVirtKey = 0;
     m_lParam = 0;
+    m_char = 0;
+    m_ownerButton = 0;
     for (size_t i = 0; i < 256; ++i) {
       m_keyState[i] = 0;
     }
@@ -222,6 +227,60 @@ static void setDeadKey(WCHAR wc[], int size, UINT flags)
   }
 }
 
+static void clearTrackedDeadKeyState(deskflow::win32::DeadKeyState &deadState, UINT flags)
+{
+  if (g_mode == kHOOK_RELAY_EVENTS) {
+    BYTE emptyState[256] = {0};
+    WCHAR unicode[2] = {0, 0};
+    constexpr UINT kFlushDeadComposeVk = VK_SPACE;
+    const UINT scanCode = MapVirtualKey(kFlushDeadComposeVk, MAPVK_VK_TO_VSC);
+    constexpr int kMaxFlushAttempts = 8;
+
+    // Relay mode owns the translated stream, so we must drain ToUnicode compose
+    // state here to avoid leaking a consumed dead key into the next key event.
+    for (int i = 0; i < kMaxFlushAttempts; ++i) {
+      if (ToUnicode(kFlushDeadComposeVk, scanCode, emptyState, unicode, 2, flags) >= 0) {
+        break;
+      }
+    }
+  }
+
+  deskflow::win32::clearDeadKeyState(deadState);
+  g_dead.reset();
+  g_dead.m_virtKey = deadState.m_deadVirtKey;
+  g_dead.m_lParam = deadState.m_deadLParam;
+  g_dead.m_char = deadState.m_deadChar;
+  for (size_t i = 0; i < 256; ++i) {
+    g_dead.m_keyState[i] = deadState.m_deadKeyState[i];
+  }
+}
+
+static deskflow::win32::DeadKeyState makeTrackedDeadKeyStateSnapshot()
+{
+  deskflow::win32::DeadKeyState deadState;
+  deadState.m_deadVirtKey = g_dead.m_virtKey;
+  deadState.m_deadLParam = g_dead.m_lParam;
+  deadState.m_deadChar = g_dead.m_char;
+  for (size_t i = 0; i < 256; ++i) {
+    deadState.m_deadKeyState[i] = g_dead.m_keyState[i];
+  }
+  return deadState;
+}
+
+static void storeCapturedDeadKeyState(
+    deskflow::win32::DeadKeyState &deadState, WPARAM wParam, LPARAM lParam, const BYTE keys[256], WCHAR deadChar
+)
+{
+  deskflow::win32::captureDeadKeyState(deadState, wParam, lParam, keys, deadChar);
+  g_dead.m_virtKey = deadState.m_deadVirtKey;
+  g_dead.m_lParam = deadState.m_deadLParam;
+  g_dead.m_char = deadState.m_deadChar;
+  g_dead.m_ownerButton = 0;
+  for (size_t i = 0; i < 256; ++i) {
+    g_dead.m_keyState[i] = deadState.m_deadKeyState[i];
+  }
+}
+
 static void normalizeControlAltForTranslation(BYTE keys[256], UINT &control, UINT &menu)
 {
   control = keys[VK_CONTROL] | keys[VK_LCONTROL] | keys[VK_RCONTROL];
@@ -257,47 +316,171 @@ struct TranslationResult
 };
 
 static TranslationResult translateToUnicodeWithAltGrFallback(
-    WPARAM wParam, LPARAM lParam, const BYTE keys[256], UINT flags, UINT control, UINT menu
+    WPARAM wParam, LPARAM lParam, const BYTE keys[256], UINT flags, UINT control, UINT menu, bool restorePendingDead
 )
 {
   TranslationResult result;
+  BYTE activeKeys[256];
+  for (size_t i = 0; i < 256; ++i) {
+    activeKeys[i] = keys[i];
+  }
 
-  // map the key event to a character.  we have to put the dead
-  // key back first and this has the side effect of removing it.
-  setDeadKey(result.m_chars, 2, flags);
+  if (restorePendingDead) {
+    setDeadKey(result.m_chars, 2, flags);
+  }
 
   const UINT scanCode = static_cast<UINT>((lParam & 0x10ff0000u) >> 16);
-  result.m_count = ToUnicode((UINT)wParam, scanCode, keys, result.m_chars, 2, flags);
+  result.m_count = ToUnicode((UINT)wParam, scanCode, activeKeys, result.m_chars, 2, flags);
 
-  // if mapping failed and ctrl and alt are pressed then try again
-  // with both not pressed.  this handles the case where ctrl and
-  // alt are being used as individual modifiers rather than AltGr.
-  // we note that's the case in the message sent back to deskflow
-  // because there's no simple way to deduce it after the fact.
-  // we have to put the dead key back first, if there was one.
   if (result.m_count == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
     result.m_noAltGr = true;
     PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
-    setDeadKey(result.m_chars, 2, flags);
 
-    BYTE keys2[256];
-    for (size_t i = 0; i < sizeof(keys2) / sizeof(keys2[0]); ++i) {
-      keys2[i] = keys[i];
+    if (restorePendingDead) {
+      setDeadKey(result.m_chars, 2, flags);
     }
-    keys2[VK_LCONTROL] = 0;
-    keys2[VK_RCONTROL] = 0;
-    keys2[VK_CONTROL] = 0;
-    keys2[VK_LMENU] = 0;
-    keys2[VK_RMENU] = 0;
-    keys2[VK_MENU] = 0;
-    result.m_count = ToUnicode((UINT)wParam, scanCode, keys2, result.m_chars, 2, flags);
+
+    activeKeys[VK_LCONTROL] = 0;
+    activeKeys[VK_RCONTROL] = 0;
+    activeKeys[VK_CONTROL] = 0;
+    activeKeys[VK_LMENU] = 0;
+    activeKeys[VK_RMENU] = 0;
+    activeKeys[VK_MENU] = 0;
+    result.m_count = ToUnicode((UINT)wParam, scanCode, activeKeys, result.m_chars, 2, flags);
   }
 
   return result;
 }
 
+static bool keyboardHookHandlerLegacy(WPARAM wParam, LPARAM lParam)
+{
+  deskflow::win32::DeadKeyState deadState = makeTrackedDeadKeyStateSnapshot();
+
+  DWORD vkCode = static_cast<DWORD>(wParam);
+  bool kf_up = (lParam & (KF_UP << 16)) != 0;
+
+  if (wParam == DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY && ((lParam >> 16) & 0xffu) == DESKFLOW_HOOK_FAKE_INPUT_SCANCODE) {
+    g_fakeServerInput = ((lParam & 0x80000000u) == 0);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xff000000u | wParam, lParam);
+    return true;
+  }
+
+  if (g_fakeServerInput) {
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xfe000000u | wParam, lParam);
+    return false;
+  }
+
+  if (wParam == VK_RSHIFT) {
+    lParam &= ~0x01000000u;
+  }
+
+  PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam, lParam);
+
+  if ((g_dead.m_virtKey == wParam || g_dead.m_releaseVirtKey == wParam) && (lParam & 0x80000000u) != 0) {
+    g_dead.m_releaseVirtKey = 0;
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
+    return false;
+  }
+
+  BYTE keys[256];
+  keyboardGetState(keys, vkCode, kf_up);
+
+  UINT control = 0;
+  UINT menu = 0;
+  normalizeControlAltForTranslation(keys, control, menu);
+  UINT flags = getTranslationFlags(menu);
+
+  if (g_mode != kHOOK_RELAY_EVENTS) {
+    UINT sc = (lParam & 0x01ff0000u) >> 16;
+    if (menu && (sc >= 0x47u && sc <= 0x52u && sc != 0x4au && sc != 0x4eu)) {
+      return false;
+    }
+  }
+
+  TranslationResult translation = translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu, true);
+  WCHAR *wc = translation.m_chars;
+  int n = translation.m_count;
+  bool noAltGr = translation.m_noAltGr;
+
+  PostThreadMessage(
+      g_threadID, DESKFLOW_MSG_DEBUG, (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) | 0x60000000,
+      lParam
+  );
+  WPARAM charAndVirtKey = 0;
+  bool clearDeadKey = false;
+  bool isKeyUpEvent = ((lParam & 0x80000000u) != 0);
+  switch (n) {
+  default:
+    if (isKeyUpEvent) {
+      break;
+    }
+    storeCapturedDeadKeyState(deadState, wParam, lParam, keys, wc[0]);
+    break;
+
+  case 0:
+    if (!isKeyUpEvent && g_dead.m_virtKey != 0 && g_dead.m_virtKey != wParam) {
+      WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_dead.m_virtKey, wc[0], noAltGr);
+      PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam & 0x7fffffffu);
+      PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam | 0x80000000u);
+      clearDeadKey = true;
+    }
+    charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    break;
+
+  case 1:
+    if (isKeyUpEvent) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    } else {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
+      clearDeadKey = deskflow::win32::shouldClearDeadKeyState(1, isKeyUpEvent);
+    }
+    break;
+
+  case 2: {
+    if (isKeyUpEvent) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    } else {
+      WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_dead.m_virtKey, wc[0], noAltGr);
+      PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam & 0x7fffffffu);
+      PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam | 0x80000000u);
+      charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
+      clearDeadKey = deskflow::win32::shouldClearDeadKeyState(2, isKeyUpEvent);
+    }
+    break;
+  }
+  }
+
+  const bool keepDeadKeyForLocalApp = (g_mode != kHOOK_RELAY_EVENTS);
+  if (g_dead.m_virtKey != 0 && (!clearDeadKey || keepDeadKeyForLocalApp)) {
+    ToUnicode((UINT)g_dead.m_virtKey, (g_dead.m_lParam & 0x10ff0000u) >> 16, g_dead.m_keyState, wc, 2, flags);
+  }
+
+  if (clearDeadKey) {
+    clearTrackedDeadKeyState(deadState, flags);
+  }
+
+  if (charAndVirtKey != 0) {
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, charAndVirtKey | 0x07000000, lParam);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, charAndVirtKey, lParam);
+  }
+
+  return false;
+}
+
 static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
+  if (g_mode != kHOOK_RELAY_EVENTS) {
+    return keyboardHookHandlerLegacy(wParam, lParam);
+  }
+
+  deskflow::win32::DeadKeyState deadState;
+  deadState.m_deadVirtKey = g_dead.m_virtKey;
+  deadState.m_deadLParam = g_dead.m_lParam;
+  deadState.m_deadChar = g_dead.m_char;
+  for (size_t i = 0; i < 256; ++i) {
+    deadState.m_deadKeyState[i] = g_dead.m_keyState[i];
+  }
+
   DWORD vkCode = static_cast<DWORD>(wParam);
   bool kf_up = (lParam & (KF_UP << 16)) != 0;
 
@@ -356,86 +539,132 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   // FIXME -- figure out some way to check if a menu is active
   UINT flags = getTranslationFlags(menu);
 
-  // if we're on the server screen then just pass numpad keys with alt
-  // key down as-is.  we won't pick up the resulting character but the
-  // local app will.  if on a client screen then grab keys as usual;
-  // if the client is a windows system it'll synthesize the expected
-  // character.  if not then it'll probably just do nothing.
-  if (g_mode != kHOOK_RELAY_EVENTS) {
-    // we don't use virtual keys because we don't know what the
-    // state of the numlock key is.  we'll hard code the scan codes
-    // instead.  hopefully this works across all keyboards.
-    UINT sc = (lParam & 0x01ff0000u) >> 16;
-    if (menu && (sc >= 0x47u && sc <= 0x52u && sc != 0x4au && sc != 0x4eu)) {
-      return false;
-    }
-  }
+  const bool isKeyUpEvent = ((lParam & 0x80000000u) != 0);
+  const UINT button = static_cast<UINT>((lParam & 0x01ff0000u) >> 16);
+  const bool hasPendingDead = (g_dead.m_virtKey != 0);
+  const bool isModifierOrToggle = deskflow::win32::isModifierOrToggleVK(static_cast<UINT>(wParam));
 
-  TranslationResult translation = translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu);
-  WCHAR *wc = translation.m_chars;
-  int n = translation.m_count;
-  bool noAltGr = translation.m_noAltGr;
+  WCHAR wc[] = {0, 0};
+  bool noAltGr = false;
+  int n = 0;
+  bool translatedWithPendingDead = false;
+  if (!isKeyUpEvent) {
+    translatedWithPendingDead = hasPendingDead;
+    TranslationResult translation =
+        translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu, hasPendingDead);
+    wc[0] = translation.m_chars[0];
+    wc[1] = translation.m_chars[1];
+    noAltGr = translation.m_noAltGr;
+    n = translation.m_count;
+  }
 
   PostThreadMessage(
       g_threadID, DESKFLOW_MSG_DEBUG, (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) | 0x60000000,
       lParam
   );
+
+  deskflow::win32::DeadKeyTransitionInput transitionInput;
+  transitionInput.m_eventType =
+      isKeyUpEvent ? deskflow::win32::DeadKeyEventType::KeyUp : deskflow::win32::DeadKeyEventType::KeyDown;
+  transitionInput.m_toUnicodeResult = n;
+  transitionInput.m_vk = static_cast<UINT>(wParam);
+  transitionInput.m_button = button;
+  transitionInput.m_isModifierOrToggle = isModifierOrToggle;
+  transitionInput.m_hasPendingDead = hasPendingDead;
+  transitionInput.m_deadOwnerButton = g_dead.m_ownerButton;
+  const auto transition = deskflow::win32::decideDeadKeyTransition(transitionInput);
+
+  if (transition.m_setOwner) {
+    g_dead.m_ownerButton = button;
+  }
+  if (transition.m_clearOwner) {
+    g_dead.m_ownerButton = 0;
+  }
+
+  auto emitPendingDeadFallback = [&](bool noAltGrFallback, WCHAR deadChar) {
+    if (g_dead.m_virtKey == 0) {
+      return;
+    }
+
+    const WCHAR effectiveDeadChar = (deadChar != 0) ? deadChar : g_dead.m_char;
+    WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_dead.m_virtKey, effectiveDeadChar, noAltGrFallback);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam & 0x7fffffffu);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam | 0x80000000u);
+  };
+
   WPARAM charAndVirtKey = 0;
-  bool clearDeadKey = false;
-  switch (n) {
-  default:
-    // key is a dead key
-
-    if (lParam & 0x80000000u)
-      // This handles the obscure situation where a key has been
-      // pressed which is both a dead key and a normal character
-      // depending on which modifiers have been pressed. We
-      // break here to prevent it from being considered a dead
-      // key.
-      break;
-
-    g_dead.m_virtKey = wParam;
-    g_dead.m_lParam = lParam;
-    for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
-      g_dead.m_keyState[i] = keys[i];
+  bool clearDeadAfterRestore = transition.m_clearPending;
+  using DeadKeyAction = deskflow::win32::DeadKeyAction;
+  switch (transition.m_action) {
+  case DeadKeyAction::StoreDead:
+    if (!isKeyUpEvent) {
+      storeCapturedDeadKeyState(deadState, wParam, lParam, keys, wc[0]);
     }
     break;
 
-  case 0:
-    // key doesn't map to a character.  this can happen if
-    // non-character keys are pressed after a dead key.
+  case DeadKeyAction::KeepPending:
     charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
     break;
 
-  case 1:
-    // key maps to a character composed with dead key
+  case DeadKeyAction::ConsumeWithComposedChar:
     charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
-    clearDeadKey = true;
     break;
 
-  case 2: {
-    // previous dead key not composed.  send a fake key press
-    // and release for the dead key to our window.
-    WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_dead.m_virtKey, wc[0], noAltGr);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam & 0x7fffffffu);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_dead.m_lParam | 0x80000000u);
+  case DeadKeyAction::ConsumeWithDeadFallback:
+    emitPendingDeadFallback(noAltGr, wc[0]);
+    if (!isKeyUpEvent && n == 2) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
+    } else {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    }
+    break;
 
-    // use uncomposed character
-    charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
-    clearDeadKey = true;
+  case DeadKeyAction::ConsumeBeforeNewCandidate: {
+    // A different key-down arrived while a dead key is pending; emit fallback for
+    // the pending dead key, clear compose state, then recompute translation cleanly.
+    emitPendingDeadFallback(noAltGr, g_dead.m_char);
+    clearTrackedDeadKeyState(deadState, flags);
+    translatedWithPendingDead = false;
+    clearDeadAfterRestore = false;
+
+    WCHAR recomputedWc[] = {0, 0};
+    TranslationResult recomputedTranslation =
+        translateToUnicodeWithAltGrFallback(wParam, lParam, keys, flags, control, menu, false);
+    recomputedWc[0] = recomputedTranslation.m_chars[0];
+    recomputedWc[1] = recomputedTranslation.m_chars[1];
+    const bool recomputedNoAltGr = recomputedTranslation.m_noAltGr;
+    const int recomputed = recomputedTranslation.m_count;
+    if (recomputed < 0) {
+      storeCapturedDeadKeyState(deadState, wParam, lParam, keys, recomputedWc[0]);
+    } else if (recomputed == 0) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, 0, recomputedNoAltGr);
+    } else {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, recomputedWc[0], recomputedNoAltGr);
+    }
     break;
   }
+
+  case DeadKeyAction::NoDeadInteraction:
+    if (isKeyUpEvent) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    } else if (n == 0) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    } else if (n > 0) {
+      charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
+    }
+    break;
   }
 
-  // put back the dead key, if any, for the application to use
-  if (g_dead.m_virtKey != 0) {
+  // Local/server mode must preserve Windows' native compose behavior for the
+  // focused app. Relay mode must avoid restoring consumed dead state.
+  const bool keepDeadKeyForLocalApp = (g_mode != kHOOK_RELAY_EVENTS);
+  if (translatedWithPendingDead && g_dead.m_virtKey != 0 && (!clearDeadAfterRestore || keepDeadKeyForLocalApp)) {
     ToUnicode((UINT)g_dead.m_virtKey, (g_dead.m_lParam & 0x10ff0000u) >> 16, g_dead.m_keyState, wc, 2, flags);
   }
 
   // clear out old dead key state
-  if (clearDeadKey) {
-    g_dead.m_virtKey = 0;
-    g_dead.m_lParam = 0;
+  if (clearDeadAfterRestore) {
+    clearTrackedDeadKeyState(deadState, flags);
   }
 
   // forward message to our window.  do this whether or not we're
