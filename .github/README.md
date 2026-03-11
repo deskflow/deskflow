@@ -184,7 +184,7 @@ Deskflow is made by possible by these contributors.
 
 ## License
 
-This project is licensed under [GPL-2.0](LICENSE) with an [OpenSSL exception](LICENSES/LicenseRef-OpenSSL-Exception.txt).
+This project is licensed under [GPL-2.0](LICENSE) with an [OpenSSL exception](../LICENSES/LicenseRef-OpenSSL-Exception.txt).
 
 Any use of this project's code by GitHub Copilot, past or present, is done
 without our permission.  We do not consent to GitHub's use of this project's
