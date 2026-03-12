@@ -1309,6 +1309,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>Show the main window</source>
         <translation type="unfinished">Mostra la finestra principale</translation>
     </message>
+    <message>
+        <source>Run command on enter</source>
+        <translation type="unfinished">Esegui il comando alla pressione di Invio</translation>
+    </message>
+    <message>
+        <source>Run command on exit</source>
+        <translation type="unfinished">Esegui comando all&apos;uscita</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>
