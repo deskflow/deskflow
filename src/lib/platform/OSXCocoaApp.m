@@ -41,4 +41,15 @@ void runCocoaApp()
 void stopCocoaLoop()
 {
   [NSApp stop:dummyWindow];
+
+  NSEvent *dummyEvent = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                                           location:NSZeroPoint
+                                      modifierFlags:0
+                                          timestamp:0
+                                       windowNumber:0
+                                            context:nil
+                                            subtype:0
+                                              data1:0
+                                              data2:0];
+  [NSApp postEvent:dummyEvent atStart:YES]; // ensures main queue is woken up
 }
