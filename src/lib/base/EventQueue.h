@@ -35,7 +35,7 @@ public:
   EventQueue &operator=(EventQueue &&) = delete;
 
   // IEventQueue overrides
-  void loop() override;
+  int loop() override;
   void adoptBuffer(IEventQueueBuffer *) override;
   bool getEvent(Event &event, double timeout = -1.0) override;
   bool dispatchEvent(const Event &event) override;
