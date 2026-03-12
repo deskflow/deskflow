@@ -12,6 +12,7 @@
 #include "base/EventQueueTimer.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
+#include "common/ExitCodes.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
 
@@ -44,7 +45,7 @@ EventQueue::~EventQueue()
   ARCH->setSignalHandler(Arch::ThreadSignal::Terminate, nullptr, nullptr);
 }
 
-void EventQueue::loop()
+int EventQueue::loop()
 {
   m_buffer->init();
   {
@@ -67,6 +68,12 @@ void EventQueue::loop()
     Event::deleteData(event);
     getEvent(event);
   }
+  int exitCode = s_exitSuccess;
+  auto *exitEvent = dynamic_cast<ExitEventData *>(event.getDataObject());
+  if (exitEvent != nullptr) {
+    exitCode = exitEvent->exitCode();
+  }
+  return exitCode;
 }
 
 void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)

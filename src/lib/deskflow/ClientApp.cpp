@@ -327,15 +327,14 @@ int ClientApp::mainLoop()
   // run event loop.  if startClient() failed we're supposed to retry
   // later.  the timer installed by startClient() will take care of
   // that.
-
-  getEvents()->loop();
+  int exitCode = getEvents()->loop();
 
   // close down
   LOG_DEBUG("stopping client");
   stopClient();
   LOG_NOTE("stopped client");
 
-  return s_exitSuccess;
+  return exitCode;
 }
 
 int ClientApp::start()

@@ -121,6 +121,14 @@ public:
 protected:
   void runEventsLoop(const void *);
 
+  struct LoopErrorCode
+  {
+    int m_errorCode;
+    LoopErrorCode(int errorCode) : m_errorCode(errorCode)
+    {
+    }
+  };
+
 private:
   void (*m_bye)(int);
   IEventQueue *m_events = nullptr;

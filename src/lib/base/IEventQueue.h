@@ -45,7 +45,7 @@ public:
   /*!
   Dequeues and dispatches events until the kQuit event is found.
   */
-  virtual void loop() = 0;
+  virtual int loop() = 0;
 
   //! Set the buffer
   /*!

@@ -539,8 +539,7 @@ int ServerApp::mainLoop()
   // run event loop.  if startServer() failed we're supposed to retry
   // later.  the timer installed by startServer() will take care of
   // that.
-
-  getEvents()->loop();
+  int exitCode = getEvents()->loop();
 
   // close down
   LOG_DEBUG("stopping server");
@@ -549,7 +548,7 @@ int ServerApp::mainLoop()
   cleanupServer();
   LOG_NOTE("stopped server");
 
-  return s_exitSuccess;
+  return exitCode;
 }
 
 void ServerApp::resetServer()

@@ -21,6 +21,20 @@ public:
   virtual ~EventData() = default;
 };
 
+class ExitEventData : public EventData
+{
+public:
+  ExitEventData(int exitCode) : m_exitCode(exitCode) {};
+  virtual ~ExitEventData() = default;
+  int exitCode()
+  {
+    return m_exitCode;
+  }
+
+private:
+  int m_exitCode;
+};
+
 //! Event
 /*!
  \c Event holds an event type and a pointer to event data. It is movable, but not copyable
@@ -77,7 +91,6 @@ public:
     switch (event.getType()) {
       using enum EventTypes;
     case Unknown:
-    case Quit:
     case System:
     case Timer:
       break;

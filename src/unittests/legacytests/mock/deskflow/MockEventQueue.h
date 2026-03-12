@@ -14,7 +14,7 @@
 class MockEventQueue : public IEventQueue
 {
 public:
-  MOCK_METHOD(void, loop, (), (override));
+  MOCK_METHOD(int, loop, (), (override));
   MOCK_METHOD(EventQueueTimer *, newOneShotTimer, (double, void *), (override));
   MOCK_METHOD(EventQueueTimer *, newTimer, (double, void *), (override));
   MOCK_METHOD(bool, getEvent, (Event &, double), (override));

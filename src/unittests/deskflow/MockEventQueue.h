@@ -8,6 +8,7 @@
 #pragma once
 
 #include "base/IEventQueue.h"
+#include "common/ExitCodes.h"
 
 class MockEventQueue : public IEventQueue
 {
@@ -27,9 +28,9 @@ public:
     return true;
   }
 
-  void loop() override
+  int loop() override
   {
-    // do nothing
+    return s_exitSuccess;
   }
 
   void adoptBuffer(IEventQueueBuffer *) override
