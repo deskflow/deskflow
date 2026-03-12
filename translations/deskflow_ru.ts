@@ -1307,6 +1307,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Show the main window</source>
         <translation type="unfinished">Показать главное окно</translation>
     </message>
+    <message>
+        <source>Run script on enter</source>
+        <translation type="unfinished">Запустить скрипт при нажатии клавиши Enter</translation>
+    </message>
+    <message>
+        <source>Run script on exit</source>
+        <translation type="unfinished">Запустить скрипт при выходе</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>

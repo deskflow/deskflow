@@ -1309,6 +1309,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Show the main window</source>
         <translation type="unfinished">Mostrar la ventana principal</translation>
     </message>
+    <message>
+        <source>Run script on enter</source>
+        <translation type="unfinished">Ejecutar script al entrar</translation>
+    </message>
+    <message>
+        <source>Run script on exit</source>
+        <translation type="unfinished">Ejecutar script al salir</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>

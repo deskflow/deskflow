@@ -10,6 +10,8 @@
 #include "base/Log.h"
 #include "deskflow/IPlatformScreen.h"
 
+#include <QProcess>
+
 namespace deskflow {
 
 //
@@ -119,6 +121,12 @@ void Screen::enter(KeyModifierMask toggleMask)
   } else {
     enterSecondary(toggleMask);
   }
+
+  if (Settings::value(Settings::Core::EnableEnterCommand).toBool()) {
+    auto args = QProcess::splitCommand(Settings::value(Settings::Core::ScreenEnterCommand).toString());
+    const auto command = args.takeFirst();
+    QProcess::startDetached(command, args);
+  }
 }
 
 bool Screen::leave()
@@ -140,6 +148,11 @@ bool Screen::leave()
   }
 
   m_screen->leave();
+  if (Settings::value(Settings::Core::EnableExitCommand).toBool()) {
+    auto args = QProcess::splitCommand(Settings::value(Settings::Core::ScreenExitCommand).toString());
+    const auto command = args.takeFirst();
+    QProcess::startDetached(command, args);
+  }
 
   // make sure our idea of clipboard ownership is correct
   m_screen->checkClipboards();
