@@ -1309,6 +1309,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Show the main window</source>
         <translation type="unfinished">메인 창을 표시합니다</translation>
     </message>
+    <message>
+        <source>Run command on enter</source>
+        <translation type="unfinished">Enter 키를 누르면 명령 실행</translation>
+    </message>
+    <message>
+        <source>Run command on exit</source>
+        <translation type="unfinished">종료 시 명령 실행</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>

@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>431</height>
+    <width>490</width>
+    <height>366</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
@@ -16,23 +22,14 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="_13">
-   <property name="spacing">
-    <number>20</number>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <widget class="QWidget" name="tabGeneral">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <attribute name="title">
        <string>&amp;General</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <property name="spacing">
         <number>9</number>
        </property>
@@ -40,13 +37,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <item>
         <spacer name="verticalSpacer_6">
@@ -147,16 +144,16 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <item>
-        <spacer name="verticalSpacer_10">
+        <spacer name="verticalSpacer_7">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -266,16 +263,16 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <item>
-        <spacer name="verticalSpacer_7">
+        <spacer name="verticalSpacer_8">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -492,16 +489,16 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <item>
-        <spacer name="verticalSpacer_8">
+        <spacer name="verticalSpacer_9">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -788,12 +785,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tabAdvanced">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <attribute name="title">
        <string>&amp;Advanced</string>
       </attribute>
@@ -805,16 +796,16 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>20</number>
+        <number>0</number>
        </property>
        <item>
-        <spacer name="verticalSpacer_9">
+        <spacer name="verticalSpacer_10">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
          </property>
@@ -830,12 +821,6 @@
         <widget class="QGroupBox" name="groupService">
          <property name="enabled">
           <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
          </property>
          <property name="title">
           <string>Use background service (daemon)</string>
@@ -862,12 +847,6 @@
        </item>
        <item>
         <widget class="QWidget" name="widgetWlClipboard" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QCheckBox" name="cbUseWlClipboard">
@@ -888,6 +867,39 @@
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_3">
+         <property name="rowWrapPolicy">
+          <enum>QFormLayout::RowWrapPolicy::DontWrapRows</enum>
+         </property>
+         <property name="labelAlignment">
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+         </property>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="cbRunEnterCommand">
+           <property name="text">
+            <string>Run command on enter</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineCommandEnter"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="cbRunExitCommand">
+           <property name="text">
+            <string>Run command on exit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lineCommandExit"/>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="verticalSpacer">

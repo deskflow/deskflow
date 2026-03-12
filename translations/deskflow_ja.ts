@@ -1311,6 +1311,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Show the main window</source>
         <translation type="unfinished">メインウィンドウを表示する</translation>
     </message>
+    <message>
+        <source>Run command on enter</source>
+        <translation type="unfinished">Enterキーでコマンドを実行</translation>
+    </message>
+    <message>
+        <source>Run command on exit</source>
+        <translation type="unfinished">終了時にコマンドを実行</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>
