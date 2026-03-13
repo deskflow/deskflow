@@ -1311,6 +1311,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Show the main window</source>
         <translation type="unfinished">显示主窗口</translation>
     </message>
+    <message>
+        <source>Run script on enter</source>
+        <translation type="unfinished">输入时运行脚本</translation>
+    </message>
+    <message>
+        <source>Run script on exit</source>
+        <translation type="unfinished">退出时运行脚本</translation>
+    </message>
 </context>
 <context>
     <name>StatusBar</name>
