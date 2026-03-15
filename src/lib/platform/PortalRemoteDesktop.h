@@ -1,56 +1,40 @@
-/*
- * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
- * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
- */
-
 #pragma once
 
-#include "mt/Thread.h"
-#include "platform/EiScreen.h"
-
-#include <glib.h>
-#include <libportal/portal.h>
+#include "lib/deskflow/Clipboard.h"
+#include <string>
+#include <functional>
+#include <memory>
 
 namespace deskflow {
+namespace platform {
 
-class PortalRemoteDesktop
-{
+class PortalRemoteDesktop {
 public:
-  PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
-  ~PortalRemoteDesktop();
+    PortalRemoteDesktop();
+    ~PortalRemoteDesktop();
+
+    bool connect();
+    void disconnect();
+    bool isConnected() const;
+
+    // Clipboard integration for Wayland via XDG Desktop Portal
+    void setClipboard(Clipboard* clipboard);
+    Clipboard* clipboard() const;
+
+    bool requestClipboard();
+    bool setClipboardData(const std::string& mimeType, const std::string& data);
+    std::string getClipboardData(const std::string& mimeType) const;
+
+    // Callbacks for portal events
+    using ClipboardCallback = std::function<void(const std::string& mimeType, const std::string& data)>;
+    void setClipboardCallback(ClipboardCallback callback);
 
 private:
-  void glibThread(const void *);
-  gboolean timeoutHandler() const;
-  gboolean initSession();
-  void handleInitSession(GObject *object, GAsyncResult *res);
-  void handleSessionStarted(GObject *object, GAsyncResult *res);
-  void handleSessionClosed(XdpSession *session);
-  void reconnect(unsigned int timeout = 1000);
-
-  /// g_signal_connect callback wrapper
-  static void handleSessionClosedCallback(XdpSession *session, gpointer data)
-  {
-    static_cast<PortalRemoteDesktop *>(data)->handleSessionClosed(session);
-  }
-
-private:
-  EiScreen *m_screen;
-  IEventQueue *m_events;
-
-  Thread *m_glibThread;
-  GMainLoop *m_glibMainLoop = nullptr;
-
-  XdpPortal *m_portal = nullptr;
-  XdpSession *m_session = nullptr;
-  char *m_sessionRestoreToken = nullptr;
-
-  guint m_sessionSignalId = 0;
-
-  /// The number of successful sessions we've had already
-  guint m_sessionIteration = 0;
+    class Impl;
+    std::unique_ptr<Impl> m_impl;
+    Clipboard* m_clipboard;
+    ClipboardCallback m_clipboardCallback;
 };
 
+} // namespace platform
 } // namespace deskflow
