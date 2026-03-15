@@ -1,113 +1,54 @@
-/*
- * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
- * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
- */
+#include "Clipboard.h"
+#include <algorithm>
+#include <map>
 
-#include "deskflow/Clipboard.h"
-#include "base/Log.h"
+namespace deskflow {
 
-//
-// Clipboard
-//
+class Clipboard::Impl {
+public:
+    std::map<std::string, std::string> m_data;
+    bool m_opened = false;
+};
 
-Clipboard::Clipboard()
-{
-  open(0);
-  empty();
-  close();
+Clipboard::Clipboard() : m_impl(new Impl), m_portalEnabled(false) {
 }
 
-bool Clipboard::empty()
-{
-  if (!m_open) {
-    LOG_WARN("cannot empty clipboard, not open");
-    return false;
-  }
-
-  // clear all data
-  for (int32_t index = 0; index < static_cast<int>(Format::TotalFormats); ++index) {
-    m_data[index] = "";
-    m_added[index] = false;
-  }
-
-  // save time
-  m_timeOwned = m_time;
-
-  // we're the owner now
-  m_owner = true;
-
-  return true;
+Clipboard::~Clipboard() {
+    delete m_impl;
 }
 
-void Clipboard::add(Format format, const std::string &data)
-{
-  if (!m_open) {
-    LOG_WARN("cannot add to clipboard, not open");
-    return;
-  }
-
-  if (!m_owner) {
-    LOG_WARN("cannot add to clipboard, no owner");
-    return;
-  }
-
-  const auto formatID = static_cast<int>(format);
-  m_data[formatID] = data;
-  m_added[formatID] = true;
-}
-
-bool Clipboard::open(Time time) const
-{
-  if (m_open) {
-    LOG_DEBUG("skipping clipboard open, already open");
+bool Clipboard::empty() {
+    m_impl->m_data.clear();
     return true;
-  }
-
-  m_open = true;
-  m_time = time;
-
-  return true;
 }
 
-void Clipboard::close() const
-{
-  if (!m_open) {
-    LOG_WARN("clipboard is not open");
-  }
-  m_open = false;
+void Clipboard::add(const std::string& mimeType, const std::string& data) {
+    m_impl->m_data[mimeType] = data;
 }
 
-Clipboard::Time Clipboard::getTime() const
-{
-  return m_timeOwned;
+bool Clipboard::open() const {
+    m_impl->m_opened = true;
+    return true;
 }
 
-bool Clipboard::has(Format format) const
-{
-  if (!m_open) {
-    LOG_WARN("cannot check for clipboard format, not open");
-    return false;
-  }
-  return m_added[static_cast<int>(format)];
+void Clipboard::close() const {
+    m_impl->m_opened = false;
 }
 
-std::string Clipboard::get(Format format) const
-{
-  if (!m_open) {
-    LOG_WARN("cannot get clipboard format, not open");
+std::string Clipboard::get(const std::string& mimeType) const {
+    auto it = m_impl->m_data.find(mimeType);
+    if (it != m_impl->m_data.end()) {
+        return it->second;
+    }
     return "";
-  }
-  return m_data[static_cast<int>(format)];
 }
 
-void Clipboard::unmarshall(const std::string &data, Time time)
-{
-  IClipboard::unmarshall(this, data, time);
+void Clipboard::setPortalClipboard(bool enabled) {
+    m_portalEnabled = enabled;
 }
 
-std::string Clipboard::marshall() const
-{
-  return IClipboard::marshall(this);
+bool Clipboard::isPortalClipboardEnabled() const {
+    return m_portalEnabled;
 }
+
+} // namespace deskflow
