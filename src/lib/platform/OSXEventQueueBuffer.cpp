@@ -58,8 +58,9 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, uint32_t &da
 
 bool OSXEventQueueBuffer::addEvent(uint32_t dataID)
 {
-  // Use GCD to dispatch event addition on the main queue
-  dispatch_async(dispatch_get_main_queue(), ^{
+  // Use GCD to dispatch event addition (can't use main queue as cocoa loop may not be running)
+  static auto gcdQueue = dispatch_queue_create("org.deskflow.deskflow.eventQueueBuffer", DISPATCH_QUEUE_SERIAL);
+  dispatch_async(gcdQueue, ^{
     std::scoped_lock lock{this->m_mutex};
     LOG_DEBUG2("adding user event with dataID: %u", dataID);
     this->m_dataQueue.push(dataID);
