@@ -1,56 +1,52 @@
-/*
- * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
- * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
- */
-
 #pragma once
 
-#include "mt/Thread.h"
-#include "platform/EiScreen.h"
-
+#include "deskflow/Clipboard.h"
 #include <glib.h>
-#include <libportal/portal.h>
+#include <string>
+#include <vector>
+#include <memory>
 
-namespace deskflow {
+// Forward declarations for XDP types if needed or include specific headers
+// Assuming xdp.h is available or we use GDBus directly for minimal implementation
 
-class PortalRemoteDesktop
-{
+// Minimal XDP constants for Clipboard (if not in a common header)
+#define XDP_DESKTOP_PORTAL_OBJECT_PATH "/org/freedesktop/portal/desktop"
+#define XDP_DESKTOP_PORTAL_INTERFACE "org.freedesktop.impl.portal.RemoteDesktop"
+#define XDP_DESKTOP_PORTAL_REQUEST_INTERFACE "org.freedesktop.portal.Request"
+
+// Generic type alias for clarity in this patch context
+using ClipboardID = uint32_t;
+
+class PortalRemoteDesktop {
 public:
-  PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
-  ~PortalRemoteDesktop();
+    PortalRemoteDesktop();
+    ~PortalRemoteDesktop();
+
+    // Entry point to enable clipboard handling
+    void enableClipboard();
+    
+    // Method to set the clipboard content (from local to remote)
+    void setClipboard(const deskflow::Clipboard::EFormat format, const std::string& data);
 
 private:
-  void glibThread(const void *);
-  gboolean timeoutHandler() const;
-  gboolean initSession();
-  void handleInitSession(GObject *object, GAsyncResult *res);
-  void handleSessionStarted(GObject *object, GAsyncResult *res);
-  void handleSessionClosed(XdpSession *session);
-  void reconnect(unsigned int timeout = 1000);
+    // GDBus connection and signal handlers
+    GDBusConnection* m_connection = nullptr;
+    guint m_signalSubscriptionId = 0;
+    guint m_ownerId = 0;
+    
+    // Clipboard state
+    std::unique_ptr<deskflow::Clipboard> m_clipboard;
+    ClipboardID m_clipboardId = 0;
 
-  /// g_signal_connect callback wrapper
-  static void handleSessionClosedCallback(XdpSession *session, gpointer data)
-  {
-    static_cast<PortalRemoteDesktop *>(data)->handleSessionClosed(session);
-  }
-
-private:
-  EiScreen *m_screen;
-  IEventQueue *m_events;
-
-  Thread *m_glibThread;
-  GMainLoop *m_glibMainLoop = nullptr;
-
-  XdpPortal *m_portal = nullptr;
-  XdpSession *m_session = nullptr;
-  char *m_sessionRestoreToken = nullptr;
-
-  guint m_sessionSignalId = 0;
-
-  /// The number of successful sessions we've had already
-  guint m_sessionIteration = 0;
+    void connectToPortal();
+    static void onSignalReceived(GDBusConnection* connection,
+                                 const gchar* sender_name,
+                                 const gchar* object_path,
+                                 const gchar* interface_name,
+                                 const gchar* signal_name,
+                                 GVariant* parameters,
+                                 gpointer user_data);
+    
+    void handleSelectionTransfer(GVariant* parameters);
+    void sendClipboardData(ClipboardID id, const std::string& mimeType);
 };
-
-} // namespace deskflow
