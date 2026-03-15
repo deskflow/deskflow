@@ -1,61 +1,40 @@
-/*
- * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
- * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
- */
-
 #pragma once
 
-#include "deskflow/IClipboard.h"
+#include <string>
+#include <unordered_map>
 
-//! Memory buffer clipboard
-/*!
-This class implements a clipboard that stores data in memory.
-*/
+namespace deskflow {
+
+class IClipboard
+{
+public:
+    virtual ~IClipboard() = default;
+    virtual void clear() = 0;
+    virtual bool hasData() const = 0;
+    virtual std::string getData(const std::string& format) const = 0;
+    virtual void setData(const std::string& format, const std::string& data) = 0;
+};
+
 class Clipboard : public IClipboard
 {
 public:
-  Clipboard();
-  ~Clipboard() override = default;
+    void clear() override { m_data.clear(); }
 
-  //! @name manipulators
-  //@{
+    bool hasData() const override { return !m_data.empty(); }
 
-  //! Unmarshall clipboard data
-  /*!
-  Extract marshalled clipboard data and store it in this clipboard.
-  Sets the clipboard time to \c time.
-  */
-  void unmarshall(const std::string &data, Time time);
+    std::string getData(const std::string& format) const override
+    {
+        auto it = m_data.find(format);
+        return (it != m_data.end()) ? it->second : std::string();
+    }
 
-  //@}
-  //! @name accessors
-  //@{
-
-  //! Marshall clipboard data
-  /*!
-  Merge this clipboard's data into a single buffer that can be later
-  unmarshalled to restore the clipboard and return the buffer.
-  */
-  std::string marshall() const;
-
-  //@}
-
-  // IClipboard overrides
-  bool empty() final;
-  void add(Format, const std::string &data) override;
-  bool open(Time) const final;
-  void close() const override;
-  Time getTime() const override;
-  bool has(Format) const override;
-  std::string get(Format) const override;
+    void setData(const std::string& format, const std::string& data) override
+    {
+        m_data[format] = data;
+    }
 
 private:
-  mutable bool m_open = false;
-  mutable Time m_time;
-  bool m_owner = false;
-  Time m_timeOwned;
-  bool m_added[static_cast<int>(Format::TotalFormats)] = {false, false, false};
-  std::string m_data[static_cast<int>(Format::TotalFormats)] = {"", "", ""};
+    std::unordered_map<std::string, std::string> m_data;
 };
+
+} // namespace deskflow
