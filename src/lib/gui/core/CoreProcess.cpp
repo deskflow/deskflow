@@ -14,6 +14,11 @@
 #include "OSXHelpers.h"
 #endif
 
+#ifdef Q_OS_LINUX
+#include <signal.h>
+#include <sys/prctl.h>
+#endif
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -202,6 +207,14 @@ void CoreProcess::startForegroundProcess(const QStringList &args)
   // core command can be easily copy/pasted to the terminal for testing.
   const auto quoted = makeQuotedArgs(m_appPath, args);
   qInfo("running command: %s", qPrintable(quoted));
+
+#ifdef Q_OS_LINUX
+  m_process->setChildProcessModifier([] {
+    // the core process becomes orphaned when the gui process exits abruptly (e.g. with kill -9),
+    // so ensure the os also kills the core when that happens to the gui.
+    prctl(PR_SET_PDEATHSIG, SIGTERM);
+  });
+#endif
 
   m_process->start(m_appPath, args);
 
