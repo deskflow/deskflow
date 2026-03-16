@@ -563,7 +563,7 @@ int ServerApp::mainLoop()
   cleanupServer();
   LOG_NOTE("stopped server");
 
-  return s_exitSuccess;
+  return m_mainLoopExitCode;
 }
 
 void ServerApp::resetServer()

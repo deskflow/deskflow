@@ -15,6 +15,7 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
+#include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/Clipboard.h"
@@ -1660,8 +1661,16 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
     break;
   case kCGEventTapDisabledByTimeout:
     // Re-enable our event-tap
-    CGEventTapEnable(screen->m_eventTapPort, true);
-    LOG_INFO("quartz event tap was disabled by timeout, re-enabling");
+    if (AXIsProcessTrusted()) {
+      CGEventTapEnable(screen->m_eventTapPort, true);
+      LOG_INFO("quartz event tap was disabled by timeout, re-enabling");
+    } else {
+      LOG_CRIT("process is not trusted anymore, quitting");
+      screen->disable();
+      App &app = App::instance();
+      app.setMainLoopExitCode(s_exitFailed);
+      app.getEvents()->addEvent(Event(EventTypes::Quit));
+    }
     break;
   case kCGEventTapDisabledByUserInput:
     LOG_ERR("quartz event tap was disabled by user input");

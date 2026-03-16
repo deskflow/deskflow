@@ -343,7 +343,7 @@ int ClientApp::mainLoop()
   stopClient();
   LOG_NOTE("stopped client");
 
-  return s_exitSuccess;
+  return m_mainLoopExitCode;
 }
 
 int ClientApp::start()

@@ -10,6 +10,7 @@
 
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/ExitCodes.h"
 #include "deskflow/IApp.h"
 #include "net/SocketMultiplexer.h"
 
@@ -104,8 +105,16 @@ public:
 
   void handleScreenError() const;
 
+  void setMainLoopExitCode(int exitCode)
+  {
+    m_mainLoopExitCode = exitCode;
+  }
+
 protected:
   void runEventsLoop(const void *);
+
+protected:
+  int m_mainLoopExitCode = s_exitSuccess;
 
 private:
   void (*m_bye)(int);
