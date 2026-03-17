@@ -240,6 +240,8 @@ private:
      Evil, and this should be moved to a place where it need not
      be mutable as soon as possible. */
   mutable MouseButtonState m_buttonState;
+  mutable double m_scrollRemainderX = 0.0;
+  mutable double m_scrollRemainderY = 0.0;
   using MouseButtonEventMapType = std::map<uint16_t, CGEventType>;
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 

@@ -588,21 +588,55 @@ void OSXScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 void OSXScreen::fakeMouseWheel(ScrollDelta delta) const
 {
   if (delta.x != 0 || delta.y != 0) {
-    // use server's acceleration with a little boost since other platforms
-    // take one wheel step as a larger step than the mac does.
-    delta = applyScrollModifier(
-        {static_cast<int32_t>(3.0 * delta.x / s_scrollDelta), static_cast<int32_t>(3.0 * delta.y / s_scrollDelta)}
-    );
-    // create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
-    // is the right choice here over kCGScrollEventUnitPixel
-    CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, delta.y, delta.x);
+    // Multiplier for lines per scroll tick (3.0 is a legacy boost).
+    const double linesPerTick = 3.0;
+    // Multiplier for pixels per line (common on macOS).
+    const double pixelsPerLine = 15.0;
 
-    // Fix for sticky keys
-    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-    CGEventSetFlags(scrollEvent, modifiers);
+    // Use doubles for intermediate calculations to preserve high-resolution scroll data.
+    double dx = linesPerTick * pixelsPerLine * delta.x / s_scrollDelta;
+    double dy = linesPerTick * pixelsPerLine * delta.y / s_scrollDelta;
 
-    CGEventPost(kCGHIDEventTap, scrollEvent);
-    CFRelease(scrollEvent);
+    // Scale and invert based on client settings.
+    dx = getInvertXScroll() ? -dx * getXScrollScale() : dx * getXScrollScale();
+    dy = getInvertYScroll() ? -dy * getYScrollScale() : dy * getYScrollScale();
+
+    // Accumulate the fractional pixels.
+    m_scrollRemainderX += dx;
+    m_scrollRemainderY += dy;
+
+    int32_t finalX = static_cast<int32_t>(m_scrollRemainderX);
+    int32_t finalY = static_cast<int32_t>(m_scrollRemainderY);
+
+    // If there was motion but it was too small to result in an integer pixel,
+    // we round up (or down) to at least 1 pixel to satisfy "round up on micro updates".
+    // This ensures that high-resolution scrolling (like Logitech mice) always results
+    // in movement on the client.
+    if (finalX == 0 && delta.x != 0) {
+      finalX = (delta.x > 0) ? (getInvertXScroll() ? -1 : 1) : (getInvertXScroll() ? 1 : -1);
+      m_scrollRemainderX = 0;
+    } else {
+      m_scrollRemainderX -= finalX;
+    }
+
+    if (finalY == 0 && delta.y != 0) {
+      finalY = (delta.y > 0) ? (getInvertYScroll() ? -1 : 1) : (getInvertYScroll() ? 1 : -1);
+      m_scrollRemainderY = 0;
+    } else {
+      m_scrollRemainderY -= finalY;
+    }
+
+    if (finalX != 0 || finalY != 0) {
+      // Post a pixel-unit scroll event for smoother high-resolution scrolling.
+      CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitPixel, 2, finalY, finalX);
+
+      // Fix for sticky keys
+      CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+      CGEventSetFlags(scrollEvent, modifiers);
+
+      CGEventPost(kCGHIDEventTap, scrollEvent);
+      CFRelease(scrollEvent);
+    }
   }
 }
 
