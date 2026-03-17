@@ -150,6 +150,8 @@ elseif(UNIX)
         PortalInputCapture.cpp
         PortalInputCapture.h
         PortalRemoteDesktop.cpp
+        PortalClipboard.cpp
+        PortalClipboard.h
         PortalRemoteDesktop.h
       )
     endif()
