@@ -183,4 +183,22 @@ void KeyMapTests::mapkey()
   QVERIFY(result == nullptr);
 }
 
+void KeyMapTests::parseModifiers_plusKey_keepsPlusAsKey()
+{
+  std::string keystroke = "Control+Shift++";
+  KeyModifierMask mask = 0;
+
+  QVERIFY(KeyMap::parseModifiers(keystroke, mask));
+  QCOMPARE(mask, static_cast<KeyModifierMask>(KeyModifierControl | KeyModifierShift));
+  QCOMPARE(keystroke, std::string("+"));
+}
+
+void KeyMapTests::parseKey_plusSymbol_parsesAsAsciiKey()
+{
+  KeyID key = kKeyNone;
+
+  QVERIFY(KeyMap::parseKey("+", key));
+  QCOMPARE(key, static_cast<KeyID>('+'));
+}
+
 QTEST_MAIN(KeyMapTests)

@@ -1152,6 +1152,12 @@ bool KeyMap::parseModifiers(std::string &x, KeyModifierMask &mask)
     }
     std::string c = x.substr(tb, te - tb);
     if (c.empty()) {
+      // allow '+' to be parsed as the key after modifiers (e.g. Control+Shift++)
+      if (x[tb] == '+') {
+        x.erase(0, tb);
+        return true;
+      }
+
       // missing component
       return false;
     }
