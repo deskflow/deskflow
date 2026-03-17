@@ -21,6 +21,8 @@ private Q_SLOTS:
   void findBestKey_noRequiredDown_cannotMatch();
   void isCommand();
   void mapkey();
+  void parseModifiers_plusKey_keepsPlusAsKey();
+  void parseKey_plusSymbol_parsesAsAsciiKey();
 
 private:
   Log m_log;
