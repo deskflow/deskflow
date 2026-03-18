@@ -10,6 +10,7 @@
 
 #include <QDebug>
 #include <QLocalSocket>
+#include <QMutexLocker>
 #include <QObject>
 #include <QString>
 
@@ -79,6 +80,7 @@ bool DaemonIpcClient::connectToServer()
 
 void DaemonIpcClient::disconnectFromServer()
 {
+  QMutexLocker locker(&m_mutex);
   m_state = State::Disconnecting;
   qDebug() << "daemon ipc client disconnecting from server";
   m_socket->disconnectFromServer();
@@ -116,6 +118,7 @@ void DaemonIpcClient::handleErrorOccurred()
 
 bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
 {
+  QMutexLocker locker(&m_mutex);
   if (expectConnected && !isConnected()) {
     qWarning() << "cannot send command, ipc client not connected";
     return false;

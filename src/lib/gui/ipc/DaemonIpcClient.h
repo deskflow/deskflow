@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <QMutex>
 #include <QObject>
 
 class QLocalSocket;
@@ -54,6 +55,7 @@ private:
 
 private:
   QLocalSocket *m_socket;
+  QMutex m_mutex;
   State m_state{State::Unconnected};
 };
 
