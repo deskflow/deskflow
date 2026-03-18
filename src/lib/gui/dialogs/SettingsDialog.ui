@@ -870,6 +870,9 @@
        </item>
        <item>
         <layout class="QFormLayout" name="formLayout_3">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::FieldGrowthPolicy::ExpandingFieldsGrow</enum>
+         </property>
          <property name="rowWrapPolicy">
           <enum>QFormLayout::RowWrapPolicy::DontWrapRows</enum>
          </property>
