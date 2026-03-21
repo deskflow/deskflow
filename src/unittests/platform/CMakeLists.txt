@@ -44,6 +44,7 @@ elseif(UNIX)
       SOURCE WlClipboardTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
+    # Keep the red-phase state-machine target out of run_tests until the SUT exists.
     add_executable(WaylandCaptureStateTests WaylandCaptureStateTests.cpp)
     target_link_libraries(WaylandCaptureStateTests platform base arch Qt::Test)
     if (CMAKE_CXX_BYTE_ORDER STREQUAL "BIG_ENDIAN")
