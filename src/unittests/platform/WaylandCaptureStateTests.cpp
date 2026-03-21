@@ -6,6 +6,7 @@
 
 #include "WaylandCaptureStateTests.h"
 
+// Red-phase coverage for recoverable Wayland capture invalidation cases.
 void WaylandCaptureStateTests::eisDisconnectTransitionsToRebindRequired()
 {
   WaylandCaptureStateMachine machine;

@@ -44,12 +44,10 @@ elseif(UNIX)
       SOURCE WlClipboardTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
-    create_test(
-      NAME WaylandCaptureStateTests
-      DEPENDS platform
-      LIBS base arch
-      SOURCE WaylandCaptureStateTests.cpp
-      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
-    )
+    add_executable(WaylandCaptureStateTests WaylandCaptureStateTests.cpp)
+    target_link_libraries(WaylandCaptureStateTests platform base arch Qt::Test)
+    if (CMAKE_CXX_BYTE_ORDER STREQUAL "BIG_ENDIAN")
+      target_compile_definitions(WaylandCaptureStateTests PUBLIC WORDS_BIGENDIAN=1)
+    endif()
   endif()
 endif()
