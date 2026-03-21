@@ -44,5 +44,12 @@ elseif(UNIX)
       SOURCE WlClipboardTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
+    create_test(
+      NAME WaylandCaptureStateTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE WaylandCaptureStateTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
   endif()
 endif()
