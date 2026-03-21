@@ -11,19 +11,19 @@
 // Red-phase coverage for recoverable Wayland capture invalidation cases.
 void WaylandCaptureStateTests::eisDisconnectTransitionsToRebindRequired()
 {
-  WaylandCaptureStateMachine machine;
+  deskflow::WaylandCaptureStateMachine machine;
   machine.onCaptureEstablished();
   machine.onEisDisconnected();
 
-  QCOMPARE(machine.state(), CaptureState::RebindRequired);
+  QCOMPARE(machine.state(), deskflow::CaptureState::RebindRequired);
 }
 
 void WaylandCaptureStateTests::createSessionCanceledTransitionsToRebindRequired()
 {
-  WaylandCaptureStateMachine machine;
+  deskflow::WaylandCaptureStateMachine machine;
   machine.onCreateSessionCanceled();
 
-  QCOMPARE(machine.state(), CaptureState::RebindRequired);
+  QCOMPARE(machine.state(), deskflow::CaptureState::RebindRequired);
 }
 
 QTEST_MAIN(WaylandCaptureStateTests)

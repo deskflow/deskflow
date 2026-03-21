@@ -8,6 +8,8 @@
 
 #include <cstdint>
 
+namespace deskflow {
+
 enum class CaptureState : std::uint8_t
 {
   Starting,
@@ -31,3 +33,5 @@ public:
 private:
   CaptureState m_state = CaptureState::Starting;
 };
+
+} // namespace deskflow

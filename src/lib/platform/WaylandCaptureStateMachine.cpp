@@ -6,6 +6,8 @@
 
 #include "platform/WaylandCaptureStateMachine.h"
 
+namespace deskflow {
+
 CaptureState WaylandCaptureStateMachine::state() const
 {
   return m_state;
@@ -25,3 +27,5 @@ void WaylandCaptureStateMachine::onCreateSessionCanceled()
 {
   m_state = CaptureState::RebindRequired;
 }
+
+} // namespace deskflow
