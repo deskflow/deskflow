@@ -8,7 +8,7 @@
 
 #include "platform/WaylandCaptureStateMachine.h"
 
-// Red-phase coverage for recoverable Wayland capture invalidation cases.
+// Coverage for recoverable Wayland capture invalidation cases.
 void WaylandCaptureStateTests::eisDisconnectTransitionsToRebindRequired()
 {
   deskflow::WaylandCaptureStateMachine machine;
