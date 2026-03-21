@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace deskflow {
 
@@ -25,13 +26,18 @@ public:
   WaylandCaptureStateMachine() = default;
 
   CaptureState state() const;
+  std::string statusSummary() const;
 
   void onCaptureEstablished();
   void onEisDisconnected();
   void onCreateSessionCanceled();
 
 private:
+  void setSessionLifecycleFailure(const char *reason);
+
   CaptureState m_state = CaptureState::Starting;
+  const char *m_failureClass = nullptr;
+  const char *m_failureReason = nullptr;
 };
 
 } // namespace deskflow

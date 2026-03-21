@@ -15,4 +15,6 @@ class WaylandCaptureStateTests : public QObject
 private Q_SLOTS:
   void eisDisconnectTransitionsToRebindRequired();
   void createSessionCanceledTransitionsToRebindRequired();
+  void eisDisconnectExposesSessionLifecycleStatusMarkers();
+  void createSessionCanceledExposesSessionLifecycleStatusMarkers();
 };

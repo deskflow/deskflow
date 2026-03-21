@@ -26,4 +26,27 @@ void WaylandCaptureStateTests::createSessionCanceledTransitionsToRebindRequired(
   QCOMPARE(machine.state(), deskflow::CaptureState::RebindRequired);
 }
 
+void WaylandCaptureStateTests::eisDisconnectExposesSessionLifecycleStatusMarkers()
+{
+  deskflow::WaylandCaptureStateMachine machine;
+  machine.onCaptureEstablished();
+  machine.onEisDisconnected();
+
+  const auto status = QString::fromStdString(machine.statusSummary());
+  QVERIFY(status.contains("wayland_capture_state=rebind_required"));
+  QVERIFY(status.contains("wayland_failure_class=session_lifecycle"));
+  QVERIFY(status.contains("wayland_failure_reason=eis_disconnected"));
+}
+
+void WaylandCaptureStateTests::createSessionCanceledExposesSessionLifecycleStatusMarkers()
+{
+  deskflow::WaylandCaptureStateMachine machine;
+  machine.onCreateSessionCanceled();
+
+  const auto status = QString::fromStdString(machine.statusSummary());
+  QVERIFY(status.contains("wayland_capture_state=rebind_required"));
+  QVERIFY(status.contains("wayland_failure_class=session_lifecycle"));
+  QVERIFY(status.contains("wayland_failure_reason=create_session_canceled"));
+}
+
 QTEST_MAIN(WaylandCaptureStateTests)
