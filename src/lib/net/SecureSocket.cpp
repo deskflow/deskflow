@@ -355,6 +355,14 @@ void SecureSocket::initContext(bool server)
     SslLogger::logError();
   }
 
+  // Reduce TLS record size to minimize latency for small messages (mouse/keyboard events).
+  // Default TLS max fragment is 16KB which adds buffering delay for tiny packets.
+  SSL_CTX_set_max_send_fragment(m_ssl->m_context, 1024);
+
+  // Allow partial writes so small messages are sent immediately without waiting
+  // for the full buffer to fill.
+  SSL_CTX_set_mode(m_ssl->m_context, SSL_MODE_ENABLE_PARTIAL_WRITE | SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER);
+
   if (m_securityLevel == SecurityLevel::PeerAuth) {
     // We want to ask for peer certificate, but not verify it. If we don't ask for peer
     // certificate, e.g. client won't send it.

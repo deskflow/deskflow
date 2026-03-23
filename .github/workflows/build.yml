@@ -1,0 +1,85 @@
+name: Build macOS & Windows
+
+on:
+  push:
+    branches: [master, main]
+    tags:
+      - "v*"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CMAKE_CONFIGURE: "cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DSKIP_BUILD_TESTS=ON"
+
+jobs:
+  build:
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.runs-on }}
+    timeout-minutes: ${{ matrix.target.timeout }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - name: "macos-arm64"
+            runs-on: macos-15
+            timeout: 15
+            qt-version: 6.10.2
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
+
+          - name: "macos-x64"
+            runs-on: macos-15-intel
+            timeout: 25
+            qt-version: 6.9.3
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12'
+
+          - name: "windows-x64"
+            runs-on: "windows-2022"
+            timeout: 30
+            config-args: "-G Ninja"
+            vcpkg-triplet: x64-windows-release
+            arch: "amd64"
+            qt-version: 6.10.2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup VC++ environment
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.target.arch }}
+
+      - name: Install dependencies
+        id: get-deps
+        uses: ./.github/actions/install-dependencies
+        with:
+          qt-version: ${{ matrix.target.qt-version }}
+          vcpkg-triplet: ${{ matrix.target.vcpkg-triplet }}
+
+      - name: Configure
+        run: ${{ env.CMAKE_CONFIGURE }} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }}
+
+      - name: Build
+        run: cmake --build build --config Release -j8
+
+      - name: Package
+        shell: bash
+        run: |
+          for i in $(seq 1 3); do
+            cmake --build build --config Release -j8 --target package 2>&1 && break
+            echo "Package attempt $i failed, retrying..."
+            sleep 1
+          done
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deskflow-${{ matrix.target.name }}
+          path: ${{ github.workspace }}/build/deskflow[-_]*.*

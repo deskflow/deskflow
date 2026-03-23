@@ -1044,10 +1044,11 @@ bool OSXScreen::onKey(CGEventRef event)
 
   // Special handling to track state of modifiers
   if (eventKind == kCGEventFlagsChanged) {
-    // get old and new modifier state
+    // get old and new modifier state, passing the virtual key so we can
+    // distinguish left from right modifier keys
     KeyModifierMask oldMask = getActiveModifiers();
     KeyModifierMask newMask = m_keyState->mapModifiersFromOSX(macMask);
-    m_keyState->handleModifierKeys(getEventTarget(), oldMask, newMask);
+    m_keyState->handleModifierKeys(getEventTarget(), oldMask, newMask, virtualKey);
 
     // if the current set of modifiers exactly matches a modifiers-only
     // hot key then generate a hot key down event.

@@ -38,7 +38,7 @@ public:
   Determines which modifier keys have changed and updates the modifier
   state and sends key events as appropriate.
   */
-  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask);
+  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask, uint32_t virtualKey = 0);
 
   //@}
   //! @name accessors
@@ -158,8 +158,12 @@ private:
   AutoCFArray m_groups{nullptr, CFRelease};
   GroupMap m_groupMap;
   bool m_shiftPressed;
+  bool m_rightShiftPressed;
   bool m_controlPressed;
+  bool m_rightControlPressed;
   bool m_altPressed;
+  bool m_rightAltPressed;
   bool m_superPressed;
+  bool m_rightSuperPressed;
   bool m_capsPressed;
 };

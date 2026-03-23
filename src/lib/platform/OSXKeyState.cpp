@@ -22,9 +22,13 @@
 // want to generate for that code.  The others are for mapping
 // different KeyIDs to a single key code.
 static const uint32_t s_shiftVK = kVK_Shift;
+static const uint32_t s_rightShiftVK = kVK_RightShift;
 static const uint32_t s_controlVK = kVK_Control;
+static const uint32_t s_rightControlVK = kVK_RightControl;
 static const uint32_t s_altVK = kVK_Option;
+static const uint32_t s_rightAltVK = kVK_RightOption;
 static const uint32_t s_superVK = kVK_Command;
+static const uint32_t s_rightSuperVK = kVK_RightCommand;
 static const uint32_t s_capsLockVK = kVK_CapsLock;
 static const uint32_t s_numLockVK = kVK_ANSI_KeypadClear; // 71
 
@@ -95,18 +99,17 @@ static const KeyEntry s_controlKeys[] = {
     // to map to.  also the enter key with numlock on is a modifier but i
     // don't know which.
 
-    // modifier keys.  OS X doesn't seem to support right handed versions
-    // of modifier keys so we map them to the left handed versions.
+    // modifier keys.  map right handed versions to their proper virtual keys.
     {kKeyShift_L, s_shiftVK},
-    {kKeyShift_R, s_shiftVK}, // 60
+    {kKeyShift_R, s_rightShiftVK},
     {kKeyControl_L, s_controlVK},
-    {kKeyControl_R, s_controlVK}, // 62
+    {kKeyControl_R, s_rightControlVK},
     {kKeyAlt_L, s_altVK},
-    {kKeyAlt_R, s_altVK},
+    {kKeyAlt_R, s_rightAltVK},
     {kKeySuper_L, s_superVK},
-    {kKeySuper_R, s_superVK}, // 61
+    {kKeySuper_R, s_rightSuperVK},
     {kKeyMeta_L, s_superVK},
-    {kKeyMeta_R, s_superVK}, // 61
+    {kKeyMeta_R, s_rightSuperVK},
 
     // toggle modifiers
     {kKeyNumLock, s_numLockVK},
@@ -168,7 +171,9 @@ io_connect_t getEventDriver()
 
 bool isModifier(uint8_t virtualKey)
 {
-  static std::set<uint8_t> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK};
+  static std::set<uint8_t> modifiers{
+      s_shiftVK, s_rightShiftVK, s_superVK, s_rightSuperVK,
+      s_altVK, s_rightAltVK, s_controlVK, s_rightControlVK, s_capsLockVK};
 
   return (modifiers.find(virtualKey) != modifiers.end());
 }
@@ -197,9 +202,13 @@ void OSXKeyState::init()
 {
   m_deadKeyState = 0;
   m_shiftPressed = false;
+  m_rightShiftPressed = false;
   m_controlPressed = false;
+  m_rightControlPressed = false;
   m_altPressed = false;
+  m_rightAltPressed = false;
   m_superPressed = false;
+  m_rightSuperPressed = false;
   m_capsPressed = false;
 
   // build virtual key map
@@ -371,19 +380,19 @@ CGEventFlags OSXKeyState::getModifierStateAsOSXFlags() const
 {
   CGEventFlags modifiers = 0;
 
-  if (m_shiftPressed) {
+  if (m_shiftPressed || m_rightShiftPressed) {
     modifiers |= kCGEventFlagMaskShift;
   }
 
-  if (m_controlPressed) {
+  if (m_controlPressed || m_rightControlPressed) {
     modifiers |= kCGEventFlagMaskControl;
   }
 
-  if (m_altPressed) {
+  if (m_altPressed || m_rightAltPressed) {
     modifiers |= kCGEventFlagMaskAlternate;
   }
 
-  if (m_superPressed) {
+  if (m_superPressed || m_rightSuperPressed) {
     modifiers |= kCGEventFlagMaskCommand;
   }
 
@@ -505,17 +514,29 @@ CGEventFlags OSXKeyState::getDeviceDependedFlags() const
   if (m_shiftPressed) {
     modifiers |= NX_DEVICELSHIFTKEYMASK;
   }
+  if (m_rightShiftPressed) {
+    modifiers |= NX_DEVICERSHIFTKEYMASK;
+  }
 
   if (m_controlPressed) {
     modifiers |= NX_DEVICELCTLKEYMASK;
+  }
+  if (m_rightControlPressed) {
+    modifiers |= NX_DEVICERCTLKEYMASK;
   }
 
   if (m_altPressed) {
     modifiers |= NX_DEVICELALTKEYMASK;
   }
+  if (m_rightAltPressed) {
+    modifiers |= NX_DEVICERALTKEYMASK;
+  }
 
   if (m_superPressed) {
     modifiers |= NX_DEVICELCMDKEYMASK;
+  }
+  if (m_rightSuperPressed) {
+    modifiers |= NX_DEVICERCMDKEYMASK;
   }
 
   return modifiers;
@@ -540,14 +561,26 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
   case s_shiftVK:
     m_shiftPressed = keyDown;
     break;
+  case s_rightShiftVK:
+    m_rightShiftPressed = keyDown;
+    break;
   case s_controlVK:
     m_controlPressed = keyDown;
+    break;
+  case s_rightControlVK:
+    m_rightControlPressed = keyDown;
     break;
   case s_altVK:
     m_altPressed = keyDown;
     break;
+  case s_rightAltVK:
+    m_rightAltPressed = keyDown;
+    break;
   case s_superVK:
     m_superPressed = keyDown;
+    break;
+  case s_rightSuperVK:
+    m_rightSuperPressed = keyDown;
     break;
   case s_capsLockVK:
     m_capsPressed = keyDown;
@@ -812,23 +845,36 @@ bool OSXKeyState::mapDeskflowHotKeyToMac(
   return true;
 }
 
-void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask)
+void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask, uint32_t virtualKey)
 {
   // compute changed modifiers
   KeyModifierMask changed = (oldMask ^ newMask);
 
-  // synthesize changed modifier keys
+  // synthesize changed modifier keys, using the virtual key from the
+  // CGEvent to distinguish left from right modifier keys.
   if ((changed & KeyModifierShift) != 0) {
-    handleModifierKey(target, s_shiftVK, kKeyShift_L, (newMask & KeyModifierShift) != 0, newMask);
+    bool isRight = (virtualKey == kVK_RightShift);
+    uint32_t vk = isRight ? s_rightShiftVK : s_shiftVK;
+    KeyID id = isRight ? kKeyShift_R : kKeyShift_L;
+    handleModifierKey(target, vk, id, (newMask & KeyModifierShift) != 0, newMask);
   }
   if ((changed & KeyModifierControl) != 0) {
-    handleModifierKey(target, s_controlVK, kKeyControl_L, (newMask & KeyModifierControl) != 0, newMask);
+    bool isRight = (virtualKey == kVK_RightControl);
+    uint32_t vk = isRight ? s_rightControlVK : s_controlVK;
+    KeyID id = isRight ? kKeyControl_R : kKeyControl_L;
+    handleModifierKey(target, vk, id, (newMask & KeyModifierControl) != 0, newMask);
   }
   if ((changed & KeyModifierAlt) != 0) {
-    handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
+    bool isRight = (virtualKey == kVK_RightOption);
+    uint32_t vk = isRight ? s_rightAltVK : s_altVK;
+    KeyID id = isRight ? kKeyAlt_R : kKeyAlt_L;
+    handleModifierKey(target, vk, id, (newMask & KeyModifierAlt) != 0, newMask);
   }
   if ((changed & KeyModifierSuper) != 0) {
-    handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
+    bool isRight = (virtualKey == kVK_RightCommand);
+    uint32_t vk = isRight ? s_rightSuperVK : s_superVK;
+    KeyID id = isRight ? kKeySuper_R : kKeySuper_L;
+    handleModifierKey(target, vk, id, (newMask & KeyModifierSuper) != 0, newMask);
   }
   if ((changed & KeyModifierCapsLock) != 0) {
     handleModifierKey(target, s_capsLockVK, kKeyCapsLock, (newMask & KeyModifierCapsLock) != 0, newMask);
