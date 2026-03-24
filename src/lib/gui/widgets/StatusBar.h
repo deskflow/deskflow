@@ -30,6 +30,7 @@ public:
   void setSecurityLevel(const QString &securityLevel);
   void setBtnFingerprintVisible(bool visible);
   void updateFound(const QString &version);
+  void setRetryCountdown(int seconds);
 
 Q_SIGNALS:
   void requestShowMyFingerprints();

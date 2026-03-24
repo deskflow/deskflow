@@ -89,12 +89,14 @@ Q_SIGNALS:
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
   void securityLevelChanged(QString securityLevel);
+  void retryCountdownChanged(int seconds);
 
 private Q_SLOTS:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
   void onProcessReadyReadStandardOutput();
   void onProcessReadyReadStandardError();
   void daemonIpcClientConnected();
+  void onRetryCountdownTick();
 
 private:
   void startForegroundProcess(const QStringList &args);
@@ -127,6 +129,8 @@ private:
   QString m_secureSocketVersion;
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
   QTimer m_retryTimer;
+  QTimer m_retryCountdownTimer;
+  int m_retryCountdown = 0;
   int m_connections = 0;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
   FileTail *m_daemonFileTail = nullptr;

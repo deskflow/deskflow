@@ -176,3 +176,12 @@ void StatusBar::setSecurityLevel(const QString &securityLevel)
   const auto txt = m_encrypted ? tr("%1 Encryption Enabled").arg(m_securityLevel) : tr("Encryption Disabled");
   m_lblSecurityIcon->setToolTip(txt);
 }
+
+void StatusBar::setRetryCountdown(int seconds)
+{
+  if (seconds > 0) {
+    m_lblStatus->setText(tr("%1 will retry in %2s...").arg(kAppName).arg(seconds));
+  } else {
+    m_lblStatus->setText(tr("%1 will retry in a moment...").arg(kAppName));
+  }
+}

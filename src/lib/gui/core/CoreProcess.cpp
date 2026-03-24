@@ -114,11 +114,17 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig)
 
   connect(&m_retryTimer, &QTimer::timeout, this, [this] {
     if (m_processState == ProcessState::RetryPending) {
+      m_retryCountdownTimer.stop();
+      m_retryCountdown = 0;
+      Q_EMIT retryCountdownChanged(0);
       start();
     } else {
       qDebug("retry cancelled, process state is not retry pending");
     }
   });
+
+  m_retryCountdownTimer.setInterval(1000);
+  connect(&m_retryCountdownTimer, &QTimer::timeout, this, &CoreProcess::onRetryCountdownTick);
 }
 
 void CoreProcess::onProcessReadyReadStandardOutput()
@@ -154,6 +160,14 @@ void CoreProcess::daemonIpcClientConnected()
   }
 }
 
+void CoreProcess::onRetryCountdownTick()
+{
+  if (m_retryCountdown > 0) {
+    m_retryCountdown--;
+    Q_EMIT retryCountdownChanged(m_retryCountdown);
+  }
+}
+
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 {
   using enum ProcessState;
@@ -179,6 +193,9 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
     setProcessState(RetryPending);
     m_retryTimer.setSingleShot(true);
     m_retryTimer.start(kRetryDelay);
+    m_retryCountdown = kRetryDelay / 1000;
+    Q_EMIT retryCountdownChanged(m_retryCountdown);
+    m_retryCountdownTimer.start();
   } else {
     setProcessState(Stopped);
   }

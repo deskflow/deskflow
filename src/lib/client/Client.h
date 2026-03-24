@@ -126,6 +126,9 @@ public:
     return m_resolvedAddressesCount;
   }
 
+  //! Get the retry delay in seconds for the current retry attempt.
+  double getRetryDelay() const;
+
   //@}
 
   // IScreen overrides
@@ -201,4 +204,5 @@ private:
   bool m_enableClipboard = true;
   size_t m_maximumClipboardSize = INT_MAX;
   size_t m_resolvedAddressesCount = 0;
+  int m_retryCount = 0;
 };

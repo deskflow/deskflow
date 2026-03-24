@@ -26,6 +26,7 @@
 #include "net/SecureSocket.h"
 #include "net/TCPSocket.h"
 
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 
@@ -418,16 +419,30 @@ void Client::setupScreen()
   });
 }
 
+double Client::getRetryDelay() const
+{
+  // Hybrid backoff: first 90 retries at 1s each (covers ~90s window),
+  // then slow exponential: 1, 2, 4, 8, 16, 32, 64, 64, ... seconds
+  if (m_retryCount < 90) {
+    return 1.0;
+  }
+  return std::min(1.0 * (1 << (m_retryCount - 90)), 64.0);
+}
+
 void Client::setupTimer()
 {
   assert(m_timer == nullptr);
-  m_timer = m_events->newOneShotTimer(2.0, nullptr);
+  double delay = getRetryDelay();
+  LOG_DEBUG("connection retry %d, next attempt in %.1f seconds", m_retryCount, delay);
+  m_timer = m_events->newOneShotTimer(delay, nullptr);
   m_events->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { handleConnectTimeout(); });
+  m_retryCount++;
 }
 
 void Client::cleanup()
 {
   m_connectOnResume = false;
+  m_retryCount = 0;
   cleanupTimer();
   cleanupScreen();
   cleanupConnecting();
@@ -489,6 +504,9 @@ void Client::handleConnected()
   LOG_DEBUG1("connected, waiting for hello");
   cleanupConnecting();
   setupConnection();
+
+  // reset retry count on successful connection
+  m_retryCount = 0;
 
   // reset clipboard state
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
