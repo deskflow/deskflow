@@ -185,6 +185,14 @@ p, li { white-space: pre-wrap; }
         <source>Reset to default values</source>
         <translation type="unfinished">Restablecer valores predeterminados</translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Permite que el cliente reduzca la frecuencia con la que intenta reconectarse al servidor cuando los intentos de conexión fallan. El intervalo entre intentos de conexión comenzará en 1 segundo y podrá alcanzar un máximo de 5 minutos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Use dynamic reconnection time based on connection attempts</source>
+        <translation type="unfinished">Utilizar un tiempo de reconexión dinámico basado en los intentos de conexión</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>

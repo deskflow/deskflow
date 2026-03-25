@@ -185,6 +185,14 @@ p, li { white-space: pre-wrap; }
         <source>Reset to default values</source>
         <translation type="unfinished">기본값으로 재설정</translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;연결 시도가 실패할 경우, 클라이언트가 서버 재연결 시도 주기를 늦추도록 허용합니다. 연결 시도 간 지연 시간은 1초 간격으로 시작되며, 최대 5분까지 늘어날 수 있습니다.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Use dynamic reconnection time based on connection attempts</source>
+        <translation type="unfinished">연결 시도 횟수에 따라 동적 재연결 시간을 사용합니다</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
