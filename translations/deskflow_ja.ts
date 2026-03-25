@@ -185,6 +185,14 @@ p, li { white-space: pre-wrap; }
         <source>Reset to default values</source>
         <translation>デフォルト値にリセットする</translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;接続試行が失敗している場合、クライアントがサーバーへの再接続を試みる頻度を徐々に落とせるようにします。接続試行の間隔は当初1秒から開始され、最大で5分まで延長されます。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Use dynamic reconnection time based on connection attempts</source>
+        <translation type="unfinished">接続試行回数に基づき、再接続時間を動的に調整する</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>

@@ -34,6 +34,7 @@ public:
 
   struct Client
   {
+    inline static const auto DynamicConnectionRetry = QStringLiteral("client/dynamicConnectionInterval");
     inline static const auto InvertYScroll = QStringLiteral("client/invertYScroll");
     inline static const auto InvertXScroll = QStringLiteral("client/invertXScroll");
     inline static const auto YScrollScale = QStringLiteral("client/yScrollScale");
@@ -198,7 +199,8 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Settings::Client::InvertYScroll
+      Settings::Client::DynamicConnectionRetry
+    , Settings::Client::InvertYScroll
     , Settings::Client::InvertXScroll
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
@@ -260,6 +262,7 @@ private:
     , Settings::Core::UseWlClipboard
     , Settings::Core::EnableEnterCommand
     , Settings::Core::EnableExitCommand
+    , Settings::Client::DynamicConnectionRetry
     , Settings::Server::ExternalConfig
     , Settings::Client::InvertYScroll
     , Settings::Client::InvertXScroll

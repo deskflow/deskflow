@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>ClientConfigDialog</class>
  <widget class="QDialog" name="ClientConfigDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>391</width>
+    <height>176</height>
+   </rect>
+  </property>
   <property name="sizePolicy">
    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
     <horstretch>0</horstretch>
@@ -12,6 +20,16 @@
    <string>Client Configuration</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="cbDynamicConnectTime">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Use dynamic reconnection time based on connection attempts</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QCheckBox" name="cbLanguageSync">
      <property name="text">

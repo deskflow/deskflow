@@ -45,8 +45,6 @@
 
 #include <memory>
 
-constexpr static auto s_retryTime = 1.0;
-
 ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
   // do nothing
@@ -164,8 +162,8 @@ void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
 
 void ClientApp::scheduleClientRestart(double retryTime)
 {
-  // install a timer and handler to retry later
   LOG_DEBUG("retry in %.0f seconds", retryTime);
+  // install a timer and handler to retry later
   EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
   getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
@@ -186,7 +184,7 @@ void ClientApp::handleClientFailed(const Event &e)
 
     LOG_WARN("failed to connect to server=%s, trying next resolved address", info->m_what.c_str());
     if (!m_suspended) {
-      scheduleClientRestart(s_retryTime);
+      scheduleClientRestart(retryTime());
     }
   } else {
     // All resolved addresses exhausted, try next server in list
@@ -200,7 +198,7 @@ void ClientApp::handleClientFailed(const Event &e)
       std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
       LOG_WARN("failed to connect to server=%s, trying next server in list", info->m_what.c_str());
       if (!m_suspended) {
-        scheduleClientRestart(s_retryTime);
+        scheduleClientRestart(retryTime());
       }
     }
   }
@@ -216,16 +214,18 @@ void ClientApp::handleClientRefused(const Event &e)
   } else {
     LOG_WARN("failed to connect to server: %s", info->m_what.c_str());
     if (!m_suspended) {
-      scheduleClientRestart(s_retryTime);
+      m_retryCount++;
+      scheduleClientRestart(retryTime());
     }
   }
 }
 
 void ClientApp::handleClientDisconnected()
 {
+  m_retryCount = 0;
   LOG_IPC("disconnected from server");
   if (!m_suspended) {
-    scheduleClientRestart(s_retryTime);
+    scheduleClientRestart(retryTime());
   }
 }
 
@@ -299,7 +299,7 @@ bool ClientApp::startClient()
     return false;
   }
 
-  scheduleClientRestart(s_retryTime);
+  scheduleClientRestart(retryTime());
   return true;
 }
 
@@ -392,4 +392,21 @@ void ClientApp::startNode()
 ISocketFactory *ClientApp::getSocketFactory() const
 {
   return new TCPSocketFactory(getEvents(), getSocketMultiplexer());
+}
+
+double ClientApp::retryTime() const
+{
+  if (!Settings::value(Settings::Client::DynamicConnectionRetry).toBool() || m_retryCount < 300) // 5 minutes
+    return 1;
+  if (m_retryCount < 360) // 5 minutes
+    return 5;
+  if (m_retryCount < 390) // 5 minutes
+    return 10;
+  if (m_retryCount < 410) // 10 minutes
+    return 30;
+  if (m_retryCount < 420) // 10 minutes
+    return 60;
+  if (m_retryCount < 430) // 20 minutes
+    return 120;
+  return 300;
 }
