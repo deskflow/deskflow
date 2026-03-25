@@ -1349,10 +1349,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">%1 está esperando clientes</translation>
     </message>
     <message>
-        <source>%1 is connecting...</source>
-        <translation type="unfinished">%1 se está conectando...</translation>
-    </message>
-    <message>
         <source>%1 is connected as client of %2</source>
         <translation type="unfinished">%1 está conectado como cliente de %2</translation>
     </message>
@@ -1385,6 +1381,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Update available</source>
         <translation type="unfinished">Actualización disponible</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 se está conectando...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1 está esperando %2 segundos antes del siguiente reintento</translation>
     </message>
     <message>
         <source>%1 Encryption Enabled</source>

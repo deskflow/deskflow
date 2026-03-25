@@ -24,6 +24,7 @@ public:
   void setStatus(ConnectionState connectionState, ProcessState processState, bool isServer);
   void setServerClients(const QStringList &clients);
   void setSecurityIconVisible(bool visible);
+  void setConnectionInterval(int newInterval);
   bool securityIconVisible() const;
   void updateSecurityInfo(bool encrypted);
   void setSecurityIcon(bool encrypted);
@@ -40,10 +41,13 @@ protected:
 
 private:
   void updateText();
+  void updateTimerLabel();
   QPushButton *m_btnFingerprint = nullptr;
   QLabel *m_lblSecurityIcon = nullptr;
   QLabel *m_lblStatus = nullptr;
   QPushButton *m_btnUpdate = nullptr;
   bool m_encrypted = false;
   QString m_securityLevel;
+  int m_connectionInterval = -1;
+  QTimer *m_retryTimer = nullptr;
 };

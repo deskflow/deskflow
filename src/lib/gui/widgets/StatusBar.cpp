@@ -11,13 +11,15 @@
 #include <QEvent>
 #include <QLabel>
 #include <QPushButton>
+#include <QTimer>
 
 StatusBar::StatusBar(QWidget *parent)
     : QStatusBar{parent},
       m_btnFingerprint{new QPushButton(this)},
       m_lblSecurityIcon{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
-      m_btnUpdate{new QPushButton(this)}
+      m_btnUpdate{new QPushButton(this)},
+      m_retryTimer{new QTimer(this)}
 {
   static const auto btnHeight = height() - 2;
   static const auto btnSize = QSize(btnHeight, btnHeight);
@@ -47,6 +49,10 @@ StatusBar::StatusBar(QWidget *parent)
   insertPermanentWidget(3, m_btnUpdate);
   connect(m_btnUpdate, &QPushButton::clicked, this, &StatusBar::requestUpdateVersion);
 
+  m_retryTimer->setInterval(1000);
+  m_retryTimer->setSingleShot(false);
+  connect(m_retryTimer, &QTimer::timeout, this, &StatusBar::updateTimerLabel);
+
   updateText();
   adjustSize();
 }
@@ -54,22 +60,28 @@ StatusBar::StatusBar(QWidget *parent)
 // clang-format off
 void StatusBar::setStatus(ConnectionState connectionState, ProcessState processState, bool isServer)
 {
+  if (m_retryTimer->isActive())
+    m_retryTimer->stop();
   setSecurityIconVisible(false);
   switch (processState) {
     using enum ProcessState;
     case Starting:
+      m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 is starting...").arg(kAppName));
       break;
 
     case RetryPending:
+      m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 will retry in a moment...").arg(kAppName));
       break;
 
     case Stopping:
+        m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 is stopping...").arg(kAppName));
       break;
 
     case Stopped:
+      m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 is not running").arg(kAppName));
       break;
 
@@ -86,11 +98,14 @@ void StatusBar::setStatus(ConnectionState connectionState, ProcessState processS
         }
 
         case Connecting:
-          m_lblStatus->setText(tr("%1 is connecting...").arg(kAppName));
+          updateTimerLabel();
+          if (Settings::value(Settings::Client::DynamicConnectionRetry).toBool())
+            m_retryTimer->start();
           break;
 
         case Connected: {
           setSecurityIconVisible(true);
+          m_connectionInterval = -1;
           if (!isServer) {
             m_lblStatus->setText(tr("%1 is connected as client of %2")
                                      .arg(kAppName, Settings::value(Settings::Client::RemoteHost).toString()));
@@ -100,6 +115,7 @@ void StatusBar::setStatus(ConnectionState connectionState, ProcessState processS
 
         case Disconnected:
           m_lblStatus->setText(tr("%1 is disconnected").arg(kAppName));
+          m_connectionInterval = -1;
           break;
       }
     }
@@ -132,6 +148,11 @@ void StatusBar::setSecurityIconVisible(bool visible)
   m_lblSecurityIcon->setVisible(visible);
 }
 
+void StatusBar::setConnectionInterval(int newInterval)
+{
+  m_connectionInterval = newInterval;
+}
+
 bool StatusBar::securityIconVisible() const
 {
   return m_lblSecurityIcon->isVisible();
@@ -160,6 +181,18 @@ void StatusBar::updateText()
   m_btnFingerprint->setToolTip(tr("View local fingerprint"));
   m_btnUpdate->setText(tr("Update available"));
   setSecurityLevel(m_securityLevel);
+}
+
+void StatusBar::updateTimerLabel()
+{
+  QString text;
+  if (m_connectionInterval < 2 || !Settings::value(Settings::Client::DynamicConnectionRetry).toBool()) {
+    text = tr("%1 is connecting...").arg(kAppName);
+  } else {
+    text = tr("%1 is waiting %2 seconds before the next retry").arg(kAppName, QString::number(m_connectionInterval));
+    m_connectionInterval--;
+  }
+  m_lblStatus->setText(text);
 }
 
 void StatusBar::setSecurityIcon(bool encrypted)

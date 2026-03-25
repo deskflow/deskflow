@@ -1349,10 +1349,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>%1 è in attesa di client</translation>
     </message>
     <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 è in connessione...</translation>
-    </message>
-    <message>
         <source>%1 is connected as client of %2</source>
         <translation>%1 è connesso come client di %2</translation>
     </message>
@@ -1385,6 +1381,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Update available</source>
         <translation>Aggiornamento disponibile</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 è in connessione...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1 attende %2 secondi prima del prossimo tentativo</translation>
     </message>
     <message>
         <source>%1 Encryption Enabled</source>

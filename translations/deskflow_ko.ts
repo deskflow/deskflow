@@ -1349,10 +1349,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>%1 클라이언트를 기다리는 중</translation>
     </message>
     <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 연결 중...</translation>
-    </message>
-    <message>
         <source>%1 is connected as client of %2</source>
         <translation>%1이(가) %2의 클라이언트로 연결되었습니다</translation>
     </message>
@@ -1384,6 +1380,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Update available</source>
         <translation>업데이트 사용 가능</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 연결 중...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1이 다음 재시도까지 %2초 대기 중입니다</translation>
     </message>
     <message>
         <source>%1 Encryption Enabled</source>
