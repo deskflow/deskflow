@@ -302,7 +302,6 @@ bool ServerApp::initServer()
     return true;
   }
 
-  double retryTime;
   deskflow::Screen *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
@@ -317,7 +316,6 @@ bool ServerApp::initServer()
     LOG_WARN("primary screen unavailable: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
-    retryTime = e.getRetryTime();
   } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
