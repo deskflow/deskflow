@@ -21,6 +21,12 @@ void ClientConnection::handleLogLine(const QString &logLine)
     return;
   }
 
+  if (logLine.contains("retry in ") && Settings::value(Settings::Client::DynamicConnectionRetry).toBool()) {
+    auto line = logLine.mid(logLine.indexOf("in ") + 3);
+    int seconds = line.mid(0, line.indexOf(" ")).toInt();
+    Q_EMIT updateTimeoutDelay(seconds);
+    return;
+  }
   if (logLine.contains("connected to server")) {
     m_supressMessage = true;
     return;

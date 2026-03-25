@@ -160,6 +160,7 @@ private:
   void remoteHostChanged(const QString &newRemoteHost);
   void handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth);
   void updateIpLabel(const QStringList &addresses);
+  void updateTimeoutDelay(int newDelay);
 
   bool canRunCore() const;
   /**

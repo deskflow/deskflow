@@ -1351,10 +1351,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>%1 正在等待客户端连接</translation>
     </message>
     <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 正在连接...</translation>
-    </message>
-    <message>
         <source>%1 is connected as client of %2</source>
         <translation>%1 已作为 %2 的客户端连接</translation>
     </message>
@@ -1386,6 +1382,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Update available</source>
         <translation>有可用更新</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 正在连接...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1 正在等待 %2 秒，然后进行下一次重试</translation>
     </message>
     <message>
         <source>%1 Encryption Enabled</source>

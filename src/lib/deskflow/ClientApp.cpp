@@ -162,7 +162,10 @@ void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
 
 void ClientApp::scheduleClientRestart(double retryTime)
 {
-  LOG_DEBUG("retry in %.0f seconds", retryTime);
+  if (Settings::value(Settings::Client::DynamicConnectionRetry).toBool())
+    LOG_IPC("retry in %.0f seconds", retryTime);
+  else
+    LOG_DEBUG("retry in %.0f seconds", retryTime);
   // install a timer and handler to retry later
   EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
   getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
@@ -214,8 +217,8 @@ void ClientApp::handleClientRefused(const Event &e)
   } else {
     LOG_WARN("failed to connect to server: %s", info->m_what.c_str());
     if (!m_suspended) {
-      m_retryCount++;
       scheduleClientRestart(retryTime());
+      m_retryCount++;
     }
   }
 }
@@ -292,10 +295,12 @@ bool ClientApp::startClient()
   } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
+    m_retryCount = 0;
     return false;
   } catch (BaseException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
+    m_retryCount = 0;
     return false;
   }
 
@@ -309,6 +314,7 @@ void ClientApp::stopClient()
   closeClientScreen(m_clientScreen);
   m_client = nullptr;
   m_clientScreen = nullptr;
+  m_retryCount = 0;
 }
 
 int ClientApp::mainLoop()

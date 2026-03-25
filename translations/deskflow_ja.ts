@@ -1351,10 +1351,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>%1 はクライアント接続を待機中</translation>
     </message>
     <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 は接続処理中…</translation>
-    </message>
-    <message>
         <source>%1 is connected as client of %2</source>
         <translation>%1 は %2 にクライアントとして接続中</translation>
     </message>
@@ -1386,6 +1382,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Update available</source>
         <translation>ソフトウェア更新あり</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 は接続処理中…</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1 は次の再試行まで %2 秒待機しています</translation>
     </message>
     <message>
         <source>%1 Encryption Enabled</source>
