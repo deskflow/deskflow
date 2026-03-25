@@ -837,7 +837,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
   LOG_DEBUG2("calling XOpenDisplay(\"%s\")", displayName);
   Display *display = XOpenDisplay(displayName);
   if (display == nullptr) {
-    throw ScreenUnavailableException(60.0);
+    throw ScreenUnavailableException();
   }
 
   // verify the availability of the XTest extension

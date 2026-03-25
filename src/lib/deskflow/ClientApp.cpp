@@ -270,7 +270,6 @@ void ClientApp::closeClient(Client *client)
 
 bool ClientApp::startClient()
 {
-  double retryTime;
   deskflow::Screen *clientScreen = nullptr;
   try {
     if (m_clientScreen == nullptr) {
@@ -290,7 +289,6 @@ bool ClientApp::startClient()
   } catch (ScreenUnavailableException &e) {
     LOG_WARN("secondary screen unavailable: %s", e.what());
     closeClientScreen(clientScreen);
-    retryTime = e.getRetryTime();
   } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
@@ -301,7 +299,7 @@ bool ClientApp::startClient()
     return false;
   }
 
-  scheduleClientRestart(retryTime);
+  scheduleClientRestart(s_retryTime);
   return true;
 }
 
