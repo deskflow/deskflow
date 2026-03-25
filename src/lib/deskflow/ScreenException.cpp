@@ -21,16 +21,6 @@ std::string ScreenOpenFailureException::getWhat() const throw()
 // ScreenUnavailableException
 //
 
-ScreenUnavailableException::ScreenUnavailableException(double timeUntilRetry) : m_timeUntilRetry(timeUntilRetry)
-{
-  // do nothing
-}
-
-double ScreenUnavailableException::getRetryTime() const
-{
-  return m_timeUntilRetry;
-}
-
 std::string ScreenUnavailableException::getWhat() const throw()
 {
   return format("ScreenUnavailableException", "unable to open screen");

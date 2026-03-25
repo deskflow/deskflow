@@ -37,27 +37,10 @@ may be successful.
 class ScreenUnavailableException : public ScreenOpenFailureException
 {
 public:
-  /*!
-  \c timeUntilRetry is the suggested time the caller should wait until
-  trying to open the screen again.
-  */
-  explicit ScreenUnavailableException(double timeUntilRetry);
   ~ScreenUnavailableException() throw() override = default;
-
-  //! @name manipulators
-  //@{
-
-  //! Get retry time
-  /*!
-  Returns the suggested time to wait until retrying to open the screen.
-  */
-  double getRetryTime() const;
 
   //@}
 
 protected:
   std::string getWhat() const throw() override;
-
-private:
-  double m_timeUntilRetry;
 };
