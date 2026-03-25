@@ -1,7 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a662eedb3d21ec748ac1199d4357c8bd5":[5,0,0,18,51],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6ab94297a308225c53fd052a1d3e7477":[5,0,0,18,19],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2":[5,0,0,18,57],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a731395388d62cd6067648dea2768653d":[5,0,0,18,44],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a786d0034ff93ad270bacde98d603b3e9":[5,0,0,18,43],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "structKeyModifierNameMapEntry.html":[6,0,137],
 "structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa":[6,0,137,1],
 "structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08":[6,0,137,0],
-"structKeyNameMapEntry.html":[6,0,138]
+"structKeyNameMapEntry.html":[6,0,138],
+"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e":[6,0,138,1],
+"structKeyNameMapEntry.html#ad73cf6b1ded24dbc17ff9d24f331bacc":[6,0,138,0]
 };

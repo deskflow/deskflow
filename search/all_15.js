@@ -110,7 +110,7 @@ var searchData=
   ['screenshapechanged_107',['ScreenShapeChanged',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a2fd1c9ec9c4f15dce5cc792d7d7b1795',1,'deskflow']]],
   ['screenssection_108',['screensSection',['../classScreen.html#a8399e3a0197115ccfa802774dd1d4c9c',1,'Screen']]],
   ['screensuspend_109',['ScreenSuspend',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aeb718c3a217f7d99ed6f049169ba554d',1,'deskflow']]],
-  ['screenunavailableexception_110',['ScreenUnavailableException',['../classScreenUnavailableException.html',1,'ScreenUnavailableException'],['../classScreenUnavailableException.html#a185349a8f8fa458724b76b2f1ad1e419',1,'ScreenUnavailableException::ScreenUnavailableException()']]],
+  ['screenunavailableexception_110',['ScreenUnavailableException',['../classScreenUnavailableException.html',1,'']]],
   ['scrolldelta_111',['ScrollDelta',['../Coordinate_8h.html#a926a72b0999cf3a9001b66c38aa4453f',1,'Coordinate.h']]],
   ['scrolllock_112',['ScrollLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a7d7902d5e2998e4fb2b8694a2de4ff65',1,'ScreenConfig']]],
   ['scrollremainder_113',['ScrollRemainder',['../structScrollRemainder.html',1,'']]],
