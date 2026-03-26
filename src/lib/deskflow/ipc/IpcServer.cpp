@@ -7,6 +7,7 @@
 #include "IpcServer.h"
 
 #include "base/Log.h"
+#include "common/VersionInfo.h"
 
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -110,8 +111,21 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
   }
 
   if (const auto &command = parts.at(0); command == "hello") {
+    const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
+    const auto clientVersion = parts.size() >= 2 ? parts.at(1) : QString();
+    if (clientVersion != versionId) {
+      LOG_ERR(
+          "ipc client version mismatch (client: %s, server: %s)",
+          clientVersion.isEmpty() ? "unknown" : clientVersion.toUtf8().constData(), versionId.toUtf8().constData()
+      );
+      writeToClientSocket(clientSocket, "error");
+      clientSocket->flush();
+      clientSocket->disconnectFromServer();
+      return;
+    }
+
     LOG_DEBUG("ipc server got hello message, sending hello back");
-    writeToClientSocket(clientSocket, "hello");
+    writeToClientSocket(clientSocket, QString("hello=%1").arg(versionId));
 
     // Replay messages that were queued before any clients connected.
     LOG_DEBUG1("ipc server replaying %d pending messages", m_pendingMessages.size());

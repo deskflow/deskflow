@@ -14,7 +14,6 @@
 #include "base/NetworkProtocol.h"
 #include "client/ServerProxy.h"
 #include "common/Settings.h"
-#include "deskflow/ipc/CoreIpc.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/PacketStreamFilter.h"
@@ -22,10 +21,13 @@
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
 #include "net/SecureSocket.h"
 #include "net/TCPSocket.h"
+
+#include <QMetaEnum>
 
 #include <cstdlib>
 #include <cstring>
@@ -133,8 +135,11 @@ void Client::disconnect(const char *msg)
   }
 }
 
-void Client::refuseConnection(const char *msg)
+void Client::refuseConnection(deskflow::core::ConnectionRefusal reason, const char *msg)
 {
+  const auto metaEnum = QMetaEnum::fromType<deskflow::core::ConnectionRefusal>();
+  ipcSendToClient("connectionRefused", metaEnum.valueToKey(static_cast<int>(reason)));
+
   cleanup();
 
   if (msg) {

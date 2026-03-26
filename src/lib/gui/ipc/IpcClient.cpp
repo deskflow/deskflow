@@ -6,14 +6,13 @@
 
 #include "IpcClient.h"
 
+#include "common/VersionInfo.h"
+
 #include <QDebug>
 #include <QLocalSocket>
 #include <QTimer>
 
 namespace deskflow::gui::ipc {
-
-const auto kTimeout = 1000;
-const auto kRetryLimit = 3;
 
 IpcClient::IpcClient(QObject *parent, const QString &socketName)
     : QObject(parent),
@@ -48,6 +47,8 @@ void IpcClient::connectToServer()
 
 void IpcClient::attemptConnection()
 {
+  const auto kRetryLimit = 3;
+
   if (m_retryCount >= kRetryLimit) {
     qWarning() << "ipc client failed to connect after" << kRetryLimit << "attempts";
     m_state = State::Unconnected;
@@ -67,8 +68,9 @@ void IpcClient::attemptConnection()
   connect(
       m_socket, &QLocalSocket::connected, this,
       [this] {
-        m_socket->write("hello\n");
-        qDebug() << "ipc client sent hello";
+        const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
+        m_socket->write(QString("hello=%1\n").arg(versionId).toUtf8());
+        qDebug() << "ipc client sent hello with version:" << versionId;
       },
       Qt::SingleShotConnection
   );
@@ -141,10 +143,8 @@ void IpcClient::handleReadyRead()
       continue;
     }
 
-    if (m_state == State::Connecting && parts.at(0) == "hello") {
-      m_state = State::Connected;
-      qDebug() << "ipc client connected";
-      Q_EMIT connected();
+    if (m_state == State::Connecting) {
+      handleHandshakeMessage(parts);
       continue;
     }
 
@@ -154,6 +154,26 @@ void IpcClient::handleReadyRead()
   if (!data.isEmpty()) {
     m_readBuffer = data;
   }
+}
+
+void IpcClient::handleHandshakeMessage(const QStringList &parts)
+{
+  if (parts.at(0) != "hello") {
+    return;
+  }
+
+  const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
+  const auto serverVersion = parts.size() >= 2 ? parts.at(1) : QString();
+  if (serverVersion != versionId) {
+    qCritical() << "ipc version mismatch (client:" << versionId << "server:" << serverVersion << ")";
+    disconnectFromServer();
+    Q_EMIT connectionFailed();
+    return;
+  }
+
+  m_state = State::Connected;
+  qDebug() << "ipc client connected";
+  Q_EMIT connected();
 }
 
 void IpcClient::sendMessage(const QString &message)

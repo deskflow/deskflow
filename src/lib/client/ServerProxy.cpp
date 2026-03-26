@@ -124,6 +124,7 @@ void ServerProxy::handleData()
 ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
 {
   using enum ConnectionResult;
+  using enum deskflow::core::ConnectionRefusal;
 
   if (memcmp(code, kMsgQInfo, 4) == 0) {
     queryInfo();
@@ -168,25 +169,25 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
     int32_t minor;
     ProtocolUtil::readf(m_stream, kMsgEIncompatible + 4, &major, &minor);
     LOG_ERR("server has incompatible version %d.%d", major, minor);
-    m_client->refuseConnection("server has incompatible version");
+    m_client->refuseConnection(IncompatibleVersion, "server has incompatible version");
     return Disconnect;
   }
 
   else if (memcmp(code, kMsgEBusy, 4) == 0) {
     LOG_ERR("server already has a connected client with name \"%s\"", m_client->getName().c_str());
-    m_client->refuseConnection("server already has a connected client with our name");
+    m_client->refuseConnection(AlreadyConnected, "server already has a connected client with our name");
     return Disconnect;
   }
 
   else if (memcmp(code, kMsgEUnknown, 4) == 0) {
     LOG_ERR("server refused client with name \"%s\"", m_client->getName().c_str());
-    m_client->refuseConnection("server refused client with our name");
+    m_client->refuseConnection(UnknownClient, "server refused client with our name");
     return Disconnect;
   }
 
   else if (memcmp(code, kMsgEBad, 4) == 0) {
     LOG_ERR("server disconnected due to a protocol error");
-    m_client->refuseConnection("server reported a protocol error");
+    m_client->refuseConnection(ProtocolError, "server reported a protocol error");
     return Disconnect;
   } else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
     setServerLanguages();

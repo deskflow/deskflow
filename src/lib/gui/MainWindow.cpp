@@ -58,8 +58,6 @@ using namespace deskflow::gui;
 MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
       m_coreProcess(m_serverConfig),
-      m_serverConnection(this, m_serverConfig),
-      m_clientConnection(this),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
@@ -269,15 +267,11 @@ void MainWindow::connectSlots()
   if (!deskflow::platform::isMac())
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
 
-  connect(&m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::serverConnectionConfigureClient);
-  connect(&m_serverConnection, &ServerConnection::clientsChanged, this, &MainWindow::serverClientsChanged);
   connect(&m_coreProcess, &CoreProcess::connectedClientsChanged, this, &MainWindow::serverClientsChanged);
-  connect(
-      &m_serverConnection, &ServerConnection::requestNewClientPrompt, this, &MainWindow::handleNewClientPromptRequest
-  );
-
-  connect(&m_clientConnection, &ClientConnection::requestShowError, this, &MainWindow::showClientError);
-  connect(&m_clientConnection, &ClientConnection::updateTimeoutDelay, this, &MainWindow::updateTimeoutDelay);
+  connect(&m_coreProcess, &CoreProcess::unrecognisedClient, this, &MainWindow::handleUnrecognisedClient);
+  connect(&m_coreProcess, &CoreProcess::connectionRefused, this, &MainWindow::handleConnectionRefused);
+  connect(&m_coreProcess, &CoreProcess::retryIn, this, &MainWindow::updateTimeoutDelay);
+  connect(&m_coreProcess, &CoreProcess::peerFingerprint, this, &MainWindow::handlePeerFingerprint);
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
@@ -430,8 +424,6 @@ void MainWindow::clearSettings()
   m_networkMonitor->stopMonitoring();
 
   disconnect(&m_coreProcess, nullptr, this, nullptr);
-  disconnect(&m_serverConnection, nullptr, this, nullptr);
-  disconnect(&m_clientConnection, nullptr, this, nullptr);
   disconnect(&m_versionChecker, nullptr, this, nullptr);
   disconnect(m_guiDupeChecker, nullptr, this, nullptr);
   disconnect(m_trayIcon, nullptr, this, nullptr);
@@ -598,12 +590,12 @@ void MainWindow::updateNetworkInfo()
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
-  m_serverConnection.serverConfigDialogVisible(true);
+  m_serverConfigDialogVisible = true;
   ServerConfigDialog dialog(this, m_serverConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_coreProcess.restart();
   }
-  m_serverConnection.serverConfigDialogVisible(false);
+  m_serverConfigDialogVisible = false;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -755,35 +747,64 @@ void MainWindow::setTrayIcon()
 void MainWindow::handleLogLine(const QString &line)
 {
   m_logDock->appendLine(line);
-  updateFromLogLine(line);
 }
 
-void MainWindow::updateFromLogLine(const QString &line)
+void MainWindow::handleUnrecognisedClient(const QString &clientName)
 {
-  checkConnected(line);
-  checkFingerprint(line);
-}
-
-void MainWindow::checkConnected(const QString &line)
-{
-  if (ui->rbModeServer->isChecked()) {
-    m_serverConnection.handleLogLine(line);
-  } else {
-    m_clientConnection.handleLogLine(line);
+  if (m_ignoredClients.contains(clientName)) {
+    qDebug("ignoring %s:", qPrintable(clientName));
+    return;
   }
-}
 
-void MainWindow::checkFingerprint(const QString &line)
-{
-  static const auto tlsPeerMessage = QStringLiteral("peer fingerprint: ");
-  static const qsizetype msgLen = QString(tlsPeerMessage).length();
-
-  const qsizetype midStart = line.indexOf(tlsPeerMessage);
-  if (midStart == -1)
+  if (m_newClientPromptShowing || m_serverConfigDialogVisible)
     return;
 
-  const auto sha256Text = line.mid(midStart + msgLen).remove(':');
+  if (Settings::value(Settings::Server::ExternalConfig).toBool())
+    return;
 
+  if (m_serverConfig.isFull() || m_serverConfig.screenExists(clientName))
+    return;
+
+  m_newClientPromptShowing = true;
+
+  showAndActivate();
+
+  if (deskflow::gui::messages::showNewClientPrompt(this, clientName)) {
+    serverConnectionConfigureClient(clientName);
+  } else {
+    m_ignoredClients.insert(clientName);
+  }
+
+  m_newClientPromptShowing = false;
+}
+
+void MainWindow::handleConnectionRefused(deskflow::core::ConnectionRefusal reason)
+{
+  if (reason != deskflow::core::ConnectionRefusal::AlreadyConnected)
+    return;
+
+  if (!isVisible() || m_clientErrorVisible)
+    return;
+
+  m_clientErrorVisible = true;
+  showAndActivate();
+
+  const auto address = Settings::value(Settings::Client::RemoteHost).toString();
+  QMessageBox::warning(
+      this, tr("%1 Connection Error").arg(kAppName),
+      tr("<p>Failed to connect to the server '%1'.</p>"
+         "<p>A Client with your name is already connected to the server.</p>"
+         "Please ensure that you're using a unique name and that only a "
+         "single instance of the client process is running.</p>")
+          .arg(address)
+  );
+
+  m_clientErrorVisible = false;
+}
+
+void MainWindow::handlePeerFingerprint(const QString &fingerprint)
+{
+  const auto sha256Text = QString(fingerprint).remove(':');
   const Fingerprint sha256 = {QCryptographicHash::Sha256, QByteArray::fromHex(sha256Text.toLatin1())};
 
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
@@ -959,7 +980,7 @@ void MainWindow::changeEvent(QEvent *e)
     updateModeControlLabels();
     updateNetworkInfo();
     updateStatus();
-    serverClientsChanged(m_serverConnection.connectedClients());
+    serverClientsChanged({});
     updateText();
   }
 }
@@ -1165,34 +1186,6 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
   } else {
     Settings::setValue(Settings::Client::RemoteHost, newRemoteHost);
   }
-}
-
-void MainWindow::showClientError(deskflow::client::ErrorType error, const QString &address)
-{
-  if (!isVisible() || m_clientErrorVisible || error != deskflow::client::ErrorType::AlreadyConnected)
-    return;
-
-  m_clientErrorVisible = true;
-
-  showAndActivate();
-
-  QMessageBox::warning(
-      this, tr("%1 Connection Error").arg(kAppName),
-      tr("<p>Failed to connect to the server '%1'.</p>"
-         "<p>A Client with your name is already connected to the server.</p>"
-         "Please ensure that you're using a unique name and that only a "
-         "single instance of the client process is running.</p>")
-          .arg(address)
-  );
-
-  m_clientErrorVisible = false;
-}
-
-void MainWindow::handleNewClientPromptRequest(const QString &clientName)
-{
-  showAndActivate();
-  bool result = deskflow::gui::messages::showNewClientPrompt(this, clientName);
-  m_serverConnection.handleNewClientResult(clientName, result);
 }
 
 void MainWindow::updateIpLabel(const QStringList &addresses)

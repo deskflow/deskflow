@@ -9,7 +9,6 @@
 
 #include "base/NetworkProtocol.h"
 #include "gui/Hotkey.h"
-#include "gui/config/IServerConfig.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"
 
@@ -31,21 +30,18 @@ const auto kDefaultProtocol = NetworkProtocol::Barrier;
 
 } // namespace deskflow::gui
 
-class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
+class ServerConfig : public ScreenConfig
 {
   friend class ServerConfigDialog;
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
   explicit ServerConfig(int columns = kDefaultColumns, int rows = kDefaultRows);
-  ~ServerConfig() override = default;
+  ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;
 
-  //
-  // Overrides
-  //
-  const ScreenList &screens() const override
+  const ScreenList &screens() const
   {
     return m_Screens;
   }
@@ -131,17 +127,10 @@ public:
   }
   static size_t defaultClipboardSharingSize();
 
-  //
-  // Overrides
-  //
-  bool save(const QString &fileName) const override;
-  bool screenExists(const QString &screenName) const override;
-  void save(QFile &file) const override;
-  bool isFull() const override;
-
-  //
-  // New methods
-  //
+  bool save(const QString &fileName) const;
+  bool screenExists(const QString &screenName) const;
+  void save(QFile &file) const;
+  bool isFull() const;
   void commit();
   int numScreens() const;
   QString getServerName() const;

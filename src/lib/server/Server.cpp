@@ -11,7 +11,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/AppUtil.h"
-#include "deskflow/ipc/CoreIpc.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
@@ -19,6 +18,7 @@
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
@@ -235,6 +235,7 @@ void Server::adoptClient(BaseClientProxy *client)
   // name must be in our configuration
   if (!m_config->isScreen(client->getName())) {
     LOG_WARN("unrecognised client name \"%s\", check server config", client->getName().c_str());
+    ipcSendToClient("unrecognisedClient", QString::fromStdString(client->getName()));
     closeClient(client, kMsgEUnknown);
     return;
   }

@@ -43,4 +43,14 @@ enum class ConnectionState
   Listening
 };
 Q_ENUM_NS(ConnectionState)
+
+enum class ConnectionRefusal
+{
+  IncompatibleVersion,
+  AlreadyConnected,
+  UnknownClient,
+  ProtocolError
+};
+Q_ENUM_NS(ConnectionRefusal)
+
 } // namespace deskflow::core
