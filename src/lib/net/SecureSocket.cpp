@@ -297,7 +297,7 @@ bool SecureSocket::loadCertificate(const QString &filename)
   if (!QFile::exists(filename)) {
     std::string errorMsg("tls certificate doesn't exist: ");
     errorMsg.append(filename.toStdString());
-    SslLogger::logError(errorMsg.c_str());
+    SslLogger::logError(errorMsg);
     return false;
   }
 
