@@ -18,6 +18,12 @@ class CoreIpcClient : public IpcClient
 
 public:
   explicit CoreIpcClient(QObject *parent = nullptr);
+
+Q_SIGNALS:
+  void commandReceived(const QString &command, const QString &args);
+
+protected:
+  void processCommand(const QString &command, const QStringList &parts) override;
 };
 
 } // namespace deskflow::gui::ipc

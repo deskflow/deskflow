@@ -18,11 +18,17 @@ class DaemonIpcClient : public IpcClient
 
 public:
   explicit DaemonIpcClient(QObject *parent = nullptr);
-  bool sendLogLevel(const QString &logLevel);
-  bool sendStartProcess(const QString &command, bool elevate);
-  bool sendStopProcess();
-  bool sendClearSettings();
-  QString requestLogPath();
+  void sendLogLevel(const QString &logLevel);
+  void sendStartProcess(const QString &command, bool elevate);
+  void sendStopProcess();
+  void sendClearSettings();
+  void requestLogPath();
+
+Q_SIGNALS:
+  void logPathReceived(const QString &logPath);
+
+protected:
+  void processCommand(const QString &command, const QStringList &parts) override;
 };
 
 } // namespace deskflow::gui::ipc

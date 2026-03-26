@@ -18,6 +18,7 @@
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -370,7 +371,8 @@ bool ServerApp::startServer()
     listener->setServer(m_server);
     m_server->setListener(listener);
     m_listener = listener;
-    LOG_IPC("started server, waiting for clients");
+    LOG_DEBUG("started server, waiting for clients");
+    ipcSendConnectionState(deskflow::core::ConnectionState::Listening);
     m_serverState = Started;
     return true;
   } catch (SocketAddressInUseException &e) {

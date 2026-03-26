@@ -9,93 +9,46 @@
 #include "common/Constants.h"
 
 #include <QDebug>
-#include <QLocalSocket>
-#include <QMutexLocker>
-#include <QObject>
-#include <QString>
 
 namespace deskflow::gui::ipc {
-
-const auto kTimeout = 1000;
 
 DaemonIpcClient::DaemonIpcClient(QObject *parent) : IpcClient(parent, kDaemonIpcName)
 {
 }
 
-bool DaemonIpcClient::sendLogLevel(const QString &logLevel)
+void DaemonIpcClient::sendLogLevel(const QString &logLevel)
 {
-  if (!keepAlive())
-    return false;
-
   sendMessage("logLevel=" + logLevel);
-  return true;
 }
 
-bool DaemonIpcClient::sendStartProcess(const QString &command, bool elevate)
+void DaemonIpcClient::sendStartProcess(const QString &command, bool elevate)
 {
-  if (!keepAlive())
-    return false;
-
-  if (!sendMessage("elevate=" + (elevate ? QStringLiteral("yes") : QStringLiteral("no")))) {
-    return false;
-  }
-
-  if (!sendMessage("command=" + command)) {
-    return false;
-  }
-
-  return sendMessage("start");
+  const auto elevateStr = elevate ? QStringLiteral("yes") : QStringLiteral("no");
+  sendMessage("elevate=" + elevateStr);
+  sendMessage("command=" + command);
+  sendMessage("start");
 }
 
-bool DaemonIpcClient::sendStopProcess()
+void DaemonIpcClient::sendStopProcess()
 {
-  return sendMessage("stop");
+  sendMessage("stop");
 }
 
-QString DaemonIpcClient::requestLogPath()
+void DaemonIpcClient::sendClearSettings()
 {
-  if (!keepAlive())
-    return QString();
-
-  if (!sendMessage("logPath", QString())) {
-    return QString();
-  }
-
-  if (!socket()->waitForReadyRead(kTimeout)) {
-    qWarning() << "daemon ipc client failed to read log path response";
-    return QString();
-  }
-
-  QByteArray response = socket()->readAll();
-  if (response.isEmpty()) {
-    qWarning() << "daemon ipc client got empty log path response";
-    return QString();
-  }
-
-  QString responseData = QString::fromUtf8(response);
-  if (responseData.isEmpty()) {
-    qWarning() << "daemon ipc client failed to convert log path response to string";
-    return QString();
-  }
-
-  // Trimming removes newline from end of message.
-  QStringList parts = responseData.trimmed().split("=");
-  if (parts.size() != 2) {
-    qWarning() << "daemon ipc client got invalid log path response:" << responseData;
-    return QString();
-  }
-
-  if (parts[0] != "logPath") {
-    qWarning() << "daemon ipc client got unexpected log path response:" << responseData;
-    return QString();
-  }
-
-  return parts[1];
+  sendMessage("clearSettings");
 }
 
-bool DaemonIpcClient::sendClearSettings()
+void DaemonIpcClient::requestLogPath()
 {
-  return sendMessage("clearSettings");
+  sendMessage("logPath");
+}
+
+void DaemonIpcClient::processCommand(const QString &command, const QStringList &parts)
+{
+  if (command == "logPath" && parts.size() == 2) {
+    Q_EMIT logPathReceived(parts[1]);
+  }
 }
 
 } // namespace deskflow::gui::ipc

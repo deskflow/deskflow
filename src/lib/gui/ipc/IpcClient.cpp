@@ -8,9 +8,7 @@
 
 #include <QDebug>
 #include <QLocalSocket>
-#include <QMutexLocker>
-#include <QObject>
-#include <QString>
+#include <QTimer>
 
 namespace deskflow::gui::ipc {
 
@@ -24,13 +22,14 @@ IpcClient::IpcClient(QObject *parent, const QString &socketName)
 {
   connect(m_socket, &QLocalSocket::disconnected, this, &IpcClient::handleDisconnected);
   connect(m_socket, &QLocalSocket::errorOccurred, this, &IpcClient::handleErrorOccurred);
+  connect(m_socket, &QLocalSocket::readyRead, this, &IpcClient::handleReadyRead);
 }
 
-bool IpcClient::connectToServer()
+void IpcClient::connectToServer()
 {
   if (m_state == State::Connecting) {
     qWarning() << "ipc client already connecting to server";
-    return false;
+    return;
   }
 
   if (m_state != State::Unconnected) {
@@ -43,139 +42,129 @@ bool IpcClient::connectToServer()
     disconnectFromServer();
   }
 
-  for (int i = 0; i < kRetryLimit; ++i) {
-    if (i == 0) {
-      qDebug() << "ipc client connecting to server:" << m_socketName;
-    } else {
-      qDebug() << "ipc client retrying connection, attempt:" << i + 1;
-    }
+  m_retryCount = 0;
+  attemptConnection();
+}
 
-    m_state = State::Connecting;
-    m_socket->connectToServer(m_socketName);
-
-    if (!m_socket->waitForConnected(kTimeout)) {
-      qWarning() << "ipc client failed to connect";
-      disconnectFromServer();
-      continue;
-    }
-
-    if (!sendMessage("hello", "hello", false)) {
-      qWarning() << "ipc client failed to send hello";
-      disconnectFromServer();
-      continue;
-    }
-
-    m_state = State::Connected;
-    qDebug() << "ipc client connected";
-    Q_EMIT connected();
-    return true;
+void IpcClient::attemptConnection()
+{
+  if (m_retryCount >= kRetryLimit) {
+    qWarning() << "ipc client failed to connect after" << kRetryLimit << "attempts";
+    m_state = State::Unconnected;
+    Q_EMIT connectionFailed();
+    return;
   }
 
-  qWarning() << "ipc client failed to connect after" << kRetryLimit << "attempts";
-  disconnectFromServer();
-  Q_EMIT connectionFailed();
-  return false;
+  if (m_retryCount == 0) {
+    qDebug() << "ipc client connecting to server:" << m_socketName;
+  } else {
+    qDebug() << "ipc client retrying connection, attempt:" << m_retryCount + 1;
+  }
+
+  m_state = State::Connecting;
+  m_retryCount++;
+
+  connect(
+      m_socket, &QLocalSocket::connected, this,
+      [this] {
+        m_socket->write("hello\n");
+        qDebug() << "ipc client sent hello";
+      },
+      Qt::SingleShotConnection
+  );
+
+  connect(
+      m_socket, &QLocalSocket::errorOccurred, this,
+      [this] {
+        qWarning() << "ipc client failed to connect:" << m_socket->errorString();
+        m_socket->disconnectFromServer();
+        m_state = State::Unconnected;
+        QTimer::singleShot(0, this, &IpcClient::attemptConnection);
+      },
+      Qt::SingleShotConnection
+  );
+
+  m_socket->connectToServer(m_socketName);
 }
 
 void IpcClient::disconnectFromServer()
 {
-  QMutexLocker locker(&m_mutex);
-
   m_state = State::Disconnecting;
   qDebug() << "ipc client disconnecting from server";
   m_socket->disconnectFromServer();
-
-  if (m_socket->state() != QLocalSocket::UnconnectedState) {
-    qDebug() << "ipc client waiting for socket to disconnect";
-    m_socket->waitForDisconnected(kTimeout);
-    qDebug() << "ipc client disconnected from server";
-  } else {
-    qDebug() << "ipc client socket already disconnected";
-  }
-
   m_state = State::Unconnected;
 }
 
 void IpcClient::handleDisconnected()
 {
-  qDebug() << "ipc client disconnected from server";
-  if (m_state == State::Connected) {
-    Q_EMIT connectionFailed();
+  if (m_state == State::Connecting) {
+    return;
   }
 
+  qDebug() << "ipc client disconnected from server";
+  const auto wasConnected = m_state == State::Connected;
   m_state = State::Unconnected;
+
+  if (wasConnected) {
+    Q_EMIT connectionFailed();
+  }
 }
 
 void IpcClient::handleErrorOccurred()
 {
+  if (m_state == State::Connecting) {
+    return;
+  }
+
   qWarning() << "ipc client error:" << m_socket->errorString();
-  disconnectFromServer();
 
   if (m_state == State::Connected) {
+    disconnectFromServer();
     Q_EMIT connectionFailed();
   }
 }
 
-bool IpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
+void IpcClient::handleReadyRead()
 {
-  QMutexLocker locker(&m_mutex);
+  QByteArray data = m_readBuffer + m_socket->readAll();
+  m_readBuffer.clear();
 
-  if (expectConnected && !isConnected()) {
-    qWarning() << "cannot send command, ipc client not connected";
-    return false;
+  while (data.contains('\n')) {
+    const auto index = data.indexOf('\n');
+    const auto message = QString::fromUtf8(data.left(index));
+    data.remove(0, index + 1);
+
+    qDebug("ipc client message: %s", message.toUtf8().constData());
+    const auto parts = message.split('=');
+    if (parts.isEmpty()) {
+      qWarning("ipc client got invalid message: %s", message.toUtf8().constData());
+      continue;
+    }
+
+    if (m_state == State::Connecting && parts.at(0) == "hello") {
+      m_state = State::Connected;
+      qDebug() << "ipc client connected";
+      Q_EMIT connected();
+      continue;
+    }
+
+    processCommand(parts.at(0), parts);
   }
 
-  QByteArray messageData = message.toUtf8() + "\n";
-  m_socket->write(messageData);
-  if (!m_socket->waitForBytesWritten(kTimeout)) {
-    qWarning() << "ipc client failed to write command";
-    return false;
+  if (!data.isEmpty()) {
+    m_readBuffer = data;
   }
-
-  if (!expectAck.isEmpty()) {
-    qDebug() << "ipc client waiting for ack:" << expectAck;
-
-    if (!m_socket->waitForReadyRead(kTimeout)) {
-      qWarning() << "ipc client socket ready read timed out";
-      return false;
-    }
-
-    QByteArray response = m_socket->readAll();
-    if (response.isEmpty()) {
-      qWarning() << "ipc client got empty response";
-      return false;
-    }
-
-    QString responseData = QString::fromUtf8(response);
-    if (responseData.isEmpty()) {
-      qWarning() << "ipc client failed to convert response to string";
-      return false;
-    }
-
-    if (responseData != expectAck + "\n") {
-      qWarning() << "ipc client got unexpected response:" << responseData;
-      return false;
-    }
-  }
-
-  qDebug() << "ipc client sent message:" << messageData;
-  return true;
 }
 
-bool IpcClient::keepAlive()
+void IpcClient::sendMessage(const QString &message)
 {
-  if (!isConnected() && !connectToServer()) {
-    qWarning() << "ipc client keep alive failed to connect";
-    return false;
+  if (m_state != State::Connected) {
+    qWarning() << "cannot send command, ipc client not connected";
+    return;
   }
 
-  if (!sendMessage("noop")) {
-    qWarning() << "ipc client keep alive ping failed, reconnecting";
-    connectToServer();
-    return false;
-  }
-
-  return true;
+  m_socket->write(message.toUtf8() + "\n");
+  qDebug() << "ipc client sent message:" << message;
 }
 
 } // namespace deskflow::gui::ipc

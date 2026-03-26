@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <QMutex>
 #include <QObject>
 
 class QLocalSocket;
@@ -28,7 +27,7 @@ class IpcClient : public QObject
 
 public:
   explicit IpcClient(QObject *parent, const QString &socketName);
-  bool connectToServer();
+  void connectToServer();
   void disconnectFromServer();
 
   bool isConnected() const
@@ -43,21 +42,25 @@ Q_SIGNALS:
 private Q_SLOTS:
   void handleDisconnected();
   void handleErrorOccurred();
+  void handleReadyRead();
 
 protected:
-  bool keepAlive();
-  bool sendMessage(const QString &message, const QString &expectAck = "ok", const bool expectConnected = true);
-
-  QLocalSocket *socket() const
+  virtual void processCommand(const QString &command, const QStringList &parts)
   {
-    return m_socket;
+    Q_UNUSED(command)
+    Q_UNUSED(parts)
   }
 
+  void sendMessage(const QString &message);
+
 private:
+  void attemptConnection();
+
   QLocalSocket *m_socket;
   State m_state{State::Unconnected};
   QString m_socketName;
-  QMutex m_mutex;
+  QByteArray m_readBuffer;
+  int m_retryCount{0};
 };
 
 } // namespace deskflow::gui::ipc

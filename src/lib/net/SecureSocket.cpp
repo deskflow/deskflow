@@ -12,6 +12,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "common/Settings.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "mt/Lock.h"
 #include "net/FingerprintDatabase.h"
 #include "net/TCPSocket.h"
@@ -625,8 +626,9 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
   if (!sha256.isValid())
     return false;
 
-  // Gui Must Parse this line, DO NOT CHANGE
-  LOG_IPC("peer fingerprint: %s", qPrintable(deskflow::formatSSLFingerprint(sha256.data, false)));
+  const auto fingerprint = deskflow::formatSSLFingerprint(sha256.data, false);
+  LOG_DEBUG("peer fingerprint: %s", qPrintable(fingerprint));
+  ipcSendToClient("peerFingerprint", fingerprint);
 
   QFile file(FingerprintDatabasePath);
 
