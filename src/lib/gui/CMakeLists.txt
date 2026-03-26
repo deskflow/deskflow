@@ -39,7 +39,6 @@ add_library(${target} STATIC
   TlsUtility.h
   VersionChecker.cpp
   VersionChecker.h
-  config/IServerConfig.h
   config/Screen.cpp
   config/Screen.h
   config/ScreenConfig.cpp
@@ -48,16 +47,10 @@ add_library(${target} STATIC
   config/ScreenList.h
   config/ServerConfig.cpp
   config/ServerConfig.h
-  core/ClientConnection.cpp
-  core/ClientConnection.h
   core/CoreProcess.cpp
   core/CoreProcess.h
   core/NetworkMonitor.cpp
   core/NetworkMonitor.h
-  core/ServerConnection.cpp
-  core/ServerConnection.h
-  core/ServerMessage.cpp
-  core/ServerMessage.h
   dialogs/AboutDialog.cpp
   dialogs/AboutDialog.h
   dialogs/AboutDialog.ui

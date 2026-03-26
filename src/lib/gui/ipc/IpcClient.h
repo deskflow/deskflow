@@ -55,6 +55,7 @@ protected:
 
 private:
   void attemptConnection();
+  void handleHandshakeMessage(const QStringList &parts);
 
   QLocalSocket *m_socket;
   State m_state{State::Unconnected};

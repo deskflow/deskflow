@@ -11,6 +11,7 @@
 #include "deskflow/IClient.h"
 
 #include "base/EventTypes.h"
+#include "common/Enums.h"
 #include "deskflow/IClipboard.h"
 #include "net/NetworkAddress.h"
 
@@ -88,7 +89,7 @@ public:
   Disconnects from the server with an optional error message.
   Unlike disconnect this function doesn't try to use other ip addresses
   */
-  void refuseConnection(const char *msg);
+  void refuseConnection(deskflow::core::ConnectionRefusal reason, const char *msg);
 
   //! Notify of handshake complete
   /*!

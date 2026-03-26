@@ -10,7 +10,7 @@
 #include "common/Enums.h"
 #include "common/Settings.h"
 #include "gui/FileTail.h"
-#include "gui/config/IServerConfig.h"
+#include "gui/config/ServerConfig.h"
 
 #include <QMutex>
 #include <QObject>
@@ -29,8 +29,6 @@ class CoreProcess : public QObject
   using ConnectionState = deskflow::core::ConnectionState;
   using ProcessMode = Settings::ProcessMode;
   using ProcessState = deskflow::core::ProcessState;
-  using IServerConfig = deskflow::gui::IServerConfig;
-
   Q_OBJECT
 
 public:
@@ -40,7 +38,7 @@ public:
     StartFailed
   };
 
-  explicit CoreProcess(const IServerConfig &serverConfig);
+  explicit CoreProcess(const ServerConfig &serverConfig);
 
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
@@ -91,6 +89,10 @@ Q_SIGNALS:
   void daemonIpcClientConnectionFailed();
   void connectedClientsChanged(const QStringList &clients);
   void securityLevelChanged(QString securityLevel);
+  void unrecognisedClient(const QString &clientName);
+  void connectionRefused(deskflow::core::ConnectionRefusal reason);
+  void retryIn(int seconds);
+  void peerFingerprint(const QString &fingerprint);
 
 private Q_SLOTS:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
@@ -116,7 +118,7 @@ private:
   static QString processStateToString(const CoreProcess::ProcessState state);
   static QString wrapIpv6(const QString &address);
 
-  const IServerConfig &m_serverConfig;
+  const ServerConfig &m_serverConfig;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;
