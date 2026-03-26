@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include <base/Log.h>
+#include <deskflow/ipc/CoreIpc.h>
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
@@ -105,13 +106,12 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl)
           std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}
       };
       if (parts.size() > 2) {
-        // log the section containing the protocol version
-        LOG_INFO("network encryption protocol: %s", parts[1].c_str());
+        LOG_DEBUG("network encryption protocol: %s", parts[1].c_str());
+        ipcSendToClient("secureSocket", parts[1].c_str());
       } else {
-        // log the error in spliting then display the whole description rather
-        // then nothing
         LOG_ERR("could not split cipher for protocol");
-        LOG_INFO("network encryption protocol: %s", msg);
+        LOG_DEBUG("network encryption protocol: %s", msg);
+        ipcSendToClient("secureSocket", msg);
       }
     } else {
       LOG_ERR("could not get secure socket cipher");

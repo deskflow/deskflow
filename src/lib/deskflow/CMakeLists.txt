@@ -83,6 +83,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ipc/IpcServer.h
   ipc/DaemonIpcServer.cpp
   ipc/DaemonIpcServer.h
+  ipc/CoreIpc.cpp
+  ipc/CoreIpc.h
   ipc/CoreIpcServer.cpp
   ipc/CoreIpcServer.h
 )

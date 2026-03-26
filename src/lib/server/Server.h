@@ -197,6 +197,7 @@ public:
   Set the \c list to the names of the currently connected clients.
   */
   void getClients(std::vector<std::string> &list) const;
+  void sendConnectedClientsIpc() const;
 
   //@}
 

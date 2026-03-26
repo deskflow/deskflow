@@ -11,6 +11,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
@@ -233,7 +234,7 @@ void Server::adoptClient(BaseClientProxy *client)
 
   // name must be in our configuration
   if (!m_config->isScreen(client->getName())) {
-    LOG_IPC("unrecognised client name \"%s\", check server config", client->getName().c_str());
+    LOG_WARN("unrecognised client name \"%s\", check server config", client->getName().c_str());
     closeClient(client, kMsgEUnknown);
     return;
   }
@@ -245,7 +246,9 @@ void Server::adoptClient(BaseClientProxy *client)
     closeClient(client, kMsgEBusy);
     return;
   }
-  LOG_IPC("client \"%s\" has connected", getName(client).c_str());
+  LOG_DEBUG("client \"%s\" has connected", getName(client).c_str());
+  ipcSendConnectionState(deskflow::core::ConnectionState::Connected);
+  sendConnectedClientsIpc();
 
   // send configuration options to client
   sendOptions(client);
@@ -289,6 +292,18 @@ void Server::getClients(std::vector<std::string> &list) const
   for (auto index = m_clients.begin(); index != m_clients.end(); ++index) {
     list.push_back(index->first);
   }
+}
+
+void Server::sendConnectedClientsIpc() const
+{
+  const auto primaryName = getName(m_primaryClient);
+  QStringList clientList;
+  for (const auto &[name, _] : m_clients) {
+    if (name != primaryName) {
+      clientList.append(QString::fromStdString(name));
+    }
+  }
+  ipcSendToClient("connectedClients", clientList.join(","));
 }
 
 std::string Server::getName(const BaseClientProxy *client) const
@@ -1284,6 +1299,11 @@ void Server::handleClientDisconnected(BaseClientProxy *client)
   // active client.  we don't care so just handle it both ways.
   removeActiveClient(client);
   removeOldClient(client);
+
+  // m_clients always contains the primary (server) screen, so 1 means no remote clients.
+  using enum deskflow::core::ConnectionState;
+  ipcSendConnectionState(m_clients.size() <= 1 ? Listening : Connected);
+  sendConnectedClientsIpc();
 
   delete client;
 }

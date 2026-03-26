@@ -15,11 +15,15 @@
 
 namespace deskflow::gui::ipc {
 
-const auto kTimeout = 1000;
-
 CoreIpcClient::CoreIpcClient(QObject *parent) : IpcClient(parent, kCoreIpcName)
 {
   // do nothing
+}
+
+void CoreIpcClient::processCommand(const QString &command, const QStringList &parts)
+{
+  const auto args = parts.size() >= 2 ? parts[1] : QString();
+  Q_EMIT commandReceived(command, args);
 }
 
 } // namespace deskflow::gui::ipc

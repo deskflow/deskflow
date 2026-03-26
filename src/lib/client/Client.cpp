@@ -14,6 +14,7 @@
 #include "base/NetworkProtocol.h"
 #include "client/ServerProxy.h"
 #include "common/Settings.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/PacketStreamFilter.h"
@@ -92,10 +93,11 @@ void Client::connect(size_t addressIndex)
     // m_serverAddress will be null if the hostname address is not reolved
     if (m_serverAddress.getAddress() != nullptr) {
       // to help users troubleshoot, show server host name (issue: 60)
-      LOG_IPC(
+      LOG_DEBUG(
           "connecting to '%s': %s:%i", m_serverAddress.getHostname().c_str(),
           ARCH->addrToString(m_serverAddress.getAddress()).c_str(), m_serverAddress.getPort()
       );
+      ipcSendConnectionState(deskflow::core::ConnectionState::Connecting);
     }
 
     // create the socket
