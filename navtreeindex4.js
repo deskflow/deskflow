@@ -1,6 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXKeyState_8cpp.html":[7,0,1,1,9,65],
 "OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,65,6],
 "OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,65,3],
 "OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,65,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX4 =
 "SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,25],
 "SocketException_8cpp.html":[7,0,1,1,8,19],
 "SocketException_8h.html":[7,0,1,1,8,20],
-"SocketException_8h_source.html":[7,0,1,1,8,20]
+"SocketException_8h_source.html":[7,0,1,1,8,20],
+"SocketMultiplexer_8cpp.html":[7,0,1,1,8,21]
 };

@@ -6,6 +6,7 @@ var classStatusBar =
     [ "requestUpdateVersion", "classStatusBar.html#aa744344743a402f760e8629aa8a6affc", null ],
     [ "securityIconVisible", "classStatusBar.html#a373657cae14d001557e38a405c7b6a2b", null ],
     [ "setBtnFingerprintVisible", "classStatusBar.html#a6b607a1c2217792ba43bd09c24c71ff3", null ],
+    [ "setConnectionInterval", "classStatusBar.html#ae0568e43af64f84366556c5d0173b056", null ],
     [ "setSecurityIcon", "classStatusBar.html#ab7be92fd0fd594cef7ee63789233c3d7", null ],
     [ "setSecurityIconVisible", "classStatusBar.html#a5b19dc02df957d57caffe1b12c013ad2", null ],
     [ "setSecurityLevel", "classStatusBar.html#af54628ffdd6c0b05bbf1834fce0146d2", null ],

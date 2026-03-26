@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"Diagnostic_8h.html":[7,0,1,1,5,9],
 "Diagnostic_8h_source.html":[7,0,1,1,5,9],
 "DirectionTypes_8h.html":[7,0,1,1,1,2],
 "DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9":[7,0,1,1,1,2,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "KeyTypes_8h.html#a3eddb77d1caf35cabcff2b95735fc63c":[7,0,1,1,4,38,116],
 "KeyTypes_8h.html#a3f404ffb546a5b344f571661629cace2":[7,0,1,1,4,38,113],
 "KeyTypes_8h.html#a419bca1272b396ffdce1051e851cc4ea":[7,0,1,1,4,38,37],
-"KeyTypes_8h.html#a4211f938da8fef0b9fa3c3288b801ad6":[7,0,1,1,4,38,96]
+"KeyTypes_8h.html#a4211f938da8fef0b9fa3c3288b801ad6":[7,0,1,1,4,38,96],
+"KeyTypes_8h.html#a43357810a7dfe9d948d4aa7fbcc83c43":[7,0,1,1,4,38,123]
 };

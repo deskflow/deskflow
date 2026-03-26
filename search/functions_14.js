@@ -23,10 +23,11 @@ var searchData=
   ['updatesecurityinfo_20',['updateSecurityInfo',['../classStatusBar.html#ac5c417e583b7e73ce5db63992624edd4',1,'StatusBar']]],
   ['updateservername_21',['updateServerName',['../classServerConfig.html#a890ced68d8b042f26b91136b53d2e6a9',1,'ServerConfig']]],
   ['updateshape_22',['updateShape',['../classdeskflow_1_1EiScreen.html#ad2afa1dc14c19f3542b94a2e80fa0bb2',1,'deskflow::EiScreen']]],
-  ['updatexkbstate_23',['updateXkbState',['../classdeskflow_1_1EiKeyState.html#a67f40d54f15d772cbe0fe547c1194e0b',1,'deskflow::EiKeyState']]],
-  ['useexternalconfig_24',['useExternalConfig',['../classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2',1,'ServerConfig']]],
-  ['usesavedmodifiers_25',['useSavedModifiers',['../classMSWindowsKeyState.html#a00048a1a17ffb4dfd00010c1674f9497',1,'MSWindowsKeyState']]],
-  ['utf16toutf8_26',['UTF16ToUTF8',['../classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e',1,'Unicode']]],
-  ['utf8toucs2_27',['UTF8ToUCS2',['../classUnicode.html#a6cf183d92569cbd9d50211908810ffec',1,'Unicode']]],
-  ['utf8toutf16_28',['UTF8ToUTF16',['../classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b',1,'Unicode']]]
+  ['updatetimeoutdelay_23',['updateTimeoutDelay',['../classdeskflow_1_1gui_1_1ClientConnection.html#ac37ba601f6653a4c31f6cf4525cc00f0',1,'deskflow::gui::ClientConnection']]],
+  ['updatexkbstate_24',['updateXkbState',['../classdeskflow_1_1EiKeyState.html#a67f40d54f15d772cbe0fe547c1194e0b',1,'deskflow::EiKeyState']]],
+  ['useexternalconfig_25',['useExternalConfig',['../classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2',1,'ServerConfig']]],
+  ['usesavedmodifiers_26',['useSavedModifiers',['../classMSWindowsKeyState.html#a00048a1a17ffb4dfd00010c1674f9497',1,'MSWindowsKeyState']]],
+  ['utf16toutf8_27',['UTF16ToUTF8',['../classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e',1,'Unicode']]],
+  ['utf8toucs2_28',['UTF8ToUCS2',['../classUnicode.html#a6cf183d92569cbd9d50211908810ffec',1,'Unicode']]],
+  ['utf8toutf16_29',['UTF8ToUTF16',['../classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b',1,'Unicode']]]
 ];

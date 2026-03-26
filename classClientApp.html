@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.94</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.96</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -137,7 +137,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6768423d58b530429cc0142151813b85" id="r_a6768423d58b530429cc0142151813b85"><td class="memItemLeft"><a class="el" href="classdeskflow_1_1Screen.html">deskflow::Screen</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a6768423d58b530429cc0142151813b85">openClientScreen</a> ()</td></tr>
 <tr class="memitem:ac6ff44cd1566cdcfc382d58fda0ab6c8" id="r_ac6ff44cd1566cdcfc382d58fda0ab6c8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac6ff44cd1566cdcfc382d58fda0ab6c8">closeClientScreen</a> (<a class="el" href="classdeskflow_1_1Screen.html">deskflow::Screen</a> *screen)</td></tr>
 <tr class="memitem:ae4a765893f132f28e07849ffcc14979b" id="r_ae4a765893f132f28e07849ffcc14979b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae4a765893f132f28e07849ffcc14979b">handleClientRestart</a> (const <a class="el" href="classEvent.html">Event</a> &amp;, <a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *vtimer)</td></tr>
-<tr class="memitem:a56e7e4a870873b46f02f801f77f7ce1c" id="r_a56e7e4a870873b46f02f801f77f7ce1c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a56e7e4a870873b46f02f801f77f7ce1c">scheduleClientRestart</a> (double retryTime)</td></tr>
+<tr class="memitem:a56e7e4a870873b46f02f801f77f7ce1c" id="r_a56e7e4a870873b46f02f801f77f7ce1c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a56e7e4a870873b46f02f801f77f7ce1c">scheduleClientRestart</a> (double <a class="el" href="#af7fcb99b24cbd2a272bdeca6ed538125">retryTime</a>)</td></tr>
 <tr class="memitem:ad16f594f75ae844f0f7d155af2a748a0" id="r_ad16f594f75ae844f0f7d155af2a748a0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad16f594f75ae844f0f7d155af2a748a0">handleClientConnected</a> ()</td></tr>
 <tr class="memitem:aafa40e2e47be311b5b5cfa16d4d2eea2" id="r_aafa40e2e47be311b5b5cfa16d4d2eea2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aafa40e2e47be311b5b5cfa16d4d2eea2">handleClientFailed</a> (const <a class="el" href="classEvent.html">Event</a> &amp;e)</td></tr>
 <tr class="memitem:a49de08e2beda98b19641d57d26e2a89a" id="r_a49de08e2beda98b19641d57d26e2a89a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a49de08e2beda98b19641d57d26e2a89a">handleClientRefused</a> (const <a class="el" href="classEvent.html">Event</a> &amp;e)</td></tr>
@@ -147,6 +147,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1854a88ad11e0633cd0a59c83857d042" id="r_a1854a88ad11e0633cd0a59c83857d042"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a1854a88ad11e0633cd0a59c83857d042">startClient</a> ()</td></tr>
 <tr class="memitem:aef69c11f23a5e05bfa7b5eee03e13858" id="r_aef69c11f23a5e05bfa7b5eee03e13858"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aef69c11f23a5e05bfa7b5eee03e13858">stopClient</a> ()</td></tr>
 <tr class="memitem:ada018e5652bfcbbc0648dc50d8bbe5c5" id="r_ada018e5652bfcbbc0648dc50d8bbe5c5"><td class="memItemLeft"><a class="el" href="classClient.html">Client</a> *&#160;</td><td class="memItemRight"><a class="el" href="#ada018e5652bfcbbc0648dc50d8bbe5c5">getClientPtr</a> ()</td></tr>
+<tr class="memitem:af7fcb99b24cbd2a272bdeca6ed538125" id="r_af7fcb99b24cbd2a272bdeca6ed538125"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="#af7fcb99b24cbd2a272bdeca6ed538125">retryTime</a> () const</td></tr>
+<tr class="memdesc:af7fcb99b24cbd2a272bdeca6ed538125"><td class="mdescLeft">&#160;</td><td class="mdescRight">retryTime  <br /></td></tr>
 <tr class="inherit_header pub_methods_classApp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classApp')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classApp.html">App</a></td></tr>
 <tr class="memitem:a6e71fe1043dc15637ded72799b92df0d inherit pub_methods_classApp" id="r_a6e71fe1043dc15637ded72799b92df0d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classApp.html#a6e71fe1043dc15637ded72799b92df0d">App</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events, const QString &amp;<a class="el" href="classApp.html#a975d935098b0a08ef69b1af32d85a499">processName</a>)</td></tr>
 <tr class="memitem:a5ecbaa8022d8e3a787779f2549b33379 inherit pub_methods_classApp" id="r_a5ecbaa8022d8e3a787779f2549b33379"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classApp.html#a5ecbaa8022d8e3a787779f2549b33379">App</a> (<a class="el" href="classApp.html">App</a> const &amp;)=delete</td></tr>
@@ -612,6 +614,26 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classApp.html#ab25cb14c8734dd3d83f96240f3b25740">App</a>.</p>
+
+</div>
+</div>
+<a id="af7fcb99b24cbd2a272bdeca6ed538125" name="af7fcb99b24cbd2a272bdeca6ed538125"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7fcb99b24cbd2a272bdeca6ed538125">&#9670;&#160;</a></span>retryTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double ClientApp::retryTime </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>retryTime </p>
+<dl class="section return"><dt>Returns</dt><dd>next retry time based on number of current retries </dd></dl>
 
 </div>
 </div>

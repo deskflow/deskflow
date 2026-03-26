@@ -1,5 +1,6 @@
 var structSettings_1_1Client =
 [
+    [ "DynamicConnectionRetry", "structSettings_1_1Client.html#a61fd699998c132f63a53720201b640c0", null ],
     [ "InvertXScroll", "structSettings_1_1Client.html#a0f1af011fe5e101cb9bb18c513c0cae0", null ],
     [ "InvertYScroll", "structSettings_1_1Client.html#aed1b5282df24c774faf80f28502fc26b", null ],
     [ "LanguageSync", "structSettings_1_1Client.html#a50b1127b62ac5088157236dd298d623b", null ],

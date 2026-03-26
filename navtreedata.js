@@ -128,13 +128,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "AboutDialog_8cpp.html",
-"Diagnostic_8h.html",
-"KeyTypes_8h.html#a43357810a7dfe9d948d4aa7fbcc83c43",
-"MSWindowsDesks_8cpp.html#a8365c5fe4c638efc320611d3e6dbc8f7",
-"OSXKeyState_8cpp.html",
-"SocketMultiplexer_8cpp.html",
-"classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b",
-"classArchNetworkWinsock.html#a513ca0e0415e1944059ec3e115c40a2d",
+"Diagnostic_8h_source.html",
+"KeyTypes_8h.html#a43eb3763cefc837f514bf3dda946298d",
+"MSWindowsDesks_8cpp.html#a847d827f781702b7b7ecf13a70d0cf56",
+"OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf",
+"SocketMultiplexer_8h.html",
+"classAppUtil.html#ab25364eccf20280b7038ba939096fcc8",
+"classArchNetworkWinsock.html#a56655c50a0541f69f1e2b49f5a1c9496",
 "classClientProxy1__1.html",
 "classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7",
 "classIPlatformScreen.html#a22e026489cf9eba85c95d1fb7a3935d1",
@@ -143,14 +143,14 @@ var NAVTREEINDEX =
 "classPacketStreamFilter.html",
 "classScreenSetupView.html#a3bf747fea4659b6634afebdaec0d0944",
 "classSettings.html#ae9e80e06caddd4c619dc286848b1f187",
-"classUnknownClientException.html",
-"classXWindowsScreen.html#adebd866d00c93789888ed2fdef89b58f",
+"classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c",
+"classXWindowsScreen.html#acd8d3403716eebd6b877f3940d2712bb",
 "classdeskflow_1_1KeyMap.html#aa22a6d7a665c36d1f4fb04925918f309",
-"classdeskflow_1_1gui_1_1CoreProcess.html#acab885490826c34af4e1414ef061f87a",
-"classdeskflow_1_1server_1_1ConfigReadContext.html",
-"functions_func_j.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2",
-"structKeyState_1_1AddActiveModifierContext.html"
+"classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f",
+"classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e",
+"functions_func_g.html",
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a60fcab4d750adf8fc79537e6e61769c8",
+"structKeyNameMapEntry.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

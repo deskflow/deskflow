@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.94</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.96</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -129,18 +129,20 @@ $(function(){initNavTree('ClientConnection_8h_source.html','',''); });
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>Q_SIGNALS:</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4">   38</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4">requestShowError</a>(<a class="code hl_enumeration" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a> error, <span class="keyword">const</span> QString &amp;address);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> showMessage(<span class="keyword">const</span> QString &amp;logLine);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  QWidget *m_pParent;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">bool</span> m_supressMessage = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#ac37ba601f6653a4c31f6cf4525cc00f0">   39</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ClientConnection.html#ac37ba601f6653a4c31f6cf4525cc00f0">updateTimeoutDelay</a>(<span class="keywordtype">int</span> newTimeout);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> showMessage(<span class="keyword">const</span> QString &amp;logLine);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  QWidget *m_pParent;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">bool</span> m_supressMessage = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
 </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace deskflow::gui</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// namespace deskflow::gui</span></div>
 <div class="ttc" id="aEnums_8h_html"><div class="ttname"><a href="Enums_8h.html">Enums.h</a></div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_a6dedf51506682748ddbdd880f4363df6"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#a6dedf51506682748ddbdd880f4363df6">deskflow::gui::ClientConnection::ClientConnection</a></div><div class="ttdeci">ClientConnection(QWidget *parent)</div><div class="ttdef"><b>Definition</b> ClientConnection.h:24</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_ac37ba601f6653a4c31f6cf4525cc00f0"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#ac37ba601f6653a4c31f6cf4525cc00f0">deskflow::gui::ClientConnection::updateTimeoutDelay</a></div><div class="ttdeci">void updateTimeoutDelay(int newTimeout)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_af57b859d12d85d46ac15c9ec71f684af"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af">deskflow::gui::ClientConnection::handleLogLine</a></div><div class="ttdeci">void handleLogLine(const QString &amp;line)</div><div class="ttdef"><b>Definition</b> ClientConnection.cpp:17</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_af82f333ba2a0666529ac3859f00a75d4"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4">deskflow::gui::ClientConnection::requestShowError</a></div><div class="ttdeci">void requestShowError(deskflow::client::ErrorType error, const QString &amp;address)</div><div class="ttdoc">requestShowError, This signal is emitted when the client connection would like the owning process to ...</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1client_html_aa4ce66800aaa4ff88fb0a1106e568210"><div class="ttname"><a href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a></div><div class="ttdeci">ErrorType</div><div class="ttdef"><b>Definition</b> Enums.h:16</div></div>

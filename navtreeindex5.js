@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
 "SocketMultiplexer_8h.html":[7,0,1,1,8,22],
 "SocketMultiplexer_8h_source.html":[7,0,1,1,8,22],
 "SpacesValidator_8cpp.html":[7,0,1,1,5,4,16],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d":[6,0,7,0],
 "classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd":[6,0,7,1],
 "classAppUtil.html#a8766d51fe30577548aec3896464489d6":[6,0,7,7],
-"classAppUtil.html#a8d56a438b43003ad64c03a2f08ee47b3":[6,0,7,9]
+"classAppUtil.html#a8d56a438b43003ad64c03a2f08ee47b3":[6,0,7,9],
+"classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b":[6,0,7,3]
 };

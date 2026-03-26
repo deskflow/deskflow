@@ -19,6 +19,7 @@ var classClientApp =
     [ "openClient", "classClientApp.html#a6dfda12b44ef2eab7224c01a0b478f77", null ],
     [ "openClientScreen", "classClientApp.html#a6768423d58b530429cc0142151813b85", null ],
     [ "parseArgs", "classClientApp.html#a3ba4f1476522b8cd8f142fb033fab1a0", null ],
+    [ "retryTime", "classClientApp.html#af7fcb99b24cbd2a272bdeca6ed538125", null ],
     [ "runInner", "classClientApp.html#ab6cc4042d3c2a8c3a0ac026ea716f0dd", null ],
     [ "scheduleClientRestart", "classClientApp.html#a56e7e4a870873b46f02f801f77f7ce1c", null ],
     [ "start", "classClientApp.html#a5e338f2124edc1032798306522d7467e", null ],

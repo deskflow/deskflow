@@ -8,5 +8,6 @@ var searchData=
   ['display_5',['Display',['../structSettings_1_1Core.html#a2a0059d3e150af140d0c1760df2dffab',1,'Settings::Core']]],
   ['dontfreedata_6',['DontFreeData',['../structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213',1,'Event::EventFlags']]],
   ['dummywindow_7',['dummyWindow',['../OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7',1,'OSXCocoaApp.m']]],
-  ['dword_8',['DWORD',['../ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7',1,'ArchNetworkWinsock.cpp']]]
+  ['dword_8',['DWORD',['../ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7',1,'ArchNetworkWinsock.cpp']]],
+  ['dynamicconnectionretry_9',['DynamicConnectionRetry',['../structSettings_1_1Client.html#a61fd699998c132f63a53720201b640c0',1,'Settings::Client']]]
 ];

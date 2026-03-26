@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"KeyTypes_8h.html#a43357810a7dfe9d948d4aa7fbcc83c43":[7,0,1,1,4,38,123],
 "KeyTypes_8h.html#a43eb3763cefc837f514bf3dda946298d":[7,0,1,1,4,38,159],
 "KeyTypes_8h.html#a447dff5777ece08f0b216d426da0d607":[7,0,1,1,4,38,111],
 "KeyTypes_8h.html#a46479cae53a6eb6ee0e891518666ac12":[7,0,1,1,4,38,134],
@@ -249,5 +248,6 @@ var NAVTREEINDEX2 =
 "MSWindowsDesks_8cpp.html#a71b058d1e00473c447e670f1461b0ac3":[7,0,1,1,9,23,8],
 "MSWindowsDesks_8cpp.html#a7461a17472766186ae856ec27a8905dc":[7,0,1,1,9,23,21],
 "MSWindowsDesks_8cpp.html#a764704869b58a8e99131a56720dfb1ac":[7,0,1,1,9,23,14],
-"MSWindowsDesks_8cpp.html#a82170759008868615bb94ecf4503fa9e":[7,0,1,1,9,23,30]
+"MSWindowsDesks_8cpp.html#a82170759008868615bb94ecf4503fa9e":[7,0,1,1,9,23,30],
+"MSWindowsDesks_8cpp.html#a8365c5fe4c638efc320611d3e6dbc8f7":[7,0,1,1,9,23,3]
 };
