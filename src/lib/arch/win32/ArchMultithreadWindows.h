@@ -89,7 +89,7 @@ public:
 private:
   ArchThreadImpl *find(DWORD id);
   ArchThreadImpl *findNoRef(DWORD id);
-  ArchThreadImpl *findNoRefOrCreate(DWORD id);
+  ArchThreadImpl *findNoRefOrInsert(DWORD id);
   void insert(ArchThreadImpl *thread);
   void erase(ArchThreadImpl *thread);
 
