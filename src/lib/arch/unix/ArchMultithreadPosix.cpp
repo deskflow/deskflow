@@ -517,9 +517,23 @@ void ArchMultithreadPosix::startSignalHandler()
 
 ArchThreadImpl *ArchMultithreadPosix::find(pthread_t thread)
 {
-  ArchThreadImpl *impl = findNoRef(thread);
+  ArchThreadImpl *impl = findNoRefOrInsert(thread);
   if (impl != nullptr) {
     refThread(impl);
+  }
+  return impl;
+}
+
+ArchThreadImpl *ArchMultithreadPosix::findNoRefOrInsert(pthread_t thread)
+{
+  ArchThreadImpl *impl = findNoRef(thread);
+  if (impl == nullptr) {
+    // create thread for calling thread which isn't in our list and
+    // add it to the list. this can happen when a foreign thread
+    // (e.g. a Qt thread) calls into the arch layer.
+    impl = new ArchThreadImpl;
+    impl->m_thread = thread;
+    insert(impl);
   }
   return impl;
 }
