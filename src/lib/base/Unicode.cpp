@@ -357,34 +357,35 @@ uint32_t Unicode::fromUTF8(const uint8_t *&data, uint32_t &n)
       truncated = true;
       size = 5;
     }
-    // fall through
+    [[fallthrough]];
 
   case 5:
     if ((data[4] & 0xc0) != 0x80) {
       truncated = true;
       size = 4;
     }
-    // fall through
+    [[fallthrough]];
 
   case 4:
     if ((data[3] & 0xc0) != 0x80) {
       truncated = true;
       size = 3;
     }
-    // fall through
+    [[fallthrough]];
 
   case 3:
     if ((data[2] & 0xc0) != 0x80) {
       truncated = true;
       size = 2;
     }
-    // fall through
+    [[fallthrough]];
 
   case 2:
     if ((data[1] & 0xc0) != 0x80) {
       truncated = true;
       size = 1;
     }
+    [[fallthrough]];
 
   default:
     break;
