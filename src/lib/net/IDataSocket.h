@@ -30,7 +30,7 @@ public:
     std::string m_what;
   };
 
-  explicit IDataSocket(const IEventQueue *events [[maybe_unused]])
+  explicit IDataSocket([[maybe_unused]] const IEventQueue *events)
   {
     // do nothing
   }
