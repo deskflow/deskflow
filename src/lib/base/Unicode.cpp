@@ -31,28 +31,6 @@ inline static uint16_t decode16(const uint8_t *n, bool byteSwapped)
   return c.n16;
 }
 
-inline static uint32_t decode32(const uint8_t *n, bool byteSwapped)
-{
-  union x32
-  {
-    uint8_t n8[4];
-    uint32_t n32;
-  };
-  x32 c;
-  if (byteSwapped) {
-    c.n8[0] = n[3];
-    c.n8[1] = n[2];
-    c.n8[2] = n[1];
-    c.n8[3] = n[0];
-  } else {
-    c.n8[0] = n[0];
-    c.n8[1] = n[1];
-    c.n8[2] = n[2];
-    c.n8[3] = n[3];
-  }
-  return c.n32;
-}
-
 inline static void resetError(bool *errors)
 {
   if (errors != nullptr) {
