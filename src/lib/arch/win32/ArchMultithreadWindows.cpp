@@ -108,7 +108,7 @@ ArchMultithreadWindows::~ArchMultithreadWindows()
 void ArchMultithreadWindows::setNetworkDataForCurrentThread(void *data)
 {
   std::scoped_lock lock{m_threadMutex};
-  ArchThreadImpl *thread = findNoRef(GetCurrentThreadId());
+  ArchThreadImpl *thread = findNoRefOrInsert(GetCurrentThreadId());
   thread->m_networkData = data;
 }
 
@@ -121,7 +121,7 @@ void *ArchMultithreadWindows::getNetworkDataForThread(ArchThread thread)
 HANDLE ArchMultithreadWindows::getCancelEventForCurrentThread()
 {
   std::scoped_lock lock{m_threadMutex};
-  ArchThreadImpl *thread = findNoRef(GetCurrentThreadId());
+  ArchThreadImpl *thread = findNoRefOrInsert(GetCurrentThreadId());
   return thread->m_cancel;
 }
 
@@ -305,7 +305,7 @@ void ArchMultithreadWindows::closeThread(ArchThread thread)
     // remove thread from list
     {
       std::scoped_lock lock{m_threadMutex};
-      assert(findNoRefOrCreate(thread->m_id) == thread);
+      assert(findNoRef(thread->m_id) == thread);
       erase(thread);
     }
 
@@ -390,7 +390,7 @@ void ArchMultithreadWindows::testCancelThread()
 {
   // find current thread
   std::scoped_lock lock{m_threadMutex};
-  ArchThreadImpl *thread = findNoRef(GetCurrentThreadId());
+  ArchThreadImpl *thread = findNoRefOrInsert(GetCurrentThreadId());
 
   // test cancel on thread
   testCancelThreadImpl(thread);
@@ -404,7 +404,7 @@ bool ArchMultithreadWindows::wait(ArchThread target, double timeout)
   {
     std::scoped_lock lock{m_threadMutex};
     // find current thread
-    self = findNoRef(GetCurrentThreadId());
+    self = findNoRefOrInsert(GetCurrentThreadId());
     // ignore wait if trying to wait on ourself
     if (target == self) {
       return false;
@@ -497,7 +497,7 @@ void ArchMultithreadWindows::raiseSignal(ThreadSignal signal)
 
 ArchThreadImpl *ArchMultithreadWindows::find(DWORD id)
 {
-  ArchThreadImpl *impl = findNoRef(id);
+  ArchThreadImpl *impl = findNoRefOrInsert(id);
   if (impl != nullptr) {
     refThread(impl);
   }
@@ -506,7 +506,17 @@ ArchThreadImpl *ArchMultithreadWindows::find(DWORD id)
 
 ArchThreadImpl *ArchMultithreadWindows::findNoRef(DWORD id)
 {
-  ArchThreadImpl *impl = findNoRefOrCreate(id);
+  for (ThreadList::const_iterator index = m_threadList.begin(); index != m_threadList.end(); ++index) {
+    if ((*index)->m_id == id) {
+      return *index;
+    }
+  }
+  return nullptr;
+}
+
+ArchThreadImpl *ArchMultithreadWindows::findNoRefOrInsert(DWORD id)
+{
+  ArchThreadImpl *impl = findNoRef(id);
   if (impl == nullptr) {
     // create thread for calling thread which isn't in our list and
     // add it to the list.  this won't normally happen but it can if
@@ -520,23 +530,12 @@ ArchThreadImpl *ArchMultithreadWindows::findNoRef(DWORD id)
   return impl;
 }
 
-ArchThreadImpl *ArchMultithreadWindows::findNoRefOrCreate(DWORD id)
-{
-  // linear search
-  for (ThreadList::const_iterator index = m_threadList.begin(); index != m_threadList.end(); ++index) {
-    if ((*index)->m_id == id) {
-      return *index;
-    }
-  }
-  return nullptr;
-}
-
 void ArchMultithreadWindows::insert(ArchThreadImpl *thread)
 {
   assert(thread != nullptr);
 
   // thread shouldn't already be on the list
-  assert(findNoRefOrCreate(thread->m_id) == nullptr);
+  assert(findNoRef(thread->m_id) == nullptr);
 
   // append to list
   m_threadList.push_back(thread);
@@ -555,7 +554,7 @@ void ArchMultithreadWindows::erase(ArchThreadImpl *thread)
 void ArchMultithreadWindows::refThread(ArchThreadImpl *thread)
 {
   assert(thread != nullptr);
-  assert(findNoRefOrCreate(thread->m_id) != nullptr);
+  assert(findNoRef(thread->m_id) != nullptr);
   ++thread->m_refCount;
 }
 
