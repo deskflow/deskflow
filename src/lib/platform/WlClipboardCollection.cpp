@@ -109,10 +109,9 @@ void WlClipboardCollection::initialize()
   m_clipboards.resize(kClipboardEnd);
 
   try {
-    // Primary clipboard (selection)
-    m_clipboards[kClipboardSelection] = std::make_unique<WlClipboard>(kClipboardSelection);
-
-    // Standard clipboard
+    // Standard clipboard. Primary selection is intentionally skipped on
+    // Wayland because compositor support is inconsistent and can block
+    // wl-paste/wl-copy calls on GNOME.
     m_clipboards[kClipboardClipboard] = std::make_unique<WlClipboard>(kClipboardClipboard);
 
     m_available = true;
