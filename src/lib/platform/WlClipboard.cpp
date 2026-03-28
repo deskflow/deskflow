@@ -84,6 +84,20 @@ void WlClipboard::startMonitoring()
   if (m_monitoring) {
     return;
   }
+
+  // On GNOME Wayland, polling wl-paste every second can cause severe
+  // dock/taskbar animation churn. Keep clipboard support enabled, but skip
+  // background polling unless explicitly forced.
+  if (qEnvironmentVariable("DESKFLOW_FORCE_WL_CLIPBOARD_POLL") != QStringLiteral("1")) {
+    const auto currentDesktop = qEnvironmentVariable("XDG_CURRENT_DESKTOP");
+    if (currentDesktop.contains(QStringLiteral("GNOME"), Qt::CaseInsensitive)) {
+      LOG_WARN(
+          "wl-clipboard polling disabled on GNOME Wayland; clipboard sync occurs on screen switches "
+          "(set DESKFLOW_FORCE_WL_CLIPBOARD_POLL=1 to override)");
+      return;
+    }
+  }
+
   m_stopMonitoring = false;
   m_monitoring = true;
   m_monitorThread = std::make_unique<std::thread>(&WlClipboard::monitorClipboard, this);
