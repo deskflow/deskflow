@@ -79,7 +79,7 @@ We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, 
 Repology monitors a huge number of package repositories and other sources comparing package
 versions across them and gathering other information.
 
-[![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?exclude_unsupported=1)](https://repology.org/project/deskflow/versions)
+[![Repology](https://repology.org/badge/vertical-allrepos/deskflow.svg?columns=2&exclude_unsupported)](https://repology.org/project/deskflow/versions)
 
 ## Installing on macOS
 
