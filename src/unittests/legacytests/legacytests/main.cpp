@@ -9,7 +9,7 @@
 #include "base/Log.h"
 #include "unittests/legacytests/shared/ExitTimeout.h"
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 {
   ExitTimeout exitTimeout(1, "Unit tests");
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   // HACK: shouldn't be needed, but logging fails without this.
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif

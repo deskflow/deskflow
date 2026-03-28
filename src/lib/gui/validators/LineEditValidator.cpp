@@ -6,8 +6,10 @@
  */
 
 #include "LineEditValidator.h"
+#include "ValidationError.h"
 
 #include <QApplication>
+#include <QLineEdit>
 #include <QStyle>
 #include <QValidator>
 

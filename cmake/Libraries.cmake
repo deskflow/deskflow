@@ -141,8 +141,6 @@ macro(configure_unix_libs)
       ${lib_ScreenSaver} ${lib_IOKit} ${lib_ApplicationServices}
       ${lib_Foundation} ${lib_Carbon} ${lib_UserNotifications}
     )
-
-    add_definitions(-DWINAPI_CARBON=1)
   else()
 
     if (BUILD_X11_SUPPORT)
@@ -163,9 +161,6 @@ macro(configure_unix_libs)
       message(WARNING "pkg-config not found, skipping wayland libraries")
     endif()
   endif()
-
-  add_definitions(-DSYSAPI_UNIX=1)
-
 endmacro()
 
 #

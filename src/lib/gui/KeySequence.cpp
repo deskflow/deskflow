@@ -62,6 +62,7 @@ static const struct
     {Qt::Key_Launch0, "AppUser1"},
     {Qt::Key_Launch1, "AppUser2"},
     {Qt::Key_Select, "Select"},
+    {Qt::Key_Plus, "Plus"},
     {Qt::Key_Comma, "Comma"},
     {Qt::Key_Semicolon, "Semicolon"},
 

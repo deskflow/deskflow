@@ -20,5 +20,5 @@ public:
   explicit NewScreenWidget(QWidget *parent);
 
 protected:
-  void mousePressEvent(QMouseEvent *event) override;
+  void mousePressEvent(QMouseEvent *) override;
 };

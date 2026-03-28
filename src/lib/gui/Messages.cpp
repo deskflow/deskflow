@@ -8,7 +8,6 @@
 
 #include "Logger.h"
 
-#include "common/Enums.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "common/VersionInfo.h"
@@ -183,61 +182,6 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
   QMessageBox::information(parent, title, message);
 }
 
-void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address)
-{
-  using enum deskflow::client::ErrorType;
-  if (error == NoError)
-    return;
-
-  auto message = QObject::tr("<p>Failed to connect to the server '%1'.</p>").arg(address);
-
-  if (error == AlreadyConnected) {
-    message.append(
-        QObject::tr( //
-            "<p>A Client with your name is already connected to the server.</p>"
-            "Please ensure that you're using a unique name and that only a "
-            "single instance of the client process is running.</p>"
-        )
-    );
-  } else if (error == HostnameError) {
-    message.append(
-        QObject::tr( //
-            "<p>Please try to connect to the server using the server IP address "
-            "instead of the hostname. </p>"
-            "<p>If that doesn't work, please check your TLS and "
-            "firewall settings.</p>"
-        )
-    );
-  } else if (error == GenericError) {
-    message.append(QObject::tr("<p>Please check your TLS and firewall settings.</p>"));
-  } else {
-    qFatal("unknown client error");
-  }
-
-  auto title = QObject::tr("%1 Connection Error").arg(kAppName);
-
-  if (error != HostnameError) {
-    QMessageBox::warning(parent, title, message);
-    return;
-  }
-
-  auto dialog = QMessageBox(parent);
-  dialog.setWindowTitle(title);
-  dialog.setText(message);
-  dialog.setWindowModality(Qt::ApplicationModal);
-  dialog.setIcon(QMessageBox::Information);
-
-  auto cbNoShowAgain = new QCheckBox(QObject::tr("Do not show this message again"));
-
-  QObject::connect(cbNoShowAgain, &QCheckBox::toggled, [](bool enabled) {
-    Settings::setValue(Settings::Gui::ShowGenericClientFailureDialog, !enabled);
-  });
-
-  dialog.setCheckBox(cbNoShowAgain);
-  dialog.setDefaultButton(QMessageBox::Ok);
-  dialog.exec();
-}
-
 bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
 {
   if (serverRequiresPeerAuth) {
@@ -278,24 +222,6 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath)
   )
                            .arg(QDir::toNativeSeparators(systemSettingsPath));
   QMessageBox::information(parent, title, message);
-}
-
-void showWaylandLibraryError(QWidget *parent)
-{
-  QMessageBox::critical(
-      parent, kAppName,
-      QObject::tr(
-          "<p>Sorry, while this version of %1 does support Wayland, "
-          "this build was not linked with one or more of the required "
-          "libraries.</p>"
-          "<p>Please either switch to X from your login screen or use a build "
-          "that uses the correct libraries.</p>"
-          "<p>If you think this is incorrect, please "
-          R"(<a href="%2">report a bug</a>.</p>)"
-          "<p>Please check the logs for more information.</p>"
-      )
-          .arg(kAppName, kUrlHelp)
-  );
 }
 
 bool showUpdateCheckOption(QWidget *parent)

@@ -138,6 +138,14 @@ void ClientListener::handleClientConnecting()
       [this, rawSocketPointer](const auto &) { handleClientAccepted(rawSocketPointer); }
   );
 
+  m_events->addHandler(
+      EventTypes::ClientListenerDisconnectedOnAccept, rawSocketPointer->getEventTarget(),
+      [this, rawSocketPointer](const auto &) {
+        LOG_DEBUG("disconnected client before accept");
+        removeClientSocket(rawSocketPointer);
+      }
+  );
+
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
   if (m_securityLevel == SecurityLevel::PlainText) {
@@ -163,7 +171,15 @@ void ClientListener::handleClientAccepted(IDataSocket *socket)
     handleUnknownClient(client);
   });
   m_events->addHandler(EventTypes::ClientProxyUnknownFailure, client, [this, client](const auto &) {
+    auto *filter = dynamic_cast<StreamFilter *>(client->getStream());
+    IDataSocket *socket = nullptr;
+    if (filter && !filter->adoptedStream()) {
+      socket = dynamic_cast<IDataSocket *>(filter->getStream());
+    }
     removeUnknownClient(client);
+    if (socket) {
+      removeClientSocket(socket);
+    }
   });
 }
 
@@ -205,12 +221,18 @@ void ClientListener::handleClientDisconnected(ClientProxy *client)
       // we know which socket we no longer need
       auto *socket = static_cast<IDataSocket *>(client->getStream());
       delete client;
-      m_clientSockets.erase(socket);
-      delete socket;
+      removeClientSocket(socket);
 
       break;
     }
   }
+}
+
+void ClientListener::removeClientSocket(IDataSocket *socket)
+{
+  m_clientSockets.erase(socket);
+  m_events->removeHandlers(socket->getEventTarget());
+  delete socket;
 }
 
 void ClientListener::cleanupListenSocket()

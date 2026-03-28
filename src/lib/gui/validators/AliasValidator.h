@@ -7,9 +7,9 @@
 #pragma once
 
 #include "LineEditValidator.h"
-#include "ValidationError.h"
 
 namespace validators {
+class ValidationError;
 
 class AliasValidator : public LineEditValidator
 {

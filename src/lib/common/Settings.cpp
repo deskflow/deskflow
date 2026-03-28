@@ -153,12 +153,11 @@ QString Settings::cleanComputerName(const QString &name)
   static const auto space = QStringLiteral(" ");
   static const auto underscore = QStringLiteral("_");
   static const auto period = QStringLiteral(".");
-  static const auto nothing = QStringLiteral("");
   static const auto nameRegex = QRegularExpression(QStringLiteral("[^\\w\\-\\.]"));
 
   QString cleanName = name.simplified();
   cleanName.replace(space, underscore);
-  cleanName.replace(nameRegex, nothing);
+  cleanName.replace(nameRegex, {});
   while (!cleanName.isEmpty() &&
          (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(period))) {
     cleanName.remove(0, 1);
@@ -255,6 +254,18 @@ void Settings::save(bool emitSaving)
 QStringList Settings::validKeys()
 {
   return Settings::m_validKeys;
+}
+
+QString Settings::serverConfigFile()
+{
+  bool useExt = value(Server::ExternalConfig).toBool();
+  return useExt ? value(Server::ExternalConfigFile).toString() : defaultValue(Server::ExternalConfigFile).toString();
+}
+
+bool Settings::isServerConfigFileReadable()
+{
+  auto file = QFile(serverConfigFile());
+  return file.open(QFile::ReadOnly);
 }
 
 bool Settings::isWritable()

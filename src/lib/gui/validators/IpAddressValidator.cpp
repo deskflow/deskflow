@@ -5,6 +5,7 @@
  */
 
 #include "IpAddressValidator.h"
+#include <QRegularExpression>
 
 namespace validators {
 

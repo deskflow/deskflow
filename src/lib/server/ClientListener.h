@@ -71,6 +71,7 @@ private:
   void handleUnknownClient(ClientProxyUnknown *unknownClient);
   void handleClientDisconnected(ClientProxy *client);
 
+  void removeClientSocket(IDataSocket *socket);
   void cleanupListenSocket();
   void cleanupClientSockets();
   void start();

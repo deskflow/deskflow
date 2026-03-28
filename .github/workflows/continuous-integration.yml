@@ -99,7 +99,7 @@ jobs:
             config-args: "-G Ninja"
             vcpkg-triplet: x64-windows-release
             arch: "amd64"
-            qt-version: 6.10.1
+            qt-version: 6.10.2
 
           - name: "windows-2022-arm64"
             runs-on: "windows-11-arm"
@@ -107,12 +107,12 @@ jobs:
             config-args: "-G Ninja"
             vcpkg-triplet: arm64-windows
             arch: "arm64"
-            qt-version: 6.10.1
+            qt-version: 6.10.2
 
           - name: "macos-arm64"
             runs-on: macos-15
             timeout: 10
-            qt-version: 6.10.1
+            qt-version: 6.10.2
             config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
 
           - name: "macos-x64"
@@ -268,6 +268,11 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
+      - name: Update Windows Paths
+        if: (runner.os == 'Windows')
+        shell: pwsh
+        run: echo "C:\Program Files\doxygen\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       - name: Configure
         run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
 
@@ -275,7 +280,21 @@ jobs:
         shell: bash
         run: |
           if [[ "${{matrix.target.like}}" != "arch" ]]; then
-            cmake --build build --config Release -j8 --target package
+            if [ "$RUNNER_OS" != "macOS" ]; then
+              cmake --build build --config Release -j8 --target package
+            else
+              cmake --build build --config Release -j8
+              for i in $(seq 1 5); do
+                cmake --build build --config Release -j8 --target package 2>&1
+                if [ $? -eq 0 ]; then
+                  echo "Package successful"
+                  break
+                else
+                  echo "Package attempt $i failed"
+                  sleep 1
+                fi
+              done
+            fi
           else
             cmake --build build --config Release -j8
             useradd -m build
@@ -312,7 +331,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
           branch: gh-pages
-          folder: build/doc/dev/html
+          folder: build/docs/dev/html
 
       - name: Upload
         uses: actions/upload-artifact@v4
@@ -347,7 +366,7 @@ jobs:
           run: |
             pkg install -y cmake ninja gmake gcc12 openssl glib \
             libX11 libXtst libxkbfile qt6-base qt6-tools gtk3 \
-            googletest pkgconf libei libportal
+            googletest pkgconf libei libportal doxygen
             ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
             # Integration tests are flakey by nature, make them optional.
@@ -457,20 +476,3 @@ jobs:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/deskflow/homebrew-tap/dispatches \
           -d '{"event_type":"update_tap"}'
-
-  winget-publish:
-    needs: release
-    if: contains(github.ref, 'tags/v')
-    runs-on: windows-latest
-    steps:
-      - name: Fancy Checkout
-        uses: sithlord48/fancy-checkout@v2
-
-      - name: Get version
-        uses: ./.github/actions/get-version
-
-      - name: Submit
-        uses: ./.github/actions/winget-publish
-        with:
-          release-version: ${{env.DESKFLOW_PACKAGE_VERSION}}
-          token: ${{ secrets.WINGET_DEPLOY_TOKEN }}

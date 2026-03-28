@@ -15,8 +15,7 @@
 #include "common/Settings.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
 
-#if SYSAPI_WIN32
-
+#if defined(Q_OS_WIN)
 #include "arch/win32/ArchDaemonWindows.h"
 #include "deskflow/Screen.h"
 #include "platform/MSWindowsDebugOutputter.h"
@@ -64,7 +63,7 @@ void DaemonApp::applyWatchdogCommand() const
 {
   LOG_DEBUG("applying watchdog command");
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   m_pWatchdog->setProcessConfig(m_command, m_elevate);
 #else
   LOG_ERR("applying watchdog command not implemented on this platform");
@@ -78,7 +77,7 @@ void DaemonApp::clearWatchdogCommand()
   // Clear the setting to prevent it from being next time the daemon starts.
   setCommand("");
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   m_pWatchdog->setProcessConfig("", false);
 #else
   LOG_ERR("clearing watchdog command not implemented on this platform");
@@ -137,7 +136,7 @@ void DaemonApp::run(QThread &daemonThread)
     LOG_DEBUG("daemon thread finished");
   });
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   m_pWatchdog = std::make_unique<MSWindowsWatchdog>(m_foreground, *m_pFileLogOutputter);
 
   auto command = Settings::value(Settings::Daemon::Command).toString().toStdString();
@@ -154,17 +153,17 @@ void DaemonApp::run(QThread &daemonThread)
 
 int DaemonApp::daemonLoop()
 {
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   // Runs the daemon through the Windows service controller, which controls the program lifecycle.
   return ArchDaemonWindows::runDaemon([this]() { return mainLoop(); });
-#elif SYSAPI_UNIX
+#else
   return mainLoop();
 #endif
 }
 
 int DaemonApp::mainLoop()
 {
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   if (m_pWatchdog == nullptr) {
     LOG_ERR("watchdog not initialized");
     return s_exitFailed;
@@ -173,7 +172,7 @@ int DaemonApp::mainLoop()
 #endif
 
   try {
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
     // Install the platform event queue to handle service stop events.
     // This must be done on the same thread as the event loop, otherwise the service stop
     // request will not add the quit event to the event queue, and the service won't stop.
@@ -193,7 +192,7 @@ int DaemonApp::mainLoop()
 
   LOG_INFO("daemon is stopping");
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   try {
     LOG_DEBUG("stopping process watchdog");
     m_pWatchdog->stop();
@@ -221,7 +220,7 @@ void DaemonApp::setForeground()
 
 void DaemonApp::initLogging()
 {
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   if (!m_foreground) {
     // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
     // in that case, but is accessible when running in the foreground.
@@ -235,7 +234,7 @@ void DaemonApp::initLogging()
 
 void DaemonApp::showConsole()
 {
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   // The daemon bin is compiled using the Win32 subsystem which works best for Windows services,
   // so when running as a foreground process we need to allocate a console (or we won't see output).
   // It is important to do this inside the arg check loop so that we can attach console ahead

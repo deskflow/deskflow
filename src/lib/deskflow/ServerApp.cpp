@@ -30,7 +30,7 @@
 // must be before screen header includes
 #include <QFileInfo>
 
-#if WINAPI_MSWINDOWS
+#if defined(Q_OS_WIN)
 #include "platform/MSWindowsScreen.h"
 #endif
 
@@ -42,7 +42,7 @@
 #include "platform/EiScreen.h"
 #endif
 
-#if WINAPI_CARBON
+#if defined(Q_OS_MAC)
 #include "base/TMethodJob.h"
 #include "mt/Thread.h"
 #include "platform/OSXCocoaApp.h"
@@ -85,17 +85,10 @@ void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
   events->addEvent(Event(EventTypes::ServerAppReloadConfig, events->getSystemTarget()));
 }
 
-QString ServerApp::currentConfig() const
-{
-  bool useExt = Settings::value(Settings::Server::ExternalConfig).toBool();
-  return useExt ? Settings::value(Settings::Server::ExternalConfigFile).toString()
-                : Settings::defaultValue(Settings::Server::ExternalConfigFile).toString();
-}
-
 void ServerApp::reloadConfig()
 {
   LOG_DEBUG("reload configuration");
-  if (loadConfig(currentConfig())) {
+  if (loadConfig(Settings::serverConfigFile())) {
     if (m_server != nullptr) {
       m_server->setConfig(*m_config);
     }
@@ -105,7 +98,7 @@ void ServerApp::reloadConfig()
 
 void ServerApp::loadConfig()
 {
-  const auto path = currentConfig();
+  const auto path = Settings::serverConfigFile();
   if (path.isEmpty()) {
     LOG_CRIT("no configuration path provided");
     bye(s_exitConfig);
@@ -123,7 +116,7 @@ bool ServerApp::loadConfig(const QString &filename)
   try {
     // load configuration
     LOG_DEBUG("opening configuration \"%s\"", path.c_str());
-#ifdef SYSAPI_WIN32
+#if defined(Q_OS_WIN)
     std::ifstream configStream(filename.toStdWString());
 #else
     std::ifstream configStream(path);
@@ -309,7 +302,6 @@ bool ServerApp::initServer()
     return true;
   }
 
-  double retryTime;
   deskflow::Screen *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
@@ -324,7 +316,6 @@ bool ServerApp::initServer()
     LOG_WARN("primary screen unavailable: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
-    retryTime = e.getRetryTime();
   } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
@@ -399,13 +390,13 @@ bool ServerApp::startServer()
 
 deskflow::Screen *ServerApp::createScreen()
 {
-#if WINAPI_MSWINDOWS
+#if defined(Q_OS_WIN)
   return new deskflow::Screen(
       new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
-#endif
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#elif defined(Q_OS_MAC)
+  return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
+#else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
@@ -414,17 +405,14 @@ deskflow::Screen *ServerApp::createScreen()
     throw XNoEiSupport();
 #endif
   }
-#endif
-
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
       getEvents()
   );
-#elif WINAPI_CARBON
-  return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
 #endif
+#endif // end os check
 }
 
 PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::Screen *screen)
@@ -553,7 +541,7 @@ int ServerApp::mainLoop()
   // later.  the timer installed by startServer() will take care of
   // that.
 
-#if WINAPI_CARBON
+#if defined(Q_OS_MAC)
 
   Thread thread(new TMethodJob<ServerApp>(this, &ServerApp::runEventsLoop, nullptr));
 

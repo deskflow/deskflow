@@ -102,13 +102,13 @@ public:
 
   //! Test if connected
   /*!
-  Returns true iff the client is successfully connected to the server.
+  Returns true if the client is successfully connected to the server.
   */
   bool isConnected() const;
 
   //! Test if connecting
   /*!
-  Returns true iff the client is currently attempting to connect to
+  Returns true if the client is currently attempting to connect to
   the server.
   */
   bool isConnecting() const;

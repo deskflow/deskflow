@@ -24,3 +24,12 @@ if (DOXYGEN_FOUND)
 else()
   message(STATUS "Doxygen not found, skipping docs build")
 endif()
+
+# Show our documents in the IDE
+add_custom_target(docs
+  SOURCES
+    Readme.md
+    Security.md
+)
+
+install(FILES Security.md Readme.md DESTINATION ${CMAKE_INSTALL_DOCDIR})

@@ -29,6 +29,7 @@
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/widgets/LogDock.h"
 #include "net/FingerprintDatabase.h"
+#include "widgets/StatusBar.h"
 
 #include <QCloseEvent>
 #include <QDesktopServices>
@@ -54,9 +55,6 @@
 
 using namespace deskflow::gui;
 
-using CoreConnectionState = CoreProcess::ConnectionState;
-using CoreProcessState = CoreProcess::ProcessState;
-
 namespace {
 
 QIcon helpAboutIcon()
@@ -77,15 +75,6 @@ QIcon processStopIcon()
 #endif
 }
 
-QIcon securityStatusIcon(bool secureSocket)
-{
-#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
-  return QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
-#else
-  return QIcon::fromTheme(secureSocket ? QStringLiteral("security-high") : QStringLiteral("security-low"));
-#endif
-}
-
 } // namespace
 
 MainWindow::MainWindow()
@@ -97,10 +86,7 @@ MainWindow::MainWindow()
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
       m_logDock{new LogDock(this)},
-      m_lblSecurityStatus{new QLabel(this)},
-      m_lblStatus{new QLabel(this)},
-      m_btnFingerprint{new QPushButton(this)},
-      m_btnUpdate{new QPushButton(this)},
+      m_statusBar{new StatusBar(this)},
       m_menuFile{new QMenu(this)},
       m_menuEdit{new QMenu(this)},
       m_menuView{new QMenu(this)},
@@ -172,8 +158,6 @@ MainWindow::MainWindow()
   connectSlots();
   setupTrayIcon();
   updateScreenName();
-  applyConfig();
-  restoreWindow();
 
   qDebug().noquote() << "active settings path:" << Settings::settingsPath();
 
@@ -192,6 +176,10 @@ MainWindow::MainWindow()
       m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
     }
   }
+
+  applyConfig();
+  m_statusBar->setSecurityIcon(TlsUtility::isEnabled());
+  restoreWindow();
 }
 MainWindow::~MainWindow()
 {
@@ -249,6 +237,7 @@ void MainWindow::setupControls()
 
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
+  ui->lineEditName->installEventFilter(this);
 
   if (deskflow::platform::isMac()) {
     ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -257,31 +246,7 @@ void MainWindow::setupControls()
   } else {
     ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
   }
-
-  static const auto btnHeight = ui->statusBar->height() - 2;
-  static const auto btnSize = QSize(btnHeight, btnHeight);
-  static const auto iconSize = QSize(fontMetrics().height() + 2, fontMetrics().height() + 2);
-
-  m_btnFingerprint->setFlat(true);
-  m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
-  m_btnFingerprint->setFixedSize(btnSize);
-  m_btnFingerprint->setIconSize(iconSize);
-  ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
-
-  m_lblSecurityStatus->setVisible(false);
-  m_lblSecurityStatus->setFixedSize(iconSize);
-  m_lblSecurityStatus->setScaledContents(true);
-  ui->statusBar->insertPermanentWidget(1, m_lblSecurityStatus);
-
-  ui->statusBar->insertPermanentWidget(2, m_lblStatus, 1);
-
-  m_btnUpdate->setVisible(false);
-  m_btnUpdate->setFlat(true);
-  m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
-  m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
-  m_btnUpdate->setFixedHeight(btnHeight);
-  m_btnUpdate->setIconSize(iconSize);
-  ui->statusBar->insertPermanentWidget(3, m_btnUpdate);
+  setStatusBar(m_statusBar);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -307,6 +272,7 @@ void MainWindow::connectSlots()
   connect(
       &m_coreProcess, &CoreProcess::daemonIpcClientConnectionFailed, this, &MainWindow::daemonIpcClientConnectionFailed
   );
+  connect(&m_coreProcess, &CoreProcess::securityLevelChanged, m_statusBar, &StatusBar::setSecurityLevel);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
@@ -321,8 +287,6 @@ void MainWindow::connectSlots()
   connect(m_actionRestartCore, &QAction::triggered, this, &MainWindow::resetCore);
   connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
 
-  connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::versionCheckerUpdateFound);
-
   // Mac os tray will only show a menu
   if (!deskflow::platform::isMac())
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
@@ -334,6 +298,7 @@ void MainWindow::connectSlots()
   );
 
   connect(&m_clientConnection, &ClientConnection::requestShowError, this, &MainWindow::showClientError);
+  connect(&m_clientConnection, &ClientConnection::updateTimeoutDelay, this, &MainWindow::updateTimeoutDelay);
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
@@ -350,14 +315,15 @@ void MainWindow::connectSlots()
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->btnConfigureClient, &QPushButton::clicked, this, [this] { showConfigureClient(); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(m_btnFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
 
   connect(m_logDock->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
 
-  connect(m_btnUpdate, &QPushButton::clicked, this, &MainWindow::openGetNewVersionUrl);
+  connect(m_statusBar, &StatusBar::requestShowMyFingerprints, this, &MainWindow::showMyFingerprint);
+  connect(m_statusBar, &StatusBar::requestUpdateVersion, this, &MainWindow::openGetNewVersionUrl);
+  connect(&m_versionChecker, &VersionChecker::updateFound, m_statusBar, &StatusBar::updateFound);
 
   connect(m_guiDupeChecker, &QLocalServer::newConnection, this, &MainWindow::showAndActivate);
 
@@ -415,7 +381,7 @@ void MainWindow::settingsChanged(const QString &key)
       qWarning() << tr("invalid certificate, generating a new one");
       TlsUtility::generateCertificate();
     }
-    updateSecurityIcon(m_lblSecurityStatus->isVisible());
+    updateSecurityIcon(m_statusBar->securityIconVisible());
     return;
   }
 }
@@ -432,12 +398,6 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
   isVisible() ? hide() : showAndActivate();
 }
 
-void MainWindow::versionCheckerUpdateFound(const QString &version)
-{
-  m_btnUpdate->setVisible(true);
-  m_btnUpdate->setToolTip(tr("A new version v%1 is available").arg(version));
-}
-
 void MainWindow::coreProcessError(CoreProcess::Error error)
 {
   if (error == CoreProcess::Error::AddressMissing) {
@@ -446,12 +406,17 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
     );
   } else if (error == CoreProcess::Error::StartFailed) {
     show();
-    QMessageBox::warning(
-        this, tr("Core cannot be started"),
-        tr("The Core executable could not be successfully started, "
-           "although it does exist. "
-           "Please check if you have sufficient permissions to run this program.")
-    );
+    auto message = tr("The Core executable could not be started.\n"
+                      "Please check if you have sufficient permissions to run %1.")
+                       .arg(kCoreBinName);
+
+    if (Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server) {
+      const auto mode =
+          Settings::value(Settings::Server::ExternalConfigFile).toBool() ? tr("read") : tr("read and write");
+      message.append(tr("\nAdditionally, check you are able to %1 the server config file: %2")
+                         .arg(mode, Settings::serverConfigFile()));
+    }
+    QMessageBox::warning(this, kAppName, message);
   }
 }
 
@@ -459,13 +424,13 @@ void MainWindow::startCore()
 {
   // Save current IP state when server starts
   if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
-    m_serverStartIPs = m_networkMonitor->getAvailableIPv4Addresses();
+    m_serverStartIPs = NetworkMonitor::validAddresses();
     m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
 
-  m_coreProcess.start();
   m_actionStartCore->setVisible(false);
   m_actionRestartCore->setVisible(true);
+  m_coreProcess.start();
 }
 
 void MainWindow::stopCore()
@@ -530,7 +495,7 @@ void MainWindow::openGetNewVersionUrl() const
 
 void MainWindow::openSettings()
 {
-  auto dialog = SettingsDialog(this, m_serverConfig, m_coreProcess);
+  auto dialog = SettingsDialog(this, m_serverConfig);
 
   if (dialog.exec() == QDialog::Accepted) {
     Settings::save();
@@ -590,7 +555,7 @@ void MainWindow::updateModeControls()
   ui->lblIpAddresses->setVisible(isServer);
   ui->clientOptions->setVisible(isClient);
   ui->lblNoMode->setVisible(!isServer && !isClient);
-  toggleCanRunCore((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  toggleCanRunCore(canRunCore());
 
   if (isServer) {
     updateNetworkInfo();
@@ -641,23 +606,15 @@ void MainWindow::updateModeControlLabels()
 
 void MainWindow::updateSecurityIcon(bool visible)
 {
-  m_lblSecurityStatus->setVisible(visible);
+  m_statusBar->setSecurityIconVisible(visible);
   if (!visible)
     return;
-
-  bool secureSocket = TlsUtility::isEnabled();
-
-  const auto txt =
-      secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
-  m_lblSecurityStatus->setToolTip(txt);
-
-  const auto icon = securityStatusIcon(secureSocket);
-  m_lblSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
+  m_statusBar->setSecurityIcon(TlsUtility::isEnabled());
 }
 
 void MainWindow::updateNetworkInfo()
 {
-  updateIpLabel(m_networkMonitor->getAvailableIPv4Addresses());
+  updateIpLabel(NetworkMonitor::validAddresses());
 }
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
@@ -676,7 +633,13 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-  Settings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
+  if (!Settings::value(Settings::Gui::Autohide).toBool())
+    showAndActivate();
+  else if (deskflow::platform::isMac())
+    // macOS to call hide after this function ends
+    QTimer::singleShot(1, this, &MainWindow::hide);
+  else
+    hide();
 
   // if a critical error was shown just before the main window (i.e. on app
   // load), it will be hidden behind the main window. therefore we need to raise
@@ -703,11 +666,6 @@ void MainWindow::open()
       return;
     startCore();
   }
-}
-
-void MainWindow::setStatus(const QString &status)
-{
-  m_lblStatus->setText(status);
 }
 
 void MainWindow::createMenuBar()
@@ -933,71 +891,22 @@ void MainWindow::showFirstConnectedMessage()
 
 void MainWindow::updateStatus()
 {
+  using enum ProcessState;
   const auto connection = m_coreProcess.connectionState();
   const auto process = m_coreProcess.processState();
   const bool isServer = (m_coreProcess.mode() == CoreMode::Server);
-
-  updateSecurityIcon(false);
-  switch (process) {
-    using enum CoreProcessState;
-
-  case Starting:
-    setStatus(tr("%1 is starting...").arg(kAppName));
-    break;
-
-  case RetryPending:
-    setStatus(tr("%1 will retry in a moment...").arg(kAppName));
-    break;
-
-  case Stopping:
-    setStatus(tr("%1 is stopping...").arg(kAppName));
-    break;
-
-  case Stopped:
+  if (process == Stopped || process == Started) {
     updateNetworkInfo();
-    setStatus(tr("%1 is not running").arg(kAppName));
-    break;
-
-  case Started: {
-    updateNetworkInfo();
-    switch (connection) {
-      using enum CoreConnectionState;
-
-    case Listening: {
-      if (isServer) {
-        updateSecurityIcon(true);
-        setStatus(tr("%1 is waiting for clients").arg(kAppName));
-      }
-
-      break;
-    }
-
-    case Connecting:
-      setStatus(tr("%1 is connecting...").arg(kAppName));
-      break;
-
-    case Connected: {
-      updateSecurityIcon(true);
-      if (!isServer) {
-        setStatus(tr("%1 is connected as client of %2")
-                      .arg(kAppName, Settings::value(Settings::Client::RemoteHost).toString()));
-      }
-      break;
-    }
-
-    case Disconnected:
-      setStatus(tr("%1 is disconnected").arg(kAppName));
-      break;
-    }
-  } break;
+    ui->btnEditName->setVisible(process == Stopped);
   }
+  m_statusBar->setStatus(connection, process, isServer);
 }
 
-void MainWindow::coreProcessStateChanged(CoreProcessState state)
+void MainWindow::coreProcessStateChanged(ProcessState state)
 {
+  using enum ProcessState;
   updateStatus();
-
-  if (state == CoreProcessState::Started) {
+  if (state == Started) {
     qDebug() << "recording that core has started";
     Settings::setValue(Settings::Gui::AutoStartCore, true);
     if (m_coreProcess.mode() == CoreMode::Server &&
@@ -1008,8 +917,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     }
   }
 
-  if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
-      state == CoreProcessState::RetryPending) {
+  if (state == Started || state == Starting || state == RetryPending) {
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
@@ -1018,10 +926,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     m_actionRestartCore->setVisible(true);
     m_actionStopCore->setEnabled(true);
 
-    if (state == CoreProcessState::Starting) {
-      if (deskflow::platform::isWayland()) {
-        m_waylandWarnings.showOnce(this);
-      }
+    if (state == Starting) {
       saveSettings();
     }
 
@@ -1037,7 +942,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
   updateModeControlLabels();
 }
 
-void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
+void MainWindow::coreConnectionStateChanged(ConnectionState state)
 {
   qDebug() << "core connection state changed: " << static_cast<int>(state);
 
@@ -1046,7 +951,7 @@ void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
   // always assume connection is not secure when connection changes
   // to anything except connected. the only way the padlock shows is
   // when the correct TLS version string is detected.
-  if (state != CoreConnectionState::Connected) {
+  if (state != ConnectionState::Connected) {
     secureSocket(false);
   } else if (isVisible()) {
     showFirstConnectedMessage();
@@ -1055,7 +960,7 @@ void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
 
 void MainWindow::updateLocalFingerprint()
 {
-  m_btnFingerprint->setVisible(TlsUtility::isEnabled() && !m_fingerprint.data.isEmpty());
+  m_statusBar->setBtnFingerprintVisible(TlsUtility::isEnabled() && !m_fingerprint.data.isEmpty());
 }
 
 void MainWindow::hide()
@@ -1084,6 +989,20 @@ void MainWindow::changeEvent(QEvent *e)
     serverClientsChanged(m_serverConnection.connectedClients());
     updateText();
   }
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+  if (obj != ui->lineEditName || event->type() != QEvent::KeyPress)
+    return false;
+  if (const auto keyEvent = static_cast<QKeyEvent *>(event); keyEvent->key() != Qt::Key_Escape)
+    return false;
+  ui->lineEditName->hide();
+  ui->lblComputerName->show();
+  ui->btnEditName->show();
+  ui->lineEditName->setText(Settings::value(Settings::Core::ComputerName).toString());
+  toggleCanRunCore(canRunCore());
+  return true;
 }
 
 void MainWindow::updateText()
@@ -1119,10 +1038,6 @@ void MainWindow::updateText()
     m_actionQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
     m_actionTrayQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
   }
-
-  // General controls
-  m_btnFingerprint->setToolTip(tr("View local fingerprint"));
-  m_btnUpdate->setText(tr("Update available"));
 }
 
 void MainWindow::showConfigureServer(const QString &message)
@@ -1145,7 +1060,7 @@ void MainWindow::showConfigureClient()
 void MainWindow::secureSocket(bool secureSocket)
 {
   m_secureSocket = secureSocket;
-  updateSecurityIcon(m_lblSecurityStatus->isVisible());
+  updateSecurityIcon(m_statusBar->securityIconVisible());
 }
 
 void MainWindow::updateScreenName()
@@ -1176,6 +1091,7 @@ void MainWindow::showHostNameEditor()
   ui->lineEditName->show();
   ui->lblComputerName->hide();
   ui->btnEditName->hide();
+  toggleCanRunCore(false);
   ui->lineEditName->setFocus();
 }
 
@@ -1184,6 +1100,7 @@ void MainWindow::setHostName()
   ui->lineEditName->hide();
   ui->lblComputerName->show();
   ui->btnEditName->show();
+  toggleCanRunCore(canRunCore());
 
   QString text = ui->lineEditName->text();
   const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
@@ -1247,21 +1164,7 @@ void MainWindow::serverClientsChanged(const QStringList &clients)
 {
   if (m_coreProcess.mode() != CoreMode::Server || !m_coreProcess.isStarted())
     return;
-
-  if (clients.isEmpty()) {
-    setStatus(tr("%1 is waiting for clients").arg(kAppName));
-    ui->statusBar->setToolTip("");
-    return;
-  }
-
-  //: Shown when in server mode and at least 1 client is connected
-  //: %1 is replaced by the app name
-  //: %2 will be a list of at least one client
-  //: %n will be replaced by the number of clients (n is >=1), it is not requried to be in the translation
-  setStatus(tr("%1 is connected, with %n client(s): %2", "", clients.size()).arg(kAppName, clients.join(", ")));
-
-  const auto toolTipString = clients.count() == 1 ? "" : tr("Clients:\n %1").arg(clients.join("\n"));
-  ui->statusBar->setToolTip(toolTipString);
+  m_statusBar->setServerClients(clients);
 }
 
 void MainWindow::daemonIpcClientConnectionFailed()
@@ -1293,12 +1196,22 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 
 void MainWindow::showClientError(deskflow::client::ErrorType error, const QString &address)
 {
-  if (!Settings::value(Settings::Gui::ShowGenericClientFailureDialog).toBool() || !isVisible() || m_clientErrorVisible)
+  if (!isVisible() || m_clientErrorVisible || error != deskflow::client::ErrorType::AlreadyConnected)
     return;
 
   m_clientErrorVisible = true;
+
   showAndActivate();
-  deskflow::gui::messages::showClientConnectError(this, error, address);
+
+  QMessageBox::warning(
+      this, tr("%1 Connection Error").arg(kAppName),
+      tr("<p>Failed to connect to the server '%1'.</p>"
+         "<p>A Client with your name is already connected to the server.</p>"
+         "Please ensure that you're using a unique name and that only a "
+         "single instance of the client process is running.</p>")
+          .arg(address)
+  );
+
   m_clientErrorVisible = false;
 }
 
@@ -1354,4 +1267,17 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
 
   ui->lblIpAddresses->setText(labelText);
   ui->lblIpAddresses->setToolTip(toolTipText);
+}
+
+void MainWindow::updateTimeoutDelay(int newDelay)
+{
+  m_statusBar->setConnectionInterval(newDelay);
+}
+
+bool MainWindow::canRunCore() const
+{
+  const auto mode = m_coreProcess.mode();
+  const bool isServer = mode == Settings::CoreMode::Server;
+  const bool isClient = mode == Settings::CoreMode::Client;
+  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
 }

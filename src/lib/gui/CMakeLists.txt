@@ -58,8 +58,6 @@ add_library(${target} STATIC
   core/ServerConnection.h
   core/ServerMessage.cpp
   core/ServerMessage.h
-  core/WaylandWarnings.cpp
-  core/WaylandWarnings.h
   dialogs/AboutDialog.cpp
   dialogs/AboutDialog.h
   dialogs/AboutDialog.ui
@@ -119,6 +117,8 @@ add_library(${target} STATIC
   widgets/ScreenSetupView.h
   widgets/SearchWidget.h
   widgets/SearchWidget.cpp
+  widgets/StatusBar.cpp
+  widgets/StatusBar.h
   widgets/TrashScreenWidget.cpp
   widgets/TrashScreenWidget.h
 )

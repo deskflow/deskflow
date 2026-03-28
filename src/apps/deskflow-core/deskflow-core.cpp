@@ -16,7 +16,7 @@
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
 
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
 #include <QCoreApplication>
 #endif
@@ -32,7 +32,7 @@ void showHelp(const CoreArgParser &parser)
 
 int main(int argc, char **argv)
 {
-#if SYSAPI_WIN32
+#if defined(Q_OS_WIN)
   // HACK to make sure settings gets the correct qApp path
   QCoreApplication m(argc, argv);
   m.deleteLater();

@@ -24,7 +24,6 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/core/NetworkMonitor.h"
 #include "gui/core/ServerConnection.h"
-#include "gui/core/WaylandWarnings.h"
 #include "net/Fingerprint.h"
 
 #ifdef Q_OS_MACOS
@@ -48,6 +47,7 @@ class QLocalServer;
 
 class DeskflowApplication;
 class LogDock;
+class StatusBar;
 
 namespace Ui {
 class MainWindow;
@@ -59,9 +59,11 @@ class DaemonIpcClient;
 
 class MainWindow : public QMainWindow
 {
+  using ConnectionState = deskflow::core::ConnectionState;
   using CoreMode = Settings::CoreMode;
   using CoreProcess = deskflow::gui::CoreProcess;
   using NetworkMonitor = deskflow::gui::NetworkMonitor;
+  using ProcessState = deskflow::core::ProcessState;
 
   Q_OBJECT
 
@@ -93,6 +95,7 @@ public:
 
 protected:
   void changeEvent(QEvent *e) override;
+  bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
   /**
@@ -104,9 +107,9 @@ private:
   void settingsChanged(const QString &key = QString());
   void serverConfigSaving();
   void coreProcessError(CoreProcess::Error error);
-  void coreConnectionStateChanged(CoreProcess::ConnectionState state);
-  void coreProcessStateChanged(CoreProcess::ProcessState state);
-  void versionCheckerUpdateFound(const QString &version);
+  void coreConnectionStateChanged(ConnectionState state);
+  void coreProcessStateChanged(ProcessState state);
+
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void serverConnectionConfigureClient(const QString &clientName);
 
@@ -133,7 +136,6 @@ private:
   void setupTrayIcon();
   void applyConfig();
   void setTrayIcon();
-  void setStatus(const QString &status);
   void updateFromLogLine(const QString &line);
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
@@ -158,7 +160,9 @@ private:
   void remoteHostChanged(const QString &newRemoteHost);
   void handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth);
   void updateIpLabel(const QStringList &addresses);
+  void updateTimeoutDelay(int newDelay);
 
+  bool canRunCore() const;
   /**
    * @brief showClientError
    * @param error Error Type
@@ -189,7 +193,6 @@ private:
   bool m_secureSocket = false;
   bool m_saveOnExit = true;
   bool m_clientErrorVisible = false;
-  deskflow::gui::core::WaylandWarnings m_waylandWarnings;
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
   deskflow::gui::ServerConnection m_serverConnection;
@@ -202,10 +205,7 @@ private:
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   LogDock *m_logDock;
-  QLabel *m_lblSecurityStatus = nullptr;
-  QLabel *m_lblStatus = nullptr;
-  QPushButton *m_btnFingerprint = nullptr;
-  QPushButton *m_btnUpdate = nullptr;
+  StatusBar *m_statusBar = nullptr;
 
   // Window Menu
   QMenu *m_menuFile = nullptr;

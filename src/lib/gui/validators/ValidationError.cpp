@@ -7,6 +7,7 @@
 
 #include "ValidationError.h"
 
+#include <QLabel>
 #include <QPalette>
 
 namespace validators {

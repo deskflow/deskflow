@@ -7,11 +7,11 @@
 #pragma once
 
 #include "LineEditValidator.h"
-#include "ValidationError.h"
 
-#include "gui/config/ScreenList.h"
+class ScreenList;
 
 namespace validators {
+class ValidationError;
 
 class ScreenNameValidator : public LineEditValidator
 {

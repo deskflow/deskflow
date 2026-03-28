@@ -22,7 +22,7 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 
-#if WINAPI_MSWINDOWS
+#if defined(Q_OS_WIN)
 #include "platform/MSWindowsScreen.h"
 #endif
 
@@ -36,7 +36,7 @@
 #include "platform/EiScreen.h"
 #endif
 
-#if WINAPI_CARBON
+#if defined(Q_OS_MAC)
 #include "base/TMethodJob.h"
 #include "mt/Thread.h"
 #include "platform/OSXCocoaApp.h"
@@ -44,8 +44,6 @@
 #endif
 
 #include <memory>
-
-constexpr static auto s_retryTime = 1.0;
 
 ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
@@ -104,7 +102,7 @@ const char *ClientApp::daemonName() const
 
 deskflow::Screen *ClientApp::createScreen()
 {
-#if WINAPI_MSWINDOWS
+#if defined(Q_OS_WIN)
   return new deskflow::Screen(
       new MSWindowsScreen(
           false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(),
@@ -112,9 +110,11 @@ deskflow::Screen *ClientApp::createScreen()
       ),
       getEvents()
   );
-#endif
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#elif defined(Q_OS_MAC)
+  return new deskflow::Screen(
+      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool()), getEvents()
+  );
+#else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
@@ -123,22 +123,14 @@ deskflow::Screen *ClientApp::createScreen()
     throw XNoEiSupport();
 #endif
   }
-#endif
-
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents()),
       getEvents()
   );
-
 #endif
-
-#if WINAPI_CARBON
-  return new deskflow::Screen(
-      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool()), getEvents()
-  );
-#endif
+#endif // end os check
 }
 
 deskflow::Screen *ClientApp::openClientScreen()
@@ -170,8 +162,11 @@ void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
 
 void ClientApp::scheduleClientRestart(double retryTime)
 {
+  if (Settings::value(Settings::Client::DynamicConnectionRetry).toBool())
+    LOG_IPC("retry in %.0f seconds", retryTime);
+  else
+    LOG_DEBUG("retry in %.0f seconds", retryTime);
   // install a timer and handler to retry later
-  LOG_DEBUG("retry in %.0f seconds", retryTime);
   EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
   getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
@@ -192,7 +187,7 @@ void ClientApp::handleClientFailed(const Event &e)
 
     LOG_WARN("failed to connect to server=%s, trying next resolved address", info->m_what.c_str());
     if (!m_suspended) {
-      scheduleClientRestart(s_retryTime);
+      scheduleClientRestart(retryTime());
     }
   } else {
     // All resolved addresses exhausted, try next server in list
@@ -206,7 +201,7 @@ void ClientApp::handleClientFailed(const Event &e)
       std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
       LOG_WARN("failed to connect to server=%s, trying next server in list", info->m_what.c_str());
       if (!m_suspended) {
-        scheduleClientRestart(s_retryTime);
+        scheduleClientRestart(retryTime());
       }
     }
   }
@@ -222,16 +217,18 @@ void ClientApp::handleClientRefused(const Event &e)
   } else {
     LOG_WARN("failed to connect to server: %s", info->m_what.c_str());
     if (!m_suspended) {
-      scheduleClientRestart(s_retryTime);
+      scheduleClientRestart(retryTime());
+      m_retryCount++;
     }
   }
 }
 
 void ClientApp::handleClientDisconnected()
 {
+  m_retryCount = 0;
   LOG_IPC("disconnected from server");
   if (!m_suspended) {
-    scheduleClientRestart(s_retryTime);
+    scheduleClientRestart(retryTime());
   }
 }
 
@@ -276,7 +273,6 @@ void ClientApp::closeClient(Client *client)
 
 bool ClientApp::startClient()
 {
-  double retryTime;
   deskflow::Screen *clientScreen = nullptr;
   try {
     if (m_clientScreen == nullptr) {
@@ -296,18 +292,19 @@ bool ClientApp::startClient()
   } catch (ScreenUnavailableException &e) {
     LOG_WARN("secondary screen unavailable: %s", e.what());
     closeClientScreen(clientScreen);
-    retryTime = e.getRetryTime();
   } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
+    m_retryCount = 0;
     return false;
   } catch (BaseException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
+    m_retryCount = 0;
     return false;
   }
 
-  scheduleClientRestart(retryTime);
+  scheduleClientRestart(retryTime());
   return true;
 }
 
@@ -317,6 +314,7 @@ void ClientApp::stopClient()
   closeClientScreen(m_clientScreen);
   m_client = nullptr;
   m_clientScreen = nullptr;
+  m_retryCount = 0;
 }
 
 int ClientApp::mainLoop()
@@ -332,8 +330,7 @@ int ClientApp::mainLoop()
   // later.  the timer installed by startClient() will take care of
   // that.
 
-#if WINAPI_CARBON
-
+#if defined(Q_OS_MAC)
   Thread thread(new TMethodJob<ClientApp>(this, &ClientApp::runEventsLoop, nullptr));
 
   // wait until carbon loop is ready
@@ -401,4 +398,21 @@ void ClientApp::startNode()
 ISocketFactory *ClientApp::getSocketFactory() const
 {
   return new TCPSocketFactory(getEvents(), getSocketMultiplexer());
+}
+
+double ClientApp::retryTime() const
+{
+  if (!Settings::value(Settings::Client::DynamicConnectionRetry).toBool() || m_retryCount < 300) // 5 minutes
+    return 1;
+  if (m_retryCount < 360) // 5 minutes
+    return 5;
+  if (m_retryCount < 390) // 5 minutes
+    return 10;
+  if (m_retryCount < 410) // 10 minutes
+    return 30;
+  if (m_retryCount < 420) // 10 minutes
+    return 60;
+  if (m_retryCount < 430) // 20 minutes
+    return 120;
+  return 300;
 }

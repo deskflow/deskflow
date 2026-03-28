@@ -10,8 +10,6 @@
 #include <QFlags>
 #include <QTableView>
 
-#include "gui/config/Screen.h"
-
 class QWidget;
 class QMouseEvent;
 class QResizeEvent;

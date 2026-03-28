@@ -15,7 +15,7 @@ SpacesValidator::SpacesValidator(const QString &message) : IStringValidator(mess
 
 bool SpacesValidator::validate(const QString &input) const
 {
-  return !input.contains(' ');
+  return !input.contains(QChar::Space);
 }
 
 } // namespace validators

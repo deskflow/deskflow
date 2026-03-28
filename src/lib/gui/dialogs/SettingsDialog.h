@@ -10,7 +10,6 @@
 #include <QDialog>
 
 #include "gui/config/IServerConfig.h"
-#include "gui/core/CoreProcess.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -19,13 +18,12 @@ class SettingsDialog;
 class SettingsDialog : public QDialog
 {
   using IServerConfig = deskflow::gui::IServerConfig;
-  using CoreProcess = deskflow::gui::CoreProcess;
 
   Q_OBJECT
 
 public:
   void extracted();
-  SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess);
+  SettingsDialog(QWidget *parent, const IServerConfig &serverConfig);
   ~SettingsDialog() override;
 
 Q_SIGNALS:
@@ -63,7 +61,30 @@ private:
   /// @brief update if the log level warning is shown
   void logLevelChanged();
 
+  /**
+   * @brief isModified
+   * @return true when any client settings in the gui do not match the stored settings values.
+   */
+  bool isModified() const;
+
+  /**
+   * @brief isDefault
+   * @return true if all client settings match the default values
+   */
+  bool isDefault() const;
+
+  /**
+   * @brief Set the gui values to the defalut values for all client settings
+   */
+  void resetToDefault();
+
+  /**
+   * @brief setButtonBoxEnabledButtons
+   * Enable / Disable the button box buttons based on the state of the gui
+   */
+  void setButtonBoxEnabledButtons() const;
+
+  bool m_interfaceSetOnLoad = false;
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
-  const CoreProcess &m_coreProcess;
 };

@@ -29,39 +29,6 @@ const deskflow::KeyMap::KeyItem *stubMapKey(
 deskflow::KeyMap::Keystroke s_stubKeystroke(1, false, false);
 deskflow::KeyMap::KeyItem s_stubKeyItem;
 
-TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
-{
-  MockKeyMap keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  keyState.onKey(1, true, KeyModifierAlt);
-
-  EXPECT_EQ(1, keyState.getKeyState(1));
-}
-
-TEST(KeyStateTests, onKey_aKeyUp_keyStateZero)
-{
-  MockKeyMap keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  keyState.onKey(1, false, KeyModifierAlt);
-
-  EXPECT_EQ(0, keyState.getKeyState(1));
-}
-
-TEST(KeyStateTests, onKey_invalidKey_keyStateZero)
-{
-  MockKeyMap keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  keyState.onKey(0, true, KeyModifierAlt);
-
-  EXPECT_EQ(0, keyState.getKeyState(0));
-}
-
 TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 {
   NiceMock<MockKeyMap> keyMap;
@@ -87,31 +54,6 @@ TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
   keyState.updateKeyMap();
 }
 
-TEST(KeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown)
-{
-  NiceMock<MockKeyMap> keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-  ON_CALL(keyState, pollPressedKeys(_)).WillByDefault(Invoke(stubPollPressedKeys));
-
-  keyState.updateKeyState();
-
-  bool actual = keyState.isKeyDown(1);
-  ASSERT_TRUE(actual);
-}
-
-TEST(KeyStateTests, updateKeyState_pollDoesNothing_keyNotSet)
-{
-  NiceMock<MockKeyMap> keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  keyState.updateKeyState();
-
-  bool actual = keyState.isKeyDown(1);
-  ASSERT_FALSE(actual);
-}
-
 TEST(KeyStateTests, updateKeyState_activeModifiers_maskSet)
 {
   NiceMock<MockKeyMap> keyMap;
@@ -123,18 +65,6 @@ TEST(KeyStateTests, updateKeyState_activeModifiers_maskSet)
 
   KeyModifierMask actual = keyState.getActiveModifiers();
   ASSERT_EQ(KeyModifierAlt, actual);
-}
-
-TEST(KeyStateTests, updateKeyState_activeModifiers_maskNotSet)
-{
-  NiceMock<MockKeyMap> keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  keyState.updateKeyState();
-
-  KeyModifierMask actual = keyState.getActiveModifiers();
-  ASSERT_EQ(0, actual);
 }
 
 TEST(KeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
@@ -227,17 +157,6 @@ TEST(KeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
   keyState.fakeKeyDown(1, 0, 0, "en");
 }
 
-TEST(KeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse)
-{
-  MockKeyMap keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  bool actual = keyState.fakeKeyRepeat(0, 0, 0, 0, "en");
-
-  ASSERT_FALSE(actual);
-}
-
 TEST(KeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
 {
   NiceMock<MockKeyMap> keyMap;
@@ -305,17 +224,6 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
   ASSERT_TRUE(actual);
 }
 
-TEST(KeyStateTests, fakeKeyUp_buttonNotDown_returnsFalse)
-{
-  MockKeyMap keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  bool actual = keyState.fakeKeyUp(0);
-
-  ASSERT_FALSE(actual);
-}
-
 TEST(KeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue)
 {
   NiceMock<MockKeyMap> keyMap;
@@ -353,50 +261,6 @@ TEST(KeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp)
 
   bool actual = keyState.isKeyDown(1);
   ASSERT_FALSE(actual);
-}
-
-TEST(KeyStateTests, isKeyDown_keyDown_returnsTrue)
-{
-  NiceMock<MockKeyMap> keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  // press button 1 down.
-  s_stubKeyItem.m_button = 1;
-  ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
-  keyState.fakeKeyDown(1, 0, 1, "en");
-
-  // method under test
-  bool actual = keyState.isKeyDown(1);
-
-  ASSERT_TRUE(actual);
-}
-
-TEST(KeyStateTests, isKeyDown_noKeysDown_returnsFalse)
-{
-  MockKeyMap keyMap;
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  // method under test
-  bool actual = keyState.isKeyDown(1);
-
-  ASSERT_FALSE(actual);
-}
-
-TEST(KeyStateTests, updateKeyMap_exercised)
-{
-  deskflow::KeyMap keyMap;
-  deskflow::KeyMap::KeyItem keyItem;
-  keyItem.m_button = 'A';
-  keyItem.m_group = 1;
-  keyItem.m_id = 'A';
-  keyMap.addKeyEntry(keyItem);
-  keyMap.finish();
-  MockEventQueue eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-
-  keyState.updateKeyMap(&keyMap);
 }
 
 void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys)

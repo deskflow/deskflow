@@ -36,6 +36,7 @@ Q_SIGNALS:
    * @param address of the host
    */
   void requestShowError(deskflow::client::ErrorType error, const QString &address);
+  void updateTimeoutDelay(int newTimeout);
 
 private:
   void showMessage(const QString &logLine);

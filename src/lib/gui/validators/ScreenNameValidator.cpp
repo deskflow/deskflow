@@ -12,6 +12,9 @@
 #include "SpacesValidator.h"
 #include "ValidationError.h"
 
+#include "gui/config/ScreenList.h"
+
+#include <QLineEdit>
 #include <QRegularExpression>
 #include <memory>
 

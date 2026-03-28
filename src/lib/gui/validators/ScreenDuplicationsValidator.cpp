@@ -5,6 +5,7 @@
  */
 
 #include "ScreenDuplicationsValidator.h"
+#include "gui/config/ScreenList.h"
 
 namespace validators {
 

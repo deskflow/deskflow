@@ -17,7 +17,7 @@ path = [
  , "sonar-project.properties"
  , "cmake/vcpkg.json.in"
  , "**/*.md"
- , "doc/**"
+ , "docs/**"
  , "deploy/linux/flatpak/**"
  , "deploy/linux/org.deskflow.deskflow.metainfo.xml"
  , "deploy/windows/wix-patch.xml.in"

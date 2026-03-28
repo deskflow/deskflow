@@ -81,6 +81,11 @@ deskflow::IStream *StreamFilter::getStream() const
   return m_stream;
 }
 
+bool StreamFilter::adoptedStream() const
+{
+  return m_adopted;
+}
+
 void StreamFilter::filterEvent(const Event &event)
 {
   m_events->dispatchEvent(Event(event.getType(), getEventTarget(), event.getData()));

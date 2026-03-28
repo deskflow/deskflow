@@ -22,14 +22,20 @@ bool isPrivateUseAddress(const QHostAddress &address)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
   return address.isPrivateUse();
 #else
-  if (address.protocol() != QAbstractSocket::IPv4Protocol) {
-    return false;
+  if (address.protocol() == QAbstractSocket::IPv4Protocol) {
+    const auto ipv4 = address.toIPv4Address();
+    return (ipv4 & 0xff000000u) == 0x0a000000u ||     // 10.0.0.0/8
+           (ipv4 & 0xfff00000u) == 0xac100000u ||     // 172.16.0.0/12
+           (ipv4 & 0xffff0000u) == 0xc0a80000u;       // 192.168.0.0/16
   }
 
-  const auto ipv4 = address.toIPv4Address();
-  return (ipv4 & 0xff000000u) == 0x0a000000u ||     // 10.0.0.0/8
-         (ipv4 & 0xfff00000u) == 0xac100000u ||     // 172.16.0.0/12
-         (ipv4 & 0xffff0000u) == 0xc0a80000u;       // 192.168.0.0/16
+  if (address.protocol() == QAbstractSocket::IPv6Protocol) {
+    const auto ipv6 = address.toIPv6Address();
+    // fc00::/7 unique local address space
+    return (ipv6[0] & 0xfeu) == 0xfcu;
+  }
+
+  return false;
 #endif
 }
 
@@ -39,7 +45,7 @@ bool NetworkMonitor::isVirtualInterface(const QString &interfaceName)
 {
   // Common virtual network interface patterns
   static const auto virtualRegEx = QRegularExpression(
-      QStringLiteral("^vboxnet|vmnet|docker|virbr|veth|br\\-|tun|utun|awdl|p2p|llw|anpi|tap"),
+      QStringLiteral("^vboxnet|vmnet|docker|virbr|veth|br\\-|tun|utun|awdl|p2p|llw|anpi|tap|vEth"),
       QRegularExpression::CaseInsensitiveOption
   );
   return virtualRegEx.match(interfaceName).hasMatch();
@@ -72,10 +78,12 @@ void NetworkMonitor::stopMonitoring()
   m_isMonitoring = false;
 }
 
-QStringList NetworkMonitor::getAvailableIPv4Addresses() const
+QStringList NetworkMonitor::validAddresses()
 {
-  QList<QHostAddress> physicalIPs;
-  QList<QHostAddress> virtualIPs;
+  QList<QHostAddress> physicalIP4;
+  QList<QHostAddress> physicalIP6;
+  QList<QHostAddress> virtualIP4;
+  QList<QHostAddress> virtualIP6;
   QSet<QHostAddress> uniqueAddresses;
 
   const auto allInterfaces = QNetworkInterface::allInterfaces();
@@ -86,39 +94,57 @@ QStringList NetworkMonitor::getAvailableIPv4Addresses() const
     }
 
     const bool isP2P = (interface.flags() & QNetworkInterface::IsPointToPoint);
-    const bool isVirtual = isVirtualInterface(interface.name()) || isP2P;
+    const bool isVirtualType = interface.type() == QNetworkInterface::Virtual;
+    const bool isVirtual = isVirtualInterface(interface.humanReadableName()) || isP2P || isVirtualType;
     const auto addressEntries = interface.addressEntries();
 
     for (const auto &entry : addressEntries) {
       const QHostAddress address = entry.ip();
 
-      if (address.protocol() != QAbstractSocket::IPv4Protocol || address.isLinkLocal() || address.isLoopback() ||
-          uniqueAddresses.contains(address)) {
+      if (address.isLinkLocal() || address.isLoopback() || uniqueAddresses.contains(address)) {
         continue;
       }
 
       uniqueAddresses.insert(address);
 
-      if (isVirtual) {
-        virtualIPs.append(address);
+      if (address.protocol() == QHostAddress::IPv6Protocol) {
+        if (isVirtual)
+          virtualIP6.append(address);
+        else
+          physicalIP6.append(address);
       } else {
-        physicalIPs.append(address);
+        if (isVirtual)
+          virtualIP4.append(address);
+        else
+          physicalIP4.append(address);
       }
     }
   }
 
-  std::ranges::sort(physicalIPs, [](const QHostAddress &a, const QHostAddress &b) {
+  std::ranges::sort(physicalIP4, [](const QHostAddress &a, const QHostAddress &b) {
     if (isPrivateUseAddress(a) != isPrivateUseAddress(b))
       return isPrivateUseAddress(a);
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
-  std::ranges::sort(virtualIPs, [](const QHostAddress &a, const QHostAddress &b) {
+  std::ranges::sort(virtualIP4, [](const QHostAddress &a, const QHostAddress &b) {
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
-  auto result = physicalIPs;
-  result.append(virtualIPs);
+  std::ranges::sort(physicalIP6, [](const QHostAddress &a, const QHostAddress &b) {
+    if (isPrivateUseAddress(a) != isPrivateUseAddress(b))
+      return isPrivateUseAddress(a);
+    return a.toString() < b.toString();
+  });
+
+  std::ranges::sort(virtualIP6, [](const QHostAddress &a, const QHostAddress &b) {
+    return a.toString() < b.toString();
+  });
+
+  auto result = physicalIP4;
+  result.append(virtualIP4);
+  result.append(physicalIP6);
+  result.append(virtualIP6);
 
   QStringList ipList;
   for (const auto &host : result) {
@@ -137,7 +163,7 @@ void NetworkMonitor::setIpAddresses(const QStringList &newAddresses)
 
 void NetworkMonitor::updateNetworkState()
 {
-  setIpAddresses(getAvailableIPv4Addresses());
+  setIpAddresses(validAddresses());
 }
 
 } // namespace deskflow::gui

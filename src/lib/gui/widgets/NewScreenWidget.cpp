@@ -19,7 +19,7 @@ NewScreenWidget::NewScreenWidget(QWidget *parent) : QLabel(parent)
   // do nothing
 }
 
-void NewScreenWidget::mousePressEvent(QMouseEvent *event)
+void NewScreenWidget::mousePressEvent(QMouseEvent *)
 {
   //: Used as the hostname. Translation may not contain spaces
   Screen newScreen(tr("Unnamed"));

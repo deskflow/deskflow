@@ -103,7 +103,6 @@ set(REQUIRED_LIBPORTAL_VERSION 0.7)
 set(REQUIRED_QT_VERSION 6.4.0)
 
 if (WIN32)
-  add_definitions(-DSYSAPI_WIN32 -DWINAPI_MSWINDOWS)
   # VSCMD_ARG_TGT_ARCH is set on CI
   if ("$ENV{VSCMD_ARG_TGT_ARCH}" STREQUAL "")
     # NOT on CI
@@ -162,11 +161,16 @@ endif()
 include(cmake/Libraries.cmake)
 configure_libs()
 
+if(BUILD_OSX_BUNDLE AND APPLE_CODESIGN_DEV)
+  include(cmake/MacCodesign.cmake)
+endif()
+
 # setup install paths
 include(GNUInstallDirs)
 if (WIN32)
   set(CMAKE_INSTALL_BINDIR .)
   set(CMAKE_INSTALL_LIBDIR .)
+  set(CMAKE_INSTALL_DOCDIR docs)
   set(CMAKE_INSTALL_LICENSE_DIR .)
   set(CMAKE_INSTALL_I18N_DIR translations)
 elseif(BUILD_OSX_BUNDLE)
@@ -177,7 +181,7 @@ else()
   set(CMAKE_INSTALL_I18N_DIR ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/translations)
 endif()
 
-add_subdirectory(doc)
+add_subdirectory(docs)
 
 # build translations before source, I18N unit tests fail if they are missing
 add_subdirectory(translations)

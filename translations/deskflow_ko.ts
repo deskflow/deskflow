@@ -151,11 +151,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Scroll Modifiers</source>
-        <translation type="unfinished">스크롤 수정자</translation>
+        <translation>스크롤 제어자</translation>
     </message>
     <message>
         <source>Invert</source>
-        <translation type="unfinished">거꾸로 하다</translation>
+        <translation>반전</translation>
     </message>
     <message>
         <source>Horizontal Scroll</source>
@@ -171,11 +171,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Close and save changes</source>
-        <translation type="unfinished">닫기 및 변경 사항 저장</translation>
+        <translation>변경 사항 저장 후 닫기</translation>
     </message>
     <message>
         <source>Close and forget changes</source>
-        <translation type="unfinished">설정을 저장하고 나면 변경 사항은 더 이상 신경 쓸 필요가 없습니다</translation>
+        <translation>저장하지 않고 닫기</translation>
     </message>
     <message>
         <source>Reset to stored values</source>
@@ -185,21 +185,29 @@ p, li { white-space: pre-wrap; }
         <source>Reset to default values</source>
         <translation type="unfinished">기본값으로 재설정</translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;연결 시도가 실패할 경우, 클라이언트가 서버 재연결 시도 주기를 늦추도록 허용합니다. 연결 시도 간 지연 시간은 1초 간격으로 시작되며, 최대 5분까지 늘어날 수 있습니다.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Use dynamic reconnection time based on connection attempts</source>
+        <translation type="unfinished">연결 시도 횟수에 따라 동적 재연결 시간을 사용합니다</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
-        <translation>로컬 지문값</translation>
+        <translation>로컬 핑거프린팅</translation>
     </message>
     <message>
         <source>Local computer&apos;s fingerprint</source>
-        <translation>이 컴퓨터의 지문값</translation>
+        <translation>이 컴퓨터의 핑거프린팅</translation>
     </message>
     <message>
         <source>Compare the fingerprints in this dialog to those on the %1.
 Only connect if they match!</source>
-        <translation>이 대화상자에 표시된 지문값을 %1의 지문값과 비교하세요.
+        <translation>이 대화상자에 표시된 핑거프린팅을 %1의 핑거프린팅과 비교하세요.
 일치할 때만 연결하세요!</translation>
     </message>
     <message>
@@ -236,11 +244,11 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Server Fingerprint</source>
-        <translation>서버 지문값</translation>
+        <translation>서버 핑거프린팅</translation>
     </message>
     <message>
         <source>Client Fingerprint</source>
-        <translation>클라이언트 지문값</translation>
+        <translation>클라이언트 핑거프린팅</translation>
     </message>
     <message>
         <source>Show image</source>
@@ -252,11 +260,11 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Display the fingerprint as an image</source>
-        <translation>지문값을 이미지로 표시</translation>
+        <translation>핑거프린팅을 이미지로 표시</translation>
     </message>
     <message>
         <source>Display the fingerprint as a hash</source>
-        <translation>지문값을 해시로 표시</translation>
+        <translation>핑거프린팅을 해시로 표시</translation>
     </message>
 </context>
 <context>
@@ -351,20 +359,12 @@ Do you want to connect to the server?
         <translation type="unfinished">유효하지 않은 인증서입니다. 새 인증서를 생성하는 중입니다</translation>
     </message>
     <message>
-        <source>A new version v%1 is available</source>
-        <translation>새 버전(v%1)을 사용할 수 있습니다</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>주소가 없습니다</translation>
     </message>
     <message>
         <source>Please enter the hostname or IP address of the other computer.</source>
         <translation>다른 컴퓨터의 호스트 이름 또는 IP 주소를 입력하세요.</translation>
-    </message>
-    <message>
-        <source>Core cannot be started</source>
-        <translation>코어를 시작할 수 없습니다</translation>
     </message>
     <message>
         <source>Save server configuration as...</source>
@@ -395,12 +395,8 @@ Do you want to connect to the server?
         <translation>연결 해제</translation>
     </message>
     <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>%1 암호화 사용</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>암호화 사용 안 함</translation>
+        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;서버 &apos;%1&apos;에 연결하지 못했습니다.&lt;/p&gt;&lt;p&gt;같은 이름의 클라이언트가 이미 서버에 연결되어 있습니다.&lt;/p&gt;&lt;p&gt;고유한 이름을 사용하고, 클라이언트 프로세스가 하나만 실행 중인지 확인하세요.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -429,40 +425,8 @@ Do you want to connect to the server?
     <message>
         <source>
 A bound IP is now invalid, you may need to restart the server.</source>
-        <translation type="unfinished">
-바인딩된 IP가 이제 유효하지 않습니다. 서버를 재시작해야 할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 시작 중...</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 잠시 후 재시도합니다...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 중지 중...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 실행 중이 아닙니다</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 클라이언트를 기다리는 중</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 연결 중...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1이(가) %2의 클라이언트로 연결되었습니다</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 연결이 해제되었습니다</translation>
+        <translation>
+연결된 IP가 이제 유효하지 않습니다. 서버를 재시작해야 합니다.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -534,14 +498,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>로컬 지문값 보기</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>업데이트 사용 가능</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation>잘못된 컴퓨터 이름</translation>
     </message>
@@ -563,26 +519,13 @@ Valid names:
 • _ 또는 - 사용 가능
 • 1~255자</translation>
     </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1이(가) %n대의 클라이언트와 연결됨: %2</numerusform>
-        </translation>
-    </message>
     <message>
-        <source>Clients:
- %1</source>
-        <translation>클라이언트:
- %1</translation>
+        <source>%1 Connection Error</source>
+        <translation>%1 연결 오류</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
         <translation type="unfinished">추천 IP: </translation>
-    </message>
-    <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation>코어 실행 파일은 존재하지만 정상적으로 시작할 수 없습니다. 이 프로그램을 실행할 권한이 충분한지 확인하세요.</translation>
     </message>
     <message>
         <source>&amp;Configure Client</source>
@@ -594,7 +537,27 @@ Valid names:
     </message>
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.&lt;br/&gt;쉼표로 구분된 목록을 포함할 수 있습니다.&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;서버 컴퓨터의 호스트 이름 또는 IP 주소입니다.&lt;br/&gt;목록 요소는 쉼표로 구분됩니다.&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">읽기</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">읽기 및 쓰기</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">Core 실행 파일을 시작할 수 없습니다.
+%1을 실행할 수 있는 충분한 권한이 있는지 확인하세요.</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+또한 서버 구성 파일을 %1할 수 있는지 확인하세요: %2</translation>
     </message>
 </context>
 <context>
@@ -602,7 +565,7 @@ Valid names:
     <message>
         <source>Unnamed</source>
         <extracomment>Used as the hostname. Translation may not contain spaces</extracomment>
-        <translation>Unnamed</translation>
+        <translation>이름없음</translation>
     </message>
 </context>
 <context>
@@ -618,13 +581,13 @@ Valid names:
     <message>
         <source>&lt;p&gt;Sorry, a fatal error has occurred and the application must now exit.&lt;/p&gt;
 </source>
-        <translation>&lt;p&gt;죄송합니다. 치명적인 오류가 발생하여 애플리케이션을 종료해야 합니다.&lt;/p&gt;
+        <translation>&lt;p&gt;문제가 발생하여 애플리케이션을 종료합니다.&lt;/p&gt;
 </translation>
     </message>
     <message>
         <source>&lt;p&gt;Sorry, a critical error has occurred.&lt;/p&gt;
 </source>
-        <translation>&lt;p&gt;죄송합니다. 심각한 오류가 발생했습니다.&lt;/p&gt;
+        <translation>&lt;p&gt;에러 발생&lt;/p&gt;
 </translation>
     </message>
     <message>
@@ -641,7 +604,7 @@ Valid names:
     </message>
     <message>
         <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot;&gt;enable an extension&lt;/a&gt; to see the %2 tray icon.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;GNOME 3을 사용하는 Linux 시스템에서는 알림 영역이 비활성화되어 있을 수 있습니다. %2 트레이 아이콘을 보려면 &lt;a href=&quot;%1&quot;&gt;확장 기능을 활성화&lt;/a&gt;해야 할 수 있습니다.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;GNOME 3을 사용하는 Linux 시스템에서는 알림 영역이 비활성화되어 있을 수 있습니다. %2 트레이 아이콘을 보려면 &lt;a href=&quot;%1&quot;&gt;확장 기능을 활성화&lt;/a&gt;해야 합니다.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Server</source>
@@ -653,11 +616,11 @@ Valid names:
     </message>
     <message>
         <source>&lt;p&gt;%1 is now connected!&lt;/p&gt;</source>
-        <translation>&lt;p&gt;%1이(가) 연결되었습니다!&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;%1이(가) 연결!&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Try moving your mouse to your other computer. Once there, go ahead and type something.&lt;/p&gt;&lt;p&gt;Don&apos;t forget, you can copy and paste between computers too.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;마우스를 다른 컴퓨터로 옮겨 보세요. 이동한 뒤 키보드로 아무 글자나 입력해 보세요.&lt;/p&gt;&lt;p&gt;컴퓨터 간 복사/붙여넣기도 할 수 있습니다.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;마우스를 다른 컴퓨터로 이동시켜 보세요. 이동한 뒤 키보드로 아무 글자나 입력해 보세요.&lt;/p&gt;&lt;p&gt;컴퓨터 간 복사/붙여넣기도 가능합니다.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Try controlling this computer remotely.&lt;/p&gt;</source>
@@ -676,36 +639,12 @@ Valid names:
         <translation>%1 연결됨</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;서버 &apos;%1&apos;에 연결하지 못했습니다.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;같은 이름의 클라이언트가 이미 서버에 연결되어 있습니다.&lt;/p&gt;&lt;p&gt;고유한 이름을 사용하고, 클라이언트 프로세스가 한 번만 실행 중인지 확인하세요.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;호스트 이름 대신 서버 IP 주소로 연결해 보세요.&lt;/p&gt;&lt;p&gt;문제가 계속되면 TLS 및 방화벽 설정을 확인하세요.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;TLS 및 방화벽 설정을 확인하세요.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 Connection Error</source>
-        <translation>%1 연결 오류</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation>다시 표시하지 않기</translation>
-    </message>
-    <message>
         <source>%1 - New Client</source>
         <translation>%1 - 새 클라이언트</translation>
     </message>
     <message>
         <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation>새 클라이언트 &apos;%1&apos;이(가) 허용되었습니다. 서버의 화면 배치에 추가해야 합니다.</translation>
+        <translation>새 클라이언트 &apos;%1&apos;이(가) 허용되었습니다. 서버의 화면 배치에 추가해 주세요.</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -725,7 +664,7 @@ Valid names:
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;모든 설정을 초기화하고 %1을(를) 재시작할까요?&lt;/p&gt;&lt;p&gt;이 작업은 되돌릴 수 없습니다.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;모든 설정을 초기화하고 %1을(를) 재시작할까요?&lt;/p&gt;&lt;p&gt;이 작업은 번복될 수 없습니다.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Read-only settings</source>
@@ -734,10 +673,6 @@ Valid names:
     <message>
         <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;p&gt;다음 파일에 대한 쓰기 권한이 없어 설정이 읽기 전용입니다:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;죄송합니다. 이 버전의 %1은(는) Wayland를 지원하지만, 이 빌드는 필요한 라이브러리 중 하나 이상이 링크되어 있지 않습니다.&lt;/p&gt;&lt;p&gt;로그인 화면에서 X로 전환하거나 올바른 라이브러리를 사용한 빌드를 이용하세요.&lt;/p&gt;&lt;p&gt;이 안내가 올바르지 않다고 생각되면 &lt;a href=&quot;%2&quot;&gt;버그를 신고&lt;/a&gt;해 주세요.&lt;/p&gt;&lt;p&gt;자세한 내용은 로그를 확인하세요.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>
@@ -765,7 +700,7 @@ Valid names:
     </message>
     <message>
         <source>&lt;p&gt;There was a problem finding the %1 background service (daemon).&lt;/p&gt;&lt;p&gt;The background service makes %1 work with UAC prompts and the login screen.&lt;/p&gt;&lt;p&gt;If don&apos;t want to use the background service and intentionally stopped it, you can prevent it&apos;s use by disabling this feature.&lt;/p&gt;&lt;p&gt;If you did not stop the background service intentionally, there may be a problem with it. Please retry or try restarting the %1 service from the Windows services program.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;%1 백그라운드 서비스(데몬)를 찾는 중 문제가 발생했습니다.&lt;/p&gt;&lt;p&gt;백그라운드 서비스는 %1이(가) UAC 프롬프트 및 로그인 화면에서 동작하도록 합니다.&lt;/p&gt;&lt;p&gt;백그라운드 서비스를 사용하지 않으려고 의도적으로 중지한 경우, 이 기능을 비활성화하여 사용을 막을 수 있습니다.&lt;/p&gt;&lt;p&gt;의도적으로 중지한 것이 아니라면 서비스에 문제가 있을 수 있습니다. 재시도하거나 Windows 서비스 관리 프로그램에서 %1 서비스를 재시작해 보세요.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;%1 백그라운드 서비스(daemon)를 찾는 중 문제가 발생했습니다.&lt;/p&gt;&lt;p&gt;백그라운드 서비스는 %1이(가) UAC 프롬프트 및 로그인 화면에서 동작됩니다.&lt;/p&gt;&lt;p&gt;백그라운드 서비스를 사용하지 않으려고 의도적으로 중지한 경우, 이 기능을 비활성화하여 사용을 막을 수 있습니다.&lt;/p&gt;&lt;p&gt;의도적으로 중지한 것이 아니라면 서비스에 문제가 있을 수 있습니다. 재시도하거나 Windows 서비스 관리 프로그램에서 %1 서비스를 재시작해 보세요.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>failed to read key from certificate file: %1</source>
@@ -855,7 +790,7 @@ Valid names:
     </message>
     <message>
         <source>Dead Corners</source>
-        <translation>무효 모서리</translation>
+        <translation>화면 걸림 방지</translation>
     </message>
     <message>
         <source>Top Left</source>
@@ -964,7 +899,7 @@ Valid names:
     </message>
     <message>
         <source>Drag a computer from the grid to the trashcan to remove it.</source>
-        <translation>컴퓨터를 삭제하려면 격자에서 휴지통으로 드래그하세요.</translation>
+        <translation>컴퓨터를 삭제하려면 휴지통으로 드래그하세요.</translation>
     </message>
     <message>
         <source>Configure the layout of your computer displays by dragging to where you want.</source>
@@ -1016,7 +951,7 @@ Valid names:
     </message>
     <message>
         <source>&amp;Dead corners (for this computer)</source>
-        <translation>무효 모서리(&amp;D) (이 컴퓨터)</translation>
+        <translation>화면 걸림 방지(&amp;D) (이 컴퓨터)</translation>
     </message>
     <message>
         <source>&amp;Bottom-left</source>
@@ -1118,7 +1053,7 @@ Valid names:
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>단순한 격자 기반 레이아웃 편집기로는 만들 수 없는 복잡한 컴퓨터 배치를 구성하려면 서버 설정 파일을 사용하세요.
+        <translation>격자 기반 레이아웃 편집기로는 만들 수 없는 복잡한 컴퓨터 배치를 구성하려면 서버 설정 파일을 사용하세요.
 
 이 설정을 활성화하면 서버 설정 GUI가 비활성화됩니다.</translation>
     </message>
@@ -1151,28 +1086,12 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>환경설정</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation>일반(&amp;R)</translation>
-    </message>
-    <message>
-        <source>App</source>
-        <translation>앱</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>시작 시 업데이트 확인</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation>앱 시작 시 창 숨기기</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation>이 컴퓨터를 절전 모드로 전환하지 않음</translation>
-    </message>
-    <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>창을 닫아도 알림 영역에서 앱을 계속 실행</translation>
     </message>
     <message>
         <source>Tray icon style</source>
@@ -1211,20 +1130,12 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>고급(&amp;A)</translation>
     </message>
     <message>
-        <source>Networking</source>
-        <translation>네트워크</translation>
-    </message>
-    <message>
         <source>Port</source>
         <translation>포트</translation>
     </message>
     <message>
         <source>Network IP</source>
         <translation>네트워크 IP</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>로그</translation>
     </message>
     <message>
         <source>Level</source>
@@ -1267,10 +1178,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>로그 경로</translation>
     </message>
     <message>
-        <source>Log to file</source>
-        <translation>파일로 로그 저장</translation>
-    </message>
-    <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
         <translation>디버그 로그 레벨은 성능에 영향을 줄 수 있습니다. 문제를 디버깅하거나 버그 신고에 첨부할 로그를 수집할 때만 디버그 레벨을 사용하세요.</translation>
     </message>
@@ -1280,15 +1187,11 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Use background service (daemon)</source>
-        <translation>백그라운드 서비스(데몬) 사용</translation>
+        <translation>백그라운드 서비스(daemon) 사용</translation>
     </message>
     <message>
         <source>Always run as system (work at login screen and UAC)</source>
         <translation>항상 시스템 권한으로 실행(로그인 화면 및 UAC에서 동작)</translation>
-    </message>
-    <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation>GUI에서 사용할 언어를 강제로 지정합니다.</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1343,12 +1246,28 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>상세 디버그 출력</translation>
     </message>
     <message>
+        <source>Close and save changes</source>
+        <translation>변경 사항 저장 후 닫기</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation>저장하지 않고 닫기</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">저장된 값으로 재설정</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">기본값으로 재설정</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>wl-clipboard 지원 사용</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wl-clipboard 패키지가 필요합니다.&lt;/p&gt;&lt;p&gt;wl-clipboard v2.2.1 사용 시 포커스 탈취 버그로 인해 Deskflow 사용이 어려워질 수 있습니다. 이 문제는 wl-clipboard master 브랜치를 사용하면 해결되지만, 사용 중인 컴포지터가 wlroots-data-control 프로토콜을 지원하지 않으면 해결되지 않을 수 있습니다.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wl-clipboard 패키지가 필요합니다.&lt;/p&gt;&lt;p&gt;wl-clipboard v2.2.1 사용 시 포커스 탈취 버그로 인해 Deskflow 사용이 어려워질 수 있습니다. 이 문제는 wl-clipboard master 브랜치를 사용하면 해결되지만, 사용 중인 컴포지터가 wlroots-data-control 프로토콜을 지원하지 않으면 해결이 안 될 수 있습니다.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Automatic</source>
@@ -1357,6 +1276,126 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">창 제목에 버전 정보 포함</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>파일로 로그 저장</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation>로그 (&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation>일반(&amp;G)</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>네트워크(&amp;N)</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">창문(&amp;W)</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">메인 창이 닫혔을 때</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">출구</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">백그라운드로 보내기</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">애플리케이션이 시작될 때</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">메인 창을 표시합니다</translation>
+    </message>
+    <message>
+        <source>Run command on enter</source>
+        <translation type="unfinished">Enter 키를 누르면 명령 실행</translation>
+    </message>
+    <message>
+        <source>Run command on exit</source>
+        <translation type="unfinished">종료 시 명령 실행</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 실행 중이 아닙니다</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 시작 중...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 잠시 후 재시도합니다...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 중지 중...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 클라이언트를 기다리는 중</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1이(가) %2의 클라이언트로 연결되었습니다</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 연결이 해제되었습니다</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1이(가) %n대의 클라이언트와 연결됨: %2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>클라이언트:
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>새 버전(v%1)을 사용할 수 있습니다</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>로컬 핑거프린팅 보기</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>업데이트 사용 가능</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 연결 중...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1이 다음 재시도까지 %2초 대기 중입니다</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>%1 암호화 사용</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>암호화 사용 안 함</translation>
     </message>
 </context>
 <context>
@@ -1398,7 +1437,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>A computer with this name already exists</source>
-        <translation>이 이름의 컴퓨터가 이미 존재합니다</translation>
+        <translation>동명의 컴퓨터가 이미 존재합니다</translation>
     </message>
 </context>
 </TS>

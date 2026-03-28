@@ -23,14 +23,17 @@
 
 using namespace deskflow::gui;
 
-SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess)
+SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfig)
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
-      m_serverConfig(serverConfig),
-      m_coreProcess(coreProcess)
+      m_serverConfig(serverConfig)
 {
 
   ui->setupUi(this);
+
+  // these are enabled by the control next to them
+  ui->lineCommandEnter->setEnabled(false);
+  ui->lineCommandExit->setEnabled(false);
 
   // set up the language combo
   I18N::reDetectLanguages();
@@ -51,12 +54,17 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->tabWidget->setCurrentIndex(0);
 
   // Populate the list of IP addresses
-  NetworkMonitor networkMonitor(this);
-  for (const auto &address : networkMonitor.getAvailableIPv4Addresses()) {
+  const auto validAddresses = NetworkMonitor::validAddresses();
+  for (const auto &address : validAddresses) {
     QString ipString = address;
     if (ui->comboInterface->findText(ipString) == -1) {
       ui->comboInterface->addItem(ipString, ipString);
     }
+  }
+
+  if (const auto interface = Settings::value(Settings::Core::Interface).toString();
+      !interface.isEmpty() && (ui->comboInterface->findData(interface) == -1)) {
+    ui->comboInterface->addItem(interface, interface);
   }
 
   loadFromConfig();
@@ -66,6 +74,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   setFixedHeight(height());
   setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
 
+  setButtonBoxEnabledButtons();
   initConnections();
 }
 
@@ -84,6 +93,14 @@ void SettingsDialog::initConnections() const
 
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(ui->buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, this, &SettingsDialog::loadFromConfig);
+  connect(
+      ui->buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this,
+      &SettingsDialog::resetToDefault
+  );
+
+  connect(ui->cbRunEnterCommand, &QCheckBox::toggled, ui->lineCommandEnter, &QLineEdit::setEnabled);
+  connect(ui->cbRunExitCommand, &QCheckBox::toggled, ui->lineCommandExit, &QLineEdit::setEnabled);
 
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
   connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::updateControls);
@@ -91,12 +108,38 @@ void SettingsDialog::initConnections() const
   connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::updateRequestedKeySize);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
-  connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
+  connect(ui->groupLogToFile, &QGroupBox::toggled, this, &SettingsDialog::setLogToFile);
   connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::logLevelChanged);
   connect(ui->comboLanguage, &QComboBox::currentTextChanged, this, [](const QString &lang) {
     const auto shortName = I18N::nativeTo639Name(lang);
     I18N::setLanguage(shortName);
   });
+
+  // Connect modifiable controls
+  connect(ui->rbIconMono, &QRadioButton::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->sbPort, &QSpinBox::valueChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboInterface, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->comboLanguage, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->rbAutoHide, &QRadioButton::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbPreventSleep, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->rbCloseToTray, &QRadioButton::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbElevateDaemon, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbAutoUpdate, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbGuiDebug, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbUseWlClipboard, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbShowVersion, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbRequireClientCert, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupLogToFile, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineLogFilename, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineTlsCertPath, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbRunEnterCommand, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbRunExitCommand, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineCommandEnter, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineCommandExit, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
 }
 
 void SettingsDialog::regenCertificates()
@@ -165,6 +208,10 @@ void SettingsDialog::updateText()
   ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
+  ui->buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
+  ui->buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(tr("Close and forget changes"));
+  ui->buttonBox->button(QDialogButtonBox::Reset)->setToolTip(tr("Reset to stored values"));
+  ui->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setToolTip(tr("Reset to default values"));
 }
 
 void SettingsDialog::accept()
@@ -172,22 +219,26 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->comboInterface->currentData());
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
-  Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
+  Settings::setValue(Settings::Log::ToFile, ui->groupLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
-  Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
+  Settings::setValue(Settings::Gui::Autohide, ui->rbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   Settings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
   Settings::setValue(Settings::Security::Certificate, ui->lineTlsCertPath->text());
   Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
-  Settings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
+  Settings::setValue(Settings::Gui::CloseToTray, ui->rbCloseToTray->isChecked());
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
   Settings::setValue(Settings::Core::Language, I18N::nativeTo639Name(ui->comboLanguage->currentText()));
   Settings::setValue(Settings::Log::GuiDebug, ui->cbGuiDebug->isChecked());
   Settings::setValue(Settings::Core::UseWlClipboard, ui->cbUseWlClipboard->isChecked());
   Settings::setValue(Settings::Gui::ShowVersionInTitle, ui->cbShowVersion->isChecked());
+  Settings::setValue(Settings::Core::EnableEnterCommand, ui->cbRunEnterCommand->isChecked());
+  Settings::setValue(Settings::Core::EnableExitCommand, ui->cbRunExitCommand->isChecked());
+  Settings::setValue(Settings::Core::ScreenEnterCommand, ui->lineCommandEnter->text());
+  Settings::setValue(Settings::Core::ScreenExitCommand, ui->lineCommandExit->text());
 
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
@@ -203,16 +254,18 @@ void SettingsDialog::loadFromConfig()
 {
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
   ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
-  ui->cbLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
+  ui->groupLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
-  ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
-  ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
   ui->cbElevateDaemon->setChecked(Settings::value(Settings::Daemon::Elevate).toBool());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
   ui->cbGuiDebug->setChecked(Settings::value(Settings::Log::GuiDebug).toBool());
   ui->cbUseWlClipboard->setChecked(Settings::value(Settings::Core::UseWlClipboard).toBool());
   ui->cbShowVersion->setChecked(Settings::value(Settings::Gui::ShowVersionInTitle).toBool());
+  ui->cbRunEnterCommand->setChecked(Settings::value(Settings::Core::EnableEnterCommand).toBool());
+  ui->cbRunExitCommand->setChecked(Settings::value(Settings::Core::EnableExitCommand).toBool());
+  ui->lineCommandEnter->setText(Settings::value(Settings::Core::ScreenEnterCommand).toString());
+  ui->lineCommandExit->setText(Settings::value(Settings::Core::ScreenExitCommand).toString());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
@@ -225,13 +278,26 @@ void SettingsDialog::loadFromConfig()
   else
     ui->rbIconColorful->setChecked(true);
 
+  const auto autoHide = Settings::value(Settings::Gui::Autohide).toBool();
+  ui->rbAutoHide->setChecked(autoHide);
+  ui->rbShowOnStart->setChecked(!autoHide);
+
+  const auto closeToTray = Settings::value(Settings::Gui::CloseToTray).toBool();
+  ui->rbCloseToTray->setChecked(closeToTray);
+  ui->rbExitOnClose->setChecked(!closeToTray);
+
   ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 4);
 
   ui->comboInterface->setCurrentText(Settings::value(Settings::Core::Interface).toString());
-  if (ui->comboInterface->currentIndex() < 0)
+  if (ui->comboInterface->currentIndex() <= 0) {
     ui->comboInterface->setCurrentIndex(0);
+    m_interfaceSetOnLoad = false;
+  } else {
+    m_interfaceSetOnLoad = true;
+  }
 
   qDebug() << "load from config done";
+
   updateControls();
 }
 
@@ -269,7 +335,7 @@ void SettingsDialog::updateTlsControlsEnabled()
 
 bool SettingsDialog::isClientMode() const
 {
-  return m_coreProcess.mode() == Settings::CoreMode::Client;
+  return Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Client;
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path)
@@ -293,20 +359,26 @@ void SettingsDialog::updateControls()
 {
   const bool writable = Settings::isWritable();
   const bool serviceChecked = ui->groupService->isChecked();
-  const bool logToFile = ui->cbLogToFile->isChecked();
+  const bool logToFile = ui->groupLogToFile->isChecked();
 
   ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(writable);
 
   ui->sbPort->setEnabled(writable);
   ui->comboInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
-  ui->cbLogToFile->setEnabled(writable);
-  ui->cbAutoHide->setEnabled(writable);
+  ui->groupLogToFile->setEnabled(writable);
+  ui->rbAutoHide->setEnabled(writable);
+  ui->rbShowOnStart->setEnabled(writable);
   ui->cbAutoUpdate->setEnabled(writable);
   ui->cbPreventSleep->setEnabled(writable);
   ui->lineTlsCertPath->setEnabled(writable);
   ui->comboTlsKeyLength->setEnabled(writable);
-  ui->cbCloseToTray->setEnabled(writable);
+  ui->rbCloseToTray->setEnabled(writable);
+  ui->rbExitOnClose->setEnabled(writable);
+  ui->cbRunEnterCommand->setEnabled(writable);
+  ui->cbRunExitCommand->setEnabled(writable);
+  ui->lineCommandEnter->setEnabled(writable && ui->cbRunEnterCommand->isChecked());
+  ui->lineCommandExit->setEnabled(writable && ui->cbRunExitCommand->isChecked());
 
   // Portable mode only ever applies to Windows.
   // Daemon options should only be available on Windows when *not* in portable mode.
@@ -340,6 +412,126 @@ void SettingsDialog::updateRequestedKeySize() const
 void SettingsDialog::logLevelChanged()
 {
   ui->lblDebugWarning->setVisible(ui->comboLogLevel->currentIndex() > 4);
+}
+
+bool SettingsDialog::isModified() const
+{
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  const bool ignoreInterface = !m_interfaceSetOnLoad && (ui->comboInterface->currentIndex() == 0);
+
+  bool modified =
+      (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
+      (ui->comboLogLevel->currentIndex() != Settings::value(Settings::Log::Level).toInt()) ||
+      (ui->groupLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
+      (ui->lineLogFilename->text() != Settings::value(Settings::Log::File).toString()) ||
+      (ui->rbAutoHide->isChecked() != Settings::value(Settings::Gui::Autohide).toBool()) ||
+      (ui->cbPreventSleep->isChecked() != Settings::value(Settings::Core::PreventSleep).toBool()) ||
+      (ui->rbCloseToTray->isChecked() != Settings::value(Settings::Gui::CloseToTray).toBool()) ||
+      (ui->cbElevateDaemon->isChecked() != Settings::value(Settings::Daemon::Elevate).toBool()) ||
+      (ui->cbAutoUpdate->isChecked() != Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) ||
+      (ui->cbGuiDebug->isChecked() != Settings::value(Settings::Log::GuiDebug).toBool()) ||
+      (ui->cbUseWlClipboard->isChecked() != Settings::value(Settings::Core::UseWlClipboard).toBool()) ||
+      (ui->cbShowVersion->isChecked() != Settings::value(Settings::Gui::ShowVersionInTitle).toBool()) ||
+      (ui->rbIconMono->isChecked() != Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) ||
+      (ui->groupService->isChecked() != (processMode == Settings::ProcessMode::Service)) ||
+      (ui->lineTlsCertPath->text() != Settings::value(Settings::Security::Certificate).toString()) ||
+      (ui->comboTlsKeyLength->currentText() != Settings::value(Settings::Security::KeySize).toString()) ||
+      (ui->groupSecurity->isChecked() != Settings::value(Settings::Security::TlsEnabled).toBool()) ||
+      (ui->cbRequireClientCert->isChecked() != Settings::value(Settings::Security::CheckPeers).toBool()) ||
+      (ui->cbRunEnterCommand->isChecked() != Settings::value(Settings::Core::EnableEnterCommand).toBool()) ||
+      (ui->cbRunExitCommand->isChecked() != Settings::value(Settings::Core::EnableExitCommand).toBool()) ||
+      (ui->lineCommandEnter->text() != Settings::value(Settings::Core::ScreenEnterCommand).toString()) ||
+      (ui->lineCommandExit->text() != Settings::value(Settings::Core::ScreenExitCommand).toString()) ||
+      (I18N::nativeTo639Name(ui->comboLanguage->currentText()) != Settings::value(Settings::Core::Language).toString());
+
+  if (!ignoreInterface)
+    modified = modified || ui->comboInterface->currentText() != Settings::value(Settings::Core::Interface).toString();
+  return modified;
+}
+
+bool SettingsDialog::isDefault() const
+{
+  const auto processMode = Settings::defaultValue(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+
+  return (
+      (ui->sbPort->value() == Settings::defaultValue(Settings::Core::Port).toInt()) &&
+      (ui->comboLogLevel->currentIndex() == Settings::defaultValue(Settings::Log::Level).toInt()) &&
+      (ui->groupLogToFile->isChecked() == Settings::defaultValue(Settings::Log::ToFile).toBool()) &&
+      (ui->lineLogFilename->text() == Settings::defaultValue(Settings::Log::File).toString()) &&
+      (ui->rbAutoHide->isChecked() == Settings::defaultValue(Settings::Gui::Autohide).toBool()) &&
+      (ui->cbPreventSleep->isChecked() == Settings::defaultValue(Settings::Core::PreventSleep).toBool()) &&
+      (ui->rbCloseToTray->isChecked() == Settings::defaultValue(Settings::Gui::CloseToTray).toBool()) &&
+      (ui->cbElevateDaemon->isChecked() == Settings::defaultValue(Settings::Daemon::Elevate).toBool()) &&
+      (ui->cbAutoUpdate->isChecked() == Settings::defaultValue(Settings::Gui::AutoUpdateCheck).toBool()) &&
+      (ui->cbGuiDebug->isChecked() == Settings::defaultValue(Settings::Log::GuiDebug).toBool()) &&
+      (ui->cbUseWlClipboard->isChecked() == Settings::defaultValue(Settings::Core::UseWlClipboard).toBool()) &&
+      (ui->cbShowVersion->isChecked() == Settings::defaultValue(Settings::Gui::ShowVersionInTitle).toBool()) &&
+      (ui->rbIconMono->isChecked() == Settings::defaultValue(Settings::Gui::SymbolicTrayIcon).toBool()) &&
+      (ui->groupService->isChecked() == (processMode == Settings::ProcessMode::Service)) &&
+      (ui->comboInterface->currentIndex() == 0) &&
+      (ui->lineTlsCertPath->text() == Settings::defaultValue(Settings::Security::Certificate).toString()) &&
+      (ui->comboTlsKeyLength->currentText() == Settings::defaultValue(Settings::Security::KeySize).toString()) &&
+      (ui->groupSecurity->isChecked() == Settings::defaultValue(Settings::Security::TlsEnabled).toBool()) &&
+      (ui->cbRequireClientCert->isChecked() == Settings::defaultValue(Settings::Security::CheckPeers).toBool()) &&
+      (ui->lineCommandEnter->text() == Settings::defaultValue(Settings::Core::ScreenEnterCommand).toString()) &&
+      (ui->lineCommandExit->text() == Settings::defaultValue(Settings::Core::ScreenExitCommand).toString()) &&
+      (ui->cbRunEnterCommand->isChecked() == Settings::defaultValue(Settings::Core::EnableEnterCommand).toBool()) &&
+      (ui->cbRunExitCommand->isChecked() == Settings::defaultValue(Settings::Core::EnableExitCommand).toBool()) &&
+      (ui->comboLanguage->currentText() == "English")
+  );
+}
+
+void SettingsDialog::resetToDefault()
+{
+  ui->sbPort->setValue(Settings::defaultValue(Settings::Core::Port).toInt());
+  ui->comboLogLevel->setCurrentIndex(Settings::defaultValue(Settings::Log::Level).toInt());
+  ui->groupLogToFile->setChecked(Settings::defaultValue(Settings::Log::ToFile).toBool());
+  ui->lineLogFilename->setText(Settings::defaultValue(Settings::Log::File).toString());
+  ui->cbPreventSleep->setChecked(Settings::defaultValue(Settings::Core::PreventSleep).toBool());
+  ui->cbElevateDaemon->setChecked(Settings::defaultValue(Settings::Daemon::Elevate).toBool());
+  ui->cbAutoUpdate->setChecked(Settings::defaultValue(Settings::Gui::AutoUpdateCheck).toBool());
+  ui->cbGuiDebug->setChecked(Settings::defaultValue(Settings::Log::GuiDebug).toBool());
+  ui->cbUseWlClipboard->setChecked(Settings::defaultValue(Settings::Core::UseWlClipboard).toBool());
+  ui->cbShowVersion->setChecked(Settings::defaultValue(Settings::Gui::ShowVersionInTitle).toBool());
+  ui->cbRunEnterCommand->setChecked(Settings::defaultValue(Settings::Core::EnableEnterCommand).toBool());
+  ui->cbRunExitCommand->setChecked(Settings::defaultValue(Settings::Core::EnableExitCommand).toBool());
+  ui->lineCommandEnter->setText(Settings::defaultValue(Settings::Core::ScreenEnterCommand).toString());
+  ui->lineCommandExit->setText(Settings::defaultValue(Settings::Core::ScreenExitCommand).toString());
+
+  const auto autoHide = Settings::defaultValue(Settings::Gui::Autohide).toBool();
+  ui->rbCloseToTray->setChecked(autoHide);
+  ui->rbExitOnClose->setChecked(!autoHide);
+
+  const auto closeToTray = Settings::defaultValue(Settings::Gui::CloseToTray).toBool();
+  ui->rbCloseToTray->setChecked(closeToTray);
+  ui->rbExitOnClose->setChecked(!closeToTray);
+
+  const auto processMode = Settings::defaultValue(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
+
+  if (!deskflow::platform::isWindows())
+    ui->groupService->setVisible(false);
+
+  if (Settings::defaultValue(Settings::Gui::SymbolicTrayIcon).toBool())
+    ui->rbIconMono->setChecked(true);
+  else
+    ui->rbIconColorful->setChecked(true);
+
+  ui->lblDebugWarning->setVisible(false);
+
+  ui->comboInterface->setCurrentIndex(0);
+
+  qDebug() << "reset to default values";
+  updateControls();
+  setButtonBoxEnabledButtons();
+}
+
+void SettingsDialog::setButtonBoxEnabledButtons() const
+{
+  const bool modified = isModified();
+  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(modified);
+  ui->buttonBox->button(QDialogButtonBox::Reset)->setEnabled(modified);
+  ui->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(!isDefault());
 }
 
 SettingsDialog::~SettingsDialog() = default;

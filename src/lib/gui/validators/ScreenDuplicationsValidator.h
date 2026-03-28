@@ -8,7 +8,7 @@
 
 #include "IStringValidator.h"
 
-#include "gui/config/ScreenList.h"
+class ScreenList;
 
 namespace validators {
 

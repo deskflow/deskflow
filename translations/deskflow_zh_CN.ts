@@ -175,7 +175,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Close and forget changes</source>
-        <translation type="unfinished">关闭并忘记更改</translation>
+        <translation>关闭并放弃修改</translation>
     </message>
     <message>
         <source>Reset to stored values</source>
@@ -184,6 +184,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Reset to default values</source>
         <translation type="unfinished">重置为默认值</translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;允许客户端在连接尝试失败时，降低其重连服务器的频率。连接尝试之间的间隔将从 1 秒开始，最长可达 5 分钟。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Use dynamic reconnection time based on connection attempts</source>
+        <translation type="unfinished">根据连接尝试次数，采用动态重连时间</translation>
     </message>
 </context>
 <context>
@@ -351,20 +359,12 @@ Do you want to connect to the server?
         <translation type="unfinished">证书无效，正在生成新证书</translation>
     </message>
     <message>
-        <source>A new version v%1 is available</source>
-        <translation>新版本 v%1 可用</translation>
-    </message>
-    <message>
         <source>Address missing</source>
         <translation>缺少地址</translation>
     </message>
     <message>
         <source>Please enter the hostname or IP address of the other computer.</source>
         <translation>请输入另一台计算机的主机名或 IP 地址。</translation>
-    </message>
-    <message>
-        <source>Core cannot be started</source>
-        <translation>核心服务无法启动</translation>
     </message>
     <message>
         <source>Save server configuration as...</source>
@@ -395,12 +395,8 @@ Do you want to connect to the server?
         <translation>断开</translation>
     </message>
     <message>
-        <source>%1 Encryption Enabled</source>
-        <translation>%1 加密已启用</translation>
-    </message>
-    <message>
-        <source>Encryption Disabled</source>
-        <translation>加密已禁用</translation>
+        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;连接到服务器“%1”失败。&lt;/p&gt;&lt;p&gt;一个同名的客户端已连接到服务器。&lt;/p&gt;请确保您使用的名称唯一，且只有一个客户端进程实例在运行。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -431,38 +427,6 @@ Do you want to connect to the server?
 A bound IP is now invalid, you may need to restart the server.</source>
         <translation type="unfinished">
 绑定的IP地址现在无效，您可能需要重启服务器。</translation>
-    </message>
-    <message>
-        <source>%1 is starting...</source>
-        <translation>%1 正在启动...</translation>
-    </message>
-    <message>
-        <source>%1 will retry in a moment...</source>
-        <translation>%1 将稍后重试...</translation>
-    </message>
-    <message>
-        <source>%1 is stopping...</source>
-        <translation>%1 正在停止...</translation>
-    </message>
-    <message>
-        <source>%1 is not running</source>
-        <translation>%1 未在运行</translation>
-    </message>
-    <message>
-        <source>%1 is waiting for clients</source>
-        <translation>%1 正在等待客户端连接</translation>
-    </message>
-    <message>
-        <source>%1 is connecting...</source>
-        <translation>%1 正在连接...</translation>
-    </message>
-    <message>
-        <source>%1 is connected as client of %2</source>
-        <translation>%1 已作为 %2 的客户端连接</translation>
-    </message>
-    <message>
-        <source>%1 is disconnected</source>
-        <translation>%1 已断开连接</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -534,14 +498,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <source>View local fingerprint</source>
-        <translation>查看本地指纹</translation>
-    </message>
-    <message>
-        <source>Update available</source>
-        <translation>有可用更新</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation>无效的屏幕名称</translation>
     </message>
@@ -563,26 +519,13 @@ Valid names:
 • 可以使用 _ 或 -
 • 长度在 1 到 255 个字符之间</translation>
     </message>
-    <message numerus="yes">
-        <source>%1 is connected, with %n client(s): %2</source>
-        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
-        <translation>
-            <numerusform>%1 已连接，共有 %n 个客户端：%2</numerusform>
-        </translation>
-    </message>
     <message>
-        <source>Clients:
- %1</source>
-        <translation>客户端：
- %1</translation>
+        <source>%1 Connection Error</source>
+        <translation>%1 连接错误</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
         <translation type="unfinished">建议 IP： </translation>
-    </message>
-    <message>
-        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
-        <translation type="unfinished">Core 可执行文件虽然存在，但无法成功启动。请检查您是否拥有运行此程序的足够权限。</translation>
     </message>
     <message>
         <source>&amp;Configure Client</source>
@@ -595,6 +538,26 @@ Valid names:
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;服务器计算机的主机名或 IP 地址。&lt;br/&gt;可以包含以逗号分隔的列表。&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>read</source>
+        <translation type="unfinished">读取</translation>
+    </message>
+    <message>
+        <source>read and write</source>
+        <translation type="unfinished">读取和写入</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be started.
+Please check if you have sufficient permissions to run %1.</source>
+        <translation type="unfinished">无法启动Core可执行文件。
+请检查您是否有足够的权限来运行%1。</translation>
+    </message>
+    <message>
+        <source>
+Additionally, check you are able to %1 the server config file: %2</source>
+        <translation type="unfinished">
+另外，请检查您是否能够%1服务器配置文件：%2</translation>
     </message>
 </context>
 <context>
@@ -678,30 +641,6 @@ Valid names:
         <translation>%1 已连接</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Failed to connect to the server &apos;%1&apos;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;连接到服务器“%1”失败。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;A Client with your name is already connected to the server.&lt;/p&gt;Please ensure that you&apos;re using a unique name and that only a single instance of the client process is running.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;一个同名的客户端已连接到服务器。&lt;/p&gt;请确保您使用的名称唯一，且只有一个客户端进程实例在运行。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please try to connect to the server using the server IP address instead of the hostname. &lt;/p&gt;&lt;p&gt;If that doesn&apos;t work, please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;请尝试使用服务器 IP 地址而不是主机名来连接服务器。&lt;/p&gt;&lt;p&gt;如果不起作用，请检查您的 TLS 和防火墙设置。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Please check your TLS and firewall settings.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;请检查您的 TLS 和防火墙设置。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>%1 Connection Error</source>
-        <translation>%1 连接错误</translation>
-    </message>
-    <message>
-        <source>Do not show this message again</source>
-        <translation>不再显示此消息</translation>
-    </message>
-    <message>
         <source>%1 - New Client</source>
         <translation>%1 - 新客户端</translation>
     </message>
@@ -736,10 +675,6 @@ Valid names:
     <message>
         <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;p&gt;设置是只读的，因为您对该文件只有读取权限：&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;抱歉，虽然此版本的 %1 支持 Wayland，但此构建版本未链接一个或多个所需的库。&lt;/p&gt;&lt;p&gt;请从登录屏幕切换到 X，或者使用链接了正确库的构建版本。&lt;/p&gt;&lt;p&gt;如果您认为存在问题，请 &lt;a href=&quot;%2&quot;&gt;报告 Bug&lt;/a&gt;。&lt;/p&gt;&lt;p&gt;请查看日志以获取更多信息。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>
@@ -1153,28 +1088,12 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>首选项</translation>
     </message>
     <message>
-        <source>&amp;Regular</source>
-        <translation>常规(&amp;R)</translation>
-    </message>
-    <message>
-        <source>App</source>
-        <translation>应用程序</translation>
-    </message>
-    <message>
         <source>Check for updates on startup</source>
         <translation>启动时检查更新</translation>
     </message>
     <message>
-        <source>Hide the window when the app starts</source>
-        <translation>应用启动时隐藏窗口</translation>
-    </message>
-    <message>
         <source>Prevent this computer from going to sleep</source>
         <translation>防止此计算机进入睡眠状态</translation>
-    </message>
-    <message>
-        <source>Leave app running in notification area when the window is closed</source>
-        <translation>窗口关闭时让应用在通知区域运行</translation>
     </message>
     <message>
         <source>Tray icon style</source>
@@ -1213,20 +1132,12 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>高级(&amp;A)</translation>
     </message>
     <message>
-        <source>Networking</source>
-        <translation>网络</translation>
-    </message>
-    <message>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
         <source>Network IP</source>
         <translation>网络 IP</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>日志</translation>
     </message>
     <message>
         <source>Level</source>
@@ -1269,10 +1180,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>日志路径</translation>
     </message>
     <message>
-        <source>Log to file</source>
-        <translation>记录日志到文件</translation>
-    </message>
-    <message>
         <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
         <translation>使用调试日志级别可能会影响性能。仅当您尝试调试问题或收集日志以提交 Bug 报告时，才使用调试级别。</translation>
     </message>
@@ -1287,10 +1194,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Always run as system (work at login screen and UAC)</source>
         <translation type="unfinished">始终以系统身份运行 (在登录屏幕和 UAC 下工作)</translation>
-    </message>
-    <message>
-        <source>Force a language to be used for the GUI.</source>
-        <translation>强制 GUI 使用特定语言。</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1345,6 +1248,22 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>详细调试输出</translation>
     </message>
     <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">关闭并保存更改</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation>关闭并放弃修改</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">重置为存储值</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">重置为默认值</translation>
+    </message>
+    <message>
         <source>Enable wl-clipboard support</source>
         <translation>启用 wl-clipboard 支持</translation>
     </message>
@@ -1359,6 +1278,126 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Include version in the window title</source>
         <translation type="unfinished">在窗口标题中包含版本信息</translation>
+    </message>
+    <message>
+        <source>Log to file</source>
+        <translation>记录日志到文件</translation>
+    </message>
+    <message>
+        <source>&amp;Logs</source>
+        <translation type="unfinished">日志(&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;General</source>
+        <translation>常规(&amp;G)</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>网络(&amp;N)</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation type="unfinished">窗户(&amp;W)</translation>
+    </message>
+    <message>
+        <source>When the main window is closed</source>
+        <translation type="unfinished">主窗口关闭时</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished">出口</translation>
+    </message>
+    <message>
+        <source>Send to background</source>
+        <translation type="unfinished">发送到后台</translation>
+    </message>
+    <message>
+        <source>When the application starts</source>
+        <translation type="unfinished">应用程序启动时</translation>
+    </message>
+    <message>
+        <source>Show the main window</source>
+        <translation type="unfinished">显示主窗口</translation>
+    </message>
+    <message>
+        <source>Run command on enter</source>
+        <translation type="unfinished">按下回车键执行命令</translation>
+    </message>
+    <message>
+        <source>Run command on exit</source>
+        <translation type="unfinished">退出时运行命令</translation>
+    </message>
+</context>
+<context>
+    <name>StatusBar</name>
+    <message>
+        <source>%1 is not running</source>
+        <translation>%1 未在运行</translation>
+    </message>
+    <message>
+        <source>%1 is starting...</source>
+        <translation>%1 正在启动...</translation>
+    </message>
+    <message>
+        <source>%1 will retry in a moment...</source>
+        <translation>%1 将稍后重试...</translation>
+    </message>
+    <message>
+        <source>%1 is stopping...</source>
+        <translation>%1 正在停止...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting for clients</source>
+        <translation>%1 正在等待客户端连接</translation>
+    </message>
+    <message>
+        <source>%1 is connected as client of %2</source>
+        <translation>%1 已作为 %2 的客户端连接</translation>
+    </message>
+    <message>
+        <source>%1 is disconnected</source>
+        <translation>%1 已断开连接</translation>
+    </message>
+    <message numerus="yes">
+        <source>%1 is connected, with %n client(s): %2</source>
+        <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>
+        <translation>
+            <numerusform>%1 已连接，共有 %n 个客户端：%2</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Clients:
+ %1</source>
+        <translation>客户端：
+ %1</translation>
+    </message>
+    <message>
+        <source>A new version v%1 is available</source>
+        <translation>新版本 v%1 可用</translation>
+    </message>
+    <message>
+        <source>View local fingerprint</source>
+        <translation>查看本地指纹</translation>
+    </message>
+    <message>
+        <source>Update available</source>
+        <translation>有可用更新</translation>
+    </message>
+    <message>
+        <source>%1 is connecting...</source>
+        <translation>%1 正在连接...</translation>
+    </message>
+    <message>
+        <source>%1 is waiting %2 seconds before the next retry</source>
+        <translation type="unfinished">%1 正在等待 %2 秒，然后进行下一次重试</translation>
+    </message>
+    <message>
+        <source>%1 Encryption Enabled</source>
+        <translation>%1 加密已启用</translation>
+    </message>
+    <message>
+        <source>Encryption Disabled</source>
+        <translation>加密已禁用</translation>
     </message>
 </context>
 <context>
