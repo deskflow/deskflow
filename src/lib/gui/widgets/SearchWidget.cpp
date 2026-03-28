@@ -27,17 +27,17 @@ SearchWidget::SearchWidget(QWidget *parent)
   m_btnToggle->setCheckable(true);
   m_btnToggle->setChecked(false);
   m_btnToggle->setFlat(true);
-  m_btnToggle->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::SystemSearch));
+  m_btnToggle->setIcon(QIcon::fromTheme(QStringLiteral("system-search")));
   m_btnToggle->setIconSize(iconSize);
 
   m_btnNext->setFixedSize(maxBtnSize);
   m_btnNext->setFlat(true);
-  m_btnNext->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoDown));
+  m_btnNext->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
   m_btnNext->setIconSize(iconSize);
 
   m_btnPrev->setFixedSize(maxBtnSize);
   m_btnPrev->setFlat(true);
-  m_btnPrev->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoUp));
+  m_btnPrev->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
   m_btnPrev->setIconSize(iconSize);
 
   m_searchLine->setMaximumHeight(maxBtnSize.height());

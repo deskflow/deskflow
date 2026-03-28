@@ -44,6 +44,12 @@ void ClientConfigDialog::updateText() const
 
 void ClientConfigDialog::initConnections() const
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+  const auto checkboxStateChanged = &QCheckBox::checkStateChanged;
+#else
+  const auto checkboxStateChanged = &QCheckBox::stateChanged;
+#endif
+
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ClientConfigDialog::save);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
   connect(ui->buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, this, &ClientConfigDialog::load);
@@ -52,10 +58,10 @@ void ClientConfigDialog::initConnections() const
       &ClientConfigDialog::resetToDefault
   );
 
-  connect(ui->cbLanguageSync, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
-  connect(ui->cbYScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbLanguageSync, checkboxStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbYScrollInvert, checkboxStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
-  connect(ui->cbXScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbXScrollInvert, checkboxStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbXScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
 }
 

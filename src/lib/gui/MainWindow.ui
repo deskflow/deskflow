@@ -270,7 +270,7 @@
                 <string>Export server configuration</string>
                </property>
                <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentSaveAs"/>
+                <iconset theme="document-save-as"/>
                </property>
               </widget>
              </item>

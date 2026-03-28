@@ -15,6 +15,26 @@
 
 namespace deskflow::gui {
 
+namespace {
+
+bool isPrivateUseAddress(const QHostAddress &address)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+  return address.isPrivateUse();
+#else
+  if (address.protocol() != QAbstractSocket::IPv4Protocol) {
+    return false;
+  }
+
+  const auto ipv4 = address.toIPv4Address();
+  return (ipv4 & 0xff000000u) == 0x0a000000u ||     // 10.0.0.0/8
+         (ipv4 & 0xfff00000u) == 0xac100000u ||     // 172.16.0.0/12
+         (ipv4 & 0xffff0000u) == 0xc0a80000u;       // 192.168.0.0/16
+#endif
+}
+
+} // namespace
+
 bool NetworkMonitor::isVirtualInterface(const QString &interfaceName)
 {
   // Common virtual network interface patterns
@@ -88,8 +108,8 @@ QStringList NetworkMonitor::getAvailableIPv4Addresses() const
   }
 
   std::ranges::sort(physicalIPs, [](const QHostAddress &a, const QHostAddress &b) {
-    if (a.isPrivateUse() != b.isPrivateUse())
-      return a.isPrivateUse();
+    if (isPrivateUseAddress(a) != isPrivateUseAddress(b))
+      return isPrivateUseAddress(a);
     return a.toIPv4Address() < b.toIPv4Address();
   });
 

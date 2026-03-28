@@ -28,6 +28,7 @@ inline static const auto s_pasteApp = QStringLiteral("wl-paste");
 // wl-clipboard args
 inline static const auto s_listTypes = QStringLiteral("--list-types");
 inline static const auto s_isPrimary = QStringLiteral("--primary");
+inline static const auto s_clear = QStringLiteral("--clear");
 inline static const auto s_noNewLine = QStringLiteral("-n");
 inline static const auto s_readType = QStringLiteral("-t%1");
 
@@ -133,13 +134,16 @@ bool WlClipboard::empty()
   m_runningWlCopies.append(cmd);
   connect(cmd, &QProcess::finished, this, [&] { m_runningWlCopies.removeAll(cmd); });
 
-  QStringList args = {s_noNewLine, ""};
+  QStringList args = {s_clear};
   if (!m_useClipboard)
     args.prepend(s_isPrimary);
 
   cmd->setArguments(args);
   cmd->start();
   bool success = cmd->waitForStarted(100);
+  if (success) {
+    success = cmd->waitForFinished(1000) && cmd->exitStatus() == QProcess::NormalExit && cmd->exitCode() == 0;
+  }
 
   if (success) {
     // Update ownership and cache only if command succeeded

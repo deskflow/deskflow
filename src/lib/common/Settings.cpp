@@ -79,9 +79,25 @@ Settings::Settings(QObject *parent) : QObject(parent)
   qInfo().noquote() << "initial settings file:" << m_settings->fileName();
 
   const auto xdgStateHome = qEnvironmentVariable("XDG_STATE_HOME");
-  const auto stateBase = !xdgStateHome.isEmpty()
-                             ? xdgStateHome
-                             : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
+  QString stateBase;
+  if (!xdgStateHome.isEmpty()) {
+    stateBase = xdgStateHome;
+  } else {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+    stateBase = QStandardPaths::writableLocation(QStandardPaths::GenericStateLocation);
+#else
+    stateBase = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#endif
+    if (stateBase.isEmpty()) {
+#if defined(Q_OS_WIN)
+      stateBase = QStringLiteral("%1/AppData/Local").arg(QDir::homePath());
+#elif defined(Q_OS_MACOS)
+      stateBase = QStringLiteral("%1/Library/Application Support").arg(QDir::homePath());
+#else
+      stateBase = QStringLiteral("%1/.local/state").arg(QDir::homePath());
+#endif
+    }
+  }
   const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
@@ -143,10 +159,14 @@ QString Settings::cleanComputerName(const QString &name)
   QString cleanName = name.simplified();
   cleanName.replace(space, underscore);
   cleanName.replace(nameRegex, nothing);
-  while (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(period))
-    cleanName.removeFirst();
-  while (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(period))
-    cleanName.removeLast();
+  while (!cleanName.isEmpty() &&
+         (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(period))) {
+    cleanName.remove(0, 1);
+  }
+  while (!cleanName.isEmpty() &&
+         (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(period))) {
+    cleanName.chop(1);
+  }
   if (cleanName.length() > 255) {
     cleanName.truncate(255);
     cleanName = cleanComputerName(cleanName);
@@ -158,7 +178,11 @@ int Settings::logLevelToInt(const QString &level)
 {
   if (level.isEmpty() || !m_logLevels.contains(level, Qt::CaseInsensitive))
     return 4;
-  return static_cast<int>(m_logLevels.indexOf(level, 0, Qt::CaseInsensitive));
+  for (int i = 0; i < m_logLevels.size(); ++i) {
+    if (m_logLevels.at(i).compare(level, Qt::CaseInsensitive) == 0)
+      return i;
+  }
+  return 4;
 }
 
 QVariant Settings::defaultValue(const QString &key)

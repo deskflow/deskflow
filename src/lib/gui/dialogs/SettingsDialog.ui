@@ -180,7 +180,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+                <iconset theme="document-open"/>
                </property>
                <property name="flat">
                 <bool>true</bool>
@@ -241,7 +241,7 @@
                <string>Regenerate certificate</string>
               </property>
               <property name="icon">
-               <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
+               <iconset theme="view-refresh"/>
               </property>
              </widget>
             </item>
@@ -550,7 +550,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+                <iconset theme="document-open"/>
                </property>
                <property name="flat">
                 <bool>true</bool>

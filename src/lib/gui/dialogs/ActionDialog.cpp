@@ -80,11 +80,11 @@ void ActionDialog::accept()
 
   for (int i = 0; i < ui->listScreens->count(); i++) {
     const auto &item = ui->listScreens->item(i);
-    m_action.typeScreenNames().append(item->text());
     if (item->checkState() == Qt::Unchecked) {
       screenCount--;
-      m_action.typeScreenNames().removeLast();
+      continue;
     }
+    m_action.typeScreenNames().append(item->text());
   }
 
   if (screenCount == ui->listScreens->count())
