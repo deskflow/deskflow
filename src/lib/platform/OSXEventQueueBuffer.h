@@ -12,7 +12,6 @@
 #include "base/IEventQueueBuffer.h"
 
 #include <condition_variable>
-#include <dispatch/dispatch.h>
 #include <mutex>
 #include <queue>
 

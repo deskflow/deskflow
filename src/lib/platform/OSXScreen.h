@@ -21,6 +21,7 @@
 #include <bitset>
 #include <map>
 #include <memory>
+#include <thread>
 #include <vector>
 
 extern "C"
@@ -292,6 +293,8 @@ private:
   // Quartz input event support
   CFMachPortRef m_eventTapPort;
   CFRunLoopSourceRef m_eventTapRLSR;
+  std::thread m_eventTapThread;
+  CFRunLoopRef m_eventTapRunLoop = nullptr;
 
   // for double click coalescing.
   double m_lastClickTime;

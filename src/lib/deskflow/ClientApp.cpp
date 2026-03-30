@@ -37,9 +37,6 @@
 #endif
 
 #if defined(Q_OS_MAC)
-#include "base/TMethodJob.h"
-#include "mt/Thread.h"
-#include "platform/OSXCocoaApp.h"
 #include "platform/OSXScreen.h"
 #endif
 
@@ -330,17 +327,7 @@ int ClientApp::mainLoop()
   // later.  the timer installed by startClient() will take care of
   // that.
 
-#if defined(Q_OS_MAC)
-  Thread thread(new TMethodJob<ClientApp>(this, &ClientApp::runEventsLoop, nullptr));
-
-  // wait until carbon loop is ready
-  OSXScreen *screen = dynamic_cast<OSXScreen *>(m_clientScreen->getPlatformScreen());
-  screen->waitForCarbonLoop();
-
-  runCocoaApp();
-#else
   getEvents()->loop();
-#endif
 
   // close down
   LOG_DEBUG("stopping client");
