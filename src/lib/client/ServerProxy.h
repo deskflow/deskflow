@@ -98,7 +98,6 @@ private:
   void secureInputNotification();
   void setServerLanguages();
   void setActiveServerLanguage(const std::string_view &language);
-  void checkMissedLanguages() const;
 
 private:
   using MessageParser = ConnectionResult (ServerProxy::*)(const uint8_t *);

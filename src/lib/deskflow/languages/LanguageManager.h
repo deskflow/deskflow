@@ -11,6 +11,8 @@
 
 namespace deskflow::languages {
 
+// TODO: rename class and namespace; "languages" is a misnomer. These are keyboard
+// _layouts_ (Windows/X11) or input sources (macOS), not spoken "languages".
 class LanguageManager
 {
   std::vector<std::string> m_remoteLanguages;
