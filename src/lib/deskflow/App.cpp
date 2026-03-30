@@ -23,7 +23,6 @@
 #include <stdexcept>
 
 #if defined(Q_OS_MAC)
-#include "platform/OSXCocoaApp.h"
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
@@ -172,7 +171,4 @@ void App::handleScreenError() const
 void App::runEventsLoop(const void *)
 {
   m_events->loop();
-#if defined(Q_OS_MAC)
-  stopCocoaLoop();
-#endif
 }

@@ -34,6 +34,7 @@
 #include <AppKit/NSEvent.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
+#include <dispatch/dispatch.h>
 #include <libproc.h>
 #include <mach-o/dyld.h>
 #include <math.h>
@@ -686,7 +687,20 @@ void OSXScreen::enable()
   if (m_eventTapPort) {
     m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
     if (m_eventTapRLSR) {
-      CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+      // Run the event tap on a dedicated thread with its own CFRunLoop so it fires
+      // independently of whatever event loop the calling thread runs (e.g. QCoreApplication).
+      // Use a semaphore to ensure m_eventTapRunLoop is set before enable() returns.
+      auto sem = dispatch_semaphore_create(0);
+      m_eventTapThread = std::thread([this, sem]() {
+        m_eventTapRunLoop = CFRunLoopGetCurrent();
+        CFRunLoopAddSource(m_eventTapRunLoop, m_eventTapRLSR, kCFRunLoopDefaultMode);
+        dispatch_semaphore_signal(sem);
+        CFRunLoopRun();
+        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+        m_eventTapRunLoop = nullptr;
+      });
+      dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+      dispatch_release(sem);
     } else {
       LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
     }
@@ -701,8 +715,14 @@ void OSXScreen::disable()
 
   // FIXME -- stop watching jump zones, stop capturing input
 
+  if (m_eventTapRunLoop) {
+    CFRunLoopStop(m_eventTapRunLoop);
+  }
+  if (m_eventTapThread.joinable()) {
+    m_eventTapThread.join();
+  }
+
   if (m_eventTapRLSR) {
-    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
     CFRelease(m_eventTapRLSR);
     m_eventTapRLSR = nullptr;
   }

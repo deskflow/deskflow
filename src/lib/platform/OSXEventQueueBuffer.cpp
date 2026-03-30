@@ -58,16 +58,11 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, uint32_t &da
 
 bool OSXEventQueueBuffer::addEvent(uint32_t dataID)
 {
-  // Use GCD to dispatch event addition on the main queue
-  dispatch_async(dispatch_get_main_queue(), ^{
-    std::scoped_lock lock{this->m_mutex};
-    LOG_DEBUG2("adding user event with dataID: %u", dataID);
-    this->m_dataQueue.push(dataID);
-    this->m_cond.notify_one();
-    LOG_DEBUG2("user event added to queue, dataID=%u", dataID);
-  });
-
-  // Always return true since dispatch_async does not fail under normal conditions
+  std::scoped_lock lock{m_mutex};
+  LOG_DEBUG2("adding user event with dataID: %u", dataID);
+  m_dataQueue.push(dataID);
+  m_cond.notify_one();
+  LOG_DEBUG2("user event added to queue, dataID=%u", dataID);
   return true;
 }
 
