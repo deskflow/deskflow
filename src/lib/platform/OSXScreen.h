@@ -157,6 +157,8 @@ private:
 
   void handleConfirmSleep(const Event &event);
 
+  bool checkAXPermissions();
+
   // global hotkey operating mode
   static bool isGlobalHotKeyOperatingModeAvailable();
   static void setGlobalHotKeysEnabled(bool enabled);
@@ -260,6 +262,8 @@ private:
   // clipboard stuff
   bool m_ownClipboard;
   EventQueueTimer *m_clipboardTimer;
+
+  EventQueueTimer *m_axTimer;
 
   // window object that gets user input events when the server
   // has focus.
