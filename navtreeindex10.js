@@ -1,6 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classIPlatformScreen.html#a22e026489cf9eba85c95d1fb7a3935d1":[6,0,127,12],
 "classIPlatformScreen.html#a3893b318acf4129cb0961d1a5bc46ea1":[6,0,127,1],
 "classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1":[6,0,127,11],
 "classIPlatformScreen.html#a5d060719edee3f6aa7db8051730fb1f6":[6,0,127,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX10 =
 "classInvalidProtocolException.html":[6,0,119],
 "classInvalidProtocolException.html#a02a62f10f28d4ff099613e67d1482f79":[6,0,119,0],
 "classKeySequence.html":[6,0,139],
-"classKeySequence.html#a263d2491392ab81d826abdfbd43c6004":[6,0,139,2]
+"classKeySequence.html#a263d2491392ab81d826abdfbd43c6004":[6,0,139,2],
+"classKeySequence.html#a3922ee75c8ef490a9d6a56053c57e667":[6,0,139,3]
 };

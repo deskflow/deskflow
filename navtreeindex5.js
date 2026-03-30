@@ -57,10 +57,9 @@ var NAVTREEINDEX5 =
 "TrashScreenWidget_8h.html":[7,0,1,1,5,5,17],
 "TrashScreenWidget_8h_source.html":[7,0,1,1,5,5,17],
 "Unicode_8cpp.html":[7,0,1,1,1,31],
-"Unicode_8cpp.html#a4994c6864cc0b82a10676b85ab373e58":[7,0,1,1,1,31,1],
-"Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60":[7,0,1,1,1,31,2],
+"Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60":[7,0,1,1,1,31,1],
 "Unicode_8cpp.html#a897b68fd0735ca07afd158894305e9cb":[7,0,1,1,1,31,0],
-"Unicode_8cpp.html#ac6efb9c52a683d569e68f04fc64cd90b":[7,0,1,1,1,31,3],
+"Unicode_8cpp.html#ac6efb9c52a683d569e68f04fc64cd90b":[7,0,1,1,1,31,2],
 "Unicode_8h.html":[7,0,1,1,1,32],
 "Unicode_8h_source.html":[7,0,1,1,1,32],
 "UrlConstants_8h.html":[7,0,1,1,3,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd":[6,0,7,1],
 "classAppUtil.html#a8766d51fe30577548aec3896464489d6":[6,0,7,7],
 "classAppUtil.html#a8d56a438b43003ad64c03a2f08ee47b3":[6,0,7,9],
-"classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b":[6,0,7,3]
+"classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b":[6,0,7,3],
+"classAppUtil.html#ab25364eccf20280b7038ba939096fcc8":[6,0,7,10]
 };
