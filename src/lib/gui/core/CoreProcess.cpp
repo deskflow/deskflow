@@ -564,6 +564,8 @@ void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString
     Q_EMIT retryIn(args.toInt());
   } else if (command == "peerFingerprint") {
     Q_EMIT peerFingerprint(args);
+  } else if (command == "missingKeyboardLayouts") {
+    Q_EMIT missingKeyboardLayouts(args);
   }
 }
 

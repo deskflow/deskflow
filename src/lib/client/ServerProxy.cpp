@@ -18,6 +18,7 @@
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "io/IStream.h"
 
 #include <cstring>
@@ -139,7 +140,12 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
 
     // handshake is complete
     m_parser = &ServerProxy::parseMessage;
-    checkMissedLanguages();
+
+    if (const auto missedKeyboardLayouts = m_languageManager.getMissedLanguages(); !missedKeyboardLayouts.empty()) {
+      LOG_WARN("server layouts missing on this computer: %s", missedKeyboardLayouts.c_str());
+      ipcSendToClient("missingKeyboardLayouts", QString::fromStdString(missedKeyboardLayouts));
+    }
+
     m_client->handshakeComplete();
   }
 
@@ -842,17 +848,5 @@ void ServerProxy::setActiveServerLanguage(const std::string_view &language)
     }
   } else {
     LOG_DEBUG1("active server language is empty");
-  }
-}
-
-void ServerProxy::checkMissedLanguages() const
-{
-  auto missedLanguages = m_languageManager.getMissedLanguages();
-  if (!missedLanguages.empty()) {
-    LOG(
-        (CLOG_WARN "You need to install these languages on this computer and restart "
-                   "Deskflow to enable support for multiple languages: %s",
-         missedLanguages.c_str())
-    );
   }
 }

@@ -31,6 +31,7 @@
 #include "net/FingerprintDatabase.h"
 #include "widgets/StatusBar.h"
 
+#include <QCheckBox>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QFileDialog>
@@ -272,6 +273,7 @@ void MainWindow::connectSlots()
   connect(&m_coreProcess, &CoreProcess::connectionRefused, this, &MainWindow::handleConnectionRefused);
   connect(&m_coreProcess, &CoreProcess::retryIn, this, &MainWindow::updateTimeoutDelay);
   connect(&m_coreProcess, &CoreProcess::peerFingerprint, this, &MainWindow::handlePeerFingerprint);
+  connect(&m_coreProcess, &CoreProcess::missingKeyboardLayouts, this, &MainWindow::handleMissingKeyboardLayouts);
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
@@ -800,6 +802,29 @@ void MainWindow::handleConnectionRefused(deskflow::core::ConnectionRefusal reaso
   );
 
   m_clientErrorVisible = false;
+}
+
+void MainWindow::handleMissingKeyboardLayouts(const QString &layouts)
+{
+  if (Settings::value(Settings::Gui::IgnoreMissingKeyboardLayouts).toBool())
+    return;
+
+  QMessageBox msgBox(this);
+  msgBox.setIcon(QMessageBox::Warning);
+  msgBox.setWindowTitle(tr("Missing Keyboard Layouts"));
+  msgBox.setText(tr("<p>Keyboard layout support requires matching layouts on all computers. "
+                    "The following layouts from the other computer are not installed on this computer:</p>"
+                    "<p><b>%1</b></p>"
+                    "<p>Please install them to enable support for these layouts.</p>")
+                     .arg(layouts));
+
+  auto *checkBox = new QCheckBox(tr("Don't show this again"), &msgBox);
+  msgBox.setCheckBox(checkBox);
+  msgBox.exec();
+
+  if (checkBox->isChecked()) {
+    Settings::setValue(Settings::Gui::IgnoreMissingKeyboardLayouts, true);
+  }
 }
 
 void MainWindow::handlePeerFingerprint(const QString &fingerprint)
