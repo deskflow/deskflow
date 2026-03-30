@@ -1,0 +1,55 @@
+changelog:
+  categories:
+    - title: Features
+      labels:
+        - "feat:"
+        - "feat (*):"
+        - "feat(*):"
+    - title: Fixes
+      labels:
+        - "fix:"
+        - "fix(*):"
+        - "fix (*):"
+    - title: Refactor
+      labels:
+        - "refactor:"
+        - "refactor(*):"
+        - "refactor (*):"
+    - title: Build
+      labels:
+        - "build:"
+        - "build(*):"
+        - "build (*):"
+    - title: Documentation
+      labels:
+        - "docs:"
+        - "docs(*):"
+        - "docs (*):"
+        - "doc:"
+        - "doc(*):"
+        - "doc (*):"
+    - title: Translations
+      labels:
+        - "i18n:"
+        - "i18n(*):"
+        - "i18n (*):"
+    - title: CI Updates
+      labels:
+        - "ci:"
+        - "ci(*):"
+        - "ci (*):"
+    - title: Package
+      labels:
+        - "package:*"
+        - "package(*):*"
+        - "package (*):*"
+    - title: Chores
+      labels:
+        - "chore:"
+        - "chore(*):"
+        - "chore (*):"
+    - title: Commits
+      labels:
+        - "*"
+
+

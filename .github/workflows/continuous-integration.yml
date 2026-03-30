@@ -453,7 +453,6 @@ jobs:
           tag_name: "continuous"
           prerelease: true
           name: "Continuous v${{env.DESKFLOW_VERSION}}"
-          previous_tag: "continuous"
           generate_release_notes: true
           files: |
             deskflow-*
