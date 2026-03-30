@@ -447,10 +447,10 @@ jobs:
 
       - name: Deploy continuous
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
-        uses: crowbarmaster/GH-Automatic-Releases@latest
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "continuous"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "continuous"
           prerelease: true
           title: "Continuous v${{env.DESKFLOW_VERSION}}"
           files: |
@@ -459,9 +459,9 @@ jobs:
 
       - name: Deploy release
         if: contains(github.ref, '/tags/v')
-        uses: crowbarmaster/GH-Automatic-Releases@latest
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
             deskflow-*
