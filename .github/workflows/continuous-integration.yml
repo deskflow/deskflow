@@ -453,7 +453,7 @@ jobs:
           tag_name: "continuous"
           prerelease: true
           name: "Continuous v${{env.DESKFLOW_VERSION}}"
-          generate_release_notes:
+          generate_release_notes: true
           files: |
             deskflow-*
             sums.txt
