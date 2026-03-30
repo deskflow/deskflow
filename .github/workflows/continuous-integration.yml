@@ -450,6 +450,8 @@ jobs:
         run: |
           git tag -d continuous || true
           git push origin :refs/tags/continuous || true
+          git tag continuous
+          git push origin continuous
 
       - name: Deploy continuous
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
