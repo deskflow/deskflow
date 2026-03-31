@@ -2,14 +2,11 @@ changelog:
   categories:
     - title: Features
       labels:
-        - "feat:"
-        - "feat (*):"
-        - "feat(*):"
+        - "🪄 feature request"
+        - "✨ enhancement"
     - title: Fixes
       labels:
-        - "fix:"
-        - "fix(*):"
-        - "fix (*):"
+        - "🩹 fix"
     - title: Refactor
       labels:
         - "refactor:"
@@ -17,27 +14,16 @@ changelog:
         - "refactor (*):"
     - title: Build
       labels:
-        - "build:"
-        - "build(*):"
-        - "build (*):"
+        - "🚧 build"
     - title: Documentation
       labels:
-        - "docs:"
-        - "docs(*):"
-        - "docs (*):"
-        - "doc:"
-        - "doc(*):"
-        - "doc (*):"
+        - "📝 document"
     - title: Translations
       labels:
-        - "i18n:"
-        - "i18n(*):"
-        - "i18n (*):"
+        - ":speech_balloon: I18N"
     - title: CI Updates
       labels:
-        - "ci:"
-        - "ci(*):"
-        - "ci (*):"
+        - ":robot: ci"
     - title: Package
       labels:
         - "package:*"
