@@ -26,7 +26,7 @@ class IpcClient : public QObject
   };
 
 public:
-  explicit IpcClient(QObject *parent, const QString &socketName);
+  explicit IpcClient(QObject *parent, const QString &socketName, const QString &typeName);
   void connectToServer();
   void disconnectFromServer();
 
@@ -62,6 +62,7 @@ private:
   QString m_socketName;
   QByteArray m_readBuffer;
   int m_retryCount{0};
+  QString m_typeName;
 };
 
 } // namespace deskflow::gui::ipc
