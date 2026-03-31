@@ -19,5 +19,5 @@ jobs:
           days-before-pr-stale: 365
           days-before-issue-close: 30
           days-before-pr-close: 30
-          stale-issue-label: "stale"
-          stale-pr-label: "stale"
+          stale-issue-label: ":bread: stale"
+          stale-pr-label: ":bread: stale"
