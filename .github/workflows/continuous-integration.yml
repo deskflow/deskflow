@@ -450,7 +450,7 @@ jobs:
         id: git-cliff
         with:
           config: ./github/cliff.toml
-          args: -vv --latest --strip header continuous..HEAD
+          args: -c github
         env:
           OUTPUT: CHANGES.md
           GITHUB_REPO: ${{ github.repository }}
