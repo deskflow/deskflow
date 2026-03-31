@@ -457,7 +457,6 @@ jobs:
             deskflow-*
             sums.txt
 
-
       - name: Deploy release
         if: contains(github.ref, '/tags/v')
         uses: crowbarmaster/GH-Automatic-Releases@latest
