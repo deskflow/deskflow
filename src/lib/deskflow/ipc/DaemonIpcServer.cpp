@@ -17,7 +17,7 @@ const auto kAckMessage = "ok";
 const auto kErrorMessage = "error";
 
 DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
-    : IpcServer(parent, kDaemonIpcName),
+    : IpcServer(parent, kDaemonIpcName, "daemon"),
       m_logFilename(logFilename)
 {
   // do nothing

@@ -19,7 +19,7 @@ class IpcServer : public QObject
   Q_OBJECT
 
 public:
-  explicit IpcServer(QObject *parent, const QString &serverName);
+  explicit IpcServer(QObject *parent, const QString &serverName, const QString &typeName);
   ~IpcServer() override;
 
   void listen();
@@ -54,6 +54,7 @@ private:
   QSet<QLocalSocket *> m_clients;
   QString m_serverName;
   QStringList m_pendingMessages;
+  QByteArray m_typeName;
 };
 
 } // namespace deskflow::core::ipc

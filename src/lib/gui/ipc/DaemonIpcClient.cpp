@@ -12,7 +12,7 @@
 
 namespace deskflow::gui::ipc {
 
-DaemonIpcClient::DaemonIpcClient(QObject *parent) : IpcClient(parent, kDaemonIpcName)
+DaemonIpcClient::DaemonIpcClient(QObject *parent) : IpcClient(parent, kDaemonIpcName, "daemon")
 {
 }
 
