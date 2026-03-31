@@ -447,7 +447,7 @@ jobs:
 
       - name: Update Continuous tag
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
-        run: gh release delete continuous --cleanup-tag --yes --repo $GITHUB_REPOSITORY|
+        run: gh release delete continuous --cleanup-tag --yes --repo $GITHUB_REPOSITORY
 
       - name: Deploy continuous
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
