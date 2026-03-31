@@ -1,6 +1,6 @@
 [git]
 conventional_commits = true
-filter_unconventional = true
+filter_unconventional = false
 require_conventional = false
 split_commits = false
 commit_parsers = [
@@ -11,6 +11,13 @@ commit_parsers = [
     { message = "^refactor", group = "Refactor"},
     { message = "^style", group = "Styling"},
     { message = "^test", group = "Testing"},
+    { message = "^ci", group = "Continuous Integraton"},
+    { message = "^i18n", group = "Translation Updates"},
+    { message = "^build", group = "Build"},
+    { message = "^package", group = "Packaging"},
+    { message = "^chore", group = "Chores"},
+    { message = ".*", group = "Commits", default_scope = "commits"},
+
 ]
 protect_breaking_commits = false
 filter_commits = false
@@ -23,8 +30,8 @@ topo_order = false
 topo_order_commits = true
 sort_commits = "oldest"
 link_parsers = [
-    { pattern = "#(\\d+)", href = "https://github.com/orhun/git-cliff/issues/$1"},
-    { pattern = "RFC(\\d+)", text = "ietf-rfc$1", href = "https://datatracker.ietf.org/doc/html/rfc$1"},
+    { pattern = "#(\\d+)", href = "https://github.com/deskflow/deskflow/issues/$1"},
+    { pattern = "#(\\d+)", href = "https://github.com/deskflow/deskflow/pull/$1"},
 ]
 limit_commits = 10000
 recurse_submodules = false
