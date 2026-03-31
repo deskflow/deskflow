@@ -811,7 +811,7 @@ void MSWindowsDesks::checkDesk()
     LOG_DEBUG("switched to desk \"%ls\"", name.c_str());
     bool syncKeys = false;
     if (isDeskAccessible(desk)) {
-      LOG_DEBUG("desktop is accessible - syncing keyboard state after desk switch");
+      LOG_DEBUG("desktop is accessible, syncing keyboard state after desk switch");
       syncKeys = true;
     } else {
       LOG_DEBUG("desktop is inaccessible");
