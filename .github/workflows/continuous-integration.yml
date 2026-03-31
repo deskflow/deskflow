@@ -449,7 +449,7 @@ jobs:
         shell: bash
         run: |
           npm install -g conventional-changelog-cli
-          conventional-changelog -p angular -r 1 -o Release_Notes.md -s
+          conventional-changelog -p angular -r 1 Release_Notes.md
 
       - name: Update Continuous tag
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
