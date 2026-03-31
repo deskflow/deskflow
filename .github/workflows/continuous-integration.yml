@@ -445,11 +445,15 @@ jobs:
           echo "Build: ${{env.DESKFLOW_VERSION }}" > sums.txt
           sha256sum deskflow-* >> sums.txt
 
-      - name: Generate changelog
-        shell: bash
-        run: |
-          npm install -g conventional-changelog-cli
-          conventional-changelog -p angular -r 1 Release_Notes.md
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: ./github/cliff.toml
+          args: -vv --latest --strip header
+        env:
+          OUTPUT: CHANGES.md
+          GITHUB_REPO: ${{ github.repository }}
 
       - name: Update Continuous tag
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
@@ -465,7 +469,7 @@ jobs:
           tag_name: "continuous"
           prerelease: true
           name: "Continuous v${{env.DESKFLOW_VERSION}}"
-          body_path: Release_Notes.md
+          body_path: CHANGES.md
           files: |
             deskflow-*
             sums.txt

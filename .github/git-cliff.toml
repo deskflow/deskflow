@@ -1,0 +1,32 @@
+[git]
+conventional_commits = true
+filter_unconventional = true
+require_conventional = false
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Features"},
+    { message = "^fix", group = "Bug Fixes"},
+    { message = "^doc", group = "Documentation"},
+    { message = "^perf", group = "Performance"},
+    { message = "^refactor", group = "Refactor"},
+    { message = "^style", group = "Styling"},
+    { message = "^test", group = "Testing"},
+]
+protect_breaking_commits = false
+filter_commits = false
+fail_on_unmatched_commit = false
+tag_pattern = "v[0-9].*"
+
+skip_tags = "continuous"
+ignore_tags = "continuous"
+topo_order = false
+topo_order_commits = true
+sort_commits = "oldest"
+link_parsers = [
+    { pattern = "#(\\d+)", href = "https://github.com/orhun/git-cliff/issues/$1"},
+    { pattern = "RFC(\\d+)", text = "ietf-rfc$1", href = "https://datatracker.ietf.org/doc/html/rfc$1"},
+]
+limit_commits = 10000
+recurse_submodules = false
+include_paths = ["src/", "doc/**/*.md"]
+exclude_paths = ["unrelated/"]
