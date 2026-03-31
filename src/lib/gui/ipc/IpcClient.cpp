@@ -163,6 +163,14 @@ void IpcClient::handleReadyRead()
 
 void IpcClient::handleHandshakeMessage(const QStringList &parts)
 {
+  if (parts.at(0) == "error") {
+    const auto detail = parts.size() >= 2 ? parts.at(1) : QString("unknown");
+    qCritical().noquote() << m_typeName << "ipc server rejected connection:" << detail;
+    disconnectFromServer();
+    Q_EMIT connectionFailed();
+    return;
+  }
+
   if (parts.at(0) != "hello") {
     return;
   }
