@@ -10,6 +10,7 @@
 #include <gui/Logger.h>
 
 #include <QPlainTextEdit>
+#include <QScrollBar>
 #include <QVBoxLayout>
 
 LogWidget::LogWidget(QWidget *parent) : QWidget{parent}, m_textLog{new QPlainTextEdit(this)}
@@ -62,4 +63,10 @@ void LogWidget::findPrevious(const QString &text)
     m_textLog->moveCursor(QTextCursor::End);
     m_textLog->find(text, QTextDocument::FindBackward);
   }
+}
+
+void LogWidget::scrollToBottom() const
+{
+  auto sb = m_textLog->verticalScrollBar();
+  sb->setValue(sb->maximum());
 }
