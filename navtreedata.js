@@ -139,18 +139,18 @@ var NAVTREEINDEX =
 "classIApp.html#a6297786c4ddfd86affa9a8368b42e473",
 "classIPlatformScreen.html#a3893b318acf4129cb0961d1a5bc46ea1",
 "classKeySequence.html#a698579551c4f6c97e0cb584de244b5ff",
-"classMSWindowsScreen.html#a6e0b5eaee052cd2e7c23a057a1787146",
-"classPacketStreamFilter.html#a2183ca880c637afe67e384e37f81f4dd",
-"classScreenSetupView.html#a4896d0007772ac56ad00f2d803284c5c",
-"classSettings.html#afd0a8dbda15587467729da0b489dd97d",
-"classUnknownClientException.html",
-"classXWindowsScreen.html#adebd866d00c93789888ed2fdef89b58f",
-"classdeskflow_1_1KeyMap.html#aa22a6d7a665c36d1f4fb04925918f309",
-"classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f",
-"classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e",
-"functions_func_h.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a662eedb3d21ec748ac1199d4357c8bd5",
-"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e"
+"classMSWindowsScreen.html#a628e5ed225fa31c0181091357f499726",
+"classPacketStreamFilter.html",
+"classScreenSetupView.html#a3bf747fea4659b6634afebdaec0d0944",
+"classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d",
+"classUnicode.html#a6cf183d92569cbd9d50211908810ffec",
+"classXWindowsScreen.html#ac62d6b5b8242feb2819086a550d23836",
+"classdeskflow_1_1KeyMap.html#aa20482dc7cf49a36c89397da1d3001ec",
+"classdeskflow_1_1gui_1_1CoreProcess.html#aa9f5fda4469cd9cb57613d1b6cd940b2",
+"classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe",
+"functions_func_f.html",
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a5c10b238cd32de63b15d003b782b081e",
+"structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

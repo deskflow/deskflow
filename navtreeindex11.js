@@ -94,6 +94,7 @@ var NAVTREEINDEX11 =
 "classLogWidget.html#a46782c113d9636b91dec16c178cd40ea":[6,0,145,1],
 "classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e":[6,0,145,0],
 "classLogWidget.html#acae13034eeee9da0b4fb48f120956027":[6,0,145,3],
+"classLogWidget.html#af0846e295fa2eabafe81234cfa450133":[6,0,145,4],
 "classMSWindowsClipboard.html":[6,0,147],
 "classMSWindowsClipboard.html#a05e7bf2345789064f00ca591aa25a5da":[6,0,147,0],
 "classMSWindowsClipboard.html#a1bc83f8deef69d8032ffeebb86da5754":[6,0,147,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classMSWindowsScreen.html#a4bd50c26515edc3551699f61366fa116":[6,0,160,7],
 "classMSWindowsScreen.html#a52cf6d35a6a05011f55f7ad3cf3a1b9a":[6,0,160,10],
 "classMSWindowsScreen.html#a572e5c869596bea2f2d498fa3c4cd303":[6,0,160,31],
-"classMSWindowsScreen.html#a60cef8266489495b174b9710c3aefa67":[6,0,160,23],
-"classMSWindowsScreen.html#a628e5ed225fa31c0181091357f499726":[6,0,160,13]
+"classMSWindowsScreen.html#a60cef8266489495b174b9710c3aefa67":[6,0,160,23]
 };
