@@ -16,6 +16,7 @@ class SearchWidget : public QWidget
   Q_OBJECT
 public:
   explicit SearchWidget(QWidget *parent = nullptr);
+  bool isExpanded() const;
 
 Q_SIGNALS:
   void findNext(const QString &text);

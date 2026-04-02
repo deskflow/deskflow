@@ -60,6 +60,11 @@ SearchWidget::SearchWidget(QWidget *parent)
   adjustSize();
 }
 
+bool SearchWidget::isExpanded() const
+{
+  return m_searchLine->isVisible();
+}
+
 void SearchWidget::changeEvent(QEvent *e)
 {
   QWidget::changeEvent(e);
