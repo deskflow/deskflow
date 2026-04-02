@@ -7,7 +7,6 @@ changelog:
     - title: Fixes
       labels:
         - "🩹 fix"
-      labels:
     - title: Build
       labels:
         - "🚧 build"
