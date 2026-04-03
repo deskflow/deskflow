@@ -1080,3 +1080,46 @@ Fix type system issue in `WlClipboardCollection` that prevents `PortalClipboard`
 | All existing clipboard implementations compile | ✅ (syntax verified) |
 | No behavioral change to existing wl-clipboard path | ✅ |
 | `#if 0` guard in `initialize()` kept | ✅ |
+
+---
+
+## Pull Request Submission (2026-04-03)
+
+### Actions Completed
+
+1. **Updated PR_DESCRIPTION.md** to document:
+   - IClipboard interface changes (5 new virtual methods)
+   - Polymorphic storage in WlClipboardCollection
+   - Updated architecture diagram
+   - Removed outdated "Future refactor needed" limitation
+
+2. **Committed polymorphism changes** (commit `26a8690`):
+   - `refactor(platform): Use polymorphic IClipboard storage in WlClipboardCollection`
+   - 12 files changed, 216 insertions, 42 deletions
+
+3. **Pushed branch to fork**:
+   - Remote: `crucis918-fork` (https://github.com/Crucis918/deskflow.git)
+   - Branch: `autogamer/xdg-clipboard`
+
+4. **Created pull request**:
+   - **PR URL**: https://github.com/deskflow/deskflow/pull/9635
+   - Title: `feat(platform): Add XDG Desktop Portal clipboard backend for Wayland`
+   - Base: `master`
+   - Head: `Crucis918:autogamer/xdg-clipboard`
+   - References issue #8031
+
+### Commits on Branch
+
+1. `d4b9600` — feat(platform): Add XDG Portal clipboard backend for Wayland
+2. `7b40350` — feat(platform): Add PortalClipboard implementation and tests
+3. `26a8690` — refactor(platform): Use polymorphic IClipboard storage in WlClipboardCollection
+4. (+ doc commits)
+
+### Acceptance Criteria
+
+| Criteria | Status |
+|----------|--------|
+| Branch pushed to remote | ✅ |
+| PR created against deskflow/deskflow master | ✅ |
+| PR references issue #8031 | ✅ |
+| PR description reflects all changes | ✅ |
