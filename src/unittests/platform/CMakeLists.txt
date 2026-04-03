@@ -44,5 +44,14 @@ elseif(UNIX)
       SOURCE WlClipboardTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
+
+    # Add Portal clipboard tests when libportal is available
+    create_test(
+      NAME PortalClipboardTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE PortalClipboardTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
   endif()
 endif()
