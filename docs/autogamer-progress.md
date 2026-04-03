@@ -738,3 +738,13 @@ The implementation is complete and follows all deskflow patterns. The only block
 - **Build blocked by missing system dependencies** (not a code issue)
 - **Code structure verified manually** — all correct
 - **CI will verify full compilation**
+
+---
+
+## Pull Request Created (2026-04-03)
+
+**PR URL**: https://github.com/deskflow/deskflow/pull/9634
+
+- Branch: `Crucis918:autogamer/xdg-clipboard` → `deskflow:master`
+- Title: `feat(platform): Add XDG Desktop Portal clipboard backend for Wayland`
+- Status: Awaiting CI verification and review
