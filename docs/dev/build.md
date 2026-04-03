@@ -108,3 +108,24 @@ After configuring you should be able to run make to build all targets.
 [google_test]:https://github.com/google/googletest
 [libei]:https://gitlab.freedesktop.org/libinput/libei
 [libportal]:https://github.com/flatpak/libportal
+
+## Wayland Clipboard Support
+
+Deskflow supports multiple clipboard backends on Wayland:
+
+### Portal Clipboard (Preferred)
+
+Portal clipboard support is built automatically when libportal >= 0.9.1 is found.
+This enables clipboard access in sandboxed environments (Flatpak, Snap).
+
+**Note:** This feature requires xdg-desktop-portal with clipboard support, which is not yet
+available in standard distributions. The client-side implementation is ready and will become
+functional once the portal adds clipboard support upstream.
+
+See [Portal Clipboard Documentation](portal-clipboard.md) for details.
+
+### wl-clipboard (Fallback)
+
+When portal clipboard is unavailable, Deskflow falls back to using the `wl-copy` and `wl-paste`
+utilities from the [wl-clipboard](https://github.com/bugaevc/wl-clipboard) project. These must
+be installed on the system for clipboard functionality in non-sandboxed environments.

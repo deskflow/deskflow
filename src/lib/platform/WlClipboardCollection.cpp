@@ -9,6 +9,11 @@
 #include "base/Log.h"
 #include "deskflow/ClipboardTypes.h"
 
+// Note: PortalClipboard is conditionally compiled when libportal with clipboard support is available
+// For now, we only use wl-clipboard backend. Portal clipboard support will be enabled when
+// xdg-desktop-portal backends implement the clipboard portal.
+// See: https://github.com/deskflow/deskflow/issues/8031
+
 namespace deskflow {
 
 WlClipboardCollection::WlClipboardCollection()
@@ -24,6 +29,11 @@ WlClipboardCollection::~WlClipboardCollection()
 bool WlClipboardCollection::isAvailable() const
 {
   return m_available;
+}
+
+ClipboardBackend WlClipboardCollection::getActiveBackend() const
+{
+  return m_backend;
 }
 
 IClipboard *WlClipboardCollection::getClipboard(ClipboardID id) const
@@ -95,14 +105,56 @@ void WlClipboardCollection::resetChanged() const
 
 void WlClipboardCollection::initialize()
 {
+  // First, check if clipboard is disabled in settings
   if (!WlClipboard::isEnabled()) {
-    LOG_DEBUG("wl-clipboard setting disabled");
+    LOG_DEBUG("clipboard setting disabled");
     return;
   }
 
-  if (!WlClipboard::isAvailable()) {
-    LOG_WARN("wl-clipboard tools not found, clipboard functionality disabled");
+  // Try portal clipboard first (preferred for sandboxed environments)
+  // Note: Portal clipboard is disabled for now until xdg-desktop-portal backends
+  // implement the clipboard portal. When available, this will be tried first.
+  // See: https://github.com/deskflow/deskflow/issues/8031
+#if 0 // Portal clipboard disabled until backend support is available
+  if (tryInitializePortal()) {
+    m_backend = ClipboardBackend::Portal;
+    m_available = true;
+    LOG_INFO("using portal clipboard backend");
     return;
+  }
+#endif
+
+  // Fall back to wl-clipboard tools
+  if (initializeWlClipboard()) {
+    m_backend = ClipboardBackend::WlClipboard;
+    m_available = true;
+    LOG_INFO("using wl-clipboard backend");
+    return;
+  }
+
+  LOG_WARN("no clipboard backend available, clipboard functionality disabled");
+}
+
+bool WlClipboardCollection::tryInitializePortal()
+{
+  // Portal clipboard is not yet implemented
+  // This will be enabled when xdg-desktop-portal backends implement clipboard support
+  // See: https://github.com/deskflow/deskflow/issues/8031
+  //
+  // When implemented, this will:
+  // 1. Check if PortalClipboard::isAvailable() returns true
+  // 2. Create PortalClipboard instances for each clipboard type
+  // 3. Return true if successful
+
+  LOG_DEBUG("portal clipboard not yet available (waiting for xdg-desktop-portal support)");
+  return false;
+}
+
+bool WlClipboardCollection::initializeWlClipboard()
+{
+  if (!WlClipboard::isAvailable()) {
+    LOG_DEBUG("wl-clipboard tools not found");
+    return false;
   }
 
   // Create clipboard instances for each clipboard type
@@ -115,13 +167,13 @@ void WlClipboardCollection::initialize()
     // Standard clipboard
     m_clipboards[kClipboardClipboard] = std::make_unique<WlClipboard>(kClipboardClipboard);
 
-    m_available = true;
-    LOG_DEBUG1("initialized Wayland clipboard support");
+    LOG_DEBUG("initialized wl-clipboard backend");
+    return true;
 
   } catch (const std::exception &e) {
-    LOG_ERR("failed to initialize clipboard: %s", e.what());
+    LOG_ERR("failed to initialize wl-clipboard: %s", e.what());
     cleanup();
-    m_available = false;
+    return false;
   }
 }
 
