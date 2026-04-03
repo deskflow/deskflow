@@ -42,6 +42,13 @@ public:
 
   //@}
 
+  // IClipboard monitoring overrides (stubs - in-memory clipboard doesn't monitor)
+  bool hasChanged() const override { return false; }
+  void startMonitoring() override {}
+  void stopMonitoring() override {}
+  void resetChanged() override {}
+  ClipboardID getID() const override { return kClipboardClipboard; }
+
   // IClipboard overrides
   bool empty() final;
   void add(Format, const std::string &data) override;

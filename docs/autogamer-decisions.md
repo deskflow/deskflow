@@ -210,3 +210,51 @@ Manual code structure review confirmed correctness.
 - All includes, types, and method signatures verified manually
 - CI will perform full build verification
 - System dependency issue is unrelated to the code changes
+
+---
+
+## WlClipboardCollection Polymorphism Fix (2026-04-03)
+
+### Decision: Add monitoring methods to IClipboard interface
+
+**Context:** `WlClipboardCollection::m_clipboards` was typed as `vector<unique_ptr<WlClipboard>>`,
+preventing storage of `PortalClipboard` instances. The collection calls `hasChanged()`,
+`startMonitoring()`, `stopMonitoring()`, `resetChanged()`, and `getID()` on its elements.
+
+**Decision:** Promote these 5 methods to pure virtual methods in the `IClipboard` interface,
+allowing `m_clipboards` to be typed as `vector<unique_ptr<IClipboard>>`.
+
+**Rationale:**
+- Enables polymorphic storage of any IClipboard implementation in the collection
+- Eliminates the need for type-specific containers or casting
+- Follows the Liskov Substitution Principle
+- Stub implementations for non-Linux platforms are trivial (monitoring not needed)
+
+### Decision: Use inline stub implementations for non-Linux platforms
+
+**Context:** MSWindowsClipboard, OSXClipboard, XWindowsClipboard, and Clipboard don't need
+monitoring functionality but must implement the new pure virtual methods.
+
+**Decision:** Add inline stub implementations in headers:
+- `hasChanged()` returns `false`
+- `startMonitoring()`, `stopMonitoring()`, `resetChanged()` are empty
+- `getID()` returns `kClipboardClipboard` (or `m_id` for XWindowsClipboard)
+
+**Rationale:**
+- No behavioral change - these platforms don't use monitoring
+- Inline stubs avoid additional .cpp file changes
+- XWindowsClipboard already stores `m_id`, so it returns that directly
+- Minimal code footprint
+
+### Decision: Use WINAPI_LIBPORTAL guard for PortalClipboard include
+
+**Context:** WlClipboardCollection.h needs PortalClipboard.h for `tryInitializePortal()`,
+but libportal may not be available on all systems.
+
+**Decision:** Use `#if defined(WINAPI_LIBPORTAL) && WINAPI_LIBPORTAL` to conditionally
+include PortalClipboard.h, matching the existing compile definition pattern.
+
+**Rationale:**
+- Consistent with existing conditional compilation in the codebase
+- PortalClipboard.h itself requires libportal headers
+- Fallback path compiles without libportal installed

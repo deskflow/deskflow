@@ -10,6 +10,10 @@
 #include "deskflow/IClipboard.h"
 #include "platform/WlClipboard.h"
 
+#if defined(WINAPI_LIBPORTAL) && WINAPI_LIBPORTAL
+#include "platform/PortalClipboard.h"
+#endif
+
 #include <memory>
 #include <vector>
 
@@ -76,7 +80,7 @@ private:
   void cleanup();
 
 private:
-  std::vector<std::unique_ptr<WlClipboard>> m_clipboards;
+  std::vector<std::unique_ptr<IClipboard>> m_clipboards;
   ClipboardBackend m_backend = ClipboardBackend::WlClipboard;
   bool m_available = false;
   bool m_monitoring = false;

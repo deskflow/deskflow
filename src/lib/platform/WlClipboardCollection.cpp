@@ -137,17 +137,26 @@ void WlClipboardCollection::initialize()
 
 bool WlClipboardCollection::tryInitializePortal()
 {
-  // Portal clipboard is not yet implemented
-  // This will be enabled when xdg-desktop-portal backends implement clipboard support
-  // See: https://github.com/deskflow/deskflow/issues/8031
-  //
-  // When implemented, this will:
-  // 1. Check if PortalClipboard::isAvailable() returns true
-  // 2. Create PortalClipboard instances for each clipboard type
-  // 3. Return true if successful
-
-  LOG_DEBUG("portal clipboard not yet available (waiting for xdg-desktop-portal support)");
+#if defined(WINAPI_LIBPORTAL) && WINAPI_LIBPORTAL
+  if (!PortalClipboard::isAvailable()) {
+    LOG_DEBUG("portal clipboard not available");
+    return false;
+  }
+  m_clipboards.resize(kClipboardEnd);
+  try {
+    m_clipboards[kClipboardSelection] = std::make_unique<PortalClipboard>(kClipboardSelection);
+    m_clipboards[kClipboardClipboard] = std::make_unique<PortalClipboard>(kClipboardClipboard);
+    LOG_DEBUG("initialized portal clipboard backend");
+    return true;
+  } catch (const std::exception &e) {
+    LOG_ERR("failed to initialize portal clipboard: %s", e.what());
+    cleanup();
+    return false;
+  }
+#else
+  LOG_DEBUG("portal clipboard not available (libportal too old)");
   return false;
+#endif
 }
 
 bool WlClipboardCollection::initializeWlClipboard()

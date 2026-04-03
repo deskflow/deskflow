@@ -44,6 +44,13 @@ public:
   //! Test if clipboard is owned by deskflow
   static bool isOwnedByDeskflow();
 
+  // IClipboard monitoring overrides (stubs - Windows doesn't use monitoring)
+  bool hasChanged() const override { return false; }
+  void startMonitoring() override {}
+  void stopMonitoring() override {}
+  void resetChanged() override {}
+  ClipboardID getID() const override { return kClipboardClipboard; }
+
   // IClipboard overrides
   bool empty() override;
   void add(Format, const std::string &data) override;

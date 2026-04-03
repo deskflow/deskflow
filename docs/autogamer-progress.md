@@ -1007,3 +1007,76 @@ No option exists to skip translations.
 - No uncommitted changes
 - No leftover debug files
 - Branch ready for PR submission
+
+---
+
+## WlClipboardCollection Polymorphism Fix (2026-04-03)
+
+### Task
+
+Fix type system issue in `WlClipboardCollection` that prevents `PortalClipboard` from being stored alongside `WlClipboard`.
+
+### Problem
+
+`WlClipboardCollection.h:79` declares `std::vector<std::unique_ptr<WlClipboard>> m_clipboards;` which cannot hold `PortalClipboard` instances. Both `WlClipboard` and `PortalClipboard` inherit from `IClipboard` but also share non-virtual methods (`hasChanged()`, `startMonitoring()`, `stopMonitoring()`, `resetChanged()`, `getID()`) that are called on elements of `m_clipboards`.
+
+### Solution
+
+1. **Added virtual methods to `IClipboard` interface** (`src/lib/deskflow/IClipboard.h`):
+   - `virtual bool hasChanged() const = 0;`
+   - `virtual void startMonitoring() = 0;`
+   - `virtual void stopMonitoring() = 0;`
+   - `virtual void resetChanged() = 0;`
+   - `virtual ClipboardID getID() const = 0;`
+   - Added `#include "deskflow/ClipboardTypes.h"` for `ClipboardID`
+
+2. **Updated WlClipboard** (`src/lib/platform/WlClipboard.h`):
+   - Marked methods as `override` instead of plain methods
+
+3. **Updated PortalClipboard** (`src/lib/platform/PortalClipboard.h`):
+   - Marked methods as `override`
+
+4. **Updated WlClipboardCollection** (`src/lib/platform/WlClipboardCollection.h`):
+   - Changed `std::vector<std::unique_ptr<WlClipboard>>` to `std::vector<std::unique_ptr<IClipboard>>`
+   - Added conditional include for `PortalClipboard.h` when `WINAPI_LIBPORTAL` is defined
+
+5. **Implemented `tryInitializePortal()`** (`src/lib/platform/WlClipboardCollection.cpp`):
+   - Creates `PortalClipboard` instances when libportal is available
+   - Uses `#if defined(WINAPI_LIBPORTAL) && WINAPI_LIBPORTAL` guard
+   - Returns `false` gracefully when portal unavailable
+
+6. **Added stub implementations to other clipboard classes**:
+   - `MSWindowsClipboard.h`: Inline stubs returning defaults
+   - `OSXClipboard.h`: Inline stubs returning defaults
+   - `XWindowsClipboard.h`: Inline stubs, `getID()` returns `m_id`
+   - `Clipboard.h` (memory buffer): Inline stubs returning defaults
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `src/lib/deskflow/IClipboard.h` | Added 5 pure virtual methods + include |
+| `src/lib/platform/WlClipboard.h` | Added `override` to 5 methods |
+| `src/lib/platform/PortalClipboard.h` | Added `override` to 5 methods |
+| `src/lib/platform/WlClipboardCollection.h` | Changed to `IClipboard` pointers + conditional include |
+| `src/lib/platform/WlClipboardCollection.cpp` | Implemented `tryInitializePortal()` |
+| `src/lib/platform/MSWindowsClipboard.h` | Added 5 stub implementations |
+| `src/lib/platform/OSXClipboard.h` | Added 5 stub implementations |
+| `src/lib/platform/XWindowsClipboard.h` | Added 5 stub implementations |
+| `src/lib/deskflow/Clipboard.h` | Added 5 stub implementations |
+
+### Verification
+
+- Syntax checks passed on all modified headers
+- Full build blocked by missing system dependencies (`qt6-tools`, `libportal`)
+- CI will verify full compilation
+
+### Acceptance Criteria
+
+| Criteria | Status |
+|----------|--------|
+| `m_clipboards` uses `IClipboard` pointers | ✅ |
+| `tryInitializePortal()` creates `PortalClipboard` instances | ✅ |
+| All existing clipboard implementations compile | ✅ (syntax verified) |
+| No behavioral change to existing wl-clipboard path | ✅ |
+| `#if 0` guard in `initialize()` kept | ✅ |

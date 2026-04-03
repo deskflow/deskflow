@@ -37,26 +37,18 @@ public:
   WlClipboard &operator=(WlClipboard const &) = delete;
   WlClipboard &operator=(WlClipboard &&) = delete;
 
-  //! Get clipboard ID
-  ClipboardID getID() const;
-
   //! Check if wl-clipboard tools are available
   static bool isAvailable();
 
   //! Check if WlClipboard is enabled
   static bool isEnabled();
 
-  //! Start monitoring clipboard changes
-  void startMonitoring();
-
-  //! Stop monitoring clipboard changes
-  void stopMonitoring();
-
-  //! Check if clipboard has changed
-  bool hasChanged() const;
-
-  //! Reset the changed flag and clear cache
-  void resetChanged();
+  // IClipboard monitoring overrides
+  ClipboardID getID() const override;
+  bool hasChanged() const override;
+  void startMonitoring() override;
+  void stopMonitoring() override;
+  void resetChanged() override;
 
   // IClipboard overrides
   bool empty() override;

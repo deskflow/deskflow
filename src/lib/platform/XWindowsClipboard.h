@@ -78,6 +78,13 @@ public:
   */
   Atom getSelection() const;
 
+  // IClipboard monitoring overrides (stubs - X11 uses event-driven updates)
+  bool hasChanged() const override { return false; }
+  void startMonitoring() override {}
+  void stopMonitoring() override {}
+  void resetChanged() override {}
+  ClipboardID getID() const override { return m_id; }
+
   // IClipboard overrides
   bool empty() override;
   void add(Format, const std::string &data) override;

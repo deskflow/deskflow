@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "deskflow/ClipboardTypes.h"
+
 #include <cstdint>
 #include <string>
 
@@ -19,6 +21,27 @@ class IClipboard
 {
 public:
   virtual ~IClipboard() = default;
+
+  //! @name monitoring
+  //@{
+
+  //! Check if clipboard has changed
+  virtual bool hasChanged() const = 0;
+
+  //! Start monitoring clipboard changes
+  virtual void startMonitoring() = 0;
+
+  //! Stop monitoring clipboard changes
+  virtual void stopMonitoring() = 0;
+
+  //! Reset the changed flag
+  virtual void resetChanged() = 0;
+
+  //! Get clipboard ID
+  virtual ClipboardID getID() const = 0;
+
+  //@}
+
   //! Timestamp type
   /*!
   Timestamp type.  Timestamps are in milliseconds from some
