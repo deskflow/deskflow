@@ -1187,10 +1187,10 @@ void MainWindow::showClientError(deskflow::client::ErrorType error, const QStrin
   m_clientErrorVisible = false;
 }
 
-void MainWindow::handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth)
+void MainWindow::handleNewClientPromptRequest(const QString &clientName)
 {
   showAndActivate();
-  bool result = deskflow::gui::messages::showNewClientPrompt(this, clientName, usePeerAuth);
+  bool result = deskflow::gui::messages::showNewClientPrompt(this, clientName);
   m_serverConnection.handleNewClientResult(clientName, result);
 }
 

@@ -25,7 +25,7 @@ void showFirstConnectedMessage(QWidget *parent);
 
 void showCloseReminder(QWidget *parent);
 
-bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false);
+bool showNewClientPrompt(QWidget *parent, const QString &clientName);
 
 bool showClearSettings(QWidget *parent);
 

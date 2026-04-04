@@ -184,9 +184,10 @@ void showFirstConnectedMessage(QWidget *parent)
   QMessageBox::information(parent, title, message);
 }
 
-bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
+bool showNewClientPrompt(QWidget *parent, const QString &clientName)
 {
-  if (serverRequiresPeerAuth) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool() &&
+      Settings::value(Settings::Security::CheckPeers).toBool()) {
     // When peer auth is enabled you will be prompted to allow the connection before seeing this dialog.
     // This is why we do not show a dialog with an option to ignore the new client
     QMessageBox::information(
