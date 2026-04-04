@@ -31,7 +31,7 @@ public:
   void handleNewClientResult(const QString &clientName, bool acceptClient);
 
 Q_SIGNALS:
-  void requestNewClientPrompt(const QString &clientName, bool peerAuthRequired);
+  void requestNewClientPrompt(const QString &clientName);
   void configureClient(const QString &clientName);
   void clientsChanged(const QStringList &clients);
 

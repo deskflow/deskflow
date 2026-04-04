@@ -140,7 +140,7 @@ private:
   void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString &newRemoteHost);
-  void handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth);
+  void handleNewClientPromptRequest(const QString &clientName);
   void updateIpLabel(const QStringList &addresses);
   void updateTimeoutDelay(int newDelay);
 

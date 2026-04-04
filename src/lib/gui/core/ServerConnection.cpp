@@ -82,9 +82,7 @@ void ServerConnection::handleNewClient(const QString &clientName)
   }
 
   m_messageShowing = true;
-  const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
-  const bool requireCerts = Settings::value(Settings::Security::CheckPeers).toBool();
-  Q_EMIT requestNewClientPrompt(clientName, tlsEnabled && requireCerts);
+  Q_EMIT requestNewClientPrompt(clientName);
 }
 
 void ServerConnection::handleNewClientResult(const QString &clientName, bool acceptClient)
