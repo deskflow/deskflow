@@ -142,12 +142,11 @@ void showFirstServerStartMessage(QWidget *parent)
   );
 }
 
-void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableService, bool isServer)
+void showFirstConnectedMessage(QWidget *parent)
 {
-
   auto message = QObject::tr("<p>%1 is now connected!</p>").arg(kAppName);
 
-  if (isServer) {
+  if (Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>() == Settings::Server) {
     message.append(
         QObject::tr(
             "<p>Try moving your mouse to your other computer. Once there, go ahead "
@@ -159,7 +158,10 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
     message.append(QObject::tr("<p>Try controlling this computer remotely.</p>"));
   }
 
-  if (!closeToTray && !enableService) {
+  using ProcessMode = Settings::ProcessMode;
+
+  if (Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Desktop &&
+      !Settings::value(Settings::Gui::CloseToTray).toBool()) {
     message.append(
         QObject::tr(
             "<p>As you do not have the setting enabled to keep %1 running in "

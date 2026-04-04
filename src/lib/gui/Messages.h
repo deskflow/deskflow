@@ -21,7 +21,7 @@ void raiseCriticalDialog();
 
 void showFirstServerStartMessage(QWidget *parent);
 
-void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableService, bool isServer);
+void showFirstConnectedMessage(QWidget *parent);
 
 void showCloseReminder(QWidget *parent);
 
