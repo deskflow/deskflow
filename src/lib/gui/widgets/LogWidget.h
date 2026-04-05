@@ -20,6 +20,7 @@ public:
   void appendLine(const QString &msg);
   void findNext(const QString &text);
   void findPrevious(const QString &text);
+  void scrollToBottom() const;
 
 private:
   QPlainTextEdit *m_textLog = nullptr;

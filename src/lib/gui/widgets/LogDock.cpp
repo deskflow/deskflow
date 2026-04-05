@@ -66,6 +66,9 @@ LogDock::LogDock(QWidget *parent)
 void LogDock::appendLine(const QString &msg)
 {
   m_textLog->appendLine(msg);
+  if (auto p = static_cast<QWidget *>(parent()); p->isVisible() && !p->isMinimized() && !m_searchWidget->isExpanded()) {
+    m_textLog->scrollToBottom();
+  }
 }
 
 void LogDock::setFloating(bool floating)
