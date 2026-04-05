@@ -20,6 +20,11 @@ public:
 };
 
 // BMP is little-endian
+static inline uint16_t fromLEU16(const uint8_t *data)
+{
+  return static_cast<uint16_t>(data[0]) | (static_cast<uint16_t>(data[1]) << 8);
+}
+
 static inline uint32_t fromLEU32(const uint8_t *data)
 {
   return static_cast<uint32_t>(data[0]) | (static_cast<uint32_t>(data[1]) << 8) |
@@ -62,7 +67,38 @@ CFStringRef OSXClipboardBMPConverter::getOSXFormat() const
 std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) const
 {
   LOG_DEBUG1("getting data from clipboard");
-  // create BMP image
+
+  if (bmp.size() < 4) {
+    return std::string();
+  }
+
+  // read the actual DIB header size from biSize
+  const uint8_t *rawDIB = reinterpret_cast<const uint8_t *>(bmp.data());
+  uint32_t biSize = fromLEU32(rawDIB);
+
+  // compute pixel data offset: file header + DIB header + color table
+  uint32_t pixelOffset = 14 + biSize;
+
+  if (biSize >= 40 && bmp.size() >= 40) {
+    uint16_t biBitCount = fromLEU16(rawDIB + 14);
+    uint32_t biCompression = fromLEU32(rawDIB + 16);
+    uint32_t biClrUsed = fromLEU32(rawDIB + 32);
+
+    // BITMAPINFOHEADER with BI_BITFIELDS has 3 DWORD color masks after header
+    if (biSize == 40 && biCompression == 3 /* BI_BITFIELDS */) {
+      pixelOffset += 3 * 4;
+    }
+
+    // add color table size
+    if (biBitCount <= 8) {
+      uint32_t colors = biClrUsed ? biClrUsed : (1u << biBitCount);
+      pixelOffset += colors * 4;
+    } else if (biClrUsed > 0) {
+      pixelOffset += biClrUsed * 4;
+    }
+  }
+
+  // create BMP file header
   uint8_t header[14];
   uint8_t *dst = header;
   toLE(dst, 'B');
@@ -70,13 +106,13 @@ std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) con
   toLE(dst, static_cast<uint32_t>(14 + bmp.size()));
   toLE(dst, static_cast<uint16_t>(0));
   toLE(dst, static_cast<uint16_t>(0));
-  toLE(dst, static_cast<uint32_t>(14 + 40));
+  toLE(dst, pixelOffset);
   return std::string(reinterpret_cast<const char *>(header), 14) + bmp;
 }
 
 std::string OSXClipboardBMPConverter::toIClipboard(const std::string &bmp) const
 {
-  // make sure data is big enough for a BMP file
+  // make sure data is big enough for a BMP file header + minimal DIB header
   if (bmp.size() <= 14 + 40) {
     return std::string();
   }
@@ -87,13 +123,7 @@ std::string OSXClipboardBMPConverter::toIClipboard(const std::string &bmp) const
     return std::string();
   }
 
-  // get offset to image data
-  uint32_t offset = fromLEU32(rawBMPHeader + 10);
-
-  // construct BMP
-  if (offset == 14 + 40) {
-    return bmp.substr(14);
-  } else {
-    return bmp.substr(14, 40) + bmp.substr(offset, bmp.size() - offset);
-  }
+  // strip the 14-byte BMP file header, keep the entire DIB
+  // (info header + optional color table + pixel data)
+  return bmp.substr(14);
 }
