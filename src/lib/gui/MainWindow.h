@@ -41,7 +41,6 @@ class QComboBox;
 class QTabWidget;
 class QCheckBox;
 class QRadioButton;
-class QMessageBox;
 class QAbstractButton;
 class QLocalServer;
 

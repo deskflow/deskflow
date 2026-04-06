@@ -10,7 +10,6 @@
 #include "ServerMessage.h"
 #include "common/Settings.h"
 
-#include <QMessageBox>
 #include <QPushButton>
 
 namespace deskflow::gui {

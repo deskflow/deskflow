@@ -10,7 +10,6 @@
 #include "common/Settings.h"
 
 #include <QHostAddress>
-#include <QMessageBox>
 
 namespace deskflow::gui {
 
