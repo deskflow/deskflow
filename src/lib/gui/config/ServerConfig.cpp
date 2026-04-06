@@ -12,7 +12,6 @@
 #include "common/Settings.h"
 
 #include <QAbstractButton>
-#include <QMessageBox>
 #include <QPushButton>
 
 using enum ScreenConfig::Modifier;
