@@ -9,14 +9,10 @@
 
 #pragma once
 
-#include <QHostAddress>
 #include <QMainWindow>
-#include <QMutex>
 #include <QProcess>
 #include <QRegularExpression>
-#include <QSettings>
 #include <QSystemTrayIcon>
-#include <QThread>
 
 #include "VersionChecker.h"
 #include "config/ServerConfig.h"
@@ -32,16 +28,6 @@
 
 class QAction;
 class QMenu;
-class QLabel;
-class QLineEdit;
-class QGroupBox;
-class QPushButton;
-class QTextEdit;
-class QComboBox;
-class QTabWidget;
-class QCheckBox;
-class QRadioButton;
-class QAbstractButton;
 class QLocalServer;
 
 class DeskflowApplication;
@@ -65,9 +51,6 @@ class MainWindow : public QMainWindow
   using ProcessState = deskflow::core::ProcessState;
 
   Q_OBJECT
-
-  friend class DeskflowApplication;
-  friend class SettingsDialog;
 
 public:
   enum class LogLevel
