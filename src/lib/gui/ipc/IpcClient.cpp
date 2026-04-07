@@ -175,8 +175,15 @@ void IpcClient::handleHandshakeMessage(const QStringList &parts)
     return;
   }
 
+  if (parts.size() < 2) {
+    qCritical().noquote() << QStringLiteral("%1 ipc server hello missing version").arg(m_typeName);
+    disconnectFromServer();
+    Q_EMIT connectionFailed();
+    return;
+  }
+
   const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
-  const auto serverVersion = parts.size() >= 2 ? parts.at(1) : QString();
+  const auto serverVersion = parts.at(1);
   if (serverVersion != versionId) {
     qCritical().noquote(
     ) << QStringLiteral("%1 ipc version mismatch (client: %2 , server: %3)").arg(m_typeName, versionId, serverVersion);

@@ -112,12 +112,23 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
   }
 
   if (const auto &command = parts.at(0); command == "hello") {
+    if (parts.size() < 2) {
+      LOG_ERR("%s ipc client hello missing version", m_typeName.constData());
+      writeToClientSocket(clientSocket, "error=missing version");
+      clientSocket->flush();
+      clientSocket->disconnectFromServer();
+      return;
+    }
+
     const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
-    const auto clientVersion = parts.size() >= 2 ? parts.at(1) : QString();
+    const auto clientVersion = parts.at(1);
     LOG_DEBUG("%s ipc server got hello message (version: %s)", m_typeName.constData(), versionId.toUtf8().constData());
 
     if (clientVersion != versionId) {
-      LOG_ERR("%s ipc client version mismatch (server: %s)", m_typeName.constData(), versionId.toUtf8().constData());
+      LOG_ERR(
+          "%s ipc client version mismatch (client: %s, server: %s)", m_typeName.constData(),
+          clientVersion.toUtf8().constData(), versionId.toUtf8().constData()
+      );
       writeToClientSocket(clientSocket, QStringLiteral("error=version mismatch, expected: %1").arg(versionId));
       clientSocket->flush();
       clientSocket->disconnectFromServer();
