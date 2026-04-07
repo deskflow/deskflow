@@ -1,6 +1,5 @@
 var dir_da58851cf6af1fd60b06cfef734271e0 =
 [
-    [ "IServerConfig.h", "IServerConfig_8h.html", "IServerConfig_8h" ],
     [ "Screen.cpp", "gui_2config_2Screen_8cpp.html", "gui_2config_2Screen_8cpp" ],
     [ "Screen.h", "gui_2config_2Screen_8h.html", "gui_2config_2Screen_8h" ],
     [ "ScreenConfig.cpp", "ScreenConfig_8cpp.html", null ],

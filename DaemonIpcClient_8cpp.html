@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.114</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.130</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -97,33 +97,23 @@ $(function(){initNavTree('DaemonIpcClient_8cpp.html','',''); });
 <div class="textblock"><code>#include &quot;<a class="el" href="DaemonIpcClient_8h_source.html">DaemonIpcClient.h</a>&quot;</code><br />
 <code>#include &quot;common/Constants.h&quot;</code><br />
 <code>#include &lt;QDebug&gt;</code><br />
-<code>#include &lt;QLocalSocket&gt;</code><br />
-<code>#include &lt;QMutexLocker&gt;</code><br />
-<code>#include &lt;QObject&gt;</code><br />
-<code>#include &lt;QString&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for DaemonIpcClient.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="DaemonIpcClient_8cpp__incl.png" border="0" usemap="#asrc_2lib_2gui_2ipc_2DaemonIpcClient_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2gui_2ipc_2DaemonIpcClient_8cpp" id="asrc_2lib_2gui_2ipc_2DaemonIpcClient_8cpp">
-<area shape="rect" title=" " alt="" coords="332,5,500,44"/>
-<area shape="rect" href="DaemonIpcClient_8h.html" title=" " alt="" coords="5,92,137,117"/>
-<area shape="poly" title=" " alt="" coords="332,47,139,91,137,86,333,42"/>
-<area shape="rect" title=" " alt="" coords="134,165,203,189"/>
-<area shape="poly" title=" " alt="" coords="329,35,298,44,263,56,230,72,201,94,183,120,174,151,170,148,178,118,197,90,227,67,261,51,297,39,334,33"/>
-<area shape="rect" title=" " alt="" coords="211,92,358,117"/>
-<area shape="poly" title=" " alt="" coords="387,44,318,86,316,81,382,46"/>
-<area shape="rect" title=" " alt="" coords="382,92,451,117"/>
-<area shape="poly" title=" " alt="" coords="418,43,419,78,414,75,415,47"/>
-<area shape="rect" title=" " alt="" coords="474,92,577,117"/>
-<area shape="poly" title=" " alt="" coords="443,42,500,83,494,83,442,47"/>
-<area shape="rect" title=" " alt="" coords="601,92,706,117"/>
-<area shape="poly" title=" " alt="" coords="474,42,606,86,601,87,473,47"/>
-<area shape="rect" title=" " alt="" coords="730,92,796,117"/>
-<area shape="poly" title=" " alt="" coords="501,41,718,91,712,92,500,46"/>
-<area shape="rect" title=" " alt="" coords="37,165,105,189"/>
-<area shape="poly" title=" " alt="" coords="73,115,74,150,68,148,69,119"/>
-<area shape="poly" title=" " alt="" coords="88,115,143,155,138,156,86,120"/>
+<area shape="rect" title=" " alt="" coords="164,5,332,44"/>
+<area shape="rect" href="DaemonIpcClient_8h.html" title=" " alt="" coords="20,92,151,117"/>
+<area shape="poly" title=" " alt="" coords="207,47,125,87,122,83,211,43"/>
+<area shape="rect" title=" " alt="" coords="175,92,322,117"/>
+<area shape="poly" title=" " alt="" coords="250,42,251,77,246,75,247,47"/>
+<area shape="rect" title=" " alt="" coords="346,92,415,117"/>
+<area shape="poly" title=" " alt="" coords="281,42,350,83,345,84,280,47"/>
+<area shape="rect" href="IpcClient_8h.html" title=" " alt="" coords="5,165,89,189"/>
+<area shape="poly" title=" " alt="" coords="78,120,63,152,58,150,80,115"/>
+<area shape="rect" title=" " alt="" coords="51,237,120,262"/>
+<area shape="poly" title=" " alt="" coords="91,115,103,164,102,195,97,224,92,221,97,194,98,165,88,120"/>
+<area shape="poly" title=" " alt="" coords="55,188,75,223,69,224,52,192"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -132,11 +122,6 @@ Namespaces</h2></td></tr>
 <tr class="memitem:deskflow" id="r_deskflow"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow.html">deskflow</a></td></tr>
 <tr class="memitem:deskflow_3A_3Agui" id="r_deskflow_3A_3Agui"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow_1_1gui.html">deskflow::gui</a></td></tr>
 <tr class="memitem:deskflow_3A_3Agui_3A_3Aipc" id="r_deskflow_3A_3Agui_3A_3Aipc"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow_1_1gui_1_1ipc.html">deskflow::gui::ipc</a></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ad676c7e7a9f7a12883b062972cb7be07" id="r_ad676c7e7a9f7a12883b062972cb7be07"><td class="memItemLeft">const auto&#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow_1_1gui_1_1ipc.html#ad676c7e7a9f7a12883b062972cb7be07">deskflow::gui::ipc::kTimeout</a> = 1000</td></tr>
-<tr class="memitem:acea5bb86329ea7330f86ab8105096bae" id="r_acea5bb86329ea7330f86ab8105096bae"><td class="memItemLeft">const auto&#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow_1_1gui_1_1ipc.html#acea5bb86329ea7330f86ab8105096bae">deskflow::gui::ipc::kRetryLimit</a> = 3</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -30,7 +30,7 @@ var classClient =
     [ "mouseWheel", "classClient.html#a89fe23b7c6abe9e8b1d50f49e37e8a45", null ],
     [ "operator=", "classClient.html#af321e8da610a61a31c020e1c0a4e32f5", null ],
     [ "operator=", "classClient.html#afa3660228505661fa5563fc05158394f", null ],
-    [ "refuseConnection", "classClient.html#a34b2cb3da4ba72d74dbd7fe079749c1f", null ],
+    [ "refuseConnection", "classClient.html#a034a37eb46efae8eed1222b30cb06271", null ],
     [ "resetOptions", "classClient.html#a0c481c7f62b29663af8c56673d52ad2b", null ],
     [ "screensaver", "classClient.html#a573b3aeb13815c7b6d25c74c67652640", null ],
     [ "setClipboard", "classClient.html#ae44078a3d819acfaa96e4d6c211ccac8", null ],

@@ -1,0 +1,18 @@
+<map id="src/lib/gui/ipc/IpcClient.h" name="src/lib/gui/ipc/IpcClient.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="472,5,636,30"/>
+<area shape="rect" id="Node000002" href="$CoreIpcClient_8h.html" title=" " alt="" coords="246,85,438,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="511,35,375,87,373,82,506,36"/>
+<area shape="rect" id="Node000005" href="$DaemonIpcClient_8h.html" title=" " alt="" coords="470,78,638,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="556,44,556,79,552,76,552,48"/>
+<area shape="rect" id="Node000008" href="$IpcClient_8cpp.html" title=" " alt="" coords="662,85,840,110"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="598,33,724,84,719,84,597,39"/>
+<area shape="rect" id="Node000003" href="$CoreProcess_8cpp.html" title=" " alt="" coords="236,172,448,196"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="344,123,344,173,340,170,340,127"/>
+<area shape="rect" id="Node000004" href="$CoreIpcClient_8cpp.html" title=" " alt="" coords="5,172,212,196"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="297,117,142,174,140,169,294,113"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="495,123,372,174,370,169,490,123"/>
+<area shape="rect" id="Node000006" href="$MainWindow_8cpp.html" title=" " alt="" coords="472,172,652,196"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="559,131,563,173,559,169,555,134"/>
+<area shape="rect" id="Node000007" href="$DaemonIpcClient_8cpp.html" title=" " alt="" coords="676,165,845,203"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="614,120,717,164,712,164,613,126"/>
+</map>

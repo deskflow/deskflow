@@ -1,7 +1,12 @@
 <map id="src/lib/deskflow/ipc/DaemonIpcServer.h" name="src/lib/deskflow/ipc/DaemonIpcServer.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="11,5,152,44"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,75,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,43,56,80,51,77,69,46"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="98,92,150,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="93,42,113,78,108,78,90,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="51,5,192,44"/>
+<area shape="rect" id="Node000002" href="$IpcServer_8h.html" title=" " alt="" coords="77,92,166,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,42,124,77,119,75,120,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,165,75,189"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="100,47,85,68,68,93,56,122,48,150,43,148,50,120,63,91,81,65,103,42"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="190,92,255,117"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="146,42,198,82,193,83,145,47"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,116,66,157,63,152,105,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="98,165,150,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="124,115,125,150,121,148,120,119"/>
 </map>

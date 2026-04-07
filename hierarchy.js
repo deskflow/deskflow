@@ -229,9 +229,6 @@ var hierarchy =
     [ "ISecondaryScreen", "classISecondaryScreen.html", [
       [ "IPlatformScreen", "classIPlatformScreen.html", null ]
     ] ],
-    [ "deskflow::gui::IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", [
-      [ "ServerConfig", "classServerConfig.html", null ]
-    ] ],
     [ "ISocket", "classISocket.html", [
       [ "IDataSocket", "classIDataSocket.html", [
         [ "TCPSocket", "classTCPSocket.html", [
@@ -340,19 +337,24 @@ var hierarchy =
       [ "MainWindow", "classMainWindow.html", null ]
     ] ],
     [ "QObject", null, [
+      [ "App", "classApp.html", null ],
       [ "DaemonApp", "classDaemonApp.html", null ],
       [ "I18N", "classI18N.html", null ],
       [ "Settings", "classSettings.html", null ],
       [ "VersionChecker", "classVersionChecker.html", null ],
       [ "WlClipboard", "classWlClipboard.html", null ],
-      [ "deskflow::core::ipc::DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", null ],
-      [ "deskflow::gui::ClientConnection", "classdeskflow_1_1gui_1_1ClientConnection.html", null ],
+      [ "deskflow::core::ipc::IpcServer", "classdeskflow_1_1core_1_1ipc_1_1IpcServer.html", [
+        [ "deskflow::core::ipc::CoreIpcServer", "classdeskflow_1_1core_1_1ipc_1_1CoreIpcServer.html", null ],
+        [ "deskflow::core::ipc::DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", null ]
+      ] ],
       [ "deskflow::gui::CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", null ],
       [ "deskflow::gui::FileTail", "classdeskflow_1_1gui_1_1FileTail.html", null ],
       [ "deskflow::gui::Logger", "classdeskflow_1_1gui_1_1Logger.html", null ],
       [ "deskflow::gui::NetworkMonitor", "classdeskflow_1_1gui_1_1NetworkMonitor.html", null ],
-      [ "deskflow::gui::ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", null ],
-      [ "deskflow::gui::ipc::DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", null ],
+      [ "deskflow::gui::ipc::IpcClient", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html", [
+        [ "deskflow::gui::ipc::CoreIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html", null ],
+        [ "deskflow::gui::ipc::DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", null ]
+      ] ],
       [ "validators::ValidationError", "classvalidators_1_1ValidationError.html", null ]
     ] ],
     [ "QPushButton", null, [
@@ -459,7 +461,6 @@ var hierarchy =
     [ "Settings::Security", "structSettings_1_1Security.html", null ],
     [ "Server", "classServer.html", null ],
     [ "Settings::Server", "structSettings_1_1Server.html", null ],
-    [ "deskflow::gui::ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", null ],
     [ "ServerProxy", "classServerProxy.html", null ],
     [ "SocketMultiplexer", "classSocketMultiplexer.html", null ],
     [ "Ssl", "structSsl.html", null ],

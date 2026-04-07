@@ -13,12 +13,8 @@ var namespacedeskflow_1_1gui =
       [ "isCertValid", "namespacedeskflow_1_1gui_1_1TlsUtility.html#a1768f15e74168a3e5b621f2981ba5029", null ],
       [ "isEnabled", "namespacedeskflow_1_1gui_1_1TlsUtility.html#aedd7ad3bb197354baeb738cef4b467a5", null ]
     ] ],
-    [ "IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", "classdeskflow_1_1gui_1_1IServerConfig" ],
-    [ "ClientConnection", "classdeskflow_1_1gui_1_1ClientConnection.html", "classdeskflow_1_1gui_1_1ClientConnection" ],
     [ "CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", "classdeskflow_1_1gui_1_1CoreProcess" ],
     [ "NetworkMonitor", "classdeskflow_1_1gui_1_1NetworkMonitor.html", "classdeskflow_1_1gui_1_1NetworkMonitor" ],
-    [ "ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", "classdeskflow_1_1gui_1_1ServerConnection" ],
-    [ "ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", "classdeskflow_1_1gui_1_1ServerMessage" ],
     [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
     [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
     [ "iconMode", "namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12", null ],

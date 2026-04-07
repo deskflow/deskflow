@@ -1,8 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e":[6,0,0,5,0,31],
-"classdeskflow_1_1server_1_1ConfigReadContext.html":[5,0,0,6,1],
-"classdeskflow_1_1server_1_1ConfigReadContext.html":[6,0,0,5,1],
 "classdeskflow_1_1server_1_1ConfigReadContext.html#a015b02335b17c35ccbb460687c2b9dea":[5,0,0,6,1,3],
 "classdeskflow_1_1server_1_1ConfigReadContext.html#a015b02335b17c35ccbb460687c2b9dea":[6,0,0,5,1,3],
 "classdeskflow_1_1server_1_1ConfigReadContext.html#a0acbd253d8976071d35a0caeceb3a1eb":[5,0,0,6,1,15],
@@ -188,8 +185,9 @@ var NAVTREEINDEX20 =
 "contributing_guide.html#autotoc_md10":[1,0],
 "deprecated.html":[3],
 "deskflow-core_8cpp.html":[7,0,1,0,0,3],
-"deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de":[7,0,1,0,0,3,1],
-"deskflow-core_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,0,3,0],
+"deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de":[7,0,1,0,0,3,2],
+"deskflow-core_8cpp.html#a1adb73677154a052f14d52d459f55a58":[7,0,1,0,0,3,0],
+"deskflow-core_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,0,3,1],
 "deskflow-daemon_8cpp.html":[7,0,1,0,1,2],
 "deskflow-daemon_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,1,2,1],
 "deskflow-daemon_8cpp.html#a40d30edf9ea1ac2a47b7874352b033b3":[7,0,1,0,1,2,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX20 =
 "functions_func_d.html":[6,3,1,4],
 "functions_func_e.html":[6,3,1,5],
 "functions_func_f.html":[6,3,1,6],
-"functions_func_g.html":[6,3,1,7]
+"functions_func_g.html":[6,3,1,7],
+"functions_func_h.html":[6,3,1,8],
+"functions_func_i.html":[6,3,1,9]
 };

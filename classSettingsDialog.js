@@ -1,6 +1,6 @@
 var classSettingsDialog =
 [
-    [ "SettingsDialog", "classSettingsDialog.html#afe7b8a9203d29348c5dfd1a527b8b6a6", null ],
+    [ "SettingsDialog", "classSettingsDialog.html#afc75245bbf56325380e8096c6dbe76c0", null ],
     [ "~SettingsDialog", "classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6", null ],
     [ "changeEvent", "classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee", null ],
     [ "extracted", "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e", null ],

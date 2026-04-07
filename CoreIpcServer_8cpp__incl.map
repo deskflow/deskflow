@@ -1,0 +1,27 @@
+<map id="src/lib/deskflow/ipc/CoreIpcServer.cpp" name="src/lib/deskflow/ipc/CoreIpcServer.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="330,5,464,44"/>
+<area shape="rect" id="Node000002" href="$CoreIpcServer_8h.html" title=" " alt="" coords="66,92,182,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="329,47,181,90,179,85,333,43"/>
+<area shape="rect" id="Node000006" href="$Log_8h.html" title=" " alt="" coords="285,92,371,117"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="383,43,350,82,347,78,378,46"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="395,92,541,117"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="415,42,450,81,444,80,414,47"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="565,92,667,117"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="450,42,572,86,566,87,450,47"/>
+<area shape="rect" id="Node000003" href="$IpcServer_8h.html" title=" " alt="" coords="38,165,127,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,115,99,153,95,150,116,119"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,237,75,262"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="87,119,56,138,41,151,29,166,24,179,24,193,30,222,25,223,18,194,19,178,24,163,37,147,53,133,90,115"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="118,237,170,262"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="129,115,141,164,146,223,141,221,136,165,126,120"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="78,188,57,226,53,223,73,191"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="94,187,127,225,121,226,92,192"/>
+<area shape="rect" id="Node000007" href="$LogLevel_8h.html" title=" " alt="" coords="201,165,284,189"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="316,116,270,157,267,153,312,119"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="309,165,347,189"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="330,115,330,150,326,148,326,119"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="371,165,429,189"/>
+<area shape="poly" id="edge10_Node000006_Node000009" title=" " alt="" coords="341,115,380,154,375,153,339,120"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="453,165,518,189"/>
+<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="354,115,448,158,443,158,354,120"/>
+</map>

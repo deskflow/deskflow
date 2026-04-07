@@ -13,5 +13,6 @@ var searchData=
   ['primaryscreensaveractivated_10',['PrimaryScreenSaverActivated',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a22535e96afc49ba89c6380ba5ebf8a51',1,'deskflow']]],
   ['primaryscreensaverdeactivated_11',['PrimaryScreenSaverDeactivated',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a55a9a46b4d6ca6c6cdca12c1361ff1aa',1,'deskflow']]],
   ['primaryscreenwheel_12',['PrimaryScreenWheel',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a731395388d62cd6067648dea2768653d',1,'deskflow']]],
-  ['print_13',['Print',['../LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d',1,'LogLevel.h']]]
+  ['print_13',['Print',['../LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d',1,'LogLevel.h']]],
+  ['protocolerror_14',['ProtocolError',['../namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50ecaca3da8f495e4e628912a7798655da6c2',1,'deskflow::core']]]
 ];

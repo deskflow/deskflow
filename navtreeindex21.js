@@ -1,7 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"functions_func_h.html":[6,3,1,8],
-"functions_func_i.html":[6,3,1,9],
 "functions_func_j.html":[6,3,1,10],
 "functions_func_k.html":[6,3,1,11],
 "functions_func_l.html":[6,3,1,12],
@@ -182,12 +180,12 @@ var NAVTREEINDEX21 =
 "group__protocol__system.html":[4,2,2,5],
 "group__protocol__system.html#ga7e76e67c020b09782d6c865db429819b":[4,2,2,5,1],
 "group__protocol__system.html#ga95ee69b1c74a09b08615e339e5dfb838":[4,2,2,5,0],
-"gui_2config_2Screen_8cpp.html":[7,0,1,1,5,0,1],
-"gui_2config_2Screen_8cpp.html#a8998f4fde8b4d01dde07d3eccfbea73d":[7,0,1,1,5,0,1,2],
-"gui_2config_2Screen_8cpp.html#a9288122eb9f01fe71828c89207035bb5":[7,0,1,1,5,0,1,0],
-"gui_2config_2Screen_8cpp.html#aa614b21714c5878160804fb6375ea814":[7,0,1,1,5,0,1,1],
-"gui_2config_2Screen_8h.html":[7,0,1,1,5,0,2],
-"gui_2config_2Screen_8h_source.html":[7,0,1,1,5,0,2],
+"gui_2config_2Screen_8cpp.html":[7,0,1,1,5,0,0],
+"gui_2config_2Screen_8cpp.html#a8998f4fde8b4d01dde07d3eccfbea73d":[7,0,1,1,5,0,0,2],
+"gui_2config_2Screen_8cpp.html#a9288122eb9f01fe71828c89207035bb5":[7,0,1,1,5,0,0,0],
+"gui_2config_2Screen_8cpp.html#aa614b21714c5878160804fb6375ea814":[7,0,1,1,5,0,0,1],
+"gui_2config_2Screen_8h.html":[7,0,1,1,5,0,1],
+"gui_2config_2Screen_8h_source.html":[7,0,1,1,5,0,1],
 "hierarchy.html":[6,2],
 "index.html":[],
 "interfaceScreenSaverController.html":[6,0,195],
@@ -249,5 +247,7 @@ var NAVTREEINDEX21 =
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a55a9a46b4d6ca6c6cdca12c1361ff1aa":[5,0,0,18,46],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a587c10af51b81a49ef10720736364cd4":[5,0,0,18,50],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a5c10b238cd32de63b15d003b782b081e":[5,0,0,18,6],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a60fcab4d750adf8fc79537e6e61769c8":[5,0,0,18,22]
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a60fcab4d750adf8fc79537e6e61769c8":[5,0,0,18,22],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a662eedb3d21ec748ac1199d4357c8bd5":[5,0,0,18,51],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6ab94297a308225c53fd052a1d3e7477":[5,0,0,18,19]
 };

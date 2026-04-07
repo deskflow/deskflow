@@ -1,7 +1,8 @@
 <map id="src/lib/gui/ipc/DaemonIpcClient.h" name="src/lib/gui/ipc/DaemonIpcClient.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,174,44"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="10,92,78,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,43,61,80,56,77,76,46"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="102,92,171,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="102,42,124,79,119,78,100,47"/>
+<area shape="rect" id="Node000002" href="$IpcClient_8h.html" title=" " alt="" coords="9,92,92,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,42,66,79,61,77,79,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="55,165,124,189"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="96,42,106,78,107,117,100,151,95,148,102,116,100,78,95,47"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,115,79,151,73,151,56,120"/>
 </map>

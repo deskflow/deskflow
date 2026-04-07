@@ -1,12 +1,19 @@
 var NAVTREEINDEX15 =
 {
+"classSettings.html#acc77a634afaed3905e6545630c71d5f2":[6,0,209,13],
+"classSettings.html#ace87ffc019dee661124504049eae06c9":[6,0,209,20],
+"classSettings.html#ad3ba2f3025c98073226c0d896158ad17":[6,0,209,33],
+"classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a":[6,0,209,10],
+"classSettings.html#ae251f1cdec2bce2dbbf133c18550888c":[6,0,209,19],
+"classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d":[6,0,209,26],
+"classSettings.html#ae9e80e06caddd4c619dc286848b1f187":[6,0,209,14],
 "classSettings.html#afd0a8dbda15587467729da0b489dd97d":[6,0,209,24],
 "classSettingsDialog.html":[6,0,210],
 "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,210,3],
 "classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,4],
 "classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,210,1],
 "classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,210,2],
-"classSettingsDialog.html#afe7b8a9203d29348c5dfd1a527b8b6a6":[6,0,210,0],
+"classSettingsDialog.html#afc75245bbf56325380e8096c6dbe76c0":[6,0,210,0],
 "classSimpleEventQueueBuffer.html":[6,0,211],
 "classSimpleEventQueueBuffer.html#a1660098f79ed1c822ff0f8680e04da6a":[6,0,211,8],
 "classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,211,3],
@@ -242,12 +249,5 @@ var NAVTREEINDEX15 =
 "classTrashScreenWidget.html":[6,0,239],
 "classTrashScreenWidget.html#a2574010f6660b4306da12ca9aa0a2cf8":[6,0,239,3],
 "classTrashScreenWidget.html#a2e5944864a2fba0b610e854d5eac0ace":[6,0,239,0],
-"classTrashScreenWidget.html#ad0e1725ce39323068e535366e87c68a4":[6,0,239,2],
-"classTrashScreenWidget.html#ad3bec5b7e997975cc22daadb14485745":[6,0,239,1],
-"classUnicode.html":[6,0,241],
-"classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e":[6,0,241,2],
-"classUnicode.html#a318adabcf876bf85a933412df0732c97":[6,0,241,0],
-"classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b":[6,0,241,4],
-"classUnicode.html#a6cf183d92569cbd9d50211908810ffec":[6,0,241,3],
-"classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c":[6,0,241,1]
+"classTrashScreenWidget.html#ad0e1725ce39323068e535366e87c68a4":[6,0,239,2]
 };

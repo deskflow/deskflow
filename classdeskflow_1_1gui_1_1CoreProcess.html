@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.114</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.130</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -131,11 +131,17 @@ Signals</h2></td></tr>
 <tr class="memitem:ae7fb7d3a914aeca7b5c57edb4c1f9695" id="r_ae7fb7d3a914aeca7b5c57edb4c1f9695"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae7fb7d3a914aeca7b5c57edb4c1f9695">processStateChanged</a> (<a class="el" href="namespacedeskflow_1_1core.html#a368b81c385b88a65d4ade1da45949480">deskflow::core::ProcessState</a> state)</td></tr>
 <tr class="memitem:a0cdc63a484155a1564542904170c2617" id="r_a0cdc63a484155a1564542904170c2617"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0cdc63a484155a1564542904170c2617">secureSocket</a> (bool enabled)</td></tr>
 <tr class="memitem:ab305459e98593bc76e894c883f70cb9f" id="r_ab305459e98593bc76e894c883f70cb9f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab305459e98593bc76e894c883f70cb9f">daemonIpcClientConnectionFailed</a> ()</td></tr>
+<tr class="memitem:a3da8510b96ea0915afb70462649dc2d4" id="r_a3da8510b96ea0915afb70462649dc2d4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a3da8510b96ea0915afb70462649dc2d4">connectedClientsChanged</a> (const QStringList &amp;clients)</td></tr>
 <tr class="memitem:a6808a5b2d6f73b1feb6540138a08a965" id="r_a6808a5b2d6f73b1feb6540138a08a965"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6808a5b2d6f73b1feb6540138a08a965">securityLevelChanged</a> (QString securityLevel)</td></tr>
+<tr class="memitem:aff9493dcb93282c4db43544852710591" id="r_aff9493dcb93282c4db43544852710591"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aff9493dcb93282c4db43544852710591">unrecognisedClient</a> (const QString &amp;clientName)</td></tr>
+<tr class="memitem:ac96e4e2b65ade2afbeed3e262219ea45" id="r_ac96e4e2b65ade2afbeed3e262219ea45"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac96e4e2b65ade2afbeed3e262219ea45">connectionRefused</a> (<a class="el" href="namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50ec">deskflow::core::ConnectionRefusal</a> reason)</td></tr>
+<tr class="memitem:af77e1a98460eda4535849f885757e3ea" id="r_af77e1a98460eda4535849f885757e3ea"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af77e1a98460eda4535849f885757e3ea">retryIn</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> seconds)</td></tr>
+<tr class="memitem:ae9d45891dc2d9866cd42e1631e2a139b" id="r_ae9d45891dc2d9866cd42e1631e2a139b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae9d45891dc2d9866cd42e1631e2a139b">peerFingerprint</a> (const QString &amp;fingerprint)</td></tr>
+<tr class="memitem:ad1bdbc39c968c6806261d2429b77dab8" id="r_ad1bdbc39c968c6806261d2429b77dab8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad1bdbc39c968c6806261d2429b77dab8">missingKeyboardLayouts</a> (const QString &amp;layouts)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a92bad0d010df1a623308db157ffb5ca3" id="r_a92bad0d010df1a623308db157ffb5ca3"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a92bad0d010df1a623308db157ffb5ca3">CoreProcess</a> (const IServerConfig &amp;serverConfig)</td></tr>
+<tr class="memitem:a89200615cefc8d27ebc05c878a96afe8" id="r_a89200615cefc8d27ebc05c878a96afe8"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a89200615cefc8d27ebc05c878a96afe8">CoreProcess</a> (const <a class="el" href="classServerConfig.html">ServerConfig</a> &amp;serverConfig)</td></tr>
 <tr class="memitem:a85a0f905b812d6285e39cb9149a93b9a" id="r_a85a0f905b812d6285e39cb9149a93b9a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a85a0f905b812d6285e39cb9149a93b9a">start</a> (std::optional&lt; <a class="el" href="classSettings.html#aac26728c616513838b3f9efb70a5cdd5">ProcessMode</a> &gt; processMode=std::nullopt)</td></tr>
 <tr class="memitem:a0a6b6dc9aa924805e81b27fa9a437391" id="r_a0a6b6dc9aa924805e81b27fa9a437391"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0a6b6dc9aa924805e81b27fa9a437391">stop</a> (std::optional&lt; <a class="el" href="classSettings.html#aac26728c616513838b3f9efb70a5cdd5">ProcessMode</a> &gt; processMode=std::nullopt)</td></tr>
 <tr class="memitem:a0019841345b08a36b50a172c5e2bf4bf" id="r_a0019841345b08a36b50a172c5e2bf4bf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0019841345b08a36b50a172c5e2bf4bf">restart</a> ()</td></tr>
@@ -179,8 +185,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a92bad0d010df1a623308db157ffb5ca3" name="a92bad0d010df1a623308db157ffb5ca3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92bad0d010df1a623308db157ffb5ca3">&#9670;&#160;</a></span>CoreProcess()</h2>
+<a id="a89200615cefc8d27ebc05c878a96afe8" name="a89200615cefc8d27ebc05c878a96afe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89200615cefc8d27ebc05c878a96afe8">&#9670;&#160;</a></span>CoreProcess()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +197,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">deskflow::gui::CoreProcess::CoreProcess </td>
           <td>(</td>
-          <td class="paramtype">const IServerConfig &amp;</td>          <td class="paramname"><span class="paramname"><em>serverConfig</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classServerConfig.html">ServerConfig</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>serverConfig</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -252,6 +258,56 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3da8510b96ea0915afb70462649dc2d4" name="a3da8510b96ea0915afb70462649dc2d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3da8510b96ea0915afb70462649dc2d4">&#9670;&#160;</a></span>connectedClientsChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::CoreProcess::connectedClientsChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;</td>          <td class="paramname"><span class="paramname"><em>clients</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac96e4e2b65ade2afbeed3e262219ea45" name="ac96e4e2b65ade2afbeed3e262219ea45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac96e4e2b65ade2afbeed3e262219ea45">&#9670;&#160;</a></span>connectionRefused</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::CoreProcess::connectionRefused </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50ec">deskflow::core::ConnectionRefusal</a></td>          <td class="paramname"><span class="paramname"><em>reason</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -406,6 +462,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ad1bdbc39c968c6806261d2429b77dab8" name="ad1bdbc39c968c6806261d2429b77dab8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1bdbc39c968c6806261d2429b77dab8">&#9670;&#160;</a></span>missingKeyboardLayouts</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::CoreProcess::missingKeyboardLayouts </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>layouts</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6d40732c891af7bad2c7087be0768db1" name="a6d40732c891af7bad2c7087be0768db1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d40732c891af7bad2c7087be0768db1">&#9670;&#160;</a></span>mode()</h2>
 
@@ -425,6 +506,31 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9d45891dc2d9866cd42e1631e2a139b" name="ae9d45891dc2d9866cd42e1631e2a139b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9d45891dc2d9866cd42e1631e2a139b">&#9670;&#160;</a></span>peerFingerprint</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::CoreProcess::peerFingerprint </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>fingerprint</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -511,6 +617,31 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af77e1a98460eda4535849f885757e3ea" name="af77e1a98460eda4535849f885757e3ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af77e1a98460eda4535849f885757e3ea">&#9670;&#160;</a></span>retryIn</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::CoreProcess::retryIn </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>seconds</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -670,6 +801,31 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aff9493dcb93282c4db43544852710591" name="aff9493dcb93282c4db43544852710591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff9493dcb93282c4db43544852710591">&#9670;&#160;</a></span>unrecognisedClient</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::CoreProcess::unrecognisedClient </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>clientName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

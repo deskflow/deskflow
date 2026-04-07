@@ -1,0 +1,21 @@
+<map id="src/lib/deskflow/ipc/IpcServer.h" name="src/lib/deskflow/ipc/IpcServer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="624,5,757,44"/>
+<area shape="rect" id="Node000002" href="$CoreIpcServer_8h.html" title=" " alt="" coords="265,92,398,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="606,46,399,97,398,92,611,44"/>
+<area shape="rect" id="Node000006" href="$DaemonIpcServer_8h.html" title=" " alt="" coords="620,92,760,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="692,58,692,93,688,90,688,62"/>
+<area shape="rect" id="Node000010" href="$IpcServer_8cpp.html" title=" " alt="" coords="785,92,918,131"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="740,49,818,92,813,91,739,54"/>
+<area shape="rect" id="Node000003" href="$deskflow-core_8cpp.html" title=" " alt="" coords="5,179,162,217"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,136,139,181,138,176,259,136"/>
+<area shape="rect" id="Node000004" href="$CoreIpc_8cpp.html" title=" " alt="" coords="186,179,320,217"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="306,141,272,180,269,176,301,143"/>
+<area shape="rect" id="Node000005" href="$CoreIpcServer_8cpp.html" title=" " alt="" coords="343,179,477,217"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="360,140,395,179,390,177,358,145"/>
+<area shape="rect" id="Node000007" href="$DaemonApp_8cpp.html" title=" " alt="" coords="502,179,679,217"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="659,140,613,181,611,176,654,142"/>
+<area shape="rect" id="Node000008" href="$deskflow-daemon_8cpp.html" title=" " alt="" coords="703,179,880,217"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="725,139,772,179,766,177,724,144"/>
+<area shape="rect" id="Node000009" href="$DaemonIpcServer_8cpp.html" title=" " alt="" coords="904,179,1058,217"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="770,133,919,178,914,178,769,138"/>
+</map>

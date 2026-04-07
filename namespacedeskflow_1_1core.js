@@ -1,6 +1,12 @@
 var namespacedeskflow_1_1core =
 [
     [ "ipc", "namespacedeskflow_1_1core_1_1ipc.html", "namespacedeskflow_1_1core_1_1ipc" ],
+    [ "ConnectionRefusal", "namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50ec", [
+      [ "IncompatibleVersion", "namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50eca1ed088cc7ec137c28277aa953f91ce8a", null ],
+      [ "AlreadyConnected", "namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50eca026d4490386eaf538cd104d5b3cb5b34", null ],
+      [ "UnknownClient", "namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50ecaec6275430fb4c005e0c5e4c92439ea20", null ],
+      [ "ProtocolError", "namespacedeskflow_1_1core.html#a6a26ece0e41cd841a31547d9e0ad50ecaca3da8f495e4e628912a7798655da6c2", null ]
+    ] ],
     [ "ConnectionState", "namespacedeskflow_1_1core.html#a040d74fafe28c4c63082a60335b81c27", [
       [ "Disconnected", "namespacedeskflow_1_1core.html#a040d74fafe28c4c63082a60335b81c27aef70e46fd3bbc21e3e1f0b6815e750c0", null ],
       [ "Connecting", "namespacedeskflow_1_1core.html#a040d74fafe28c4c63082a60335b81c27ae321c53b354930ba96f0243e652df458", null ],

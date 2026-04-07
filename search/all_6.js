@@ -125,7 +125,7 @@ var searchData=
   ['disconnect_122',['Disconnect',['../classServerProxy.html#a1bc5a0b70c8bbfe20fb415ee40cd9d76a42ae25231906c83927831e0ef7c317ac',1,'ServerProxy']]],
   ['disconnect_123',['disconnect',['../classClient.html#a60df5a73ba81892e79af46a3d70231fb',1,'Client::disconnect()'],['../classdeskflow_1_1server_1_1Config.html#a985f1a015ede854e3a9e4f5f30d3b05c',1,'deskflow::server::Config::disconnect(const std::string &amp;srcName, Direction srcSide)'],['../classdeskflow_1_1server_1_1Config.html#a51da75455bc11436caeabb9d4f519660',1,'deskflow::server::Config::disconnect(const std::string &amp;srcName, Direction srcSide, float position)'],['../classServer.html#acd0114484495cfd2749816ddb12e4246',1,'Server::disconnect()']]],
   ['disconnected_124',['Disconnected',['../namespacedeskflow_1_1core.html#a040d74fafe28c4c63082a60335b81c27aef70e46fd3bbc21e3e1f0b6815e750c0',1,'deskflow::core']]],
-  ['disconnectfromserver_125',['disconnectFromServer',['../classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html#af72f778c6e69a3360edab22bdff66aad',1,'deskflow::gui::ipc::DaemonIpcClient']]],
+  ['disconnectfromserver_125',['disconnectFromServer',['../classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7acd0f58a60c6aaaf03c0361fed21065',1,'deskflow::gui::ipc::IpcClient']]],
   ['dispatchevent_126',['dispatchEvent',['../classEventQueue.html#a6934fca3d8c36d6e629c6150808c410e',1,'EventQueue::dispatchEvent()'],['../classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564',1,'IEventQueue::dispatchEvent()']]],
   ['display_127',['Display',['../structSettings_1_1Core.html#a2a0059d3e150af140d0c1760df2dffab',1,'Settings::Core']]],
   ['displayinvalidexception_128',['DisplayInvalidException',['../classDisplayInvalidException.html',1,'']]],

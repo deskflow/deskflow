@@ -1,19 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classInputFilter_1_1Action.html" title=" " alt="" coords="5,215,130,240"/>
-<area shape="rect" id="Node000001" href="$classInputFilter_1_1KeyboardBroadcastAction.html" title=" " alt="" coords="178,5,378,44"/>
-<area shape="poly" id="edge95_Node000000_Node000001" title=" " alt="" coords="77,199,113,127,142,88,176,55,199,43,196,47,179,59,146,92,118,130,82,201"/>
-<area shape="rect" id="Node000002" href="$classInputFilter_1_1KeystrokeAction.html" title=" " alt="" coords="188,68,368,93"/>
-<area shape="poly" id="edge96_Node000000_Node000002" title=" " alt="" coords="82,201,121,150,147,124,176,102,204,92,200,96,179,107,150,128,125,154,87,203"/>
-<area shape="rect" id="Node000003" href="$classInputFilter_1_1LockCursorToScreenAction.html" title=" " alt="" coords="193,117,362,156"/>
-<area shape="poly" id="edge97_Node000000_Node000003" title=" " alt="" coords="100,205,177,165,208,155,204,158,179,170,104,209"/>
-<area shape="rect" id="Node000004" href="$classInputFilter_1_1MouseButtonAction.html" title=" " alt="" coords="196,180,360,219"/>
-<area shape="poly" id="edge98_Node000000_Node000004" title=" " alt="" coords="144,215,197,209,193,212,146,219"/>
-<area shape="rect" id="Node000005" href="$classInputFilter_1_1RestartServer.html" title=" " alt="" coords="194,243,362,268"/>
-<area shape="poly" id="edge99_Node000000_Node000005" title=" " alt="" coords="144,235,195,243,191,245,146,240"/>
-<area shape="rect" id="Node000006" href="$classInputFilter_1_1SwitchInDirectionAction.html" title=" " alt="" coords="183,292,373,331"/>
-<area shape="poly" id="edge100_Node000000_Node000006" title=" " alt="" coords="107,244,179,277,213,291,208,292,177,282,107,250"/>
-<area shape="rect" id="Node000007" href="$classInputFilter_1_1SwitchToNextScreenAction.html" title=" " alt="" coords="193,355,362,393"/>
-<area shape="poly" id="edge101_Node000000_Node000007" title=" " alt="" coords="87,249,127,296,152,319,179,340,204,354,199,354,176,344,148,324,123,300,86,255"/>
-<area shape="rect" id="Node000008" href="$classInputFilter_1_1SwitchToScreenAction.html" title=" " alt="" coords="187,417,369,456"/>
-<area shape="poly" id="edge102_Node000000_Node000008" title=" " alt="" coords="79,252,95,287,117,327,145,368,179,403,200,417,195,417,176,407,141,371,112,330,91,290,78,257"/>
+<area shape="rect" id="Node000000" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="5,80,170,105"/>
+<area shape="rect" id="Node000001" href="$classOSXClipboardAnyBitmapConverter.html" title="Convert to/from some text encoding." alt="" coords="218,31,442,55"/>
+<area shape="poly" id="edge106_Node000000_Node000001" title=" " alt="" coords="166,74,268,55,263,57,167,79"/>
+<area shape="rect" id="Node000002" href="$classOSXClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="226,80,434,105"/>
+<area shape="poly" id="edge107_Node000000_Node000002" title=" " alt="" coords="185,90,228,92,223,93,186,95"/>
+<area shape="rect" id="Node000007" href="$classOSXClipboardBMPConverter.html" title="Convert to/from some text encoding." alt="" coords="235,129,424,154"/>
+<area shape="poly" id="edge112_Node000000_Node000007" title=" " alt="" coords="167,106,268,128,263,130,166,111"/>
+<area shape="rect" id="Node000003" href="$classOSXClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="492,5,687,30"/>
+<area shape="poly" id="edge108_Node000002_Node000003" title=" " alt="" coords="413,73,441,65,465,53,489,41,527,31,532,30,491,45,467,58,443,69,415,78"/>
+<area shape="rect" id="Node000004" href="$classOSXClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="497,55,682,79"/>
+<area shape="poly" id="edge109_Node000002_Node000004" title=" " alt="" coords="449,78,499,76,494,76,450,83"/>
+<area shape="rect" id="Node000005" href="$classOSXClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="490,104,689,129"/>
+<area shape="poly" id="edge110_Node000002_Node000005" title=" " alt="" coords="450,101,492,107,487,107,450,106"/>
+<area shape="rect" id="Node000006" href="$classOSXClipboardUTF8Converter.html" title=" " alt="" coords="494,153,686,178"/>
+<area shape="poly" id="edge111_Node000002_Node000006" title=" " alt="" coords="414,106,443,115,491,138,533,153,528,152,489,143,441,120,413,112"/>
 </map>
