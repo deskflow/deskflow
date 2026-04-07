@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['deskflowapplication_0',['DeskflowApplication',['../classMainWindow.html#a569ba885dcf12c616588d5859b9f97e0',1,'MainWindow']]]
+  ['hotkeydialog_0',['HotkeyDialog',['../classHotkey.html#a5eb73441f3f12e373e5dd1fffd21f1eb',1,'Hotkey']]]
 ];

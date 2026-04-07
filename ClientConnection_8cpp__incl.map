@@ -1,13 +1,11 @@
 <map id="src/lib/gui/core/ClientConnection.cpp" name="src/lib/gui/core/ClientConnection.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="371,5,607,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="299,5,535,30"/>
 <area shape="rect" id="Node000002" href="$ClientConnection_8h.html" title=" " alt="" coords="159,78,291,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="443,32,284,76,282,71,448,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,32,272,75,270,70,388,29"/>
 <area shape="rect" id="Node000007" href="$Settings_8h.html" title=" " alt="" coords="350,78,484,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="479,29,441,69,438,65,475,32"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="419,28,419,64,415,61,415,33"/>
 <area shape="rect" id="Node000012" title=" " alt="" coords="509,78,616,103"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="502,28,542,68,537,67,500,33"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="641,78,748,103"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="523,28,649,72,643,73,523,33"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="441,28,527,71,522,71,441,33"/>
 <area shape="rect" id="Node000003" href="$Enums_8h.html" title=" " alt="" coords="5,151,133,175"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="198,105,110,146,107,141,201,101"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="156,151,222,175"/>

@@ -1,7 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a5c10b238cd32de63b15d003b782b081e":[5,0,0,18,6],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a60fcab4d750adf8fc79537e6e61769c8":[5,0,0,18,22],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a662eedb3d21ec748ac1199d4357c8bd5":[5,0,0,18,51],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6ab94297a308225c53fd052a1d3e7477":[5,0,0,18,19],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2":[5,0,0,18,57],
@@ -95,13 +93,13 @@ var NAVTREEINDEX22 =
 "namespacedeskflow_1_1gui_1_1messages.html#a3cef3788e3fae6bc7ebb84ef4969bca3":[5,0,0,5,2,4],
 "namespacedeskflow_1_1gui_1_1messages.html#a3ee57c3c76be1f5eb084883f65fbf93e":[5,0,0,5,2,11],
 "namespacedeskflow_1_1gui_1_1messages.html#a60dc73cee3be7ef255a925127c1fa2b6":[5,0,0,5,2,6],
-"namespacedeskflow_1_1gui_1_1messages.html#a886ff5d104d6bbbf78d97902a184c477":[5,0,0,5,2,10],
+"namespacedeskflow_1_1gui_1_1messages.html#ab6357e17d4ae0fdc31bb3177a61ad0f6":[5,0,0,5,2,10],
+"namespacedeskflow_1_1gui_1_1messages.html#ad1ae8d4a81574ee03103387aaa9910fc":[5,0,0,5,2,8],
 "namespacedeskflow_1_1gui_1_1messages.html#ae073516dca7103f8d26cd3b7c5e69a13":[5,0,0,5,2,12],
 "namespacedeskflow_1_1gui_1_1messages.html#ae18075df8499e361db2d41463fd3f5cc":[5,0,0,5,2,1],
 "namespacedeskflow_1_1gui_1_1messages.html#ae36c4e343b7e48e06e2a9005a5bf4eda":[5,0,0,5,2,9],
 "namespacedeskflow_1_1gui_1_1messages.html#ae637f1327216dc1e3eb1401c84deb40c":[5,0,0,5,2,7],
 "namespacedeskflow_1_1gui_1_1messages.html#aeaa785620dafb9bb8fd52f785f3c1016":[5,0,0,5,2,3],
-"namespacedeskflow_1_1gui_1_1messages.html#aedad0d21c313ee2a3e62076024608d56":[5,0,0,5,2,8],
 "namespacedeskflow_1_1gui_1_1messages.html#aefd2a689c47cf3fefb5d844fd8ed327f":[5,0,0,5,2,5],
 "namespacedeskflow_1_1languages.html":[5,0,0,4],
 "namespacedeskflow_1_1platform.html":[5,0,0,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "structKeyEntry.html#a02ebe770c6e8fbcf88c67b4f73493eb7":[6,0,136,0],
 "structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c":[6,0,136,1],
 "structKeyModifierNameMapEntry.html":[6,0,137],
-"structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa":[6,0,137,1]
+"structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa":[6,0,137,1],
+"structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08":[6,0,137,0],
+"structKeyNameMapEntry.html":[6,0,138]
 };

@@ -46,7 +46,7 @@ var searchData=
   ['reply_43',['Reply',['../classXWindowsClipboard_1_1Reply.html#a96904b8fb22f85e6f663150e341e1233',1,'XWindowsClipboard::Reply::Reply(Window, Atom target, ::Time)'],['../classXWindowsClipboard_1_1Reply.html#acbae19ab990023a4a036b5e6ea3a25cc',1,'XWindowsClipboard::Reply::Reply(Window, Atom target, ::Time, Atom property, const std::string &amp;data, Atom type, int format)']]],
   ['replyfinished_44',['replyFinished',['../classVersionChecker.html#a1fc73b7fe6ac155ed9a69fb91315d56a',1,'VersionChecker']]],
   ['requestlogpath_45',['requestLogPath',['../classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html#a47fefdc11069444a94ffc8e8128e12eb',1,'deskflow::gui::ipc::DaemonIpcClient']]],
-  ['requestnewclientprompt_46',['requestNewClientPrompt',['../classdeskflow_1_1gui_1_1ServerConnection.html#a936b76071ad3ed725cac41c17a515e44',1,'deskflow::gui::ServerConnection']]],
+  ['requestnewclientprompt_46',['requestNewClientPrompt',['../classdeskflow_1_1gui_1_1ServerConnection.html#a328d7cd61edd78eb177ccd6886e906b7',1,'deskflow::gui::ServerConnection']]],
   ['requestosxnotificationpermission_47',['requestOSXNotificationPermission',['../OSXHelpers_8h.html#a5c480918d5a448353e2aeda2c7349d9a',1,'requestOSXNotificationPermission():&#160;OSXHelpers.mm'],['../OSXHelpers_8mm.html#a5c480918d5a448353e2aeda2c7349d9a',1,'requestOSXNotificationPermission():&#160;OSXHelpers.mm']]],
   ['requestshowerror_48',['requestShowError',['../classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4',1,'deskflow::gui::ClientConnection']]],
   ['requestshowmyfingerprints_49',['requestShowMyFingerprints',['../classStatusBar.html#a4ba3324821424c7b38ff140721cd3f69',1,'StatusBar']]],

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['operator_3c_3c_0',['operator&lt;&lt;',['../classAction.html#aae0e76abf40db5f24a51e63bdb7fa8f5',1,'Action::operator&lt;&lt;()'],['../classScreen.html#a6b15e7496fd7a135e73eed573201f2bd',1,'Screen::operator&lt;&lt;()'],['../classServerConfig.html#a627940781f81e0b7434cd8f444373ab2',1,'ServerConfig::operator&lt;&lt;()'],['../classHotkey.html#a03801f4755f300c298f76570bc275883',1,'Hotkey::operator&lt;&lt;()'],['../classdeskflow_1_1server_1_1Config.html#a06ac256f027193cfd76891134e19fe7d',1,'deskflow::server::Config::operator&lt;&lt;()']]],
-  ['operator_3e_3e_1',['operator&gt;&gt;',['../classScreen.html#afc5a8ea56204bf0fb1ecfa8a302b3cf5',1,'Screen::operator&gt;&gt;()'],['../classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe',1,'deskflow::server::Config::operator&gt;&gt;()']]]
+  ['screensettingsdialog_0',['ScreenSettingsDialog',['../classScreen.html#a5c8c37c53b655c2f9579c9d6e6010465',1,'Screen']]],
+  ['screensetupmodel_1',['ScreenSetupModel',['../classScreen.html#a5ebdebaf7a432056eccf661566c11420',1,'Screen']]],
+  ['screensetupview_2',['ScreenSetupView',['../classScreen.html#a24c810d6d27c2c954bdad39ee23d3b0c',1,'Screen::ScreenSetupView()'],['../classScreenSetupModel.html#a24c810d6d27c2c954bdad39ee23d3b0c',1,'ScreenSetupModel::ScreenSetupView()']]],
+  ['serverconfigdialog_3',['ServerConfigDialog',['../classServerConfig.html#a57ca9109e2da3343064777dee953741b',1,'ServerConfig::ServerConfigDialog()'],['../classHotkey.html#a57ca9109e2da3343064777dee953741b',1,'Hotkey::ServerConfigDialog()'],['../classScreenSetupModel.html#a57ca9109e2da3343064777dee953741b',1,'ScreenSetupModel::ServerConfigDialog()']]]
 ];

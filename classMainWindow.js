@@ -11,7 +11,5 @@ var classMainWindow =
     [ "eventFilter", "classMainWindow.html#aeaecedc36266ab4571b7af2a9fcd5b08", null ],
     [ "hide", "classMainWindow.html#a3c9e6940d44970aee2e791efbaecb0c9", null ],
     [ "open", "classMainWindow.html#aa7473e4bbbcc281706ac2edef864fb45", null ],
-    [ "serverConfig", "classMainWindow.html#aa0ee1fdc634179b66566f3599595393a", null ],
-    [ "DeskflowApplication", "classMainWindow.html#a569ba885dcf12c616588d5859b9f97e0", null ],
-    [ "SettingsDialog", "classMainWindow.html#ac35c75567108290ee50f30a0cf639526", null ]
+    [ "serverConfig", "classMainWindow.html#aa0ee1fdc634179b66566f3599595393a", null ]
 ];

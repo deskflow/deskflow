@@ -8,9 +8,9 @@ var Messages_8cpp =
     [ "deskflow::gui::messages::showCloseReminder", "namespacedeskflow_1_1gui_1_1messages.html#aefd2a689c47cf3fefb5d844fd8ed327f", null ],
     [ "deskflow::gui::messages::showDaemonOffline", "namespacedeskflow_1_1gui_1_1messages.html#a60dc73cee3be7ef255a925127c1fa2b6", null ],
     [ "deskflow::gui::messages::showErrorDialog", "namespacedeskflow_1_1gui_1_1messages.html#ae637f1327216dc1e3eb1401c84deb40c", null ],
-    [ "deskflow::gui::messages::showFirstConnectedMessage", "namespacedeskflow_1_1gui_1_1messages.html#aedad0d21c313ee2a3e62076024608d56", null ],
+    [ "deskflow::gui::messages::showFirstConnectedMessage", "namespacedeskflow_1_1gui_1_1messages.html#ad1ae8d4a81574ee03103387aaa9910fc", null ],
     [ "deskflow::gui::messages::showFirstServerStartMessage", "namespacedeskflow_1_1gui_1_1messages.html#ae36c4e343b7e48e06e2a9005a5bf4eda", null ],
-    [ "deskflow::gui::messages::showNewClientPrompt", "namespacedeskflow_1_1gui_1_1messages.html#a886ff5d104d6bbbf78d97902a184c477", null ],
+    [ "deskflow::gui::messages::showNewClientPrompt", "namespacedeskflow_1_1gui_1_1messages.html#ab6357e17d4ae0fdc31bb3177a61ad0f6", null ],
     [ "deskflow::gui::messages::showReadOnlySettings", "namespacedeskflow_1_1gui_1_1messages.html#a3ee57c3c76be1f5eb084883f65fbf93e", null ],
     [ "deskflow::gui::messages::showUpdateCheckOption", "namespacedeskflow_1_1gui_1_1messages.html#ae073516dca7103f8d26cd3b7c5e69a13", null ]
 ];

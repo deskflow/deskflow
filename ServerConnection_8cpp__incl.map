@@ -1,15 +1,13 @@
 <map id="src/lib/gui/core/ServerConnection.cpp" name="src/lib/gui/core/ServerConnection.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="895,5,1134,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="869,5,1109,30"/>
 <area shape="rect" id="Node000002" href="$ServerConnection_8h.html" title=" " alt="" coords="392,78,528,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="920,32,544,81,543,76,924,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="899,32,544,80,543,75,903,29"/>
 <area shape="rect" id="Node000020" href="$ServerMessage_8h.html" title=" " alt="" coords="854,151,977,175"/>
-<area shape="poly" id="edge24_Node000001_Node000020" title=" " alt="" coords="1009,29,934,139,931,136,1004,32"/>
+<area shape="poly" id="edge24_Node000001_Node000020" title=" " alt="" coords="985,28,930,138,927,135,981,32"/>
 <area shape="rect" id="Node000021" href="$Settings_8h.html" title=" " alt="" coords="1150,369,1284,393"/>
-<area shape="poly" id="edge26_Node000001_Node000021" title=" " alt="" coords="1016,28,1017,162,1017,237,1020,261,1030,282,1044,300,1063,317,1107,343,1155,364,1150,363,1105,348,1060,321,1041,304,1025,284,1015,262,1012,237,1012,162,1013,33"/>
-<area shape="rect" id="Node000024" title=" " alt="" coords="1051,78,1159,103"/>
-<area shape="poly" id="edge31_Node000001_Node000024" title=" " alt="" coords="1030,28,1081,69,1076,68,1029,33"/>
-<area shape="rect" id="Node000025" title=" " alt="" coords="1183,78,1283,103"/>
-<area shape="poly" id="edge32_Node000001_Node000025" title=" " alt="" coords="1050,28,1185,73,1180,73,1050,33"/>
+<area shape="poly" id="edge26_Node000001_Node000021" title=" " alt="" coords="994,28,1009,86,1015,123,1017,162,1017,237,1020,261,1030,282,1044,300,1063,317,1107,343,1155,364,1150,363,1105,348,1060,321,1041,304,1025,284,1015,262,1012,237,1012,162,1009,124,1003,87,991,33"/>
+<area shape="rect" id="Node000024" title=" " alt="" coords="1051,78,1151,103"/>
+<area shape="poly" id="edge31_Node000001_Node000024" title=" " alt="" coords="1008,28,1072,69,1067,69,1007,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="440,441,506,466"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="452,101,420,159,406,196,400,235,400,309,405,344,418,376,436,405,454,430,449,429,431,408,414,378,400,345,394,310,394,234,400,194,415,156,449,105"/>
 <area shape="rect" id="Node000004" href="$Messages_8h.html" title=" " alt="" coords="171,151,284,175"/>
