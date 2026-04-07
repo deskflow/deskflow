@@ -49,11 +49,9 @@ void IpcClient::connectToServer()
 
 void IpcClient::attemptConnection()
 {
-  const auto kRetryLimit = 3;
-
-  if (m_retryCount >= kRetryLimit) {
+  if (const int retryLimit = 3; m_retryCount >= retryLimit) {
     qWarning().noquote() << QStringLiteral("%1 ipc client failed to connect after %2 attempts")
-                                .arg(m_typeName, QString::number(kRetryLimit));
+                                .arg(m_typeName, QString::number(retryLimit));
     m_state = State::Unconnected;
     Q_EMIT connectionFailed();
     return;
@@ -183,8 +181,7 @@ void IpcClient::handleHandshakeMessage(const QStringList &parts)
   }
 
   const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
-  const auto serverVersion = parts.at(1);
-  if (serverVersion != versionId) {
+  if (const auto serverVersion = parts.at(1); serverVersion != versionId) {
     qCritical().noquote(
     ) << QStringLiteral("%1 ipc version mismatch (client: %2 , server: %3)").arg(m_typeName, versionId, serverVersion);
     disconnectFromServer();
