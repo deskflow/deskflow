@@ -114,6 +114,7 @@ private:
   void handleLogLines(const QString &text);
   QString correctedAddress(const QString &address) const;
   void setupDaemonLogTail(const QString &logPath);
+  void checkExistingProcess();
   static QString makeQuotedArgs(const QString &app, const QStringList &args);
   static QString processModeToString(const Settings::ProcessMode mode);
   static QString processStateToString(const CoreProcess::ProcessState state);

@@ -77,6 +77,7 @@ public:
   }
 
   void run(QThread &coreThread);
+  void quit();
   void setupFileLogging();
   void loggingFilterWarning() const;
   void initApp() override;
