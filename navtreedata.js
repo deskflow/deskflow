@@ -146,11 +146,11 @@ var NAVTREEINDEX =
 "classTrashScreenWidget.html#ad3bec5b7e997975cc22daadb14485745",
 "classXWindowsScreen.html#a9d34e7b8ec494fbbd8151276c189405e",
 "classdeskflow_1_1KeyMap.html#a96ff8c796feab9da3d8ba488ddd49a0a",
-"classdeskflow_1_1gui_1_1CoreProcess.html#a81c7ca0a133eb01824ff7e26f4222568",
+"classdeskflow_1_1gui_1_1CoreProcess.html#a19622d42b3b977bbddec07124ee48b00",
 "classdeskflow_1_1server_1_1ConfigReadContext.html#a015b02335b17c35ccbb460687c2b9dea",
-"functions_func_j.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2",
-"structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08"
+"functions_func_k.html",
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a731395388d62cd6067648dea2768653d",
+"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

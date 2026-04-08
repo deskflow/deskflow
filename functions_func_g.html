@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.134</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -154,12 +154,12 @@ $(function(){initNavTree('functions_func_g.html','',''); });
 <li>getLastDown()&#160;:&#160;<a class="el" href="classMSWindowsKeyState.html#a7071b72f97a36b41cc167964f151aeb3">MSWindowsKeyState</a></li>
 <li>getLastResolvedAddressesCount()&#160;:&#160;<a class="el" href="classClient.html#af0c76cf90902f04bae506b96c16298f8">Client</a></li>
 <li>getLineNumber()&#160;:&#160;<a class="el" href="classdeskflow_1_1server_1_1ConfigReadContext.html#a015b02335b17c35ccbb460687c2b9dea">deskflow::server::ConfigReadContext</a></li>
-<li>getLocalLanguages()&#160;:&#160;<a class="el" href="classdeskflow_1_1languages_1_1LanguageManager.html#a48be8f66108826222c0bfcedb2676d25">deskflow::languages::LanguageManager</a></li>
+<li>getLocalLayouts()&#160;:&#160;<a class="el" href="classdeskflow_1_1KeyboardLayoutManager.html#abfe29edadf83c700c83d515b5221f946">deskflow::KeyboardLayoutManager</a></li>
 <li>getMajor()&#160;:&#160;<a class="el" href="classIncompatibleClientException.html#a06bd741c683687a29ba9eb2b840896db">IncompatibleClientException</a></li>
 <li>getMask()&#160;:&#160;<a class="el" href="classInputFilter_1_1KeystrokeCondition.html#a397ecffcda784b88ef22050c8e8d4245">InputFilter::KeystrokeCondition</a>, <a class="el" href="classInputFilter_1_1MouseButtonCondition.html#ab00b86dcccd0361b7949942038e78ab8">InputFilter::MouseButtonCondition</a></li>
 <li>getMessage()&#160;:&#160;<a class="el" href="classvalidators_1_1IStringValidator.html#a6688907e46771069cd9f39a6a8397529">validators::IStringValidator</a></li>
 <li>getMinor()&#160;:&#160;<a class="el" href="classIncompatibleClientException.html#a41438c025baa08fd0545bde4543dcba3">IncompatibleClientException</a></li>
-<li>getMissedLanguages()&#160;:&#160;<a class="el" href="classdeskflow_1_1languages_1_1LanguageManager.html#a37a9381a87ad533b4f6d6b7b50f4a210">deskflow::languages::LanguageManager</a></li>
+<li>getMissedLayouts()&#160;:&#160;<a class="el" href="classdeskflow_1_1KeyboardLayoutManager.html#aa0f8374811b2405ccdf6b8584b1eed77">deskflow::KeyboardLayoutManager</a></li>
 <li>getMode()&#160;:&#160;<a class="el" href="classInputFilter_1_1KeyboardBroadcastAction.html#a60afa8992739c3d08391f9369d19e07d">InputFilter::KeyboardBroadcastAction</a>, <a class="el" href="classInputFilter_1_1LockCursorToScreenAction.html#a3043163bb4de6c15866fa197151f9827">InputFilter::LockCursorToScreenAction</a>, <a class="el" href="classInputFilter_1_1RestartServer.html#a58289f443a71130485cd1938c45de2f4">InputFilter::RestartServer</a></li>
 <li>getModifierBitForKeySym()&#160;:&#160;<a class="el" href="classXDGKeyUtil.html#a4c2f8d42050b721ad1868ebd338e3cf9">XDGKeyUtil</a></li>
 <li>getModifierStateAsOSXFlags()&#160;:&#160;<a class="el" href="classOSXKeyState.html#a6f040afadef7509e508c53a2ebdc2dd0">OSXKeyState</a></li>
@@ -180,7 +180,7 @@ $(function(){initNavTree('functions_func_g.html','',''); });
 <li>getParentProcessName()&#160;:&#160;<a class="el" href="classArchMiscWindows.html#a6666c54a8ce6bf017ad327d22d8c451c">ArchMiscWindows</a></li>
 <li>getPlatformScreen()&#160;:&#160;<a class="el" href="classdeskflow_1_1Screen.html#a327e1bce824ec0b081ab6ddc15733841">deskflow::Screen</a></li>
 <li>getPort()&#160;:&#160;<a class="el" href="classNetworkAddress.html#a8c469013754643d5b36350985327f141">NetworkAddress</a>, <a class="el" href="classSocketAddressException.html#a8b49eed09b66f8156e2f4747a861f503">SocketAddressException</a></li>
-<li>getRemoteLanguages()&#160;:&#160;<a class="el" href="classdeskflow_1_1languages_1_1LanguageManager.html#aca441e98242b9f6e652da650e0410207">deskflow::languages::LanguageManager</a></li>
+<li>getRemoteLayouts()&#160;:&#160;<a class="el" href="classdeskflow_1_1KeyboardLayoutManager.html#a92f09165e6a3083fb27ad374d92aa4a2">deskflow::KeyboardLayoutManager</a></li>
 <li>getResult()&#160;:&#160;<a class="el" href="classThread.html#ae6fced5fdf9d033c4cc3b3ae009e4b46">Thread</a></li>
 <li>getResultOfThread()&#160;:&#160;<a class="el" href="classArchMultithreadPosix.html#a35b845ae433272d18ba1d3ac460a88a9">ArchMultithreadPosix</a>, <a class="el" href="classArchMultithreadWindows.html#a704e8e058276d834763f932b6233f4c2">ArchMultithreadWindows</a>, <a class="el" href="classIArchMultithread.html#a9583afda41b5b50cd88ac5edc499c7a2">IArchMultithread</a></li>
 <li>getRule()&#160;:&#160;<a class="el" href="classInputFilter.html#a93c078a139881f98b5ce502354a0a1a3">InputFilter</a></li>
@@ -189,7 +189,7 @@ $(function(){initNavTree('functions_func_g.html','',''); });
 <li>getScreens()&#160;:&#160;<a class="el" href="classInputFilter_1_1KeyboardBroadcastAction.html#a47e0ed9d670c7663cee38a58ebaa2646">InputFilter::KeyboardBroadcastAction</a></li>
 <li>getSecureInputApp()&#160;:&#160;<a class="el" href="classBaseClientProxy.html#a352955eccfda19f9ad2ed8ffd56cdc48">BaseClientProxy</a>, <a class="el" href="classClientProxy1__0.html#ae2812c552a2eb8c7a36d6ba92d0afd83">ClientProxy1_0</a>, <a class="el" href="classdeskflow_1_1EiScreen.html#ad0ca514ec10c37896ba26e769a4a0b34">deskflow::EiScreen</a>, <a class="el" href="classdeskflow_1_1Screen.html#a1139794c6af4ca8b27b67f30ab6f362b">deskflow::Screen</a>, <a class="el" href="classIPlatformScreen.html#ad85af72ff780c248393b9da1b161bea3">IPlatformScreen</a>, <a class="el" href="classMSWindowsScreen.html#aa951776f036c122c0dd90ac1f426569e">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a07cbdbcdb68cc3a14ea106507867157c">OSXScreen</a>, <a class="el" href="classPrimaryClient.html#a215f15f0f7479bf7ba551c8688dff026">PrimaryClient</a>, <a class="el" href="classXWindowsScreen.html#a8461e181a589d839973d10c21d5be392">XWindowsScreen</a></li>
 <li>getSelection()&#160;:&#160;<a class="el" href="classXWindowsClipboard.html#a4c04ae1ed507ae95de710f511f9fa7dd">XWindowsClipboard</a></li>
-<li>getSerializedLocalLanguages()&#160;:&#160;<a class="el" href="classdeskflow_1_1languages_1_1LanguageManager.html#afbb07847e0cf3982990d9fb181b8632a">deskflow::languages::LanguageManager</a></li>
+<li>getSerializedLocalLayouts()&#160;:&#160;<a class="el" href="classdeskflow_1_1KeyboardLayoutManager.html#aed3b2587212033c0e9eb10125380e67c">deskflow::KeyboardLayoutManager</a></li>
 <li>getServer()&#160;:&#160;<a class="el" href="classClientListener.html#ad49d807da29e255e2347313575dcd548">ClientListener</a>, <a class="el" href="classClientProxy1__4.html#a84156948f38ebca74f9ce41de241c0ce">ClientProxy1_4</a></li>
 <li>getServerAddress()&#160;:&#160;<a class="el" href="classClient.html#a9be93c4cbc77f1b0813fa890150ce132">Client</a></li>
 <li>getServerName()&#160;:&#160;<a class="el" href="classServerConfig.html#adc84a7a50be3f77d416f0ba63e299c93">ServerConfig</a></li>

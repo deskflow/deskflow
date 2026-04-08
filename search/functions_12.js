@@ -138,7 +138,7 @@ var searchData=
   ['setpriorityofthread_135',['setPriorityOfThread',['../classIArchMultithread.html#a6483b65429b101bb824b9b7d952f3e9e',1,'IArchMultithread::setPriorityOfThread()'],['../classArchMultithreadPosix.html#a33e6fe3a382f7be01175ebac590467e0',1,'ArchMultithreadPosix::setPriorityOfThread()'],['../classArchMultithreadWindows.html#a4eb3fa83e71e732153ea594f911831e6',1,'ArchMultithreadWindows::setPriorityOfThread()']]],
   ['setprocessconfig_136',['setProcessConfig',['../classMSWindowsWatchdog.html#adcb632aec46aee3d5391d9be2e925e1d',1,'MSWindowsWatchdog']]],
   ['setreadable_137',['setReadable',['../classTCPSocket.html#ab108acdd0bd4fc2069ef0688b08df11f',1,'TCPSocket']]],
-  ['setremotelanguages_138',['setRemoteLanguages',['../classdeskflow_1_1languages_1_1LanguageManager.html#a92221eb63c18bcdccb94d686e4101f4c',1,'deskflow::languages::LanguageManager']]],
+  ['setremotelayouts_138',['setRemoteLayouts',['../classdeskflow_1_1KeyboardLayoutManager.html#ac4aefeb7a6e9365928a50a9cd8fb4895',1,'deskflow::KeyboardLayoutManager']]],
   ['setrestartserver_139',['setRestartServer',['../classAction.html#aee86ab819c6de33f9dd59bd45b3d2756',1,'Action']]],
   ['setreuseaddronsocket_140',['setReuseAddrOnSocket',['../classIArchNetwork.html#a83636eea30639869fa7d6bd80ee38f0b',1,'IArchNetwork::setReuseAddrOnSocket()'],['../classArchNetworkBSD.html#a875bf0c0c3f6f1a194e952dbc972696c',1,'ArchNetworkBSD::setReuseAddrOnSocket()'],['../classArchNetworkWinsock.html#af3d54dc165eaf08d9c4b47f0487be5bf',1,'ArchNetworkWinsock::setReuseAddrOnSocket()']]],
   ['setsavedmodifiers_141',['setSavedModifiers',['../classMSWindowsKeyState.html#ab07d0d04366b7aef1889e2c90fa01a1f',1,'MSWindowsKeyState']]],

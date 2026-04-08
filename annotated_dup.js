@@ -14,9 +14,6 @@ var annotated_dup =
       [ "platform", "namespacedeskflow_1_1platform.html", [
         [ "MSWindowsProcess", "classdeskflow_1_1platform_1_1MSWindowsProcess.html", "classdeskflow_1_1platform_1_1MSWindowsProcess" ]
       ] ],
-      [ "languages", "namespacedeskflow_1_1languages.html", [
-        [ "LanguageManager", "classdeskflow_1_1languages_1_1LanguageManager.html", "classdeskflow_1_1languages_1_1LanguageManager" ]
-      ] ],
       [ "gui", "namespacedeskflow_1_1gui.html", [
         [ "ipc", "namespacedeskflow_1_1gui_1_1ipc.html", [
           [ "CoreIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html", "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient" ],
@@ -37,6 +34,7 @@ var annotated_dup =
         [ "ServerConfigReadException", "classdeskflow_1_1server_1_1ServerConfigReadException.html", "classdeskflow_1_1server_1_1ServerConfigReadException" ]
       ] ],
       [ "FinalAction", "classdeskflow_1_1FinalAction.html", "classdeskflow_1_1FinalAction" ],
+      [ "KeyboardLayoutManager", "classdeskflow_1_1KeyboardLayoutManager.html", "classdeskflow_1_1KeyboardLayoutManager" ],
       [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
       [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
       [ "IStream", "classdeskflow_1_1IStream.html", "classdeskflow_1_1IStream" ],

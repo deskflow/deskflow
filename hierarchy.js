@@ -272,6 +272,7 @@ var hierarchy =
       [ "XWindowsClipboardUCS2Converter", "classXWindowsClipboardUCS2Converter.html", null ],
       [ "XWindowsClipboardUTF8Converter", "classXWindowsClipboardUTF8Converter.html", null ]
     ] ],
+    [ "deskflow::KeyboardLayoutManager", "classdeskflow_1_1KeyboardLayoutManager.html", null ],
     [ "KeyEntry", "structKeyEntry.html", null ],
     [ "IKeyState::KeyInfo", "classIKeyState_1_1KeyInfo.html", null ],
     [ "deskflow::KeyMap::KeyItem", "structdeskflow_1_1KeyMap_1_1KeyItem.html", null ],
@@ -280,7 +281,6 @@ var hierarchy =
     [ "KeyNameMapEntry", "structKeyNameMapEntry.html", null ],
     [ "KeySequence", "classKeySequence.html", null ],
     [ "deskflow::KeyMap::Keystroke", "classdeskflow_1_1KeyMap_1_1Keystroke.html", null ],
-    [ "deskflow::languages::LanguageManager", "classdeskflow_1_1languages_1_1LanguageManager.html", null ],
     [ "Lock", "classLock.html", null ],
     [ "Log", "classLog.html", null ],
     [ "Settings::Log", "structSettings_1_1Log.html", null ],

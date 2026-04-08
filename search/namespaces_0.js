@@ -9,8 +9,7 @@ var searchData=
   ['deskflow_3a_3agui_3a_3aipc_6',['ipc',['../namespacedeskflow_1_1gui_1_1ipc.html',1,'deskflow::gui']]],
   ['deskflow_3a_3agui_3a_3amessages_7',['messages',['../namespacedeskflow_1_1gui_1_1messages.html',1,'deskflow::gui']]],
   ['deskflow_3a_3agui_3a_3atlsutility_8',['TlsUtility',['../namespacedeskflow_1_1gui_1_1TlsUtility.html',1,'deskflow::gui']]],
-  ['deskflow_3a_3alanguages_9',['languages',['../namespacedeskflow_1_1languages.html',1,'deskflow']]],
-  ['deskflow_3a_3aplatform_10',['platform',['../namespacedeskflow_1_1platform.html',1,'deskflow']]],
-  ['deskflow_3a_3aserver_11',['server',['../namespacedeskflow_1_1server.html',1,'deskflow']]],
-  ['deskflow_3a_3astring_12',['string',['../namespacedeskflow_1_1string.html',1,'deskflow']]]
+  ['deskflow_3a_3aplatform_9',['platform',['../namespacedeskflow_1_1platform.html',1,'deskflow']]],
+  ['deskflow_3a_3aserver_10',['server',['../namespacedeskflow_1_1server.html',1,'deskflow']]],
+  ['deskflow_3a_3astring_11',['string',['../namespacedeskflow_1_1string.html',1,'deskflow']]]
 ];

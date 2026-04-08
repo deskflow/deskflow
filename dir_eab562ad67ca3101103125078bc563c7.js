@@ -1,7 +1,6 @@
 var dir_eab562ad67ca3101103125078bc563c7 =
 [
     [ "ipc", "dir_5e31995b7db7a54ee12c447cedc87879.html", "dir_5e31995b7db7a54ee12c447cedc87879" ],
-    [ "languages", "dir_486f97b0b3f30a7a2635c91724bbf9e8.html", "dir_486f97b0b3f30a7a2635c91724bbf9e8" ],
     [ "unix", "dir_4c719d8bedcbaab4d3d4db04f9027178.html", "dir_4c719d8bedcbaab4d3d4db04f9027178" ],
     [ "win32", "dir_b54601a1fb8356964ff4c22fbf7d7455.html", "dir_b54601a1fb8356964ff4c22fbf7d7455" ],
     [ "App.cpp", "App_8cpp.html", null ],
@@ -33,6 +32,8 @@ var dir_eab562ad67ca3101103125078bc563c7 =
     [ "IScreen.h", "IScreen_8h.html", "IScreen_8h" ],
     [ "IScreenSaver.h", "IScreenSaver_8h.html", "IScreenSaver_8h" ],
     [ "ISecondaryScreen.h", "ISecondaryScreen_8h.html", "ISecondaryScreen_8h" ],
+    [ "KeyboardLayoutManager.cpp", "KeyboardLayoutManager_8cpp.html", null ],
+    [ "KeyboardLayoutManager.h", "KeyboardLayoutManager_8h.html", "KeyboardLayoutManager_8h" ],
     [ "KeyMap.cpp", "KeyMap_8cpp.html", null ],
     [ "KeyMap.h", "KeyMap_8h.html", "KeyMap_8h" ],
     [ "KeyState.cpp", "KeyState_8cpp.html", "KeyState_8cpp" ],

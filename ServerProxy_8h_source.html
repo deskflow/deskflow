@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.134</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -106,7 +106,7 @@ $(function(){initNavTree('ServerProxy_8h_source.html','',''); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="ClipboardTypes_8h.html">deskflow/ClipboardTypes.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="KeyTypes_8h.html">deskflow/KeyTypes.h</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="LanguageManager_8h.html">deskflow/languages/LanguageManager.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="KeyboardLayoutManager_8h.html">deskflow/KeyboardLayoutManager.h</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">class </span><a class="code hl_class" href="classClient.html">Client</a>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">class </span><a class="code hl_class" href="classClientInfo.html">ClientInfo</a>;</div>
@@ -212,9 +212,9 @@ $(function(){initNavTree('ServerProxy_8h_source.html','',''); });
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  MessageParser m_parser = &amp;<a class="code hl_function" href="classServerProxy.html#ad0b077058cbfcecc5d8ca77ceff20a36">ServerProxy::parseHandshakeMessage</a>;</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  std::string m_serverLanguage = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="keywordtype">bool</span> m_isUserNotifiedAboutLanguageSyncError = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <a class="code hl_class" href="classdeskflow_1_1languages_1_1LanguageManager.html">deskflow::languages::LanguageManager</a> m_languageManager;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  std::string m_serverLayout = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="keywordtype">bool</span> m_isUserNotifiedAboutLayoutSyncError = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <a class="code hl_class" href="classdeskflow_1_1KeyboardLayoutManager.html">deskflow::KeyboardLayoutManager</a> m_layoutManager;</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>};</div>
 </div>
 <div class="ttc" id="aClipboardTypes_8h_html"><div class="ttname"><a href="ClipboardTypes_8h.html">ClipboardTypes.h</a></div></div>
@@ -224,7 +224,7 @@ $(function(){initNavTree('ServerProxy_8h_source.html','',''); });
 <div class="ttc" id="aKeyTypes_8h_html_a106170af5cef4e36dc9fa0a4d94a612d"><div class="ttname"><a href="KeyTypes_8h.html#a106170af5cef4e36dc9fa0a4d94a612d">kKeyModifierIDLast</a></div><div class="ttdeci">static const KeyModifierID kKeyModifierIDLast</div><div class="ttdef"><b>Definition</b> KeyTypes.h:96</div></div>
 <div class="ttc" id="aKeyTypes_8h_html_a50075062b7f32bf5710e296d8be8c1a6"><div class="ttname"><a href="KeyTypes_8h.html#a50075062b7f32bf5710e296d8be8c1a6">KeyModifierID</a></div><div class="ttdeci">uint32_t KeyModifierID</div><div class="ttdoc">Modifier key ID.</div><div class="ttdef"><b>Definition</b> KeyTypes.h:54</div></div>
 <div class="ttc" id="aKeyTypes_8h_html_aaaeb68ca75dd837e4de1a5d73bb12a13"><div class="ttname"><a href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a></div><div class="ttdeci">uint32_t KeyModifierMask</div><div class="ttdoc">Modifier key mask.</div><div class="ttdef"><b>Definition</b> KeyTypes.h:44</div></div>
-<div class="ttc" id="aLanguageManager_8h_html"><div class="ttname"><a href="LanguageManager_8h.html">LanguageManager.h</a></div></div>
+<div class="ttc" id="aKeyboardLayoutManager_8h_html"><div class="ttname"><a href="KeyboardLayoutManager_8h.html">KeyboardLayoutManager.h</a></div></div>
 <div class="ttc" id="aclassClientInfo_html"><div class="ttname"><a href="classClientInfo.html">ClientInfo</a></div><div class="ttdoc">Client screen information structure.</div><div class="ttdef"><b>Definition</b> ProtocolTypes.h:1304</div></div>
 <div class="ttc" id="aclassClient_html"><div class="ttname"><a href="classClient.html">Client</a></div><div class="ttdoc">Deskflow client.</div><div class="ttdef"><b>Definition</b> Client.h:40</div></div>
 <div class="ttc" id="aclassEventQueueTimer_html"><div class="ttname"><a href="classEventQueueTimer.html">EventQueueTimer</a></div><div class="ttdef"><b>Definition</b> EventQueueTimer.h:12</div></div>
@@ -247,7 +247,7 @@ $(function(){initNavTree('ServerProxy_8h_source.html','',''); });
 <div class="ttc" id="aclassServerProxy_html_ad23ab066855550f0a1eb76e41967396f"><div class="ttname"><a href="classServerProxy.html#ad23ab066855550f0a1eb76e41967396f">ServerProxy::~ServerProxy</a></div><div class="ttdeci">~ServerProxy()</div><div class="ttdef"><b>Definition</b> ServerProxy.cpp:54</div></div>
 <div class="ttc" id="aclassServerProxy_html_ae67da2ce4101e20ea50929959ae7daba"><div class="ttname"><a href="classServerProxy.html#ae67da2ce4101e20ea50929959ae7daba">ServerProxy::onInfoChanged</a></div><div class="ttdeci">void onInfoChanged()</div><div class="ttdef"><b>Definition</b> ServerProxy.cpp:342</div></div>
 <div class="ttc" id="aclassdeskflow_1_1IStream_html"><div class="ttname"><a href="classdeskflow_1_1IStream.html">deskflow::IStream</a></div><div class="ttdoc">Bidirectional stream interface.</div><div class="ttdef"><b>Definition</b> IStream.h:22</div></div>
-<div class="ttc" id="aclassdeskflow_1_1languages_1_1LanguageManager_html"><div class="ttname"><a href="classdeskflow_1_1languages_1_1LanguageManager.html">deskflow::languages::LanguageManager</a></div><div class="ttdef"><b>Definition</b> LanguageManager.h:17</div></div>
+<div class="ttc" id="aclassdeskflow_1_1KeyboardLayoutManager_html"><div class="ttname"><a href="classdeskflow_1_1KeyboardLayoutManager.html">deskflow::KeyboardLayoutManager</a></div><div class="ttdef"><b>Definition</b> KeyboardLayoutManager.h:15</div></div>
 <div class="ttc" id="anamespacedeskflow_html"><div class="ttname"><a href="namespacedeskflow.html">deskflow</a></div><div class="ttdef"><b>Definition</b> DaemonApp.h:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

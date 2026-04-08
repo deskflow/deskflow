@@ -11,10 +11,10 @@ var namespacedeskflow =
       ] ]
     ] ],
     [ "platform", "namespacedeskflow_1_1platform.html", "namespacedeskflow_1_1platform" ],
-    [ "languages", "namespacedeskflow_1_1languages.html", "namespacedeskflow_1_1languages" ],
     [ "gui", "namespacedeskflow_1_1gui.html", "namespacedeskflow_1_1gui" ],
     [ "server", "namespacedeskflow_1_1server.html", "namespacedeskflow_1_1server" ],
     [ "FinalAction", "classdeskflow_1_1FinalAction.html", "classdeskflow_1_1FinalAction" ],
+    [ "KeyboardLayoutManager", "classdeskflow_1_1KeyboardLayoutManager.html", "classdeskflow_1_1KeyboardLayoutManager" ],
     [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
     [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
     [ "IStream", "classdeskflow_1_1IStream.html", "classdeskflow_1_1IStream" ],

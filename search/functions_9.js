@@ -63,7 +63,7 @@ var searchData=
   ['isignoredkey_60',['isIgnoredKey',['../classKeyState.html#a988e02ff614f27a5d085f41084b8d45e',1,'KeyState']]],
   ['isinside_61',['isInside',['../classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a0dbf435a92deaff7f3b7ac3f7e0d477f',1,'deskflow::server::Config::CellEdge']]],
   ['iskeydown_62',['isKeyDown',['../classIKeyState.html#abc4f758f788eb134f63a138e89304778',1,'IKeyState::isKeyDown()'],['../classKeyState.html#af3367ffb0f6cd1743e90e7cceba1dc65',1,'KeyState::isKeyDown()'],['../classPlatformScreen.html#aedf76ddd96b4c9132c325f41d9471d6b',1,'PlatformScreen::isKeyDown()']]],
-  ['islanguageinstalled_63',['isLanguageInstalled',['../classdeskflow_1_1languages_1_1LanguageManager.html#a8173837f0f704d67074a37b4f3442488',1,'deskflow::languages::LanguageManager']]],
+  ['islayoutinstalled_63',['isLayoutInstalled',['../classdeskflow_1_1KeyboardLayoutManager.html#a9496d82b29474177dc3f9bd0b51ea4b4',1,'deskflow::KeyboardLayoutManager']]],
   ['islf_64',['isLF',['../OSXClipboardAnyTextConverter_8cpp.html#ad4df07f0566d1dec5d7a5a526e66c7cf',1,'OSXClipboardAnyTextConverter.cpp']]],
   ['islockedtoscreen_65',['isLockedToScreen',['../classdeskflow_1_1Screen.html#aa74942f12af1db22866dfffd52f3a65c',1,'deskflow::Screen::isLockedToScreen()'],['../classPrimaryClient.html#a6496fd6b7b2d8eb8182d09cf8842208d',1,'PrimaryClient::isLockedToScreen()']]],
   ['ismac_66',['isMac',['../namespacedeskflow_1_1platform.html#ade70aeb9d77e1781c854a34008a428ed',1,'deskflow::platform']]],
