@@ -8,17 +8,17 @@
 
 #include <QTest>
 
-class LanguageManagerTests : public QObject
+class KeyboardLayoutManagerTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
   void initTestCase();
   // Test are run in order top to bottom
-  void remoteLanguages();
-  void localLanguage();
-  void missedLanguage();
-  void serializeLocalLanguages();
-  void languageInstall();
+  void remoteLayouts();
+  void localLayout();
+  void missedLayout();
+  void serializeLocalLayouts();
+  void layoutInstall();
 
 private:
   Log m_log;
