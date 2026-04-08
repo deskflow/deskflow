@@ -107,11 +107,11 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
   const auto parts = message.split('=');
   if (parts.isEmpty()) {
     LOG_ERR("%s ipc server got invalid message: %s", m_typeName.constData(), message.toUtf8().constData());
-    writeToClientSocket(clientSocket, "error");
+    writeToClientSocket(clientSocket, QStringLiteral("error"));
     return;
   }
 
-  if (const auto &command = parts.at(0); command == "hello") {
+  if (const auto &command = parts.at(0); command == QStringLiteral("hello")) {
     if (parts.size() < 2) {
       LOG_ERR("%s ipc client hello missing version", m_typeName.constData());
       writeToClientSocket(clientSocket, "error=missing version");
@@ -136,7 +136,7 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
     }
 
     LOG_DEBUG("%s ipc server sending hello back", m_typeName.constData());
-    writeToClientSocket(clientSocket, QString("hello=%1").arg(versionId));
+    writeToClientSocket(clientSocket, QStringLiteral("hello=%1").arg(versionId));
 
     // Replay messages that were queued before any clients connected.
     LOG_DEBUG1("ipc server replaying %d pending messages", m_pendingMessages.size());
@@ -145,9 +145,9 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
       writeToClientSocket(clientSocket, pending);
     }
     m_pendingMessages.clear();
-  } else if (command == "noop") {
+  } else if (command == QStringLiteral("noop")) {
     LOG_DEBUG("%s ipc server got noop message", m_typeName.constData());
-    writeToClientSocket(clientSocket, "ok");
+    writeToClientSocket(clientSocket, QStringLiteral("ok"));
   } else {
     processCommand(clientSocket, command, parts);
   }
@@ -157,7 +157,7 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
 
 void IpcServer::broadcastCommand(const QString &command, const QString &args)
 {
-  const auto message = args.isEmpty() ? command : command + "=" + args;
+  const auto message = args.isEmpty() ? command : QStringLiteral("%1=%2").arg(command, args);
 
   if (m_clients.isEmpty()) {
     LOG_DEBUG1(

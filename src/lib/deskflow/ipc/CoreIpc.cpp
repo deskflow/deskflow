@@ -24,5 +24,5 @@ void ipcSendToClient(const QString &command, const QString &args)
 void ipcSendConnectionState(deskflow::core::ConnectionState state)
 {
   const auto metaEnum = QMetaEnum::fromType<deskflow::core::ConnectionState>();
-  ipcSendToClient("connectionState", metaEnum.valueToKey(static_cast<int>(state)));
+  ipcSendToClient(QStringLiteral("connectionState"), metaEnum.valueToKey(static_cast<int>(state)));
 }
