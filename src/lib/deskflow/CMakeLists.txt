@@ -77,8 +77,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ServerApp.h
   StreamChunker.cpp
   StreamChunker.h
-  languages/LanguageManager.cpp
-  languages/LanguageManager.h
+  KeyboardLayoutManager.cpp
+  KeyboardLayoutManager.h
   ipc/IpcServer.cpp
   ipc/IpcServer.h
   ipc/DaemonIpcServer.cpp

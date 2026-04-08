@@ -46,10 +46,10 @@ create_test(
 )
 
 create_test(
-  NAME LanguageManagerTests
+  NAME KeyboardLayoutManagerTests
   DEPENDS app
   LIBS arch base ${extra_libs}
-  SOURCE LanguageManagerTests.cpp
+  SOURCE KeyboardLayoutManagerTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 

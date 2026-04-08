@@ -141,7 +141,7 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
     // handshake is complete
     m_parser = &ServerProxy::parseMessage;
 
-    if (const auto missedKeyboardLayouts = m_languageManager.getMissedLanguages(); !missedKeyboardLayouts.empty()) {
+    if (const auto missedKeyboardLayouts = m_layoutManager.getMissedLayouts(); !missedKeyboardLayouts.empty()) {
       LOG_WARN("server layouts missing on this computer: %s", missedKeyboardLayouts.c_str());
       ipcSendToClient("missingKeyboardLayouts", QString::fromStdString(missedKeyboardLayouts));
     }
@@ -505,8 +505,8 @@ void ServerProxy::enter()
   m_dxMouse = 0;
   m_dyMouse = 0;
   m_seqNum = seqNum;
-  m_serverLanguage = "";
-  m_isUserNotifiedAboutLanguageSyncError = false;
+  m_serverLayout = "";
+  m_isUserNotifiedAboutLayoutSyncError = false;
 
   // forward
   m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
@@ -825,28 +825,28 @@ void ServerProxy::secureInputNotification()
 
 void ServerProxy::setServerLanguages()
 {
-  std::string serverLanguages;
-  ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
-  m_languageManager.setRemoteLanguages(serverLanguages);
+  std::string serverLayout;
+  ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLayout);
+  m_layoutManager.setRemoteLayouts(serverLayout);
 }
 
 void ServerProxy::setActiveServerLanguage(const std::string_view &language)
 {
   if (!language.empty() && (language.size() > 0)) {
-    if (m_serverLanguage != language) {
-      m_isUserNotifiedAboutLanguageSyncError = false;
-      m_serverLanguage = language;
+    if (m_serverLayout != language) {
+      m_isUserNotifiedAboutLayoutSyncError = false;
+      m_serverLayout = language;
     }
 
-    if (!m_languageManager.isLanguageInstalled(m_serverLanguage)) {
-      if (!m_isUserNotifiedAboutLanguageSyncError) {
-        LOG_WARN("current server language is not installed on client");
-        m_isUserNotifiedAboutLanguageSyncError = true;
+    if (!m_layoutManager.isLayoutInstalled(m_serverLayout)) {
+      if (!m_isUserNotifiedAboutLayoutSyncError) {
+        LOG_WARN("current server layout is not installed on client");
+        m_isUserNotifiedAboutLayoutSyncError = true;
       }
     } else {
-      m_isUserNotifiedAboutLanguageSyncError = false;
+      m_isUserNotifiedAboutLayoutSyncError = false;
     }
   } else {
-    LOG_DEBUG1("active server language is empty");
+    LOG_DEBUG1("active server layout is empty");
   }
 }
