@@ -168,6 +168,12 @@ void App::handleScreenError() const
   getEvents()->addEvent(Event(EventTypes::Quit));
 }
 
+void App::quit()
+{
+  LOG_INFO("quitting");
+  getEvents()->addEvent(Event(EventTypes::Quit));
+}
+
 void App::runEventsLoop(const void *)
 {
   int exitCode = m_events->loop();

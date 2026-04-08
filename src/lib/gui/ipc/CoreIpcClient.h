@@ -19,6 +19,8 @@ class CoreIpcClient : public IpcClient
 public:
   explicit CoreIpcClient(QObject *parent = nullptr);
 
+  void sendStop();
+
 Q_SIGNALS:
   void commandReceived(const QString &command, const QString &args);
 
