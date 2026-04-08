@@ -199,15 +199,27 @@ otherwise it expands to a call that doesn't.
 // end, then we resort to using non-numerical chars. this still works (since
 // to deduce the number we subtract octal \060, so '/' is -1, and ':' is 10
 
-#define CLOG_PRINT CLOG_TRACE "%z\057" // char is '/'
-#define CLOG_CRIT CLOG_TRACE "%z\060"  // char is '0'
-#define CLOG_ERR CLOG_TRACE "%z\061"
-#define CLOG_WARN CLOG_TRACE "%z\062"
-#define CLOG_NOTE CLOG_TRACE "%z\063"
-#define CLOG_INFO CLOG_TRACE "%z\064"
-#define CLOG_DEBUG CLOG_TRACE "%z\065"
-#define CLOG_DEBUG1 CLOG_TRACE "%z\066"
-#define CLOG_DEBUG2 CLOG_TRACE "%z\067"
+// Priority tag used as the first three bytes of a format string. Log::print
+// reads fmt[2] - '0' to recover the level, so the escape must be ASCII '0'-'9'.
+#define CLOG_TAG_PRINT "%z\057" // char is '/'
+#define CLOG_TAG_CRIT "%z\060"  // char is '0'
+#define CLOG_TAG_ERR "%z\061"
+#define CLOG_TAG_WARN "%z\062"
+#define CLOG_TAG_NOTE "%z\063"
+#define CLOG_TAG_INFO "%z\064"
+#define CLOG_TAG_DEBUG "%z\065"
+#define CLOG_TAG_DEBUG1 "%z\066"
+#define CLOG_TAG_DEBUG2 "%z\067"
+
+#define CLOG_PRINT CLOG_TRACE CLOG_TAG_PRINT
+#define CLOG_CRIT CLOG_TRACE CLOG_TAG_CRIT
+#define CLOG_ERR CLOG_TRACE CLOG_TAG_ERR
+#define CLOG_WARN CLOG_TRACE CLOG_TAG_WARN
+#define CLOG_NOTE CLOG_TRACE CLOG_TAG_NOTE
+#define CLOG_INFO CLOG_TRACE CLOG_TAG_INFO
+#define CLOG_DEBUG CLOG_TRACE CLOG_TAG_DEBUG
+#define CLOG_DEBUG1 CLOG_TRACE CLOG_TAG_DEBUG1
+#define CLOG_DEBUG2 CLOG_TRACE CLOG_TAG_DEBUG2
 
 #define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))
 #define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))

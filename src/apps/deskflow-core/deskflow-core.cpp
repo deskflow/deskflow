@@ -26,6 +26,32 @@
 #include <QSharedMemory>
 #include <QTextStream>
 #include <QThread>
+#include <QtGlobal>
+
+void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
+{
+  const auto utf8 = message.toUtf8();
+  switch (type) {
+  case QtDebugMsg:
+    CLOG->print(context.file, context.line, CLOG_TAG_DEBUG "%s", utf8.constData());
+    break;
+  case QtInfoMsg:
+    CLOG->print(context.file, context.line, CLOG_TAG_INFO "%s", utf8.constData());
+    break;
+  case QtWarningMsg:
+    CLOG->print(context.file, context.line, CLOG_TAG_WARN "%s", utf8.constData());
+    break;
+  case QtCriticalMsg:
+    CLOG->print(context.file, context.line, CLOG_TAG_ERR "%s", utf8.constData());
+    break;
+  case QtFatalMsg:
+    CLOG->print(context.file, context.line, CLOG_TAG_CRIT "%s", utf8.constData());
+    break;
+  }
+  if (type == QtFatalMsg) {
+    abort();
+  }
+}
 
 void showHelp(const CoreArgParser &parser)
 {
@@ -57,6 +83,7 @@ int main(int argc, char **argv)
   arch.init();
 
   Log log;
+  qInstallMessageHandler(qtMessageHandler);
 
   QStringList args;
   for (int i = 0; i < argc; i++)
