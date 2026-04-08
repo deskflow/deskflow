@@ -22,7 +22,7 @@ CoreIpcClient::CoreIpcClient(QObject *parent) : IpcClient(parent, kCoreIpcName, 
 
 void CoreIpcClient::processCommand(const QString &command, const QStringList &parts)
 {
-  const auto args = parts.size() >= 2 ? parts[1] : QString();
+  const auto args = parts.size() >= 2 ? parts.at(1) : QString();
   Q_EMIT commandReceived(command, args);
 }
 

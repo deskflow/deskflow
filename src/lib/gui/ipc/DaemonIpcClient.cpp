@@ -47,7 +47,7 @@ void DaemonIpcClient::requestLogPath()
 void DaemonIpcClient::processCommand(const QString &command, const QStringList &parts)
 {
   if (command == QStringLiteral("logPath") && parts.size() == 2) {
-    Q_EMIT logPathReceived(parts[1]);
+    Q_EMIT logPathReceived(parts.at(1));
   }
 }
 
