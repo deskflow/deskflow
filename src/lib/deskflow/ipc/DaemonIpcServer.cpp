@@ -17,7 +17,7 @@ const auto kAckMessage = "ok";
 const auto kErrorMessage = "error";
 
 DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
-    : IpcServer(parent, kDaemonIpcName, "daemon"),
+    : IpcServer(parent, kDaemonIpcName, QStringLiteral("daemon")),
       m_logFilename(logFilename)
 {
   // do nothing
@@ -25,24 +25,24 @@ DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
 
 void DaemonIpcServer::processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts)
 {
-  if (command == "logLevel") {
+  if (command == QStringLiteral("logLevel")) {
     processLogLevel(clientSocket, parts);
-  } else if (command == "elevate") {
+  } else if (command == QStringLiteral("elevate")) {
     processElevate(clientSocket, parts);
-  } else if (command == "command") {
+  } else if (command == QStringLiteral("command")) {
     processCommandMessage(clientSocket, parts);
-  } else if (command == "start") {
+  } else if (command == QStringLiteral("start")) {
     LOG_DEBUG("daemon ipc server got start message");
     Q_EMIT startProcessRequested();
     writeToClientSocket(clientSocket, kAckMessage);
-  } else if (command == "stop") {
+  } else if (command == QStringLiteral("stop")) {
     LOG_DEBUG("daemon ipc server got stop message");
     Q_EMIT stopProcessRequested();
     writeToClientSocket(clientSocket, kAckMessage);
-  } else if (command == "logPath") {
+  } else if (command == QStringLiteral("logPath")) {
     LOG_DEBUG("daemon ipc server got log path request");
-    writeToClientSocket(clientSocket, "logPath=" + m_logFilename.toUtf8());
-  } else if (command == "clearSettings") {
+    writeToClientSocket(clientSocket, QStringLiteral("logPath=%1").arg(m_logFilename.toUtf8()));
+  } else if (command == QStringLiteral("clearSettings")) {
     LOG_DEBUG("daemon ipc server got clear settings message");
     Q_EMIT clearSettingsRequested();
     writeToClientSocket(clientSocket, kAckMessage);
@@ -80,14 +80,14 @@ void DaemonIpcServer::processElevate(QLocalSocket *&clientSocket, const QStringL
   }
 
   const auto &elevate = messageParts[1];
-  if (elevate != "yes" && elevate != "no") {
+  if (elevate != QStringLiteral("yes") && elevate != QStringLiteral("no")) {
     LOG_ERR("daemon ipc server got invalid elevate value: %s", elevate.toUtf8().constData());
     writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   LOG_DEBUG("daemon ipc server got new elevate value: %s", elevate.toUtf8().constData());
-  Q_EMIT elevateModeChanged(elevate == "yes");
+  Q_EMIT elevateModeChanged(elevate == QStringLiteral("yes"));
   writeToClientSocket(clientSocket, kAckMessage);
 }
 

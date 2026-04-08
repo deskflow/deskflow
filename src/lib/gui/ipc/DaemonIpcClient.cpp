@@ -12,41 +12,41 @@
 
 namespace deskflow::gui::ipc {
 
-DaemonIpcClient::DaemonIpcClient(QObject *parent) : IpcClient(parent, kDaemonIpcName, "daemon")
+DaemonIpcClient::DaemonIpcClient(QObject *parent) : IpcClient(parent, kDaemonIpcName, QStringLiteral("daemon"))
 {
 }
 
 void DaemonIpcClient::sendLogLevel(const QString &logLevel)
 {
-  sendMessage("logLevel=" + logLevel);
+  sendMessage(QStringLiteral("logLevel=%1").arg(logLevel));
 }
 
 void DaemonIpcClient::sendStartProcess(const QString &command, bool elevate)
 {
   const auto elevateStr = elevate ? QStringLiteral("yes") : QStringLiteral("no");
-  sendMessage("elevate=" + elevateStr);
-  sendMessage("command=" + command);
-  sendMessage("start");
+  sendMessage(QStringLiteral("elevate=%1").arg(elevateStr));
+  sendMessage(QStringLiteral("command=%1").arg(command));
+  sendMessage(QStringLiteral("start"));
 }
 
 void DaemonIpcClient::sendStopProcess()
 {
-  sendMessage("stop");
+  sendMessage(QStringLiteral("stop"));
 }
 
 void DaemonIpcClient::sendClearSettings()
 {
-  sendMessage("clearSettings");
+  sendMessage(QStringLiteral("clearSettings"));
 }
 
 void DaemonIpcClient::requestLogPath()
 {
-  sendMessage("logPath");
+  sendMessage(QStringLiteral("logPath"));
 }
 
 void DaemonIpcClient::processCommand(const QString &command, const QStringList &parts)
 {
-  if (command == "logPath" && parts.size() == 2) {
+  if (command == QStringLiteral("logPath") && parts.size() == 2) {
     Q_EMIT logPathReceived(parts[1]);
   }
 }
