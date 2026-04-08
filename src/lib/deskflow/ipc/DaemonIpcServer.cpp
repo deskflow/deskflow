@@ -59,7 +59,7 @@ void DaemonIpcServer::processLogLevel(QLocalSocket *&clientSocket, const QString
     return;
   }
 
-  const auto &logLevel = messageParts[1];
+  const auto &logLevel = messageParts.at(1);
   if (logLevel.isEmpty()) {
     LOG_ERR("daemon ipc server got empty log level");
     writeToClientSocket(clientSocket, kErrorMessage);
@@ -79,7 +79,7 @@ void DaemonIpcServer::processElevate(QLocalSocket *&clientSocket, const QStringL
     return;
   }
 
-  const auto &elevate = messageParts[1];
+  const auto &elevate = messageParts.at(1);
   if (elevate != QStringLiteral("yes") && elevate != QStringLiteral("no")) {
     LOG_ERR("daemon ipc server got invalid elevate value: %s", elevate.toUtf8().constData());
     writeToClientSocket(clientSocket, kErrorMessage);
@@ -99,7 +99,7 @@ void DaemonIpcServer::processCommandMessage(QLocalSocket *&clientSocket, const Q
     return;
   }
 
-  const auto &command = messageParts[1];
+  const auto &command = messageParts.at(1);
   if (command.isEmpty()) {
     LOG_ERR("daemon ipc server got empty command");
     writeToClientSocket(clientSocket, kErrorMessage);
