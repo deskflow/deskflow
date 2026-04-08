@@ -125,13 +125,12 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
     LOG_DEBUG("%s ipc server got hello message (version: %s)", m_typeName.constData(), versionId.toUtf8().constData());
 
     if (clientVersion != versionId) {
-      LOG_ERR(
+      LOG_WARN(
           "%s ipc client version mismatch (client: %s, server: %s)", m_typeName.constData(),
           clientVersion.toUtf8().constData(), versionId.toUtf8().constData()
       );
-      writeToClientSocket(clientSocket, QStringLiteral("error=version mismatch, expected: %1").arg(versionId));
+      writeToClientSocket(clientSocket, QStringLiteral("versionMismatch=%1").arg(versionId));
       clientSocket->flush();
-      clientSocket->disconnectFromServer();
       return;
     }
 

@@ -29,8 +29,14 @@ CoreIpcServer &CoreIpcServer::instance()
 
 void CoreIpcServer::processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts)
 {
-  Q_UNUSED(clientSocket)
   Q_UNUSED(parts)
+  if (command == QStringLiteral("stop")) {
+    LOG_DEBUG("core ipc server got stop message");
+    writeToClientSocket(clientSocket, QStringLiteral("ok"));
+    broadcastCommand(QStringLiteral("bye"));
+    Q_EMIT stopProcessRequested();
+    return;
+  }
   LOG_WARN("core ipc server got unknown command: %s", command.toUtf8().constData());
 }
 

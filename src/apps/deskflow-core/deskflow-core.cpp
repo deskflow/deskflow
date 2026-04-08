@@ -132,6 +132,9 @@ int main(int argc, char **argv)
   QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
 
   const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
+  QObject::connect(
+      ipcServer, &deskflow::core::ipc::IpcServer::stopProcessRequested, coreApp, &App::quit, Qt::DirectConnection
+  );
   ipcServer->listen();
 
   QThread coreThread;

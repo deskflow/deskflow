@@ -151,6 +151,13 @@ void IpcClient::handleReadyRead()
       continue;
     }
 
+    if (parts.at(0) == QStringLiteral("bye")) {
+      qDebug().noquote() << QStringLiteral("%1 ipc server is shutting down").arg(m_typeName);
+      disconnectFromServer();
+      Q_EMIT serverShutdown();
+      return;
+    }
+
     processCommand(parts.at(0), parts);
   }
 
@@ -169,21 +176,23 @@ void IpcClient::handleHandshakeMessage(const QStringList &parts)
     return;
   }
 
+  const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
+
+  if (parts.at(0) == QStringLiteral("versionMismatch")) {
+    const auto serverVersion = parts.size() >= 2 ? parts.at(1) : QStringLiteral("unknown");
+    qWarning().noquote(
+    ) << QStringLiteral("%1 ipc version mismatch (client: %2, server: %3)").arg(m_typeName, versionId, serverVersion);
+    m_state = State::Connected;
+    Q_EMIT versionMismatch();
+    return;
+  }
+
   if (parts.at(0) != QStringLiteral("hello")) {
     return;
   }
 
   if (parts.size() < 2) {
     qCritical().noquote() << QStringLiteral("%1 ipc server hello missing version").arg(m_typeName);
-    disconnectFromServer();
-    Q_EMIT connectionFailed();
-    return;
-  }
-
-  const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
-  if (const auto serverVersion = parts.at(1); serverVersion != versionId) {
-    qCritical().noquote(
-    ) << QStringLiteral("%1 ipc version mismatch (client: %2 , server: %3)").arg(m_typeName, versionId, serverVersion);
     disconnectFromServer();
     Q_EMIT connectionFailed();
     return;
