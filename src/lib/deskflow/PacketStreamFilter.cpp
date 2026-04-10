@@ -164,7 +164,16 @@ void PacketStreamFilter::filterEvent(const Event &event)
     std::scoped_lock lock{m_mutex};
     m_inputShutdown = true;
     if (m_size != 0) {
-      return;
+      if (m_buffer.getSize() >= m_size) {
+        // we have a complete packet, so we can process it before
+        // shutting down.
+        return;
+      }
+      // we have a partial packet, but the stream has shut down.
+      // we'll never get the rest of the packet, so we should
+      // signal an error and then shut down.
+      m_events->addEvent(Event(EventTypes::StreamInputFormatError, getEventTarget()));
+      m_size = 0;
     }
   }
 
