@@ -85,8 +85,15 @@ void SecureSocket::connect(const NetworkAddress &addr)
 ISocketMultiplexerJob *SecureSocket::newJob()
 {
   // after TCP connection is established, SecureSocket will pick up
-  // connected event and do secureConnect
+  // connected event and do secureConnect. However, we must ensure
+  // that the multiplexer has a job to actually detect that connection.
   if (isConnected() && !m_secureReady) {
+    if (m_ssl && m_ssl->m_ssl) {
+      // we are in the middle of a secure handshake
+      return new TSocketMultiplexerMethodJob<SecureSocket>(
+          this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+      );
+    }
     return nullptr;
   }
 
@@ -443,7 +450,6 @@ int SecureSocket::secureAccept(int socket)
   if (retry > 0) {
     LOG_DEBUG2("retry accepting secure socket");
     m_secureReady = false;
-    Arch::sleep(s_retryDelay);
     return 0;
   }
 
@@ -488,7 +494,6 @@ int SecureSocket::secureConnect(int socket)
   if (retry > 0) {
     LOG_DEBUG2("retry connect secure socket");
     m_secureReady = false;
-    Arch::sleep(s_retryDelay);
     return 0;
   }
 
@@ -549,14 +554,14 @@ void SecureSocket::checkResult(int status, int &retry)
     break;
 
   case SSL_ERROR_WANT_READ:
+    setReadable(true);
     retry++;
     LOG_DEBUG2("want to read, error=%d, attempt=%d", errorCode, retry);
     break;
 
   case SSL_ERROR_WANT_WRITE:
     // Need to make sure the socket is known to be writable so the impending
-    // select action actually triggers on a write. This isn't necessary for
-    // m_readable because the socket logic is always readable
+    // poll action actually triggers on a write.
     setWritable(true);
     retry++;
     LOG_DEBUG2("want to write, error=%d, attempt=%d", errorCode, retry);
@@ -659,6 +664,10 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *const
 {
   Lock lock(&getMutex());
 
+  // reset flags so checkResult can set them based on what SSL needs
+  setReadable(false);
+  setWritable(false);
+
   int status = 0;
 #if defined(Q_OS_WIN)
   status = secureConnect(static_cast<int>(getSocket()->m_socket));
@@ -673,11 +682,18 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *const
 
   // If status > 0, success
   if (status > 0) {
+    setReadable(true);
+    setWritable(true);
     sendEvent(EventTypes::DataSocketSecureConnected);
     return newJob();
   }
 
-  // Retry case
+  // Retry case. Ensure we poll for what we need.
+  // If checkResult didn't set anything, default to what we were doing.
+  if (!isReadable() && !isWritable()) {
+    setWritable(true);
+  }
+
   return new TSocketMultiplexerMethodJob<SecureSocket>(
       this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
   );
@@ -686,6 +702,10 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *const
 ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *const, bool, bool, bool)
 {
   Lock lock(&getMutex());
+
+  // reset flags so checkResult can set them based on what SSL needs
+  setReadable(false);
+  setWritable(false);
 
   int status = 0;
 #if defined(Q_OS_WIN)
@@ -701,11 +721,17 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *const,
 
   // If status > 0, success
   if (status > 0) {
+    setReadable(true);
+    setWritable(true);
     sendEvent(EventTypes::ClientListenerAccepted);
     return newJob();
   }
 
-  // Retry case
+  // Retry case. Ensure we poll for what we need.
+  if (!isReadable() && !isWritable()) {
+    setReadable(true);
+  }
+
   return new TSocketMultiplexerMethodJob<SecureSocket>(
       this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
   );
