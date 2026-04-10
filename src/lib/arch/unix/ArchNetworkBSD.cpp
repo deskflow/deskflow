@@ -419,6 +419,17 @@ bool ArchNetworkBSD::setNoDelayOnSocket(ArchSocket s, bool noDelay)
   return (oflag != 0);
 }
 
+void ArchNetworkBSD::setKeepAliveOnSocket(ArchSocket s, bool keepAlive)
+{
+  if (!s) {
+    throwError(EINVAL);
+  }
+  int opt = keepAlive;
+  if (setsockopt(s->m_fd, SOL_SOCKET, SO_KEEPALIVE, reinterpret_cast<const optval_t *>(&opt), sizeof(opt)) == -1) {
+    throwError(errno);
+  }
+}
+
 bool ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
   assert(s != nullptr);
