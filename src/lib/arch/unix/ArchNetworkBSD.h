@@ -86,6 +86,7 @@ public:
   size_t writeSocket(ArchSocket s, const void *buf, size_t len) override;
   void throwErrorOnSocket(ArchSocket) override;
   bool setNoDelayOnSocket(ArchSocket, bool noDelay) override;
+  void setKeepAliveOnSocket(ArchSocket, bool keepAlive) override;
   bool setReuseAddrOnSocket(ArchSocket, bool reuse) override;
   ArchNetAddress newAnyAddr(AddressFamily) override;
   ArchNetAddress copyAddr(ArchNetAddress) override;

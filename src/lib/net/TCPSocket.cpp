@@ -283,6 +283,9 @@ void TCPSocket::init()
     // that should be sent without (much) delay.  for example, the
     // mouse motion messages are much less useful if they're delayed.
     ARCH->setNoDelayOnSocket(m_socket, true);
+
+    // turn on keep-alive to avoid dead connections from lingering indefinitely
+    ARCH->setKeepAliveOnSocket(m_socket, true);
   } catch (const ArchNetworkException &e) {
     try {
       ARCH->closeSocket(m_socket);

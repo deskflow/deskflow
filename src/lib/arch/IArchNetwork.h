@@ -225,6 +225,12 @@ public:
   */
   virtual bool setNoDelayOnSocket(ArchSocket, bool noDelay) = 0;
 
+  //! Turn keep-alive on or off on socket
+  /*!
+  Set socket to use keep-alive (true) or not (false).
+  */
+  virtual void setKeepAliveOnSocket(ArchSocket, bool keepAlive) = 0;
+
   //! Turn address reuse on or off on socket
   /*!
   Allows the address this socket is bound to to be reused while in the

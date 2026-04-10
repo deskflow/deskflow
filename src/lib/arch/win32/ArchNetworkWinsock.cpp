@@ -605,6 +605,17 @@ bool ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
   return (oflag != 0);
 }
 
+void ArchNetworkWinsock::setKeepAliveOnSocket(ArchSocket s, bool keepAlive)
+{
+  if (!s) {
+    throwError(WSAEINVAL);
+  }
+  int opt = keepAlive;
+  if (setsockopt_winsock(s->m_socket, SOL_SOCKET, SO_KEEPALIVE, &opt, sizeof(opt)) == SOCKET_ERROR) {
+    throwError(getsockerror_winsock());
+  }
+}
+
 bool ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
   LOG_ERR("socket re-use not supported on windows");
