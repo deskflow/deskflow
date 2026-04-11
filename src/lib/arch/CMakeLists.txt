@@ -36,7 +36,6 @@ endif()
 add_library(arch STATIC ${PLATFORM_CODE}
   Arch.cpp
   Arch.h
-  ArchDaemonNone.h
   ArchException.h
   IArchDaemon.h
   IArchLog.h
