@@ -1,8 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXHelpers_8h.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,22,3],
-"OSXHelpers_8h.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,22,0],
-"OSXHelpers_8h.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,22,2],
 "OSXHelpers_8h_source.html":[7,0,1,1,5,22],
 "OSXHelpers_8mm.html":[7,0,1,1,5,23],
 "OSXHelpers_8mm.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,23,5],
@@ -249,5 +246,8 @@ var NAVTREEINDEX4 =
 "Settings_8cpp.html":[7,0,1,1,3,8],
 "Settings_8h.html":[7,0,1,1,3,9],
 "Settings_8h_source.html":[7,0,1,1,3,9],
-"SimpleEventQueueBuffer_8cpp.html":[7,0,1,1,1,24]
+"SimpleEventQueueBuffer_8cpp.html":[7,0,1,1,1,24],
+"SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,25],
+"SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,25],
+"SocketException_8cpp.html":[7,0,1,1,8,19]
 };

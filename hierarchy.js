@@ -17,9 +17,6 @@ var hierarchy =
       [ "AppUtilUnix", "classAppUtilUnix.html", null ],
       [ "AppUtilWindows", "classAppUtilWindows.html", null ]
     ] ],
-    [ "ARCH_DAEMON", null, [
-      [ "Arch", "classArch.html", null ]
-    ] ],
     [ "ARCH_LOG", null, [
       [ "Arch", "classArch.html", null ]
     ] ],
@@ -106,7 +103,6 @@ var hierarchy =
       ] ]
     ] ],
     [ "IArchDaemon", "classIArchDaemon.html", [
-      [ "ArchDaemonNone", "classArchDaemonNone.html", null ],
       [ "ArchDaemonWindows", "classArchDaemonWindows.html", null ]
     ] ],
     [ "IArchLog", "classIArchLog.html", [

@@ -1,8 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"KeyTypes_8h.html#a32ef4b8c6fd9636322655e4376cbc8ef":[7,0,1,1,4,39,18],
-"KeyTypes_8h.html#a332f60e50a590fdd1418b764c6ca12fc":[7,0,1,1,4,39,89],
-"KeyTypes_8h.html#a3677df24ef58651d9677f338ecc83533":[7,0,1,1,4,39,66],
 "KeyTypes_8h.html#a375c062c48f1e029279c21616d1b9acd":[7,0,1,1,4,39,87],
 "KeyTypes_8h.html#a3ad809f4722dc4a7fa806c52b33605b7":[7,0,1,1,4,39,192],
 "KeyTypes_8h.html#a3b8cbd45144fedc531e9dc40c3499846":[7,0,1,1,4,39,149],
@@ -249,5 +246,8 @@ var NAVTREEINDEX2 =
 "MSWindowsDebugOutputter_8cpp.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,9,21,0],
 "MSWindowsDebugOutputter_8h.html":[7,0,1,1,9,22],
 "MSWindowsDebugOutputter_8h_source.html":[7,0,1,1,9,22],
-"MSWindowsDesks_8cpp.html":[7,0,1,1,9,23]
+"MSWindowsDesks_8cpp.html":[7,0,1,1,9,23],
+"MSWindowsDesks_8cpp.html#a229eb3cb01c581e4a20a2428af85df87":[7,0,1,1,9,23,15],
+"MSWindowsDesks_8cpp.html#a22d10b903873cdbaadbe303273b04f9c":[7,0,1,1,9,23,4],
+"MSWindowsDesks_8cpp.html#a466ba152ad50de01f74de9926c77933d":[7,0,1,1,9,23,26]
 };

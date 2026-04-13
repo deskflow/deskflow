@@ -147,7 +147,7 @@ var searchData=
   ['command_144',['Command',['../structSettings_1_1Daemon.html#af9e6842a07e56327dbdb16af6cb62873',1,'Settings::Daemon']]],
   ['command_20messages_145',['Command Messages',['../group__protocol__commands.html',1,'']]],
   ['commandchanged_146',['commandChanged',['../classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a1e6c86407c96d13faafcfd7235f0990e',1,'deskflow::core::ipc::IpcServer']]],
-  ['commandline_147',['commandLine',['../classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270',1,'ArchDaemonNone::commandLine()'],['../classIArchDaemon.html#aad014dbecf0641b2873dc9f6fd86c93b',1,'IArchDaemon::commandLine()'],['../classArchDaemonWindows.html#a64cc33f4ac486e3133e23184f1b96c9e',1,'ArchDaemonWindows::commandLine()']]],
+  ['commandline_147',['commandLine',['../classIArchDaemon.html#aad014dbecf0641b2873dc9f6fd86c93b',1,'IArchDaemon::commandLine()'],['../classArchDaemonWindows.html#a64cc33f4ac486e3133e23184f1b96c9e',1,'ArchDaemonWindows::commandLine()']]],
   ['commandreceived_148',['commandReceived',['../classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6',1,'deskflow::gui::ipc::CoreIpcClient']]],
   ['commit_149',['commit',['../classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c',1,'ServerConfig']]],
   ['common_20issues_150',['Common Issues',['../protocol_reference.html#autotoc_md36',1,'']]],

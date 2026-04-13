@@ -72,7 +72,6 @@ var annotated_dup =
     [ "ArchDaemonException", "classArchDaemonException.html", null ],
     [ "ArchDaemonFailedException", "classArchDaemonFailedException.html", null ],
     [ "ArchDaemonInstallException", "classArchDaemonInstallException.html", null ],
-    [ "ArchDaemonNone", "classArchDaemonNone.html", "classArchDaemonNone" ],
     [ "ArchDaemonUninstallFailedException", "classArchDaemonUninstallFailedException.html", null ],
     [ "ArchDaemonUninstallNotInstalledException", "classArchDaemonUninstallNotInstalledException.html", null ],
     [ "ArchDaemonWindows", "classArchDaemonWindows.html", "classArchDaemonWindows" ],

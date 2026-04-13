@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.134</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.137</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -104,11 +104,9 @@ Inheritance diagram for IArchDaemon:</div>
 <div class="dyncontent">
 <div class="center"><img src="classIArchDaemon__inherit__graph.png" border="0" usemap="#aIArchDaemon_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aIArchDaemon_inherit__map" id="aIArchDaemon_inherit__map">
-<area shape="rect" title="Interface for architecture dependent daemonizing." alt="" coords="100,5,200,30"/>
-<area shape="rect" href="classArchDaemonNone.html" title="Dummy implementation of IArchDaemon." alt="" coords="5,78,133,103"/>
-<area shape="poly" title=" " alt="" coords="128,40,84,80,81,75,123,41"/>
-<area shape="rect" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon." alt="" coords="156,78,307,103"/>
-<area shape="poly" title=" " alt="" coords="176,38,221,78,216,78,174,43"/>
+<area shape="rect" title="Interface for architecture dependent daemonizing." alt="" coords="30,5,131,30"/>
+<area shape="rect" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon." alt="" coords="5,78,156,103"/>
+<area shape="poly" title=" " alt="" coords="82,44,83,79,78,77,79,48"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -196,7 +194,7 @@ Public Member Functions</h2></td></tr>
 <p>Get the command line. </p>
 <p>Gets the command line with which the application was started. </p>
 
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a64cc33f4ac486e3133e23184f1b96c9e">ArchDaemonWindows</a>.</p>
+<p>Implemented in <a class="el" href="classArchDaemonWindows.html#a64cc33f4ac486e3133e23184f1b96c9e">ArchDaemonWindows</a>.</p>
 
 </div>
 </div>
@@ -232,7 +230,7 @@ unix: Detaches from terminal. <code>func</code> gets passed one argument, the na
 win32: Becomes a service. Argument 0 is the name of the service and the rest are the arguments passed to StartService(). <code>func</code> is only called when the service is actually started. <code>func</code> must call <code><a class="el" href="classArchDaemonWindows.html#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">ArchDaemonWindows::runDaemon()</a></code> to finally becoming a service. The <code>runFunc</code> function passed to <code>runDaemon()</code> must call <code>ArchDaemonWindows::daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>ArchDaemonWindows::daemonRunning(false)</code> when it leaves the main loop. The <code>stopFunc</code> function passed to <code>runDaemon()</code> is called when the daemon must exit the main loop and it must cause <code>runFunc</code> to return. <code>func</code> should return what <code>runDaemon()</code> returns. <code>func</code> or <code>runFunc</code> can call <code><a class="el" href="classArchDaemonWindows.html#a59e4f68b87e109032cfe590e0eb5f6c1" title="Indicate failure of running daemon.">ArchDaemonWindows::daemonFailed()</a></code> to indicate startup failure. </li>
 </ul>
 
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf">ArchDaemonWindows</a>.</p>
+<p>Implemented in <a class="el" href="classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf">ArchDaemonWindows</a>.</p>
 
 </div>
 </div>

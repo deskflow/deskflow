@@ -6,7 +6,7 @@ var searchData=
   ['daemonipcclient_3',['DaemonIpcClient',['../classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html#a27673574276630252e815e050cf34d7c',1,'deskflow::gui::ipc::DaemonIpcClient']]],
   ['daemonipcclientconnectionfailed_4',['daemonIpcClientConnectionFailed',['../classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f',1,'deskflow::gui::CoreProcess']]],
   ['daemonipcserver_5',['DaemonIpcServer',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a33730200213d81f92c76fcc07603aee6',1,'deskflow::core::ipc::DaemonIpcServer']]],
-  ['daemonize_6',['daemonize',['../classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711',1,'ArchDaemonNone::daemonize()'],['../classIArchDaemon.html#a6644e694fd49213342d4008cba60a516',1,'IArchDaemon::daemonize()'],['../classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf',1,'ArchDaemonWindows::daemonize()']]],
+  ['daemonize_6',['daemonize',['../classIArchDaemon.html#a6644e694fd49213342d4008cba60a516',1,'IArchDaemon::daemonize()'],['../classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf',1,'ArchDaemonWindows::daemonize()']]],
   ['daemonname_7',['daemonName',['../classClientApp.html#a6fd5bc186ce674f67a1f644f5f6679a1',1,'ClientApp::daemonName()'],['../classIApp.html#a165504789fa07702277cb59a237c928c',1,'IApp::daemonName()'],['../classServerApp.html#a24ce330e84e2ec6c0a4725dcd2e636b7',1,'ServerApp::daemonName()']]],
   ['daemonntmainloop_8',['daemonNTMainLoop',['../classAppUtilWindows.html#a83a430b7c403525433c751445b0dcf02',1,'AppUtilWindows']]],
   ['daemonntmainloopstatic_9',['daemonNTMainLoopStatic',['../AppUtilWindows_8cpp.html#aee529bac9450e2cede7d2d651b194892',1,'AppUtilWindows.cpp']]],

@@ -1,8 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,25],
-"SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,25],
-"SocketException_8cpp.html":[7,0,1,1,8,19],
 "SocketException_8h.html":[7,0,1,1,8,20],
 "SocketException_8h_source.html":[7,0,1,1,8,20],
 "SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
@@ -249,5 +246,8 @@ var NAVTREEINDEX5 =
 "classApp.html#ad4d9e0526734148f3d7364f2933c6d57":[6,0,6,23],
 "classApp.html#ae59ab33fd366ee0609bd4df8e807fab0":[6,0,6,9],
 "classAppUtil.html":[6,0,7],
-"classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca":[6,0,7,4]
+"classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca":[6,0,7,4],
+"classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d":[6,0,7,0],
+"classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd":[6,0,7,1],
+"classAppUtil.html#a8766d51fe30577548aec3896464489d6":[6,0,7,7]
 };
