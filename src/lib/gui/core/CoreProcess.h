@@ -104,7 +104,7 @@ private Q_SLOTS:
 
 private:
   void startForegroundProcess(const QStringList &args);
-  void startProcessFromDaemon(const QStringList &args);
+  void startProcessFromDaemon();
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
   QPair<bool, QString> persistServerConfig() const;

@@ -19,7 +19,8 @@ class DaemonIpcClient : public IpcClient
 public:
   explicit DaemonIpcClient(QObject *parent = nullptr);
   void sendLogLevel(const QString &logLevel);
-  void sendStartProcess(const QString &command, bool elevate);
+  void sendConfigFile(const QString &configFile);
+  void sendStartProcess();
   void sendStopProcess();
   void sendClearSettings();
   void requestLogPath();

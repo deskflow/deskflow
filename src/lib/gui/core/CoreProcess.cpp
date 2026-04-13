@@ -214,17 +214,18 @@ void CoreProcess::startForegroundProcess(const QStringList &args)
   }
 }
 
-void CoreProcess::startProcessFromDaemon(const QStringList &args)
+void CoreProcess::startProcessFromDaemon()
 {
   if (m_processState != ProcessState::Starting) {
     qFatal("core process must be in starting state");
   }
 
-  QString commandQuoted = makeQuotedArgs(m_appPath, args);
-  qInfo("running command: %s", qPrintable(commandQuoted));
+  const auto configFile = Settings::settingsFile();
+  qInfo("sending start to daemon (config file: %s)", qPrintable(configFile));
 
-  auto sendStart = [this, commandQuoted] {
-    m_daemonIpcClient->sendStartProcess(commandQuoted, Settings::value(Settings::Daemon::Elevate).toBool());
+  auto sendStart = [this, configFile] {
+    m_daemonIpcClient->sendConfigFile(configFile);
+    m_daemonIpcClient->sendStartProcess();
     setProcessState(ProcessState::Started);
   };
 
@@ -412,8 +413,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(args);
   } else if (processMode == ProcessMode::Service) {
-    args.append({QStringLiteral("--settings"), Settings::settingsFile()});
-    startProcessFromDaemon(args);
+    startProcessFromDaemon();
   }
 
   m_lastProcessMode = processMode;

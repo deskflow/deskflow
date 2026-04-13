@@ -27,7 +27,8 @@
 
 #endif
 
-#include <string>
+#include <QCoreApplication>
+#include <QSettings>
 
 using namespace deskflow::core;
 
@@ -45,26 +46,40 @@ void DaemonApp::saveLogLevel(const QString &logLevel) const
   Settings::setValue(Settings::Daemon::LogLevel, logLevel);
 }
 
-void DaemonApp::setElevate(bool elevate)
+void DaemonApp::setConfigFile(const QString &configFile)
 {
-  LOG_DEBUG("elevate value changed: %s", elevate ? "yes" : "no");
-  m_elevate = elevate;
-  Settings::setValue(Settings::Daemon::Elevate, m_elevate);
-}
-
-void DaemonApp::setCommand(const QString &command)
-{
-  LOG_DEBUG("service command updated");
-  Settings::setValue(Settings::Daemon::Command, command);
-  m_command = command.toStdString();
+  LOG_DEBUG("config file updated: %s", configFile.toUtf8().constData());
+  m_configFile = configFile;
+  Settings::setValue(Settings::Daemon::ConfigFile, configFile);
 }
 
 void DaemonApp::applyWatchdogCommand() const
 {
-  LOG_DEBUG("applying watchdog command");
-
 #if defined(Q_OS_WIN)
-  m_pWatchdog->setProcessConfig(m_command, m_elevate);
+  if (m_configFile.isEmpty()) {
+    LOG_ERR("cannot apply watchdog command: no config file set");
+    return;
+  }
+
+  QSettings config(m_configFile, QSettings::IniFormat);
+  const auto coreMode = config.value(Settings::Core::CoreMode).toInt();
+  const auto elevate = config.value(Settings::Daemon::Elevate, !Settings::isPortableMode()).toBool();
+
+  QString modeArg;
+  if (coreMode == Settings::CoreMode::Server) {
+    modeArg = QStringLiteral("server");
+  } else if (coreMode == Settings::CoreMode::Client) {
+    modeArg = QStringLiteral("client");
+  } else {
+    LOG_ERR("cannot apply watchdog command: invalid core mode in config: %d", coreMode);
+    return;
+  }
+
+  const auto corePath = QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName);
+  const auto command = QStringLiteral("\"%1\" %2 --settings \"%3\"").arg(corePath, modeArg, m_configFile).toStdString();
+
+  LOG_DEBUG("applying watchdog command (elevate: %s)", elevate ? "yes" : "no");
+  m_pWatchdog->setProcessConfig(command, elevate);
 #else
   LOG_ERR("applying watchdog command not implemented on this platform");
 #endif
@@ -74,8 +89,9 @@ void DaemonApp::clearWatchdogCommand()
 {
   LOG_DEBUG("clearing watchdog command");
 
-  // Clear the setting to prevent it from being next time the daemon starts.
-  setCommand("");
+  // Clear the persisted config path so the daemon does not auto-start the core on next boot.
+  m_configFile.clear();
+  Settings::setValue(Settings::Daemon::ConfigFile);
 
 #if defined(Q_OS_WIN)
   m_pWatchdog->setProcessConfig("", false);
@@ -84,11 +100,11 @@ void DaemonApp::clearWatchdogCommand()
 #endif
 }
 
-void DaemonApp::clearSettings() const
+void DaemonApp::clearSettings()
 {
   LOG_INFO("clearing daemon settings");
-  Settings::setValue(Settings::Daemon::Command);
-  Settings::setValue(Settings::Daemon::Elevate);
+  m_configFile.clear();
+  Settings::setValue(Settings::Daemon::ConfigFile);
   Settings::setValue(Settings::Daemon::LogFile);
   Settings::setValue(Settings::Daemon::LogLevel);
 }
@@ -98,8 +114,7 @@ void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const
   // Use direct connection as this object is on it's own thread,
   // and so is on a different event loop to the main Qt loop.
   connect(ipcServer, &ipc::DaemonIpcServer::logLevelChanged, this, &DaemonApp::saveLogLevel, Qt::DirectConnection);
-  connect(ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::setElevate, Qt::DirectConnection);
-  connect(ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::setCommand, Qt::DirectConnection);
+  connect(ipcServer, &ipc::DaemonIpcServer::configFileChanged, this, &DaemonApp::setConfigFile, Qt::DirectConnection);
   connect(
       ipcServer, &ipc::DaemonIpcServer::startProcessRequested, this, &DaemonApp::applyWatchdogCommand,
       Qt::DirectConnection
@@ -139,11 +154,11 @@ void DaemonApp::run(QThread &daemonThread)
 #if defined(Q_OS_WIN)
   m_pWatchdog = std::make_unique<MSWindowsWatchdog>(m_foreground, *m_pFileLogOutputter);
 
-  auto command = Settings::value(Settings::Daemon::Command).toString().toStdString();
-  bool elevate = Settings::value(Settings::Daemon::Elevate).toBool();
-  if (!command.empty()) {
-    LOG_DEBUG("using last known command: %s", command.c_str());
-    m_pWatchdog->setProcessConfig(command, elevate);
+  if (const auto persistedConfig = Settings::value(Settings::Daemon::ConfigFile).toString();
+      !persistedConfig.isEmpty()) {
+    LOG_DEBUG("using last known config file: %s", persistedConfig.toUtf8().constData());
+    m_configFile = persistedConfig;
+    applyWatchdogCommand();
   }
 #endif
 
