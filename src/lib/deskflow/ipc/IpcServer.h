@@ -27,8 +27,7 @@ public:
 
 Q_SIGNALS:
   void logLevelChanged(const QString &logLevel);
-  void elevateModeChanged(bool elevate);
-  void commandChanged(const QString &command);
+  void configFileChanged(const QString &configFile);
   void startProcessRequested();
   void stopProcessRequested();
   void clearSettingsRequested();

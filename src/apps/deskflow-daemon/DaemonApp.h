@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <string>
-
 #include <QObject>
 #include <QThread>
 
@@ -48,11 +46,10 @@ private:
   int mainLoop();
   int daemonLoop();
   void saveLogLevel(const QString &logLevel) const;
-  void setElevate(bool elevate);
-  void setCommand(const QString &command);
+  void setConfigFile(const QString &configFile);
   void applyWatchdogCommand() const;
   void clearWatchdogCommand();
-  void clearSettings() const;
+  void clearSettings();
 
   static void showConsole();
 
@@ -63,7 +60,6 @@ private:
   IEventQueue &m_events;
   FileLogOutputter *m_pFileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
-  std::string m_command = "";
-  bool m_elevate = false;
+  QString m_configFile;
   bool m_foreground = false;
 };

@@ -25,8 +25,7 @@ public:
 private:
   void processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts) override;
   void processLogLevel(QLocalSocket *&clientSocket, const QStringList &messageParts);
-  void processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts);
-  void processCommandMessage(QLocalSocket *&clientSocket, const QStringList &messageParts);
+  void processConfigFile(QLocalSocket *&clientSocket, const QStringList &messageParts);
 
 private:
   const QString m_logFilename;
