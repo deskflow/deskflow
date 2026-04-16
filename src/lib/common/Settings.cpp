@@ -9,6 +9,7 @@
 #include "NetworkProtocol.h"
 #include "UrlConstants.h"
 
+#include "ManagedSettings.h"
 #include <QCoreApplication>
 #include <QFile>
 #include <QRect>
@@ -293,6 +294,9 @@ QString Settings::tlsTrustedClientsDb()
 
 void Settings::setValue(const QString &key, const QVariant &value)
 {
+  if (deskflow::settings::admin::isManaged(key)) {
+    return;
+  }
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
 
@@ -316,6 +320,10 @@ QVariant Settings::value(const QString &key)
 {
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
+  const auto mdmVal = deskflow::settings::admin::value(key);
+  if (mdmVal.isValid()) {
+    return mdmVal;
+  }
   return settings->value(key, defaultValue(key));
 }
 

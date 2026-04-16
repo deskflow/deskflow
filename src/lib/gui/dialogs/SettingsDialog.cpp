@@ -21,6 +21,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include "common/ManagedSettings.h"
+
 using namespace deskflow::gui;
 
 SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig)
@@ -313,9 +315,8 @@ void SettingsDialog::updateTlsControls()
   ui->lineTlsCertPath->setText(certificate);
   ui->cbRequireClientCert->setChecked(Settings::value(Settings::Security::CheckPeers).toBool());
   ui->groupSecurity->setChecked(TlsUtility::isEnabled());
-
   ui->groupSecurity->setEnabled(Settings::isWritable());
-
+  applyManagedLocks();
   updateTlsControlsEnabled();
 }
 
@@ -366,6 +367,7 @@ void SettingsDialog::updateControls()
   ui->sbPort->setEnabled(writable);
   ui->comboInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
+  applyManagedLocks();
   ui->groupLogToFile->setEnabled(writable);
   ui->rbAutoHide->setEnabled(writable);
   ui->rbShowOnStart->setEnabled(writable);
@@ -535,3 +537,19 @@ void SettingsDialog::setButtonBoxEnabledButtons() const
 }
 
 SettingsDialog::~SettingsDialog() = default;
+
+void SettingsDialog::applyManagedLocks()
+{
+  const auto managed = tr("Managed by your organization");
+  const QList<QPair<QString, QWidget *>> managedWidgets = {
+      {Settings::Core::Port, ui->sbPort},
+      {Settings::Security::TlsEnabled, ui->groupSecurity},
+      {Settings::Log::Level, ui->comboLogLevel},
+  };
+  for (const auto &[key, widget] : managedWidgets) {
+    if (deskflow::settings::admin::isManaged(key)) {
+      widget->setEnabled(false);
+      widget->setToolTip(managed);
+    }
+  }
+}

@@ -60,6 +60,7 @@ protected:
   void setSwitchDelay(int delay);
 
   void toggleDefaultLockToScreenState(bool state);
+  void applyManagedLocks();
   void toggleLockToScreen(bool disabled);
   void toggleWin32Foreground(bool enabled);
 
