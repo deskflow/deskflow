@@ -1118,6 +1118,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>설정 파일 찾아보기</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation>시작 시 컴퓨터 잠금 사용</translation>
     </message>
@@ -1259,6 +1263,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Reset to default values</source>
         <translation type="unfinished">기본값으로 재설정</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enable wl-clipboard support</source>

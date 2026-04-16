@@ -1120,6 +1120,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>設定ファイルを選択</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation>起動時にコンピューター間移動のロックを有効にする</translation>
     </message>
@@ -1261,6 +1265,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Reset to default values</source>
         <translation>デフォルト値にリセットする</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enable wl-clipboard support</source>

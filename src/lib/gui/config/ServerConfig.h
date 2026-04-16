@@ -117,10 +117,7 @@ public:
   {
     return m_DisableLockToScreen;
   }
-  bool clipboardSharing() const
-  {
-    return m_ClipboardSharing;
-  }
+  bool clipboardSharing() const;
   size_t clipboardSharingSize() const
   {
     return m_ClipboardSharingSize;

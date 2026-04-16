@@ -14,6 +14,7 @@
 #include "common/I18N.h"
 #include "common/Settings.h"
 #include "gui/Messages.h"
+#include "gui/StyleUtils.h"
 #include "gui/TlsUtility.h"
 #include "gui/core/NetworkMonitor.h"
 
@@ -326,9 +327,8 @@ void SettingsDialog::updateTlsControls()
   ui->lineTlsCertPath->setText(certificate);
   ui->cbRequireClientCert->setChecked(Settings::value(Settings::Security::CheckPeers).toBool());
   ui->groupSecurity->setChecked(TlsUtility::isEnabled());
-
   ui->groupSecurity->setEnabled(Settings::isWritable());
-
+  applyManagedLocks();
   updateTlsControlsEnabled();
 }
 
@@ -379,6 +379,7 @@ void SettingsDialog::updateControls()
   ui->sbPort->setEnabled(writable);
   ui->comboInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
+  applyManagedLocks();
   ui->groupLogToFile->setEnabled(writable);
   ui->rbAutoHide->setEnabled(writable);
   ui->rbShowOnStart->setEnabled(writable);
@@ -552,3 +553,11 @@ void SettingsDialog::setButtonBoxEnabledButtons() const
 }
 
 SettingsDialog::~SettingsDialog() = default;
+
+void SettingsDialog::applyManagedLocks()
+{
+  ui->sbPort->setProperty("managedSetting", Settings::Core::Port);
+  ui->groupSecurity->setProperty("managedSetting", Settings::Security::TlsEnabled);
+  ui->comboLogLevel->setProperty("managedSetting", Settings::Log::Level);
+  deskflow::gui::applyManagedLocks(this, tr("Managed by your organization"));
+}

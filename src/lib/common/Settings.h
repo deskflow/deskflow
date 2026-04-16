@@ -151,6 +151,13 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+
+  /**
+   * @brief Returns true if the given key is enforced by an admin policy and may not be changed.
+   * @param key The settings key to check.
+   * @return true if the key is managed (e.g. by macOS MDM), false otherwise.
+   */
+  static bool isManaged(const QString &key);
   static QString portableSettingsFile();
 
 Q_SIGNALS:
@@ -187,6 +194,12 @@ private:
   QSettings *m_settings = nullptr;
   QSettings *m_stateSettings = nullptr;
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
+
+  // Settings that can be enforced by an admin policy (e.g. macOS MDM).
+  inline static const QStringList m_managedKeys = {
+      Settings::Security::TlsEnabled, Settings::Core::Port, Settings::Log::Level,
+      QStringLiteral("ClipboardSharingEnabled")
+  };
 
   // clang-format off
   inline static const QStringList m_validKeys = {
