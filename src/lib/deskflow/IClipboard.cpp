@@ -7,6 +7,8 @@
 
 #include "deskflow/IClipboard.h"
 
+#include "base/Log.h"
+
 #include <assert.h>
 #include <vector>
 
@@ -19,6 +21,7 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
   assert(clipboard != nullptr);
 
   const char *index = data.data();
+  const char *const end = index + data.size();
 
   if (clipboard->open(time)) {
     // clear existing data
@@ -26,10 +29,20 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
 
     // read the number of formats
     const uint32_t numFormats = readUInt32(index);
+    if (end - index < 4) {
+      LOG_ERR("clipboard unmarshall: truncated header");
+      clipboard->close();
+      return;
+    }
     index += 4;
 
     // read each format
     for (uint32_t i = 0; i < numFormats; ++i) {
+      // need 8 bytes for format id + payload size
+      if (end - index < 8) {
+        LOG_ERR("clipboard unmarshall: truncated format header at %u/%u", i, numFormats);
+        break;
+      }
       // get the format id
       auto format = static_cast<IClipboard::Format>(readUInt32(index));
       index += 4;
@@ -37,6 +50,12 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
       // get the size of the format data
       uint32_t size = readUInt32(index);
       index += 4;
+
+      // peer-supplied size must not exceed remaining buffer
+      if (size > static_cast<uint32_t>(end - index)) {
+        LOG_ERR("clipboard unmarshall: payload size %u exceeds remaining %zd", size, end - index);
+        break;
+      }
 
       // save the data if it's a known format.  if either the client
       // or server supports more clipboard formats than the other
