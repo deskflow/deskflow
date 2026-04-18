@@ -43,10 +43,14 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
     return nullptr;
   }
 
-  HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+  const DWORD desiredAccess = PROCESS_TERMINATE | PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE;
+  HANDLE handle = OpenProcess(desiredAccess, FALSE, entry.th32ProcessID);
   if (handle == nullptr) {
-    LOG_ERR("could not open process handle for kill");
-    throw std::runtime_error(windowsErrorToString(GetLastError()));
+    LOG_WARN(
+        "could not open process handle for kill, pid=%u, error=%s", entry.th32ProcessID,
+        windowsErrorToString(GetLastError()).c_str()
+    );
+    return nullptr;
   }
 
   // only shut down if not current process (daemon is now the same unified binary).
@@ -116,10 +120,12 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
   );
 
   if (!duplicateRet) {
+    CloseHandle(sourceToken);
     LOG_ERR("could not duplicate token %i", sourceToken);
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
+  CloseHandle(sourceToken);
   LOG_DEBUG("duplicated, new token: %i", newToken);
   return newToken;
 }
@@ -137,13 +143,22 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
     if (!m_session.isProcessInSession(L"winlogon.exe", &process)) {
       throw std::runtime_error("cannot get user token without winlogon.exe");
     }
+    if (process == nullptr) {
+      throw std::runtime_error("found winlogon.exe but failed to open process handle");
+    }
 
     try {
-      return duplicateProcessToken(process, security);
-    } catch (std::runtime_error &e) {
+      HANDLE token = duplicateProcessToken(process, security);
+      if (process != nullptr) {
+        CloseHandle(process);
+      }
+      return token;
+    } catch (...) {
       LOG_ERR("failed to duplicate user token from winlogon.exe");
-      CloseHandle(process);
-      throw e;
+      if (process != nullptr) {
+        CloseHandle(process);
+      }
+      throw;
     }
   } else {
     LOG_DEBUG("getting non-elevated token");
@@ -369,8 +384,8 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   const auto kAllProcesses = 0;
 
   // first we need to take a snapshot of the running processes
-  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, kAllProcesses);
-  if (snapshot == INVALID_HANDLE_VALUE) {
+  MSWindowsHandle snapshot(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, kAllProcesses));
+  if (snapshot.get() == INVALID_HANDLE_VALUE) {
     LOG_ERR("could not get process snapshot");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
@@ -380,7 +395,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 
   // get the first process, and if we can't do that then it's
   // unlikely we can go any further
-  BOOL gotEntry = Process32First(snapshot, &entry);
+  BOOL gotEntry = Process32First(snapshot.get(), &entry);
   if (!gotEntry) {
     LOG_ERR("could not get first process entry");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
@@ -395,8 +410,8 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
       CloseHandle(handle);
     }
 
-    // now move on to the next entry (if we're not at the end)
-    gotEntry = Process32Next(snapshot, &entry);
+        // now move on to the next entry (if we're not at the end)
+    gotEntry = Process32Next(snapshot.get(), &entry);
     if (!gotEntry) {
 
       DWORD err = GetLastError();
@@ -408,9 +423,8 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
       }
     }
   }
-
-  CloseHandle(snapshot);
 }
+
 
 MSWindowsWatchdog::ProcessState MSWindowsWatchdog::handleStartError(const std::string_view &message)
 {

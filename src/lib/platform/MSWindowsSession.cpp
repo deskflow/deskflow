@@ -8,6 +8,7 @@
 
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
+#include "platform/MSWindowsHandle.h"
 
 #include <Wtsapi32.h>
 #include <stdexcept>
@@ -19,8 +20,8 @@ MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1)
 bool MSWindowsSession::isProcessInSession(const wchar_t *name, PHANDLE process = nullptr)
 {
   // first we need to take a snapshot of the running processes
-  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-  if (snapshot == INVALID_HANDLE_VALUE) {
+  MSWindowsHandle snapshot(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0));
+  if (snapshot.get() == INVALID_HANDLE_VALUE) {
     LOG_ERR("could not get process snapshot");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
@@ -30,7 +31,7 @@ bool MSWindowsSession::isProcessInSession(const wchar_t *name, PHANDLE process =
 
   // get the first process, and if we can't do that then it's
   // unlikely we can go any further
-  BOOL gotEntry = Process32First(snapshot, &entry);
+  BOOL gotEntry = Process32First(snapshot.get(), &entry);
   if (!gotEntry) {
     LOG_ERR("could not get first process entry");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
@@ -55,7 +56,7 @@ bool MSWindowsSession::isProcessInSession(const wchar_t *name, PHANDLE process =
         LOG_DEBUG2(
             "could not get session id for process: %i %s, code=%i", entry.th32ProcessID, entry.szExeFile, GetLastError()
         );
-        gotEntry = nextProcessEntry(snapshot, &entry);
+        gotEntry = nextProcessEntry(snapshot.get(), &entry);
         continue;
       } else {
         // only pay attention to processes in the active session
@@ -72,7 +73,7 @@ bool MSWindowsSession::isProcessInSession(const wchar_t *name, PHANDLE process =
     }
 
     // now move on to the next entry (if we're not at the end)
-    gotEntry = nextProcessEntry(snapshot, &entry);
+    gotEntry = nextProcessEntry(snapshot.get(), &entry);
   }
 
   std::wstring nameListJoin;
@@ -83,13 +84,15 @@ bool MSWindowsSession::isProcessInSession(const wchar_t *name, PHANDLE process =
 
   LOG_DEBUG2("processes in session %d: %s", m_activeSessionId, nameListJoin.c_str());
 
-  CloseHandle(snapshot);
-
   if (pid) {
     if (process != nullptr) {
       // now get the process, which we'll use to get the process token.
       LOG_DEBUG("found %s in session %i", name, m_activeSessionId);
       *process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
+      if (*process == nullptr) {
+        LOG_WARN("found %s in session %i but could not open process handle", name, m_activeSessionId);
+        return false;
+      }
     }
     return true;
   } else {
@@ -111,11 +114,12 @@ MSWindowsSession::getUserToken(LPSECURITY_ATTRIBUTES security)
   if (!DuplicateTokenEx(
           sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security, SecurityImpersonation, TokenPrimary, &newToken
       )) {
-
+    CloseHandle(sourceToken);
     LOG_ERR("could not duplicate token");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
+  CloseHandle(sourceToken);
   LOG_DEBUG("duplicated, new token: %i", newToken);
   return newToken;
 }
