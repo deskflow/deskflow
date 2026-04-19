@@ -25,7 +25,7 @@ jobs:
       # Allow failure so the "Delete PR comment" step still runs to clean up stale comments.
       - name: Download summaries
         id: download
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         continue-on-error: true
         with:
           run-id: ${{ github.event.workflow_run.id }}

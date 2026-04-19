@@ -434,7 +434,7 @@ jobs:
         uses: ./.github/actions/get-version
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
 
       - name: Generate package checksums
         id: generate_notes
