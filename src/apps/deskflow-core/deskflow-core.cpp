@@ -111,8 +111,12 @@ int main(int argc, char **argv)
   QObject::connect(&coreThread, &QThread::finished, &app, &QApplication::quit);
   coreApp->run(coreThread);
 
-  const auto exitCode = QApplication::exec();
+  int exitCode = QApplication::exec();
   coreThread.wait();
+
+  if (exitCode == s_exitSuccess) {
+    exitCode = coreApp->getExitCode();
+  }
 
   LOG_DEBUG("core exited, code: %d", exitCode);
   return exitCode;

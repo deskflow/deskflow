@@ -10,6 +10,7 @@
 
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/ExitCodes.h"
 #include "deskflow/IApp.h"
 #include "net/SocketMultiplexer.h"
 
@@ -107,6 +108,16 @@ public:
 
   void handleScreenError() const;
 
+  void updateExitCode(int errorCode)
+  {
+    m_exitCode = errorCode;
+  }
+
+  int getExitCode() const
+  {
+    return m_exitCode;
+  }
+
 protected:
   void runEventsLoop(const void *);
 
@@ -118,6 +129,7 @@ private:
   ARCH_APP_UTIL m_appUtil;
   std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
   QString m_pname;
+  int m_exitCode = s_exitSuccess;
 };
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS

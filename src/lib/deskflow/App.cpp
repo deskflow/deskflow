@@ -109,7 +109,7 @@ void App::run(QThread &coreThread)
     if (result == s_exitSuccess) {
       LOG_INFO("core stopped successfully");
     } else {
-      // TODO: surface error code to main thread somehow
+      updateExitCode(result);
       LOG_ERR("core stopped with error code: %d", result);
     }
 
