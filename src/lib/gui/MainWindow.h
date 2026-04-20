@@ -140,6 +140,7 @@ private:
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString &newRemoteHost);
   void updateIpLabel(const QStringList &addresses);
+  void updateClientIpDisplay(bool isAuto);
   void updateTimeoutDelay(int newDelay);
 
   bool canRunCore() const;

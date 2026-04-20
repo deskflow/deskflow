@@ -530,6 +530,11 @@ void MainWindow::updateModeControls()
   ui->lblNoMode->setVisible(!isServer && !isClient);
   toggleCanRunCore(canRunCore());
 
+  if (isClient) {
+      // If the hostname field is empty, it's effectively "Auto" or "Unconfigured"
+      updateClientIpDisplay(ui->lineHostname->text().isEmpty());
+  }
+
   if (isServer) {
     updateNetworkInfo();
     m_networkMonitor->startMonitoring();
@@ -1260,6 +1265,18 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
   ui->lblIpAddresses->setToolTip(toolTipText);
 }
 
+
+void MainWindow::updateClientIpDisplay(bool isAuto) {
+    if (isAuto) {
+        ui->lblClientIpInfo->setText("Client IP: [Auto]");
+    } else {
+        // Deskflow's NetworkMonitor or settings usually tracks the current IP.
+        // We fallback to the m_currentIpAddress member variable from the header.
+        QString currentIp = m_currentIpAddress.isEmpty() ? "Unknown" : m_currentIpAddress;
+        ui->lblClientIpInfo->setText("Client IP: " + currentIp);
+    }
+}
+
 void MainWindow::updateTimeoutDelay(int newDelay)
 {
   m_statusBar->setConnectionInterval(newDelay);
@@ -1272,3 +1289,5 @@ bool MainWindow::canRunCore() const
   const bool isClient = mode == Settings::CoreMode::Client;
   return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
 }
+
+
