@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Test summary
         uses: ./.github/actions/test-summary
@@ -58,7 +58,7 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: REUSE Compliance Check
         uses: fsfe/reuse-action@v5
@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Lint Checker
         uses: ./.github/actions/lint-clang
@@ -253,9 +253,10 @@ jobs:
       # VC++ as that's already pre-installed on the Windows runner.
       - name: Setup VC++ environment
         if: ${{ runner.os == 'Windows' }}
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: ${{matrix.target.arch}}
+          spectre: true
 
       - name: Install dependencies
         id: get-deps
@@ -334,7 +335,7 @@ jobs:
           folder: build/docs/dev/html
 
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
           path: ${{github.workspace}}/build/deskflow[-_]*.*
@@ -416,7 +417,7 @@ jobs:
         run: flatpak-builder-lint --exceptions --user-exceptions deploy/linux/flatpak/ci-build-lint-exceptions.json repo repo
 
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: package-${{ env.PACKAGE_PREFIX }}-flatpak-${{matrix.flatpak.arch}}
           path: ${{github.workspace}}/deskflow[-_]*.flatpak
@@ -434,7 +435,7 @@ jobs:
         uses: ./.github/actions/get-version
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
 
       - name: Generate package checksums
         id: generate_notes

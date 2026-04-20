@@ -36,7 +36,7 @@ runs:
     - name: Upload to GitHub
       id: upload
       if: steps.changes.outputs.diff
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: clang-format-diff
         path: ${{ steps.changes.outputs.file }}
@@ -79,7 +79,7 @@ runs:
 
     - name: Upload CI summary as artifact
       if: steps.summary.outputs.file
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: summary-clang-format
         path: ${{ steps.summary.outputs.file }}

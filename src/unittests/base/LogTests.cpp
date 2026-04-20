@@ -6,7 +6,7 @@
  */
 
 #include "LogTests.h"
-
+#include <clocale>
 #include <iostream>
 #include <sstream>
 
@@ -24,6 +24,7 @@ QString sanitizeBuffer(const std::stringstream &in)
 
 void LogTests::initTestCase()
 {
+  std::setlocale(LC_NUMERIC, "C");
   m_log.setFilter(LogLevel::Debug1);
 }
 
