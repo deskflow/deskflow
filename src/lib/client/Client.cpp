@@ -651,7 +651,7 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
       socket->bind(bindAddress);
     }
   } catch (BaseException &e) {
-    LOG_WARN("%s", e.what());
-    LOG_WARN("operating system will select network interface automatically");
+    LOG_WARN("Failed to bind to strict network interface: %s", e.what());
+    throw; // Re-throw the exception to abort the connection attempt
   }
 }
