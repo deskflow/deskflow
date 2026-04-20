@@ -19,10 +19,9 @@
 
 #if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
-#include <QCoreApplication>
 #endif
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QFileInfo>
 #include <QSharedMemory>
 #include <QTextStream>
@@ -102,17 +101,17 @@ int main(int argc, char **argv)
 
   App *coreApp = createApp(parser, events, processName);
 
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
+  QApplication app(argc, argv);
+  QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
 
   const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
   ipcServer->listen();
 
   QThread coreThread;
-  QObject::connect(&coreThread, &QThread::finished, &app, &QCoreApplication::quit);
+  QObject::connect(&coreThread, &QThread::finished, &app, &QApplication::quit);
   coreApp->run(coreThread);
 
-  const auto exitCode = QCoreApplication::exec();
+  const auto exitCode = QApplication::exec();
   coreThread.wait();
 
   LOG_DEBUG("core exited, code: %d", exitCode);
