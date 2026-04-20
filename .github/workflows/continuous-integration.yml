@@ -253,9 +253,10 @@ jobs:
       # VC++ as that's already pre-installed on the Windows runner.
       - name: Setup VC++ environment
         if: ${{ runner.os == 'Windows' }}
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: ${{matrix.target.arch}}
+          spectre: true
 
       - name: Install dependencies
         id: get-deps
