@@ -641,17 +641,12 @@ void Client::handleResume()
 
 void Client::bindNetworkInterface(IDataSocket *socket) const
 {
-  try {
-    if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
-      LOG_DEBUG1("bind to network interface: %s", qPrintable(address));
+  if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
+    LOG_DEBUG1("bind to network interface: %s", qPrintable(address));
 
-      NetworkAddress bindAddress(address.toStdString());
-      bindAddress.resolve();
+    NetworkAddress bindAddress(address.toStdString());
+    bindAddress.resolve();
 
-      socket->bind(bindAddress);
-    }
-  } catch (BaseException &e) {
-    LOG_WARN("Failed to bind to strict network interface: %s", e.what());
-    throw; // Re-throw the exception to abort the connection attempt
+    socket->bind(bindAddress);
   }
 }
