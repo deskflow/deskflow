@@ -12,5 +12,6 @@ var searchData=
   ['eventflags_9',['EventFlags',['../structEvent_1_1EventFlags.html',1,'Event']]],
   ['eventqueue_10',['EventQueue',['../classEventQueue.html',1,'']]],
   ['eventqueuetimer_11',['EventQueueTimer',['../classEventQueueTimer.html',1,'']]],
-  ['exitappexception_12',['ExitAppException',['../classExitAppException.html',1,'']]]
+  ['exitappexception_12',['ExitAppException',['../classExitAppException.html',1,'']]],
+  ['exiteventdata_13',['ExitEventData',['../classExitEventData.html',1,'']]]
 ];

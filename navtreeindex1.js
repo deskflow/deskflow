@@ -50,7 +50,7 @@ var NAVTREEINDEX1 =
 "EventTypes_8h.html":[7,0,1,1,1,7],
 "EventTypes_8h_source.html":[7,0,1,1,1,7],
 "Event_8h.html":[7,0,1,1,1,3],
-"Event_8h.html#a34787a880fd439e02383f336665d7bc2":[7,0,1,1,1,3,3],
+"Event_8h.html#a34787a880fd439e02383f336665d7bc2":[7,0,1,1,1,3,4],
 "Event_8h_source.html":[7,0,1,1,1,3],
 "ExitCodes_8h.html":[7,0,1,1,3,2],
 "ExitCodes_8h.html#a09b1160d454c1b1d0e45d82bc45637d6":[7,0,1,1,3,2,2],

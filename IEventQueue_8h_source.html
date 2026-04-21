@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.145</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.149</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -134,7 +134,7 @@ $(function(){initNavTree('IEventQueue_8h_source.html','',''); });
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4">   48</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4">loop</a>() = 0;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classIEventQueue.html#ad646f5ae85940103c024b26391276754">   48</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classIEventQueue.html#ad646f5ae85940103c024b26391276754">loop</a>() = 0;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5">   55</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5">adoptBuffer</a>(<a class="code hl_class" href="classIEventQueueBuffer.html">IEventQueueBuffer</a> *) = 0;</div>
@@ -180,7 +180,7 @@ $(function(){initNavTree('IEventQueue_8h_source.html','',''); });
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac765329451135abec74c45e1897abf26"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a></div><div class="ttdeci">static int type</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:45</div></div>
 <div class="ttc" id="aEvent_8h_html"><div class="ttname"><a href="Event_8h.html">Event.h</a></div></div>
 <div class="ttc" id="aclassEventQueueTimer_html"><div class="ttname"><a href="classEventQueueTimer.html">EventQueueTimer</a></div><div class="ttdef"><b>Definition</b> EventQueueTimer.h:12</div></div>
-<div class="ttc" id="aclassEvent_html"><div class="ttname"><a href="classEvent.html">Event</a></div><div class="ttdoc">Event.</div><div class="ttdef"><b>Definition</b> Event.h:29</div></div>
+<div class="ttc" id="aclassEvent_html"><div class="ttname"><a href="classEvent.html">Event</a></div><div class="ttdoc">Event.</div><div class="ttdef"><b>Definition</b> Event.h:43</div></div>
 <div class="ttc" id="aclassIEventQueueBuffer_html"><div class="ttname"><a href="classIEventQueueBuffer.html">IEventQueueBuffer</a></div><div class="ttdoc">Event queue buffer interface.</div><div class="ttdef"><b>Definition</b> IEventQueueBuffer.h:22</div></div>
 <div class="ttc" id="aclassIEventQueue_1_1TimerEvent_html"><div class="ttname"><a href="classIEventQueue_1_1TimerEvent.html">IEventQueue::TimerEvent</a></div><div class="ttdef"><b>Definition</b> IEventQueue.h:35</div></div>
 <div class="ttc" id="aclassIEventQueue_1_1TimerEvent_html_a9faf0af9a7b2bbe287cc159842edee7e"><div class="ttname"><a href="classIEventQueue_1_1TimerEvent.html#a9faf0af9a7b2bbe287cc159842edee7e">IEventQueue::TimerEvent::m_timer</a></div><div class="ttdeci">EventQueueTimer * m_timer</div><div class="ttdoc">The timer.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:37</div></div>
@@ -198,7 +198,7 @@ $(function(){initNavTree('IEventQueue_8h_source.html','',''); });
 <div class="ttc" id="aclassIEventQueue_html_a9a504772d2d2e06e4b5b831f5a12e7dc"><div class="ttname"><a href="classIEventQueue.html#a9a504772d2d2e06e4b5b831f5a12e7dc">IEventQueue::deleteTimer</a></div><div class="ttdeci">virtual void deleteTimer(EventQueueTimer *)=0</div><div class="ttdoc">Destroy a timer.</div></div>
 <div class="ttc" id="aclassIEventQueue_html_a9af1fcd05003a150ebb85c5c57c2c564"><div class="ttname"><a href="classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564">IEventQueue::dispatchEvent</a></div><div class="ttdeci">virtual bool dispatchEvent(const Event &amp;event)=0</div><div class="ttdoc">Dispatch an event.</div></div>
 <div class="ttc" id="aclassIEventQueue_html_ac5534abeb246a36c64f63bb04a38b7c3"><div class="ttname"><a href="classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3">IEventQueue::getSystemTarget</a></div><div class="ttdeci">virtual void * getSystemTarget()=0</div><div class="ttdoc">Get the system event type target.</div></div>
-<div class="ttc" id="aclassIEventQueue_html_acd06874382d81f9e39d4e888eee68ba4"><div class="ttname"><a href="classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4">IEventQueue::loop</a></div><div class="ttdeci">virtual void loop()=0</div><div class="ttdoc">Loop the event queue until quit.</div></div>
+<div class="ttc" id="aclassIEventQueue_html_ad646f5ae85940103c024b26391276754"><div class="ttname"><a href="classIEventQueue.html#ad646f5ae85940103c024b26391276754">IEventQueue::loop</a></div><div class="ttdeci">virtual int loop()=0</div><div class="ttdoc">Loop the event queue until quit.</div></div>
 <div class="ttc" id="aclassIEventQueue_html_aecbae935d6739631699414d2ff5ac6c5"><div class="ttname"><a href="classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5">IEventQueue::adoptBuffer</a></div><div class="ttdeci">virtual void adoptBuffer(IEventQueueBuffer *)=0</div><div class="ttdoc">Set the buffer.</div></div>
 <div class="ttc" id="aclassIEventQueue_html_afa768ac29e98999d69b74ae1d749864d"><div class="ttname"><a href="classIEventQueue.html#afa768ac29e98999d69b74ae1d749864d">IEventQueue::addEvent</a></div><div class="ttdeci">virtual void addEvent(Event &amp;&amp;event)=0</div><div class="ttdoc">Add event to queue.</div></div>
 <div class="ttc" id="anamespacedeskflow_html_a34787a880fd439e02383f336665d7bc2"><div class="ttname"><a href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">deskflow::EventTypes</a></div><div class="ttdeci">EventTypes</div><div class="ttdef"><b>Definition</b> EventTypes.h:13</div></div>

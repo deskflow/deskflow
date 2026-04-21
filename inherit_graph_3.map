@@ -1,9 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="38,5,131,30"/>
-<area shape="rect" id="Node000001" href="$classArch.html" title="Delegating implementation of architecture dependent interfaces." alt="" coords="212,55,260,79"/>
-<area shape="poly" id="edge3_Node000000_Node000001" title=" " alt="" coords="140,33,165,40,214,59,209,60,163,46,140,38"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,55,164,79"/>
-<area shape="poly" id="edge4_Node000002_Node000001" title=" " alt="" coords="179,64,214,66,209,68,180,70"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="18,104,151,129"/>
-<area shape="poly" id="edge5_Node000003_Node000001" title=" " alt="" coords="139,96,163,88,209,76,214,74,165,94,141,101"/>
+<area shape="rect" id="Node000000" href="$classAppUtil.html" title=" " alt="" coords="5,31,70,55"/>
+<area shape="rect" id="Node000001" href="$classAppUtilUnix.html" title=" " alt="" coords="131,5,222,30"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="84,32,133,25,128,27,86,37"/>
+<area shape="rect" id="Node000002" href="$classAppUtilWindows.html" title=" " alt="" coords="118,55,236,79"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="85,48,120,56,115,57,85,54"/>
 </map>

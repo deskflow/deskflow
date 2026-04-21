@@ -39,5 +39,7 @@ var searchData=
   ['exitapp_36',['exitApp',['../classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca',1,'AppUtil::exitApp()'],['../classAppUtilWindows.html#aa3e682db043261faf827019df0cfbf06',1,'AppUtilWindows::exitApp()']]],
   ['exitappexception_37',['ExitAppException',['../classExitAppException.html#a61c3d2092d07a05c10f8b3b14482e6b6',1,'ExitAppException']]],
   ['exitappstatic_38',['exitAppStatic',['../classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53',1,'AppUtil']]],
-  ['extracted_39',['extracted',['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog']]]
+  ['exitcode_39',['exitCode',['../classExitEventData.html#af030e25ba060ff897bc06c91bbce6938',1,'ExitEventData']]],
+  ['exiteventdata_40',['ExitEventData',['../classExitEventData.html#a0faee5602ae927717e34a12250a6ef64',1,'ExitEventData']]],
+  ['extracted_41',['extracted',['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog']]]
 ];

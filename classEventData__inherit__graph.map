@@ -1,15 +1,17 @@
 <map id="EventData" name="EventData">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,87,129"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,129,87,154"/>
 <area shape="rect" id="Node000002" href="$classChunk.html" title=" " alt="" coords="211,5,270,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,91,97,64,133,41,173,26,213,20,208,22,174,31,136,45,101,68,72,94"/>
-<area shape="rect" id="Node000004" href="$classServer_1_1KeyboardBroadcastInfo.html" title="Keyboard broadcast data." alt="" coords="140,55,342,79"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="100,99,134,90,187,78,182,82,135,95,103,103"/>
-<area shape="rect" id="Node000005" href="$classServer_1_1LockCursorToScreenInfo.html" title="Lock cursor to screen data." alt="" coords="135,104,347,129"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="102,114,137,115,132,118,103,119"/>
-<area shape="rect" id="Node000006" href="$classServer_1_1SwitchInDirectionInfo.html" title="Switch in direction data." alt="" coords="145,153,337,178"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="101,129,135,138,187,152,182,154,134,143,102,134"/>
-<area shape="rect" id="Node000007" href="$classServer_1_1SwitchToScreenInfo.html" title="Switch to screen data." alt="" coords="149,203,333,227"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="70,138,101,164,136,187,170,202,164,202,133,192,97,168,69,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,115,91,76,111,57,133,41,172,25,213,18,208,22,174,30,136,45,115,61,95,80,65,118"/>
+<area shape="rect" id="Node000004" href="$classExitEventData.html" title=" " alt="" coords="189,55,293,79"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="77,119,134,90,191,75,186,78,136,95,81,123"/>
+<area shape="rect" id="Node000005" href="$classServer_1_1KeyboardBroadcastInfo.html" title="Keyboard broadcast data." alt="" coords="140,104,342,129"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="101,132,143,128,139,131,103,137"/>
+<area shape="rect" id="Node000006" href="$classServer_1_1LockCursorToScreenInfo.html" title="Lock cursor to screen data." alt="" coords="135,153,347,178"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="102,146,138,151,133,154,103,151"/>
+<area shape="rect" id="Node000007" href="$classServer_1_1SwitchInDirectionInfo.html" title="Switch in direction data." alt="" coords="145,203,337,227"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="80,160,136,187,177,201,172,203,134,192,80,165"/>
+<area shape="rect" id="Node000008" href="$classServer_1_1SwitchToScreenInfo.html" title="Switch to screen data." alt="" coords="149,252,333,277"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="64,165,96,203,115,221,136,237,165,251,160,251,133,241,111,225,92,207,63,170"/>
 <area shape="rect" id="Node000003" href="$classClipboardChunk.html" title=" " alt="" coords="395,5,509,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="286,15,397,17,392,19,287,20"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="285,15,397,16,392,19,287,20"/>
 </map>

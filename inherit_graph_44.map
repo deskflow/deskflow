@@ -1,3 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classEventQueueTimer.html" title=" " alt="" coords="5,5,131,30"/>
+<area shape="rect" id="Node000000" href="$classEventData.html" title=" " alt="" coords="5,129,87,154"/>
+<area shape="rect" id="Node000001" href="$classChunk.html" title=" " alt="" coords="211,5,270,30"/>
+<area shape="poly" id="edge8_Node000000_Node000001" title=" " alt="" coords="61,115,91,76,111,57,133,41,172,25,213,18,208,22,174,30,136,45,115,61,95,80,65,118"/>
+<area shape="rect" id="Node000003" href="$classExitEventData.html" title=" " alt="" coords="189,55,293,79"/>
+<area shape="poly" id="edge10_Node000000_Node000003" title=" " alt="" coords="77,119,134,90,191,75,186,78,136,95,81,123"/>
+<area shape="rect" id="Node000004" href="$classServer_1_1KeyboardBroadcastInfo.html" title="Keyboard broadcast data." alt="" coords="140,104,342,129"/>
+<area shape="poly" id="edge11_Node000000_Node000004" title=" " alt="" coords="101,132,143,128,139,131,103,137"/>
+<area shape="rect" id="Node000005" href="$classServer_1_1LockCursorToScreenInfo.html" title="Lock cursor to screen data." alt="" coords="135,153,347,178"/>
+<area shape="poly" id="edge12_Node000000_Node000005" title=" " alt="" coords="102,146,138,151,133,154,103,151"/>
+<area shape="rect" id="Node000006" href="$classServer_1_1SwitchInDirectionInfo.html" title="Switch in direction data." alt="" coords="145,203,337,227"/>
+<area shape="poly" id="edge13_Node000000_Node000006" title=" " alt="" coords="80,160,136,187,177,201,172,203,134,192,80,165"/>
+<area shape="rect" id="Node000007" href="$classServer_1_1SwitchToScreenInfo.html" title="Switch to screen data." alt="" coords="149,252,333,277"/>
+<area shape="poly" id="edge14_Node000000_Node000007" title=" " alt="" coords="64,165,96,203,115,221,136,237,165,251,160,251,133,241,111,225,92,207,63,170"/>
+<area shape="rect" id="Node000002" href="$classClipboardChunk.html" title=" " alt="" coords="395,5,509,30"/>
+<area shape="poly" id="edge9_Node000001_Node000002" title=" " alt="" coords="285,15,397,16,392,19,287,20"/>
 </map>

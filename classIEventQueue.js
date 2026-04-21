@@ -10,7 +10,7 @@ var classIEventQueue =
     [ "dispatchEvent", "classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564", null ],
     [ "getEvent", "classIEventQueue.html#a2a9b3e766507af31980c28fce4acfa66", null ],
     [ "getSystemTarget", "classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3", null ],
-    [ "loop", "classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4", null ],
+    [ "loop", "classIEventQueue.html#ad646f5ae85940103c024b26391276754", null ],
     [ "newOneShotTimer", "classIEventQueue.html#a729346cb4e7faf9b9510dd8b48935e3d", null ],
     [ "newTimer", "classIEventQueue.html#a135df3daf33f6ac2e13e70895bedfd56", null ],
     [ "removeHandler", "classIEventQueue.html#a3ff4e1913c2a794be3b4314948ec4e5c", null ],

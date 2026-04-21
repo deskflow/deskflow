@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.145</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.149</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -128,6 +128,7 @@ Collaboration diagram for App:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:XNoEiSupport" id="r_XNoEiSupport"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classApp_1_1XNoEiSupport.html">XNoEiSupport</a></td></tr>
+<tr class="memitem:LoopErrorCode" id="r_LoopErrorCode"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structApp_1_1LoopErrorCode.html">LoopErrorCode</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -153,6 +154,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a60b51c7e60aa48b222849fbdc68971a0" id="r_a60b51c7e60aa48b222849fbdc68971a0"><td class="memItemLeft"><a class="el" href="classSocketMultiplexer.html">SocketMultiplexer</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a60b51c7e60aa48b222849fbdc68971a0">getSocketMultiplexer</a> () const</td></tr>
 <tr class="memitem:a975d935098b0a08ef69b1af32d85a499" id="r_a975d935098b0a08ef69b1af32d85a499"><td class="memItemLeft">QString&#160;</td><td class="memItemRight"><a class="el" href="#a975d935098b0a08ef69b1af32d85a499">processName</a> () const</td></tr>
 <tr class="memitem:ae59ab33fd366ee0609bd4df8e807fab0" id="r_ae59ab33fd366ee0609bd4df8e807fab0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae59ab33fd366ee0609bd4df8e807fab0">handleScreenError</a> () const</td></tr>
+<tr class="memitem:a24574f40d27af7cb2c24dc1624d9ff8f" id="r_a24574f40d27af7cb2c24dc1624d9ff8f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a24574f40d27af7cb2c24dc1624d9ff8f">updateExitCode</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> errorCode)</td></tr>
+<tr class="memitem:a7feb588e84a611d3643a8131f1311e67" id="r_a7feb588e84a611d3643a8131f1311e67"><td class="memItemLeft"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight"><a class="el" href="#a7feb588e84a611d3643a8131f1311e67">getExitCode</a> () const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -336,6 +339,31 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classIApp.html#a6a7146a44b78dd2934520a79708302d1">IApp</a>.</p>
+
+</div>
+</div>
+<a id="a7feb588e84a611d3643a8131f1311e67" name="a7feb588e84a611d3643a8131f1311e67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7feb588e84a611d3643a8131f1311e67">&#9670;&#160;</a></span>getExitCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> App::getExitCode </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -738,6 +766,31 @@ Protected Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a24574f40d27af7cb2c24dc1624d9ff8f" name="a24574f40d27af7cb2c24dc1624d9ff8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24574f40d27af7cb2c24dc1624d9ff8f">&#9670;&#160;</a></span>updateExitCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void App::updateExitCode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>errorCode</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

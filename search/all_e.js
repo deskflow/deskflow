@@ -89,7 +89,8 @@ var searchData=
   ['logwidget_2ecpp_86',['LogWidget.cpp',['../LogWidget_8cpp.html',1,'']]],
   ['logwidget_2eh_87',['LogWidget.h',['../LogWidget_8h.html',1,'']]],
   ['long_88',['long',['../ArchNetworkWinsock_8cpp.html#a0bc651ef7626a7868da4cbfdbe70f96f',1,'long:&#160;ArchNetworkWinsock.cpp'],['../ArchNetworkWinsock_8cpp.html#a2b70d06c0aace9c8693696cc736f3a31',1,'long(PASCAL FAR *inet_addr_winsock)(const char FAR *cp):&#160;ArchNetworkWinsock.cpp']]],
-  ['loop_89',['loop',['../classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1',1,'EventQueue::loop()'],['../classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4',1,'IEventQueue::loop()']]],
-  ['lost_90',['lost',['../classXWindowsClipboard.html#ad7d153734c6645677babf9496f77a5fd',1,'XWindowsClipboard']]],
-  ['lpwsanetworkevents_91',['LPWSANETWORKEVENTS',['../ArchNetworkWinsock_8cpp.html#aa1b63b60fb3f206fad88bf4f0f008d6b',1,'ArchNetworkWinsock.cpp']]]
+  ['loop_89',['loop',['../classEventQueue.html#aba9b3dbc2561cf06948aa078066d96e9',1,'EventQueue::loop()'],['../classIEventQueue.html#ad646f5ae85940103c024b26391276754',1,'IEventQueue::loop()']]],
+  ['looperrorcode_90',['LoopErrorCode',['../structApp_1_1LoopErrorCode.html',1,'App::LoopErrorCode'],['../structApp_1_1LoopErrorCode.html#ae3e7af671a4b9a6e9b6dd0278f134c1b',1,'App::LoopErrorCode::LoopErrorCode()']]],
+  ['lost_91',['lost',['../classXWindowsClipboard.html#ad7d153734c6645677babf9496f77a5fd',1,'XWindowsClipboard']]],
+  ['lpwsanetworkevents_92',['LPWSANETWORKEVENTS',['../ArchNetworkWinsock_8cpp.html#aa1b63b60fb3f206fad88bf4f0f008d6b',1,'ArchNetworkWinsock.cpp']]]
 ];
