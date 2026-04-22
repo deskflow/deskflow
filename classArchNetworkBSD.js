@@ -30,6 +30,7 @@ var classArchNetworkBSD =
     [ "pollSocket", "classArchNetworkBSD.html#af1920f7432654f87a6645cdc0193b747", null ],
     [ "readSocket", "classArchNetworkBSD.html#ac8bbe36665dc6b73991bd8dd39ffcaa9", null ],
     [ "setAddrPort", "classArchNetworkBSD.html#ae8439afdb5ac2d66ba2e3b2d421db117", null ],
+    [ "setKeepAliveOnSocket", "classArchNetworkBSD.html#a665778b12985218ba1c6504308ad6501", null ],
     [ "setNoDelayOnSocket", "classArchNetworkBSD.html#ac2039ed541a76175349476dcf0f0e890", null ],
     [ "setReuseAddrOnSocket", "classArchNetworkBSD.html#a875bf0c0c3f6f1a194e952dbc972696c", null ],
     [ "throwErrorOnSocket", "classArchNetworkBSD.html#abfdcbbd569e4114d037ea16ed626f656", null ],

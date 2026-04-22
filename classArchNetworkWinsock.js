@@ -25,6 +25,7 @@ var classArchNetworkWinsock =
     [ "pollSocket", "classArchNetworkWinsock.html#a67750426aff0d7faaf7c933e1dad09c7", null ],
     [ "readSocket", "classArchNetworkWinsock.html#acb2271a6d6530cbb72d7c31ac383ab89", null ],
     [ "setAddrPort", "classArchNetworkWinsock.html#a0f735f2e437cb1b7f1af78ed16540f79", null ],
+    [ "setKeepAliveOnSocket", "classArchNetworkWinsock.html#a13cc7f0587c43ed0dc02cc46fdd32128", null ],
     [ "setNoDelayOnSocket", "classArchNetworkWinsock.html#a90e959252672ad3aa89a57cb65dabae0", null ],
     [ "setReuseAddrOnSocket", "classArchNetworkWinsock.html#af3d54dc165eaf08d9c4b47f0487be5bf", null ],
     [ "throwErrorOnSocket", "classArchNetworkWinsock.html#a82599cd8f917122c330252b700600154", null ],

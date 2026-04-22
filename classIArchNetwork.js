@@ -35,6 +35,7 @@ var classIArchNetwork =
     [ "pollSocket", "classIArchNetwork.html#a5b6c101dde0dfb69dae2dd526da47b4a", null ],
     [ "readSocket", "classIArchNetwork.html#ac4dc899e9fe553387d254766588b78f3", null ],
     [ "setAddrPort", "classIArchNetwork.html#ae8a851a1419e351d995f5d9a8afe0294", null ],
+    [ "setKeepAliveOnSocket", "classIArchNetwork.html#ac0b755b9462e7f8cf23e9ba5f7eff4a2", null ],
     [ "setNoDelayOnSocket", "classIArchNetwork.html#a325a04dcaa93d702b9a57b54918c0f64", null ],
     [ "setReuseAddrOnSocket", "classIArchNetwork.html#a83636eea30639869fa7d6bd80ee38f0b", null ],
     [ "throwErrorOnSocket", "classIArchNetwork.html#a022b6ad93707bce3a595f09cd509c2e9", null ],

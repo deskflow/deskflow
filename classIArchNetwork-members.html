@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.150</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.153</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -121,13 +121,14 @@ $(function(){initNavTree('classIArchNetwork.html','',''); });
   <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a5b6c101dde0dfb69dae2dd526da47b4a">pollSocket</a>(PollEntry[], int num, double timeout)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#ac4dc899e9fe553387d254766588b78f3">readSocket</a>(ArchSocket s, void *buf, size_t len)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#ae8a851a1419e351d995f5d9a8afe0294">setAddrPort</a>(ArchNetAddress, int port)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#a325a04dcaa93d702b9a57b54918c0f64">setNoDelayOnSocket</a>(ArchSocket, bool noDelay)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a83636eea30639869fa7d6bd80ee38f0b">setReuseAddrOnSocket</a>(ArchSocket, bool reuse)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#a0ca03bdd251faa4394d521cfbe2cf02b">SocketType</a> enum name</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a022b6ad93707bce3a595f09cd509c2e9">throwErrorOnSocket</a>(ArchSocket s)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#a5e5acab8fd019d9c30ef4085f65dde16">unblockPollSocket</a>(ArchThread thread)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#ae320c3d16957f3ec892284c9a60cf5a5">writeSocket</a>(ArchSocket s, const void *buf, size_t len)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#a915c4f94cf00e92506fb3e6f3777edce">~IArchNetwork</a>()=default</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#ac0b755b9462e7f8cf23e9ba5f7eff4a2">setKeepAliveOnSocket</a>(ArchSocket, bool keepAlive)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a325a04dcaa93d702b9a57b54918c0f64">setNoDelayOnSocket</a>(ArchSocket, bool noDelay)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#a83636eea30639869fa7d6bd80ee38f0b">setReuseAddrOnSocket</a>(ArchSocket, bool reuse)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a0ca03bdd251faa4394d521cfbe2cf02b">SocketType</a> enum name</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#a022b6ad93707bce3a595f09cd509c2e9">throwErrorOnSocket</a>(ArchSocket s)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a5e5acab8fd019d9c30ef4085f65dde16">unblockPollSocket</a>(ArchThread thread)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIArchNetwork.html#ae320c3d16957f3ec892284c9a60cf5a5">writeSocket</a>(ArchSocket s, const void *buf, size_t len)=0</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIArchNetwork.html#a915c4f94cf00e92506fb3e6f3777edce">~IArchNetwork</a>()=default</td><td class="entry"><a class="el" href="classIArchNetwork.html">IArchNetwork</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

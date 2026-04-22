@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.150</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.153</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -163,6 +163,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:abfdcbbd569e4114d037ea16ed626f656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check error on socket.  <br /></td></tr>
 <tr class="memitem:ac2039ed541a76175349476dcf0f0e890" id="r_ac2039ed541a76175349476dcf0f0e890"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ac2039ed541a76175349476dcf0f0e890">setNoDelayOnSocket</a> (<a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a>, bool noDelay) override</td></tr>
 <tr class="memdesc:ac2039ed541a76175349476dcf0f0e890"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn Nagle algorithm on or off on socket.  <br /></td></tr>
+<tr class="memitem:a665778b12985218ba1c6504308ad6501" id="r_a665778b12985218ba1c6504308ad6501"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a665778b12985218ba1c6504308ad6501">setKeepAliveOnSocket</a> (<a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a>, bool keepAlive) override</td></tr>
+<tr class="memdesc:a665778b12985218ba1c6504308ad6501"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn keep-alive on or off on socket.  <br /></td></tr>
 <tr class="memitem:a875bf0c0c3f6f1a194e952dbc972696c" id="r_a875bf0c0c3f6f1a194e952dbc972696c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a875bf0c0c3f6f1a194e952dbc972696c">setReuseAddrOnSocket</a> (<a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a>, bool reuse) override</td></tr>
 <tr class="memdesc:a875bf0c0c3f6f1a194e952dbc972696c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn address reuse on or off on socket.  <br /></td></tr>
 <tr class="memitem:a43341549e9c317b069acac05e292ccfc" id="r_a43341549e9c317b069acac05e292ccfc"><td class="memItemLeft"><a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>&#160;</td><td class="memItemRight"><a class="el" href="#a43341549e9c317b069acac05e292ccfc">newAnyAddr</a> (<a class="el" href="classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445">AddressFamily</a>) override</td></tr>
@@ -1074,6 +1076,40 @@ Additional Inherited Members</h2></td></tr>
 <p>Set the port of an address. </p>
 
 <p>Implements <a class="el" href="classIArchNetwork.html#ae8a851a1419e351d995f5d9a8afe0294">IArchNetwork</a>.</p>
+
+</div>
+</div>
+<a id="a665778b12985218ba1c6504308ad6501" name="a665778b12985218ba1c6504308ad6501"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a665778b12985218ba1c6504308ad6501">&#9670;&#160;</a></span>setKeepAliveOnSocket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ArchNetworkBSD::setKeepAliveOnSocket </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>keepAlive</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Turn keep-alive on or off on socket. </p>
+<p>Set socket to use keep-alive (true) or not (false). </p>
+
+<p>Implements <a class="el" href="classIArchNetwork.html#ac0b755b9462e7f8cf23e9ba5f7eff4a2">IArchNetwork</a>.</p>
 
 </div>
 </div>
