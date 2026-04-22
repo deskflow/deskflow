@@ -18,7 +18,6 @@ var OptionTypes_8h =
     [ "kOptionModifierMapForMeta", "OptionTypes_8h.html#a1a519940004cf19e1dfd6d3534ddcbfd", null ],
     [ "kOptionModifierMapForShift", "OptionTypes_8h.html#a1005c1445f3b46d1469ab6f8d3039881", null ],
     [ "kOptionModifierMapForSuper", "OptionTypes_8h.html#a4a3013f4958999df3136d130d1c0bb93", null ],
-    [ "kOptionProtocol", "OptionTypes_8h.html#a4ff45e5005e5c114e770dae7826e405e", null ],
     [ "kOptionRelativeMouseMoves", "OptionTypes_8h.html#a31cf424e9a28a8a912a4ab0b9945ce4f", null ],
     [ "kOptionScreenPreserveFocus", "OptionTypes_8h.html#a04c35d2630efe9fb5a92ccd3876fdd10", null ],
     [ "kOptionScreenSwitchCorners", "OptionTypes_8h.html#a410ee937df9723467e34fec518750038", null ],

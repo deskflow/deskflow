@@ -22,7 +22,6 @@ var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
     [ "LogLevel.h", "LogLevel_8h.html", "LogLevel_8h" ],
     [ "LogOutputters.cpp", "LogOutputters_8cpp.html", "LogOutputters_8cpp" ],
     [ "LogOutputters.h", "LogOutputters_8h.html", "LogOutputters_8h" ],
-    [ "NetworkProtocol.h", "NetworkProtocol_8h.html", "NetworkProtocol_8h" ],
     [ "PriorityQueue.h", "PriorityQueue_8h.html", "PriorityQueue_8h" ],
     [ "SimpleEventQueueBuffer.cpp", "SimpleEventQueueBuffer_8cpp.html", null ],
     [ "SimpleEventQueueBuffer.h", "SimpleEventQueueBuffer_8h.html", "SimpleEventQueueBuffer_8h" ],
