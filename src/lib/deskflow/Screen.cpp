@@ -12,7 +12,34 @@
 
 #include <QProcess>
 
+#ifdef Q_OS_WIN
+#include "arch/win32/ArchMiscWindows.h"
+#include "platform/MSWindowsProcess.h"
+#endif
+
 namespace deskflow {
+
+namespace {
+
+bool runScreenCommand(const QString &commandLine)
+{
+#ifdef Q_OS_WIN
+  using deskflow::platform::MSWindowsProcess;
+  if (ArchMiscWindows::isProcessElevated()) {
+    LOG_DEBUG("current process is elevated, starting detached process as session user");
+    return MSWindowsProcess::startDetachedAsSessionUser(commandLine.toStdWString());
+  }
+#endif
+
+  auto args = QProcess::splitCommand(commandLine);
+  if (args.isEmpty()) {
+    return false;
+  }
+  const auto program = args.takeFirst();
+  return QProcess::startDetached(program, args);
+}
+
+} // namespace
 
 //
 // Screen
@@ -123,10 +150,9 @@ void Screen::enter(KeyModifierMask toggleMask)
   }
 
   if (Settings::value(Settings::Core::EnableEnterCommand).toBool()) {
-    auto args = QProcess::splitCommand(Settings::value(Settings::Core::ScreenEnterCommand).toString());
-    const auto command = args.takeFirst();
-    LOG_DEBUG("running screen enter command: %s %s", qPrintable(command), qPrintable(args.join(" ")));
-    if (!QProcess::startDetached(command, args))
+    const auto commandLine = Settings::value(Settings::Core::ScreenEnterCommand).toString();
+    LOG_DEBUG("running screen enter command: %s", qPrintable(commandLine));
+    if (!runScreenCommand(commandLine))
       LOG_ERR("failed to run screen enter command");
   }
 }
@@ -151,10 +177,9 @@ bool Screen::leave()
 
   m_screen->leave();
   if (Settings::value(Settings::Core::EnableExitCommand).toBool()) {
-    auto args = QProcess::splitCommand(Settings::value(Settings::Core::ScreenExitCommand).toString());
-    const auto command = args.takeFirst();
-    LOG_DEBUG("running screen exit command: %s %s", qPrintable(command), qPrintable(args.join(" ")));
-    if (!QProcess::startDetached(command, args))
+    const auto commandLine = Settings::value(Settings::Core::ScreenExitCommand).toString();
+    LOG_DEBUG("running screen exit command: %s", qPrintable(commandLine));
+    if (!runScreenCommand(commandLine))
       LOG_ERR("failed to run screen exit command");
   }
 

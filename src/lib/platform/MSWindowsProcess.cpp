@@ -11,6 +11,7 @@
 #include "base/Log.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "platform/MSWindowsSession.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -186,6 +187,51 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
   } else {
     LOG_ERR("failed to terminate process %d, error: %s", pid, windowsErrorToString(GetLastError()).c_str());
   }
+}
+
+bool MSWindowsProcess::startDetachedAsSessionUser(const std::wstring &command)
+{
+  MSWindowsSession session;
+  session.updateActiveSession();
+
+  HANDLE userToken = nullptr;
+  try {
+    userToken = session.getUserToken(nullptr);
+  } catch (const std::runtime_error &e) {
+    LOG_ERR("could not get session user token: %s", e.what());
+    return false;
+  }
+
+  LPVOID environment = nullptr;
+  if (!CreateEnvironmentBlock(&environment, userToken, FALSE)) {
+    LOG_ERR("could not create environment block, error: %s", windowsErrorToString(GetLastError()).c_str());
+    CloseHandle(userToken);
+    return false;
+  }
+
+  STARTUPINFOW si = {};
+  si.cb = sizeof(si);
+  PROCESS_INFORMATION pi = {};
+
+  std::wstring mutableCommand = command;
+  const DWORD flags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE;
+
+  LOG_DEBUG("starting detached process as session user, command: %s", command.c_str());
+  const BOOL ok = CreateProcessAsUserW(
+      userToken, nullptr, mutableCommand.data(), nullptr, nullptr, FALSE, flags, environment, nullptr, &si, &pi
+  );
+
+  DestroyEnvironmentBlock(environment);
+  CloseHandle(userToken);
+
+  if (!ok) {
+    LOG_ERR("could not start process as session user, error: %s", windowsErrorToString(GetLastError()).c_str());
+    return false;
+  }
+
+  CloseHandle(pi.hProcess);
+  CloseHandle(pi.hThread);
+  return true;
 }
 
 void MSWindowsProcess::createPipes()

@@ -91,6 +91,10 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
 
 target_link_libraries(${lib_name} PUBLIC common Qt6::Core Qt6::Network)
 
+if(WIN32)
+  target_link_libraries(${lib_name} PRIVATE platform)
+endif()
+
 if(UNIX)
   target_link_libraries(
     ${lib_name}
