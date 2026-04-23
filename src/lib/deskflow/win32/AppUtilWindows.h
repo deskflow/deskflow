@@ -14,6 +14,7 @@
 
 #include <condition_variable>
 #include <mutex>
+#include <string_view>
 #include <thread>
 
 #define ARCH_APP_UTIL AppUtilWindows
@@ -44,6 +45,11 @@ public:
   HKL getCurrentKeyboardLayout() const;
 
 private:
+  static std::string normalizeKeyboardLayoutId(std::string_view layoutId);
+  static std::string formatKeyboardLayoutForLog(std::string_view layoutId);
+  static std::string getLocaleTagFromLayoutId(std::string_view layoutId);
+  static std::string getLayoutDisplayName(std::string_view layoutId);
+
   AppExitMode m_exitMode;
   IEventQueue *m_events;
   std::thread m_eventThread; // NOSONAR - No jthread on Windows
