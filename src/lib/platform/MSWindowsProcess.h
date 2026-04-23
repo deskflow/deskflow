@@ -38,6 +38,10 @@ public:
 
   static void shutdown(HANDLE handle, DWORD pid, int timeout = kDefaultShutdownTimeout);
 
+  /// Launch @p command as a detached process under the active console user's token, so the
+  /// child does not inherit the caller's (SYSTEM) privileges.
+  static bool startDetachedAsSessionUser(const std::wstring &command);
+
 private:
   void setStartupInfo(STARTUPINFO &si);
 

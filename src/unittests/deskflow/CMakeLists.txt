@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 if(WIN32)
-  set(extra_libs version)
+  set(extra_libs platform version)
 endif()
 
 create_test(
