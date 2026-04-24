@@ -25,6 +25,7 @@
 
 #include <Windows.h>
 #include <conio.h>
+#include <string>
 
 #include <algorithm>
 #include <cwchar>
@@ -359,57 +360,56 @@ void AppUtilWindows::startNode()
   app().startNode();
 }
 
+
+static std::string resolveKeyboardLayoutKlid(HKL layout)
+{
+  if (layout == nullptr) {
+    return {};
+  }
+
+  const HKL previousLayout = ActivateKeyboardLayout(layout, 0);
+
+  wchar_t klid[KL_NAMELENGTH] = {};
+  if (!GetKeyboardLayoutNameW(klid)) {
+    if (previousLayout != nullptr) {
+      ActivateKeyboardLayout(previousLayout, 0);
+    }
+    return {};
+  }
+
+  if (previousLayout != nullptr) {
+    ActivateKeyboardLayout(previousLayout, 0);
+  }
+
+  char result[KL_NAMELENGTH] = {};
+  WideCharToMultiByte(CP_UTF8, 0, klid, -1, result, sizeof(result), nullptr, nullptr);
+  return result;
+}
+
 std::vector<std::string> AppUtilWindows::getKeyboardLayoutList()
 {
-  auto layoutIds = getPreloadedKeyboardLayouts();
+  std::vector<std::string> layouts;
 
-  if (layoutIds.empty()) {
-    const auto layoutCount = GetKeyboardLayoutList(0, nullptr);
-    if (layoutCount <= 0) {
-      LOG_WARN("failed to enumerate installed keyboard layouts");
-      return layoutIds;
-    }
-
-    auto *layouts = static_cast<HKL *>(LocalAlloc(LPTR, static_cast<SIZE_T>(layoutCount) * sizeof(HKL)));
-    if (layouts == nullptr) {
-      LOG_WARN("failed to allocate keyboard layout buffer");
-      return layoutIds;
-    }
-
-    const auto resolvedLayoutCount = GetKeyboardLayoutList(layoutCount, layouts);
-    layoutIds.reserve(resolvedLayoutCount);
-
-    for (int i = 0; i < resolvedLayoutCount; ++i) {
-      layoutIds.push_back(normalizeKeyboardLayoutId(rawKeyboardLayoutId(layouts[i])));
-    }
-
-    LocalFree(layouts);
+  const auto activeLayout = resolveKeyboardLayoutKlid(getCurrentKeyboardLayout());
+  if (!activeLayout.empty()) {
+    layouts.push_back(activeLayout);
   }
 
-  LOG_INFO("resolved windows keyboard layouts:");
-  for (const auto &layoutId : layoutIds) {
-    LOG_INFO("  - %s", formatKeyboardLayoutForLog(layoutId).c_str());
+  LOG_INFO("resolved active windows keyboard layout:");
+  for (const auto &layout : layouts) {
+    LOG_INFO("  - %s", layout.c_str());
   }
 
-  return layoutIds;
+  return layouts;
 }
 
 std::string AppUtilWindows::getCurrentLanguageCode()
 {
-  if (const auto layoutName = getCurrentKeyboardLayoutName(); !layoutName.empty()) {
-    return wideCharToUtf8(layoutName);
+  const auto activeLayout = resolveKeyboardLayoutKlid(getCurrentKeyboardLayout());
+  if (activeLayout.empty()) {
+    LOG_WARN("failed to determine active Windows keyboard KLID");
   }
-
-  const auto installedLayouts = getPreloadedKeyboardLayouts();
-  if (!installedLayouts.empty()) {
-    return installedLayouts.front();
-  }
-
-  if (const auto layout = getCurrentKeyboardLayout()) {
-    return normalizeKeyboardLayoutId(rawKeyboardLayoutId(layout));
-  }
-
-  return {};
+  return activeLayout;
 }
 
 HKL AppUtilWindows::getCurrentKeyboardLayout() const
