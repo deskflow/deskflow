@@ -1,5 +1,14 @@
 var NAVTREEINDEX4 =
 {
+"OSXEventQueueBuffer_8h_source.html":[7,0,1,1,9,64],
+"OSXHelpers_8h.html":[7,0,1,1,5,22],
+"OSXHelpers_8h.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,22,5],
+"OSXHelpers_8h.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,22,4],
+"OSXHelpers_8h.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,22,1],
+"OSXHelpers_8h.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,22,3],
+"OSXHelpers_8h.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,22,0],
+"OSXHelpers_8h.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,22,2],
+"OSXHelpers_8h_source.html":[7,0,1,1,5,22],
 "OSXHelpers_8mm.html":[7,0,1,1,5,23],
 "OSXHelpers_8mm.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,23,5],
 "OSXHelpers_8mm.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,23,4],
@@ -240,14 +249,5 @@ var NAVTREEINDEX4 =
 "Server_8h_source.html":[7,0,1,1,10,33],
 "SettingsDialog_8cpp.html":[7,0,1,1,5,2,14],
 "SettingsDialog_8h.html":[7,0,1,1,5,2,15],
-"SettingsDialog_8h_source.html":[7,0,1,1,5,2,15],
-"Settings_8cpp.html":[7,0,1,1,3,9],
-"Settings_8h.html":[7,0,1,1,3,10],
-"Settings_8h_source.html":[7,0,1,1,3,10],
-"SimpleEventQueueBuffer_8cpp.html":[7,0,1,1,1,23],
-"SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,24],
-"SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,24],
-"SocketException_8cpp.html":[7,0,1,1,8,19],
-"SocketException_8h.html":[7,0,1,1,8,20],
-"SocketException_8h_source.html":[7,0,1,1,8,20]
+"SettingsDialog_8h_source.html":[7,0,1,1,5,2,15]
 };

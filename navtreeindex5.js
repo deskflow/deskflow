@@ -1,5 +1,14 @@
 var NAVTREEINDEX5 =
 {
+"Settings_8cpp.html":[7,0,1,1,3,9],
+"Settings_8h.html":[7,0,1,1,3,10],
+"Settings_8h_source.html":[7,0,1,1,3,10],
+"SimpleEventQueueBuffer_8cpp.html":[7,0,1,1,1,23],
+"SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,24],
+"SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,24],
+"SocketException_8cpp.html":[7,0,1,1,8,19],
+"SocketException_8h.html":[7,0,1,1,8,20],
+"SocketException_8h_source.html":[7,0,1,1,8,20],
 "SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
 "SocketMultiplexer_8h.html":[7,0,1,1,8,22],
 "SocketMultiplexer_8h_source.html":[7,0,1,1,8,22],
@@ -240,14 +249,5 @@ var NAVTREEINDEX5 =
 "classApp.html#aab3f6534616a1a83c021e0d78f7469c0":[6,0,6,22],
 "classApp.html#ab25cb14c8734dd3d83f96240f3b25740":[6,0,6,19],
 "classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048":[6,0,6,7],
-"classApp.html#ab51ebb2be69b544372c4ab6a9169264f":[6,0,6,18],
-"classApp.html#acbc962ac1eea477e7cf22e97c1c04bed":[6,0,6,24],
-"classApp.html#acde03ff6767ca35828915a6f327d4b5c":[6,0,6,5],
-"classApp.html#ad4d9e0526734148f3d7364f2933c6d57":[6,0,6,25],
-"classApp.html#ae59ab33fd366ee0609bd4df8e807fab0":[6,0,6,11],
-"classAppUtil.html":[6,0,7],
-"classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca":[6,0,7,4],
-"classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d":[6,0,7,0],
-"classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd":[6,0,7,1],
-"classAppUtil.html#a8766d51fe30577548aec3896464489d6":[6,0,7,7]
+"classApp.html#ab51ebb2be69b544372c4ab6a9169264f":[6,0,6,18]
 };

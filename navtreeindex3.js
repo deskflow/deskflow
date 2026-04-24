@@ -1,5 +1,14 @@
 var NAVTREEINDEX3 =
 {
+"MSWindowsClipboard_8h_source.html":[7,0,1,1,9,10],
+"MSWindowsDebugOutputter_8cpp.html":[7,0,1,1,9,21],
+"MSWindowsDebugOutputter_8cpp.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,9,21,0],
+"MSWindowsDebugOutputter_8h.html":[7,0,1,1,9,22],
+"MSWindowsDebugOutputter_8h_source.html":[7,0,1,1,9,22],
+"MSWindowsDesks_8cpp.html":[7,0,1,1,9,23],
+"MSWindowsDesks_8cpp.html#a229eb3cb01c581e4a20a2428af85df87":[7,0,1,1,9,23,15],
+"MSWindowsDesks_8cpp.html#a22d10b903873cdbaadbe303273b04f9c":[7,0,1,1,9,23,4],
+"MSWindowsDesks_8cpp.html#a466ba152ad50de01f74de9926c77933d":[7,0,1,1,9,23,26],
 "MSWindowsDesks_8cpp.html#a5888d7a67129edfea2f1298c57335c43":[7,0,1,1,9,23,11],
 "MSWindowsDesks_8cpp.html#a616cb7a5bd545fb32808031dfd5f587f":[7,0,1,1,9,23,25],
 "MSWindowsDesks_8cpp.html#a67bddffae0d971cda003b663bdea5e25":[7,0,1,1,9,23,5],
@@ -240,14 +249,5 @@ var NAVTREEINDEX3 =
 "OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,62,0],
 "OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,62,2],
 "OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,63],
-"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,64],
-"OSXEventQueueBuffer_8h_source.html":[7,0,1,1,9,64],
-"OSXHelpers_8h.html":[7,0,1,1,5,22],
-"OSXHelpers_8h.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,22,5],
-"OSXHelpers_8h.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,22,4],
-"OSXHelpers_8h.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,22,1],
-"OSXHelpers_8h.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,22,3],
-"OSXHelpers_8h.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,22,0],
-"OSXHelpers_8h.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,22,2],
-"OSXHelpers_8h_source.html":[7,0,1,1,5,22]
+"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,64]
 };
