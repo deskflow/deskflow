@@ -62,6 +62,14 @@ void DaemonApp::applyWatchdogCommand() const
     return;
   }
 
+  // QFileInfo::exists on a UNC path triggers SMB auth from this SYSTEM-context
+  // process, leaking the machine NTLM hash to whoever controls the remote host.
+  // Any local user can reach this via the IPC pipe, so reject remote paths up front.
+  if (m_configFile.startsWith(QStringLiteral("\\\\")) || m_configFile.startsWith(QStringLiteral("//"))) {
+    LOG_ERR("cannot apply watchdog command: remote config file paths are not allowed: %s", qPrintable(m_configFile));
+    return;
+  }
+
   if (!QFileInfo::exists(m_configFile)) {
     LOG_ERR("cannot apply watchdog command: config file does not exist: %s", qPrintable(m_configFile));
     return;
