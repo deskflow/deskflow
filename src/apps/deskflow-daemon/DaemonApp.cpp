@@ -28,6 +28,7 @@
 #endif
 
 #include <QCoreApplication>
+#include <QFileInfo>
 #include <QSettings>
 
 using namespace deskflow::core;
@@ -58,6 +59,11 @@ void DaemonApp::applyWatchdogCommand() const
 #if defined(Q_OS_WIN)
   if (m_configFile.isEmpty()) {
     LOG_ERR("cannot apply watchdog command: no config file set");
+    return;
+  }
+
+  if (!QFileInfo::exists(m_configFile)) {
+    LOG_ERR("cannot apply watchdog command: config file does not exist: %s", qPrintable(m_configFile));
     return;
   }
 
