@@ -259,6 +259,8 @@ void MSWindowsWatchdog::startProcess()
 
   m_process = std::make_unique<deskflow::platform::MSWindowsProcess>(m_command, m_outputWritePipe, m_outputWritePipe);
 
+  LOG_INFO("running command (%s): %ls", m_elevateProcess ? "elevated" : "not elevated", m_command.c_str());
+
   BOOL createRet;
   if (m_foreground) {
     LOG_DEBUG("starting command in foreground");
