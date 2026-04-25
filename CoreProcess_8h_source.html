@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.159</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.164</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -219,7 +219,7 @@ $(function(){initNavTree('CoreProcess_8h_source.html','',''); });
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keywordtype">void</span> startForegroundProcess(<span class="keyword">const</span> QStringList &amp;args);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keywordtype">void</span> startProcessFromDaemon(<span class="keyword">const</span> QStringList &amp;args);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keywordtype">void</span> startProcessFromDaemon();</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">void</span> stopForegroundProcess() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">void</span> stopProcessFromDaemon();</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  QPair&lt;bool, QString&gt; persistServerConfig() <span class="keyword">const</span>;</div>
@@ -272,7 +272,7 @@ $(function(){initNavTree('CoreProcess_8h_source.html','',''); });
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a6d40732c891af7bad2c7087be0768db1"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a6d40732c891af7bad2c7087be0768db1">deskflow::gui::CoreProcess::mode</a></div><div class="ttdeci">Settings::CoreMode mode() const</div><div class="ttdef"><b>Definition</b> CoreProcess.h:52</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a7e71f9782c34b927045af276d0e3f11f"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a7e71f9782c34b927045af276d0e3f11f">deskflow::gui::CoreProcess::isStarted</a></div><div class="ttdeci">bool isStarted() const</div><div class="ttdef"><b>Definition</b> CoreProcess.h:60</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a81c7ca0a133eb01824ff7e26f4222568"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a81c7ca0a133eb01824ff7e26f4222568">deskflow::gui::CoreProcess::secureSocketVersion</a></div><div class="ttdeci">QString secureSocketVersion() const</div><div class="ttdef"><b>Definition</b> CoreProcess.h:56</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a85a0f905b812d6285e39cb9149a93b9a"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a85a0f905b812d6285e39cb9149a93b9a">deskflow::gui::CoreProcess::start</a></div><div class="ttdeci">void start(std::optional&lt; ProcessMode &gt; processMode=std::nullopt)</div><div class="ttdef"><b>Definition</b> CoreProcess.cpp:319</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a85a0f905b812d6285e39cb9149a93b9a"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a85a0f905b812d6285e39cb9149a93b9a">deskflow::gui::CoreProcess::start</a></div><div class="ttdeci">void start(std::optional&lt; ProcessMode &gt; processMode=std::nullopt)</div><div class="ttdef"><b>Definition</b> CoreProcess.cpp:320</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a89200615cefc8d27ebc05c878a96afe8"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a89200615cefc8d27ebc05c878a96afe8">deskflow::gui::CoreProcess::CoreProcess</a></div><div class="ttdeci">CoreProcess(const ServerConfig &amp;serverConfig)</div><div class="ttdef"><b>Definition</b> CoreProcess.cpp:102</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_a956743f8c6dccdab5787b6f8cc110dff"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#a956743f8c6dccdab5787b6f8cc110dff">deskflow::gui::CoreProcess::applyLogLevel</a></div><div class="ttdeci">void applyLogLevel()</div><div class="ttdef"><b>Definition</b> CoreProcess.cpp:177</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_aa6b3faa1c42637f07adb9a6bef2e7065"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#aa6b3faa1c42637f07adb9a6bef2e7065">deskflow::gui::CoreProcess::error</a></div><div class="ttdeci">void error(deskflow::gui::CoreProcess::Error error)</div></div>

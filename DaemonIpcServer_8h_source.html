@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.159</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.164</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,19 +122,18 @@ $(function(){initNavTree('DaemonIpcServer_8h_source.html','',''); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordtype">void</span> processCommand(QLocalSocket *clientSocket, <span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QStringList &amp;parts) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">void</span> processLogLevel(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> processElevate(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">void</span> processCommandMessage(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">const</span> QString m_logFilename;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>};</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> processConfigFile(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">const</span> QString m_logFilename;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>};</div>
 </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>} <span class="comment">// namespace deskflow::core::ipc</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>} <span class="comment">// namespace deskflow::core::ipc</span></div>
 <div class="ttc" id="aIpcServer_8h_html"><div class="ttname"><a href="IpcServer_8h.html">IpcServer.h</a></div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer_html_a33730200213d81f92c76fcc07603aee6"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a33730200213d81f92c76fcc07603aee6">deskflow::core::ipc::DaemonIpcServer::DaemonIpcServer</a></div><div class="ttdeci">DaemonIpcServer(QObject *parent, const QString &amp;logFilename)</div><div class="ttdef"><b>Definition</b> DaemonIpcServer.cpp:19</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a3d4deae0448b3832f36688f3e577d1dd"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a3d4deae0448b3832f36688f3e577d1dd">deskflow::core::ipc::IpcServer::IpcServer</a></div><div class="ttdeci">IpcServer(QObject *parent, const QString &amp;serverName, const QString &amp;typeName)</div><div class="ttdef"><b>Definition</b> IpcServer.cpp:17</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1core_1_1ipc_html"><div class="ttname"><a href="namespacedeskflow_1_1core_1_1ipc.html">deskflow::core::ipc</a></div><div class="ttdef"><b>Definition</b> DaemonApp.h:20</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1core_1_1ipc_html"><div class="ttname"><a href="namespacedeskflow_1_1core_1_1ipc.html">deskflow::core::ipc</a></div><div class="ttdef"><b>Definition</b> DaemonApp.h:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

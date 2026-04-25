@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.159</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.164</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,7 +132,8 @@ Signals</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a27673574276630252e815e050cf34d7c" id="r_a27673574276630252e815e050cf34d7c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a27673574276630252e815e050cf34d7c">DaemonIpcClient</a> (QObject *parent=nullptr)</td></tr>
 <tr class="memitem:a2734981c82690a0c49581c104c4c5bbf" id="r_a2734981c82690a0c49581c104c4c5bbf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2734981c82690a0c49581c104c4c5bbf">sendLogLevel</a> (const QString &amp;logLevel)</td></tr>
-<tr class="memitem:a970de28a278a2473cb6fc3e9815412dd" id="r_a970de28a278a2473cb6fc3e9815412dd"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a970de28a278a2473cb6fc3e9815412dd">sendStartProcess</a> (const QString &amp;command, bool elevate)</td></tr>
+<tr class="memitem:ab2a7083cfa70433998f0db251dd69873" id="r_ab2a7083cfa70433998f0db251dd69873"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab2a7083cfa70433998f0db251dd69873">sendConfigFile</a> (const QString &amp;configFile)</td></tr>
+<tr class="memitem:a317f20306af35b39b4e9775179bd063f" id="r_a317f20306af35b39b4e9775179bd063f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a317f20306af35b39b4e9775179bd063f">sendStartProcess</a> ()</td></tr>
 <tr class="memitem:a6a8784831c852d239bdb7badb98c5fd6" id="r_a6a8784831c852d239bdb7badb98c5fd6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6a8784831c852d239bdb7badb98c5fd6">sendStopProcess</a> ()</td></tr>
 <tr class="memitem:aaedee1798aaa6300d6dbf260768ffe0e" id="r_aaedee1798aaa6300d6dbf260768ffe0e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aaedee1798aaa6300d6dbf260768ffe0e">sendClearSettings</a> ()</td></tr>
 <tr class="memitem:a7c04c6d90428750b85d627e22cdf0f5c" id="r_a7c04c6d90428750b85d627e22cdf0f5c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7c04c6d90428750b85d627e22cdf0f5c">requestLogPath</a> ()</td></tr>
@@ -265,6 +266,23 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab2a7083cfa70433998f0db251dd69873" name="ab2a7083cfa70433998f0db251dd69873"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2a7083cfa70433998f0db251dd69873">&#9670;&#160;</a></span>sendConfigFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::ipc::DaemonIpcClient::sendConfigFile </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>configFile</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2734981c82690a0c49581c104c4c5bbf" name="a2734981c82690a0c49581c104c4c5bbf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2734981c82690a0c49581c104c4c5bbf">&#9670;&#160;</a></span>sendLogLevel()</h2>
 
@@ -282,8 +300,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a970de28a278a2473cb6fc3e9815412dd" name="a970de28a278a2473cb6fc3e9815412dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a970de28a278a2473cb6fc3e9815412dd">&#9670;&#160;</a></span>sendStartProcess()</h2>
+<a id="a317f20306af35b39b4e9775179bd063f" name="a317f20306af35b39b4e9775179bd063f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a317f20306af35b39b4e9775179bd063f">&#9670;&#160;</a></span>sendStartProcess()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,12 +309,8 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void deskflow::gui::ipc::DaemonIpcClient::sendStartProcess </td>
           <td>(</td>
-          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>command</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>elevate</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

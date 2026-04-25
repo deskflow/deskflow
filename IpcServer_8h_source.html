@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.159</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.164</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,44 +124,42 @@ $(function(){initNavTree('IpcServer_8h_source.html','',''); });
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>Q_SIGNALS:</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6d96ad4dd9583b4070e1bc255a3e00d9">   29</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6d96ad4dd9583b4070e1bc255a3e00d9">logLevelChanged</a>(<span class="keyword">const</span> QString &amp;logLevel);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#aa053e3f5ba1f598ff48d8f25595c9884">   30</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#aa053e3f5ba1f598ff48d8f25595c9884">elevateModeChanged</a>(<span class="keywordtype">bool</span> elevate);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a1e6c86407c96d13faafcfd7235f0990e">   31</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a1e6c86407c96d13faafcfd7235f0990e">commandChanged</a>(<span class="keyword">const</span> QString &amp;command);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a88accae3265235e7a6f68ebb0728a76a">   32</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a88accae3265235e7a6f68ebb0728a76a">startProcessRequested</a>();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6f6821af2fd14d2b1cfdd127504d9257">   33</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6f6821af2fd14d2b1cfdd127504d9257">stopProcessRequested</a>();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a91e16f4291833e7013bfc333bb74b458">   34</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a91e16f4291833e7013bfc333bb74b458">clearSettingsRequested</a>();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#ac177eb3a1687b1e78589d8b6910a2bdc">writeToClientSocket</a>(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QString &amp;message) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> processMessage(QLocalSocket *clientSocket, <span class="keyword">const</span> QString &amp;message);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> processCommand(QLocalSocket *clientSocket, <span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QStringList &amp;parts) = 0;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">void</span> handleNewConnection();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">void</span> handleReadyRead();</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">void</span> handleDisconnected();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keywordtype">void</span> handleErrorOccurred();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  QLocalServer *m_server;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  QSet&lt;QLocalSocket *&gt; m_clients;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  QString m_serverName;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  QStringList m_pendingMessages;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  QByteArray m_typeName;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>};</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a4a0f6e7fe5a4b08463149ff2e6b6d768">   30</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a4a0f6e7fe5a4b08463149ff2e6b6d768">configFileChanged</a>(<span class="keyword">const</span> QString &amp;configFile);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a88accae3265235e7a6f68ebb0728a76a">   31</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a88accae3265235e7a6f68ebb0728a76a">startProcessRequested</a>();</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6f6821af2fd14d2b1cfdd127504d9257">   32</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6f6821af2fd14d2b1cfdd127504d9257">stopProcessRequested</a>();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a91e16f4291833e7013bfc333bb74b458">   33</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a91e16f4291833e7013bfc333bb74b458">clearSettingsRequested</a>();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#ac177eb3a1687b1e78589d8b6910a2bdc">writeToClientSocket</a>(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QString &amp;message) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> processMessage(QLocalSocket *clientSocket, <span class="keyword">const</span> QString &amp;message);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> processCommand(QLocalSocket *clientSocket, <span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QStringList &amp;parts) = 0;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> handleNewConnection();</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">void</span> handleReadyRead();</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">void</span> handleDisconnected();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">void</span> handleErrorOccurred();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  QLocalServer *m_server;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  QSet&lt;QLocalSocket *&gt; m_clients;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  QString m_serverName;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  QStringList m_pendingMessages;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  QByteArray m_typeName;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>} <span class="comment">// namespace deskflow::core::ipc</span></div>
-<div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a1e6c86407c96d13faafcfd7235f0990e"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a1e6c86407c96d13faafcfd7235f0990e">deskflow::core::ipc::IpcServer::commandChanged</a></div><div class="ttdeci">void commandChanged(const QString &amp;command)</div></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>} <span class="comment">// namespace deskflow::core::ipc</span></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a2f8d33430f33102bfd5f68a5c9f9d061"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a2f8d33430f33102bfd5f68a5c9f9d061">deskflow::core::ipc::IpcServer::broadcastCommand</a></div><div class="ttdeci">void broadcastCommand(const QString &amp;command, const QString &amp;args=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> IpcServer.cpp:158</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a3d4deae0448b3832f36688f3e577d1dd"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a3d4deae0448b3832f36688f3e577d1dd">deskflow::core::ipc::IpcServer::IpcServer</a></div><div class="ttdeci">IpcServer(QObject *parent, const QString &amp;serverName, const QString &amp;typeName)</div><div class="ttdef"><b>Definition</b> IpcServer.cpp:17</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a45340f66129454bf48c8f7a0c5e24766"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a45340f66129454bf48c8f7a0c5e24766">deskflow::core::ipc::IpcServer::listen</a></div><div class="ttdeci">void listen()</div><div class="ttdef"><b>Definition</b> IpcServer.cpp:31</div></div>
+<div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a4a0f6e7fe5a4b08463149ff2e6b6d768"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a4a0f6e7fe5a4b08463149ff2e6b6d768">deskflow::core::ipc::IpcServer::configFileChanged</a></div><div class="ttdeci">void configFileChanged(const QString &amp;configFile)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a6d96ad4dd9583b4070e1bc255a3e00d9"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6d96ad4dd9583b4070e1bc255a3e00d9">deskflow::core::ipc::IpcServer::logLevelChanged</a></div><div class="ttdeci">void logLevelChanged(const QString &amp;logLevel)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a6f6821af2fd14d2b1cfdd127504d9257"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a6f6821af2fd14d2b1cfdd127504d9257">deskflow::core::ipc::IpcServer::stopProcessRequested</a></div><div class="ttdeci">void stopProcessRequested()</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a88accae3265235e7a6f68ebb0728a76a"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a88accae3265235e7a6f68ebb0728a76a">deskflow::core::ipc::IpcServer::startProcessRequested</a></div><div class="ttdeci">void startProcessRequested()</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a91e16f4291833e7013bfc333bb74b458"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a91e16f4291833e7013bfc333bb74b458">deskflow::core::ipc::IpcServer::clearSettingsRequested</a></div><div class="ttdeci">void clearSettingsRequested()</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_a9e3f5a0f85e589bbd0d047b6b87955ca"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#a9e3f5a0f85e589bbd0d047b6b87955ca">deskflow::core::ipc::IpcServer::~IpcServer</a></div><div class="ttdeci">~IpcServer() override</div><div class="ttdef"><b>Definition</b> IpcServer.cpp:26</div></div>
-<div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_aa053e3f5ba1f598ff48d8f25595c9884"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#aa053e3f5ba1f598ff48d8f25595c9884">deskflow::core::ipc::IpcServer::elevateModeChanged</a></div><div class="ttdeci">void elevateModeChanged(bool elevate)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1IpcServer_html_ac177eb3a1687b1e78589d8b6910a2bdc"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1IpcServer.html#ac177eb3a1687b1e78589d8b6910a2bdc">deskflow::core::ipc::IpcServer::writeToClientSocket</a></div><div class="ttdeci">void writeToClientSocket(QLocalSocket *&amp;clientSocket, const QString &amp;message) const</div><div class="ttdef"><b>Definition</b> IpcServer.cpp:180</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1core_1_1ipc_html"><div class="ttname"><a href="namespacedeskflow_1_1core_1_1ipc.html">deskflow::core::ipc</a></div><div class="ttdef"><b>Definition</b> DaemonApp.h:20</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1core_1_1ipc_html"><div class="ttname"><a href="namespacedeskflow_1_1core_1_1ipc.html">deskflow::core::ipc</a></div><div class="ttdef"><b>Definition</b> DaemonApp.h:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

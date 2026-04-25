@@ -9,6 +9,7 @@ var classdeskflow_1_1platform_1_1MSWindowsProcess =
     [ "shutdown", "classdeskflow_1_1platform_1_1MSWindowsProcess.html#ae1cb61e44ac78db3f0eb68142ec5e0c0", null ],
     [ "shutdown", "classdeskflow_1_1platform_1_1MSWindowsProcess.html#ae9f0edbf7fdeac7367e5861485faee03", null ],
     [ "startAsUser", "classdeskflow_1_1platform_1_1MSWindowsProcess.html#a17d6d6059e6cdf6ec4e269c8ace454a9", null ],
+    [ "startDetachedAsSessionUser", "classdeskflow_1_1platform_1_1MSWindowsProcess.html#ab098ee6672d8b98e6954fc6443dd1e42", null ],
     [ "startInForeground", "classdeskflow_1_1platform_1_1MSWindowsProcess.html#a425586420123c408f3e44936ad6d5d35", null ],
     [ "waitForExit", "classdeskflow_1_1platform_1_1MSWindowsProcess.html#a9ebb3af1e159665eb624f0bbee4c93e1", null ]
 ];

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.159</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.164</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,8 +124,7 @@ Collaboration diagram for deskflow::core::ipc::IpcServer:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-signals" class="groupheader"><a id="signals" name="signals"></a>
 Signals</h2></td></tr>
 <tr class="memitem:a6d96ad4dd9583b4070e1bc255a3e00d9" id="r_a6d96ad4dd9583b4070e1bc255a3e00d9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6d96ad4dd9583b4070e1bc255a3e00d9">logLevelChanged</a> (const QString &amp;logLevel)</td></tr>
-<tr class="memitem:aa053e3f5ba1f598ff48d8f25595c9884" id="r_aa053e3f5ba1f598ff48d8f25595c9884"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa053e3f5ba1f598ff48d8f25595c9884">elevateModeChanged</a> (bool elevate)</td></tr>
-<tr class="memitem:a1e6c86407c96d13faafcfd7235f0990e" id="r_a1e6c86407c96d13faafcfd7235f0990e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1e6c86407c96d13faafcfd7235f0990e">commandChanged</a> (const QString &amp;command)</td></tr>
+<tr class="memitem:a4a0f6e7fe5a4b08463149ff2e6b6d768" id="r_a4a0f6e7fe5a4b08463149ff2e6b6d768"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4a0f6e7fe5a4b08463149ff2e6b6d768">configFileChanged</a> (const QString &amp;configFile)</td></tr>
 <tr class="memitem:a88accae3265235e7a6f68ebb0728a76a" id="r_a88accae3265235e7a6f68ebb0728a76a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a88accae3265235e7a6f68ebb0728a76a">startProcessRequested</a> ()</td></tr>
 <tr class="memitem:a6f6821af2fd14d2b1cfdd127504d9257" id="r_a6f6821af2fd14d2b1cfdd127504d9257"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6f6821af2fd14d2b1cfdd127504d9257">stopProcessRequested</a> ()</td></tr>
 <tr class="memitem:a91e16f4291833e7013bfc333bb74b458" id="r_a91e16f4291833e7013bfc333bb74b458"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a91e16f4291833e7013bfc333bb74b458">clearSettingsRequested</a> ()</td></tr>
@@ -248,8 +247,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1e6c86407c96d13faafcfd7235f0990e" name="a1e6c86407c96d13faafcfd7235f0990e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e6c86407c96d13faafcfd7235f0990e">&#9670;&#160;</a></span>commandChanged</h2>
+<a id="a4a0f6e7fe5a4b08463149ff2e6b6d768" name="a4a0f6e7fe5a4b08463149ff2e6b6d768"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a0f6e7fe5a4b08463149ff2e6b6d768">&#9670;&#160;</a></span>configFileChanged</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,34 +257,9 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void deskflow::core::ipc::IpcServer::commandChanged </td>
+          <td class="memname">void deskflow::core::ipc::IpcServer::configFileChanged </td>
           <td>(</td>
-          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>command</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa053e3f5ba1f598ff48d8f25595c9884" name="aa053e3f5ba1f598ff48d8f25595c9884"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa053e3f5ba1f598ff48d8f25595c9884">&#9670;&#160;</a></span>elevateModeChanged</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void deskflow::core::ipc::IpcServer::elevateModeChanged </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>elevate</em></span></td><td>)</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>configFile</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

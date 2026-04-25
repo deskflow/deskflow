@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.159</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.164</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -113,6 +113,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1cb61e44ac78db3f0eb68142ec5e0c0" id="r_ae1cb61e44ac78db3f0eb68142ec5e0c0"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ae1cb61e44ac78db3f0eb68142ec5e0c0">shutdown</a> (HANDLE handle, <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> pid, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>=kDefaultShutdownTimeout)</td></tr>
+<tr class="memitem:ab098ee6672d8b98e6954fc6443dd1e42" id="r_ab098ee6672d8b98e6954fc6443dd1e42"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#ab098ee6672d8b98e6954fc6443dd1e42">startDetachedAsSessionUser</a> (const std::wstring &amp;command)</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a083ad3252a2a6cda1544e76209ebd2d7" name="a083ad3252a2a6cda1544e76209ebd2d7"></a>
@@ -312,6 +313,32 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab098ee6672d8b98e6954fc6443dd1e42" name="ab098ee6672d8b98e6954fc6443dd1e42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab098ee6672d8b98e6954fc6443dd1e42">&#9670;&#160;</a></span>startDetachedAsSessionUser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool deskflow::platform::MSWindowsProcess::startDetachedAsSessionUser </td>
+          <td>(</td>
+          <td class="paramtype">const std::wstring &amp;</td>          <td class="paramname"><span class="paramname"><em>command</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Launch <code class="param">command</code> as a detached process under the active console user's token, so the child does not inherit the caller's (SYSTEM) privileges. </p>
 
 </div>
 </div>

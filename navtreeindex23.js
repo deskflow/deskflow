@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"structIArchNetwork_1_1PollEventMask.html":[6,0,105,0],
+"structIArchNetwork_1_1PollEventMask.html#a2a37fe75c8d7a7b0b533ad4a3827a1aa":[6,0,105,0,3],
 "structIArchNetwork_1_1PollEventMask.html#a63c05ada1c4ff3608177a5df753753e2":[6,0,105,0,0],
 "structIArchNetwork_1_1PollEventMask.html#ac5d78f713bee0e3d288def3d5b737911":[6,0,105,0,1],
 "structIArchNetwork_1_1PollEventMask.html#adc3edc69b9ea00a4f6ea46cf7c45b22c":[6,0,105,0,2],
@@ -51,8 +53,8 @@ var NAVTREEINDEX23 =
 "structSettings_1_1Core.html#aa9b297403710d920ab1182db9f551508":[6,0,209,1,13],
 "structSettings_1_1Daemon.html":[6,0,209,2],
 "structSettings_1_1Daemon.html#a771cef30da81388437b4565ce8c3ec21":[6,0,209,2,1],
+"structSettings_1_1Daemon.html#a88aa431f45261baea31f1c24c87668cd":[6,0,209,2,0],
 "structSettings_1_1Daemon.html#abcf7fc053c4f9ed636b2481d4f324233":[6,0,209,2,2],
-"structSettings_1_1Daemon.html#af9e6842a07e56327dbdb16af6cb62873":[6,0,209,2,0],
 "structSettings_1_1Daemon.html#afc62a8aba1ac94925a03d6294d36a9e7":[6,0,209,2,3],
 "structSettings_1_1Gui.html":[6,0,209,3],
 "structSettings_1_1Gui.html#a2f5f638ae1ce82b3e05c58ccd721893f":[6,0,209,3,0],
