@@ -364,6 +364,11 @@ jobs:
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
+
+          # Workaround for unreliable pkg: Pin to a stable release.
+          # vmactions/freebsd-vm@v1 gets latest FreeBSD, which sometimes has a broken ports catalog.
+          release: "14.4"
+
           run: |
             pkg install -y cmake ninja gmake gcc12 openssl glib \
             libX11 libXtst libxkbfile qt6-base qt6-tools gtk3 \
