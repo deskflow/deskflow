@@ -375,9 +375,6 @@ jobs:
             googletest pkgconf libei libportal doxygen
             ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
-            # Integration tests are flakey by nature, make them optional.
-            export QT_QPA_PLATFORM=offscreen
-            ./build/bin/unittests || true
   flatpak:
     needs: lint-clang
     name: flatpak-${{matrix.flatpak.arch}}
