@@ -441,16 +441,7 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
       return;
     }
 
-    // update the primary client's clipboards if we're leaving the
-    // primary screen.
-    if (m_active == m_primaryClient && m_enableClipboard) {
-      for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        const ClipboardInfo &clipboard = m_clipboards[id];
-        if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
-          onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
-        }
-      }
-    }
+    const bool leavingPrimary = (m_active == m_primaryClient);
 
 #if defined(__APPLE__)
     if (dst != m_primaryClient) {
@@ -474,13 +465,27 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     m_active->enter(x, y, m_seqNum, m_primaryClient->getToggleMask(), forScreensaver);
 
     if (m_enableClipboard) {
+      // Updating the primary clipboard can require decoding and
+      // chunking large image data, so do it after the cursor has
+      // already entered the destination screen.
+      if (leavingPrimary) {
+        const std::string primaryName = getName(m_primaryClient);
+        for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+          ClipboardInfo &clipboard = m_clipboards[id];
+          if (clipboard.m_clipboardOwner == primaryName) {
+            onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
+          }
+        }
+      }
+
       // send the clipboard data to new active screen
       for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        // Hackity hackity hack
-        if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
+        const ClipboardInfo &clipboard = m_clipboards[id];
+        if (clipboard.m_clipboardOverSizeLimit ||
+            clipboard.m_clipboardData.size() > (m_maximumClipboardSize * 1024)) {
           continue;
         }
-        m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+        m_active->setClipboard(id, &clipboard.m_clipboard);
       }
     }
 
@@ -1197,6 +1202,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
     clipboard.m_clipboard.close();
   }
   clipboard.m_clipboardData = clipboard.m_clipboard.marshall();
+  clipboard.m_clipboardOverSizeLimit = false;
 
   // tell all other screens to take ownership of clipboard.  tell the
   // grabber that it's clipboard isn't dirty.
@@ -1458,7 +1464,8 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
   sender->getClipboard(id, &clipboard.m_clipboard);
 
   std::string data = clipboard.m_clipboard.marshall();
-  if (data.size() > m_maximumClipboardSize * 1024) {
+  clipboard.m_clipboardOverSizeLimit = (data.size() > m_maximumClipboardSize * 1024);
+  if (clipboard.m_clipboardOverSizeLimit) {
     LOG_NOTE(
         "not updating clipboard because it's over the size limit (%i KB) configured by the server",
         m_maximumClipboardSize
