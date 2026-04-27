@@ -113,7 +113,7 @@ jobs:
             runs-on: macos-15
             timeout: 10
             qt-version: 6.10.2
-            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
 
           - name: "macos-x64"
             runs-on: macos-15-intel
