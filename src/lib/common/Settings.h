@@ -86,6 +86,7 @@ public:
     inline static const auto ShownServerFirstStartMessage = QStringLiteral("gui/shownServerFirstStartMessage");
     inline static const auto ShowVersionInTitle = QStringLiteral("gui/showVersionInTitle");
     inline static const auto IgnoreMissingKeyboardLayouts = QStringLiteral("gui/ignoreMissingKeyboardLayouts");
+    inline static const auto LocalNetworkPermissionProbed = QStringLiteral("gui/localNetworkPermissionProbed");
   };
   struct Log
   {
@@ -246,6 +247,7 @@ private:
     , Settings::Gui::ShownServerFirstStartMessage
     , Settings::Gui::ShowVersionInTitle
     , Settings::Gui::IgnoreMissingKeyboardLayouts
+    , Settings::Gui::LocalNetworkPermissionProbed
     , Settings::Security::Certificate
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
@@ -263,6 +265,7 @@ private:
     , Settings::Gui::ShownServerFirstStartMessage
     , Settings::Gui::ShowVersionInTitle
     , Settings::Gui::IgnoreMissingKeyboardLayouts
+    , Settings::Gui::LocalNetworkPermissionProbed
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
     , Settings::Core::EnableEnterCommand

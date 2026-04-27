@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>deskflow-core</string>
+	<key>CFBundleIdentifier</key>
+	<string>@CMAKE_PROJECT_REV_FQDN@</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>deskflow-core</string>
+	<key>CFBundlePackageType</key>
+	<string>TOOL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>@CMAKE_PROJECT_VERSION@</string>
+	<key>CFBundleVersion</key>
+	<string>@CMAKE_PROJECT_VERSION@</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Deskflow uses the local network to share keyboard and mouse between computers.</string>
+</dict>
+</plist>

@@ -10,6 +10,7 @@
 #include "common/ExitCodes.h"
 #include "common/I18N.h"
 #include "common/PlatformInfo.h"
+#include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "common/VersionInfo.h"
 #include "gui/Diagnostic.h"
@@ -25,6 +26,10 @@
 
 #if defined(Q_OS_MACOS)
 #include <Carbon/Carbon.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
 #include <cstdlib>
 #endif
 
@@ -40,6 +45,7 @@ using namespace deskflow::gui;
 
 #if defined(Q_OS_MACOS)
 bool checkMacAssistiveDevices();
+void triggerLocalNetworkPermission();
 #endif
 
 const static auto kHeader = QStringLiteral("%1: %2\n").arg(kAppName, kDisplayVersion);
@@ -139,6 +145,8 @@ int main(int argc, char *argv[])
     return 1;
   }
 
+  triggerLocalNetworkPermission();
+
   if (!checkMacAssistiveDevices()) {
     return 1;
   }
@@ -156,6 +164,35 @@ int main(int argc, char *argv[])
 }
 
 #if defined(Q_OS_MACOS)
+// Send a harmless UDP broadcast packet so macOS 15+ / 26+ (Sequoia/Tahoe)
+// shows the Local Network permission prompt immediately at startup, before
+// any real connection is attempted. Without this the prompt is never shown
+// because plain TCP bind/listen does not trigger it.
+void triggerLocalNetworkPermission()
+{
+  // Only probe once — repeated probes on subsequent launches create duplicate
+  // TCC entries (each re-sign changes the app's identity hash).
+  if (Settings::value(Settings::Gui::LocalNetworkPermissionProbed).toBool()) {
+    return;
+  }
+
+  int sock = ::socket(AF_INET, SOCK_DGRAM, 0);
+  if (sock < 0) {
+    return;
+  }
+  int broadcast = 1;
+  ::setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
+  struct sockaddr_in addr{};
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(9); // RFC 863 discard port — ignored by all receivers
+  addr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+  const char msg[] = "deskflow";
+  ::sendto(sock, msg, sizeof(msg) - 1, 0, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr));
+  ::close(sock);
+
+  Settings::setValue(Settings::Gui::LocalNetworkPermissionProbed, true);
+}
+
 bool checkMacAssistiveDevices()
 {
   // new in mavericks, applications are trusted individually
