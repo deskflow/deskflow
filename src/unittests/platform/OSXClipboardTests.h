@@ -15,6 +15,10 @@ private Q_SLOTS:
   void open();
   void singleFormat();
   void formatConvert_UTF8();
+  void formatConvert_PNG();
+  void formatConvert_TIFF();
+  void formatConvert_PNG_zeroAlphaBitmap();
+  void formatConvert_PNG_preservesOrientation();
 
 private:
   Log m_log;

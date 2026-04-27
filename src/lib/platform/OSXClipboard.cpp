@@ -11,6 +11,7 @@
 #include "base/Log.h"
 #include "platform/OSXClipboardBMPConverter.h"
 #include "platform/OSXClipboardHTMLConverter.h"
+#include "platform/OSXClipboardImageConverter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardUTF8Converter.h"
@@ -22,6 +23,9 @@
 OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
+  m_converters.push_back(new OSXClipboardImageConverter(CFSTR("public.png"), CFSTR("public.png")));
+  m_converters.push_back(new OSXClipboardImageConverter(CFSTR("public.tiff"), CFSTR("public.tiff")));
+  m_converters.push_back(new OSXClipboardImageConverter(CFSTR("NeXT TIFF v4.0 pasteboard type"), CFSTR("public.tiff")));
   m_converters.push_back(new OSXClipboardBMPConverter);
   m_converters.push_back(new OSXClipboardUTF8Converter);
   m_converters.push_back(new OSXClipboardUTF16Converter);
