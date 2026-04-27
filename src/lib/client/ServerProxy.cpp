@@ -44,7 +44,7 @@ ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue 
     handleData();
   });
   m_events->addHandler(EventTypes::ClipboardSending, this, [this](const auto &e) {
-    ClipboardChunk::send(m_stream, e.getDataObject());
+    StreamChunker::sendClipboardChunk(m_stream, e.getDataObject(), m_events, this);
   });
 
   // send heartbeat

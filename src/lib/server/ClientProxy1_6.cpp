@@ -22,7 +22,7 @@ ClientProxy1_6::ClientProxy1_6(const std::string &name, deskflow::IStream *strea
       m_events(events)
 {
   m_events->addHandler(EventTypes::ClipboardSending, this, [this](const auto &e) {
-    ClipboardChunk::send(getStream(), e.getDataObject());
+    StreamChunker::sendClipboardChunk(getStream(), e.getDataObject(), m_events, this);
   });
 }
 
