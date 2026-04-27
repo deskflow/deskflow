@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "base/LogOutputters.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
@@ -22,8 +23,10 @@
 #endif
 
 #include <QApplication>
+#include <QDir>
 #include <QFileInfo>
 #include <QSharedMemory>
+#include <QStandardPaths>
 #include <QTextStream>
 #include <QThread>
 #include <QtGlobal>
@@ -85,6 +88,11 @@ int main(int argc, char **argv)
   Log log;
   qInstallMessageHandler(qtMessageHandler);
 
+  const auto cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+  QDir().mkpath(cacheDir);
+  const auto coreLogFilename = QStringLiteral("%1/%2-core.log").arg(cacheDir, kAppId);
+  CLOG->insert(new FileLogOutputter(coreLogFilename)); // NOSONAR - Adopted by `Log`
+
   QStringList args;
   for (int i = 0; i < argc; i++)
     args.append(argv[i]);
@@ -131,7 +139,7 @@ int main(int argc, char **argv)
   QApplication app(argc, argv);
   QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
 
-  const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
+  const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app, coreLogFilename); // NOSONAR - Qt managed
   QObject::connect(
       ipcServer, &deskflow::core::ipc::IpcServer::stopProcessRequested, coreApp, &App::quit, Qt::DirectConnection
   );

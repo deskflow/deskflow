@@ -15,7 +15,9 @@ namespace deskflow::core::ipc {
 
 static CoreIpcServer *s_instance = nullptr;
 
-CoreIpcServer::CoreIpcServer(QObject *parent) : IpcServer(parent, kCoreIpcName, QStringLiteral("core"))
+CoreIpcServer::CoreIpcServer(QObject *parent, const QString &logFilename)
+    : IpcServer(parent, kCoreIpcName, QStringLiteral("core")),
+      m_logFilename(logFilename)
 {
   assert(s_instance == nullptr);
   s_instance = this;
@@ -35,6 +37,11 @@ void CoreIpcServer::processCommand(QLocalSocket *clientSocket, const QString &co
     writeToClientSocket(clientSocket, QStringLiteral("ok"));
     broadcastCommand(QStringLiteral("bye"));
     Q_EMIT stopProcessRequested();
+    return;
+  }
+  if (command == QStringLiteral("logPath")) {
+    LOG_DEBUG("core ipc server got log path request");
+    writeToClientSocket(clientSocket, QStringLiteral("logPath=%1").arg(m_logFilename));
     return;
   }
   LOG_WARN("core ipc server got unknown command: %s", command.toUtf8().constData());

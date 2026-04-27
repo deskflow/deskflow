@@ -25,8 +25,18 @@ void CoreIpcClient::sendStop()
   sendMessage(QStringLiteral("stop"));
 }
 
+void CoreIpcClient::requestLogPath()
+{
+  sendMessage(QStringLiteral("logPath"));
+}
+
 void CoreIpcClient::processCommand(const QString &command, const QStringList &parts)
 {
+  if (command == QStringLiteral("logPath") && parts.size() == 2) {
+    Q_EMIT logPathReceived(parts.at(1));
+    return;
+  }
+
   const auto args = parts.size() >= 2 ? parts.at(1) : QString();
   Q_EMIT commandReceived(command, args);
 }

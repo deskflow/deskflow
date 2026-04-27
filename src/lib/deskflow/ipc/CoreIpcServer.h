@@ -20,12 +20,14 @@ class CoreIpcServer : public IpcServer
   Q_OBJECT
 
 public:
-  explicit CoreIpcServer(QObject *parent);
+  explicit CoreIpcServer(QObject *parent, const QString &logFilename);
 
   static CoreIpcServer &instance();
 
 private:
   void processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts) override;
+
+  const QString m_logFilename;
 };
 
 } // namespace deskflow::core::ipc

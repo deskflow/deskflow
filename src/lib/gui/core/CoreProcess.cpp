@@ -144,31 +144,52 @@ void CoreProcess::daemonIpcClientConnected()
   m_daemonIpcClient->requestLogPath();
 }
 
-void CoreProcess::checkExistingProcess()
+void CoreProcess::setupCoreIpcClient()
 {
-  qInfo("checking existing core");
+  if (m_coreIpcClient) {
+    return;
+  }
 
-  auto *client = new ipc::CoreIpcClient(this);
-  connect(client, &ipc::CoreIpcClient::connected, this, [client] {
-    qInfo("existing core has matching version, leaving it running");
-    client->deleteLater();
+  m_coreIpcClient = new ipc::CoreIpcClient(this);
+
+  connect(m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived);
+  connect(m_coreIpcClient, &ipc::CoreIpcClient::logPathReceived, this, &CoreProcess::setupCoreLogTail);
+  connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [this] {
+    qDebug("connected to core ipc server");
+    m_coreIpcClient->requestLogPath();
   });
-  connect(client, &ipc::CoreIpcClient::versionMismatch, this, [client] {
+  connect(m_coreIpcClient, &ipc::CoreIpcClient::versionMismatch, this, [this] {
     qInfo("existing core has mismatched version, asking it to stop");
-    client->sendStop();
+    m_coreIpcClient->sendStop();
   });
-  connect(client, &ipc::CoreIpcClient::serverShutdown, this, [this, client] {
-    qInfo("existing core stopped successfully");
-    client->deleteLater();
+  connect(m_coreIpcClient, &ipc::CoreIpcClient::connectionFailed, this, [] {
+    qWarning("failed to establish core ipc connection");
+  });
+  connect(m_coreIpcClient, &ipc::CoreIpcClient::serverShutdown, this, [this] {
+    qDebug("core ipc server shut down cleanly");
+    m_coreIpcClient->deleteLater();
+    m_coreIpcClient = nullptr;
     setProcessState(ProcessState::RetryPending);
     m_retryTimer.setSingleShot(true);
     m_retryTimer.start(kRetryDelay);
   });
-  connect(client, &ipc::CoreIpcClient::connectionFailed, this, [client] {
-    qCritical("could not contact existing core");
-    client->deleteLater();
-  });
-  client->connectToServer();
+}
+
+void CoreProcess::checkExistingProcess()
+{
+  qInfo("checking existing core");
+  setupCoreIpcClient();
+
+  connect(
+      m_coreIpcClient, &ipc::CoreIpcClient::connected, this,
+      [this] {
+        qInfo("existing core has matching version, leaving it running");
+        setProcessState(ProcessState::Started);
+      },
+      static_cast<Qt::ConnectionType>(Qt::SingleShotConnection | Qt::QueuedConnection)
+  );
+
+  m_coreIpcClient->connectToServer();
 }
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
@@ -424,19 +445,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
           if (m_processState != ProcessState::Started) {
             return;
           }
-
-          m_coreIpcClient = new ipc::CoreIpcClient(this);
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived);
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [] {
-            qDebug("connected to core ipc server");
-          });
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::connectionFailed, this, [] {
-            qWarning("failed to establish core ipc connection");
-          });
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::serverShutdown, this, [] {
-            qDebug("core ipc server shut down cleanly");
-          });
-
+          setupCoreIpcClient();
           m_coreIpcClient->connectToServer();
         });
       },
@@ -642,6 +651,28 @@ void CoreProcess::setupDaemonLogTail(const QString &logPath)
   } else {
     m_daemonFileTail = new FileTail(logPath, this);
     connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
+  }
+}
+
+void CoreProcess::setupCoreLogTail(const QString &logPath)
+{
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  if (processMode != ProcessMode::Desktop) {
+    return;
+  }
+
+  qDebug() << "core log path:" << logPath;
+
+  if (m_coreFileTail) {
+    m_coreFileTail->setWatchedFile(logPath);
+  } else {
+    m_coreFileTail = new FileTail(logPath, this);
+    connect(m_coreFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
+  }
+
+  if (m_process) {
+    disconnect(m_process, &QProcess::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput);
+    disconnect(m_process, &QProcess::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError);
   }
 }
 
