@@ -46,11 +46,31 @@ install(
 )
 
 if(BUILD_OSX_BUNDLE)
+  # Embed an Info.plist so macOS 26+ (Tahoe) shows the Local Network permission
+  # prompt for deskflow-core (the process that opens the listening socket).
+  configure_file(
+    ${CMAKE_SOURCE_DIR}/src/apps/res/deskflow-core.plist.in
+    ${CMAKE_CURRENT_BINARY_DIR}/deskflow-core.plist
+    @ONLY
+  )
+  target_link_options(${target} PRIVATE
+    "LINKER:-sectcreate,__TEXT,__info_plist,${CMAKE_CURRENT_BINARY_DIR}/deskflow-core.plist"
+  )
+
   set_target_properties(${target} PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
     RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS
   )
+
+  # Re-sign deskflow-core with the parent app's bundle identifier so TCC treats
+  # both binaries as the same app for Accessibility and Local Network grants.
+  add_custom_command(TARGET ${target} POST_BUILD
+    COMMAND codesign -s - --identifier "${CMAKE_PROJECT_REV_FQDN}" -f
+      $<TARGET_FILE:${target}>
+    COMMENT "Re-signing deskflow-core with identifier ${CMAKE_PROJECT_REV_FQDN}"
+  )
+
   if (APPLE_CODESIGN_DEV)
     configure_mac_codesign(${target})
   endif()
