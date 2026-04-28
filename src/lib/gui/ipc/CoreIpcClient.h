@@ -19,8 +19,12 @@ class CoreIpcClient : public IpcClient
 public:
   explicit CoreIpcClient(QObject *parent = nullptr);
 
+  void sendStop();
+  void requestLogPath();
+
 Q_SIGNALS:
   void commandReceived(const QString &command, const QString &args);
+  void logPathReceived(const QString &logPath);
 
 protected:
   void processCommand(const QString &command, const QStringList &parts) override;

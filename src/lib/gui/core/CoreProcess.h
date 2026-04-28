@@ -114,6 +114,9 @@ private:
   void handleLogLines(const QString &text);
   QString correctedAddress(const QString &address) const;
   void setupDaemonLogTail(const QString &logPath);
+  void setupCoreLogTail(const QString &logPath);
+  void setupCoreIpcClient();
+  void checkExistingProcess();
   static QString makeQuotedArgs(const QString &app, const QStringList &args);
   static QString processModeToString(const Settings::ProcessMode mode);
   static QString processStateToString(const CoreProcess::ProcessState state);
@@ -131,6 +134,7 @@ private:
   deskflow::gui::ipc::CoreIpcClient *m_coreIpcClient = nullptr;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
   FileTail *m_daemonFileTail = nullptr;
+  FileTail *m_coreFileTail = nullptr;
   QProcess *m_process = nullptr;
   QString m_appPath;
 };

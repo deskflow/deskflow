@@ -38,6 +38,8 @@ public:
 Q_SIGNALS:
   void connected();
   void connectionFailed();
+  void serverShutdown();
+  void versionMismatch();
 
 private Q_SLOTS:
   void handleDisconnected();
