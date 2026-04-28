@@ -11,6 +11,7 @@
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <cerrno>
 #include <cstring>
@@ -615,6 +616,13 @@ std::string PortalRemoteDesktop::readMimeTypeFromPortal(const std::string &mimeT
   if (fd < 0) {
     LOG_WARN("clipboard: failed to get fd from SelectionRead: %s", error->message);
     return {};
+  }
+
+  // Set fd to blocking mode — the portal may return a non-blocking fd
+  // and read() would fail with EAGAIN if data isn't immediately available.
+  int flags = fcntl(fd, F_GETFL);
+  if (flags >= 0) {
+    fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
   }
 
   // Read all data from the fd (limit to 100MB to prevent runaway reads)

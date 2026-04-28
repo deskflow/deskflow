@@ -1,0 +1,15 @@
+#!/bin/bash
+# Wrapper for self-built deskflow-core with Portal Clipboard support.
+# Ensures XDG_SESSION_TYPE=wayland so isWayland() picks the EiScreen backend.
+set -euo pipefail
+
+DESKFLOW_CORE="${DESKFLOW_CORE_PATH:-$(dirname "$0")/deskflow-core}"
+
+if [ ! -x "$DESKFLOW_CORE" ]; then
+  echo "ERROR: $DESKFLOW_CORE not found or not executable" >&2
+  exit 1
+fi
+
+export XDG_SESSION_TYPE="${XDG_SESSION_TYPE:-wayland}"
+
+exec "$DESKFLOW_CORE" "$@"

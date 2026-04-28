@@ -1,0 +1,17 @@
+#!/bin/bash
+# Wrapper for self-built Deskflow GUI with Portal Clipboard support.
+# Ensures Wayland environment is set so Qt picks the right platform plugin.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+DESKFLOW_GUI="${DESKFLOW_GUI_PATH:-$SCRIPT_DIR/deskflow}"
+
+if [ ! -x "$DESKFLOW_GUI" ]; then
+  echo "ERROR: $DESKFLOW_GUI not found or not executable" >&2
+  exit 1
+fi
+
+export XDG_SESSION_TYPE="${XDG_SESSION_TYPE:-wayland}"
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-wayland}"
+
+exec "$DESKFLOW_GUI" "$@"
