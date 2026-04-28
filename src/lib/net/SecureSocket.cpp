@@ -423,13 +423,12 @@ int SecureSocket::secureAccept(int socket)
   checkResult(r, retry);
 
   if (isFatal()) {
-    // tell user and sleep so the socket isn't hammered.
+    // Never block here; this thread services every connected socket.
+    // Historically a 1s sleep let any failed handshake DoS all clients.
     LOG_ERR("failed to accept secure socket");
-    LOG_WARN("client connection may not be secure");
     m_secureReady = false;
-    Arch::sleep(1);
     retry = 0;
-    return -1; // Failed, error out
+    return -1; // Fail
   }
 
   // If not fatal and no retry, state is good
@@ -455,7 +454,7 @@ int SecureSocket::secureAccept(int socket)
 
   // no good state exists here
   LOG_ERR("unexpected state attempting to accept connection");
-  return -1;
+  return -1; // Fail
 }
 
 int SecureSocket::secureConnect(int socket)
