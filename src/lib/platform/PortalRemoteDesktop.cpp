@@ -324,9 +324,20 @@ void PortalRemoteDesktop::requestClipboard()
     }
 
     if (!lastNode.empty()) {
-      m_sessionHandle = tokenPath + "/" + lastNode;
-      // Don't break — keep looking; the last one found is the most recent.
-      // In practice there's usually only one active RemoteDesktop session.
+      std::string fullPath = tokenPath + "/" + lastNode;
+      // Prefer GNOME portal sessions (node starts with "portal") over GTK portal
+      // sessions (node starts with "gtk"). GTK portal sessions belong to
+      // xdg-desktop-portal-gtk which is a different portal backend; we need
+      // the session created by xdg-desktop-portal-gnome (the RemoteDesktop
+      // session used for input capture).
+      if (lastNode.find("portal") == 0) {
+        m_sessionHandle = fullPath;
+        break; // Found a GNOME portal session, use it.
+      } else if (m_sessionHandle.empty() || m_sessionHandle.find("/gtk") != std::string::npos) {
+        // Only use a non-portal session as fallback if we haven't found
+        // one yet or the current best is a GTK session.
+        m_sessionHandle = fullPath;
+      }
     }
   }
 
