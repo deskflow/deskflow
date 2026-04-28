@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"classdeskflow_1_1gui_1_1CoreProcess.html":[6,0,0,3,2],
 "classdeskflow_1_1gui_1_1CoreProcess.html#a0019841345b08a36b50a172c5e2bf4bf":[5,0,0,4,4,18],
 "classdeskflow_1_1gui_1_1CoreProcess.html#a0019841345b08a36b50a172c5e2bf4bf":[6,0,0,3,2,18],
 "classdeskflow_1_1gui_1_1CoreProcess.html#a0a6b6dc9aa924805e81b27fa9a437391":[5,0,0,4,4,27],
@@ -98,6 +99,8 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html":[6,0,0,3,0,0],
 "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20a114500aecab2d981ffcae6fd1b83c":[5,0,0,4,0,0,2],
 "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20a114500aecab2d981ffcae6fd1b83c":[6,0,0,3,0,0,2],
+"classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20d49aceec4ca98fea7f36852edf986c":[5,0,0,4,0,0,3],
+"classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20d49aceec4ca98fea7f36852edf986c":[6,0,0,3,0,0,3],
 "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6":[5,0,0,4,0,0,1],
 "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6":[6,0,0,3,0,0,1],
 "classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#afe56af19ca80c145897b2f6e34520266":[5,0,0,4,0,0,0],
@@ -126,6 +129,8 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html":[6,0,0,3,0,2],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a3a3e11e749c90382d6ff9298e1145425":[5,0,0,4,0,2,5],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a3a3e11e749c90382d6ff9298e1145425":[6,0,0,3,0,2,5],
+"classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5815a7df0dfd0ec1b33d5c6d60a002a9":[5,0,0,4,0,2,9],
+"classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5815a7df0dfd0ec1b33d5c6d60a002a9":[6,0,0,3,0,2,9],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5e15fc7fce0188ddf50ea0c6c45bc766":[5,0,0,4,0,2,3],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5e15fc7fce0188ddf50ea0c6c45bc766":[6,0,0,3,0,2,3],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a773a624a8870515d04d4f843ef92e872":[5,0,0,4,0,2,2],
@@ -134,6 +139,8 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7aac4568ce514076054bc2901f423de8":[6,0,0,3,0,2,0],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7acd0f58a60c6aaaf03c0361fed21065":[5,0,0,4,0,2,4],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7acd0f58a60c6aaaf03c0361fed21065":[6,0,0,3,0,2,4],
+"classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7b5ed0877a20618234398fb42b264c41":[5,0,0,4,0,2,8],
+"classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7b5ed0877a20618234398fb42b264c41":[6,0,0,3,0,2,8],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7bea8fe61d682c235d205f2e78dd73fe":[5,0,0,4,0,2,1],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7bea8fe61d682c235d205f2e78dd73fe":[6,0,0,3,0,2,1],
 "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a9cef6dcaf9dd3f51ffabf5ed9b6d518b":[5,0,0,4,0,2,6],
@@ -242,12 +249,5 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1server_1_1Config.html#ae5dc5d2cb12766dcbf629e878511995b":[6,0,0,4,0,14],
 "classdeskflow_1_1server_1_1Config.html#ae62c95233b0cc51cf94431da93c8fa01":[5,0,0,5,0,21],
 "classdeskflow_1_1server_1_1Config.html#ae62c95233b0cc51cf94431da93c8fa01":[6,0,0,4,0,21],
-"classdeskflow_1_1server_1_1Config.html#aed92ec45c378daa80ff3cf1745418cc3":[5,0,0,5,0,2],
-"classdeskflow_1_1server_1_1Config.html#aed92ec45c378daa80ff3cf1745418cc3":[6,0,0,4,0,2],
-"classdeskflow_1_1server_1_1Config.html#af1b8d1b689844f359188f141cba80af3":[5,0,0,5,0,39],
-"classdeskflow_1_1server_1_1Config.html#af1b8d1b689844f359188f141cba80af3":[6,0,0,4,0,39],
-"classdeskflow_1_1server_1_1Config.html#af1d0a9ed19208eaf3509cc59323ce0de":[5,0,0,5,0,6],
-"classdeskflow_1_1server_1_1Config.html#af1d0a9ed19208eaf3509cc59323ce0de":[6,0,0,4,0,6],
-"classdeskflow_1_1server_1_1Config.html#af224d470299368ce6f10fff62bbef68d":[5,0,0,5,0,28],
-"classdeskflow_1_1server_1_1Config.html#af224d470299368ce6f10fff62bbef68d":[6,0,0,4,0,28]
+"classdeskflow_1_1server_1_1Config.html#aed92ec45c378daa80ff3cf1745418cc3":[5,0,0,5,0,2]
 };

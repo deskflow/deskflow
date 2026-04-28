@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.168</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.169</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -127,10 +127,13 @@ Signals</h2></td></tr>
 <tr class="inherit_header signals_classdeskflow_1_1gui_1_1ipc_1_1IpcClient"><td colspan="2" onclick="javascript:dynsection.toggleInherit('signals_classdeskflow_1_1gui_1_1ipc_1_1IpcClient')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Signals inherited from <a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html">deskflow::gui::ipc::IpcClient</a></td></tr>
 <tr class="memitem:a7bea8fe61d682c235d205f2e78dd73fe inherit signals_classdeskflow_1_1gui_1_1ipc_1_1IpcClient" id="r_a7bea8fe61d682c235d205f2e78dd73fe"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7bea8fe61d682c235d205f2e78dd73fe">connected</a> ()</td></tr>
 <tr class="memitem:a773a624a8870515d04d4f843ef92e872 inherit signals_classdeskflow_1_1gui_1_1ipc_1_1IpcClient" id="r_a773a624a8870515d04d4f843ef92e872"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a773a624a8870515d04d4f843ef92e872">connectionFailed</a> ()</td></tr>
+<tr class="memitem:a7b5ed0877a20618234398fb42b264c41 inherit signals_classdeskflow_1_1gui_1_1ipc_1_1IpcClient" id="r_a7b5ed0877a20618234398fb42b264c41"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7b5ed0877a20618234398fb42b264c41">serverShutdown</a> ()</td></tr>
+<tr class="memitem:a5815a7df0dfd0ec1b33d5c6d60a002a9 inherit signals_classdeskflow_1_1gui_1_1ipc_1_1IpcClient" id="r_a5815a7df0dfd0ec1b33d5c6d60a002a9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5815a7df0dfd0ec1b33d5c6d60a002a9">versionMismatch</a> ()</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:afe56af19ca80c145897b2f6e34520266" id="r_afe56af19ca80c145897b2f6e34520266"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afe56af19ca80c145897b2f6e34520266">CoreIpcClient</a> (QObject *parent=nullptr)</td></tr>
+<tr class="memitem:a20d49aceec4ca98fea7f36852edf986c" id="r_a20d49aceec4ca98fea7f36852edf986c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a20d49aceec4ca98fea7f36852edf986c">sendStop</a> ()</td></tr>
 <tr class="inherit_header pub_methods_classdeskflow_1_1gui_1_1ipc_1_1IpcClient"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classdeskflow_1_1gui_1_1ipc_1_1IpcClient')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html">deskflow::gui::ipc::IpcClient</a></td></tr>
 <tr class="memitem:a7aac4568ce514076054bc2901f423de8 inherit pub_methods_classdeskflow_1_1gui_1_1ipc_1_1IpcClient" id="r_a7aac4568ce514076054bc2901f423de8"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7aac4568ce514076054bc2901f423de8">IpcClient</a> (QObject *parent, const QString &amp;socketName, const QString &amp;typeName)</td></tr>
 <tr class="memitem:a5e15fc7fce0188ddf50ea0c6c45bc766 inherit pub_methods_classdeskflow_1_1gui_1_1ipc_1_1IpcClient" id="r_a5e15fc7fce0188ddf50ea0c6c45bc766"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5e15fc7fce0188ddf50ea0c6c45bc766">connectToServer</a> ()</td></tr>
@@ -227,6 +230,23 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a9cef6dcaf9dd3f51ffabf5ed9b6d518b">deskflow::gui::ipc::IpcClient</a>.</p>
+
+</div>
+</div>
+<a id="a20d49aceec4ca98fea7f36852edf986c" name="a20d49aceec4ca98fea7f36852edf986c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20d49aceec4ca98fea7f36852edf986c">&#9670;&#160;</a></span>sendStop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deskflow::gui::ipc::CoreIpcClient::sendStop </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

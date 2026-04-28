@@ -21,6 +21,7 @@ var classApp =
     [ "operator=", "classApp.html#ab51ebb2be69b544372c4ab6a9169264f", null ],
     [ "parseArgs", "classApp.html#ab25cb14c8734dd3d83f96240f3b25740", null ],
     [ "processName", "classApp.html#a975d935098b0a08ef69b1af32d85a499", null ],
+    [ "quit", "classApp.html#ab474007a8e53ffa41f9a13e0640b387f", null ],
     [ "run", "classApp.html#a870db6a13733d61fa6c85b18af1e4a1f", null ],
     [ "runEventsLoop", "classApp.html#aab3f6534616a1a83c021e0d78f7469c0", null ],
     [ "setByeFunc", "classApp.html#a7007955907d7a63830ee966fc25110da", null ],

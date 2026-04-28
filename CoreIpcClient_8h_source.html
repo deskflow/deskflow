@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.168</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.169</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -116,17 +116,20 @@ $(function(){initNavTree('CoreIpcClient_8h_source.html','',''); });
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#afe56af19ca80c145897b2f6e34520266">CoreIpcClient</a>(QObject *parent = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>Q_SIGNALS:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6">   23</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6">commandReceived</a>(<span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QString &amp;args);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20a114500aecab2d981ffcae6fd1b83c">processCommand</a>(<span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QStringList &amp;parts) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>};</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20d49aceec4ca98fea7f36852edf986c">sendStop</a>();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>Q_SIGNALS:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6">   25</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6">commandReceived</a>(<span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QString &amp;args);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20a114500aecab2d981ffcae6fd1b83c">processCommand</a>(<span class="keyword">const</span> QString &amp;command, <span class="keyword">const</span> QStringList &amp;parts) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>} <span class="comment">// namespace deskflow::gui::ipc</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>} <span class="comment">// namespace deskflow::gui::ipc</span></div>
 <div class="ttc" id="aIpcClient_8h_html"><div class="ttname"><a href="IpcClient_8h.html">IpcClient.h</a></div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient_html_a20a114500aecab2d981ffcae6fd1b83c"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20a114500aecab2d981ffcae6fd1b83c">deskflow::gui::ipc::CoreIpcClient::processCommand</a></div><div class="ttdeci">void processCommand(const QString &amp;command, const QStringList &amp;parts) override</div><div class="ttdef"><b>Definition</b> CoreIpcClient.cpp:23</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient_html_a20a114500aecab2d981ffcae6fd1b83c"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20a114500aecab2d981ffcae6fd1b83c">deskflow::gui::ipc::CoreIpcClient::processCommand</a></div><div class="ttdeci">void processCommand(const QString &amp;command, const QStringList &amp;parts) override</div><div class="ttdef"><b>Definition</b> CoreIpcClient.cpp:28</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient_html_a20d49aceec4ca98fea7f36852edf986c"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a20d49aceec4ca98fea7f36852edf986c">deskflow::gui::ipc::CoreIpcClient::sendStop</a></div><div class="ttdeci">void sendStop()</div><div class="ttdef"><b>Definition</b> CoreIpcClient.cpp:23</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient_html_a71feca59ab2748fe06033ce94cd292b6"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#a71feca59ab2748fe06033ce94cd292b6">deskflow::gui::ipc::CoreIpcClient::commandReceived</a></div><div class="ttdeci">void commandReceived(const QString &amp;command, const QString &amp;args)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient_html_afe56af19ca80c145897b2f6e34520266"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html#afe56af19ca80c145897b2f6e34520266">deskflow::gui::ipc::CoreIpcClient::CoreIpcClient</a></div><div class="ttdeci">CoreIpcClient(QObject *parent=nullptr)</div><div class="ttdef"><b>Definition</b> CoreIpcClient.cpp:18</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1IpcClient_html_a7aac4568ce514076054bc2901f423de8"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7aac4568ce514076054bc2901f423de8">deskflow::gui::ipc::IpcClient::IpcClient</a></div><div class="ttdeci">IpcClient(QObject *parent, const QString &amp;socketName, const QString &amp;typeName)</div><div class="ttdef"><b>Definition</b> IpcClient.cpp:17</div></div>

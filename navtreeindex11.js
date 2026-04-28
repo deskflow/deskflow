@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classInputFilter_1_1SwitchToNextScreenAction.html#a2cf2112cbc5c0f759ac2e9e865256a9c":[6,0,118,9,0],
 "classInputFilter_1_1SwitchToNextScreenAction.html#a438e069ed8407efe5660529dd2971628":[6,0,118,9,3],
 "classInputFilter_1_1SwitchToNextScreenAction.html#a7c8a746c8e7a2ce2ddc3bca2c8724ff9":[6,0,118,9,1],
 "classInputFilter_1_1SwitchToNextScreenAction.html#ab226c21f01acf9f4adb06daea3cd6009":[6,0,118,9,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classMSWindowsScreen.html":[6,0,160],
 "classMSWindowsScreen.html#a000c21d039ad26f6665e0fe043c0f6b7":[6,0,160,18],
 "classMSWindowsScreen.html#a038c6c1e4cb6db6e07aebdf40ebd45e6":[6,0,160,0],
-"classMSWindowsScreen.html#a07d8eab4f5484d8e6444283d76cccbe6":[6,0,160,45],
-"classMSWindowsScreen.html#a1488e7c4b45fd447f73d7d5d9eb5e105":[6,0,160,37]
+"classMSWindowsScreen.html#a07d8eab4f5484d8e6444283d76cccbe6":[6,0,160,45]
 };

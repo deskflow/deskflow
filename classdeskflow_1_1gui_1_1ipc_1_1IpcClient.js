@@ -7,5 +7,7 @@ var classdeskflow_1_1gui_1_1ipc_1_1IpcClient =
     [ "disconnectFromServer", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7acd0f58a60c6aaaf03c0361fed21065", null ],
     [ "isConnected", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a3a3e11e749c90382d6ff9298e1145425", null ],
     [ "processCommand", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a9cef6dcaf9dd3f51ffabf5ed9b6d518b", null ],
-    [ "sendMessage", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#ac7ab453f53d16b561552931f9cb88ca1", null ]
+    [ "sendMessage", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#ac7ab453f53d16b561552931f9cb88ca1", null ],
+    [ "serverShutdown", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a7b5ed0877a20618234398fb42b264c41", null ],
+    [ "versionMismatch", "classdeskflow_1_1gui_1_1ipc_1_1IpcClient.html#a5815a7df0dfd0ec1b33d5c6d60a002a9", null ]
 ];
