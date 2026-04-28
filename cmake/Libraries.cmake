@@ -152,8 +152,10 @@ macro(configure_unix_libs)
     if(PKG_CONFIG_FOUND)
       pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
       pkg_check_modules(GLIB2 REQUIRED glib-2.0)
+      pkg_check_modules(GIO_UNIX REQUIRED gio-unix-2.0)
       find_library(LIBM m)
       include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
+                          ${GIO_UNIX_INCLUDE_DIRS}
                           ${LIBM_INCLUDE_DIRS})
       
       message(STATUS "xkbcommon version: ${LIBXKBCOMMON_VERSION}")

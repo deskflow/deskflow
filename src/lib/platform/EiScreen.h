@@ -33,6 +33,10 @@ using ClipboardInfo = IScreen::ClipboardInfo;
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen
 {
+  // Portal classes need access to sendClipboardEvent() for clipboard notifications
+  friend class PortalRemoteDesktop;
+  friend class PortalInputCapture;
+
 public:
   EiScreen(bool isPrimary, IEventQueue *events, bool usePortal);
   ~EiScreen() override;
@@ -158,6 +162,11 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+
+  // Server (primary) side: separate clipboard-only RemoteDesktop session.
+  // GNOME's InputCapture portal has zero clipboard support, so we need a
+  // dedicated RemoteDesktop session just for org.freedesktop.portal.Clipboard.
+  PortalRemoteDesktop *m_portalClipboard = nullptr;
 
   struct HotKeyItem
   {
