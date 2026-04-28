@@ -814,3 +814,46 @@ section: links
 		down  = larry
 end
 ```
+
+## macOS MDM Support
+
+Deskflow supports native macOS MDM (Mobile Device Management), allowing IT administrators to enforce settings across managed Mac fleets using standard Apple configuration profiles.
+
+### Bundle Identifier
+
+MDM configuration profiles must target Deskflow's bundle identifier:
+
+```
+org.deskflow.deskflow
+```
+
+### MDM Manageable Settings
+
+The following settings can be enforced via MDM:
+
+| MDM Key | Type | UI Location | Default |
+|---|---|---|---|
+| `ClipboardSharingEnabled` | Boolean | Server Config → Advanced | `true` |
+| `TLSEnabled` | Boolean | Preferences → Network | `true` |
+| `ServerPort` | Integer | Preferences → Network | `24800` |
+| `LogLevel` | Integer | Preferences → Logs | `4` |
+
+When a setting is managed by MDM, the corresponding UI control is disabled and displays a "Managed by your organization" tooltip.
+
+### Testing MDM Without Enrollment
+
+To simulate MDM on a non-enrolled Mac:
+
+```bash
+sudo mkdir -p "/Library/Managed Preferences"
+sudo /usr/libexec/PlistBuddy \
+  -c "Add :ClipboardSharingEnabled bool false" \
+  -c "Add :TLSEnabled bool true" \
+  "/Library/Managed Preferences/org.deskflow.deskflow.plist"
+```
+
+To remove the test configuration:
+
+```bash
+sudo rm "/Library/Managed Preferences/org.deskflow.deskflow.plist"
+```
