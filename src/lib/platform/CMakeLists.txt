@@ -99,6 +99,8 @@ elseif(UNIX)
     XDGPowerManager.h
     XDGKeyUtil.h
     XDGKeyUtil.cpp
+    WaylandCaptureStateMachine.cpp
+    WaylandCaptureStateMachine.h
   )
   if (BUILD_X11_SUPPORT)
     configure_file(XWindowsConfig.h.in XWindowsConfig.h @ONLY)
