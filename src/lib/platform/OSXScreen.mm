@@ -262,6 +262,14 @@ uint32_t OSXScreen::activeSides()
 
 void OSXScreen::warpCursor(int32_t x, int32_t y)
 {
+  if (m_eventTapRunLoop && CFRunLoopGetCurrent() != m_eventTapRunLoop) {
+    CFRunLoopPerformBlock(m_eventTapRunLoop, kCFRunLoopDefaultMode, ^{
+      warpCursor(x, y);
+    });
+    CFRunLoopWakeUp(m_eventTapRunLoop);
+    return;
+  }
+
   // move cursor without generating events
   CGPoint pos;
   pos.x = x;
