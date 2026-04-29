@@ -53,6 +53,34 @@
       Execute="immediate" />
 
     <CustomAction
+      Id="SetStopAndRemoveServiceData"
+      Property="StopAndRemoveService"
+      Value="SERVICE_NAME=@CMAKE_PROJECT_PROPER_NAME@"
+      Execute="immediate" />
+
+    <CustomAction
+      Id="StopAndRemoveService"
+      BinaryRef="CustomDLL"
+      DllEntry="StopAndRemoveService"
+      Execute="deferred"
+      Impersonate="no"
+      Return="check" />
+
+    <CustomAction
+      Id="SetCleanupInstalledArtifactsData"
+      Property="CleanupInstalledArtifacts"
+      Value="INSTALL_ROOT=[INSTALL_ROOT];COMMON_APPDATA=[CommonAppDataFolder];LOCAL_APPDATA=[LocalAppDataFolder];APPDATA=[AppDataFolder]"
+      Execute="immediate" />
+
+    <CustomAction
+      Id="CleanupInstalledArtifacts"
+      BinaryRef="CustomDLL"
+      DllEntry="CleanupInstalledArtifacts"
+      Execute="deferred"
+      Impersonate="no"
+      Return="check" />
+
+    <CustomAction
       Id="ShowVCRedistError"
       Error="Microsoft Visual C++ Redistributable v@REQUIRED_MSVC_RUNTIME_MAJOR@.@REQUIRED_MSVC_RUNTIME_MINOR@ or later is required. Please download and install the latest version and then restart the installation. See our documentation for instructions." />
 
@@ -65,6 +93,22 @@
       Return="asyncNoWait" />
 
     <InstallExecuteSequence>
+      <Custom
+        Action="SetStopAndRemoveServiceData"
+        Before="StopAndRemoveService"
+        Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom
+        Action="StopAndRemoveService"
+        Before="StopServices"
+        Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom
+        Action="SetCleanupInstalledArtifactsData"
+        Before="CleanupInstalledArtifacts"
+        Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom
+        Action="CleanupInstalledArtifacts"
+        After="RemoveFiles"
+        Condition="REMOVE=&quot;ALL&quot;" />
       <Custom
         Action="CheckVCRedist"
         Before="InstallInitialize"

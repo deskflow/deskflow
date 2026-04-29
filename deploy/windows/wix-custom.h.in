@@ -7,6 +7,8 @@
 #pragma once
 
 const auto kAppId = "@CMAKE_PROJECT_NAME@";
+const auto kAppName = "@CMAKE_PROJECT_PROPER_NAME@";
+const auto kServiceName = "@CMAKE_PROJECT_PROPER_NAME@";
 const auto kRegKey = "SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\@BUILD_ARCHITECTURE@";
 
 // clang-format off
