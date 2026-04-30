@@ -134,10 +134,6 @@ p, li { white-space: pre-wrap; }
         <source>Switch to %1</source>
         <translation>切换到 %1</translation>
     </message>
-    <message>
-        <source>Switch to </source>
-        <translation>切换到 </translation>
-    </message>
 </context>
 <context>
     <name>ClientConfigDialog</name>

@@ -134,10 +134,6 @@ p, li { white-space: pre-wrap; }
         <source>Switch to %1</source>
         <translation>%1(으)로 전환</translation>
     </message>
-    <message>
-        <source>Switch to </source>
-        <translation>전환: </translation>
-    </message>
 </context>
 <context>
     <name>ClientConfigDialog</name>
