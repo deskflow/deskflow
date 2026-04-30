@@ -641,17 +641,12 @@ void Client::handleResume()
 
 void Client::bindNetworkInterface(IDataSocket *socket) const
 {
-  try {
-    if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
-      LOG_DEBUG1("bind to network interface: %s", qPrintable(address));
+  if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
+    LOG_DEBUG1("bind to network interface: %s", qPrintable(address));
 
-      NetworkAddress bindAddress(address.toStdString());
-      bindAddress.resolve();
+    NetworkAddress bindAddress(address.toStdString());
+    bindAddress.resolve();
 
-      socket->bind(bindAddress);
-    }
-  } catch (BaseException &e) {
-    LOG_WARN("%s", e.what());
-    LOG_WARN("operating system will select network interface automatically");
+    socket->bind(bindAddress);
   }
 }
