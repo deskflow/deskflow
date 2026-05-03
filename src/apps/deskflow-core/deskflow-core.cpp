@@ -26,7 +26,6 @@
 #include <QSharedMemory>
 #include <QTextStream>
 #include <QThread>
-#include <QtGlobal>
 
 void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
 {
