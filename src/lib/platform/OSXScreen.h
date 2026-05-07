@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "base/ScreenEdges.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
@@ -92,6 +93,10 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
+  std::vector<deskflow::ScreenRect> getMonitorRects() const override
+  {
+    return m_monitorRects;
+  }
   std::string getSecureInputApp() const override;
 
   void waitForCarbonLoop() const;
@@ -231,6 +236,7 @@ private:
   int32_t m_x, m_y;
   int32_t m_w, m_h;
   int32_t m_xCenter, m_yCenter;
+  std::vector<deskflow::ScreenRect> m_monitorRects;
 
   // mouse state
   mutable int32_t m_xCursor, m_yCursor;

@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
@@ -27,6 +28,8 @@ add_library(base STATIC
   Log.h
   LogLevel.h
   PriorityQueue.h
+  ScreenEdges.cpp
+  ScreenEdges.h
   SimpleEventQueueBuffer.cpp
   SimpleEventQueueBuffer.h
   Stopwatch.cpp

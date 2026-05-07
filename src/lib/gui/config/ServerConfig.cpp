@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -9,10 +10,18 @@
 #include "ServerConfig.h"
 
 #include "Hotkey.h"
+#include "base/DirectionTypes.h"
+#include "base/ScreenEdges.h"
 #include "common/Settings.h"
 
 #include <QAbstractButton>
+#include <QGuiApplication>
 #include <QPushButton>
+#include <QRect>
+#include <QScreen>
+
+#include <optional>
+#include <vector>
 
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
@@ -32,6 +41,99 @@ static const struct
 };
 
 const int serverDefaultIndex = 7;
+
+namespace {
+
+deskflow::ScreenRect toScreenRect(const QRect &rect)
+{
+  return {rect.left(), rect.top(), rect.width(), rect.height()};
+}
+
+std::optional<Direction> linkDirection(const char *side)
+{
+  if (qstrcmp(side, "left") == 0) {
+    return Direction::Left;
+  }
+  if (qstrcmp(side, "right") == 0) {
+    return Direction::Right;
+  }
+  if (qstrcmp(side, "up") == 0) {
+    return Direction::Top;
+  }
+  if (qstrcmp(side, "down") == 0) {
+    return Direction::Bottom;
+  }
+  return std::nullopt;
+}
+
+Direction opposite(Direction side)
+{
+  switch (side) {
+    using enum Direction;
+  case Left:
+    return Right;
+  case Right:
+    return Left;
+  case Top:
+    return Bottom;
+  case Bottom:
+    return Top;
+  default:
+    return NoDirection;
+  }
+}
+
+std::optional<deskflow::ScreenEdgeInterval> primaryEdgeInterval(Direction side)
+{
+  const auto screens = QGuiApplication::screens();
+  const auto primary = QGuiApplication::primaryScreen();
+  if (primary == nullptr || screens.size() < 2) {
+    return std::nullopt;
+  }
+
+  QRect virtualGeometry = screens.first()->geometry();
+  std::vector<deskflow::ScreenRect> screenRects;
+  for (const auto *screen : screens) {
+    const auto geometry = screen->geometry();
+    virtualGeometry = virtualGeometry.united(geometry);
+    screenRects.push_back(toScreenRect(geometry));
+  }
+
+  return deskflow::visibleEdgeInterval(
+      screenRects, toScreenRect(virtualGeometry), toScreenRect(primary->geometry()), side
+  );
+}
+
+QString formatInterval(const deskflow::ScreenEdgeInterval &interval)
+{
+  return QStringLiteral("(%1,%2)").arg(interval.start, 0, 'f', 4).arg(interval.end, 0, 'f', 4);
+}
+
+QString formatLink(const ServerConfig &config, const QString &srcName, const QString &dstName, const char *side)
+{
+  const auto serverName = config.getServerName();
+  QString srcInterval;
+  QString dstInterval;
+
+  if (!serverName.isEmpty()) {
+    const auto direction = linkDirection(side);
+    if (direction && srcName == serverName) {
+      if (const auto interval = primaryEdgeInterval(*direction)) {
+        srcInterval = formatInterval(*interval);
+        dstInterval = QStringLiteral("(0,100)");
+      }
+    } else if (direction && dstName == serverName) {
+      if (const auto interval = primaryEdgeInterval(opposite(*direction))) {
+        srcInterval = QStringLiteral("(0,100)");
+        dstInterval = formatInterval(*interval);
+      }
+    }
+  }
+
+  return QStringLiteral("%1%2 = %3%4").arg(QString::fromLatin1(side), srcInterval, dstName, dstInterval);
+}
+
+} // namespace
 
 ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_Columns(columns), m_Rows(rows)
 {
@@ -244,7 +346,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
       for (const auto &neighbour : std::as_const(neighbourDirs)) {
         int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
         if (idx != -1 && !config.screens()[idx].isNull())
-          outStream << "\t\t" << neighbour.name << " = " << config.screens()[idx].name() << Qt::endl;
+          outStream << "\t\t" << formatLink(config, screen.name(), config.screens()[idx].name(), neighbour.name)
+                    << Qt::endl;
       }
     }
     i++;

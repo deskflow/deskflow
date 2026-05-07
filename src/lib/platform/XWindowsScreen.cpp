@@ -488,6 +488,10 @@ uint32_t XWindowsScreen::activeSides()
 
 void XWindowsScreen::warpCursor(int32_t x, int32_t y)
 {
+  if (m_isPrimary && deskflow::projectFromVisibleEdge(m_monitorRects, deskflow::VisibleEdgeBand, x, y)) {
+    LOG_DEBUG1("projected primary warp onto visible monitor edge: %+d,%+d", x, y);
+  }
+
   // warp mouse
   warpCursorNoFlush(x, y);
 
@@ -896,6 +900,7 @@ void XWindowsScreen::setShape(int32_t width, int32_t height)
 
   m_w = width;
   m_h = height;
+  m_monitorRects = {{m_x, m_y, m_w, m_h}};
 
   // get center of screen
   m_xCenter = m_x + (m_w >> 1);
@@ -925,11 +930,13 @@ void XWindowsScreen::setShape(int32_t width, int32_t height)
     if (screens != nullptr) {
       if (numScreens > 1) {
         m_xinerama = true;
+        m_monitorRects.clear();
         for (int n = 0; n < numScreens; n++) {
           LOG_DEBUG(
               "xinerama screen: %d origin: %d,%d size: %dx%d", n, screens[n].x_org, screens[n].y_org, screens[n].width,
               screens[n].height
           );
+          m_monitorRects.push_back({screens[n].x_org, screens[n].y_org, screens[n].width, screens[n].height});
           m_xCenter = std::max(m_xCenter, (screens[n].x_org + screens[n].width) >> 1);
           m_yCenter = std::max(m_yCenter, (screens[n].y_org + screens[n].height) >> 1);
         }
@@ -1500,7 +1507,15 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
     cntr = 0;
   } else if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    int32_t reportX = m_xCursor;
+    int32_t reportY = m_yCursor;
+    if (deskflow::projectToVisibleEdge(
+            m_monitorRects, m_activeSides, deskflow::VisibleEdgeBand, {m_x, m_y, m_w, m_h}, reportX, reportY
+        )) {
+      LOG_DEBUG2("projected visible monitor edge: %+d,%+d -> %+d,%+d", m_xCursor, m_yCursor, reportX, reportY);
+    }
+
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(reportX, reportY));
   } else {
     // motion on secondary screen.  warp mouse back to
     // center.

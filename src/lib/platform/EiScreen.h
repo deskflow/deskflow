@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,6 +8,7 @@
 
 #pragma once
 
+#include "base/ScreenEdges.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
@@ -77,6 +79,10 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(std::uint32_t) override;
   bool isPrimary() const override;
+  std::vector<deskflow::ScreenRect> getMonitorRects() const override
+  {
+    return m_monitorRects;
+  }
 
 protected:
   // IPlatformScreen overrides
@@ -138,10 +144,11 @@ private:
   std::uint32_t m_sequenceNumber = 0;
 
   std::uint32_t m_activeSides = 0;
-  std::uint32_t m_x = 0;
-  std::uint32_t m_y = 0;
-  std::uint32_t m_w = 0;
-  std::uint32_t m_h = 0;
+  std::int32_t m_x = 0;
+  std::int32_t m_y = 0;
+  std::int32_t m_w = 0;
+  std::int32_t m_h = 0;
+  std::vector<deskflow::ScreenRect> m_monitorRects;
 
   // true if mouse has entered the screen
   bool m_isOnScreen;
