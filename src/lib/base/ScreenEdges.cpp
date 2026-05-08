@@ -144,23 +144,6 @@ int32_t projectedBoundsCoordinate(const ScreenRect &bounds, Direction side)
   }
 }
 
-bool isAtBoundsEdge(const ScreenRect &bounds, Direction side, int32_t x, int32_t y)
-{
-  switch (side) {
-    using enum Direction;
-  case Left:
-    return x <= bounds.x && y >= bounds.y && y < bottom(bounds);
-  case Right:
-    return x >= right(bounds) - 1 && y >= bounds.y && y < bottom(bounds);
-  case Top:
-    return y <= bounds.y && x >= bounds.x && x < right(bounds);
-  case Bottom:
-    return y >= bottom(bounds) - 1 && x >= bounds.x && x < right(bounds);
-  default:
-    return false;
-  }
-}
-
 void setEdgeCoordinate(Direction side, int32_t edge, int32_t &x, int32_t &y)
 {
   if (isHorizontal(side)) {
@@ -173,15 +156,6 @@ void setEdgeCoordinate(Direction side, int32_t edge, int32_t &x, int32_t &y)
 int32_t getAxisCoordinate(Direction side, int32_t x, int32_t y)
 {
   return isHorizontal(side) ? x : y;
-}
-
-void setAxisCoordinate(Direction side, int32_t value, int32_t &x, int32_t &y)
-{
-  if (isHorizontal(side)) {
-    x = value;
-  } else {
-    y = value;
-  }
 }
 
 bool pointInEdgeBand(const ScreenRect &screen, Direction side, int32_t edgeBandSize, int32_t x, int32_t y)
@@ -310,37 +284,6 @@ preferredSegment(const std::vector<EdgeSegment> &segments, const ScreenRect &scr
   return best;
 }
 
-std::optional<EdgeSegment> segmentForFraction(const std::vector<EdgeSegment> &segments, double fraction)
-{
-  if (segments.empty()) {
-    return std::nullopt;
-  }
-
-  int32_t totalLength = 0;
-  for (const auto &segment : segments) {
-    totalLength += segment.end - segment.start;
-  }
-  if (totalLength <= 0) {
-    return std::nullopt;
-  }
-
-  const double clampedFraction = std::clamp(fraction, 0.0, 1.0);
-  int32_t offset = static_cast<int32_t>(clampedFraction * totalLength);
-  if (offset >= totalLength) {
-    offset = totalLength - 1;
-  }
-
-  for (const auto &segment : segments) {
-    const int32_t length = segment.end - segment.start;
-    if (offset < length) {
-      return {EdgeSegment{segment.edge, segment.start + offset, segment.end}};
-    }
-    offset -= length;
-  }
-
-  return segments.back();
-}
-
 bool projectFromVisibleEdge(
     const std::vector<ScreenRect> &screens, Direction side, int32_t edgeInset, int32_t &x, int32_t &y
 )
@@ -430,41 +373,6 @@ bool projectFromVisibleEdge(const std::vector<ScreenRect> &screens, int32_t edge
   }
 
   return projected;
-}
-
-bool remapToVisibleEdge(const std::vector<ScreenRect> &screens, const ScreenRect &bounds, int32_t &x, int32_t &y)
-{
-  if (screens.empty() || bounds.w <= 0 || bounds.h <= 0) {
-    return false;
-  }
-
-  for (Direction side = Direction::FirstDirection; side <= Direction::LastDirection;
-       side = static_cast<Direction>(static_cast<int>(side) + 1)) {
-    if (!isAtBoundsEdge(bounds, side, x, y)) {
-      continue;
-    }
-
-    const auto segments = visibleEdgeSegments(screens, side);
-    if (segments.empty()) {
-      continue;
-    }
-
-    const int32_t axisStart = boundsStart(bounds, side);
-    const int32_t size = boundsSize(bounds, side);
-    const double fraction = size > 1 ? static_cast<double>(getAxisCoordinate(side, x, y) - axisStart) / size : 0.0;
-    const auto segment = segmentForFraction(segments, fraction);
-    if (!segment) {
-      continue;
-    }
-
-    const int32_t oldX = x;
-    const int32_t oldY = y;
-    setEdgeCoordinate(side, segment->edge, x, y);
-    setAxisCoordinate(side, segment->start, x, y);
-    return oldX != x || oldY != y;
-  }
-
-  return false;
 }
 
 std::optional<ScreenEdgeInterval> visibleEdgeInterval(

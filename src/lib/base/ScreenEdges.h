@@ -37,8 +37,6 @@ bool projectToVisibleEdge(
 
 bool projectFromVisibleEdge(const std::vector<ScreenRect> &screens, int32_t edgeInset, int32_t &x, int32_t &y);
 
-bool remapToVisibleEdge(const std::vector<ScreenRect> &screens, const ScreenRect &bounds, int32_t &x, int32_t &y);
-
 std::optional<ScreenEdgeInterval> visibleEdgeInterval(
     const std::vector<ScreenRect> &screens, const ScreenRect &bounds, const ScreenRect &screen, Direction side
 );

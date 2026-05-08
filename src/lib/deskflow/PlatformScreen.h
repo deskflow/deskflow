@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "base/ScreenEdges.h"
 #include "deskflow/IPlatformScreen.h"
 
 //! Base screen implementation
@@ -78,7 +77,6 @@ public:
   void setOptions(const OptionsList &options) override = 0;
   void setSequenceNumber(uint32_t) override = 0;
   bool isPrimary() const override = 0;
-  std::vector<deskflow::ScreenRect> getMonitorRects() const override = 0;
 
 protected:
   //! Update mouse buttons

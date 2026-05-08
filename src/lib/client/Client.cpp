@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -11,7 +11,6 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/ScreenEdges.h"
 #include "client/ServerProxy.h"
 #include "common/NetworkProtocol.h"
 #include "common/Settings.h"
@@ -196,14 +195,6 @@ void Client::getCursorPos(int32_t &x, int32_t &y) const
 void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, bool)
 {
   m_active = true;
-  int32_t x = 0;
-  int32_t y = 0;
-  int32_t w = 0;
-  int32_t h = 0;
-  m_screen->getShape(x, y, w, h);
-  if (deskflow::remapToVisibleEdge(m_screen->getPlatformScreen()->getMonitorRects(), {x, y, w, h}, xAbs, yAbs)) {
-    LOG_DEBUG1("remapped enter onto visible monitor edge: %+d,%+d", xAbs, yAbs);
-  }
   m_screen->mouseMove(xAbs, yAbs);
   m_screen->enter(mask);
 }

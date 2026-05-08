@@ -19,7 +19,9 @@
 #include <QPushButton>
 #include <QRect>
 #include <QScreen>
+#include <QStringList>
 
+#include <algorithm>
 #include <optional>
 #include <vector>
 
@@ -47,6 +49,51 @@ namespace {
 deskflow::ScreenRect toScreenRect(const QRect &rect)
 {
   return {rect.left(), rect.top(), rect.width(), rect.height()};
+}
+
+int rectRight(const QRect &rect)
+{
+  return rect.x() + rect.width();
+}
+
+int rectBottom(const QRect &rect)
+{
+  return rect.y() + rect.height();
+}
+
+bool isHorizontal(Direction side)
+{
+  return side == Direction::Top || side == Direction::Bottom;
+}
+
+int axisStart(const QRect &rect, Direction side)
+{
+  return isHorizontal(side) ? rect.x() : rect.y();
+}
+
+int axisEnd(const QRect &rect, Direction side)
+{
+  return isHorizontal(side) ? rectRight(rect) : rectBottom(rect);
+}
+
+std::optional<deskflow::ScreenEdgeInterval> intervalForRange(int start, int end, int boundsStart, int boundsEnd)
+{
+  start = std::max(start, boundsStart);
+  end = std::min(end, boundsEnd);
+  const auto size = boundsEnd - boundsStart;
+  if (size <= 0 || start >= end) {
+    return std::nullopt;
+  }
+
+  return deskflow::ScreenEdgeInterval{
+      100.0 * (start - boundsStart) / size,
+      100.0 * (end - boundsStart) / size,
+  };
+}
+
+deskflow::ScreenEdgeInterval fullInterval()
+{
+  return deskflow::ScreenEdgeInterval{0.0, 100.0};
 }
 
 std::optional<Direction> linkDirection(const char *side)
@@ -83,7 +130,31 @@ Direction opposite(Direction side)
   }
 }
 
-std::optional<deskflow::ScreenEdgeInterval> primaryEdgeInterval(Direction side)
+QString sideName(Direction side)
+{
+  switch (side) {
+    using enum Direction;
+  case Left:
+    return QStringLiteral("left");
+  case Right:
+    return QStringLiteral("right");
+  case Top:
+    return QStringLiteral("up");
+  case Bottom:
+    return QStringLiteral("down");
+  default:
+    return {};
+  }
+}
+
+struct DesktopGeometry
+{
+  QRect bounds;
+  QRect primary;
+  std::vector<QRect> screens;
+};
+
+std::optional<DesktopGeometry> getDesktopGeometry()
 {
   const auto screens = QGuiApplication::screens();
   const auto primary = QGuiApplication::primaryScreen();
@@ -91,16 +162,30 @@ std::optional<deskflow::ScreenEdgeInterval> primaryEdgeInterval(Direction side)
     return std::nullopt;
   }
 
-  QRect virtualGeometry = screens.first()->geometry();
-  std::vector<deskflow::ScreenRect> screenRects;
+  DesktopGeometry desktop{screens.first()->geometry(), primary->geometry(), {}};
   for (const auto *screen : screens) {
     const auto geometry = screen->geometry();
-    virtualGeometry = virtualGeometry.united(geometry);
+    desktop.bounds = desktop.bounds.united(geometry);
+    desktop.screens.push_back(geometry);
+  }
+
+  return desktop;
+}
+
+std::optional<deskflow::ScreenEdgeInterval> primaryEdgeInterval(Direction side)
+{
+  const auto desktop = getDesktopGeometry();
+  if (!desktop) {
+    return std::nullopt;
+  }
+
+  std::vector<deskflow::ScreenRect> screenRects;
+  for (const auto &geometry : desktop->screens) {
     screenRects.push_back(toScreenRect(geometry));
   }
 
   return deskflow::visibleEdgeInterval(
-      screenRects, toScreenRect(virtualGeometry), toScreenRect(primary->geometry()), side
+      screenRects, toScreenRect(desktop->bounds), toScreenRect(desktop->primary), side
   );
 }
 
@@ -109,28 +194,187 @@ QString formatInterval(const deskflow::ScreenEdgeInterval &interval)
   return QStringLiteral("(%1,%2)").arg(interval.start, 0, 'f', 4).arg(interval.end, 0, 'f', 4);
 }
 
-QString formatLink(const ServerConfig &config, const QString &srcName, const QString &dstName, const char *side)
+QString formatLinkLine(
+    const QString &side, const std::optional<deskflow::ScreenEdgeInterval> &srcRange, const QString &dstName,
+    const std::optional<deskflow::ScreenEdgeInterval> &dstRange
+)
+{
+  QString srcIntervalText;
+  QString dstIntervalText;
+  if (srcRange.has_value()) {
+    srcIntervalText = formatInterval(*srcRange);
+  }
+  if (dstRange.has_value()) {
+    dstIntervalText = formatInterval(*dstRange);
+  }
+
+  return QStringLiteral("%1%2 = %3%4").arg(side, srcIntervalText, dstName, dstIntervalText);
+}
+
+struct HoleLink
+{
+  Direction serverSide = Direction::NoDirection;
+  deskflow::ScreenEdgeInterval serverInterval;
+  Direction clientSide = Direction::NoDirection;
+  deskflow::ScreenEdgeInterval clientInterval;
+};
+
+std::optional<QRect> edgeHole(const DesktopGeometry &desktop, Direction side)
+{
+  const auto interval = primaryEdgeInterval(side);
+  if (!interval) {
+    return std::nullopt;
+  }
+
+  const auto baseStart = axisStart(desktop.bounds, side);
+  const auto baseEnd = axisEnd(desktop.bounds, side);
+  const auto size = baseEnd - baseStart;
+  if (size <= 0) {
+    return std::nullopt;
+  }
+
+  const auto start = baseStart + static_cast<int>((interval->start / 100.0) * size);
+  const auto end = baseStart + static_cast<int>((interval->end / 100.0) * size);
+
+  switch (side) {
+    using enum Direction;
+  case Top:
+    return QRect(start, desktop.bounds.y(), end - start, desktop.primary.y() - desktop.bounds.y());
+  case Bottom:
+    return QRect(
+        start, rectBottom(desktop.primary), end - start, rectBottom(desktop.bounds) - rectBottom(desktop.primary)
+    );
+  case Left:
+    return QRect(desktop.bounds.x(), start, desktop.primary.x() - desktop.bounds.x(), end - start);
+  case Right:
+    return QRect(
+        rectRight(desktop.primary), start, rectRight(desktop.bounds) - rectRight(desktop.primary), end - start
+    );
+  default:
+    return std::nullopt;
+  }
+}
+
+void addVerticalHoleLinks(const DesktopGeometry &desktop, const QRect &hole, std::vector<HoleLink> &links)
+{
+  if (hole.width() <= 0 || hole.height() <= 0) {
+    return;
+  }
+
+  const auto holeTop = hole.y();
+  const auto holeBottom = rectBottom(hole);
+  const auto boundsTop = desktop.bounds.y();
+  const auto boundsBottom = rectBottom(desktop.bounds);
+
+  for (const auto &screen : desktop.screens) {
+    const auto overlapStart = std::max(holeTop, screen.y());
+    const auto overlapEnd = std::min(holeBottom, rectBottom(screen));
+    if (overlapStart >= overlapEnd) {
+      continue;
+    }
+
+    const auto serverInterval = intervalForRange(overlapStart, overlapEnd, boundsTop, boundsBottom);
+    if (!serverInterval) {
+      continue;
+    }
+
+    if (rectRight(screen) == hole.x()) {
+      links.push_back({Direction::Right, *serverInterval, Direction::Left, fullInterval()});
+    } else if (screen.x() == rectRight(hole)) {
+      links.push_back({Direction::Left, *serverInterval, Direction::Right, fullInterval()});
+    }
+  }
+}
+
+void addHorizontalHoleLinks(const DesktopGeometry &desktop, const QRect &hole, std::vector<HoleLink> &links)
+{
+  if (hole.width() <= 0 || hole.height() <= 0) {
+    return;
+  }
+
+  const auto holeLeft = hole.x();
+  const auto holeRight = rectRight(hole);
+  const auto boundsLeft = desktop.bounds.x();
+  const auto boundsRight = rectRight(desktop.bounds);
+
+  for (const auto &screen : desktop.screens) {
+    const auto overlapStart = std::max(holeLeft, screen.x());
+    const auto overlapEnd = std::min(holeRight, rectRight(screen));
+    if (overlapStart >= overlapEnd) {
+      continue;
+    }
+
+    const auto serverInterval = intervalForRange(overlapStart, overlapEnd, boundsLeft, boundsRight);
+    if (!serverInterval) {
+      continue;
+    }
+
+    if (rectBottom(screen) == hole.y()) {
+      links.push_back({Direction::Bottom, *serverInterval, Direction::Top, fullInterval()});
+    } else if (screen.y() == rectBottom(hole)) {
+      links.push_back({Direction::Top, *serverInterval, Direction::Bottom, fullInterval()});
+    }
+  }
+}
+
+std::vector<HoleLink> holeLinks(Direction side)
+{
+  const auto desktop = getDesktopGeometry();
+  if (!desktop) {
+    return {};
+  }
+
+  const auto hole = edgeHole(*desktop, side);
+  if (!hole) {
+    return {};
+  }
+
+  std::vector<HoleLink> links;
+  if (side == Direction::Top || side == Direction::Bottom) {
+    addVerticalHoleLinks(*desktop, *hole, links);
+  } else {
+    addHorizontalHoleLinks(*desktop, *hole, links);
+  }
+
+  return links;
+}
+
+QStringList formatLinks(const ServerConfig &config, const QString &srcName, const QString &dstName, const char *side)
 {
   const auto serverName = config.getServerName();
-  QString srcInterval;
-  QString dstInterval;
+  std::optional<deskflow::ScreenEdgeInterval> srcInterval;
+  std::optional<deskflow::ScreenEdgeInterval> dstInterval;
+  QStringList links;
 
   if (!serverName.isEmpty()) {
     const auto direction = linkDirection(side);
     if (direction && srcName == serverName) {
       if (const auto interval = primaryEdgeInterval(*direction)) {
-        srcInterval = formatInterval(*interval);
-        dstInterval = QStringLiteral("(0,100)");
+        srcInterval = *interval;
+        dstInterval = fullInterval();
       }
+
+      links << formatLinkLine(QString::fromLatin1(side), srcInterval, dstName, dstInterval);
+      for (const auto &link : holeLinks(*direction)) {
+        links << formatLinkLine(sideName(link.serverSide), link.serverInterval, dstName, link.clientInterval);
+      }
+      return links;
     } else if (direction && dstName == serverName) {
       if (const auto interval = primaryEdgeInterval(opposite(*direction))) {
-        srcInterval = QStringLiteral("(0,100)");
-        dstInterval = formatInterval(*interval);
+        srcInterval = fullInterval();
+        dstInterval = *interval;
       }
+
+      links << formatLinkLine(QString::fromLatin1(side), srcInterval, dstName, dstInterval);
+      for (const auto &link : holeLinks(opposite(*direction))) {
+        links << formatLinkLine(sideName(link.clientSide), link.clientInterval, dstName, link.serverInterval);
+      }
+      return links;
     }
   }
 
-  return QStringLiteral("%1%2 = %3%4").arg(QString::fromLatin1(side), srcInterval, dstName, dstInterval);
+  links << formatLinkLine(QString::fromLatin1(side), std::nullopt, dstName, std::nullopt);
+  return links;
 }
 
 } // namespace
@@ -345,9 +589,11 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
       outStream << "\t" << screen.name() << ":\n";
       for (const auto &neighbour : std::as_const(neighbourDirs)) {
         int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
-        if (idx != -1 && !config.screens()[idx].isNull())
-          outStream << "\t\t" << formatLink(config, screen.name(), config.screens()[idx].name(), neighbour.name)
-                    << Qt::endl;
+        if (idx != -1 && !config.screens()[idx].isNull()) {
+          for (const auto &link : formatLinks(config, screen.name(), config.screens()[idx].name(), neighbour.name)) {
+            outStream << "\t\t" << link << Qt::endl;
+          }
+        }
       }
     }
     i++;

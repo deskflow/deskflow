@@ -93,10 +93,6 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
-  std::vector<deskflow::ScreenRect> getMonitorRects() const override
-  {
-    return m_monitorRects;
-  }
   std::string getSecureInputApp() const override;
 
   void waitForCarbonLoop() const;

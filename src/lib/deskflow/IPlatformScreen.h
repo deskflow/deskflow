@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,15 +8,12 @@
 
 #pragma once
 
-#include "base/ScreenEdges.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IKeyState.h"
 #include "deskflow/IPrimaryScreen.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/ISecondaryScreen.h"
 #include "deskflow/OptionTypes.h"
-
-#include <vector>
 
 class IClipboard;
 
@@ -147,14 +144,6 @@ public:
   Return true iff this screen is a primary screen.
   */
   virtual bool isPrimary() const = 0;
-
-  //! Get per-monitor rectangles
-  /*!
-  Return logical monitor rectangles in the same coordinate space as
-  getShape(). Implementations that cannot provide per-monitor data should
-  return one rectangle matching getShape().
-  */
-  virtual std::vector<deskflow::ScreenRect> getMonitorRects() const = 0;
 
   //@}
   // IKeyState overrides

@@ -212,22 +212,6 @@ void ScreenEdgesTests::projectFromVisibleBottomEdge_positionInsideScreen_preserv
   QCOMPARE(y, 1078);
 }
 
-void ScreenEdgesTests::remapToVisibleEdge_leftBoundingEdge_remapsToVisibleMonitorEdge()
-{
-  const std::vector<deskflow::ScreenRect> screens = {
-      {0, 0, 100, 100},
-      {50, 100, 50, 100},
-  };
-  int32_t x = 0;
-  int32_t y = 100;
-
-  const bool remapped = deskflow::remapToVisibleEdge(screens, {0, 0, 100, 200}, x, y);
-
-  QVERIFY(remapped);
-  QCOMPARE(x, 50);
-  QCOMPARE(y, 100);
-}
-
 void ScreenEdgesTests::visibleBottomEdgeInterval_centerBottomWithLowerSideScreens_returnsCenterInterval()
 {
   const auto screens = unevenScreens();

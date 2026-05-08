@@ -79,10 +79,6 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(std::uint32_t) override;
   bool isPrimary() const override;
-  std::vector<deskflow::ScreenRect> getMonitorRects() const override
-  {
-    return m_monitorRects;
-  }
 
 protected:
   // IPlatformScreen overrides
