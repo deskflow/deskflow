@@ -106,7 +106,7 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
 void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (!mimeTypes || isowner)
+  if (!mimeTypes || isOwner)
     return;
 
   if (g_strv_contains(mimeTypes, "text/plain")) {
