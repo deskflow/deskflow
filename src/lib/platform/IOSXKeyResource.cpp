@@ -6,6 +6,7 @@
 
 #include "platform/IOSXKeyResource.h"
 
+#include "platform/OSXAutoTypes.h"
 #include <Carbon/Carbon.h>
 
 KeyID IOSXKeyResource::getKeyID(uint8_t c)
@@ -101,8 +102,14 @@ KeyID IOSXKeyResource::getKeyID(uint8_t c)
     str[1] = 0;
 
     // get current keyboard script
-    TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
-    CFArrayRef langs = (CFArrayRef)TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
+    AutoTISInputSourceRef isref(nullptr, CFRelease);
+    CFArrayRef langs = nullptr;
+    {
+      std::lock_guard<std::mutex> lock(g_tisMutex);
+      isref = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
+      if (isref)
+        langs = (CFArrayRef)TISGetInputSourceProperty(isref.get(), kTISPropertyInputSourceLanguages);
+    }
     CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
     // convert to unicode
     CFStringRef cfString = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
