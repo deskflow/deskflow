@@ -18,8 +18,12 @@
 #include "common/Settings.h"
 #endif
 
+#include <poll.h>
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
+
+#include <QByteArray>
+#include <QFile>
 
 namespace deskflow {
 
@@ -103,45 +107,74 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
+void PortalInputCapture::readTextClipboardSelection(XdpSession *session)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  constexpr int kClipboardReadTimeoutMs = 200;
+  constexpr qint64 kClipboardReadCap = 1024;
+
+  int fd = xdp_session_selection_read(session, "text/plain");
+  if (fd < 0)
+    return;
+
+  QFile pipe;
+  if (!pipe.open(fd, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle)) {
+    LOG_WARN("failed to wrap clipboard pipe");
+    ::close(fd);
+    return;
+  }
+
+  QByteArray contents;
+  contents.reserve(kClipboardReadCap);
+  while (contents.size() < kClipboardReadCap) {
+    pollfd pfd{fd, POLLIN, 0};
+    if (poll(&pfd, 1, kClipboardReadTimeoutMs) <= 0)
+      break;
+    QByteArray chunk = pipe.read(kClipboardReadCap - contents.size());
+    if (chunk.isEmpty())
+      break;
+    contents.append(chunk);
+  }
+
+  while (contents.endsWith('\0'))
+    contents.chop(1);
+  contents.replace("\r\n", "\n");
+
+  if (contents.isEmpty()) {
+    LOG_WARN("clipboard read returned no data");
+    return;
+  }
+
+  LOG_INFO("clipboard content is: %s", contents.constData());
+
+  m_clipboard->open(0);
+  m_clipboard->empty();
+  m_clipboard->add(IClipboard::Format::Text, std::string(contents.constData(), contents.size()));
+  m_clipboard->close();
+  m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+#else
+  (void)session;
+#endif
+}
+
 void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (!mimeTypes || isOwner)
     return;
 
-  if (g_strv_contains(mimeTypes, "text/plain")) {
-    int fd = xdp_session_selection_read(session, "text/plain");
-    if (fd < 0)
-      return;
+  if (!g_strv_contains(mimeTypes, "text/plain"))
+    return;
 
-    char clipboardContent[1024] = {};
+  m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 
-    if (read(fd, clipboardContent, sizeof(clipboardContent) - 1) < 0) {
-      LOG_WARN("Failed to read clipboard content: %m");
-      return;
-    }
-
-    LOG_INFO("Clipboard content is: %s", clipboardContent);
-
-    // Store clipboard data in our clipboard
-    // Note: kClipboardClipboard = 0 for primary clipboard
-    ClipboardID id = kClipboardClipboard;
-
-    // Open clipboard for writing
-    m_clipboard->open(0);
-
-    // Empty and take ownership
-    m_clipboard->empty();
-
-    // Add the text data
-    m_clipboard->add(IClipboard::Format::Text, std::string(clipboardContent));
-
-    // Close the clipboard
-    m_clipboard->close();
-
-    // Emit clipboard change event to notify the server
-    m_screen->sendClipboardEvent(EventTypes::ClipboardChanged, id);
+  if (!m_isActive) {
+    LOG_DEBUG("deferring clipboard read until input capture activates");
+    m_pendingClipboardRead = true;
+    return;
   }
+
+  readTextClipboardSelection(session);
 #endif
 }
 
@@ -159,7 +192,7 @@ void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char
 
   int nbytes = write(fd, data, strlen(data));
   if (nbytes < 0) {
-    LOG_WARN("Failed to read clipboard content: %m");
+    LOG_WARN("failed to read clipboard content: %m");
   }
 
   xdp_session_selection_write_done(session, serial, nbytes >= 0);
@@ -428,6 +461,18 @@ void PortalInputCapture::handleActivated(
   }
   m_activationId = activationId;
   m_isActive = true;
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (m_session) {
+    m_pendingClipboardRead = false;
+    LOG_DEBUG("reading clipboard selection on activation");
+    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+    readTextClipboardSelection(xdp_input_capture_session_get_session(m_session));
+    LOG_DEBUG("activation clipboard read complete");
+  } else {
+    LOG_WARN("input capture activated without a session, skipping clipboard read");
+  }
+#endif
 }
 
 void PortalInputCapture::handleDeactivated(

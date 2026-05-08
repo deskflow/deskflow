@@ -53,6 +53,7 @@ private:
 
   void handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
+  void readTextClipboardSelection(XdpSession *session);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)
@@ -122,6 +123,7 @@ private:
 
   bool m_enabled = false;
   bool m_isActive = false;
+  bool m_pendingClipboardRead = false;
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
