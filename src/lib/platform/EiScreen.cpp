@@ -24,6 +24,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <unistd.h>
 #include <vector>
 
@@ -205,6 +206,10 @@ std::uint32_t EiScreen::activeSides()
 
 void EiScreen::warpCursor(int32_t x, int32_t y)
 {
+  if (m_isPrimary && deskflow::projectFromVisibleEdge(m_monitorRects, deskflow::VisibleEdgeBand, x, y)) {
+    LOG_DEBUG1("projected primary warp onto visible monitor edge: %+d,%+d", x, y);
+  }
+
   m_cursorX = x;
   m_cursorY = y;
 }
@@ -458,19 +463,39 @@ bool EiScreen::isPrimary() const
 
 void EiScreen::updateShape()
 {
-  m_w = 1;
-  m_h = 1;
-  m_x = std::numeric_limits<uint32_t>::max();
-  m_y = std::numeric_limits<uint32_t>::max();
+  int32_t minX = std::numeric_limits<int32_t>::max();
+  int32_t minY = std::numeric_limits<int32_t>::max();
+  int32_t maxX = std::numeric_limits<int32_t>::min();
+  int32_t maxY = std::numeric_limits<int32_t>::min();
+  m_monitorRects.clear();
   for (auto it = m_eiDevices.begin(); it != m_eiDevices.end(); it++) {
     auto idx = 0;
     struct ei_region *r;
     while ((r = ei_device_get_region(*it, idx++)) != nullptr) {
-      m_x = std::min(ei_region_get_x(r), m_x);
-      m_y = std::min(ei_region_get_y(r), m_y);
-      m_w = std::max(ei_region_get_x(r) + ei_region_get_width(r), m_w);
-      m_h = std::max(ei_region_get_y(r) + ei_region_get_height(r), m_h);
+      const deskflow::ScreenRect rect{
+          static_cast<int32_t>(ei_region_get_x(r)),
+          static_cast<int32_t>(ei_region_get_y(r)),
+          static_cast<int32_t>(ei_region_get_width(r)),
+          static_cast<int32_t>(ei_region_get_height(r)),
+      };
+      minX = std::min(rect.x, minX);
+      minY = std::min(rect.y, minY);
+      maxX = std::max(rect.x + rect.w, maxX);
+      maxY = std::max(rect.y + rect.h, maxY);
+      m_monitorRects.push_back(rect);
     }
+  }
+
+  if (m_monitorRects.empty()) {
+    m_x = 0;
+    m_y = 0;
+    m_w = 1;
+    m_h = 1;
+  } else {
+    m_x = minX;
+    m_y = minY;
+    m_w = std::max<int32_t>(1, maxX - minX);
+    m_h = std::max<int32_t>(1, maxY - minY);
   }
 
   LOG_DEBUG("logical output size: %dx%d@%d.%d", m_w, m_h, m_x, m_y);
@@ -740,7 +765,18 @@ void EiScreen::onMotionEvent(ei_event *event)
 
   if (m_isOnScreen) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", m_cursorX, m_cursorY);
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_cursorX, m_cursorY));
+    int32_t reportX = m_cursorX;
+    int32_t reportY = m_cursorY;
+    if (deskflow::projectToVisibleEdge(
+            m_monitorRects, m_activeSides, deskflow::VisibleEdgeBand,
+            {static_cast<int32_t>(m_x), static_cast<int32_t>(m_y), static_cast<int32_t>(m_w),
+             static_cast<int32_t>(m_h)},
+            reportX, reportY
+        )) {
+      LOG_DEBUG2("projected visible monitor edge: %+d,%+d -> %+d,%+d", m_cursorX, m_cursorY, reportX, reportY);
+    }
+
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(reportX, reportY));
     if (m_portalInputCapture->isActive()) {
       m_portalInputCapture->release();
     }

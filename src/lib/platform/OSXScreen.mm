@@ -262,6 +262,10 @@ uint32_t OSXScreen::activeSides()
 
 void OSXScreen::warpCursor(int32_t x, int32_t y)
 {
+  if (m_isPrimary && deskflow::projectFromVisibleEdge(m_monitorRects, deskflow::VisibleEdgeBand, x, y)) {
+    LOG_DEBUG1("projected primary warp onto visible monitor edge: %+d,%+d", x, y);
+  }
+
   // move cursor without generating events
   CGPoint pos;
   pos.x = x;
@@ -974,7 +978,15 @@ bool OSXScreen::onMouseMove()
 
   if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    int32_t reportX = m_xCursor;
+    int32_t reportY = m_yCursor;
+    if (deskflow::projectToVisibleEdge(
+            m_monitorRects, m_activeSides, deskflow::VisibleEdgeBand, {m_x, m_y, m_w, m_h}, reportX, reportY
+        )) {
+      LOG_DEBUG2("projected visible monitor edge: %+d,%+d -> %+d,%+d", m_xCursor, m_yCursor, reportX, reportY);
+    }
+
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(reportX, reportY));
   } else {
     // motion on secondary screen.  warp mouse back to
     // center.
@@ -1320,9 +1332,16 @@ bool OSXScreen::updateScreenShape()
 
   // get smallest rect enclosing all display rects
   CGRect totalBounds = CGRectZero;
+  m_monitorRects.clear();
   for (CGDisplayCount i = 0; i < displayCount; ++i) {
     CGRect bounds = CGDisplayBounds(displays[i]);
     totalBounds = CGRectUnion(totalBounds, bounds);
+    m_monitorRects.push_back({
+        static_cast<int32_t>(bounds.origin.x),
+        static_cast<int32_t>(bounds.origin.y),
+        static_cast<int32_t>(bounds.size.width),
+        static_cast<int32_t>(bounds.size.height),
+    });
   }
 
   // get shape of default screen

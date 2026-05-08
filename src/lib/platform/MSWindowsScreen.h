@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,12 +8,14 @@
 
 #pragma once
 
+#include "base/ScreenEdges.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 
 #include <map>
 #include <string>
+#include <vector>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -272,6 +274,7 @@ private:
 
   // true if system appears to have multiple monitors
   bool m_multimon = false;
+  std::vector<deskflow::ScreenRect> m_monitorRects;
 
   // last mouse position
   int32_t m_xCursor = 0;

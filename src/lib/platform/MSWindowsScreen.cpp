@@ -79,6 +79,28 @@
 HINSTANCE MSWindowsScreen::s_windowInstance = nullptr;
 MSWindowsScreen *MSWindowsScreen::s_screen = nullptr;
 
+namespace {
+
+BOOL CALLBACK enumMonitorRect(HMONITOR monitor, HDC, LPRECT, LPARAM data)
+{
+  auto *monitorRects = reinterpret_cast<std::vector<deskflow::ScreenRect> *>(data);
+  MONITORINFO info;
+  info.cbSize = sizeof(info);
+  if (GetMonitorInfo(monitor, &info) == FALSE) {
+    return TRUE;
+  }
+
+  monitorRects->push_back({
+      static_cast<int32_t>(info.rcMonitor.left),
+      static_cast<int32_t>(info.rcMonitor.top),
+      static_cast<int32_t>(info.rcMonitor.right - info.rcMonitor.left),
+      static_cast<int32_t>(info.rcMonitor.bottom - info.rcMonitor.top),
+  });
+  return TRUE;
+}
+
+} // namespace
+
 MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync)
     : PlatformScreen(events),
       m_isPrimary(isPrimary),
@@ -515,6 +537,10 @@ uint32_t MSWindowsScreen::activeSides()
 
 void MSWindowsScreen::warpCursor(int32_t x, int32_t y)
 {
+  if (m_isPrimary && deskflow::projectFromVisibleEdge(m_monitorRects, deskflow::VisibleEdgeBand, x, y)) {
+    LOG_DEBUG1("projected primary warp onto visible monitor edge: %+d,%+d", x, y);
+  }
+
   // warp mouse
   warpCursorNoFlush(x, y);
 
@@ -1224,9 +1250,22 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
 
   LOG_DEBUG2("mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)", x, mx, m_xCursor, y, my, m_yCursor);
 
-  // ignore if the mouse didn't move or if message posted prior
-  // to last mark change.
-  if (ignore() || (x == 0 && y == 0)) {
+  // ignore if message posted prior to last mark change.
+  if (ignore()) {
+    return true;
+  }
+
+  int32_t reportX = mx;
+  int32_t reportY = my;
+  const bool projectedVisibleEdge = m_isOnScreen && deskflow::projectToVisibleEdge(
+                                                        m_monitorRects, m_hook.getSides(), deskflow::VisibleEdgeBand,
+                                                        {m_x, m_y, m_w, m_h}, reportX, reportY
+                                                    );
+
+  // Ignore unchanged positions unless they project onto a visible monitor
+  // edge. Windows can clamp the cursor there while the user keeps moving
+  // outward, so the projected edge move still needs to reach the server.
+  if (x == 0 && y == 0 && !projectedVisibleEdge) {
     return true;
   }
 
@@ -1235,7 +1274,11 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
 
   if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    if (projectedVisibleEdge) {
+      LOG_DEBUG2("projected visible monitor edge: %+d,%+d -> %+d,%+d", m_xCursor, m_yCursor, reportX, reportY);
+    }
+
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(reportX, reportY));
   } else {
     // the motion is on the secondary screen, so we warp mouse back to
     // center on the server screen. if we don't do this, then the mouse
@@ -1430,6 +1473,11 @@ void MSWindowsScreen::updateScreenShape()
 
   // check for multiple monitors
   m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) || m_h != GetSystemMetrics(SM_CYSCREEN));
+  m_monitorRects.clear();
+  EnumDisplayMonitors(nullptr, nullptr, enumMonitorRect, reinterpret_cast<LPARAM>(&m_monitorRects));
+  if (m_monitorRects.empty()) {
+    m_monitorRects.push_back({m_x, m_y, m_w, m_h});
+  }
 
   // tell the desks
   m_desks->setShape(m_x, m_y, m_w, m_h, m_xCenter, m_yCenter, m_multimon);
