@@ -1211,9 +1211,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
 
   if (grabber == m_primaryClient && m_active != m_primaryClient) {
     LOG_INFO("clipboard grabbed while active screen was changed, resending clipboard data");
-    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-      onClipboardChanged(m_primaryClient, id, m_clipboards[id].m_clipboardSeqNum);
-    }
+    onClipboardChanged(m_primaryClient, info->m_id, clipboard.m_clipboardSeqNum);
   }
 }
 
