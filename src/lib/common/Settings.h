@@ -196,8 +196,7 @@ private:
     , QStringLiteral("WARNING")
     , QStringLiteral("INFO")
     , QStringLiteral("DEBUG")
-    , QStringLiteral("DEBUG1")
-    , QStringLiteral("DEBUG2")
+    , QStringLiteral("TRACE")
   };
 
   inline static const QStringList m_validKeys = {

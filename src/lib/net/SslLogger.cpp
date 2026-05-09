@@ -27,7 +27,7 @@ void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack)
       msg[pos] = '\0';
     }
 
-    LOG_DEBUG1("%s", msg);
+    LOG_VERBOSE("%s", msg);
   }
 }
 
@@ -36,10 +36,10 @@ void logLocalSecureCipherInfo(const SSL *ssl)
   auto sStack = SSL_get_ciphers(ssl);
 
   if (sStack) {
-    LOG_DEBUG1("available local ciphers:");
+    LOG_VERBOSE("available local ciphers:");
     showCipherStackDesc(sStack);
   } else {
-    LOG_DEBUG1("local cipher list not available");
+    LOG_VERBOSE("local cipher list not available");
   }
 }
 
@@ -55,10 +55,10 @@ void logRemoteSecureCipherInfo(const SSL *ssl)
   auto cStack = SSL_get_client_ciphers(ssl);
 #endif
   if (cStack) {
-    LOG_DEBUG1("available remote ciphers:");
+    LOG_VERBOSE("available remote ciphers:");
     showCipherStackDesc(cStack);
   } else {
-    LOG_DEBUG1("remote cipher list not available");
+    LOG_VERBOSE("remote cipher list not available");
   }
 }
 
@@ -68,16 +68,16 @@ void SslLogger::logSecureLibInfo()
 {
   if (CLOG->getFilter() >= LogLevel::Debug) {
     LOG_DEBUG("openssl version: %s", SSLeay_version(SSLEAY_VERSION));
-    LOG_DEBUG1("openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS));
-    LOG_DEBUG1("openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON));
-    LOG_DEBUG1("openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM));
-    LOG_DEBUG1("openssl dir: %s", SSLeay_version(SSLEAY_DIR));
+    LOG_VERBOSE("openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS));
+    LOG_VERBOSE("openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON));
+    LOG_VERBOSE("openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM));
+    LOG_VERBOSE("openssl dir: %s", SSLeay_version(SSLEAY_DIR));
   }
 }
 
 void SslLogger::logSecureCipherInfo(const SSL *ssl)
 {
-  if (ssl && CLOG->getFilter() >= LogLevel::Debug1) {
+  if (ssl && CLOG->getFilter() >= LogLevel::Verbose) {
     logLocalSecureCipherInfo(ssl);
     logRemoteSecureCipherInfo(ssl);
   }
@@ -144,19 +144,19 @@ void SslLogger::logErrorByCode(int code, int retry)
     break;
 
   case SSL_ERROR_WANT_READ:
-    LOG_DEBUG2("want to read, error=%d, attempt=%d", code, retry);
+    LOG_VERBOSE("want to read, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_WANT_WRITE:
-    LOG_DEBUG2("want to write, error=%d, attempt=%d", code, retry);
+    LOG_VERBOSE("want to write, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_WANT_CONNECT:
-    LOG_DEBUG2("want to connect, error=%d, attempt=%d", code, retry);
+    LOG_VERBOSE("want to connect, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_WANT_ACCEPT:
-    LOG_DEBUG2("want to accept, error=%d, attempt=%d", code, retry);
+    LOG_VERBOSE("want to accept, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_SYSCALL:

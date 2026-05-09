@@ -22,7 +22,7 @@ ClientProxy1_1::ClientProxy1_1(const std::string &name, deskflow::IStream *strea
 
 void ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &)
 {
-  LOG_DEBUG1("send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button);
+  LOG_VERBOSE("send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button);
   ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
 }
 
@@ -31,8 +31,8 @@ void ClientProxy1_1::keyRepeat(
 )
 {
   LOG(
-      (CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, "
-                   "button=0x%04x, lang=\"%s\"",
+      (CLOG_VERBOSE "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, "
+                    "button=0x%04x, lang=\"%s\"",
        getName().c_str(), key, mask, count, button, lang.c_str())
   );
   ProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button, &lang);
@@ -40,6 +40,6 @@ void ClientProxy1_1::keyRepeat(
 
 void ClientProxy1_1::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-  LOG_DEBUG1("send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button);
+  LOG_VERBOSE("send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button);
   ProtocolUtil::writef(getStream(), kMsgDKeyUp, key, mask, button);
 }

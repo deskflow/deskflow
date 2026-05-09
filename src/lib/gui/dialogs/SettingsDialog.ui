@@ -328,17 +328,22 @@
            </item>
            <item>
             <property name="text">
-             <string>Debug1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Debug2</string>
+             <string>Trace</string>
             </property>
            </item>
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblDebugWarning">
+         <property name="text">
+          <string>Using a log level higher than Info may affect performance.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="groupLogToFile">
@@ -444,16 +449,6 @@
         <widget class="QCheckBox" name="cbGuiDebug">
          <property name="text">
           <string>Enable GUI debug messages</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="lblDebugWarning">
-         <property name="text">
-          <string>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
          </property>
         </widget>
        </item>

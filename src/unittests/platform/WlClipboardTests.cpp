@@ -40,7 +40,7 @@ void WlClipboardTests::isAvailable()
 void WlClipboardTests::initTestCase()
 {
   m_arch.init();
-  m_log.setFilter(LogLevel::Debug2);
+  m_log.setFilter(LogLevel::Verbose);
 
   // Only run tests if Wayland clipboard tools are available
   if (!deskflow::platform::isWayland()) {

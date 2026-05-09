@@ -71,7 +71,7 @@ bool MSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
   // we first check that the screen saver is indeed active
   // before watching for it to stop.
   if (!isActive()) {
-    LOG_DEBUG2("can't open screen saver desktop");
+    LOG_VERBOSE("can't open screen saver desktop");
     return false;
   }
 

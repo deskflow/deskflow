@@ -12,7 +12,7 @@
 
 void ClipboardTests::initTestCase()
 {
-  m_log.setFilter(LogLevel::Debug2);
+  m_log.setFilter(LogLevel::Verbose);
 }
 
 void ClipboardTests::basicFunction()

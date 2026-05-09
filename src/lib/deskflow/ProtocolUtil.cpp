@@ -71,7 +71,7 @@ void ProtocolUtil::writef(deskflow::IStream *stream, const char *fmt, ...)
 {
   assert(stream != nullptr);
   assert(fmt != nullptr);
-  LOG_DEBUG2("writef(%s)", fmt);
+  LOG_VERBOSE("writef(%s)", fmt);
 
   va_list args;
   va_start(args, fmt);
@@ -87,7 +87,7 @@ bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...)
   bool result = false;
 
   if (stream && fmt) {
-    LOG_DEBUG2("readf(%s)", fmt);
+    LOG_VERBOSE("readf(%s)", fmt);
     va_list args;
     va_start(args, fmt);
     try {
@@ -121,9 +121,9 @@ void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, uint32_t 
   try {
     // write buffer
     stream->write(Buffer.data(), size);
-    LOG_DEBUG2("wrote %d bytes", size);
+    LOG_VERBOSE("wrote %d bytes", size);
   } catch (const BaseException &exception) {
-    LOG_DEBUG2("exception <%s> during wrote %d bytes into stream", exception.what(), size);
+    LOG_VERBOSE("exception <%s> during wrote %d bytes into stream", exception.what(), size);
     throw;
   }
 }
@@ -217,7 +217,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
 
       // verify match
       if (buffer[0] != *fmt) {
-        LOG_DEBUG2("readf: format mismatch: %c vs %c", *fmt, buffer[0]);
+        LOG_VERBOSE("readf: format mismatch: %c vs %c", *fmt, buffer[0]);
         throw XIOReadMismatch();
       }
 
@@ -429,7 +429,7 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, uint32_t count
 
     // bail if stream has hungup
     if (n == 0) {
-      LOG_DEBUG2("unexpected disconnect in readf(), %d bytes left", count);
+      LOG_VERBOSE("unexpected disconnect in readf(), %d bytes left", count);
       throw IOEndOfStreamException();
     }
 
@@ -446,7 +446,7 @@ uint8_t ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
   read(stream, buffer.data(), BufferSize);
 
   uint8_t Result = buffer[0];
-  LOG_DEBUG2("readf: read 1 byte integer: %d (0x%x)", Result, Result);
+  LOG_VERBOSE("readf: read 1 byte integer: %d (0x%x)", Result, Result);
 
   return Result;
 }
@@ -458,7 +458,7 @@ uint16_t ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
   read(stream, buffer.data(), BufferSize);
 
   auto Result = static_cast<uint16_t>((static_cast<uint16_t>(buffer[0]) << 8) | static_cast<uint16_t>(buffer[1]));
-  LOG_DEBUG2("readf: read 2 byte integer: %d (0x%x)", Result, Result);
+  LOG_VERBOSE("readf: read 2 byte integer: %d (0x%x)", Result, Result);
 
   return Result;
 }
@@ -472,7 +472,7 @@ uint32_t ProtocolUtil::read4BytesInt(deskflow::IStream *stream)
   uint32_t Result = (static_cast<uint32_t>(buffer[0]) << 24) | (static_cast<uint32_t>(buffer[1]) << 16) |
                     (static_cast<uint32_t>(buffer[2]) << 8) | (static_cast<uint32_t>(buffer[3]));
 
-  LOG_DEBUG2("readf: read 4 byte integer: %d (0x%x)", Result, Result);
+  LOG_VERBOSE("readf: read 4 byte integer: %d (0x%x)", Result, Result);
 
   return Result;
 }
@@ -550,7 +550,7 @@ void ProtocolUtil::readBytes(deskflow::IStream *stream, uint32_t len, std::strin
     throw;
   }
 
-  LOG_DEBUG2("readf: read %d byte string", len);
+  LOG_VERBOSE("readf: read %d byte string", len);
 
   // save the data
 

@@ -403,10 +403,10 @@ void XWindowsScreen::setOptions(const OptionsList &options)
   for (uint32_t i = 0, n = options.size(); i < n; i += 2) {
     if (options[i] == kOptionXTestXineramaUnaware) {
       m_xtestIsXineramaUnaware = (options[i + 1] != 0);
-      LOG_DEBUG1("library, XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false");
+      LOG_VERBOSE("library, XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false");
     } else if (options[i] == kOptionScreenPreserveFocus) {
       m_preserveFocus = (options[i + 1] != 0);
-      LOG_DEBUG1("preserve focus: %s", m_preserveFocus ? "true" : "false");
+      LOG_VERBOSE("preserve focus: %s", m_preserveFocus ? "true" : "false");
     }
   }
 }
@@ -834,7 +834,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
   }
 
   // open the display
-  LOG_DEBUG2("calling XOpenDisplay(\"%s\")", displayName);
+  LOG_VERBOSE("calling XOpenDisplay(\"%s\")", displayName);
   Display *display = XOpenDisplay(displayName);
   if (display == nullptr) {
     throw ScreenUnavailableException();
@@ -1343,7 +1343,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
 
 void XWindowsScreen::onKeyPress(XKeyEvent &xkey)
 {
-  LOG_DEBUG1("event: KeyPress code=%d, state=0x%04x", xkey.keycode, xkey.state);
+  LOG_VERBOSE("event: KeyPress code=%d, state=0x%04x", xkey.keycode, xkey.state);
   const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
   KeyID key = mapKeyFromX(&xkey);
   if (key != kKeyNone) {
@@ -1364,7 +1364,7 @@ void XWindowsScreen::onKeyPress(XKeyEvent &xkey)
       keycode = static_cast<KeyButton>(m_lastKeycode);
       if (keycode == 0) {
         // no keycode
-        LOG_DEBUG1("event: KeyPress no keycode");
+        LOG_VERBOSE("event: KeyPress no keycode");
         return;
       }
     }
@@ -1377,7 +1377,7 @@ void XWindowsScreen::onKeyPress(XKeyEvent &xkey)
       m_keyState->sendKeyEvent(getEventTarget(), false, false, key, mask, 1, keycode);
     }
   } else {
-    LOG_DEBUG1("can't map keycode to key id");
+    LOG_VERBOSE("can't map keycode to key id");
   }
 }
 
@@ -1398,14 +1398,14 @@ void XWindowsScreen::onKeyRelease(XKeyEvent &xkey, bool isRepeat)
     auto keycode = static_cast<KeyButton>(xkey.keycode);
     if (!isRepeat) {
       // no press event follows so it's a plain release
-      LOG_DEBUG1("event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state);
+      LOG_VERBOSE("event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state);
       m_keyState->sendKeyEvent(getEventTarget(), false, false, key, mask, 1, keycode);
     } else {
       // found a press event following so it's a repeat.
       // we could attempt to count the already queued
       // repeats but we'll just send a repeat of 1.
       // note that we discard the press event.
-      LOG_DEBUG1("event: repeat code=%d, state=0x%04x", keycode, xkey.state);
+      LOG_VERBOSE("event: repeat code=%d, state=0x%04x", keycode, xkey.state);
       m_keyState->sendKeyEvent(getEventTarget(), false, true, key, mask, 1, keycode);
     }
   }
@@ -1438,7 +1438,7 @@ bool XWindowsScreen::onHotKey(const XKeyEvent &xkey, bool isRepeat)
 
 void XWindowsScreen::onMousePress(const XButtonEvent &xbutton)
 {
-  LOG_DEBUG1("event: ButtonPress button=%d", xbutton.button);
+  LOG_VERBOSE("event: ButtonPress button=%d", xbutton.button);
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
@@ -1449,7 +1449,7 @@ void XWindowsScreen::onMousePress(const XButtonEvent &xbutton)
 void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton)
 {
   using enum EventTypes;
-  LOG_DEBUG1("event: ButtonRelease button=%d", xbutton.button);
+  LOG_VERBOSE("event: ButtonRelease button=%d", xbutton.button);
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
@@ -1471,7 +1471,7 @@ void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton)
 
 void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
 {
-  LOG_DEBUG2("event: MotionNotify %d,%d", xmotion.x_root, xmotion.y_root);
+  LOG_VERBOSE("event: MotionNotify %d,%d", xmotion.x_root, xmotion.y_root);
 
   // compute motion delta (relative to the last known
   // mouse position)
@@ -1726,11 +1726,11 @@ KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const
     XLookupString(event, dummy, 0, &keysym, nullptr);
   }
 
-  LOG_DEBUG2("mapped code=%d to keysym=0x%04x", event->keycode, keysym);
+  LOG_VERBOSE("mapped code=%d to keysym=0x%04x", event->keycode, keysym);
 
   // convert key
   KeyID result = XDGKeyUtil::mapKeySymToKeyID(keysym);
-  LOG_DEBUG2("mapped keysym=0x%04x to keyID=%d", keysym, result);
+  LOG_VERBOSE("mapped keysym=0x%04x to keyID=%d", keysym, result);
   return result;
 }
 
@@ -1805,7 +1805,7 @@ void XWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)
   XSendEvent(m_display, m_window, False, 0, &eventAfter);
   XSync(m_display, False);
 
-  LOG_DEBUG2("warped to %d,%d", x, y);
+  LOG_VERBOSE("warped to %d,%d", x, y);
 }
 
 void XWindowsScreen::updateButtons()
@@ -1857,15 +1857,15 @@ bool XWindowsScreen::grabMouseAndKeyboard()
       result = XGrabKeyboard(m_display, m_window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
       assert(result != GrabNotViewable);
       if (result != GrabSuccess) {
-        LOG_DEBUG2("waiting to grab keyboard");
+        LOG_VERBOSE("waiting to grab keyboard");
         Arch::sleep(0.05);
         if (timer.getTime() >= s_timeout) {
-          LOG_DEBUG2("grab keyboard timed out");
+          LOG_VERBOSE("grab keyboard timed out");
           return false;
         }
       }
     } while (result != GrabSuccess);
-    LOG_DEBUG2("grabbed keyboard");
+    LOG_VERBOSE("grabbed keyboard");
 
     // now the mouse --- use event_mask to get EnterNotify, LeaveNotify events
     result =
@@ -1874,16 +1874,16 @@ bool XWindowsScreen::grabMouseAndKeyboard()
     if (result != GrabSuccess) {
       // back off to avoid grab deadlock
       XUngrabKeyboard(m_display, CurrentTime);
-      LOG_DEBUG2("ungrabbed keyboard, waiting to grab pointer");
+      LOG_VERBOSE("ungrabbed keyboard, waiting to grab pointer");
       Arch::sleep(0.05);
       if (timer.getTime() >= s_timeout) {
-        LOG_DEBUG2("grab pointer timed out");
+        LOG_VERBOSE("grab pointer timed out");
         return false;
       }
     }
   } while (result != GrabSuccess);
 
-  LOG_DEBUG1("grabbed pointer and keyboard");
+  LOG_VERBOSE("grabbed pointer and keyboard");
   return true;
 }
 

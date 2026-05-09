@@ -25,7 +25,7 @@ QString sanitizeBuffer(const std::stringstream &in)
 void LogTests::initTestCase()
 {
   std::setlocale(LC_NUMERIC, "C");
-  m_log.setFilter(LogLevel::Debug1);
+  m_log.setFilter(LogLevel::Debug);
 }
 
 void LogTests::printWithErrorValidOutput()
@@ -86,7 +86,7 @@ void LogTests::printLevelToHigh()
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  m_log.print(CLOG_DEBUG2 "test message");
+  m_log.print(CLOG_VERBOSE "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);

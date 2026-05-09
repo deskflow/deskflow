@@ -376,7 +376,7 @@ void ClientApp::startNode()
 {
   // start the client.  if this return false then we've failed and
   // we shouldn't retry.
-  LOG_DEBUG1("starting client");
+  LOG_VERBOSE("starting client");
   if (!startClient()) {
     bye(s_exitFailed);
   }

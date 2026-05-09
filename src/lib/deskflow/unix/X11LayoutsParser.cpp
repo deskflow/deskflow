@@ -174,7 +174,7 @@ std::string X11LayoutsParser::convertLayoutToISO(
 )
 {
   if (layoutLangCode.empty()) {
-    LOG_DEBUG1("skip converting empty layout lang code");
+    LOG_VERBOSE("skip converting empty layout lang code");
     return "";
   }
 

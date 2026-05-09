@@ -190,14 +190,14 @@ void ClientProxyUnknown::initProxy(const std::string &name, int major, int minor
 
 void ClientProxyUnknown::handleData()
 {
-  LOG_DEBUG1("parsing hello reply");
+  LOG_VERBOSE("parsing hello reply");
 
   std::string name("<unknown>");
 
   try {
     // limit the maximum length of the hello
     if (uint32_t n = m_stream->getSize(); n > kMaxHelloLength) {
-      LOG_DEBUG1("hello reply too long");
+      LOG_VERBOSE("hello reply too long");
       throw BadClientException();
     }
 
@@ -222,7 +222,7 @@ void ClientProxyUnknown::handleData()
     initProxy(name, major, minor);
 
     // the proxy is created and now proxy now owns the stream
-    LOG_DEBUG1("created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor);
+    LOG_VERBOSE("created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor);
     m_stream = nullptr;
 
     // wait until the proxy signals that it's ready or has disconnected

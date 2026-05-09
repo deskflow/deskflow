@@ -834,7 +834,7 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
   // get group
   GroupMap::const_iterator i = m_groupMap.find(hkl);
   if (i == m_groupMap.end()) {
-    LOG_DEBUG1("can't find keyboard layout %08x", hkl);
+    LOG_VERBOSE("can't find keyboard layout %08x", hkl);
     return 0;
   }
 
@@ -1165,14 +1165,14 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
   switch (keystroke.m_type) {
   case Keystroke::KeyType::Button: {
     LOG(
-        (CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
+        (CLOG_VERBOSE "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
          keystroke.m_data.m_button.m_press ? "down" : "up")
     );
     KeyButton scanCode = keystroke.m_data.m_button.m_button;
 
     // windows doesn't send key ups for key repeats
     if (keystroke.m_data.m_button.m_repeat && !keystroke.m_data.m_button.m_press) {
-      LOG_DEBUG1("  discard key repeat release");
+      LOG_VERBOSE("  discard key repeat release");
       break;
     }
 
@@ -1207,10 +1207,10 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
     // key events.
     if (!keystroke.m_data.m_group.m_restore) {
       if (keystroke.m_data.m_group.m_absolute) {
-        LOG_DEBUG1("  group %d", keystroke.m_data.m_group.m_group);
+        LOG_VERBOSE("  group %d", keystroke.m_data.m_group.m_group);
         setWindowGroup(keystroke.m_data.m_group.m_group);
       } else {
-        LOG_DEBUG1("  group %+d", keystroke.m_data.m_group.m_group);
+        LOG_VERBOSE("  group %+d", keystroke.m_data.m_group.m_group);
         setWindowGroup(getEffectiveGroup(pollActiveGroup(), keystroke.m_data.m_group.m_group));
       }
     }
@@ -1232,13 +1232,13 @@ bool MSWindowsKeyState::getGroups(GroupList &groups) const
   // get keyboard layouts
   uint32_t newNumLayouts = GetKeyboardLayoutList(0, nullptr);
   if (newNumLayouts == 0) {
-    LOG_DEBUG1("can't get keyboard layouts");
+    LOG_VERBOSE("can't get keyboard layouts");
     return false;
   }
   HKL *newLayouts = new HKL[newNumLayouts];
   newNumLayouts = GetKeyboardLayoutList(newNumLayouts, newLayouts);
   if (newNumLayouts == 0) {
-    LOG_DEBUG1("can't get keyboard layouts");
+    LOG_VERBOSE("can't get keyboard layouts");
     delete[] newLayouts;
     return false;
   }

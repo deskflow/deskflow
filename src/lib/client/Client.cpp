@@ -110,7 +110,7 @@ void Client::connect(size_t addressIndex)
     m_stream = new PacketStreamFilter(m_events, socket, true);
 
     // connect
-    LOG_DEBUG1("connecting to server");
+    LOG_VERBOSE("connecting to server");
     setupConnecting();
     setupTimer();
     socket->connect(m_serverAddress);
@@ -118,7 +118,7 @@ void Client::connect(size_t addressIndex)
     cleanupTimer();
     cleanupConnecting();
     cleanupStream();
-    LOG_DEBUG1("connection failed");
+    LOG_VERBOSE("connection failed");
     sendConnectionFailedEvent(e.what());
     return;
   }
@@ -493,7 +493,7 @@ void Client::cleanupStream()
 
 void Client::handleConnected()
 {
-  LOG_DEBUG1("connected, waiting for hello");
+  LOG_VERBOSE("connected, waiting for hello");
   cleanupConnecting();
   setupConnection();
 
@@ -512,7 +512,7 @@ void Client::handleConnectionFailed(const Event &event)
   cleanupTimer();
   cleanupConnecting();
   cleanupStream();
-  LOG_DEBUG1("connection failed");
+  LOG_VERBOSE("connection failed");
   sendConnectionFailedEvent(info->m_what.c_str());
   delete info;
 }
@@ -523,7 +523,7 @@ void Client::handleConnectTimeout()
   cleanupConnecting();
   cleanupConnection();
   cleanupStream();
-  LOG_DEBUG1("connection timed out");
+  LOG_VERBOSE("connection timed out");
   sendConnectionFailedEvent("Timed out");
 }
 
@@ -541,7 +541,7 @@ void Client::handleDisconnected()
   cleanupTimer();
   cleanupScreen();
   cleanupConnection();
-  LOG_DEBUG1("disconnected");
+  LOG_VERBOSE("disconnected");
   sendEvent(EventTypes::ClientDisconnected);
 }
 
@@ -643,7 +643,7 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
 {
   try {
     if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
-      LOG_DEBUG1("bind to network interface: %s", qPrintable(address));
+      LOG_VERBOSE("bind to network interface: %s", qPrintable(address));
 
       NetworkAddress bindAddress(address.toStdString());
       bindAddress.resolve();

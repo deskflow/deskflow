@@ -61,7 +61,7 @@ void IpcServer::handleNewConnection()
 void IpcServer::handleReadyRead()
 {
   const auto clientSocket = qobject_cast<QLocalSocket *>(sender());
-  LOG_DEBUG1("%s ipc server ready to read data", m_typeName.constData());
+  LOG_VERBOSE("%s ipc server ready to read data", m_typeName.constData());
 
   QByteArray data = clientSocket->readAll();
   if (data.isEmpty()) {
@@ -103,7 +103,7 @@ void IpcServer::handleErrorOccurred()
 
 void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &message)
 {
-  LOG_DEBUG1("%s ipc server got message: %s", m_typeName.constData(), message.toUtf8().constData());
+  LOG_VERBOSE("%s ipc server got message: %s", m_typeName.constData(), message.toUtf8().constData());
   const auto parts = message.split('=');
   if (parts.isEmpty()) {
     LOG_ERR("%s ipc server got invalid message: %s", m_typeName.constData(), message.toUtf8().constData());
@@ -138,9 +138,9 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
     writeToClientSocket(clientSocket, QStringLiteral("hello=%1").arg(versionId));
 
     // Replay messages that were queued before any clients connected.
-    LOG_DEBUG1("ipc server replaying %d pending messages", m_pendingMessages.size());
+    LOG_VERBOSE("ipc server replaying %d pending messages", m_pendingMessages.size());
     for (const auto &pending : std::as_const(m_pendingMessages)) {
-      LOG_DEBUG1("%s ipc server replaying: %s", m_typeName.constData(), pending.toUtf8().constData());
+      LOG_VERBOSE("%s ipc server replaying: %s", m_typeName.constData(), pending.toUtf8().constData());
       writeToClientSocket(clientSocket, pending);
     }
     m_pendingMessages.clear();
@@ -159,14 +159,14 @@ void IpcServer::broadcastCommand(const QString &command, const QString &args)
   const auto message = args.isEmpty() ? command : QStringLiteral("%1=%2").arg(command, args);
 
   if (m_clients.isEmpty()) {
-    LOG_DEBUG1(
+    LOG_VERBOSE(
         "%s ipc server has no clients, message queued: %s", m_typeName.constData(), message.toUtf8().constData()
     );
     m_pendingMessages.append(message);
     return;
   }
 
-  LOG_DEBUG1(
+  LOG_VERBOSE(
       "%s ipc server broadcasting message to %d clients: %s", m_typeName.constData(), m_clients.size(),
       message.toUtf8().constData()
   );
@@ -183,7 +183,7 @@ void IpcServer::writeToClientSocket(QLocalSocket *&clientSocket, const QString &
   if (bytesWritten != messageData.size()) {
     LOG_ERR("%s ipc server failed to write full message to client socket", m_typeName.constData());
   } else {
-    LOG_DEBUG1(
+    LOG_VERBOSE(
         "%s ipc server wrote message to client socket: %s", m_typeName.constData(), message.toUtf8().constData()
     );
   }

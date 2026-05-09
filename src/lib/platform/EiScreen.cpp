@@ -96,7 +96,7 @@ void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
 {
   switch (priority) {
   case EI_LOG_PRIORITY_DEBUG:
-    LOG_DEBUG1("ei: %s", message);
+    LOG_VERBOSE("ei: %s", message);
     break;
   case EI_LOG_PRIORITY_INFO:
     LOG_INFO("ei: %s", message);
@@ -629,7 +629,7 @@ void EiScreen::onKeyEvent(ei_event *event)
 
   m_lastPressed = pressed ? keyid : kKeyNone;
 
-  LOG_DEBUG1(
+  LOG_VERBOSE(
       "event: key %s%s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", repeat ? " (repeat)" : "",
       keycode, keyid, mask
   );
@@ -651,7 +651,7 @@ void EiScreen::onButtonEvent(ei_event *event)
   bool pressed = ei_event_button_get_is_press(event);
   KeyModifierMask mask = m_keyState->pollActiveModifiers();
 
-  LOG_DEBUG1("event: button %s button=%d mask=0x%x", pressed ? "press" : "release", buttonID, mask);
+  LOG_VERBOSE("event: button %s button=%d mask=0x%x", pressed ? "press" : "release", buttonID, mask);
 
   if (buttonID == kButtonNone) {
     LOG_DEBUG("event: button not recognized");
@@ -680,7 +680,7 @@ void EiScreen::onPointerScrollEvent(ei_event *event)
   auto dy = ei_event_scroll_get_dy(event);
   struct ei_device *device = ei_event_get_device(event);
 
-  LOG_DEBUG1("event: scroll (%.2f, %.2f)", dx, dy);
+  LOG_VERBOSE("event: scroll (%.2f, %.2f)", dx, dy);
 
   auto *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
   if (!remainder) {
@@ -723,7 +723,7 @@ void EiScreen::onPointerScrollDiscreteEvent(ei_event *event)
   auto dx = ei_event_scroll_get_discrete_dx(event);
   auto dy = ei_event_scroll_get_discrete_dy(event);
 
-  LOG_DEBUG1("event: scroll discrete (%d, %d)", dx, dy);
+  LOG_VERBOSE("event: scroll discrete (%d, %d)", dx, dy);
 
   // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
@@ -750,7 +750,7 @@ void EiScreen::onMotionEvent(ei_event *event)
     auto pixelDx = static_cast<std::int32_t>(m_bufferDX);
     auto pixelDy = static_cast<std::int32_t>(m_bufferDY);
     if (pixelDx || pixelDy) {
-      LOG_DEBUG1("event: motion on secondary x=%d y=%d", pixelDx, pixelDy);
+      LOG_VERBOSE("event: motion on secondary x=%d y=%d", pixelDx, pixelDy);
       sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(pixelDx, pixelDy));
       m_bufferDX -= pixelDx;
       m_bufferDY -= pixelDy;

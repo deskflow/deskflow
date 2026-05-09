@@ -90,7 +90,7 @@ void ServerProxy::handleData()
     }
 
     // parse message
-    LOG_DEBUG2("msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]);
+    LOG_VERBOSE("msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]);
     try {
       switch ((this->*m_parser)(code)) {
         using enum ConnectionResult;
@@ -165,7 +165,7 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
 
   else if (memcmp(code, kMsgCClose, 4) == 0) {
     // server wants us to hangup
-    LOG_DEBUG1("recv close");
+    LOG_VERBOSE("recv close");
     m_client->disconnect(nullptr);
     return Disconnect;
   }
@@ -225,7 +225,7 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     uint16_t mask = 0;
     uint16_t button = 0;
     ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
-    LOG_DEBUG1("recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
+    LOG_VERBOSE("recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
 
     keyDown(id, mask, button, "");
   }
@@ -237,7 +237,7 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     uint16_t button = 0;
 
     ProtocolUtil::readf(m_stream, kMsgDKeyDownLang + 4, &id, &mask, &button, &lang);
-    LOG_DEBUG1("recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str());
+    LOG_VERBOSE("recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str());
 
     keyDown(id, mask, button, lang);
   }
@@ -310,7 +310,7 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
 
   else if (memcmp(code, kMsgCClose, 4) == 0) {
     // server wants us to hangup
-    LOG_DEBUG1("recv close");
+    LOG_VERBOSE("recv close");
     m_client->disconnect(nullptr);
     return Disconnect;
   } else if (memcmp(code, kMsgEBad, 4) == 0) {
@@ -351,7 +351,7 @@ void ServerProxy::onInfoChanged()
 
 bool ServerProxy::onGrabClipboard(ClipboardID id)
 {
-  LOG_DEBUG1("sending clipboard %d changed", id);
+  LOG_VERBOSE("sending clipboard %d changed", id);
   ProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
   return true;
 }
@@ -380,7 +380,7 @@ void ServerProxy::flushCompressedMouse()
 
 void ServerProxy::sendInfo(const ClientInfo &info)
 {
-  LOG_DEBUG1("sending info shape=%d,%d %dx%d", info.m_x, info.m_y, info.m_w, info.m_h);
+  LOG_VERBOSE("sending info shape=%d,%d %dx%d", info.m_x, info.m_y, info.m_w, info.m_h);
   ProtocolUtil::writef(m_stream, kMsgDInfo, info.m_x, info.m_y, info.m_w, info.m_h, 0, info.m_mx, info.m_my);
 }
 
@@ -497,7 +497,7 @@ void ServerProxy::enter()
   uint16_t mask;
   uint32_t seqNum;
   ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
-  LOG_DEBUG1("recv enter, %d,%d %d %04x", x, y, seqNum, mask);
+  LOG_VERBOSE("recv enter, %d,%d %d %04x", x, y, seqNum, mask);
 
   // discard old compressed mouse motion, if any
   m_compressMouse = false;
@@ -515,7 +515,7 @@ void ServerProxy::enter()
 void ServerProxy::leave()
 {
   // parse
-  LOG_DEBUG1("recv leave");
+  LOG_VERBOSE("recv leave");
 
   // send last mouse motion
   flushCompressedMouse();
@@ -575,7 +575,7 @@ void ServerProxy::keyDown(uint16_t id, uint16_t mask, uint16_t button, const std
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
-    LOG_DEBUG1("key down translated to id=0x%08x, mask=0x%04x", id2, mask2);
+    LOG_VERBOSE("key down translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
   // forward
   m_client->keyDown(id2, mask2, button, lang);
@@ -594,8 +594,8 @@ void ServerProxy::keyRepeat()
   std::string lang;
   ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
   LOG(
-      (CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, "
-                   "button=0x%04x, lang=\"%s\"",
+      (CLOG_VERBOSE "recv key repeat id=0x%08x, mask=0x%04x, count=%d, "
+                    "button=0x%04x, lang=\"%s\"",
        id, mask, count, button, lang.c_str())
   );
 
@@ -603,7 +603,7 @@ void ServerProxy::keyRepeat()
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
-    LOG_DEBUG1("key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2);
+    LOG_VERBOSE("key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
   // forward
   m_client->keyRepeat(id2, mask2, count, button, lang);
@@ -619,13 +619,13 @@ void ServerProxy::keyUp()
   uint16_t mask;
   uint16_t button;
   ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
-  LOG_DEBUG1("recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
+  LOG_VERBOSE("recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
 
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
-    LOG_DEBUG1("key up translated to id=0x%08x, mask=0x%04x", id2, mask2);
+    LOG_VERBOSE("key up translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
   // forward
   m_client->keyUp(id2, mask2, button);
@@ -639,7 +639,7 @@ void ServerProxy::mouseDown()
   // parse
   int8_t id;
   ProtocolUtil::readf(m_stream, kMsgDMouseDown + 4, &id);
-  LOG_DEBUG1("recv mouse down id=%d", id);
+  LOG_VERBOSE("recv mouse down id=%d", id);
 
   // forward
   m_client->mouseDown(static_cast<ButtonID>(id));
@@ -653,7 +653,7 @@ void ServerProxy::mouseUp()
   // parse
   int8_t id;
   ProtocolUtil::readf(m_stream, kMsgDMouseUp + 4, &id);
-  LOG_DEBUG1("recv mouse up id=%d", id);
+  LOG_VERBOSE("recv mouse up id=%d", id);
 
   // forward
   m_client->mouseUp(static_cast<ButtonID>(id));
@@ -684,7 +684,7 @@ void ServerProxy::mouseMove()
     m_dxMouse = 0;
     m_dyMouse = 0;
   }
-  LOG_DEBUG2("recv mouse move %d,%d", x, y);
+  LOG_VERBOSE("recv mouse move %d,%d", x, y);
 
   // forward
   if (!ignore) {
@@ -714,7 +714,7 @@ void ServerProxy::mouseRelativeMove()
     m_dxMouse += dx;
     m_dyMouse += dy;
   }
-  LOG_DEBUG2("recv mouse relative move %d,%d", dx, dy);
+  LOG_VERBOSE("recv mouse relative move %d,%d", dx, dy);
 
   // forward
   if (!ignore) {
@@ -731,7 +731,7 @@ void ServerProxy::mouseWheel()
   int16_t xDelta;
   int16_t yDelta;
   ProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
-  LOG_DEBUG2("recv mouse wheel %+d,%+d", xDelta, yDelta);
+  LOG_VERBOSE("recv mouse wheel %+d,%+d", xDelta, yDelta);
 
   // forward
   m_client->mouseWheel(xDelta, yDelta);
@@ -742,7 +742,7 @@ void ServerProxy::screensaver()
   // parse
   int8_t on;
   ProtocolUtil::readf(m_stream, kMsgCScreenSaver + 4, &on);
-  LOG_DEBUG1("recv screen saver on=%d", on);
+  LOG_VERBOSE("recv screen saver on=%d", on);
 
   // forward
   m_client->screensaver(on != 0);
@@ -751,7 +751,7 @@ void ServerProxy::screensaver()
 void ServerProxy::resetOptions()
 {
   // parse
-  LOG_DEBUG1("recv reset options");
+  LOG_VERBOSE("recv reset options");
 
   // forward
   m_client->resetOptions();
@@ -770,7 +770,7 @@ void ServerProxy::setOptions()
   // parse
   OptionsList options;
   ProtocolUtil::readf(m_stream, kMsgDSetOptions + 4, &options);
-  LOG_DEBUG1("recv set options size=%d", options.size());
+  LOG_VERBOSE("recv set options size=%d", options.size());
 
   // forward
   m_client->setOptions(options);
@@ -797,7 +797,7 @@ void ServerProxy::setOptions()
 
     if (id != kKeyModifierIDNull) {
       m_modifierTranslationTable[id] = options[i + 1];
-      LOG_DEBUG1("modifier %d mapped to %d", id, m_modifierTranslationTable[id]);
+      LOG_VERBOSE("modifier %d mapped to %d", id, m_modifierTranslationTable[id]);
     }
   }
 }
@@ -812,7 +812,7 @@ void ServerProxy::queryInfo()
 
 void ServerProxy::infoAcknowledgment()
 {
-  LOG_DEBUG1("recv info acknowledgment");
+  LOG_VERBOSE("recv info acknowledgment");
   m_ignoreMouse = false;
 }
 
@@ -847,6 +847,6 @@ void ServerProxy::setActiveServerLanguage(const std::string_view &language)
       m_isUserNotifiedAboutLayoutSyncError = false;
     }
   } else {
-    LOG_DEBUG1("active server layout is empty");
+    LOG_VERBOSE("active server layout is empty");
   }
 }

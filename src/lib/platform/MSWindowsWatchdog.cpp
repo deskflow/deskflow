@@ -159,7 +159,7 @@ void MSWindowsWatchdog::mainLoop(const void *)
 
   LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
-    LOG_DEBUG2("locking process state mutex in watchdog main loop");
+    LOG_VERBOSE("locking process state mutex in watchdog main loop");
     std::unique_lock lock(m_processStateMutex);
 
     if (m_processState == Running && !m_command.empty() && !m_foreground && m_session.hasChanged()) {
@@ -170,11 +170,11 @@ void MSWindowsWatchdog::mainLoop(const void *)
 
     switch (m_processState) {
     case Idle:
-      LOG_DEBUG2("watchdog process state idle");
+      LOG_VERBOSE("watchdog process state idle");
       break;
 
     case StartScheduled: {
-      LOG_DEBUG2("watchdog process start scheduled");
+      LOG_VERBOSE("watchdog process start scheduled");
       if (m_nextStartTime.has_value() && m_nextStartTime.value() <= Arch::time()) {
         LOG_DEBUG("start time reached, queueing process start");
         m_processState = StartPending;
@@ -195,7 +195,7 @@ void MSWindowsWatchdog::mainLoop(const void *)
     } break;
 
     case Running: {
-      LOG_DEBUG2("watchdog process in running state");
+      LOG_VERBOSE("watchdog process in running state");
       if (!isProcessRunning()) {
         LOG_WARN("detected application not running, pid=%d", m_process->info().dwProcessId);
         m_processState = StartPending;
@@ -215,11 +215,11 @@ void MSWindowsWatchdog::mainLoop(const void *)
     } break;
     }
 
-    LOG_DEBUG2("unlocking process state mutex in watchdog main loop");
+    LOG_VERBOSE("unlocking process state mutex in watchdog main loop");
     lock.unlock();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
-    LOG_DEBUG2("watchdog main loop sleeping");
+    LOG_VERBOSE("watchdog main loop sleeping");
     Arch::sleep(0.1);
   }
 
@@ -298,7 +298,7 @@ void MSWindowsWatchdog::startProcess()
     }
 
     LOG_DEBUG("started core process from watchdog");
-    LOG_DEBUG2(
+    LOG_VERBOSE(
         "process info, session=%i, elevated=%s, command: %s", //
         m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no", m_command.c_str()
     );
@@ -307,7 +307,7 @@ void MSWindowsWatchdog::startProcess()
 
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
-  LOG_DEBUG1("locking process state mutex for watchdog config change");
+  LOG_VERBOSE("locking process state mutex for watchdog config change");
   std::scoped_lock lock{m_processStateMutex};
 
   LOG_DEBUG("setting watchdog process config");
@@ -501,7 +501,7 @@ void MSWindowsWatchdog::initSasFunc()
 
 void MSWindowsWatchdog::sasLoop(const void *) // NOSONAR - Thread entry point signature
 {
-  LOG_DEBUG2("watchdog creating sas event");
+  LOG_VERBOSE("watchdog creating sas event");
 
   if (m_sendSasFunc == nullptr) {
     throw std::runtime_error("SendSAS function not initialized");
@@ -509,7 +509,7 @@ void MSWindowsWatchdog::sasLoop(const void *) // NOSONAR - Thread entry point si
 
   while (m_running) {
     if (m_processState != ProcessState::Running) {
-      LOG_DEBUG2("watchdog not running, skipping SendSAS");
+      LOG_VERBOSE("watchdog not running, skipping SendSAS");
       Arch::sleep(1);
       continue;
     }

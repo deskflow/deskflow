@@ -1170,20 +1170,8 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>디버그</translation>
     </message>
     <message>
-        <source>Debug1</source>
-        <translation>디버그1</translation>
-    </message>
-    <message>
-        <source>Debug2</source>
-        <translation>디버그2</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>로그 경로</translation>
-    </message>
-    <message>
-        <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
-        <translation>디버그 로그 레벨은 성능에 영향을 줄 수 있습니다. 문제를 디버깅하거나 버그 신고에 첨부할 로그를 수집할 때만 디버그 레벨을 사용하세요.</translation>
     </message>
     <message>
         <source>Enable GUI debug messages</source>
@@ -1236,10 +1224,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Debug entries</source>
         <translation>디버그 항목</translation>
-    </message>
-    <message>
-        <source>More debug output</source>
-        <translation>더 많은 디버그 출력</translation>
     </message>
     <message>
         <source>Verbose debug output</source>
@@ -1324,6 +1308,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">종료 시 명령 실행</translation>
+    </message>
+    <message>
+        <source>Trace</source>
+        <translation type="unfinished">추적하다</translation>
+    </message>
+    <message>
+        <source>Using a log level higher than Info may affect performance.</source>
+        <translation type="unfinished">Info보다 높은 로그 레벨을 사용하면 성능에 영향을 미칠 수 있습니다.</translation>
     </message>
 </context>
 <context>

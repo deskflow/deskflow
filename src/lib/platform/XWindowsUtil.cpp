@@ -94,12 +94,12 @@ bool XWindowsUtil::getWindowProperty(
 
   if (okay) {
     LOG(
-        (CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window,
+        (CLOG_VERBOSE "read property %d on window 0x%08x: bytes=%d", property, window,
          (data == nullptr) ? 0 : data->size())
     );
     return true;
   } else {
-    LOG_DEBUG2("can't read property %d on window 0x%08x", property, window);
+    LOG_VERBOSE("can't read property %d on window 0x%08x", property, window);
     return false;
   }
 }
@@ -317,13 +317,13 @@ int XWindowsUtil::ErrorLock::internalHandler(Display *display, XErrorEvent *even
 
 void XWindowsUtil::ErrorLock::ignoreHandler(Display *, XErrorEvent *e, void *)
 {
-  LOG_DEBUG1("ignoring X error: %d", e->error_code);
+  LOG_VERBOSE("ignoring X error: %d", e->error_code);
 }
 
 void XWindowsUtil::ErrorLock::saveHandler(Display *display, XErrorEvent *e, void *flag)
 {
   char errtxt[1024];
   XGetErrorText(display, e->error_code, errtxt, 1023);
-  LOG_DEBUG1("flagging X error: %d - %.1023s", e->error_code, errtxt);
+  LOG_VERBOSE("flagging X error: %d - %.1023s", e->error_code, errtxt);
   *static_cast<bool *>(flag) = true;
 }

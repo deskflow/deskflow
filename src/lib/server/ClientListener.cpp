@@ -46,7 +46,7 @@ ClientListener::ClientListener(
     m_socketFactory.reset();
     throw;
   }
-  LOG_DEBUG1("listening for clients");
+  LOG_VERBOSE("listening for clients");
 }
 
 ClientListener::~ClientListener()
@@ -82,14 +82,14 @@ void ClientListener::start()
   });
 
   // bind listen address
-  LOG_DEBUG1("binding listen socket");
+  LOG_VERBOSE("binding listen socket");
   m_listen->bind(m_address);
 }
 
 void ClientListener::stop()
 {
   using enum EventTypes;
-  LOG_DEBUG1("stop listening for clients");
+  LOG_VERBOSE("stop listening for clients");
 
   // discard already connected clients
   for (auto index = m_newClients.begin(); index != m_newClients.end(); ++index) {

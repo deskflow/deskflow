@@ -677,18 +677,18 @@ bool InputFilter::Rule::handleEvent(const Event &event)
 
   case Activate:
     actions = &m_activateActions;
-    LOG_DEBUG1("activate actions");
+    LOG_VERBOSE("activate actions");
     break;
 
   case Deactivate:
     actions = &m_deactivateActions;
-    LOG_DEBUG1("deactivate actions");
+    LOG_VERBOSE("deactivate actions");
     break;
   }
 
   // perform actions
   for (auto action : *actions) {
-    LOG_DEBUG1("hotkey: %s", action->format().c_str());
+    LOG_VERBOSE("hotkey: %s", action->format().c_str());
     action->perform(event);
   }
 

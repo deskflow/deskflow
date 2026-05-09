@@ -21,6 +21,6 @@ ClientProxy1_7::ClientProxy1_7(const std::string &name, deskflow::IStream *strea
 
 void ClientProxy1_7::secureInputNotification(const std::string &app) const
 {
-  LOG_DEBUG2("send secure input notification to \"%s\" %s", getName().c_str(), app.c_str());
+  LOG_VERBOSE("send secure input notification to \"%s\" %s", getName().c_str(), app.c_str());
   ProtocolUtil::writef(getStream(), kMsgDSecureInputNotification, &app);
 }

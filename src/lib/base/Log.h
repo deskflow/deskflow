@@ -118,7 +118,7 @@ public:
   //! console).
   LogLevel getConsoleMaxLevel() const
   {
-    return LogLevel::Debug2;
+    return LogLevel::Verbose;
   }
 
   //@}
@@ -207,8 +207,7 @@ otherwise it expands to a call that doesn't.
 #define CLOG_TAG_WARN "%z\062"
 #define CLOG_TAG_INFO "%z\063"
 #define CLOG_TAG_DEBUG "%z\064"
-#define CLOG_TAG_DEBUG1 "%z\065"
-#define CLOG_TAG_DEBUG2 "%z\066"
+#define CLOG_TAG_VERBOSE "%z\065"
 
 #define CLOG_PRINT CLOG_TRACE CLOG_TAG_PRINT
 #define CLOG_CRIT CLOG_TRACE CLOG_TAG_CRIT
@@ -216,8 +215,7 @@ otherwise it expands to a call that doesn't.
 #define CLOG_WARN CLOG_TRACE CLOG_TAG_WARN
 #define CLOG_INFO CLOG_TRACE CLOG_TAG_INFO
 #define CLOG_DEBUG CLOG_TRACE CLOG_TAG_DEBUG
-#define CLOG_DEBUG1 CLOG_TRACE CLOG_TAG_DEBUG1
-#define CLOG_DEBUG2 CLOG_TRACE CLOG_TAG_DEBUG2
+#define CLOG_VERBOSE CLOG_TRACE CLOG_TAG_VERBOSE
 
 #define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))
 #define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))
@@ -225,5 +223,4 @@ otherwise it expands to a call that doesn't.
 #define LOG_WARN(...) LOG((CLOG_WARN __VA_ARGS__))
 #define LOG_INFO(...) LOG((CLOG_INFO __VA_ARGS__))
 #define LOG_DEBUG(...) LOG((CLOG_DEBUG __VA_ARGS__))
-#define LOG_DEBUG1(...) LOG((CLOG_DEBUG1 __VA_ARGS__))
-#define LOG_DEBUG2(...) LOG((CLOG_DEBUG2 __VA_ARGS__))
+#define LOG_VERBOSE(...) LOG((CLOG_VERBOSE __VA_ARGS__))

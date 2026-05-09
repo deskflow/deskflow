@@ -19,6 +19,5 @@ enum class LogLevel
   Warning,    //!< For minor errors and warnings
   Info,       //!< For informational messages
   Debug,      //!< For important debugging messages
-  Debug1,     //!< For verbosity +1 debugging messages
-  Debug2      //!< For verbosity +2 debugging messages
+  Verbose     //!< For verbose debugging messages
 };

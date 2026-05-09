@@ -205,8 +205,7 @@ void SettingsDialog::updateText()
   ui->comboLogLevel->setItemData(2, tr("General warnings"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(3, tr("General events [Default]"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(4, tr("Debug entries"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(5, tr("More debug output"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(6, tr("Verbose debug output"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(5, tr("Verbose debug output"), Qt::ToolTipRole);
   ui->buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(tr("Close and forget changes"));
   ui->buttonBox->button(QDialogButtonBox::Reset)->setToolTip(tr("Reset to stored values"));

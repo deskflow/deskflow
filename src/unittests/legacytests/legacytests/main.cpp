@@ -32,7 +32,7 @@ int main(int argc, char **argv)
   arch.init();
 
   Log log;
-  log.setFilter(LogLevel::Debug2);
+  log.setFilter(LogLevel::Verbose);
 
   ::testing::GTEST_FLAG(throw_on_failure) = true;
   testing::InitGoogleTest(&argc, argv);

@@ -288,7 +288,7 @@ void MSWindowsScreen::leave()
   m_desks->leave(m_keyLayout);
 
   if (m_isPrimary) {
-    LOG_DEBUG1("centering cursor on leave: %+d, %+d", m_xCenter, m_yCenter);
+    LOG_VERBOSE("centering cursor on leave: %+d, %+d", m_xCenter, m_yCenter);
     warpCursor(m_xCenter, m_yCenter);
 
     // disable special key sequences on win95 family
@@ -307,7 +307,7 @@ void MSWindowsScreen::leave()
     for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
       if (m_keyState->isKeyDown(i)) {
         m_primaryKeyDownList.push_back(i);
-        LOG_DEBUG1("key button %d is down before leaving to another screen", i);
+        LOG_VERBOSE("key button %d is down before leaving to another screen", i);
       }
     }
   }
@@ -533,7 +533,7 @@ void MSWindowsScreen::saveMousePosition(int32_t x, int32_t y)
   m_xCursor = x;
   m_yCursor = y;
 
-  LOG_DEBUG2("saved mouse position for next delta: %+d,%+d", x, y);
+  LOG_VERBOSE("saved mouse position for next delta: %+d,%+d", x, y);
 }
 
 uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
@@ -867,7 +867,7 @@ bool MSWindowsScreen::onPreDispatch(HWND hwnd, UINT message, WPARAM wParam, LPAR
     return onScreensaver(wParam != 0);
 
   case DESKFLOW_MSG_DEBUG:
-    LOG_DEBUG1("hook: 0x%08x 0x%08x", wParam, lParam);
+    LOG_VERBOSE("hook: 0x%08x 0x%08x", wParam, lParam);
     return true;
   }
 
@@ -880,7 +880,7 @@ bool MSWindowsScreen::onPreDispatch(HWND hwnd, UINT message, WPARAM wParam, LPAR
 
 bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  LOG_DEBUG2("handling pre-dispatch primary");
+  LOG_VERBOSE("handling pre-dispatch primary");
 
   // handle event
   switch (message) {
@@ -1009,7 +1009,7 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 {
   static const KeyModifierMask s_ctrlAlt = KeyModifierControl | KeyModifierAlt;
 
-  LOG_DEBUG1(
+  LOG_VERBOSE(
       "event: Key char=%d, vk=0x%02x, nagr=%d, lParam=0x%08x", (wParam & 0xffffu), (wParam >> 16) & 0xffu,
       (wParam & 0x1000000u) ? 1 : 0, lParam
   );
@@ -1043,7 +1043,7 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
   if (!down && m_isPrimary && !m_isOnScreen) {
     PrimaryKeyDownList::iterator find = std::find(m_primaryKeyDownList.begin(), m_primaryKeyDownList.end(), button);
     if (find != m_primaryKeyDownList.end()) {
-      LOG_DEBUG1("release key button %d on primary", *find);
+      LOG_VERBOSE("release key button %d on primary", *find);
       m_hook.setMode(kHOOK_WATCH_JUMP_ZONE);
       fakeLocalKey(*find, false);
       m_primaryKeyDownList.erase(find);
@@ -1125,7 +1125,7 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
           (int32_t)(lParam & 0xffff), button
       );
     } else {
-      LOG_DEBUG1("cannot map key");
+      LOG_VERBOSE("cannot map key");
     }
   }
 
@@ -1190,12 +1190,12 @@ bool MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
   if (!ignore()) {
     KeyModifierMask mask = m_keyState->getActiveModifiers();
     if (pressed) {
-      LOG_DEBUG1("event: button press button=%d", button);
+      LOG_VERBOSE("event: button press button=%d", button);
       if (button != kButtonNone) {
         sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
       }
     } else {
-      LOG_DEBUG1("event: button release button=%d", button);
+      LOG_VERBOSE("event: button release button=%d", button);
       if (button != kButtonNone) {
         sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
       }
@@ -1222,7 +1222,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
   int32_t x = mx - m_xCursor;
   int32_t y = my - m_yCursor;
 
-  LOG_DEBUG2("mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)", x, mx, m_xCursor, y, my, m_yCursor);
+  LOG_VERBOSE("mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)", x, mx, m_xCursor, y, my, m_yCursor);
 
   // ignore if the mouse didn't move or if message posted prior
   // to last mark change.
@@ -1241,7 +1241,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
     // center on the server screen. if we don't do this, then the mouse
     // will always try to return to the original entry point on the
     // secondary screen.
-    LOG_DEBUG2("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
+    LOG_VERBOSE("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
     warpCursorNoFlush(m_xCenter, m_yCenter);
 
     // examine the motion.  if it's about the distance
@@ -1267,7 +1267,7 @@ bool MSWindowsScreen::onMouseWheel(int32_t xDelta, int32_t yDelta)
 {
   // ignore message if posted prior to last mark change
   if (!ignore()) {
-    LOG_DEBUG1("event: button wheel delta=%+d,%+d", xDelta, yDelta);
+    LOG_VERBOSE("event: button wheel delta=%+d,%+d", xDelta, yDelta);
     sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
   }
   return true;
@@ -1315,7 +1315,7 @@ bool MSWindowsScreen::onDisplayChange()
   if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
     if (m_isPrimary) {
       if (!m_isOnScreen) {
-        LOG_DEBUG1("centering cursor on display change: %+d, %+d", m_xCenter, m_yCenter);
+        LOG_VERBOSE("centering cursor on display change: %+d, %+d", m_xCenter, m_yCenter);
         warpCursor(m_xCenter, m_yCenter);
       }
 
@@ -1659,7 +1659,7 @@ void MSWindowsScreen::updateMouseKeys()
   if (!ok) {
     LOG_ERR("failed to set mouse keys, error: %d", GetLastError());
   } else {
-    LOG_DEBUG1("mouse keys enabled successfully");
+    LOG_VERBOSE("mouse keys enabled successfully");
   }
 }
 

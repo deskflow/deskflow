@@ -1172,20 +1172,8 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>调试</translation>
     </message>
     <message>
-        <source>Debug1</source>
-        <translation>调试1</translation>
-    </message>
-    <message>
-        <source>Debug2</source>
-        <translation>调试2</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>日志路径</translation>
-    </message>
-    <message>
-        <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
-        <translation>使用调试日志级别可能会影响性能。仅当您尝试调试问题或收集日志以提交 Bug 报告时，才使用调试级别。</translation>
     </message>
     <message>
         <source>Enable GUI debug messages</source>
@@ -1238,10 +1226,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Debug entries</source>
         <translation>调试条目</translation>
-    </message>
-    <message>
-        <source>More debug output</source>
-        <translation>更多调试输出</translation>
     </message>
     <message>
         <source>Verbose debug output</source>
@@ -1326,6 +1310,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">退出时运行命令</translation>
+    </message>
+    <message>
+        <source>Trace</source>
+        <translation type="unfinished">痕迹</translation>
+    </message>
+    <message>
+        <source>Using a log level higher than Info may affect performance.</source>
+        <translation type="unfinished">使用高于 Info 级别的日志级别可能会影响性能。</translation>
     </message>
 </context>
 <context>

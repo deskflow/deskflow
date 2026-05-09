@@ -1172,20 +1172,8 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>デバッグ</translation>
     </message>
     <message>
-        <source>Debug1</source>
-        <translation>デバッグ1</translation>
-    </message>
-    <message>
-        <source>Debug2</source>
-        <translation>デバッグ2</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>ログファイルのパス</translation>
-    </message>
-    <message>
-        <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
-        <translation>デバッグレベルのログ取得は性能に影響が出ることがあります。不具合の修正やバグレポートの送信に必要な場合にのみ使用してください。</translation>
     </message>
     <message>
         <source>Enable GUI debug messages</source>
@@ -1238,10 +1226,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Debug entries</source>
         <translation>デバッグ情報</translation>
-    </message>
-    <message>
-        <source>More debug output</source>
-        <translation>より多くのデバッグ出力</translation>
     </message>
     <message>
         <source>Verbose debug output</source>
@@ -1326,6 +1310,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">終了時にコマンドを実行</translation>
+    </message>
+    <message>
+        <source>Trace</source>
+        <translation type="unfinished">トレース</translation>
+    </message>
+    <message>
+        <source>Using a log level higher than Info may affect performance.</source>
+        <translation type="unfinished">Infoよりも高いログレベルを使用すると、パフォーマンスに影響を及ぼす可能性があります。</translation>
     </message>
 </context>
 <context>

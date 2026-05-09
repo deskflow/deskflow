@@ -27,7 +27,7 @@ ClientProxy::~ClientProxy()
 
 void ClientProxy::close(const char *msg) const
 {
-  LOG_DEBUG1("send close \"%s\" to \"%s\"", msg, getName().c_str());
+  LOG_VERBOSE("send close \"%s\" to \"%s\"", msg, getName().c_str());
   ProtocolUtil::writef(getStream(), msg);
 
   // force the close to be sent before we return

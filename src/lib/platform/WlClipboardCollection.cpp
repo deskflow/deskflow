@@ -116,7 +116,7 @@ void WlClipboardCollection::initialize()
     m_clipboards[kClipboardClipboard] = std::make_unique<WlClipboard>(kClipboardClipboard);
 
     m_available = true;
-    LOG_DEBUG1("initialized Wayland clipboard support");
+    LOG_VERBOSE("initialized Wayland clipboard support");
 
   } catch (const std::exception &e) {
     LOG_ERR("failed to initialize clipboard: %s", e.what());

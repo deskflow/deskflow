@@ -100,7 +100,7 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
 {
   const auto *clipboardData = static_cast<ClipboardChunk *>(data);
 
-  LOG_DEBUG1("sending clipboard chunk");
+  LOG_VERBOSE("sending clipboard chunk");
 
   const char *chunk = clipboardData->m_chunk;
   ClipboardID id = chunk[0];
@@ -111,15 +111,15 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
 
   switch (mark) {
   case ChunkType::DataStart:
-    LOG_DEBUG2("sending clipboard chunk start: size=%s", dataChunk.c_str());
+    LOG_VERBOSE("sending clipboard chunk start: size=%s", dataChunk.c_str());
     break;
 
   case ChunkType::DataChunk:
-    LOG_DEBUG2("sending clipboard chunk data: size=%i", dataChunk.size());
+    LOG_VERBOSE("sending clipboard chunk data: size=%i", dataChunk.size());
     break;
 
   case ChunkType::DataEnd:
-    LOG_DEBUG2("sending clipboard finished");
+    LOG_VERBOSE("sending clipboard finished");
     break;
 
   default:

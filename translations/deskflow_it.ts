@@ -1170,20 +1170,8 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Debug</translation>
     </message>
     <message>
-        <source>Debug1</source>
-        <translation>Debug1</translation>
-    </message>
-    <message>
-        <source>Debug2</source>
-        <translation>Debug2</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation>Livello</translation>
-    </message>
-    <message>
-        <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
-        <translation>L&apos;utilizzo di un livello di log Debug può influire sulle prestazioni. Utilizza un livello Debug solo se stai tentando di eseguire il debug di un problema o stai raccogliendo log da inviare con una segnalazione di bug.</translation>
     </message>
     <message>
         <source>Use background service (daemon)</source>
@@ -1212,10 +1200,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Debug entries</source>
         <translation>Voci di debug</translation>
-    </message>
-    <message>
-        <source>More debug output</source>
-        <translation>Più output di debug</translation>
     </message>
     <message>
         <source>Verbose debug output</source>
@@ -1324,6 +1308,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">Esegui comando all&apos;uscita</translation>
+    </message>
+    <message>
+        <source>Trace</source>
+        <translation type="unfinished">Traccia</translation>
+    </message>
+    <message>
+        <source>Using a log level higher than Info may affect performance.</source>
+        <translation type="unfinished">L&apos;utilizzo di un livello di log superiore a Info potrebbe influire sulle prestazioni.</translation>
     </message>
 </context>
 <context>

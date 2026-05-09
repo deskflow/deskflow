@@ -188,7 +188,7 @@ void MSWindowsDesks::setOptions(const OptionsList &options)
   for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     if (options[i] == kOptionWin32KeepForeground) {
       m_leaveForegroundOption = (options[i + 1] != 0);
-      LOG_DEBUG1("%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab");
+      LOG_VERBOSE("%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab");
     }
   }
 }
@@ -470,20 +470,20 @@ void setCursorVisibility(bool visible)
   int attempts = 0;
   while (attempts++ < max) {
     const auto displayCounter = ShowCursor(visible ? TRUE : FALSE);
-    LOG_DEBUG1("cursor display counter: %d", displayCounter);
+    LOG_VERBOSE("cursor display counter: %d", displayCounter);
 
     if (visible) {
       if (displayCounter < 0) {
-        LOG_DEBUG1("cursor still hidden, retrying, attempt: %d", attempts);
+        LOG_VERBOSE("cursor still hidden, retrying, attempt: %d", attempts);
       } else {
-        LOG_DEBUG1("cursor is now visible, attempts: %d", attempts);
+        LOG_VERBOSE("cursor is now visible, attempts: %d", attempts);
         return;
       }
     } else {
       if (displayCounter >= 0) {
-        LOG_DEBUG1("cursor still visible, retrying, attempt: %d", attempts);
+        LOG_VERBOSE("cursor still visible, retrying, attempt: %d", attempts);
       } else {
-        LOG_DEBUG1("cursor is now hidden, attempts: %d", attempts);
+        LOG_VERBOSE("cursor is now hidden, attempts: %d", attempts);
         return;
       }
     }
@@ -594,7 +594,7 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
     // would be better but 10 ms doesn't seem to be quite long enough, as we get noticeable flicker.
     // this is largely a balance and out of our control, since windows can be unpredictable...
     // maybe another approach would be to repeatedly check the cursor visibility until it is hidden.
-    LOG_DEBUG1("centering cursor on leave: %+d,%+d", m_xCenter, m_yCenter);
+    LOG_VERBOSE("centering cursor on leave: %+d,%+d", m_xCenter, m_yCenter);
     ARCH->sleep(0.03);
     deskMouseMove(m_xCenter, m_yCenter);
   }

@@ -684,7 +684,7 @@ void KeyState::onKey(KeyButton button, bool down, KeyModifierMask newState)
 {
   // update modifier state
   m_mask = newState;
-  LOG_DEBUG1("new mask: 0x%04x", m_mask);
+  LOG_VERBOSE("new mask: 0x%04x", m_mask);
 
   // ignore bogus buttons
   button &= kButtonMask;
@@ -767,7 +767,7 @@ void KeyState::updateKeyState()
   AddActiveModifierContext addModifierContext(pollActiveGroup(), m_mask, m_activeModifiers);
   m_keyMap.foreachKey(&KeyState::addActiveModifierCB, &addModifierContext);
 
-  LOG_DEBUG1("modifiers on update: 0x%04x", m_mask);
+  LOG_VERBOSE("modifiers on update: 0x%04x", m_mask);
 }
 
 void KeyState::addActiveModifierCB(KeyID, int32_t group, deskflow::KeyMap::KeyItem &keyItem, void *vcontext)
@@ -804,7 +804,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
 
   // ignore certain keys
   if (isIgnoredKey(id, mask)) {
-    LOG_DEBUG1("ignored key %04x %04x", id, mask);
+    LOG_VERBOSE("ignored key %04x %04x", id, mask);
     return;
   }
 
@@ -818,7 +818,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
     // special way
     if (id == kKeyAudioDown || id == kKeyAudioUp || id == kKeyAudioMute || id == kKeyAudioPlay || id == kKeyAudioPrev ||
         id == kKeyAudioNext || id == kKeyBrightnessDown || id == kKeyBrightnessUp) {
-      LOG_DEBUG1("emulating media key");
+      LOG_VERBOSE("emulating media key");
       fakeMediaKey(id);
     }
 
@@ -841,7 +841,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
 
 bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton serverID, const std::string &lang)
 {
-  LOG_DEBUG2("fakeKeyRepeat");
+  LOG_VERBOSE("fakeKeyRepeat");
   serverID &= kButtonMask;
 
   // if we haven't seen this button go down then ignore it
@@ -927,7 +927,7 @@ bool KeyState::fakeKeyUp(KeyButton serverID)
       if (!m_activeModifiers.contains(mask)) {
         // no key for modifier is down so deactivate modifier
         m_mask &= ~mask;
-        LOG_DEBUG1("new state %04x", m_mask);
+        LOG_VERBOSE("new state %04x", m_mask);
       }
     } else {
       ++i;
@@ -1086,7 +1086,7 @@ void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
       // next key
       ++k;
     } else {
-      LOG_DEBUG1("skipping keystroke, language sync is disabled");
+      LOG_VERBOSE("skipping keystroke, language sync is disabled");
       ++k;
     }
   }

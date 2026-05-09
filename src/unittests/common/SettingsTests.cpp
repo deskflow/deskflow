@@ -108,8 +108,7 @@ void SettingsTests::checkLogLevels_Valid()
   QCOMPARE(Settings::logLevelToInt(QStringLiteral("wArning")), 2);
   QCOMPARE(Settings::logLevelToInt(QStringLiteral("info")), 3);
   QCOMPARE(Settings::logLevelToInt(QStringLiteral("deBug")), 4);
-  QCOMPARE(Settings::logLevelToInt(QStringLiteral("debuG1")), 5);
-  QCOMPARE(Settings::logLevelToInt(QStringLiteral("dEbug2")), 6);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("TraCe")), 5);
 }
 
 void SettingsTests::checkLogLevels_Invalid()

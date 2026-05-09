@@ -540,7 +540,7 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
   EMouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
 
-  LOG_DEBUG1("faking mouse button id: %d press: %s", index, press ? "pressed" : "released");
+  LOG_VERBOSE("faking mouse button id: %d press: %s", index, press ? "pressed" : "released");
 
   MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
   CGEventType type = thisButtonMap[state];
@@ -815,7 +815,7 @@ bool OSXScreen::setClipboard(ClipboardID, const IClipboard *src)
 
 void OSXScreen::checkClipboards()
 {
-  LOG_DEBUG2("checking clipboard");
+  LOG_VERBOSE("checking clipboard");
   if (m_pasteboard.synchronize()) {
     LOG_DEBUG("clipboard changed");
     sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
@@ -933,19 +933,19 @@ void OSXScreen::handleSystemEvent(const Event &event)
     SendEventToEventTarget(*carbonEvent, nullptr);
     switch (GetEventKind(*carbonEvent)) {
     case kEventWindowActivated:
-      LOG_DEBUG1("window activated");
+      LOG_VERBOSE("window activated");
       break;
 
     case kEventWindowDeactivated:
-      LOG_DEBUG1("window deactivated");
+      LOG_VERBOSE("window deactivated");
       break;
 
     case kEventWindowFocusAcquired:
-      LOG_DEBUG1("focus acquired");
+      LOG_VERBOSE("focus acquired");
       break;
 
     case kEventWindowFocusRelinquish:
-      LOG_DEBUG1("focus released");
+      LOG_VERBOSE("focus released");
       break;
     }
     break;
@@ -967,7 +967,7 @@ bool OSXScreen::onMouseMove()
   CGFloat mx = pos.x;
   CGFloat my = pos.y;
 
-  LOG_DEBUG2("mouse move %+f,%+f", mx, my);
+  LOG_VERBOSE("mouse move %+f,%+f", mx, my);
 
   CGFloat x = mx - m_xCursor;
   CGFloat y = my - m_yCursor;
@@ -1026,13 +1026,13 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
   ButtonID button = mapMacButtonToDeskflow(macButton);
 
   if (pressed) {
-    LOG_DEBUG1("event: button press button=%d", button);
+    LOG_VERBOSE("event: button press button=%d", button);
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
       sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
     }
   } else {
-    LOG_DEBUG1("event: button release button=%d", button);
+    LOG_VERBOSE("event: button release button=%d", button);
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
       sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
@@ -1044,7 +1044,7 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
 
 bool OSXScreen::onMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
-  LOG_DEBUG1("event: button wheel delta=%+d,%+d", xDelta, yDelta);
+  LOG_VERBOSE("event: button wheel delta=%+d,%+d", xDelta, yDelta);
   sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
   return true;
 }
@@ -1062,10 +1062,10 @@ void OSXScreen::displayReconfigurationCallback(
                                      kCGDisplayDisabledFlag | kCGDisplayMirrorFlag | kCGDisplayUnMirrorFlag |
                                      kCGDisplayDesktopShapeChangedFlag;
 
-  LOG_DEBUG1("event: display was reconfigured: %x %x %x", flags, mask, flags & mask);
+  LOG_VERBOSE("event: display was reconfigured: %x %x %x", flags, mask, flags & mask);
 
   if (flags & mask) { /* Something actually did change */
-    LOG_DEBUG1("event: screen changed shape; refreshing dimensions");
+    LOG_VERBOSE("event: screen changed shape; refreshing dimensions");
     if (!screen->updateScreenShape(displayID, flags)) {
       LOG_ERR("failed to update screen shape during display reconfiguration");
     }
@@ -1079,7 +1079,7 @@ bool OSXScreen::onKey(CGEventRef event)
   // get the key and active modifiers
   uint32_t virtualKey = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
   CGEventFlags macMask = CGEventGetFlags(event);
-  LOG_DEBUG1("event: Key event kind: %d, keycode=%d", eventKind, virtualKey);
+  LOG_VERBOSE("event: Key event kind: %d, keycode=%d", eventKind, virtualKey);
 
   // Special handling to track state of modifiers
   if (eventKind == kCGEventFlagsChanged) {
@@ -1189,7 +1189,7 @@ void OSXScreen::onMediaKey(CGEventRef event)
     return;
   }
 
-  LOG_DEBUG2("Media key event: keyID=0x%02x, %s, repeat=%s", keyID, (down ? "down" : "up"), (isRepeat ? "yes" : "no"));
+  LOG_VERBOSE("Media key event: keyID=0x%02x, %s, repeat=%s", keyID, (down ? "down" : "up"), (isRepeat ? "yes" : "no"));
 
   KeyButton button = 0;
   KeyModifierMask mask = m_keyState->getActiveModifiers();
@@ -1724,16 +1724,16 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
   default:
     if (type == NX_SYSDEFINED) {
       if (isMediaKeyEvent(event)) {
-        LOG_DEBUG2("detected media key event");
+        LOG_VERBOSE("detected media key event");
         screen->onMediaKey(event);
       } else {
-        LOG_DEBUG2("ignoring unknown system defined event");
+        LOG_VERBOSE("ignoring unknown system defined event");
         return event;
       }
       break;
     }
 
-    LOG_DEBUG2("unknown quartz event type: 0x%02x", type);
+    LOG_VERBOSE("unknown quartz event type: 0x%02x", type);
   }
 
   if (screen->m_isOnScreen) {

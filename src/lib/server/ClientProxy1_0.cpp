@@ -42,7 +42,7 @@ ClientProxy1_0::ClientProxy1_0(const std::string &name, deskflow::IStream *strea
 
   setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
-  LOG_DEBUG1("querying client \"%s\" info", getName().c_str());
+  LOG_VERBOSE("querying client \"%s\" info", getName().c_str());
   ProtocolUtil::writef(getStream(), kMsgQInfo);
 }
 
@@ -120,7 +120,7 @@ void ClientProxy1_0::handleData()
 
     // parse message
     try {
-      LOG_DEBUG2("msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]);
+      LOG_VERBOSE("msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]);
       if (!(this->*m_parser)(code)) {
         LOG(
             (CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2],
@@ -149,7 +149,7 @@ bool ClientProxy1_0::parseHandshakeMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgCNoop, 4) == 0) {
     // discard no-ops
-    LOG_DEBUG2("no-op from", getName().c_str());
+    LOG_VERBOSE("no-op from", getName().c_str());
     return true;
   } else if (memcmp(code, kMsgDInfo, 4) == 0) {
     // future messages get parsed by parseMessage
@@ -173,7 +173,7 @@ bool ClientProxy1_0::parseMessage(const uint8_t *code)
     return false;
   } else if (memcmp(code, kMsgCNoop, 4) == 0) {
     // discard no-ops
-    LOG_DEBUG2("no-op from", getName().c_str());
+    LOG_VERBOSE("no-op from", getName().c_str());
     return true;
   } else if (memcmp(code, kMsgCClipboard, 4) == 0) {
     return recvGrabClipboard();
@@ -225,13 +225,13 @@ void ClientProxy1_0::getCursorPos(int32_t &x, int32_t &y) const
 
 void ClientProxy1_0::enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool)
 {
-  LOG_DEBUG1("send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask);
+  LOG_VERBOSE("send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask);
   ProtocolUtil::writef(getStream(), kMsgCEnter, xAbs, yAbs, seqNum, mask);
 }
 
 bool ClientProxy1_0::leave()
 {
-  LOG_DEBUG1("send leave to \"%s\"", getName().c_str());
+  LOG_VERBOSE("send leave to \"%s\"", getName().c_str());
   ProtocolUtil::writef(getStream(), kMsgCLeave);
 
   // we can never prevent the user from leaving
@@ -259,37 +259,37 @@ void ClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
 
 void ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton, const std::string &)
 {
-  LOG_DEBUG1("send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask);
+  LOG_VERBOSE("send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask);
   ProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
 }
 
 void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, int32_t count, KeyButton, const std::string &)
 {
-  LOG_DEBUG1("send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count);
+  LOG_VERBOSE("send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count);
   ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
 }
 
 void ClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton)
 {
-  LOG_DEBUG1("send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask);
+  LOG_VERBOSE("send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask);
   ProtocolUtil::writef(getStream(), kMsgDKeyUp1_0, key, mask);
 }
 
 void ClientProxy1_0::mouseDown(ButtonID button)
 {
-  LOG_DEBUG1("send mouse down to \"%s\" id=%d", getName().c_str(), button);
+  LOG_VERBOSE("send mouse down to \"%s\" id=%d", getName().c_str(), button);
   ProtocolUtil::writef(getStream(), kMsgDMouseDown, button);
 }
 
 void ClientProxy1_0::mouseUp(ButtonID button)
 {
-  LOG_DEBUG1("send mouse up to \"%s\" id=%d", getName().c_str(), button);
+  LOG_VERBOSE("send mouse up to \"%s\" id=%d", getName().c_str(), button);
   ProtocolUtil::writef(getStream(), kMsgDMouseUp, button);
 }
 
 void ClientProxy1_0::mouseMove(int32_t xAbs, int32_t yAbs)
 {
-  LOG_DEBUG2("send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs);
+  LOG_VERBOSE("send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs);
   ProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
@@ -301,7 +301,7 @@ void ClientProxy1_0::mouseRelativeMove(int32_t, int32_t)
 void ClientProxy1_0::mouseWheel(int32_t, int32_t yDelta)
 {
   // clients prior to 1.3 only support the y axis
-  LOG_DEBUG2("send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta);
+  LOG_VERBOSE("send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta);
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel1_0, yDelta);
 }
 
@@ -332,13 +332,13 @@ void ClientProxy1_0::secureInputNotification(const std::string &) const
 
 void ClientProxy1_0::screensaver(bool on)
 {
-  LOG_DEBUG1("send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0);
+  LOG_VERBOSE("send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0);
   ProtocolUtil::writef(getStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
 void ClientProxy1_0::resetOptions()
 {
-  LOG_DEBUG1("send reset options to \"%s\"", getName().c_str());
+  LOG_VERBOSE("send reset options to \"%s\"", getName().c_str());
   ProtocolUtil::writef(getStream(), kMsgCResetOptions);
 
   // reset heart rate and death
@@ -349,7 +349,7 @@ void ClientProxy1_0::resetOptions()
 
 void ClientProxy1_0::setOptions(const OptionsList &options)
 {
-  LOG_DEBUG1("send set options to \"%s\" size=%d", getName().c_str(), options.size());
+  LOG_VERBOSE("send set options to \"%s\" size=%d", getName().c_str(), options.size());
   ProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
 
   // check options
@@ -399,7 +399,7 @@ bool ClientProxy1_0::recvInfo()
   m_info.m_my = my;
 
   // acknowledge receipt
-  LOG_DEBUG1("send info ack to \"%s\"", getName().c_str());
+  LOG_VERBOSE("send info ack to \"%s\"", getName().c_str());
   ProtocolUtil::writef(getStream(), kMsgCInfoAck);
   return true;
 }

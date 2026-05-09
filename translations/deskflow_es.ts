@@ -1170,20 +1170,8 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Depurar</translation>
     </message>
     <message>
-        <source>Debug1</source>
-        <translation type="unfinished">Depuración1</translation>
-    </message>
-    <message>
-        <source>Debug2</source>
-        <translation type="unfinished">Depuración 2</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation type="unfinished">Nivel</translation>
-    </message>
-    <message>
-        <source>Using a Debug log level may affect performance. Only use a Debug level if you are attempting to debug an issue or are gathering logs to submit with a bug report.</source>
-        <translation type="unfinished">Usar un nivel de registro de depuración puede afectar el rendimiento. Úselo solo si intenta depurar un problema o recopila registros para enviarlos junto con un informe de errores.</translation>
     </message>
     <message>
         <source>Use background service (daemon)</source>
@@ -1212,10 +1200,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Debug entries</source>
         <translation type="unfinished">Entradas de depuración</translation>
-    </message>
-    <message>
-        <source>More debug output</source>
-        <translation type="unfinished">Más resultados de depuración</translation>
     </message>
     <message>
         <source>Verbose debug output</source>
@@ -1324,6 +1308,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">Ejecutar comando al salir</translation>
+    </message>
+    <message>
+        <source>Trace</source>
+        <translation type="unfinished">Rastro</translation>
+    </message>
+    <message>
+        <source>Using a log level higher than Info may affect performance.</source>
+        <translation type="unfinished">Utilizar un nivel de registro superior a Info puede afectar el rendimiento.</translation>
     </message>
 </context>
 <context>

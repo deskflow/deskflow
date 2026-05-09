@@ -178,7 +178,7 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
              (strcmp(XKB_MOD_NAME_MOD2, name) == 0) ||  // spare, sometimes mapped to num lock.
              (strcmp(XKB_MOD_NAME_MOD3, name) == 0)     // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
     )
-      LOG_DEBUG2("modifier mask %s ignored", name);
+      LOG_VERBOSE("modifier mask %s ignored", name);
     else
       LOG_WARN("modifier mask %s not accounted for, this is a bug", name);
   }
@@ -245,7 +245,7 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
         // that shouldn't be sent over the network. They appear in newer
         // xkeyboard-config on level 5 of function keys with CTRL+ALT type.
         if (strncmp(keysymName, "XF86_Switch_VT_", 15) == 0) {
-          LOG_DEBUG2("skipping VT switch keysym %s for keycode %d", keysymName, keycode);
+          LOG_VERBOSE("skipping VT switch keysym %s for keycode %d", keysymName, keycode);
           continue;
         }
 
@@ -305,7 +305,7 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
   if (keystroke.m_type != Keystroke::KeyType::Button)
     return;
 
-  LOG_DEBUG1(
+  LOG_VERBOSE(
       "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
       keystroke.m_data.m_button.m_press ? "down" : "up"
   );
@@ -333,14 +333,14 @@ KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 
   auto keysym = static_cast<KeySym>(xkbKeysym);
   KeyID keyid = XDGKeyUtil::mapKeySymToKeyID(keysym);
-  LOG_DEBUG1("mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
+  LOG_VERBOSE("mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
 
   return keyid;
 }
 
 void EiKeyState::updateXkbState(uint32_t keyval, bool isPressed)
 {
-  LOG_DEBUG1("update key state: keyval=%d pressed=%i", keyval, isPressed);
+  LOG_VERBOSE("update key state: keyval=%d pressed=%i", keyval, isPressed);
   xkb_state_update_key(m_xkbState, keyval, isPressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }
 
