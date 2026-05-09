@@ -12,7 +12,7 @@
 
 #define LEVEL_PRINT "%z\057"
 #define LEVEL_ERR "%z\061"
-#define LEVEL_INFO "%z\064"
+#define LEVEL_INFO "%z\063"
 
 QString sanitizeBuffer(const std::stringstream &in)
 {

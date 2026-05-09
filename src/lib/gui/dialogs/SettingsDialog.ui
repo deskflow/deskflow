@@ -318,11 +318,6 @@
            </item>
            <item>
             <property name="text">
-             <string>Note</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>Info</string>
             </property>
            </item>

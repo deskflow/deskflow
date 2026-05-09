@@ -294,7 +294,7 @@ void Client::setOptions(const OptionsList &options)
       index++;
       if (index != options.end()) {
         if (!*index) {
-          LOG_NOTE("clipboard sharing disabled by server");
+          LOG_INFO("clipboard sharing disabled by server");
         }
         m_enableClipboard = *index;
       }
@@ -308,7 +308,7 @@ void Client::setOptions(const OptionsList &options)
 
   if (m_enableClipboard && !m_maximumClipboardSize) {
     m_enableClipboard = false;
-    LOG_NOTE("clipboard sharing is disabled because the server set the maximum clipboard size to 0");
+    LOG_INFO("clipboard sharing is disabled because the server set the maximum clipboard size to 0");
   }
 
   m_screen->setOptions(options);
@@ -341,7 +341,7 @@ void Client::sendClipboard(ClipboardID id)
     std::string data = clipboard.marshall();
     if (data.size() >= m_maximumClipboardSize * 1024) {
       LOG(
-          (CLOG_NOTE "skipping clipboard transfer because the clipboard"
+          (CLOG_INFO "skipping clipboard transfer because the clipboard"
                      " contents exceeds the %i MB size limit set by the server",
            m_maximumClipboardSize / 1024)
       );

@@ -1160,10 +1160,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <source>Note</source>
-        <translation>Примечание</translation>
-    </message>
-    <message>
         <source>Info</source>
         <translation>Инфо</translation>
     </message>
@@ -1234,10 +1230,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>General warnings</source>
         <translation>Общие предупреждения</translation>
-    </message>
-    <message>
-        <source>Notable events</source>
-        <translation>Важные события</translation>
     </message>
     <message>
         <source>General events [Default]</source>

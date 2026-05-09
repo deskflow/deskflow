@@ -90,7 +90,7 @@ void ServerApp::reloadConfig()
     if (m_server != nullptr) {
       m_server->setConfig(*m_config);
     }
-    LOG_NOTE("reloaded configuration");
+    LOG_INFO("reloaded configuration");
   }
 }
 
@@ -546,7 +546,7 @@ int ServerApp::mainLoop()
   getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
   getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
   cleanupServer();
-  LOG_NOTE("stopped server");
+  LOG_INFO("stopped server");
 
   return exitCode;
 }

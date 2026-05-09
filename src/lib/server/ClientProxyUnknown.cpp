@@ -245,18 +245,18 @@ void ClientProxyUnknown::handleData()
 
 void ClientProxyUnknown::handleWriteError()
 {
-  LOG_NOTE("error communicating with new client");
+  LOG_INFO("error communicating with new client");
   sendFailure();
 }
 
 void ClientProxyUnknown::handleTimeout()
 {
-  LOG_NOTE("new client is unresponsive");
+  LOG_INFO("new client is unresponsive");
   sendFailure();
 }
 
 void ClientProxyUnknown::handleDisconnect()
 {
-  LOG_NOTE("new client disconnected");
+  LOG_INFO("new client disconnected");
   sendFailure();
 }

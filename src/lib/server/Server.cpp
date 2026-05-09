@@ -133,10 +133,10 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   // Determine if scroll lock is already set. If so, lock the cursor to the
   // primary screen (unless the user has disabled lock to screen in config)
   if (!m_disableLockToScreen && (m_primaryClient->getToggleMask() & KeyModifierScrollLock)) {
-    LOG_NOTE("scroll lock is on, locking cursor to screen");
+    LOG_INFO("scroll lock is on, locking cursor to screen");
     m_lockedToScreen = true;
   } else if (m_defaultLockToScreenState) {
-    LOG_NOTE("default screen lock is on, locking cursor to screen");
+    LOG_INFO("default screen lock is on, locking cursor to screen");
     m_lockedToScreen = true;
   }
 }
@@ -353,7 +353,7 @@ bool Server::isLockedToScreen() const
   // locked if we say we're locked
   if (isLockedToScreenServer()) {
     if (!m_defaultLockToScreenState) {
-      LOG_NOTE("cursor is locked to screen, check scroll lock key");
+      LOG_INFO("cursor is locked to screen, check scroll lock key");
     }
     return true;
   }
@@ -1112,12 +1112,12 @@ void Server::processOptions()
     } else if (id == kOptionClipboardSharing) {
       m_enableClipboard = value;
       if (!m_enableClipboard) {
-        LOG_NOTE("clipboard sharing is disabled");
+        LOG_INFO("clipboard sharing is disabled");
       }
     } else if (id == kOptionClipboardSharingSize) {
       if (value <= 0) {
         m_maximumClipboardSize = 0;
-        LOG_NOTE(
+        LOG_INFO(
             "clipboard sharing is disabled because the "
             "maximum shared clipboard size is set to 0"
         );
@@ -1308,7 +1308,7 @@ void Server::handleClientDisconnected(BaseClientProxy *client)
 void Server::handleClientCloseTimeout(BaseClientProxy *client)
 {
   // client took too long to disconnect.  just dump it.
-  LOG_NOTE("forced disconnection of client \"%s\"", getName(client).c_str());
+  LOG_INFO("forced disconnection of client \"%s\"", getName(client).c_str());
   removeOldClient(client);
 
   delete client;
@@ -1432,7 +1432,7 @@ void Server::handleLockCursorToScreenEvent(const Event &event)
   // enter new state
   if (newState != m_lockedToScreen) {
     m_lockedToScreen = newState;
-    LOG_NOTE("cursor %s current screen", m_lockedToScreen ? "locked to" : "unlocked from");
+    LOG_INFO("cursor %s current screen", m_lockedToScreen ? "locked to" : "unlocked from");
 
     m_primaryClient->reconfigure(getActivePrimarySides());
     if (!isLockedToScreenServer()) {
@@ -1459,7 +1459,7 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   std::string data = clipboard.m_clipboard.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {
-    LOG_NOTE(
+    LOG_INFO(
         "not updating clipboard because it's over the size limit (%i KB) configured by the server",
         m_maximumClipboardSize
     );
@@ -1961,7 +1961,7 @@ void Server::closeClient(BaseClientProxy *client, const char *msg)
   // note that this method also works on clients that are not in
   // the m_clients list.  adoptClient() may call us with such a
   // client.
-  LOG_NOTE("disconnecting client \"%s\"", getName(client).c_str());
+  LOG_INFO("disconnecting client \"%s\"", getName(client).c_str());
 
   // send message
   // FIXME -- avoid type cast (kinda hard, though)

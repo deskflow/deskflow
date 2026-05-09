@@ -194,7 +194,6 @@ private:
       QStringLiteral("FATAL")
     , QStringLiteral("ERROR")
     , QStringLiteral("WARNING")
-    , QStringLiteral("NOTE")
     , QStringLiteral("INFO")
     , QStringLiteral("DEBUG")
     , QStringLiteral("DEBUG1")

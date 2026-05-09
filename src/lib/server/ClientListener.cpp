@@ -155,7 +155,7 @@ void ClientListener::handleClientConnecting()
 
 void ClientListener::handleClientAccepted(IDataSocket *socket)
 {
-  LOG_NOTE("accepted client connection");
+  LOG_INFO("accepted client connection");
 
   // filter socket messages, including a packetizing filter
   deskflow::IStream *stream = new PacketStreamFilter(m_events, socket, false);

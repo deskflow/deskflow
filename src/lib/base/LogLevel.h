@@ -17,7 +17,6 @@ enum class LogLevel
   Fatal,      //!< For fatal errors
   Error,      //!< For serious errors
   Warning,    //!< For minor errors and warnings
-  Note,       //!< For messages about notable events
   Info,       //!< For informational messages
   Debug,      //!< For important debugging messages
   Debug1,     //!< For verbosity +1 debugging messages

@@ -1162,10 +1162,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Avviso</translation>
     </message>
     <message>
-        <source>Note</source>
-        <translation>Nota</translation>
-    </message>
-    <message>
         <source>Info</source>
         <translation>Informazioni</translation>
     </message>
@@ -1208,10 +1204,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>General warnings</source>
         <translation>Avvisi generali</translation>
-    </message>
-    <message>
-        <source>Notable events</source>
-        <translation>Eventi importanti</translation>
     </message>
     <message>
         <source>General events [Default]</source>

@@ -37,10 +37,6 @@ void ArchLogUnix::writeLog(LogLevel level, const QString &msg)
     priority = LOG_WARNING;
     break;
 
-  case Note:
-    priority = LOG_NOTICE;
-    break;
-
   case Info:
     priority = LOG_INFO;
     break;

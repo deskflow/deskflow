@@ -1164,10 +1164,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>警告</translation>
     </message>
     <message>
-        <source>Note</source>
-        <translation>注意</translation>
-    </message>
-    <message>
         <source>Info</source>
         <translation>信息</translation>
     </message>
@@ -1234,10 +1230,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>General warnings</source>
         <translation>一般警告</translation>
-    </message>
-    <message>
-        <source>Notable events</source>
-        <translation>值得注意的事件</translation>
     </message>
     <message>
         <source>General events [Default]</source>

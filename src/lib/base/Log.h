@@ -205,17 +205,15 @@ otherwise it expands to a call that doesn't.
 #define CLOG_TAG_CRIT "%z\060"  // char is '0'
 #define CLOG_TAG_ERR "%z\061"
 #define CLOG_TAG_WARN "%z\062"
-#define CLOG_TAG_NOTE "%z\063"
-#define CLOG_TAG_INFO "%z\064"
-#define CLOG_TAG_DEBUG "%z\065"
-#define CLOG_TAG_DEBUG1 "%z\066"
-#define CLOG_TAG_DEBUG2 "%z\067"
+#define CLOG_TAG_INFO "%z\063"
+#define CLOG_TAG_DEBUG "%z\064"
+#define CLOG_TAG_DEBUG1 "%z\065"
+#define CLOG_TAG_DEBUG2 "%z\066"
 
 #define CLOG_PRINT CLOG_TRACE CLOG_TAG_PRINT
 #define CLOG_CRIT CLOG_TRACE CLOG_TAG_CRIT
 #define CLOG_ERR CLOG_TRACE CLOG_TAG_ERR
 #define CLOG_WARN CLOG_TRACE CLOG_TAG_WARN
-#define CLOG_NOTE CLOG_TRACE CLOG_TAG_NOTE
 #define CLOG_INFO CLOG_TRACE CLOG_TAG_INFO
 #define CLOG_DEBUG CLOG_TRACE CLOG_TAG_DEBUG
 #define CLOG_DEBUG1 CLOG_TRACE CLOG_TAG_DEBUG1
@@ -225,7 +223,6 @@ otherwise it expands to a call that doesn't.
 #define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))
 #define LOG_ERR(...) LOG((CLOG_ERR __VA_ARGS__))
 #define LOG_WARN(...) LOG((CLOG_WARN __VA_ARGS__))
-#define LOG_NOTE(...) LOG((CLOG_NOTE __VA_ARGS__))
 #define LOG_INFO(...) LOG((CLOG_INFO __VA_ARGS__))
 #define LOG_DEBUG(...) LOG((CLOG_DEBUG __VA_ARGS__))
 #define LOG_DEBUG1(...) LOG((CLOG_DEBUG1 __VA_ARGS__))

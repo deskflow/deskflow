@@ -1162,10 +1162,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Advertencia</translation>
     </message>
     <message>
-        <source>Note</source>
-        <translation type="unfinished">Nota</translation>
-    </message>
-    <message>
         <source>Info</source>
         <translation type="unfinished">Información</translation>
     </message>
@@ -1208,10 +1204,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>General warnings</source>
         <translation type="unfinished">Advertencias generales</translation>
-    </message>
-    <message>
-        <source>Notable events</source>
-        <translation type="unfinished">Eventos notables</translation>
     </message>
     <message>
         <source>General events [Default]</source>

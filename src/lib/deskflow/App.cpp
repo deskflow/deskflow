@@ -58,7 +58,7 @@ App::~App()
 
 void App::run(QThread &coreThread)
 {
-  LOG_NOTE("starting core");
+  LOG_INFO("starting core");
 
   // Important: Move the daemon app to the daemon thread before creating any more Qt objects
   // owned by the daemon app, as they will be created on the daemon thread.

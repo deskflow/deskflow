@@ -87,7 +87,7 @@ void ClientApp::parseArgs()
       bye(s_exitFailed);
     }
 
-    LOG_NOTE("configured %zu server address(es)", static_cast<size_t>(m_serverAddresses.size()));
+    LOG_INFO("configured %zu server address(es)", static_cast<size_t>(m_serverAddresses.size()));
   }
 }
 
@@ -280,7 +280,7 @@ bool ClientApp::startClient()
           clientScreen
       );
       m_clientScreen = clientScreen;
-      LOG_NOTE("started client");
+      LOG_INFO("started client");
     }
 
     m_client->setServerAddress(getCurrentServerAddress());
@@ -332,7 +332,7 @@ int ClientApp::mainLoop()
   // close down
   LOG_DEBUG("stopping client");
   stopClient();
-  LOG_NOTE("stopped client");
+  LOG_INFO("stopped client");
 
   return exitCode;
 }

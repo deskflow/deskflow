@@ -203,11 +203,10 @@ void SettingsDialog::updateText()
   ui->comboLogLevel->setItemData(0, tr("Required messages"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(1, tr("Non-fatal errors"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(2, tr("General warnings"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(3, tr("Notable events"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(4, tr("General events [Default]"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(3, tr("General events [Default]"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(4, tr("Debug entries"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(5, tr("More debug output"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(6, tr("Verbose debug output"), Qt::ToolTipRole);
   ui->buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(tr("Close and forget changes"));
   ui->buttonBox->button(QDialogButtonBox::Reset)->setToolTip(tr("Reset to stored values"));
@@ -286,7 +285,7 @@ void SettingsDialog::loadFromConfig()
   ui->rbCloseToTray->setChecked(closeToTray);
   ui->rbExitOnClose->setChecked(!closeToTray);
 
-  ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 4);
+  ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 3);
 
   ui->comboInterface->setCurrentText(Settings::value(Settings::Core::Interface).toString());
   if (ui->comboInterface->currentIndex() <= 0) {
@@ -411,7 +410,7 @@ void SettingsDialog::updateRequestedKeySize() const
 
 void SettingsDialog::logLevelChanged()
 {
-  ui->lblDebugWarning->setVisible(ui->comboLogLevel->currentIndex() > 4);
+  ui->lblDebugWarning->setVisible(ui->comboLogLevel->currentIndex() > 3);
 }
 
 bool SettingsDialog::isModified() const

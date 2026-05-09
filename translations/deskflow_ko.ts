@@ -1162,10 +1162,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>경고</translation>
     </message>
     <message>
-        <source>Note</source>
-        <translation>안내</translation>
-    </message>
-    <message>
         <source>Info</source>
         <translation>정보</translation>
     </message>
@@ -1232,10 +1228,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>General warnings</source>
         <translation>일반 경고</translation>
-    </message>
-    <message>
-        <source>Notable events</source>
-        <translation>주요 이벤트</translation>
     </message>
     <message>
         <source>General events [Default]</source>

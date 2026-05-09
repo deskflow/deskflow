@@ -144,7 +144,7 @@ void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const
 
 void DaemonApp::run(QThread &daemonThread)
 {
-  LOG_NOTE("starting daemon");
+  LOG_INFO("starting daemon");
 
   // Important: Move the daemon app to the daemon thread before creating any more Qt objects
   // owned by the daemon app, as they will be created on the daemon thread.
