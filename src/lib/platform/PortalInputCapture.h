@@ -54,6 +54,8 @@ private:
   void handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
   void readTextClipboardSelection(XdpSession *session);
+  void printMimeTypes(const char **mime_types);
+  void claimClipboardOwnership(XdpSession *session);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)

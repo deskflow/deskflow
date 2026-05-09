@@ -107,15 +107,70 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
+void PortalInputCapture::printMimeTypes(const char **mime_types)
+{
+  if (!mime_types || !mime_types[0]) {
+    LOG_DEBUG("Clipboard:  (no mime types)");
+    return;
+  }
+
+  for (int i = 0; mime_types[i]; i++)
+    LOG_DEBUG("Clipboard:  [%d] %s", i, mime_types[i]);
+}
+
+void PortalInputCapture::claimClipboardOwnership(XdpSession *session)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  const char *mime_types[] = {"text/plain", "text/plain;charset=utf-8", NULL};
+
+  LOG_DEBUG("Clipboard: Claiming selection ownership with mime types:");
+  printMimeTypes(mime_types);
+
+  xdp_session_set_selection(session, mime_types);
+#endif
+}
+
 void PortalInputCapture::readTextClipboardSelection(XdpSession *session)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
+  const char **mime_types;
+  int fd;
   constexpr int kClipboardReadTimeoutMs = 200;
   constexpr qint64 kClipboardReadCap = 1024;
 
-  int fd = xdp_session_selection_read(session, "text/plain");
-  if (fd < 0)
+  mime_types = xdp_session_get_selection_mime_types(session);
+  if (!mime_types) {
+    LOG_DEBUG("clipboard: No mime types available to read");
     return;
+  }
+
+  const char *try_types[] = {"text/plain;charset=utf-8", "text/plain", NULL};
+  const char *read_type = NULL;
+  for (int i = 0; try_types[i]; i++) {
+    for (int j = 0; mime_types[j]; j++) {
+      if (g_strcmp0(mime_types[j], try_types[i]) == 0) {
+        read_type = try_types[i];
+        break;
+      }
+    }
+    if (read_type)
+      break;
+  }
+
+  if (!read_type) {
+    LOG_DEBUG("clipboard: No text/plain mime type in selection, available types:");
+    printMimeTypes(mime_types);
+    return;
+  }
+
+  LOG_DEBUG("clipboard: Reading selection for mime type '%s'...", read_type);
+
+  fd = xdp_session_selection_read(session, read_type);
+
+  if (fd < 0) {
+    LOG_ERR("failed to read clipboard selection: selection_read returned invalid fd");
+    return;
+  }
 
   QFile pipe;
   if (!pipe.open(fd, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle)) {
@@ -182,20 +237,63 @@ void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   int fd;
+  constexpr int kClipboardWriteTimeoutMs = 200;
+
+  LOG_DEBUG(">>> Selection transfer requested <<<");
+  LOG_DEBUG("Requested mime type: %s", mimeType);
+  LOG_DEBUG("Transfer serial: %u", serial);
 
   fd = xdp_session_selection_write(session, serial);
-  if (fd < 0)
+  if (fd < 0) {
+    LOG_WARN("failed to write clipboard content: selection_write returned invalid fd");
+    xdp_session_selection_write_done(session, serial, false);
     return;
-
-  /* FIXME: fill data with the clipboard from the remote */
-  char data[1024] = {};
-
-  int nbytes = write(fd, data, strlen(data));
-  if (nbytes < 0) {
-    LOG_WARN("failed to read clipboard content: %m");
   }
 
-  xdp_session_selection_write_done(session, serial, nbytes >= 0);
+  m_clipboard->open(0);
+  std::string data;
+  if (m_clipboard->has(IClipboard::Format::Text))
+    data = m_clipboard->get(IClipboard::Format::Text);
+  m_clipboard->close();
+
+  LOG_DEBUG("Writing clipboard content: \"%s\"", data.c_str());
+
+  QFile pipe;
+  if (!pipe.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
+    LOG_WARN("failed to wrap clipboard pipe");
+    ::close(fd);
+    xdp_session_selection_write_done(session, serial, FALSE);
+    return;
+  }
+
+  const char *buf = data.data();
+  qint64 total = static_cast<qint64>(data.size());
+  qint64 written = 0;
+
+  while (written < total) {
+    pollfd pfd{fd, POLLOUT, 0};
+    if (poll(&pfd, 1, kClipboardWriteTimeoutMs) <= 0) {
+      LOG_ERR("Writing selection: timeout while waiting to write clipboard");
+      xdp_session_selection_write_done(session, serial, FALSE);
+      return;
+    }
+    qint64 n = pipe.write(buf + written, total - written);
+    if (n < 0) {
+      LOG_ERR("Writing selection: write failed");
+      xdp_session_selection_write_done(session, serial, FALSE);
+      return;
+    }
+    if (n == 0) {
+      LOG_ERR("Writing selection: write returned 0");
+      xdp_session_selection_write_done(session, serial, FALSE);
+      return;
+    }
+    written += n;
+  }
+
+  xdp_session_selection_write_done(session, serial, TRUE);
+  LOG_DEBUG("Clipboard write complete");
+
 #endif
 }
 
@@ -217,11 +315,11 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   using enum Signal;
   XdpSession *parentSession = xdp_input_capture_session_get_session(session);
   m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
-  m_signals.at(Activated) = g_signal_connect(G_OBJECT(m_session), "activated", G_CALLBACK(activated), this);
-  m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(m_session), "deactivated", G_CALLBACK(deactivated), this);
-  m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
+  m_signals.at(Activated) = g_signal_connect(G_OBJECT(session), "activated", G_CALLBACK(activated), this);
+  m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(session), "deactivated", G_CALLBACK(deactivated), this);
+  m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
-  handleZonesChanged(m_session, nullptr);
+  handleZonesChanged(session, nullptr);
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (xdp_session_is_clipboard_enabled(parentSession)) {
@@ -229,9 +327,6 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
         g_signal_connect(G_OBJECT(parentSession), "selection-owner-changed", G_CALLBACK(selectionOwnerChanged), this);
     m_signals.at(SelectionTransfer) =
         g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
-
-    /* FIXME: do handleSelectionOwnerChanged() here to retrieve the
-     * current selection (if any) */
   }
 #endif
 }
@@ -467,7 +562,20 @@ void PortalInputCapture::handleActivated(
     m_pendingClipboardRead = false;
     LOG_DEBUG("reading clipboard selection on activation");
     m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
-    readTextClipboardSelection(xdp_input_capture_session_get_session(m_session));
+
+    XdpSession *session = xdp_input_capture_session_get_session(m_session);
+    const char **mime_types = xdp_session_get_selection_mime_types(session);
+
+    if (mime_types && mime_types[0]) {
+      LOG_DEBUG("clipboard: Current selection mime types:");
+      printMimeTypes(mime_types);
+      if (!xdp_session_is_selection_owned_by_session(session))
+        readTextClipboardSelection(session);
+    } else {
+      LOG_DEBUG("clipboard: No current selection");
+    }
+
+    claimClipboardOwnership(session);
     LOG_DEBUG("activation clipboard read complete");
   } else {
     LOG_WARN("input capture activated without a session, skipping clipboard read");
