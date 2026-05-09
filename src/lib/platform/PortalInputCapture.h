@@ -11,6 +11,8 @@
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
+#include <QByteArray>
+
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
@@ -54,6 +56,8 @@ private:
   void handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
   void readTextClipboardSelection(XdpSession *session);
+  static QByteArray formatMimeTypes(const char **mimeTypes);
+  void claimClipboardOwnership(XdpSession *session);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)
