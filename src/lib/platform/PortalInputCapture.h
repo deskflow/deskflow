@@ -56,7 +56,9 @@ private:
   void handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
   void readTextClipboardSelection(XdpSession *session);
-  static QByteArray formatMimeTypes(const char **mimeTypes);
+  static QByteArray formatMimeTypes(const char *const *mimeTypes);
+  static bool isSupportedMimeType(const char *mimeType);
+  static const char *pickSupportedMimeType(const char *const *mimeTypes);
   void claimClipboardOwnership(XdpSession *session);
 
   /// g_signal_connect callback wrapper

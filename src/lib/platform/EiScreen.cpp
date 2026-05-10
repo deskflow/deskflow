@@ -14,6 +14,7 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/IScreen.h"
+#include "deskflow/OptionTypes.h"
 #include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
@@ -456,7 +457,15 @@ void EiScreen::resetOptions()
 
 void EiScreen::setOptions(const OptionsList &options)
 {
-  // We don't have ei-specific options, nothing to do here
+  for (auto it = options.begin(); it != options.end(); ++it) {
+    if (*it == kOptionClipboardSharingSize) {
+      ++it;
+      if (it == options.end())
+        break;
+      m_maximumClipboardSize = *it;
+      LOG_DEBUG("ei screen received clipboard size limit: %zu KB", m_maximumClipboardSize);
+    }
+  }
 }
 
 bool EiScreen::isPrimary() const

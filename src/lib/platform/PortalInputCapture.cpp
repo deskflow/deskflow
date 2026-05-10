@@ -28,6 +28,8 @@
 
 namespace deskflow {
 
+static const char *kSupportedMimeTypes[] = {"text/plain;charset=utf-8", "text/plain", nullptr};
+
 PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
     : m_screen{screen},
       m_events{events},
@@ -108,7 +110,7 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
-QByteArray PortalInputCapture::formatMimeTypes(const char **mimeTypes)
+QByteArray PortalInputCapture::formatMimeTypes(const char *const *mimeTypes)
 {
   if (!mimeTypes || !mimeTypes[0])
     return QByteArrayLiteral("(none)");
@@ -120,12 +122,39 @@ QByteArray PortalInputCapture::formatMimeTypes(const char **mimeTypes)
   return parts.join(", ");
 }
 
+bool PortalInputCapture::isSupportedMimeType(const char *mimeType)
+{
+  if (!mimeType)
+    return false;
+
+  for (int i = 0; kSupportedMimeTypes[i]; i++) {
+    if (g_strcmp0(mimeType, kSupportedMimeTypes[i]) == 0)
+      return true;
+  }
+
+  return false;
+}
+
+const char *PortalInputCapture::pickSupportedMimeType(const char *const *mimeTypes)
+{
+  if (!mimeTypes) {
+    LOG_WARN("cannot pick mime type, no mime types provided");
+    return nullptr;
+  }
+
+  for (int i = 0; kSupportedMimeTypes[i]; i++) {
+    if (g_strv_contains(mimeTypes, kSupportedMimeTypes[i]))
+      return kSupportedMimeTypes[i];
+  }
+
+  return nullptr;
+}
+
 void PortalInputCapture::claimClipboardOwnership(XdpSession *session)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  const char *mimeTypes[] = {"text/plain", "text/plain;charset=utf-8", nullptr};
-  LOG_DEBUG("clipboard claiming selection ownership with mime types: %s", formatMimeTypes(mimeTypes).constData());
-  xdp_session_set_selection(session, mimeTypes);
+  LOG_DEBUG("claiming clipboard, mime types: %s", formatMimeTypes(kSupportedMimeTypes).constData());
+  xdp_session_set_selection(session, kSupportedMimeTypes);
 #endif
 }
 
@@ -133,7 +162,10 @@ void PortalInputCapture::readTextClipboardSelection(XdpSession *session)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   constexpr int kClipboardReadTimeoutMs = 200;
-  constexpr qint64 kClipboardReadCap = 1024;
+  constexpr qint64 kInitialReserveBytes = 64 * 1024;
+  const qint64 kClipboardReadCap = static_cast<qint64>(m_screen->maximumClipboardSize()) * 1024;
+
+  LOG_DEBUG("clipboard read cap: %lld bytes", static_cast<long long>(kClipboardReadCap));
 
   const char **mimeTypes = xdp_session_get_selection_mime_types(session);
   if (!mimeTypes) {
@@ -141,23 +173,10 @@ void PortalInputCapture::readTextClipboardSelection(XdpSession *session)
     return;
   }
 
-  const char *tryTypes[] = {"text/plain;charset=utf-8", "text/plain", nullptr};
-  const char *readType = nullptr;
-  for (int i = 0; tryTypes[i]; i++) {
-    for (int j = 0; mimeTypes[j]; j++) {
-      if (g_strcmp0(mimeTypes[j], tryTypes[i]) == 0) {
-        readType = tryTypes[i];
-        break;
-      }
-    }
-
-    if (readType)
-      break;
-  }
-
+  const char *readType = pickSupportedMimeType(mimeTypes);
   if (!readType) {
     LOG_DEBUG(
-        "clipboard no text/plain mime type in selection, available types: %s", formatMimeTypes(mimeTypes).constData()
+        "clipboard no supported mime type in selection, available types: %s", formatMimeTypes(mimeTypes).constData()
     );
     return;
   }
@@ -178,7 +197,7 @@ void PortalInputCapture::readTextClipboardSelection(XdpSession *session)
   }
 
   QByteArray contents;
-  contents.reserve(kClipboardReadCap);
+  contents.reserve(std::min(kClipboardReadCap, kInitialReserveBytes));
   while (contents.size() < kClipboardReadCap) {
     pollfd pfd{fd, POLLIN, 0};
     if (poll(&pfd, 1, kClipboardReadTimeoutMs) <= 0)
@@ -202,7 +221,7 @@ void PortalInputCapture::readTextClipboardSelection(XdpSession *session)
 
   m_clipboard->open(0);
   m_clipboard->empty();
-  m_clipboard->add(IClipboard::Format::Text, std::string(contents.constData(), contents.size()));
+  m_clipboard->add(IClipboard::Format::Text, contents.toStdString());
   m_clipboard->close();
   m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 #else
@@ -216,8 +235,10 @@ void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv 
   if (!mimeTypes || isOwner)
     return;
 
-  if (!g_strv_contains(mimeTypes, "text/plain"))
+  if (!pickSupportedMimeType(mimeTypes)) {
+    LOG_DEBUG("ignoring selection owner change, no supported mime types: %s", formatMimeTypes(mimeTypes).constData());
     return;
+  }
 
   m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 
@@ -237,6 +258,12 @@ void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char
   constexpr int kClipboardWriteTimeoutMs = 200;
 
   LOG_DEBUG("clipboard selection transfer requested, mime type: %s, serial: %u", mimeType, serial);
+
+  if (!isSupportedMimeType(mimeType)) {
+    LOG_DEBUG("rejecting clipboard selection transfer, unsupported mime type: %s", mimeType);
+    xdp_session_selection_write_done(session, serial, false);
+    return;
+  }
 
   int fd = xdp_session_selection_write(session, serial);
   if (fd < 0) {

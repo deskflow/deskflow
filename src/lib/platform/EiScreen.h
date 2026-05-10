@@ -11,6 +11,7 @@
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
 
+#include <climits>
 #include <libei.h>
 #include <map>
 #include <mutex>
@@ -81,6 +82,12 @@ public:
   // Send clipboard event (needed by PortalInputCapture)
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
+  // Maximum clipboard size in KB, configured by the server
+  size_t maximumClipboardSize() const
+  {
+    return m_maximumClipboardSize;
+  }
+
 protected:
   // IPlatformScreen overrides
   void handleSystemEvent(const Event &event) override;
@@ -128,6 +135,7 @@ private:
 
   // clipboard stuff
   EiClipboard *m_clipboard = nullptr;
+  size_t m_maximumClipboardSize = INT_MAX;
 
   std::vector<ei_device *> m_eiDevices;
 
