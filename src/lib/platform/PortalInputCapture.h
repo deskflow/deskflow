@@ -1,13 +1,14 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024, 2026 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #pragma once
 
+#include "deskflow/IClipboard.h"
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
@@ -55,11 +56,30 @@ private:
 
   void handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
-  void readTextClipboardSelection(XdpSession *session);
-  static QByteArray formatMimeTypes(const char *const *mimeTypes);
-  static bool isSupportedMimeType(const char *mimeType);
-  static const char *pickSupportedMimeType(const char *const *mimeTypes);
+  void readClipboardSelection(XdpSession *session);
   void claimClipboardOwnership(XdpSession *session);
+
+  struct SupportedMime
+  {
+    const char *mime;
+    IClipboard::Format format;
+  };
+
+  // Listed in preference order: richer formats first.
+  static constexpr SupportedMime kSupportedMimes[] = {
+      {"image/png", IClipboard::Format::Bitmap},
+      {"text/plain;charset=utf-8", IClipboard::Format::Text},
+      {"text/plain", IClipboard::Format::Text},
+  };
+
+  static QByteArray formatMimeTypes(const char *const *mimeTypes);
+  static const SupportedMime *findSupportedMime(const char *mime);
+  static const SupportedMime *pickSupportedMime(const char *const *available);
+  static QByteArray dibToBmp(const std::string &dib);
+  static std::string bmpToDib(const QByteArray &bmp);
+  static QByteArray encodeFormat(IClipboard::Format format, const std::string &data);
+  static std::string decodeFormat(IClipboard::Format format, const QByteArray &bytes);
+  static QByteArray readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)

@@ -200,6 +200,7 @@ if(UNIX)
     target_link_libraries(
       platform
       Qt6::DBus
+      Qt6::Gui
       ${LIBXKBCOMMON_LINK_LIBRARIES}
       ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}
       ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
