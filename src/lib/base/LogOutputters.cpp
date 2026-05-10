@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -31,7 +31,7 @@ void StopLogOutputter::close()
   // do nothing
 }
 
-bool StopLogOutputter::write(LogLevel, const QString &)
+bool StopLogOutputter::write(LogLevel::Level, const QString &)
 {
   return false;
 }
@@ -50,9 +50,10 @@ void ConsoleLogOutputter::close()
   // do nothing
 }
 
-bool ConsoleLogOutputter::write(LogLevel level, const QString &msg)
+bool ConsoleLogOutputter::write(LogLevel::Level level, const QString &msg)
 {
-  if ((level >= LogLevel::Fatal) && (level <= LogLevel::Warning))
+  using enum LogLevel::Level;
+  if ((level >= Fatal) && (level <= Warning))
     std::cerr << qPrintable(msg) << std::endl;
   else
     std::cout << qPrintable(msg) << std::endl;
@@ -79,7 +80,7 @@ void SystemLogOutputter::close()
   ARCH->closeLog();
 }
 
-bool SystemLogOutputter::write(LogLevel level, const QString &msg)
+bool SystemLogOutputter::write(LogLevel::Level level, const QString &msg)
 {
   ARCH->writeLog(level, msg);
   return true;
@@ -126,7 +127,7 @@ void FileLogOutputter::setLogFilename(const QString &logFile)
   m_fileName = logFile;
 }
 
-bool FileLogOutputter::write(LogLevel, const QString &message)
+bool FileLogOutputter::write(LogLevel::Level, const QString &message)
 {
   QFile file(m_fileName);
   if (!file.open(QFile::WriteOnly | QFile::Append))

@@ -151,7 +151,6 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
-  static int logLevelToInt(const QString &level);
   static QString portableSettingsFile();
 
 Q_SIGNALS:
@@ -190,15 +189,6 @@ private:
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
-  inline static const QStringList m_logLevels = {
-      QStringLiteral("FATAL")
-    , QStringLiteral("ERROR")
-    , QStringLiteral("WARNING")
-    , QStringLiteral("INFO")
-    , QStringLiteral("DEBUG")
-    , QStringLiteral("TRACE")
-  };
-
   inline static const QStringList m_validKeys = {
       Settings::Client::DynamicConnectionRetry
     , Settings::Client::InvertYScroll

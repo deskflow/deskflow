@@ -11,7 +11,7 @@
 
 void UnicodeTests::initTestCase()
 {
-  m_log.setFilter(LogLevel::Verbose);
+  m_log.setFilter(LogLevel::Level::Verbose);
 }
 
 void UnicodeTests::UTF16ToUTF8()

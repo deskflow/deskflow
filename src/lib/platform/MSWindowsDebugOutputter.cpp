@@ -22,7 +22,7 @@ void MSWindowsDebugOutputter::close()
   // do nothing
 }
 
-bool MSWindowsDebugOutputter::write(LogLevel level, const QString &msg)
+bool MSWindowsDebugOutputter::write(LogLevel::Level level, const QString &msg)
 {
   std::wstring out = msg.toStdWString() + L"\n";
   OutputDebugString(out.c_str());

@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -26,7 +26,7 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  bool write(LogLevel level, const QString &message) override;
+  bool write(LogLevel::Level level, const QString &message) override;
 };
 
 //! Write log to console
@@ -43,7 +43,7 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  bool write(LogLevel level, const QString &message) override;
+  bool write(LogLevel::Level level, const QString &message) override;
   void flush() const;
 };
 
@@ -62,7 +62,7 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  bool write(LogLevel level, const QString &message) override;
+  bool write(LogLevel::Level level, const QString &message) override;
 
   void setLogFilename(const QString &title);
 
@@ -83,7 +83,7 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  bool write(LogLevel level, const QString &message) override;
+  bool write(LogLevel::Level level, const QString &message) override;
 };
 
 //! Write log to system log only

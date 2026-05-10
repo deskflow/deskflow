@@ -301,6 +301,33 @@ Do you want to connect to the server?
     </message>
 </context>
 <context>
+    <name>LogLevel</name>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished">重大</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">警告</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished">情報</translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished">デバッグ</translation>
+    </message>
+    <message>
+        <source>Verbose</source>
+        <translation type="unfinished">冗長</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>This computer&apos;s name:</source>

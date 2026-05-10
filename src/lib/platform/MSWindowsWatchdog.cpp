@@ -355,7 +355,7 @@ void MSWindowsWatchdog::outputLoop(const void *)
 
     // The file log outputter adds its own newlines, so trim the decoded string to avoid double newlines.
     const auto trimmed = decoded.trimmed();
-    m_fileLogOutputter.write(LogLevel::Print, trimmed);
+    m_fileLogOutputter.write(LogLevel::Level::Print, trimmed);
 
     if (m_foreground) {
       // Doesn't add it's own newlines, so use the original ones from the process output.

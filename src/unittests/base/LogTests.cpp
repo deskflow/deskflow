@@ -25,7 +25,7 @@ QString sanitizeBuffer(const std::stringstream &in)
 void LogTests::initTestCase()
 {
   std::setlocale(LC_NUMERIC, "C");
-  m_log.setFilter(LogLevel::Debug);
+  m_log.setFilter(LogLevel::Level::Debug);
 }
 
 void LogTests::printWithErrorValidOutput()

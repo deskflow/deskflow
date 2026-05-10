@@ -11,7 +11,7 @@
 
 void KeyboardLayoutManagerTests::initTestCase()
 {
-  m_log.setFilter(LogLevel::Verbose);
+  m_log.setFilter(LogLevel::Level::Verbose);
 }
 
 void KeyboardLayoutManagerTests::remoteLayouts()

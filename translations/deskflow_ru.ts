@@ -301,6 +301,33 @@ Do you want to connect to the server?
     </message>
 </context>
 <context>
+    <name>LogLevel</name>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished">Критический</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Ошибка</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Предупреждение</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished">Инфо</translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished">Отладка</translation>
+    </message>
+    <message>
+        <source>Verbose</source>
+        <translation type="unfinished">Многословный</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>This computer&apos;s name:</source>

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -36,14 +37,14 @@ static const int g_numPriority = 6;
 // for visual studio, then NDEBUG will be set (even if your VS solution
 // config is Debug).
 #ifndef NDEBUG
-static const LogLevel g_defaultMaxPriority = LogLevel::Debug;
+static const auto g_defaultMaxPriority = LogLevel::Level::Debug;
 #else
-static const LogLevel g_defaultMaxPriority = LogLevel::Info;
+static const auto g_defaultMaxPriority = LogLevel::Level::Info;
 #endif
 
 namespace {
 
-LogLevel getPriority(const char *&fmt)
+LogLevel::Level getPriority(const char *&fmt)
 {
   if (strnlen(fmt, SIZE_MAX) < kPriorityPrefixLength) {
     throw std::invalid_argument("invalid format string, too short");
@@ -53,10 +54,10 @@ LogLevel getPriority(const char *&fmt)
     throw std::invalid_argument("invalid format string, missing priority");
   }
 
-  return static_cast<LogLevel>(fmt[2] - '0');
+  return static_cast<LogLevel::Level>(fmt[2] - '0');
 }
 
-std::vector<char> makeMessage(const char *filename, int lineNumber, const char *message, LogLevel priority)
+std::vector<char> makeMessage(const char *filename, int lineNumber, const char *message, LogLevel::Level priority)
 {
 
   // base size includes null terminator, colon, space, etc.
@@ -150,7 +151,7 @@ const char *Log::getFilterName() const
   return getFilterName(getFilter());
 }
 
-const char *Log::getFilterName(LogLevel level) const
+const char *Log::getFilterName(LogLevel::Level level) const
 {
   const auto levelIndex = static_cast<int>(level);
   if (levelIndex < 0) {
@@ -164,7 +165,7 @@ void Log::print(const char *file, int line, const char *fmt, ...)
   const int initBufferSize = 1024;
   const int bufferResizeScale = 2;
 
-  LogLevel priority = getPriority(fmt);
+  const auto priority = getPriority(fmt);
   fmt += kPriorityPrefixLength;
 
   if (priority > getFilter()) {
@@ -188,7 +189,7 @@ void Log::print(const char *file, int line, const char *fmt, ...)
     }
   }
 
-  if (priority == LogLevel::Print) {
+  if (priority == LogLevel::Level::Print) {
     output(priority, buffer.data());
   } else {
     auto message = makeMessage(file, line, buffer.data(), priority);
@@ -235,26 +236,26 @@ bool Log::setFilter(const QString &maxPriority)
 
   for (int i = 0; i < g_numPriority; ++i) {
     if (maxPriority == QString(g_priority[i])) {
-      setFilter(static_cast<LogLevel>(i));
+      setFilter(static_cast<LogLevel::Level>(i));
       return true;
     }
   }
   return false;
 }
 
-void Log::setFilter(LogLevel maxPriority)
+void Log::setFilter(LogLevel::Level maxPriority)
 {
   std::scoped_lock lock{m_mutex};
   m_maxPriority = maxPriority;
 }
 
-LogLevel Log::getFilter() const
+LogLevel::Level Log::getFilter() const
 {
   std::scoped_lock lock{m_mutex};
   return m_maxPriority;
 }
 
-void Log::output(LogLevel priority, const char *msg)
+void Log::output(LogLevel::Level priority, const char *msg)
 {
   assert(static_cast<int>(priority) >= -2 && static_cast<int>(priority) < g_numPriority);
   assert(msg != nullptr);

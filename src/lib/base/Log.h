@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers.
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -88,7 +89,7 @@ public:
   bool setFilter(const QString &name);
 
   //! Set the minimum priority filter (by ordinal).
-  void setFilter(LogLevel);
+  void setFilter(LogLevel::Level);
 
   //@}
   //! @name accessors
@@ -103,28 +104,28 @@ public:
   void print(const char *file, int line, const char *format, ...);
 
   //! Get the minimum priority level.
-  LogLevel getFilter() const;
+  LogLevel::Level getFilter() const;
 
   //! Get the filter name of the current filter level.
   const char *getFilterName() const;
 
   //! Get the filter name of a specified filter level.
-  const char *getFilterName(LogLevel level) const;
+  const char *getFilterName(LogLevel::Level level) const;
 
   //! Get the singleton instance of the log
   static Log *getInstance();
 
   //! Get the console filter level (messages above this are not sent to
   //! console).
-  LogLevel getConsoleMaxLevel() const
+  LogLevel::Level getConsoleMaxLevel() const
   {
-    return LogLevel::Verbose;
+    return LogLevel::Level::Verbose;
   }
 
   //@}
 
 private:
-  void output(LogLevel priority, const char *msg);
+  void output(LogLevel::Level priority, const char *msg);
 
 private:
   using OutputterList = std::list<ILogOutputter *>;
@@ -134,7 +135,7 @@ private:
   mutable std::mutex m_mutex;
   OutputterList m_outputters;
   OutputterList m_alwaysOutputters;
-  LogLevel m_maxPriority;
+  LogLevel::Level m_maxPriority;
 };
 
 /*!

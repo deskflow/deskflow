@@ -5,10 +5,11 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "platform/XWindowsClipboard.h"
-
 #include "arch/Arch.h"
 #include "base/Log.h"
+
+#include "platform/XWindowsClipboard.h"
+
 #include "base/Stopwatch.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
@@ -1000,7 +1001,7 @@ bool XWindowsClipboard::sendReply(Reply *reply)
   reply->m_replied = true;
 
   // nothing to log
-  if (CLOG->getFilter() < LogLevel::Verbose) {
+  if (CLOG->getFilter() < LogLevel::Level::Verbose) {
     sendNotify(
         reply->m_requestor, m_selection, reply->m_target, reply->m_property, static_cast<unsigned int>(reply->m_time)
     );

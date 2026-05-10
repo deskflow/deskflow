@@ -301,6 +301,33 @@ Do you want to connect to the server?
     </message>
 </context>
 <context>
+    <name>LogLevel</name>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished">치명적 오류</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">오류</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">경고</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished">정보</translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation type="unfinished">디버그</translation>
+    </message>
+    <message>
+        <source>Verbose</source>
+        <translation type="unfinished">말 수가 많은</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>This computer&apos;s name:</source>

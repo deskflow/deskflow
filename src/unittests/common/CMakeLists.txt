@@ -9,6 +9,13 @@ create_test(
 )
 
 create_test(
+  NAME LogLevelTests
+  DEPENDS common
+  SOURCE LogLevelTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/common"
+)
+
+create_test(
   NAME I18NTests
   DEPENDS common
   SOURCE I18NTests.cpp

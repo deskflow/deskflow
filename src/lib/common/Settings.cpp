@@ -6,6 +6,7 @@
 
 #include "Settings.h"
 
+#include "LogLevel.h"
 #include "NetworkProtocol.h"
 #include "UrlConstants.h"
 
@@ -95,6 +96,10 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
 void Settings::upgradeSettings()
 {
+  const auto logValue = m_settings->value(Settings::Log::Level).toString();
+  if (!LogLevel::logLevelOptions().contains(logValue, Qt::CaseInsensitive))
+    m_settings->setValue(Settings::Log::Level, defaultValue(Settings::Log::Level));
+
   for (const auto [oldKey, newKey] : m_upgradedMap.asKeyValueRange()) {
     if (m_settings->contains(oldKey) && !m_settings->contains(newKey)) {
       m_settings->setValue(newKey, m_settings->value(oldKey));
@@ -156,13 +161,6 @@ QString Settings::cleanComputerName(const QString &name)
   return cleanName;
 }
 
-int Settings::logLevelToInt(const QString &level)
-{
-  if (level.isEmpty() || !m_logLevels.contains(level, Qt::CaseInsensitive))
-    return 4;
-  return static_cast<int>(m_logLevels.indexOf(level, 0, Qt::CaseInsensitive));
-}
-
 QVariant Settings::defaultValue(const QString &key)
 {
   if (m_defaultFalseValues.contains(key))
@@ -181,7 +179,7 @@ QVariant Settings::defaultValue(const QString &key)
     return QStringLiteral("%1/%2.log").arg(QDir::homePath(), kAppId);
 
   if (key == Log::Level)
-    return 4; // INFO
+    return QVariant::fromValue(LogLevel::Level::Info).toString();
 
   if (key == Daemon::Elevate)
     return !Settings::isPortableMode();
@@ -213,11 +211,6 @@ QVariant Settings::defaultValue(const QString &key)
     return QVariant::fromValue(NetworkProtocol::Barrier);
 
   return QVariant();
-}
-
-QString Settings::logLevelText()
-{
-  return Settings::m_logLevels.at(Settings::value(Log::Level).toInt());
 }
 
 QSettingsProxy &Settings::proxy()
@@ -289,6 +282,11 @@ QString Settings::tlsTrustedServersDb()
 QString Settings::tlsTrustedClientsDb()
 {
   return QFileInfo(QStringLiteral("%1/trusted-clients").arg(instance()->tlsDir())).absoluteFilePath();
+}
+
+QString Settings::logLevelText()
+{
+  return Settings::value(Log::Level).toString();
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)

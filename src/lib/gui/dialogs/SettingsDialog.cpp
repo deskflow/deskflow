@@ -7,6 +7,7 @@
  */
 
 #include "SettingsDialog.h"
+#include "common/LogLevel.h"
 #include "common/PlatformInfo.h"
 #include "ui_SettingsDialog.h"
 
@@ -216,7 +217,9 @@ void SettingsDialog::accept()
 {
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->comboInterface->currentData());
-  Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
+  Settings::setValue(
+      Settings::Log::Level, LogLevel::toOption(static_cast<LogLevel::Level>(ui->comboLogLevel->currentIndex()))
+  );
   Settings::setValue(Settings::Log::ToFile, ui->groupLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
@@ -251,7 +254,7 @@ void SettingsDialog::accept()
 void SettingsDialog::loadFromConfig()
 {
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
-  ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
+  ui->comboLogLevel->setCurrentIndex(static_cast<int>(LogLevel::fromOption(Settings::logLevelText())));
   ui->groupLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
@@ -284,7 +287,9 @@ void SettingsDialog::loadFromConfig()
   ui->rbCloseToTray->setChecked(closeToTray);
   ui->rbExitOnClose->setChecked(!closeToTray);
 
-  ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 3);
+  ui->lblDebugWarning->setVisible(
+      Settings::value(Settings::Log::Level).toInt() > static_cast<int>(LogLevel::Level::Info)
+  );
 
   ui->comboInterface->setCurrentText(Settings::value(Settings::Core::Interface).toString());
   if (ui->comboInterface->currentIndex() <= 0) {
@@ -409,7 +414,7 @@ void SettingsDialog::updateRequestedKeySize() const
 
 void SettingsDialog::logLevelChanged()
 {
-  ui->lblDebugWarning->setVisible(ui->comboLogLevel->currentIndex() > 3);
+  ui->lblDebugWarning->setVisible(ui->comboLogLevel->currentIndex() > static_cast<int>(LogLevel::Level::Info));
 }
 
 bool SettingsDialog::isModified() const
@@ -419,7 +424,7 @@ bool SettingsDialog::isModified() const
 
   bool modified =
       (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
-      (ui->comboLogLevel->currentIndex() != Settings::value(Settings::Log::Level).toInt()) ||
+      (ui->comboLogLevel->currentIndex() != static_cast<int>(LogLevel::fromOption(Settings::logLevelText()))) ||
       (ui->groupLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
       (ui->lineLogFilename->text() != Settings::value(Settings::Log::File).toString()) ||
       (ui->rbAutoHide->isChecked() != Settings::value(Settings::Gui::Autohide).toBool()) ||
@@ -450,10 +455,12 @@ bool SettingsDialog::isModified() const
 bool SettingsDialog::isDefault() const
 {
   const auto processMode = Settings::defaultValue(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  const auto logLevelIndex =
+      static_cast<int>(LogLevel::fromOption(Settings::defaultValue(Settings::Log::Level).toString()));
 
   return (
       (ui->sbPort->value() == Settings::defaultValue(Settings::Core::Port).toInt()) &&
-      (ui->comboLogLevel->currentIndex() == Settings::defaultValue(Settings::Log::Level).toInt()) &&
+      (ui->comboLogLevel->currentIndex() == logLevelIndex) &&
       (ui->groupLogToFile->isChecked() == Settings::defaultValue(Settings::Log::ToFile).toBool()) &&
       (ui->lineLogFilename->text() == Settings::defaultValue(Settings::Log::File).toString()) &&
       (ui->rbAutoHide->isChecked() == Settings::defaultValue(Settings::Gui::Autohide).toBool()) &&
@@ -482,7 +489,9 @@ bool SettingsDialog::isDefault() const
 void SettingsDialog::resetToDefault()
 {
   ui->sbPort->setValue(Settings::defaultValue(Settings::Core::Port).toInt());
-  ui->comboLogLevel->setCurrentIndex(Settings::defaultValue(Settings::Log::Level).toInt());
+  ui->comboLogLevel->setCurrentIndex(
+      static_cast<int>(LogLevel::fromOption(Settings::defaultValue(Settings::Log::Level).toString()))
+  );
   ui->groupLogToFile->setChecked(Settings::defaultValue(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::defaultValue(Settings::Log::File).toString());
   ui->cbPreventSleep->setChecked(Settings::defaultValue(Settings::Core::PreventSleep).toBool());

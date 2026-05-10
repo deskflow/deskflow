@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -23,12 +24,12 @@ void ArchLogUnix::closeLog()
   closelog();
 }
 
-void ArchLogUnix::writeLog(LogLevel level, const QString &msg)
+void ArchLogUnix::writeLog(LogLevel::Level level, const QString &msg)
 {
   // convert level
   int priority;
   switch (level) {
-    using enum LogLevel;
+    using enum LogLevel::Level;
   case Error:
     priority = LOG_ERR;
     break;
