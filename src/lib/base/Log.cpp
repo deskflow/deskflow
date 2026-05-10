@@ -24,9 +24,6 @@
 
 const int kPriorityPrefixLength = 3;
 
-// number of priorities
-static const int g_numPriority = 6;
-
 // if NDEBUG (not debug) is not specified, i.e. you're building in debug,
 // then set default log level to DEBUG, otherwise the max level is INFO.
 //
@@ -216,14 +213,8 @@ bool Log::setFilter(const QString &maxPriority)
   if (maxPriority.isEmpty()) {
     return false;
   }
-
-  for (int i = 0; i < g_numPriority; ++i) {
-    if (maxPriority == LogLevel::toOption((i))) {
-      setFilter(static_cast<LogLevel::Level>(i));
-      return true;
-    }
-  }
-  return false;
+  setFilter(LogLevel::fromOption(maxPriority));
+  return true;
 }
 
 void Log::setFilter(LogLevel::Level maxPriority)
@@ -240,7 +231,6 @@ LogLevel::Level Log::getFilter() const
 
 void Log::output(LogLevel::Level priority, const char *msg)
 {
-  assert(static_cast<int>(priority) >= -2 && static_cast<int>(priority) < g_numPriority);
   assert(msg != nullptr);
   if (!msg)
     return;
