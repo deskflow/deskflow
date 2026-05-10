@@ -1175,26 +1175,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Уровень</translation>
     </message>
     <message>
-        <source>Fatal</source>
-        <translation>Критический</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Ошибка</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Предупреждение</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>Инфо</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>Отладка</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>Путь к журналам</translation>
     </message>
@@ -1333,10 +1313,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">Выполнить команду при выходе</translation>
-    </message>
-    <message>
-        <source>Trace</source>
-        <translation type="unfinished">След</translation>
     </message>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>

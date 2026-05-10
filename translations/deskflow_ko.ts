@@ -1177,26 +1177,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>레벨</translation>
     </message>
     <message>
-        <source>Fatal</source>
-        <translation>치명적 오류</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>오류</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>경고</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>정보</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>디버그</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>로그 경로</translation>
     </message>
@@ -1335,10 +1315,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">종료 시 명령 실행</translation>
-    </message>
-    <message>
-        <source>Trace</source>
-        <translation type="unfinished">추적하다</translation>
     </message>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>

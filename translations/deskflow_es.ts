@@ -1177,26 +1177,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Ruta de registro</translation>
     </message>
     <message>
-        <source>Fatal</source>
-        <translation type="unfinished">Fatal</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Error</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">Advertencia</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="unfinished">Información</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation type="unfinished">Depurar</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation type="unfinished">Nivel</translation>
     </message>
@@ -1335,10 +1315,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">Ejecutar comando al salir</translation>
-    </message>
-    <message>
-        <source>Trace</source>
-        <translation type="unfinished">Rastro</translation>
     </message>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>

@@ -200,13 +200,22 @@ void SettingsDialog::showReadOnlyMessage()
 
 void SettingsDialog::updateText()
 {
-  // Set Tooltip for the logLevel Items
-  ui->comboLogLevel->setItemData(0, tr("Required messages"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(1, tr("Non-fatal errors"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(2, tr("General warnings"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(3, tr("General events [Default]"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(4, tr("Debug entries"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(5, tr("Verbose debug output"), Qt::ToolTipRole);
+  const auto logLevelNames = LogLevel::logLevelNames();
+  const QStringList toolTips = {tr("Required messages"),        tr("Non-fatal errors"), tr("General warnings"),
+                                tr("General events [Default]"), tr("Debug entries"),    tr("Verbose debug output")};
+  if (ui->comboLogLevel->count() == 0) {
+    const auto logLevelOptions = LogLevel::logLevelOptions();
+    for (int i = 0; i < logLevelNames.count(); i++) {
+      ui->comboLogLevel->addItem(logLevelNames.at(i));
+      ui->comboLogLevel->setItemData(i, logLevelOptions.at(i), Qt::UserRole);
+      ui->comboLogLevel->setItemData(i, toolTips.at(i), Qt::ToolTipRole);
+    }
+  } else {
+    for (int i = 0; i < logLevelNames.count(); i++) {
+      ui->comboLogLevel->setItemData(i, logLevelNames.at(i), Qt::DisplayRole);
+      ui->comboLogLevel->setItemData(i, toolTips.at(i), Qt::ToolTipRole);
+    }
+  }
   ui->buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(tr("Close and forget changes"));
   ui->buttonBox->button(QDialogButtonBox::Reset)->setToolTip(tr("Reset to stored values"));
@@ -217,9 +226,7 @@ void SettingsDialog::accept()
 {
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->comboInterface->currentData());
-  Settings::setValue(
-      Settings::Log::Level, LogLevel::toOption(static_cast<LogLevel::Level>(ui->comboLogLevel->currentIndex()))
-  );
+  Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentData());
   Settings::setValue(Settings::Log::ToFile, ui->groupLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
@@ -254,7 +261,9 @@ void SettingsDialog::accept()
 void SettingsDialog::loadFromConfig()
 {
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
-  ui->comboLogLevel->setCurrentIndex(static_cast<int>(LogLevel::fromOption(Settings::logLevelText())));
+  ui->comboLogLevel->setCurrentIndex(
+      ui->comboLogLevel->findData(Settings::logLevelText(), Qt::UserRole, Qt::MatchFixedString)
+  );
   ui->groupLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
@@ -424,7 +433,7 @@ bool SettingsDialog::isModified() const
 
   bool modified =
       (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
-      (ui->comboLogLevel->currentIndex() != static_cast<int>(LogLevel::fromOption(Settings::logLevelText()))) ||
+      (ui->comboLogLevel->currentData() != Settings::logLevelText()) ||
       (ui->groupLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
       (ui->lineLogFilename->text() != Settings::value(Settings::Log::File).toString()) ||
       (ui->rbAutoHide->isChecked() != Settings::value(Settings::Gui::Autohide).toBool()) ||

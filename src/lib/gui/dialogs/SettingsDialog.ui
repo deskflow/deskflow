@@ -25,6 +25,9 @@
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
        <string>&amp;General</string>
@@ -300,38 +303,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboLogLevel">
-           <item>
-            <property name="text">
-             <string>Fatal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Error</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Warning</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Info</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Debug</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Trace</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="comboLogLevel"/>
          </item>
         </layout>
        </item>

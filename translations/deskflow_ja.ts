@@ -1179,26 +1179,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>レベル</translation>
     </message>
     <message>
-        <source>Fatal</source>
-        <translation>重大</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>エラー</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>情報</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>デバッグ</translation>
-    </message>
-    <message>
         <source>Log path</source>
         <translation>ログファイルのパス</translation>
     </message>
@@ -1337,10 +1317,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">終了時にコマンドを実行</translation>
-    </message>
-    <message>
-        <source>Trace</source>
-        <translation type="unfinished">トレース</translation>
     </message>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>

@@ -1177,26 +1177,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Percorso log</translation>
     </message>
     <message>
-        <source>Fatal</source>
-        <translation>Fatale</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Errore</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Avviso</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>Informazioni</translation>
-    </message>
-    <message>
-        <source>Debug</source>
-        <translation>Debug</translation>
-    </message>
-    <message>
         <source>Level</source>
         <translation>Livello</translation>
     </message>
@@ -1335,10 +1315,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Run command on exit</source>
         <translation type="unfinished">Esegui comando all&apos;uscita</translation>
-    </message>
-    <message>
-        <source>Trace</source>
-        <translation type="unfinished">Traccia</translation>
     </message>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
