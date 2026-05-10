@@ -136,7 +136,7 @@ void App::loggingFilterWarning() const
   if ((CLOG->getFilter() > CLOG->getConsoleMaxLevel()) && (Settings::value(Settings::Log::ToFile).toBool())) {
     LOG_WARN(
         "log messages above %s are NOT sent to console (use file logging)",
-        CLOG->getFilterName(CLOG->getConsoleMaxLevel())
+        qPrintable(LogLevel::toOption(CLOG->getConsoleMaxLevel()))
     );
   }
 }

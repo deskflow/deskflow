@@ -106,12 +106,6 @@ public:
   //! Get the minimum priority level.
   LogLevel::Level getFilter() const;
 
-  //! Get the filter name of the current filter level.
-  const char *getFilterName() const;
-
-  //! Get the filter name of a specified filter level.
-  const char *getFilterName(LogLevel::Level level) const;
-
   //! Get the singleton instance of the log
   static Log *getInstance();
 

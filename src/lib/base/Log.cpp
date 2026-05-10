@@ -146,20 +146,6 @@ Log *Log::getInstance()
   return s_log;
 }
 
-const char *Log::getFilterName() const
-{
-  return getFilterName(getFilter());
-}
-
-const char *Log::getFilterName(LogLevel::Level level) const
-{
-  const auto levelIndex = static_cast<int>(level);
-  if (levelIndex < 0) {
-    return "Message";
-  }
-  return g_priority[levelIndex];
-}
-
 void Log::print(const char *file, int line, const char *fmt, ...)
 {
   const int initBufferSize = 1024;
