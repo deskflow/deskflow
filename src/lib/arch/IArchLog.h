@@ -10,7 +10,7 @@
 
 #include <QString>
 
-#include "base/LogLevel.h"
+#include "common/LogLevel.h"
 
 //! Interface for architecture dependent logging
 /*!

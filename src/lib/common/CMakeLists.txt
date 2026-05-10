@@ -15,6 +15,7 @@ add_library(common STATIC
   ExitCodes.h
   I18N.h
   I18N.cpp
+  LogLevel.h
   NetworkProtocol.h
   PlatformInfo.h
   Settings.h

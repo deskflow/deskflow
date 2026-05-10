@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "LogLevel.h"
+#include "common/LogLevel.h"
 
 #include <list>
 #include <mutex>

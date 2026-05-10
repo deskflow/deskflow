@@ -6,9 +6,9 @@
  */
 
 #include "base/Log.h"
-#include "base/LogLevel.h"
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
+#include "common/LogLevel.h"
 
 #include <cstdarg>
 #include <cstdint>

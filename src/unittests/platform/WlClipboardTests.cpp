@@ -6,7 +6,7 @@
 
 #include "WlClipboardTests.h"
 
-#include "base/LogLevel.h"
+#include "common/LogLevel.h"
 #include "common/PlatformInfo.h"
 #include "deskflow/ClipboardTypes.h"
 #include "platform/WlClipboard.h"

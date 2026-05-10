@@ -9,7 +9,7 @@
 #pragma once
 
 #include "base/Log.h"
-#include "base/LogLevel.h"
+#include "common/LogLevel.h"
 
 //! Outputter interface
 /*!
