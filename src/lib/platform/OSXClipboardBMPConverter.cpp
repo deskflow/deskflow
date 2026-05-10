@@ -1,51 +1,42 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2014 - 2016 Symless Ltd
+ * SPDX-FileCopyrightText: (C) 2014 - 2016, 2023 - 2026 Symless Ltd
  * SPDX-FileCopyrightText: (C) 2014 Ryan Chapman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "platform/OSXClipboardBMPConverter.h"
+
 #include "base/Log.h"
 
-// BMP file header structure
-struct CBMPHeader
-{
-public:
-  uint16_t type;
-  uint32_t size;
-  uint16_t reserved1;
-  uint16_t reserved2;
-  uint32_t offset;
-};
+#include <QtEndian>
 
-// BMP is little-endian
-static inline uint32_t fromLEU32(const uint8_t *data)
+quint32 OSXClipboardBMPConverter::dibPixelOffset(const quint8 *dib, qsizetype dibSize)
 {
-  return static_cast<uint32_t>(data[0]) | (static_cast<uint32_t>(data[1]) << 8) |
-         (static_cast<uint32_t>(data[2]) << 16) | (static_cast<uint32_t>(data[3]) << 24);
-}
-
-static void toLE(uint8_t *&dst, char src)
-{
-  dst[0] = static_cast<uint8_t>(src);
-  dst += 1;
-}
-
-static void toLE(uint8_t *&dst, uint16_t src)
-{
-  dst[0] = static_cast<uint8_t>(src & 0xffu);
-  dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
-  dst += 2;
-}
-
-static void toLE(uint8_t *&dst, uint32_t src)
-{
-  dst[0] = static_cast<uint8_t>(src & 0xffu);
-  dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
-  dst[2] = static_cast<uint8_t>((src >> 16) & 0xffu);
-  dst[3] = static_cast<uint8_t>((src >> 24) & 0xffu);
-  dst += 4;
+  quint32 pixelOffset = 0;
+  if (dibSize >= 16) {
+    const auto biSize = qFromLittleEndian<quint32>(dib);
+    if (biSize >= 12 && biSize <= dibSize) {
+      pixelOffset = biSize;
+      if (biSize >= kFallbackPixelOffset) {
+        const auto biBitCount = qFromLittleEndian<quint16>(dib + 14);
+        const auto biCompression = qFromLittleEndian<quint32>(dib + 16);
+        if (biSize == kFallbackPixelOffset) {
+          if (biCompression == kBiBitfields) {
+            pixelOffset += 12;
+          } else if (biCompression == kBiAlphabitfields) {
+            pixelOffset += 16;
+          }
+        }
+        if (biBitCount > 0 && biBitCount <= 8) {
+          const auto biClrUsed = qFromLittleEndian<quint32>(dib + 32);
+          const auto numColors = biClrUsed != 0 ? biClrUsed : (1u << biBitCount);
+          pixelOffset += numColors * 4;
+        }
+      }
+    }
+  }
+  return pixelOffset;
 }
 
 IClipboard::Format OSXClipboardBMPConverter::getFormat() const
@@ -55,45 +46,54 @@ IClipboard::Format OSXClipboardBMPConverter::getFormat() const
 
 CFStringRef OSXClipboardBMPConverter::getOSXFormat() const
 {
-  // TODO: does this only work with Windows?
   return CFSTR("com.microsoft.bmp");
 }
 
 std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) const
 {
-  LOG_VERBOSE("getting data from clipboard");
-  // create BMP image
-  uint8_t header[14];
-  uint8_t *dst = header;
-  toLE(dst, 'B');
-  toLE(dst, 'M');
-  toLE(dst, static_cast<uint32_t>(14 + bmp.size()));
-  toLE(dst, static_cast<uint16_t>(0));
-  toLE(dst, static_cast<uint16_t>(0));
-  toLE(dst, static_cast<uint32_t>(14 + 40));
-  return std::string(reinterpret_cast<const char *>(header), 14) + bmp;
+  if (bmp.size() < 4) {
+    LOG_DEBUG("rejecting clipboard dib, too small to wrap as bmp, size: %zu bytes", bmp.size());
+    return std::string();
+  }
+
+  auto pixelOffset = dibPixelOffset(reinterpret_cast<const quint8 *>(bmp.data()), bmp.size());
+  if (pixelOffset == 0) {
+    pixelOffset = kFallbackPixelOffset;
+  }
+
+  quint8 header[kBmpFileHeaderSize];
+  header[0] = 'B';
+  header[1] = 'M';
+  qToLittleEndian<quint32>(static_cast<quint32>(kBmpFileHeaderSize + bmp.size()), header + 2);
+  qToLittleEndian<quint16>(0, header + 6);
+  qToLittleEndian<quint16>(0, header + 8);
+  qToLittleEndian<quint32>(kBmpFileHeaderSize + pixelOffset, header + kBmpHeaderDIBPad);
+  return std::string(reinterpret_cast<const char *>(header), kBmpFileHeaderSize) + bmp;
 }
 
 std::string OSXClipboardBMPConverter::toIClipboard(const std::string &bmp) const
 {
-  // make sure data is big enough for a BMP file
-  if (bmp.size() <= 14 + 40) {
+  if (bmp.size() <= kBmpFileHeaderSize) {
+    LOG_DEBUG("rejecting clipboard bmp, too small to parse, size: %zu bytes", bmp.size());
+    return std::string();
+  }
+  const auto *raw = reinterpret_cast<const quint8 *>(bmp.data());
+  if (raw[0] != 'B' || raw[1] != 'M') {
+    LOG_DEBUG("rejecting clipboard bmp, missing bm magic");
     return std::string();
   }
 
-  // check BMP file header
-  const uint8_t *rawBMPHeader = reinterpret_cast<const uint8_t *>(bmp.data());
-  if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
-    return std::string();
-  }
-
-  // get offset to image data
-  uint32_t offset = fromLEU32(rawBMPHeader + 10);
-
-  // construct BMP
-  if (offset == 14 + 40) {
-    return bmp.substr(14);
+  // macOS auto-promotes pasteboard images as 32-bit BITMAPV5HEADER + BI_BITFIELDS,
+  // so the full DIB (extended header, masks, palette) must reach the receiver. The
+  // earlier code truncated to 40 bytes and dropped the BGRA bitfield masks.
+  const auto offset = qFromLittleEndian<quint32>(raw + kBmpHeaderDIBPad);
+  const auto naturalOffset = dibPixelOffset(raw + kBmpFileHeaderSize, bmp.size() - kBmpFileHeaderSize);
+  std::string result;
+  const bool hasGap = naturalOffset != 0 && offset > kBmpFileHeaderSize + naturalOffset && offset <= bmp.size();
+  if (hasGap) {
+    result = bmp.substr(kBmpFileHeaderSize, naturalOffset) + bmp.substr(offset);
   } else {
-    return bmp.substr(14, 40) + bmp.substr(offset, bmp.size() - offset);
+    result = bmp.substr(kBmpFileHeaderSize);
   }
+  return result;
 }
