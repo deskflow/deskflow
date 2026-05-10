@@ -24,9 +24,6 @@
 
 const int kPriorityPrefixLength = 3;
 
-// names of priorities
-static const char *g_priority[] = {"FATAL", "ERROR", "WARNING", "INFO", "DEBUG", "VERBOSE"};
-
 // number of priorities
 static const int g_numPriority = 6;
 
@@ -63,16 +60,14 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
   // base size includes null terminator, colon, space, etc.
   const int baseSize = 10;
 
-  const int priorityMaxSize = 10;
   const auto currentPriority = static_cast<int>(priority);
 
   auto timeStr = QDateTime::currentDateTime().toString(Qt::ISODateWithMs).toStdString();
 
-  auto sectionName = g_priority[currentPriority];
+  auto sectionName = LogLevel::toOption(priority).toStdString();
 
-  size_t priorityLength = strnlen(sectionName, priorityMaxSize);
   size_t messageLength = strnlen(message, SIZE_MAX);
-  size_t bufferSize = baseSize + timeStr.length() + priorityLength + messageLength;
+  size_t bufferSize = baseSize + timeStr.length() + sectionName.length() + messageLength;
 
   const auto filenameSet = filename != nullptr && filename[0] != '\0';
   if (filenameSet) {
@@ -83,20 +78,22 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
     std::vector<char> buffer(bufferSize);
 #if HAVE_FORMAT
     std::format_to_n(
-        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeStr.c_str(), sectionName, message, filename, lineNumber
+        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeStr.c_str(), sectionName.c_str(), message, filename,
+        lineNumber
     );
 #else
     snprintf(
-        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeStr.c_str(), sectionName, message, filename, lineNumber
+        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeStr.c_str(), sectionName.c_str(), message, filename,
+        lineNumber
     );
 #endif
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
 #if HAVE_FORMAT
-    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeStr.c_str(), sectionName, message);
+    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeStr.c_str(), sectionName.c_str(), message);
 #else
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeStr.c_str(), sectionName, message);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeStr.c_str(), sectionName.c_str(), message);
 #endif
     return buffer;
   }
@@ -221,7 +218,7 @@ bool Log::setFilter(const QString &maxPriority)
   }
 
   for (int i = 0; i < g_numPriority; ++i) {
-    if (maxPriority == QString(g_priority[i])) {
+    if (maxPriority == LogLevel::toOption((i))) {
       setFilter(static_cast<LogLevel::Level>(i));
       return true;
     }

@@ -18,7 +18,7 @@ void LogLevelTests::checkLogLevels_Valid()
   QCOMPARE(LogLevel::fromOption(QStringLiteral("wArning")), LogLevel::Level::Warning);
   QCOMPARE(LogLevel::fromOption(QStringLiteral("info")), LogLevel::Level::Info);
   QCOMPARE(LogLevel::fromOption("deBug"), LogLevel::Level::Debug);
-  QCOMPARE(LogLevel::fromOption("TraCe"), LogLevel::Level::Verbose);
+  QCOMPARE(LogLevel::fromOption("vERBOse"), LogLevel::Level::Verbose);
 }
 
 void LogLevelTests::checkLogLevels_Invalid()
