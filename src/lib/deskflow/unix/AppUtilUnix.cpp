@@ -46,9 +46,15 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 
 #if WINAPI_XWINDOWS
   // Check /usr/local first used on bsd and some systems
-  m_evdev = "/usr/local/share/X11/xkb/rules/evdev.xml";
-  if (!std::filesystem::exists(m_evdev))
-    m_evdev = "/usr/share/X11/xkb/rules/evdev.xml";
+  std::vector<std::string> evdev_candidate = {
+      "/usr/share/X11/xkb/rules/evdev.xml",       // Linux
+      "/usr/local/share/X11/xkb/rules/evdev.xml", // FreeBSD, DragonFlyBSD
+      "/usr/X11R7/lib/X11/xkb/rules/evdev.xml",   // NetBSD
+      "/usr/X11R6/share/X11/xkb/rules/evdev.xml", // OpenBSD
+  };
+
+  for (auto it = evdev_candidate.begin(); it != evdev_candidate.end() && !std::filesystem::exists(m_evdev = *it); it++)
+    ;
   layoutLangCodes = X11LayoutsParser::getX11LanguageList(m_evdev);
 
 #elif defined(Q_OS_MAC)
