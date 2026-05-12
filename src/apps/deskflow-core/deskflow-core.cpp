@@ -22,6 +22,7 @@
 #endif
 
 #include <QApplication>
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QSharedMemory>
 #include <QTextStream>
@@ -70,11 +71,6 @@ App *createApp(const CoreArgParser &parser, EventQueue &events, const QString &p
 int main(int argc, char **argv)
 {
 #if defined(Q_OS_WIN)
-  {
-    // HACK to make sure settings gets the correct qApp path
-    QCoreApplication m(argc, argv);
-  }
-
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
@@ -90,37 +86,47 @@ int main(int argc, char **argv)
 
   CoreArgParser parser(args);
 
-  // Print any parser errors
-  if (!parser.errorText().isEmpty()) {
-    QTextStream(stdout) << parser.errorText() << "\n";
+#if defined(Q_OS_WIN)
+  // Keep a Qt app object alive while parsing args/settings so
+  // portableSettingsFile() can safely use applicationDirPath().
+  {
+    QCoreApplication bootstrapApp(argc, argv);
+#endif
+
+    // Print any parser errors
+    if (!parser.errorText().isEmpty()) {
+      QTextStream(stdout) << parser.errorText() << "\n";
+    }
+
+    if (parser.help()) {
+      showHelp(parser);
+      return s_exitSuccess;
+    }
+
+    if (parser.version()) {
+      QTextStream(stdout) << parser.versionText();
+      return s_exitSuccess;
+    }
+
+    // Before we check any more args we need to check for a duplicate process.
+    // Create a shared memory segment with a unique key
+    // This is to prevent a new instance from running if one is already running
+    QSharedMemory sharedMemory(kCoreBinName);
+
+    // Attempt to attach first and detach in order to clean up stale shm chunks
+    // This can happen if the previous instance was killed or crashed
+    if (sharedMemory.attach())
+      sharedMemory.detach();
+
+    if (!sharedMemory.create(1) && parser.singleInstanceOnly()) {
+      LOG_WARN("an instance of deskflow core is already running");
+      return s_exitDuplicate;
+    }
+
+    parser.parse();
+#if defined(Q_OS_WIN)
   }
-
-  if (parser.help()) {
-    showHelp(parser);
-    return s_exitSuccess;
-  }
-
-  if (parser.version()) {
-    QTextStream(stdout) << parser.versionText();
-    return s_exitSuccess;
-  }
-
-  // Before we check any more args we need to check for a duplicate process.
-  // Create a shared memory segment with a unique key
-  // This is to prevent a new instance from running if one is already running
-  QSharedMemory sharedMemory(kCoreBinName);
-
-  // Attempt to attach first and detach in order to clean up stale shm chunks
-  // This can happen if the previous instance was killed or crashed
-  if (sharedMemory.attach())
-    sharedMemory.detach();
-
-  if (!sharedMemory.create(1) && parser.singleInstanceOnly()) {
-    LOG_WARN("an instance of deskflow core is already running");
-    return s_exitDuplicate;
-  }
-
-  parser.parse();
+#endif
 
   EventQueue events;
   const auto processName = QFileInfo(argv[0]).fileName();
