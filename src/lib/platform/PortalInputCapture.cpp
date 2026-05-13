@@ -16,6 +16,9 @@
 #include "common/Settings.h"
 #endif
 
+#include <algorithm>
+#include <cmath>
+#include <limits>
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
 
@@ -37,6 +40,118 @@ const char *PortalInputCapture::barrierSideName(BarrierSide side)
   }
 
   return "unknown";
+}
+
+int PortalInputCapture::scaleCoordinateBetweenRanges(
+    double value, int sourceMin, int sourceMax, int destinationMin, int destinationMax
+)
+{
+  if (sourceMax <= sourceMin || destinationMax <= destinationMin) {
+    return destinationMin;
+  }
+
+  const auto clamped = std::clamp(value, static_cast<double>(sourceMin), static_cast<double>(sourceMax));
+  const auto fraction = (clamped - sourceMin) / (sourceMax - sourceMin);
+  const auto mapped = static_cast<int>(std::lround(destinationMin + fraction * (destinationMax - destinationMin)));
+  return std::clamp(mapped, destinationMin, destinationMax);
+}
+
+bool PortalInputCapture::getPortalBounds(Bounds &bounds) const
+{
+  if (m_barrierInfo.empty()) {
+    return false;
+  }
+
+  bounds.left = std::numeric_limits<gint>::max();
+  bounds.top = std::numeric_limits<gint>::max();
+  bounds.right = std::numeric_limits<gint>::min();
+  bounds.bottom = std::numeric_limits<gint>::min();
+
+  for (const auto &info : m_barrierInfo) {
+    bounds.left = std::min(bounds.left, info.x);
+    bounds.top = std::min(bounds.top, info.y);
+    bounds.right = std::max(bounds.right, info.x + static_cast<gint>(info.width) - 1);
+    bounds.bottom = std::max(bounds.bottom, info.y + static_cast<gint>(info.height) - 1);
+  }
+
+  return true;
+}
+
+bool PortalInputCapture::getClosestReleaseBarrier(
+    double x, double y, int screenLeft, int screenTop, int screenRight, int screenBottom, const Bounds &portalBounds,
+    BarrierInfo &barrier
+) const
+{
+  const auto activeSides = m_screen->activeSides();
+  using enum DirectionMask;
+
+  auto side = BarrierSide::Left;
+  auto sideDistance = std::numeric_limits<double>::max();
+  const auto considerSide = [&side, &sideDistance](BarrierSide candidateSide, double candidateDistance) {
+    if (candidateDistance < sideDistance) {
+      side = candidateSide;
+      sideDistance = candidateDistance;
+    }
+  };
+
+  if (activeSides & static_cast<int>(LeftMask)) {
+    considerSide(BarrierSide::Left, std::abs(x - screenLeft));
+  }
+  if (activeSides & static_cast<int>(RightMask)) {
+    considerSide(BarrierSide::Right, std::abs(x - screenRight));
+  }
+  if (activeSides & static_cast<int>(TopMask)) {
+    considerSide(BarrierSide::Top, std::abs(y - screenTop));
+  }
+  if (activeSides & static_cast<int>(BottomMask)) {
+    considerSide(BarrierSide::Bottom, std::abs(y - screenBottom));
+  }
+  if (sideDistance == std::numeric_limits<double>::max()) {
+    return false;
+  }
+
+  const auto portalX = scaleCoordinateBetweenRanges(x, screenLeft, screenRight, portalBounds.left, portalBounds.right);
+  const auto portalY = scaleCoordinateBetweenRanges(y, screenTop, screenBottom, portalBounds.top, portalBounds.bottom);
+
+  auto bestDistance = std::numeric_limits<int>::max();
+  for (const auto &info : m_barrierInfo) {
+    if (info.side != side) {
+      continue;
+    }
+
+    const auto left = info.x;
+    const auto top = info.y;
+    const auto right = info.x + static_cast<gint>(info.width) - 1;
+    const auto bottom = info.y + static_cast<gint>(info.height) - 1;
+    auto distance = 0;
+
+    switch (side) {
+    case BarrierSide::Left:
+    case BarrierSide::Right:
+      if (portalY < top) {
+        distance = top - portalY;
+      } else if (portalY > bottom) {
+        distance = portalY - bottom;
+      }
+      break;
+
+    case BarrierSide::Top:
+    case BarrierSide::Bottom:
+      if (portalX < left) {
+        distance = left - portalX;
+      } else if (portalX > right) {
+        distance = portalX - right;
+      }
+      break;
+    }
+
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      barrier = info;
+    }
+  }
+
+  return bestDistance != std::numeric_limits<int>::max();
 }
 
 PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
@@ -189,6 +304,7 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
           LOG_WARN("failed to apply barrier %d (%d/%d-%d/%d)", id, x1, y1, x2, y2);
           g_object_unref(*elem);
           m_barriers.erase(elem);
+          std::erase_if(m_barrierInfo, [id](const auto &info) { return info.id == id; });
           break;
         }
       }
@@ -198,6 +314,110 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
   g_list_free_full(failed_list, g_object_unref);
 
   enable();
+}
+
+std::pair<int, int>
+PortalInputCapture::mapPortalActivationToScreenPosition(guint barrierId, double rawX, double rawY) const
+{
+  auto x = static_cast<int>(rawX);
+  auto y = static_cast<int>(rawY);
+
+  const auto it = std::ranges::find_if(m_barrierInfo, [barrierId](const auto &info) { return info.id == barrierId; });
+  if (it == m_barrierInfo.end()) {
+    LOG_DEBUG("activated barrier %u is not in the current pointer barrier set", barrierId);
+    return {x, y};
+  }
+
+  const auto zoneLeft = it->x;
+  const auto zoneTop = it->y;
+  const auto zoneRight = it->x + static_cast<gint>(it->width) - 1;
+  const auto zoneBottom = it->y + static_cast<gint>(it->height) - 1;
+
+  std::int32_t screenX;
+  std::int32_t screenY;
+  std::int32_t screenW;
+  std::int32_t screenH;
+  m_screen->getShape(screenX, screenY, screenW, screenH);
+
+  Bounds portalBounds;
+  if (getPortalBounds(portalBounds)) {
+    x = scaleCoordinateBetweenRanges(rawX, portalBounds.left, portalBounds.right, screenX, screenX + screenW - 1);
+    y = scaleCoordinateBetweenRanges(rawY, portalBounds.top, portalBounds.bottom, screenY, screenY + screenH - 1);
+  } else {
+    x = std::clamp(x, zoneLeft, zoneRight);
+    y = std::clamp(y, zoneTop, zoneBottom);
+  }
+
+  // The portal reports per-output zones, while Deskflow models the whole computer as one screen.
+  // Use the activated barrier to preserve the intended switch direction in Deskflow's aggregate coordinates.
+  using enum BarrierSide;
+  switch (it->side) {
+  case Left:
+    x = screenX;
+    break;
+  case Right:
+    x = screenX + screenW - 1;
+    break;
+  case Top:
+    y = screenY;
+    break;
+  case Bottom:
+    y = screenY + screenH - 1;
+    break;
+  }
+
+  return {x, y};
+}
+
+std::pair<double, double> PortalInputCapture::mapPortalReleasePosition(double x, double y) const
+{
+  std::int32_t screenX;
+  std::int32_t screenY;
+  std::int32_t screenW;
+  std::int32_t screenH;
+  m_screen->getShape(screenX, screenY, screenW, screenH);
+
+  const auto screenLeft = screenX;
+  const auto screenTop = screenY;
+  const auto screenRight = screenX + screenW - 1;
+  const auto screenBottom = screenY + screenH - 1;
+  const auto jumpZoneSize = m_screen->getJumpZoneSize();
+  Bounds portalBounds;
+  if (!getPortalBounds(portalBounds)) {
+    return {x, y};
+  }
+
+  auto mappedX = scaleCoordinateBetweenRanges(x, screenLeft, screenRight, portalBounds.left, portalBounds.right);
+  auto mappedY = scaleCoordinateBetweenRanges(y, screenTop, screenBottom, portalBounds.top, portalBounds.bottom);
+  BarrierInfo releaseBarrier;
+  if (getClosestReleaseBarrier(x, y, screenLeft, screenTop, screenRight, screenBottom, portalBounds, releaseBarrier)) {
+    const Bounds releaseBounds = {
+        releaseBarrier.x, releaseBarrier.y, releaseBarrier.x + static_cast<gint>(releaseBarrier.width) - 1,
+        releaseBarrier.y + static_cast<gint>(releaseBarrier.height) - 1
+    };
+
+    using enum BarrierSide;
+    switch (releaseBarrier.side) {
+    case Left:
+      mappedX = std::min(releaseBounds.left + jumpZoneSize, releaseBounds.right);
+      mappedY = std::clamp(mappedY, releaseBounds.top, releaseBounds.bottom);
+      break;
+    case Right:
+      mappedX = std::max(releaseBounds.right - jumpZoneSize, releaseBounds.left);
+      mappedY = std::clamp(mappedY, releaseBounds.top, releaseBounds.bottom);
+      break;
+    case Top:
+      mappedX = std::clamp(mappedX, releaseBounds.left, releaseBounds.right);
+      mappedY = std::min(releaseBounds.top + jumpZoneSize, releaseBounds.bottom);
+      break;
+    case Bottom:
+      mappedX = std::clamp(mappedX, releaseBounds.left, releaseBounds.right);
+      mappedY = std::max(releaseBounds.bottom - jumpZoneSize, releaseBounds.top);
+      break;
+    }
+  }
+
+  return {mappedX, mappedY};
 }
 
 void PortalInputCapture::addBarrier(
@@ -241,6 +461,7 @@ void PortalInputCapture::addBarrier(
   m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
       g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr)
   ));
+  m_barrierInfo.push_back({id, side, zoneX, zoneY, zoneWidth, zoneHeight, x1, y1, x2, y2});
 }
 
 gboolean PortalInputCapture::initSession()
@@ -345,8 +566,11 @@ void PortalInputCapture::release()
 
 void PortalInputCapture::release(double x, double y)
 {
-  LOG_DEBUG("releasing input capture session, id=%d x=%.1f y=%.1f", m_activationId, x, y);
-  xdp_input_capture_session_release_at(m_session, m_activationId, x, y);
+  const auto [mappedX, mappedY] = mapPortalReleasePosition(x, y);
+  LOG_DEBUG(
+      "releasing input capture session, id=%d x=%.1f y=%.1f mapped=%.1f,%.1f", m_activationId, x, y, mappedX, mappedY
+  );
+  xdp_input_capture_session_release_at(m_session, m_activationId, mappedX, mappedY);
   m_isActive = false;
 }
 
@@ -385,7 +609,27 @@ void PortalInputCapture::handleActivated(
     gdouble x;
     gdouble y;
     if (g_variant_lookup(options, "cursor_position", "(dd)", &x, &y)) {
-      m_screen->warpCursor((int)x, (int)y);
+      auto warpX = static_cast<int>(x);
+      auto warpY = static_cast<int>(y);
+
+      guint barrierId = 0;
+      const bool hasBarrierId = g_variant_lookup(options, "barrier_id", "u", &barrierId);
+
+      if (hasBarrierId && barrierId > 0) {
+        auto [mappedX, mappedY] = mapPortalActivationToScreenPosition(barrierId, x, y);
+        warpX = mappedX;
+        warpY = mappedY;
+      } else if (!hasBarrierId) {
+        LOG_DEBUG("portal activation has no barrier id, using raw cursor position");
+      } else {
+        LOG_DEBUG("portal activation barrier id is zero, using raw cursor position");
+      }
+
+      m_screen->warpCursor(warpX, warpY);
+      m_events->addEvent(Event(
+          EventTypes::PrimaryScreenMotionOnPrimary, m_screen->getEventTarget(),
+          IPrimaryScreen::MotionInfo::alloc(warpX, warpY)
+      ));
     } else {
       LOG_WARN("failed to get cursor position");
     }
@@ -406,16 +650,17 @@ void PortalInputCapture::handleDeactivated(
 
 void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, const GVariant *)
 {
-
   for (auto b : m_barriers)
     g_object_unref(b);
   m_barriers.clear();
+  m_barrierInfo.clear();
 
   const auto activeSides = m_screen->activeSides();
   using enum DirectionMask;
 
   // May not correctly handle different sized screens
   auto zones = xdp_input_capture_session_get_zones(session);
+  guint id = 0;
   while (zones != nullptr) {
     guint w;
     guint h;
@@ -424,8 +669,6 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
     g_object_get(zones->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr);
 
     LOG_DEBUG("input capture zone, %dx%d@%d,%d", w, h, x, y);
-
-    auto id = 0;
 
     if (activeSides & static_cast<int>(LeftMask)) {
       addBarrier(++id, BarrierSide::Left, x, y, w, h);
