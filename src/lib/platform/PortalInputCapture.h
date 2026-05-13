@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -14,6 +14,10 @@
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
+
+#include <cstdint>
+#include <map>
+#include <vector>
 
 namespace deskflow {
 
@@ -82,6 +86,17 @@ private:
     Deactivated,
     ZonesChanged
   };
+
+  enum class BarrierSide : uint8_t
+  {
+    Left,
+    Right,
+    Top,
+    Bottom
+  };
+
+  static const char *barrierSideName(BarrierSide side);
+  void addBarrier(guint id, BarrierSide side, gint zoneX, gint zoneY, guint zoneWidth, guint zoneHeight);
 
   EiScreen *m_screen = nullptr;
   IEventQueue *m_events = nullptr;
