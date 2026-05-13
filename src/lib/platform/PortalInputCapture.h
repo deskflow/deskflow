@@ -17,6 +17,7 @@
 
 #include <cstdint>
 #include <map>
+#include <utility>
 #include <vector>
 
 namespace deskflow {
@@ -95,7 +96,38 @@ private:
     Bottom
   };
 
+  struct BarrierInfo
+  {
+    guint id = 0;
+    BarrierSide side = BarrierSide::Left;
+    gint x = 0;
+    gint y = 0;
+    guint width = 0;
+    guint height = 0;
+    gint x1 = 0;
+    gint y1 = 0;
+    gint x2 = 0;
+    gint y2 = 0;
+  };
+
+  struct Bounds
+  {
+    gint left = 0;
+    gint top = 0;
+    gint right = 0;
+    gint bottom = 0;
+  };
+
   static const char *barrierSideName(BarrierSide side);
+  static int
+  scaleCoordinateBetweenRanges(double value, int sourceMin, int sourceMax, int destinationMin, int destinationMax);
+  bool getPortalBounds(Bounds &bounds) const;
+  bool getClosestReleaseBarrier(
+      double x, double y, int screenLeft, int screenTop, int screenRight, int screenBottom, const Bounds &portalBounds,
+      BarrierInfo &barrier
+  ) const;
+  std::pair<int, int> mapPortalActivationToScreenPosition(guint barrierId, double rawX, double rawY) const;
+  std::pair<double, double> mapPortalReleasePosition(double x, double y) const;
   void addBarrier(guint id, BarrierSide side, gint zoneX, gint zoneY, guint zoneWidth, guint zoneHeight);
 
   EiScreen *m_screen = nullptr;
@@ -121,6 +153,7 @@ private:
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
+  std::vector<BarrierInfo> m_barrierInfo;
 };
 
 } // namespace deskflow
