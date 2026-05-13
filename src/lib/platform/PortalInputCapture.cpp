@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -20,6 +20,24 @@
 #include <sys/un.h>     // for EIS fd hack, remove
 
 namespace deskflow {
+
+const char *PortalInputCapture::barrierSideName(BarrierSide side)
+{
+  using enum BarrierSide;
+
+  switch (side) {
+  case Left:
+    return "left";
+  case Right:
+    return "right";
+  case Top:
+    return "top";
+  case Bottom:
+    return "bottom";
+  }
+
+  return "unknown";
+}
 
 PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
     : m_screen{screen},
@@ -180,6 +198,49 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
   g_list_free_full(failed_list, g_object_unref);
 
   enable();
+}
+
+void PortalInputCapture::addBarrier(
+    guint id, BarrierSide side, gint zoneX, gint zoneY, guint zoneWidth, guint zoneHeight
+)
+{
+  gint x1 = 0;
+  gint x2 = 0;
+  gint y1 = 0;
+  gint y2 = 0;
+
+  using enum BarrierSide;
+  switch (side) {
+  case Left:
+    x1 = zoneX;
+    y1 = zoneY;
+    x2 = zoneX;
+    y2 = zoneY + static_cast<gint>(zoneHeight) - 1;
+    break;
+  case Right:
+    x1 = zoneX + static_cast<gint>(zoneWidth);
+    y1 = zoneY;
+    x2 = x1;
+    y2 = zoneY + static_cast<gint>(zoneHeight) - 1;
+    break;
+  case Top:
+    x1 = zoneX;
+    y1 = zoneY;
+    x2 = zoneX + static_cast<gint>(zoneWidth) - 1;
+    y2 = zoneY;
+    break;
+  case Bottom:
+    x1 = zoneX;
+    y1 = zoneY + static_cast<gint>(zoneHeight);
+    x2 = zoneX + static_cast<gint>(zoneWidth) - 1;
+    y2 = y1;
+    break;
+  }
+
+  LOG_DEBUG("barrier (%s) %u at %d,%d-%d,%d", barrierSideName(side), id, x1, y1, x2, y2);
+  m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
+      g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr)
+  ));
 }
 
 gboolean PortalInputCapture::initSession()
@@ -364,59 +425,22 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
 
     LOG_DEBUG("input capture zone, %dx%d@%d,%d", w, h, x, y);
 
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-
     auto id = 0;
 
     if (activeSides & static_cast<int>(LeftMask)) {
-      id++;
-      x1 = x;
-      y1 = y;
-      x2 = x;
-      y2 = y + h - 1;
-      LOG_DEBUG("barrier (left) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
-          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
-      )));
+      addBarrier(++id, BarrierSide::Left, x, y, w, h);
     }
 
     if (activeSides & static_cast<int>(RightMask)) {
-      id++;
-      x1 = x + w;
-      y1 = y;
-      x2 = x + w;
-      y2 = y + h - 1;
-      LOG_DEBUG("barrier (right) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
-          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
-      )));
+      addBarrier(++id, BarrierSide::Right, x, y, w, h);
     }
 
     if (activeSides & static_cast<int>(TopMask)) {
-      id++;
-      x1 = x;
-      y1 = y;
-      x2 = x + w - 1;
-      y2 = y;
-      LOG_DEBUG("barrier (top) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
-          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
-      )));
+      addBarrier(++id, BarrierSide::Top, x, y, w, h);
     }
 
     if (activeSides & static_cast<int>(BottomMask)) {
-      id++;
-      x1 = x;
-      y1 = y + h;
-      x2 = x + w - 1;
-      y2 = y + h;
-      LOG_DEBUG("barrier (bottom) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
-          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
-      )));
+      addBarrier(++id, BarrierSide::Bottom, x, y, w, h);
     }
     zones = zones->next;
   }
