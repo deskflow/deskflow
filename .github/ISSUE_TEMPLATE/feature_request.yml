@@ -15,7 +15,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     id: votes
     attributes:
       label: Voting Instructions
