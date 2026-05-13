@@ -7,26 +7,28 @@ body:
       value: |
         Thanks for taking the time to help us improve Deskflow.
 
+        <b>Sanity checks</b>
+        > [!IMPORTANT]
+        > 1. Try the latest [continuous build](https://github.com/deskflow/deskflow/releases).
+        > 2. Wayland users, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499).
+        > 3. macOS users, if the app crashes, try [Apple's solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac).
+        > 4. Search for existing issues and avoided creating duplicates.
+        > 5. Provide descriptive title for this issue.
+
   - type: checkboxes
     id: sanity-checks
     attributes:
-      label: Sanity checks
-      description: |
-        Before reporting a bug, please first:
-        1. Try the latest [continuous build](https://github.com/deskflow/deskflow/releases).
-        2. Wayland users, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499).
-        3. macOS users, if the app crashes, try [Apple's solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac).
+      label: Before reporting a bug, please complete the sanity checks above.
+      description: This helps us triage and resolve issues more efficiently.
       options:
-        - label: I have done the sanity checks, and my issue persists
-        - label: These sanity checks are not relevant to the bug
-    validations:
-      required: true
-      
+        - label: I have done the sanity checks, and my issue persists.
+          required: true
+
   - type: textarea
     id: version
     attributes:
       label: Deskflow version info
-      description: You can find the Deskflow version number on the About screen.
+      description: Please paste only the Deskflow version info, accessible via the **Help** menu in the **About** dialog using the **Copy version info** button.
       placeholder: |
         Deskflow: 1.2.3.4 (deadc0de)
         Qt: 3.2.1
@@ -38,31 +40,14 @@ body:
   - type: dropdown
     id: build
     attributes:
-      label: Build type
-      description: What kind of build are you using?
+      label: Build types
+      description: What kind of builds are you running for all servers and clients?
+      multiple: true
       options:
-        # Empty option to force selection
-        -
-        - Deskflow package (downloaded from Deskflow)
-        - Community package (apt, dnf, brew, etc.)
+        - Official release (installer/package from GitHub releases)
+        - Community package (apt, dnf, pacman/aur, brew, etc.)
         - Local developer build (built it myself)
         - Other (please specify)
-      default: 0
-    validations:
-      required: true
-
-  - type: checkboxes
-    id: os
-    attributes:
-      label: Operating systems (OS)
-      description: Operating systems (OS) in use for all servers and clients
-      options:
-        - label: Windows
-        - label: macOS
-        - label: Linux (X11)
-        - label: Linux (Wayland)
-        - label: BSD-derived
-        - label: Other (please specify)
     validations:
       required: true
 
@@ -72,15 +57,15 @@ body:
       label: Deskflow configuration
       description: |
         Please provide a very brief description of your configuration.
-        Let us know what OS your server and client are running, including all OS versions.
+        There is no need to provide operating system details here, as they are included when you paste the version info in the **Deskflow version info** section above.
         If you're using Linux, please provide the name of the distribution.
       placeholder: |
-        - Windows 11 server, macOS 15 client
+        - Windows 11 server, Ubuntu client, macOS 15 client
         - Each computer has a single monitor
-        - Windows is on the left, macOS is on the right
+        - Windows is on the center, Ubuntu is on the left, macOS is on the right
     validations:
       required: true
-      
+
   - type: textarea
     id: repro-steps
     attributes:
@@ -98,9 +83,17 @@ body:
     attributes:
       label: Log output
       description: |
-        Please copy and paste any relevant log output. 
+        Please copy and paste any relevant log output.
         This will be automatically formatted into code, so no need for backticks.
-      render: shell
+      value: |
+        <details><summary><h3> Show log </h3></summary>
+
+        <!-- Please paste your log into the code block below -->
+        ```ceylon
+
+        ```
+
+        </details>
 
   - type: textarea
     id: additional-info
@@ -114,4 +107,5 @@ body:
         - What other apps are you running?
         - Does the issue stop you using Deskflow entirely?
         - Did restarting Deskflow or the computer help?
+        - Are the locales matching across all your systems?
         - Anything else you can think of?
