@@ -15,6 +15,10 @@
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
 
+#include <cstdint>
+#include <map>
+#include <vector>
+
 namespace deskflow {
 
 class PortalInputCapture
@@ -82,6 +86,17 @@ private:
     Deactivated,
     ZonesChanged
   };
+
+  enum class BarrierSide : uint8_t
+  {
+    Left,
+    Right,
+    Top,
+    Bottom
+  };
+
+  static const char *barrierSideName(BarrierSide side);
+  void addBarrier(guint id, BarrierSide side, gint zoneX, gint zoneY, guint zoneWidth, guint zoneHeight);
 
   EiScreen *m_screen = nullptr;
   IEventQueue *m_events = nullptr;
