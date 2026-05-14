@@ -172,6 +172,11 @@
             </item>
             <item>
              <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>None</string>
              </property>
             </item>
@@ -202,6 +207,11 @@
             <item>
              <property name="text">
               <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
              </property>
             </item>
             <item>
@@ -259,6 +269,11 @@
             </item>
             <item>
              <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>None</string>
              </property>
             </item>
@@ -296,6 +311,11 @@
             </item>
             <item>
              <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>None</string>
              </property>
             </item>
@@ -329,6 +349,63 @@
             <item>
              <property name="text">
               <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="labelAltGr">
+            <property name="text">
+             <string>Alt &amp;Gr</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboAltGr</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QComboBox" name="comboAltGr">
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
              </property>
             </item>
             <item>
@@ -668,6 +745,7 @@
   <tabstop>comboShift</tabstop>
   <tabstop>comboCtrl</tabstop>
   <tabstop>comboSuper</tabstop>
+  <tabstop>comboAltGr</tabstop>
   <tabstop>comboAlt</tabstop>
   <tabstop>chkDeadTopLeft</tabstop>
   <tabstop>chkDeadTopRight</tabstop>
