@@ -895,6 +895,14 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
         <translation type="unfinished">El nombre de usuario no puede ser el mismo que un alias. Elimine el alias o cambie el nombre de usuario.</translation>
     </message>
+    <message>
+        <source>Alt Gr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt &amp;Gr</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>

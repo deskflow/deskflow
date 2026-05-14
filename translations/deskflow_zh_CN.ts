@@ -897,6 +897,14 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
         <translation>屏幕名称不能与别名相同。请移除别名或更改屏幕名称。</translation>
     </message>
+    <message>
+        <source>Alt Gr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt &amp;Gr</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
