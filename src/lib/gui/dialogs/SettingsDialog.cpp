@@ -69,6 +69,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
   }
 
   loadFromConfig();
+  logLevelChanged();
 
   adjustSize();
   QApplication::processEvents();
