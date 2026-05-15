@@ -45,15 +45,8 @@ void logLocalSecureCipherInfo(const SSL *ssl)
 
 void logRemoteSecureCipherInfo(const SSL *ssl)
 {
-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
-  // ssl->session->ciphers is not forward compatable,
-  // In future release of OpenSSL, it's not visible,
-  // however, LibreSSL still uses this.
-  auto cStack = ssl->session->ciphers;
-#else
-  // Use SSL_get_client_ciphers() for newer versions of OpenSSL.
   auto cStack = SSL_get_client_ciphers(ssl);
-#endif
+
   if (cStack) {
     LOG_VERBOSE("available remote ciphers:");
     showCipherStackDesc(cStack);
