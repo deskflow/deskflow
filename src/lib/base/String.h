@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <cstdarg>
 #include <string>
 
 //! std::string utilities
