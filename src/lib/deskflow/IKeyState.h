@@ -163,5 +163,15 @@ public:
   */
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const = 0;
 
+  //! Get the base key for a physical button
+  /*!
+  Returns the unmodified key produced by \p button, if the platform can
+  resolve it. The default implementation reports no mapping.
+  */
+  virtual KeyID getKeyIDForButton(KeyButton) const
+  {
+    return kKeyNone;
+  }
+
   //@}
 };
