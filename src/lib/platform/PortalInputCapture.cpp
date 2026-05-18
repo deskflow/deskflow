@@ -207,8 +207,6 @@ PortalInputCapture::~PortalInputCapture()
     g_signal_handler_disconnect(m_session, m_signals.at(Activated));
     g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
     g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
-
-    g_signal_handler_disconnect(m_session, m_signals.at(SelectionOwnerChanged));
     g_signal_handler_disconnect(m_session, m_signals.at(SelectionTransfer));
     g_object_unref(m_session);
   }
@@ -337,40 +335,6 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session)
 #endif
 }
 
-void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner)
-{
-#ifdef HAVE_LIBPORTAL_CLIPBOARD
-  LOG_DEBUG(
-      "selection owner changed, session owns: %s, mime types: %s", isOwner ? "yes" : "no",
-      mimeTypes ? formatMimeTypes(const_cast<const char **>(mimeTypes)).constData() : "(none)"
-  );
-
-  if (isOwner) {
-    LOG_DEBUG("ignoring selection owner change, session already owns the selection");
-    return;
-  }
-  if (!mimeTypes) {
-    LOG_DEBUG("ignoring selection owner change, selection cleared");
-    return;
-  }
-
-  if (!pickSupportedMime(mimeTypes)) {
-    LOG_DEBUG("ignoring selection owner change, no supported mime types: %s", formatMimeTypes(mimeTypes).constData());
-    return;
-  }
-
-  m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
-
-  if (!m_isActive) {
-    LOG_DEBUG("deferring clipboard read until input capture activates");
-    m_pendingClipboardRead = true;
-    return;
-  }
-
-  readClipboardSelection(session);
-#endif
-}
-
 void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
@@ -488,8 +452,6 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   handleZonesChanged(session, nullptr);
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  m_signals.at(SelectionOwnerChanged) =
-      g_signal_connect(G_OBJECT(parentSession), "selection-owner-changed", G_CALLBACK(selectionOwnerChanged), this);
   m_signals.at(SelectionTransfer) =
       g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
 #endif
@@ -895,7 +857,6 @@ void PortalInputCapture::handleActivated(
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (m_session) {
-    m_pendingClipboardRead = false;
     LOG_DEBUG("reading clipboard selection on activation");
     m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 
