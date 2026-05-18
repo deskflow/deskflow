@@ -66,13 +66,11 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
 {
   auto expirationDays = 365;
 
-  auto *privateKey = EVP_PKEY_new();
+  auto *privateKey = EVP_RSA_gen(keyLength);
   if (!privateKey) {
-    throw std::runtime_error("could not allocate private key for certificate");
+    throw std::runtime_error("failed to generate a " + std::to_string(keyLength) + "bit key for certificate");
   }
   auto privateKeyFree = finally([privateKey]() { EVP_PKEY_free(privateKey); });
-
-  privateKey = EVP_RSA_gen(keyLength);
 
   auto *cert = X509_new();
   if (!cert) {
