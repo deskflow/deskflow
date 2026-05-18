@@ -207,8 +207,19 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session)
 void PortalInputCapture::handleSelectionOwnerChanged(XdpSession *session, GStrv mimeTypes, gboolean isOwner)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (!mimeTypes || isOwner)
+  LOG_DEBUG(
+      "selection owner changed, session owns: %s, mime types: %s", isOwner ? "yes" : "no",
+      mimeTypes ? formatMimeTypes(const_cast<const char **>(mimeTypes)).constData() : "(none)"
+  );
+
+  if (isOwner) {
+    LOG_DEBUG("ignoring selection owner change, session already owns the selection");
     return;
+  }
+  if (!mimeTypes) {
+    LOG_DEBUG("ignoring selection owner change, selection cleared");
+    return;
+  }
 
   if (!pickSupportedMime(mimeTypes)) {
     LOG_DEBUG("ignoring selection owner change, no supported mime types: %s", formatMimeTypes(mimeTypes).constData());
@@ -306,6 +317,23 @@ void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char
 void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
 {
   g_autoptr(GError) error = nullptr;
+  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (!xdp_session_is_clipboard_enabled(parentSession)) {
+    // Restored sessions can pre-date clipboard support, leaving the channel
+    // disabled even though we requested it. Drop the saved token and recreate
+    // the session from scratch so the user gets a fresh permission dialog.
+    LOG_WARN("clipboard not enabled on session, discarding restore token to force a fresh session");
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
+    Settings::setValue(Settings::Server::XdpRestoreToken, QString());
+#endif
+    g_object_unref(m_session);
+    m_session = nullptr;
+    g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
+    return;
+  }
+#endif
 
   auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
   if (fd < 0) {
@@ -319,7 +347,6 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
   using enum Signal;
-  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
   m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
   m_signals.at(Activated) = g_signal_connect(G_OBJECT(session), "activated", G_CALLBACK(activated), this);
   m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(session), "deactivated", G_CALLBACK(deactivated), this);
@@ -328,12 +355,10 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   handleZonesChanged(session, nullptr);
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (xdp_session_is_clipboard_enabled(parentSession)) {
-    m_signals.at(SelectionOwnerChanged) =
-        g_signal_connect(G_OBJECT(parentSession), "selection-owner-changed", G_CALLBACK(selectionOwnerChanged), this);
-    m_signals.at(SelectionTransfer) =
-        g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
-  }
+  m_signals.at(SelectionOwnerChanged) =
+      g_signal_connect(G_OBJECT(parentSession), "selection-owner-changed", G_CALLBACK(selectionOwnerChanged), this);
+  m_signals.at(SelectionTransfer) =
+      g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
 #endif
 }
 
