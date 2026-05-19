@@ -1,15 +1,20 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2024 - 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "platform/PortalRemoteDesktop.h"
+
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include "platform/PortalClipboard.h"
+#endif
 
 namespace deskflow {
 
@@ -43,6 +48,10 @@ PortalRemoteDesktop::~PortalRemoteDesktop()
 
   if (m_sessionSignalId)
     g_signal_handler_disconnect(m_session, m_sessionSignalId);
+  if (m_selectionTransferSignalId)
+    g_signal_handler_disconnect(m_session, m_selectionTransferSignalId);
+  if (m_selectionOwnerChangedSignalId)
+    g_signal_handler_disconnect(m_session, m_selectionOwnerChangedSignalId);
   if (m_session)
     g_object_unref(m_session);
   g_object_unref(m_portal);
@@ -88,6 +97,30 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (!xdp_session_is_clipboard_enabled(session)) {
+    LOG_WARN("clipboard not enabled on remote desktop session, discarding restore token to force a fresh session");
+    Settings::setValue(Settings::Client::XdpRestoreToken, QString());
+    free(m_sessionRestoreToken);
+    m_sessionRestoreToken = nullptr;
+    if (m_selectionTransferSignalId) {
+      g_signal_handler_disconnect(session, m_selectionTransferSignalId);
+      m_selectionTransferSignalId = 0;
+    }
+    if (m_selectionOwnerChangedSignalId) {
+      g_signal_handler_disconnect(session, m_selectionOwnerChangedSignalId);
+      m_selectionOwnerChangedSignalId = 0;
+    }
+    if (m_sessionSignalId) {
+      g_signal_handler_disconnect(session, m_sessionSignalId);
+      m_sessionSignalId = 0;
+    }
+    g_clear_object(&m_session);
+    reconnect(0);
+    return;
+  }
+#endif
 
   m_sessionRestoreToken = xdp_session_get_restore_token(session);
   if (m_sessionRestoreToken) {
@@ -135,6 +168,14 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
   // the static function
   m_sessionSignalId = g_signal_connect(G_OBJECT(session), "closed", G_CALLBACK(handleSessionClosedCallback), this);
 
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  xdp_session_request_clipboard(session);
+  m_selectionTransferSignalId =
+      g_signal_connect(G_OBJECT(session), "selection-transfer", G_CALLBACK(selectionTransferCallback), this);
+  m_selectionOwnerChangedSignalId =
+      g_signal_connect(G_OBJECT(session), "selection-owner-changed", G_CALLBACK(selectionOwnerChangedCallback), this);
+#endif
+
   LOG_DEBUG("portal remote desktop session starting");
   xdp_session_start(
       session,
@@ -176,6 +217,50 @@ void PortalRemoteDesktop::glibThread(const void *)
     Thread::testCancel();
     g_main_context_iteration(context, true);
   }
+}
+
+void PortalRemoteDesktop::claimClipboard()
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (!m_session) {
+    LOG_DEBUG("portal remote desktop clipboard claim deferred, no session yet");
+    return;
+  }
+  if (!xdp_session_is_clipboard_enabled(m_session)) {
+    LOG_WARN("portal remote desktop clipboard not enabled on session, cannot claim");
+    return;
+  }
+  PortalClipboard::claimOwnership(m_screen->getClipboardCache(), m_session);
+#endif
+}
+
+void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  PortalClipboard::serveSelectionTransfer(m_screen->getClipboardCache(), session, mimeType, serial);
+#else
+  (void)session;
+  (void)mimeType;
+  (void)serial;
+#endif
+}
+
+void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (isOwner) {
+    LOG_DEBUG("portal remote desktop selection owner changed, we own it, ignoring");
+    return;
+  }
+
+  const qint64 maxBytes = static_cast<qint64>(m_screen->maximumClipboardSize()) * 1024;
+  if (PortalClipboard::readSelectionIntoCache(m_screen->getClipboardCache(), session, mimeTypes, maxBytes))
+    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+#else
+  (void)session;
+  (void)mimeTypes;
+  (void)isOwner;
+#endif
 }
 
 } // namespace deskflow
