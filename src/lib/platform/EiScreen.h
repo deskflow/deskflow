@@ -82,6 +82,12 @@ public:
   // Send clipboard event (needed by PortalInputCapture)
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
+  // Local clipboard cache (used by PortalRemoteDesktop to land selection reads)
+  EiClipboard *getClipboardCache() const
+  {
+    return m_clipboard;
+  }
+
   // Maximum clipboard size in KB, configured by the server
   size_t maximumClipboardSize() const
   {

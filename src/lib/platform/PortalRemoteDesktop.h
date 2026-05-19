@@ -13,6 +13,8 @@
 #include <glib.h>
 #include <libportal/portal.h>
 
+#include <QByteArray>
+
 namespace deskflow {
 
 class PortalRemoteDesktop
@@ -21,6 +23,8 @@ public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
   ~PortalRemoteDesktop();
 
+  void claimClipboard();
+
 private:
   void glibThread(const void *);
   gboolean timeoutHandler() const;
@@ -28,12 +32,23 @@ private:
   void handleInitSession(GObject *object, GAsyncResult *res);
   void handleSessionStarted(GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
+  void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
+  void handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner);
   void reconnect(unsigned int timeout = 1000);
 
-  /// g_signal_connect callback wrapper
   static void handleSessionClosedCallback(XdpSession *session, gpointer data)
   {
     static_cast<PortalRemoteDesktop *>(data)->handleSessionClosed(session);
+  }
+
+  static void selectionTransferCallback(XdpSession *session, const char *mimeType, uint32_t serial, gpointer data)
+  {
+    static_cast<PortalRemoteDesktop *>(data)->handleSelectionTransfer(session, mimeType, serial);
+  }
+
+  static void selectionOwnerChangedCallback(XdpSession *session, char **mimeTypes, gboolean isOwner, gpointer data)
+  {
+    static_cast<PortalRemoteDesktop *>(data)->handleSelectionOwnerChanged(session, mimeTypes, isOwner);
   }
 
 private:
@@ -48,6 +63,8 @@ private:
   char *m_sessionRestoreToken = nullptr;
 
   guint m_sessionSignalId = 0;
+  guint m_selectionTransferSignalId = 0;
+  guint m_selectionOwnerChangedSignalId = 0;
 
   /// The number of successful sessions we've had already
   guint m_sessionIteration = 0;
