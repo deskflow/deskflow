@@ -12,7 +12,7 @@ body:
         > 1. Try the latest [continuous build](https://github.com/deskflow/deskflow/releases).
         > 2. Wayland users, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499).
         > 3. macOS users, if the app crashes, try [Apple's solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac).
-        > 4. Search for existing issues and avoided creating duplicates.
+        > 4. Search for existing issues and avoid creating duplicates.
         > 5. Provide descriptive title for this issue.
 
   - type: checkboxes
@@ -60,9 +60,9 @@ body:
         There is no need to provide operating system details here, as they are included when you paste the version info in the **Deskflow version info** section above.
         If you're using Linux, please provide the name of the distribution.
       placeholder: |
-        - Windows 11 server, Ubuntu client, macOS 15 client
+        - Windows 11 server, Ubuntu client, and macOS 15 client
         - Each computer has a single monitor
-        - Windows is on the center, Ubuntu is on the left, macOS is on the right
+        - Windows is in the center, Ubuntu is on the left, and macOS is on the right
     validations:
       required: true
 
