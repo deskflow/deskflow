@@ -14,6 +14,7 @@ var classScreenConfig =
       [ "Alt", "classScreenConfig.html#aa614b21714c5878160804fb6375ea814aa2e92861b757ab878312dd57993d60cf", null ],
       [ "Meta", "classScreenConfig.html#aa614b21714c5878160804fb6375ea814ab6755d218d5f4e1cef9cce9cc39aeda9", null ],
       [ "Super", "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a0ce3266d4eb71ad50f7a90aee6d21dcd", null ],
+      [ "AltGr", "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a571dc3ee993d6e9a33bdc851be52b995", null ],
       [ "None", "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a6adf97f83acf6453d4a6a4b1070f3754", null ],
       [ "NumModifiers", "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a1e1d357a199c55b82db55f2992a484f0", null ]
     ] ],
