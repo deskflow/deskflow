@@ -340,6 +340,11 @@ void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   constexpr int kClipboardWriteTimeoutMs = 200;
 
+  if (m_isActive) {
+    LOG_DEBUG("skipping clipboard selection transfer, clipboard is active");
+    return;
+  }
+
   LOG_DEBUG("clipboard selection transfer requested, mime type: %s, serial: %u", mimeType, serial);
 
   const auto *requested = findSupportedMime(mimeType);
