@@ -164,6 +164,12 @@ elseif(UNIX)
         PortalRemoteDesktop.cpp
         PortalRemoteDesktop.h
       )
+      if(HAVE_LP_CLIPBOARD)
+        list(APPEND PLATFORM_SOURCES
+          PortalClipboard.cpp
+          PortalClipboard.h
+        )
+      endif()
     endif()
   endif()
 endif()
