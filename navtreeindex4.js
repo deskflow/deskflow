@@ -1,9 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,65,3],
-"OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,65,2],
-"OSXKeyState_8cpp.html#a57aa0ad9d6d6748803eeb69cc7460381":[7,0,1,1,9,65,11],
-"OSXKeyState_8cpp.html#a5c181c8c92422e7428a02f3ceee556c0":[7,0,1,1,9,65,12],
 "OSXKeyState_8cpp.html#a5d80ee8e879186619558806ad996f98d":[7,0,1,1,9,65,5],
 "OSXKeyState_8cpp.html#a5dc4072aac99d42048f4215cb937310a":[7,0,1,1,9,65,7],
 "OSXKeyState_8cpp.html#a8ad213e888adb067b810522d15d37c54":[7,0,1,1,9,65,8],
@@ -249,5 +245,9 @@ var NAVTREEINDEX4 =
 "SpacesValidator_8h_source.html":[7,0,1,1,5,4,17],
 "SslLogger_8cpp.html":[7,0,1,1,8,23],
 "SslLogger_8h.html":[7,0,1,1,8,24],
-"SslLogger_8h_source.html":[7,0,1,1,8,24]
+"SslLogger_8h_source.html":[7,0,1,1,8,24],
+"StatusBar_8cpp.html":[7,0,1,1,5,5,14],
+"StatusBar_8h.html":[7,0,1,1,5,5,15],
+"StatusBar_8h.html#a1398aa3370cc4c379c51f9837dabcd3b":[7,0,1,1,5,5,15,1],
+"StatusBar_8h.html#a2c61bdc878f442f4efbefb327251d895":[7,0,1,1,5,5,15,2]
 };

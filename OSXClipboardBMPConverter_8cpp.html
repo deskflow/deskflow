@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,167 +96,47 @@ $(function(){initNavTree('OSXClipboardBMPConverter_8cpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="OSXClipboardBMPConverter_8h_source.html">platform/OSXClipboardBMPConverter.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Log_8h_source.html">base/Log.h</a>&quot;</code><br />
+<code>#include &lt;QtEndian&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for OSXClipboardBMPConverter.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="OSXClipboardBMPConverter_8cpp__incl.png" border="0" usemap="#asrc_2lib_2platform_2OSXClipboardBMPConverter_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2platform_2OSXClipboardBMPConverter_8cpp" id="asrc_2lib_2platform_2OSXClipboardBMPConverter_8cpp">
-<area shape="rect" title=" " alt="" coords="300,5,493,44"/>
-<area shape="rect" href="OSXClipboardBMPConverter_8h.html" title=" " alt="" coords="175,92,426,117"/>
-<area shape="poly" title=" " alt="" coords="375,43,328,84,325,80,371,46"/>
-<area shape="rect" href="Log_8h.html" title=" " alt="" coords="495,92,580,117"/>
-<area shape="poly" title=" " alt="" coords="431,42,506,84,500,84,430,47"/>
-<area shape="rect" href="OSXClipboard_8h.html" title=" " alt="" coords="168,165,334,189"/>
-<area shape="poly" title=" " alt="" coords="294,115,270,154,266,150,290,119"/>
+<area shape="rect" title=" " alt="" coords="516,5,709,44"/>
+<area shape="rect" href="OSXClipboardBMPConverter_8h.html" title=" " alt="" coords="252,92,503,117"/>
+<area shape="poly" title=" " alt="" coords="553,46,428,89,426,84,558,43"/>
+<area shape="rect" href="Log_8h.html" title=" " alt="" coords="570,92,655,117"/>
+<area shape="poly" title=" " alt="" coords="614,42,615,78,610,75,611,47"/>
+<area shape="rect" title=" " alt="" coords="679,92,754,117"/>
+<area shape="poly" title=" " alt="" coords="638,42,691,83,686,82,637,47"/>
+<area shape="rect" href="OSXClipboard_8h.html" title=" " alt="" coords="154,165,319,189"/>
+<area shape="poly" title=" " alt="" coords="352,119,275,160,272,155,357,116"/>
+<area shape="rect" title=" " alt="" coords="342,165,413,189"/>
+<area shape="poly" title=" " alt="" coords="379,115,380,150,375,148,376,119"/>
 <area shape="rect" href="IClipboard_8h.html" title=" " alt="" coords="5,237,153,262"/>
-<area shape="poly" title=" " alt="" coords="221,192,123,233,120,229,224,188"/>
+<area shape="poly" title=" " alt="" coords="209,192,120,233,117,228,212,188"/>
 <area shape="rect" title=" " alt="" coords="176,237,296,262"/>
-<area shape="poly" title=" " alt="" coords="250,188,244,224,240,221,247,192"/>
+<area shape="poly" title=" " alt="" coords="238,188,239,223,234,221,235,192"/>
 <area shape="rect" title=" " alt="" coords="320,237,376,262"/>
-<area shape="poly" title=" " alt="" coords="268,187,323,228,318,228,266,192"/>
+<area shape="poly" title=" " alt="" coords="255,187,320,228,314,229,254,193"/>
 <area shape="rect" title=" " alt="" coords="9,310,69,335"/>
 <area shape="poly" title=" " alt="" coords="75,261,55,298,51,295,70,264"/>
 <area shape="rect" title=" " alt="" coords="94,310,147,335"/>
 <area shape="poly" title=" " alt="" coords="87,260,109,297,103,297,85,265"/>
-<area shape="rect" href="LogLevel_8h.html" title=" " alt="" coords="362,165,500,189"/>
-<area shape="poly" title=" " alt="" coords="522,116,463,158,460,153,518,118"/>
-<area shape="rect" title=" " alt="" coords="501,237,566,262"/>
-<area shape="poly" title=" " alt="" coords="539,115,537,223,532,220,535,119"/>
-<area shape="rect" title=" " alt="" coords="574,165,613,189"/>
-<area shape="poly" title=" " alt="" coords="548,115,578,153,573,152,546,120"/>
-<area shape="rect" title=" " alt="" coords="637,165,694,189"/>
-<area shape="poly" title=" " alt="" coords="559,115,634,157,628,157,558,120"/>
-<area shape="rect" title=" " alt="" coords="400,237,470,262"/>
-<area shape="poly" title=" " alt="" coords="433,188,436,223,431,220,430,192"/>
-<area shape="poly" title=" " alt="" coords="449,187,507,229,502,228,447,192"/>
+<area shape="rect" href="LogLevel_8h.html" title=" " alt="" coords="437,165,574,189"/>
+<area shape="poly" title=" " alt="" coords="597,116,537,158,535,153,592,118"/>
+<area shape="rect" title=" " alt="" coords="573,237,638,262"/>
+<area shape="poly" title=" " alt="" coords="614,115,609,223,605,220,610,119"/>
+<area shape="rect" title=" " alt="" coords="649,165,688,189"/>
+<area shape="poly" title=" " alt="" coords="622,115,652,153,647,152,621,120"/>
+<area shape="rect" title=" " alt="" coords="712,165,769,189"/>
+<area shape="poly" title=" " alt="" coords="634,115,708,157,703,157,633,120"/>
+<area shape="rect" title=" " alt="" coords="471,237,540,262"/>
+<area shape="poly" title=" " alt="" coords="507,188,508,223,503,220,504,192"/>
+<area shape="poly" title=" " alt="" coords="523,187,579,228,574,228,522,192"/>
 </map>
 </div>
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:CBMPHeader" id="r_CBMPHeader"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structCBMPHeader.html">CBMPHeader</a></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a9b4e877b5101f07289b4b163b6a3838d" id="r_a9b4e877b5101f07289b4b163b6a3838d"><td class="memItemLeft">static uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a9b4e877b5101f07289b4b163b6a3838d">fromLEU32</a> (const uint8_t *<a class="el" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)</td></tr>
-<tr class="memitem:a819a5ae7bd0a410afa3de17410434c49" id="r_a819a5ae7bd0a410afa3de17410434c49"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a819a5ae7bd0a410afa3de17410434c49">toLE</a> (uint8_t *&amp;dst, char src)</td></tr>
-<tr class="memitem:af05ae33bea57cf65cb913f9797aea3c3" id="r_af05ae33bea57cf65cb913f9797aea3c3"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#af05ae33bea57cf65cb913f9797aea3c3">toLE</a> (uint8_t *&amp;dst, uint16_t src)</td></tr>
-<tr class="memitem:ab75b57090621db7c7b2103d774c67c12" id="r_ab75b57090621db7c7b2103d774c67c12"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ab75b57090621db7c7b2103d774c67c12">toLE</a> (uint8_t *&amp;dst, uint32_t src)</td></tr>
-</table>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="a9b4e877b5101f07289b4b163b6a3838d" name="a9b4e877b5101f07289b4b163b6a3838d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b4e877b5101f07289b4b163b6a3838d">&#9670;&#160;</a></span>fromLEU32()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t fromLEU32 </td>
-          <td>(</td>
-          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a819a5ae7bd0a410afa3de17410434c49" name="a819a5ae7bd0a410afa3de17410434c49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a819a5ae7bd0a410afa3de17410434c49">&#9670;&#160;</a></span>toLE() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void toLE </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *&amp;</td>          <td class="paramname"><span class="paramname"><em>dst</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>src</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af05ae33bea57cf65cb913f9797aea3c3" name="af05ae33bea57cf65cb913f9797aea3c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af05ae33bea57cf65cb913f9797aea3c3">&#9670;&#160;</a></span>toLE() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void toLE </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *&amp;</td>          <td class="paramname"><span class="paramname"><em>dst</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>src</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab75b57090621db7c7b2103d774c67c12" name="ab75b57090621db7c7b2103d774c67c12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab75b57090621db7c7b2103d774c67c12">&#9670;&#160;</a></span>toLE() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void toLE </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *&amp;</td>          <td class="paramname"><span class="paramname"><em>dst</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>src</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>
