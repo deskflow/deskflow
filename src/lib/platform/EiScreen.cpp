@@ -424,7 +424,13 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
     return false;
   }
 
-  return IClipboard::copy(m_clipboard, clipboard);
+  bool ok = IClipboard::copy(m_clipboard, clipboard);
+
+  if (ok && m_portalRemoteDesktop && id == kClipboardClipboard) {
+    m_portalRemoteDesktop->claimClipboard();
+  }
+
+  return ok;
 }
 
 void EiScreen::checkClipboards()
