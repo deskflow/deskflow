@@ -798,6 +798,8 @@ void OSXScreen::leave()
 
   if (m_isPrimary) {
     avoidHesitatingCursor();
+    LOG_VERBOSE("centering cursor on leave: %+d, %+d", m_xCenter, m_yCenter);
+    warpCursor(m_xCenter, m_yCenter);
   }
 
   // now off screen
