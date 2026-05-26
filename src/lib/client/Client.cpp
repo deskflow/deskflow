@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -154,6 +154,9 @@ void Client::handshakeComplete()
 {
   m_ready = true;
   m_screen->enable();
+  if (m_relativeMouseMoves && !m_hasRelativeRestorePosition) {
+    saveRelativeRestorePosition();
+  }
   sendEvent(EventTypes::ClientConnected);
 }
 
@@ -195,12 +198,20 @@ void Client::getCursorPos(int32_t &x, int32_t &y) const
 void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, bool)
 {
   m_active = true;
+  if (m_relativeMouseMoves && m_hasRelativeRestorePosition) {
+    xAbs = m_relativeRestoreX;
+    yAbs = m_relativeRestoreY;
+    LOG_VERBOSE("using relative restore position: %d,%d", xAbs, yAbs);
+  }
   m_screen->mouseMove(xAbs, yAbs);
   m_screen->enter(mask);
 }
 
 bool Client::leave()
 {
+  if (m_relativeMouseMoves) {
+    saveRelativeRestorePosition();
+  }
   m_active = false;
 
   m_screen->leave();
@@ -283,6 +294,8 @@ void Client::screensaver(bool activate)
 
 void Client::resetOptions()
 {
+  m_relativeMouseMoves = false;
+  m_hasRelativeRestorePosition = false;
   m_screen->resetOptions();
 }
 
@@ -303,6 +316,14 @@ void Client::setOptions(const OptionsList &options)
       if (index != options.end()) {
         m_maximumClipboardSize = *index;
       }
+    } else if (id == kOptionRelativeMouseMoves) {
+      index++;
+      if (index != options.end()) {
+        m_relativeMouseMoves = (*index != 0);
+        if (m_relativeMouseMoves && m_ready && !m_hasRelativeRestorePosition) {
+          saveRelativeRestorePosition();
+        }
+      }
     }
   }
 
@@ -312,6 +333,13 @@ void Client::setOptions(const OptionsList &options)
   }
 
   m_screen->setOptions(options);
+}
+
+void Client::saveRelativeRestorePosition()
+{
+  m_screen->getCursorPos(m_relativeRestoreX, m_relativeRestoreY);
+  m_hasRelativeRestorePosition = true;
+  LOG_VERBOSE("saved relative restore position: %d,%d", m_relativeRestoreX, m_relativeRestoreY);
 }
 
 std::string Client::getName() const
