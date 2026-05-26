@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <string>
 
+#include <QByteArray>
 #include <QString>
 
 //! Exception base class
@@ -45,5 +46,5 @@ protected:
   virtual QString format(const char *id, const char *defaultFormat, ...) const noexcept;
 
 private:
-  mutable QString m_what;
+  mutable QByteArray m_what;
 };
