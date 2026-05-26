@@ -31,8 +31,8 @@ const char *BaseException::what() const throw()
     return what;
   }
 
-  m_what = getWhat();
-  return qPrintable(m_what);
+  m_what = getWhat().toLocal8Bit();
+  return m_what.constData();
 }
 
 QString BaseException::format(const char * /*id*/, const char *fmt, ...) const noexcept

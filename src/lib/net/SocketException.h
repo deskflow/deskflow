@@ -11,6 +11,8 @@
 #include "base/BaseException.h"
 #include "io/IOException.h"
 
+#include <QByteArray>
+
 /**
  * @brief SocketException generic socket exception
  */
@@ -81,11 +83,11 @@ public:
   {
     if (m_state == kFirst) {
       m_state = kFormat;
-      m_formatted = getWhat();
+      m_formatted = getWhat().toLocal8Bit();
       m_state = kDone;
     }
     if (m_state == kDone) {
-      return qPrintable(m_formatted);
+      return m_formatted.constData();
     } else {
       return IOCloseException::what();
     }
@@ -102,7 +104,7 @@ private:
     kDone
   };
   mutable EState m_state;
-  mutable QString m_formatted;
+  mutable QByteArray m_formatted;
 };
 
 /**
@@ -125,11 +127,11 @@ public:
   {
     if (m_state == kFirst) {
       m_state = kFormat;
-      m_formatted = getWhat();
+      m_formatted = getWhat().toLocal8Bit();
       m_state = kDone;
     }
     if (m_state == kDone) {
-      return qPrintable(m_formatted);
+      return m_formatted.constData();
     } else {
       return SocketException::what();
     }
@@ -143,7 +145,7 @@ private:
     kDone
   };
   mutable EState m_state;
-  mutable QString m_formatted;
+  mutable QByteArray m_formatted;
 };
 
 /**
