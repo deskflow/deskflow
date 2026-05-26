@@ -1,11 +1,13 @@
 <map id="src/lib/deskflow/DeskflowException.h" name="src/lib/deskflow/DeskflowException.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="48,5,219,44"/>
-<area shape="rect" id="Node000002" href="$BaseException_8h.html" title=" " alt="" coords="58,92,209,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,42,136,77,131,75,132,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="96,5,267,44"/>
+<area shape="rect" id="Node000002" href="$BaseException_8h.html" title=" " alt="" coords="106,92,257,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,42,184,77,179,75,180,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,165,83,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,117,72,157,69,153,116,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="161,119,82,160,79,155,157,115"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="107,165,160,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="135,115,136,150,131,148,132,119"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="185,165,250,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="148,115,195,155,190,155,146,120"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="176,116,151,154,148,150,171,118"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="185,165,274,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="190,115,216,152,210,151,188,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="298,165,363,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="207,115,295,157,290,158,205,120"/>
 </map>
