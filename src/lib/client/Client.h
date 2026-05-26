@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -155,6 +155,7 @@ public:
   std::string getName() const override;
 
 private:
+  void saveRelativeRestorePosition();
   void sendClipboard(ClipboardID);
   void sendEvent(deskflow::EventTypes);
   void sendConnectionFailedEvent(const char *msg);
@@ -200,6 +201,10 @@ private:
   IEventQueue *m_events = nullptr;
   bool m_useSecureNetwork = false;
   bool m_enableClipboard = true;
+  bool m_relativeMouseMoves = false;
+  bool m_hasRelativeRestorePosition = false;
+  int32_t m_relativeRestoreX = 0;
+  int32_t m_relativeRestoreY = 0;
   size_t m_maximumClipboardSize = INT_MAX;
   size_t m_resolvedAddressesCount = 0;
 };
