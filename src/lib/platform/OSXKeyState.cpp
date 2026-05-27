@@ -173,6 +173,33 @@ bool isModifier(uint8_t virtualKey)
   return (modifiers.find(virtualKey) != modifiers.end());
 }
 
+AutoTISInputSourceRef copyKeyboardLayoutForKeyTranslation()
+{
+  std::lock_guard<std::mutex> lock(g_tisMutex);
+
+  AutoTISInputSourceRef keyboardLayout(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
+  AutoTISInputSourceRef inputSource(TISCopyCurrentKeyboardInputSource(), CFRelease);
+
+  const bool inputSourceHasLayout =
+      inputSource && TISGetInputSourceProperty(inputSource.get(), kTISPropertyUnicodeKeyLayoutData) != nullptr;
+
+  CFBooleanRef isSelectCapable = nullptr;
+  if (keyboardLayout) {
+    isSelectCapable =
+        (CFBooleanRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceIsSelectCapable);
+  }
+  const bool keyboardLayoutIsSelectCapable = isSelectCapable && CFBooleanGetValue(isSelectCapable);
+
+  if (inputSource && keyboardLayout && !inputSourceHasLayout && !keyboardLayoutIsSelectCapable) {
+    AutoTISInputSourceRef asciiKeyboardLayout(TISCopyCurrentASCIICapableKeyboardLayoutInputSource(), CFRelease);
+    if (asciiKeyboardLayout) {
+      return asciiKeyboardLayout;
+    }
+  }
+
+  return keyboardLayout;
+}
+
 } // namespace
 
 //
@@ -293,11 +320,10 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   }
 
   // get keyboard info
-  AutoTISInputSourceRef currentKeyboardLayout(nullptr, CFRelease);
+  AutoTISInputSourceRef currentKeyboardLayout = copyKeyboardLayoutForKeyTranslation();
   CFDataRef ref = nullptr;
   {
     std::lock_guard<std::mutex> lock(g_tisMutex);
-    currentKeyboardLayout = AutoTISInputSourceRef(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
     if (currentKeyboardLayout)
       ref = (CFDataRef)TISGetInputSourceProperty(currentKeyboardLayout.get(), kTISPropertyUnicodeKeyLayoutData);
   }
