@@ -14,6 +14,7 @@
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
+#include <QFile>
 #include <algorithm>
 #include <filesystem>
 #include <stdexcept>
@@ -88,8 +89,9 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   X509_set_issuer_name(cert, name);
 
   X509_sign(cert, privateKey, EVP_sha256());
+  const QFile file(path);
+  const std::filesystem::path fsPath = file.filesystemFileName();
 
-  const std::filesystem::path fsPath = path.toStdString();
 #if defined(Q_OS_WIN)
   auto fp = _wfopen(fsPath.native().c_str(), L"w");
 #else
