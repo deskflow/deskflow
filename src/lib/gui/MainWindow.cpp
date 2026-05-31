@@ -33,8 +33,10 @@
 
 #include <QCheckBox>
 #include <QCloseEvent>
+#include <QComboBox>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include <QLineEdit>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QMenu>
@@ -47,6 +49,7 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
+#include <QSignalBlocker>
 
 #include <memory>
 
@@ -55,6 +58,30 @@
 #endif
 
 using namespace deskflow::gui;
+
+namespace {
+constexpr auto kRemoteHostHistoryLimit = 10;
+
+QStringList remoteHostHistory()
+{
+  const auto rawHistory = Settings::value(Settings::Client::RemoteHostHistory).toString();
+  const auto savedHosts = rawHistory.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+
+  QStringList history;
+  for (const auto &savedHost : savedHosts) {
+    const auto host = savedHost.trimmed();
+    if (!host.isEmpty() && !history.contains(host))
+      history.append(host);
+  }
+
+  return history;
+}
+
+QString remoteHostHistorySettingValue(const QStringList &history)
+{
+  return history.join(QLatin1Char('\n'));
+}
+} // namespace
 
 MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
@@ -215,6 +242,8 @@ void MainWindow::setupControls()
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
   ui->lineEditName->installEventFilter(this);
+  ui->lineHostname->setInsertPolicy(QComboBox::NoInsert);
+  refreshRemoteHostHistory();
 
   if (deskflow::platform::isMac()) {
     ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -283,8 +312,8 @@ void MainWindow::connectSlots()
 
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->lineHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
+  connect(ui->lineHostname, &QComboBox::currentTextChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -649,7 +678,7 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (ui->rbModeClient->isChecked() && remoteHostText().isEmpty())
       return;
     startCore();
   }
@@ -703,8 +732,9 @@ void MainWindow::applyConfig()
     setWindowTitle(kAppName);
   }
 
+  refreshRemoteHostHistory();
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
-    ui->lineHostname->setText(host);
+    ui->lineHostname->setCurrentText(host);
 
   updateLocalFingerprint();
   setTrayIcon();
@@ -724,8 +754,11 @@ void MainWindow::saveSettings() const
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  if (!ui->lineHostname->text().isEmpty())
-    Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+  const auto remoteHost = remoteHostText();
+  if (!remoteHost.isEmpty()) {
+    Settings::setValue(Settings::Client::RemoteHost, remoteHost);
+    rememberRemoteHost(remoteHost);
+  }
   Settings::save();
 }
 
@@ -1216,14 +1249,47 @@ void MainWindow::toggleCanRunCore(bool enableButtons)
   m_actionStopCore->setEnabled(enableButtons && isStarted);
 }
 
+QString MainWindow::remoteHostText() const
+{
+  return ui->lineHostname->currentText().trimmed();
+}
+
+void MainWindow::refreshRemoteHostHistory() const
+{
+  const auto currentHost = remoteHostText();
+  const QSignalBlocker blocker(ui->lineHostname);
+
+  ui->lineHostname->clear();
+  ui->lineHostname->addItems(remoteHostHistory());
+  ui->lineHostname->setCurrentText(currentHost);
+}
+
+void MainWindow::rememberRemoteHost(const QString &remoteHost) const
+{
+  const auto host = remoteHost.trimmed();
+  if (host.isEmpty())
+    return;
+
+  auto history = remoteHostHistory();
+  history.removeAll(host);
+  history.prepend(host);
+
+  while (history.size() > kRemoteHostHistoryLimit)
+    history.removeLast();
+
+  Settings::setValue(Settings::Client::RemoteHostHistory, remoteHostHistorySettingValue(history));
+  refreshRemoteHostHistory();
+}
+
 void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 {
-  m_coreProcess.setAddress(newRemoteHost);
-  toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());
-  if (newRemoteHost.isEmpty()) {
+  const auto remoteHost = newRemoteHost.trimmed();
+  m_coreProcess.setAddress(remoteHost);
+  toggleCanRunCore(!remoteHost.isEmpty() && ui->rbModeClient->isChecked());
+  if (remoteHost.isEmpty()) {
     Settings::setValue(Settings::Client::RemoteHost);
   } else {
-    Settings::setValue(Settings::Client::RemoteHost, newRemoteHost);
+    Settings::setValue(Settings::Client::RemoteHost, remoteHost);
   }
 }
 
@@ -1284,5 +1350,5 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  return ((isServer || isClient) && (isClient && !remoteHostText().isEmpty()) || isServer);
 }

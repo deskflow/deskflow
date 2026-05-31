@@ -138,6 +138,9 @@ private:
   void setHostName();
   void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
+  QString remoteHostText() const;
+  void refreshRemoteHostHistory() const;
+  void rememberRemoteHost(const QString &remoteHost) const;
   void remoteHostChanged(const QString &newRemoteHost);
   void updateIpLabel(const QStringList &addresses);
   void updateTimeoutDelay(int newDelay);

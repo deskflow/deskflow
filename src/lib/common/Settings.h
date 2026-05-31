@@ -41,6 +41,7 @@ public:
     inline static const auto XScrollScale = QStringLiteral("client/xScrollScale");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
+    inline static const auto RemoteHostHistory = QStringLiteral("client/remoteHostHistory");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
   };
   struct Core
@@ -195,6 +196,7 @@ private:
     , Settings::Client::InvertXScroll
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
+    , Settings::Client::RemoteHostHistory
     , Settings::Client::YScrollScale
     , Settings::Client::XScrollScale
     , Settings::Client::XdpRestoreToken
