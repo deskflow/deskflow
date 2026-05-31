@@ -84,9 +84,14 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   X509_gmtime_adj(X509_get_notAfter(cert), expirationDays * 24 * 3600);
   X509_set_pubkey(cert, privateKey);
 
-  auto *name = X509_get_subject_name(cert);
+  auto *name = X509_NAME_new();
+  if (!name) {
+    throw std::runtime_error("could not allocate subject name");
+  }
   X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, reinterpret_cast<const unsigned char *>("Deskflow"), -1, -1, 0);
+  X509_set_subject_name(cert, name);
   X509_set_issuer_name(cert, name);
+  X509_NAME_free(name);
 
   X509_sign(cert, privateKey, EVP_sha256());
   const QFile file(path);
