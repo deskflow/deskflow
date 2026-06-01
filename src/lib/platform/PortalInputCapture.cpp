@@ -1,8 +1,8 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -11,13 +11,28 @@
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "deskflow/ClipboardTypes.h"
+#include "platform/EiClipboard.h"
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include "platform/PortalClipboard.h"
+#endif
 
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
 #include "common/Settings.h"
 #endif
 
+#include <poll.h>
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
+
+#include <QBuffer>
+#include <QByteArray>
+#include <QByteArrayList>
+#include <QDataStream>
+#include <QFile>
+#include <QImage>
+#include <QtEndian>
 
 namespace deskflow {
 
@@ -27,6 +42,9 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
       m_portalVersion(0),
       m_portal{xdp_portal_new()}
 {
+  // Create clipboard for primary clipboard ID
+  m_clipboard = new EiClipboard(kClipboardClipboard);
+
   m_glibMainLoop = g_main_loop_new(nullptr, true);
 
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
@@ -59,6 +77,7 @@ PortalInputCapture::~PortalInputCapture()
     g_signal_handler_disconnect(m_session, m_signals.at(Activated));
     g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
     g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
+    g_signal_handler_disconnect(m_session, m_signals.at(SelectionTransfer));
     g_object_unref(m_session);
   }
 
@@ -67,6 +86,17 @@ PortalInputCapture::~PortalInputCapture()
   }
   m_barriers.clear();
   g_object_unref(m_portal);
+
+  delete m_clipboard;
+}
+
+EiClipboard *PortalInputCapture::getClipboard(ClipboardID id) const
+{
+  // Currently only supporting primary clipboard
+  if (id == kClipboardClipboard) {
+    return m_clipboard;
+  }
+  return nullptr;
 }
 
 gboolean PortalInputCapture::timeoutHandler() const
@@ -84,9 +114,67 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
+void PortalInputCapture::claimClipboardOwnership(XdpSession *session)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  PortalClipboard::claimOwnership(m_clipboard, session);
+#endif
+}
+
+void PortalInputCapture::readClipboardSelection(XdpSession *session)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  const qint64 maxBytes = static_cast<qint64>(m_screen->maximumClipboardSize()) * 1024;
+  LOG_DEBUG("clipboard read cap: %lld bytes", static_cast<long long>(maxBytes));
+
+  const char **mimeTypes = xdp_session_get_selection_mime_types(session);
+  if (!mimeTypes) {
+    LOG_DEBUG("clipboard has no mime types available to read");
+    return;
+  }
+
+  if (PortalClipboard::readSelectionIntoCache(m_clipboard, session, mimeTypes, maxBytes))
+    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+#else
+  (void)session;
+#endif
+}
+
+void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (m_isActive) {
+    LOG_DEBUG("skipping clipboard selection transfer, clipboard is active");
+    return;
+  }
+  PortalClipboard::serveSelectionTransfer(m_clipboard, session, mimeType, serial);
+#else
+  (void)session;
+  (void)mimeType;
+  (void)serial;
+#endif
+}
+
 void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
 {
   g_autoptr(GError) error = nullptr;
+  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (!xdp_session_is_clipboard_enabled(parentSession)) {
+    // Restored sessions can pre-date clipboard support, leaving the channel
+    // disabled even though we requested it. Drop the saved token and recreate
+    // the session from scratch so the user gets a fresh permission dialog.
+    LOG_WARN("clipboard not enabled on session, discarding restore token to force a fresh session");
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
+    Settings::setValue(Settings::Server::XdpRestoreToken, QString());
+#endif
+    g_object_unref(m_session);
+    m_session = nullptr;
+    g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
+    return;
+  }
+#endif
 
   auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
   if (fd < 0) {
@@ -100,13 +188,17 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
   using enum Signal;
-  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
   m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
-  m_signals.at(Activated) = g_signal_connect(G_OBJECT(m_session), "activated", G_CALLBACK(activated), this);
-  m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(m_session), "deactivated", G_CALLBACK(deactivated), this);
-  m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
+  m_signals.at(Activated) = g_signal_connect(G_OBJECT(session), "activated", G_CALLBACK(activated), this);
+  m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(session), "deactivated", G_CALLBACK(deactivated), this);
+  m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
-  handleZonesChanged(m_session, nullptr);
+  handleZonesChanged(session, nullptr);
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_signals.at(SelectionTransfer) =
+      g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
+#endif
 }
 
 void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
@@ -225,6 +317,7 @@ gboolean PortalInputCapture::initSession()
       return FALSE;
     }
     m_session = session;
+    xdp_session_request_clipboard(xdp_input_capture_session_get_session(session));
     xdp_input_capture_session_set_session_persistence(session, XDP_INPUT_CAPTURE_SESSION_PERSISTENCE_PERSISTENT);
     if (auto sessionToken = Settings::value(Settings::Server::XdpRestoreToken).toByteArray(); !sessionToken.isEmpty()) {
       xdp_input_capture_session_set_restore_token(session, strdup(sessionToken.data()));
@@ -333,6 +426,29 @@ void PortalInputCapture::handleActivated(
   }
   m_activationId = activationId;
   m_isActive = true;
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (m_session) {
+    LOG_DEBUG("reading clipboard selection on activation");
+    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+
+    XdpSession *session = xdp_input_capture_session_get_session(m_session);
+    const char **mimeTypes = xdp_session_get_selection_mime_types(session);
+
+    if (mimeTypes && mimeTypes[0]) {
+      LOG_DEBUG("clipboard current selection mime types: %s", PortalClipboard::formatMimeTypes(mimeTypes).constData());
+      if (!xdp_session_is_selection_owned_by_session(session))
+        readClipboardSelection(session);
+    } else {
+      LOG_DEBUG("no current clipboard selection");
+    }
+
+    claimClipboardOwnership(session);
+    LOG_DEBUG("activation clipboard handling complete");
+  } else {
+    LOG_WARN("input capture activated without a session, skipping clipboard read");
+  }
+#endif
 }
 
 void PortalInputCapture::handleDeactivated(

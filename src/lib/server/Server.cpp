@@ -1211,9 +1211,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
 
   if (grabber == m_primaryClient && m_active != m_primaryClient) {
     LOG_INFO("clipboard grabbed while active screen was changed, resending clipboard data");
-    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-      onClipboardChanged(m_primaryClient, id, m_clipboards[id].m_clipboardSeqNum);
-    }
+    onClipboardChanged(m_primaryClient, info->m_id, clipboard.m_clipboardSeqNum);
   }
 }
 
@@ -1459,10 +1457,7 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   std::string data = clipboard.m_clipboard.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {
-    LOG_INFO(
-        "not updating clipboard because it's over the size limit (%i KB) configured by the server",
-        m_maximumClipboardSize
-    );
+    LOG_WARN("not sending clipboard data, exceeds limit: %i KB", m_maximumClipboardSize);
     return;
   }
 

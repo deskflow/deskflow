@@ -1,8 +1,8 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -11,17 +11,24 @@
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
+#include <QByteArray>
+
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
 
 namespace deskflow {
 
+class EiClipboard;
+
 class PortalInputCapture
 {
 public:
   PortalInputCapture(EiScreen *screen, IEventQueue *events);
   ~PortalInputCapture();
+
+  // Get the clipboard for the specified ID
+  EiClipboard *getClipboard(ClipboardID id) const;
   void enable();
   void disable();
   void release();
@@ -45,6 +52,10 @@ private:
   void
   handleDeactivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, const GVariant *options);
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
+
+  void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
+  void readClipboardSelection(XdpSession *session);
+  void claimClipboardOwnership(XdpSession *session);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)
@@ -72,6 +83,10 @@ private:
   {
     static_cast<PortalInputCapture *>(data)->handleZonesChanged(session, options);
   }
+  static void selectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial, const gpointer data)
+  {
+    static_cast<PortalInputCapture *>(data)->handleSelectionTransfer(session, mimeType, serial);
+  }
 
 private:
   enum class Signal : uint8_t
@@ -80,7 +95,10 @@ private:
     Disabled,
     Activated,
     Deactivated,
-    ZonesChanged
+    ZonesChanged,
+
+    // Clipboard signals
+    SelectionTransfer,
   };
 
   EiScreen *m_screen = nullptr;
@@ -94,11 +112,10 @@ private:
   XdpInputCaptureSession *m_session = nullptr;
 
   std::map<Signal, gulong> m_signals = {
-      {Signal::SessionClosed, 0},
-      {Signal::Disabled, 0},
-      {Signal::Activated, 0},
-      {Signal::Deactivated, 0},
-      {Signal::ZonesChanged, 0}
+      {Signal::SessionClosed, 0},     {Signal::Disabled, 0},     {Signal::Activated, 0},
+      {Signal::Deactivated, 0},       {Signal::ZonesChanged, 0},
+
+      {Signal::SelectionTransfer, 0},
   };
 
   bool m_enabled = false;
@@ -106,6 +123,9 @@ private:
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
+
+  // Clipboard storage
+  EiClipboard *m_clipboard = nullptr;
 };
 
 } // namespace deskflow
