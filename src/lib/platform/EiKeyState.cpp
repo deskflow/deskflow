@@ -312,6 +312,39 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
   m_screen->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
 }
 
+KeyID EiKeyState::mapKeyFromLevel(std::uint32_t keyval, xkb_layout_index_t layout, xkb_level_index_t level) const
+{
+  if (m_xkbKeymap == nullptr || xkb_keymap_num_layouts_for_key(m_xkbKeymap, keyval) == 0) {
+    return kKeyNone;
+  }
+
+  const xkb_keysym_t *syms = nullptr;
+  const auto nsyms = xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keyval, layout, level, &syms);
+  if (nsyms <= 0 || syms == nullptr) {
+    return kKeyNone;
+  }
+
+  auto keysym = static_cast<KeySym>(syms[0]);
+  KeyID keyid = XDGKeyUtil::mapKeySymToKeyID(keysym);
+  LOG_VERBOSE(
+      "mapped key: code=%d layout=%u level=%u keysym=0x%04lx to keyID=%d", keyval, layout, level, keysym, keyid
+  );
+  return keyid;
+}
+
+KeyID EiKeyState::getKeyIDForButton(KeyButton button) const
+{
+  xkb_layout_index_t layout = 0;
+  if (m_xkbState != nullptr) {
+    layout = xkb_state_key_get_layout(m_xkbState, button);
+    if (layout == XKB_LAYOUT_INVALID) {
+      layout = 0;
+    }
+  }
+
+  return mapKeyFromLevel(button, layout, 0);
+}
+
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 {
   // Get the base keysym from level 0, ignoring current modifiers.
