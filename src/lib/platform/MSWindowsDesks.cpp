@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -181,6 +181,10 @@ void MSWindowsDesks::leave(HKL keyLayout)
 void MSWindowsDesks::resetOptions()
 {
   m_leaveForegroundOption = false;
+  m_relativeMouseMoves = false;
+  for (auto &entry : m_desks) {
+    entry.second->m_hasRelativeRestorePosition = false;
+  }
 }
 
 void MSWindowsDesks::setOptions(const OptionsList &options)
@@ -189,6 +193,8 @@ void MSWindowsDesks::setOptions(const OptionsList &options)
     if (options[i] == kOptionWin32KeepForeground) {
       m_leaveForegroundOption = (options[i + 1] != 0);
       LOG_VERBOSE("%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab");
+    } else if (options[i] == kOptionRelativeMouseMoves) {
+      m_relativeMouseMoves = (options[i + 1] != 0);
     }
   }
 }
@@ -307,6 +313,39 @@ void MSWindowsDesks::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 void MSWindowsDesks::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
   sendMessage(DESKFLOW_MSG_FAKE_WHEEL, xDelta, yDelta);
+}
+
+void MSWindowsDesks::saveRelativeRestorePosition(Desk *desk) const
+{
+  POINT pos{0, 0};
+  if (!GetCursorPos(&pos)) {
+    LOG_DEBUG(
+        "could not save relative restore position on desk \"%ls\", error: %lu", desk->m_name.c_str(), GetLastError()
+    );
+    return;
+  }
+
+  desk->m_relativeRestoreX = pos.x;
+  desk->m_relativeRestoreY = pos.y;
+  desk->m_hasRelativeRestorePosition = true;
+  LOG_VERBOSE(
+      "saved relative restore position on desk \"%ls\": %+d,%+d", desk->m_name.c_str(), desk->m_relativeRestoreX,
+      desk->m_relativeRestoreY
+  );
+}
+
+bool MSWindowsDesks::restoreRelativeCursorPosition(Desk *desk) const
+{
+  if (!desk->m_hasRelativeRestorePosition) {
+    return false;
+  }
+
+  LOG_VERBOSE(
+      "restoring relative cursor position on desk \"%ls\": %+d,%+d", desk->m_name.c_str(), desk->m_relativeRestoreX,
+      desk->m_relativeRestoreY
+  );
+  deskMouseMove(desk->m_relativeRestoreX, desk->m_relativeRestoreY);
+  return true;
 }
 
 void MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
@@ -496,6 +535,9 @@ void MSWindowsDesks::deskEnter(Desk *desk)
 {
   if (!m_isPrimary) {
     ReleaseCapture();
+    if (m_relativeMouseMoves) {
+      restoreRelativeCursorPosition(desk);
+    }
   }
 
   setCursorVisibility(true);
@@ -519,6 +561,10 @@ void MSWindowsDesks::deskEnter(Desk *desk)
 
 void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
 {
+  if (!m_isPrimary && m_relativeMouseMoves) {
+    saveRelativeRestorePosition(desk);
+  }
+
   setCursorVisibility(false);
 
   if (m_isPrimary) {
