@@ -178,6 +178,12 @@ private:
 
   void addKeyEntry(deskflow::KeyMap &keyMap, deskflow::KeyMap::KeyItem &item);
 
+  // Map a fullwidth CJK punctuation KeyID to the ASCII character on the same
+  // physical key when the original glyph can't be produced by the local
+  // keyboard, so the local IME can re-apply the width instead of the key
+  // being dropped.  Returns the original id when no substitution applies.
+  KeyID normalizeFullwidthKey(KeyID id) const;
+
   void init();
 
 private:

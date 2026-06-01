@@ -737,16 +737,68 @@ void MSWindowsKeyState::sendKeyEvent(
   }
 }
 
+KeyID MSWindowsKeyState::normalizeFullwidthKey(KeyID id) const
+{
+  KeyID ascii = kKeyNone;
+
+  if (id >= 0xff01u && id <= 0xff5eu) {
+    ascii = id - 0xfee0u;
+  } else {
+    // CJK punctuations that have no fullwidth-form
+    struct FullwidthKey
+    {
+      KeyID m_fullwidth;
+      KeyID m_ascii;
+    };
+    static const FullwidthKey s_fullwidthKeys[] = {
+        {0x3002, '.'},  // 。
+        {0x3001, '\\'}, // 、
+        {0x300a, '<'},  // 《
+        {0x300b, '>'},  // 》
+        {0x3010, '['},  // 【
+        {0x3011, ']'},  // 】
+        {0x2014, '_'},  // —
+        {0x2026, '^'},  // …
+        {0x201c, '"'},  // “
+        {0x201d, '"'},  // ”
+        {0x2018, '\''}, // ‘
+        {0x2019, '\''}, // ’
+        {0x00b7, '`'},  // ·
+        {0x300c, '{'},  // 「
+        {0x300d, '}'},  // 」
+        {0x00a5, '$'},  // ¥
+        {0xffe5, '$'},  // ￥
+    };
+    for (const auto &entry : s_fullwidthKeys) {
+      if (entry.m_fullwidth == id) {
+        ascii = entry.m_ascii;
+        break;
+      }
+    }
+  }
+
+  if (ascii == kKeyNone) {
+    return id;
+  }
+
+  if (getButton(id, pollActiveGroup()) != 0) {
+    return id;
+  }
+
+  LOG_DEBUG("normalized fullwidth key %04x to %04x", id, ascii);
+  return ascii;
+}
+
 void MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
-  KeyState::fakeKeyDown(id, mask, button, lang);
+  KeyState::fakeKeyDown(normalizeFullwidthKey(id), mask, button, lang);
 }
 
 bool MSWindowsKeyState::fakeKeyRepeat(
     KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
 )
 {
-  return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
+  return KeyState::fakeKeyRepeat(normalizeFullwidthKey(id), mask, count, button, lang);
 }
 
 // We must use SendSAS (Secure Attention Sequence) to simulate Ctrl+Alt+Del (since Windows Vista).
