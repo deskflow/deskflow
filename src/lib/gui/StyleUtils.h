@@ -8,6 +8,7 @@
 
 #include <QDir>
 #include <QFileInfoList>
+#include <QFontDatabase>
 #include <QIcon>
 #include <QPalette>
 #include <QStyleHints>
@@ -49,3 +50,18 @@ inline void updateIconTheme()
   QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
 }
 } // namespace deskflow::gui
+
+inline QFont fixedFont()
+{
+#if defined(Q_OS_WIN)
+  QFont f({"Hack", "Liberation Mono", "Monospace", "Andale Mono"});
+  f.setStyleHint(QFont::Monospace);
+#else
+  QFont f = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+#endif
+
+#if defined(Q_OS_MAC)
+  f.setPointSize(12);
+#endif
+  return f;
+}
