@@ -219,7 +219,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{matrix.target.like}}" == "debian" ]; then
-            apt update -qqq > /dev/null && apt install -qqq git devscripts > /dev/null
+            apt update -qqq > /dev/null && DEBIAN_FRONTEND=noninteractive apt install -qqq git devscripts > /dev/null
           elif [ "${{matrix.target.like}}" == "fedora" ]; then
             dnf install -y git
           elif [ "${{matrix.target.like}}" == "suse" ]; then
