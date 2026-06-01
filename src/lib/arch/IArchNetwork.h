@@ -275,6 +275,9 @@ public:
   */
   virtual bool isAnyAddr(ArchNetAddress addr) = 0;
 
+  //! Get the remote peer address from socket
+  [[nodiscard]] virtual ArchNetAddress getRemotePeerAddress(ArchSocket) = 0;
+
   //@}
 
   virtual void init() = 0;
