@@ -7,6 +7,7 @@
  */
 
 #include "ServerConfig.h"
+#include "common/ManagedSettings.h"
 
 #include "Hotkey.h"
 #include "common/Settings.h"
@@ -172,7 +173,9 @@ void ServerConfig::recall()
       settings().value("clipboardSharingSize", (int)ServerConfig::defaultClipboardSharingSize()).toULongLong()
   );
   setClipboardSharing(settings().value("clipboardSharing", true).toBool());
-
+  if (deskflow::settings::admin::isManaged(QStringLiteral("ClipboardSharingEnabled"))) {
+    setClipboardSharing(deskflow::settings::admin::value(QStringLiteral("ClipboardSharingEnabled")).toBool());
+  }
   readSettings(settings(), switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
 
   int numScreens = settings().beginReadArray("screens");
@@ -433,6 +436,20 @@ size_t ServerConfig::setClipboardSharingSize(size_t size)
   using std::swap;
   swap(size, m_ClipboardSharingSize);
   return size;
+}
+bool ServerConfig::clipboardSharing() const
+{
+  static const QString kKey = QStringLiteral("ClipboardSharingEnabled");
+  if (deskflow::settings::admin::isManaged(kKey)) {
+    return deskflow::settings::admin::value(kKey).toBool();
+  }
+  return m_ClipboardSharing;
+}
+
+bool ServerConfig::isClipboardSharingManaged() const
+{
+  static const QString kKey = QStringLiteral("ClipboardSharingEnabled");
+  return deskflow::settings::admin::isManaged(kKey);
 }
 
 QSettingsProxy &ServerConfig::settings()

@@ -40,6 +40,7 @@ private:
   void showEvent(QShowEvent *event) override;
   bool isClientMode() const;
   void updateTlsControls();
+  void applyManagedLocks();
   void updateTlsControlsEnabled();
   void showReadOnlyMessage();
   void updateText();
