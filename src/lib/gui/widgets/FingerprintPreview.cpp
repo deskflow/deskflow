@@ -70,16 +70,11 @@ QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint, const 
   f.setStyleHint(QFont::Monospace);
   m_lblArt->setFont(f);
 
-  auto innersha256Layout = new QHBoxLayout();
-  innersha256Layout->setContentsMargins(0, 0, 0, 0);
-  innersha256Layout->addWidget(m_lblHash);
-  innersha256Layout->addWidget(m_lblArt);
-
   auto sha256Layout = new QVBoxLayout();
   sha256Layout->setContentsMargins(0, 0, 0, 0);
   sha256Layout->addWidget(labelTitle);
-  sha256Layout->addLayout(innersha256Layout);
-  sha256Layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
+  sha256Layout->addWidget(m_lblHash);
+  sha256Layout->addWidget(m_lblArt);
 
   auto frameSha256 = new QFrame(this);
   frameSha256->setFrameShape(QFrame::StyledPanel);
