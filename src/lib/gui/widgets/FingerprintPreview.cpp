@@ -10,6 +10,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include <gui/StyleUtils.h>
 #include <net/SecureUtils.h>
 
 FingerprintPreview::FingerprintPreview(
@@ -59,16 +60,13 @@ QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint, const 
   m_lblHash->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   m_lblHash->setTextInteractionFlags(Qt::TextSelectableByMouse);
   m_lblHash->setVisible(hashMode);
+  m_lblHash->setFont(fixedFont());
 
   m_lblArt = new QLabel(deskflow::generateFingerprintArt(fingerprint.data), this);
   m_lblArt->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   m_lblArt->setTextInteractionFlags(Qt::TextSelectableByMouse);
   m_lblArt->setVisible(!hashMode);
-
-  f = font();
-  f.setFamilies({"Hack", "Liberation Mono", "Monospace", "Andale Mono"});
-  f.setStyleHint(QFont::Monospace);
-  m_lblArt->setFont(f);
+  m_lblArt->setFont(fixedFont());
 
   auto sha256Layout = new QVBoxLayout();
   sha256Layout->setContentsMargins(0, 0, 0, 0);
