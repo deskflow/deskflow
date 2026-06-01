@@ -773,7 +773,10 @@ KeyID MSWindowsKeyState::normalizeFullwidthKey(KeyID id) const
         {0x2018, '\''}, // left single quotation mark
         {0x2019, '\''}, // right single quotation mark
         {0x00b7, '`'},  // middle dot
-        {0xffe5, '$'},  // fullwidth yen/yuan sign
+        {0x300c, '{'},  // 「
+        {0x300d, '}'},  // 」
+        {0x00a5, '$'},  // fullwidth yuan sign
+        {0xffe5, '$'},  // fullwidth yen sign
     };
     for (const auto &entry : s_fullwidthKeys) {
       if (entry.m_fullwidth == id) {
