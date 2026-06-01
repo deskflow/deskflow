@@ -5,6 +5,7 @@
  */
 
 #include "FingerprintPreview.h"
+#include "common/PlatformInfo.h"
 
 #include <QFont>
 #include <QHBoxLayout>
@@ -26,7 +27,10 @@ FingerprintPreview::FingerprintPreview(
       fingerprint.type == QCryptographicHash::Sha256 ? sha256Layout(fingerprint, titleText, hashMode) : emptyLayout()
   );
   adjustSize();
-  setFixedSize(size());
+  int artPadding = 48;
+  if (deskflow::platform::isMac())
+    artPadding = 32;
+  setFixedSize(m_lblArt->width() + artPadding, height());
 }
 
 void FingerprintPreview::toggleMode(bool hashMode)
