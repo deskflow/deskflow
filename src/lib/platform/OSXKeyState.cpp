@@ -829,6 +829,11 @@ bool OSXKeyState::mapDeskflowHotKeyToMac(
     macModifierMask |= s_osxNumLock;
   }
 
+  LOG_DEBUG(
+      "mapped hotkey to mac, key: 0x%04x, mask: 0x%04x, mac key: 0x%08x, mac mask: 0x%08x", key, mask, macVirtualKey,
+      macModifierMask
+  );
+
   return true;
 }
 
