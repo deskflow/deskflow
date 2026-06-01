@@ -476,7 +476,11 @@ int SecureSocket::secureConnect(int socket)
 
   // enable hostname verification.
   const auto name = Settings::value(Settings::Core::ComputerName).toString().toStdString();
+#if defined(OPENSSL_VERSION_PREREQ) && OPENSSL_VERSION_PREREQ(4, 0)
+  SSL_set1_dnsname(m_ssl->m_ssl, name.c_str());
+#else
   SSL_set1_host(m_ssl->m_ssl, name.c_str());
+#endif
   int r = SSL_connect(m_ssl->m_ssl);
 
   static int retry;
