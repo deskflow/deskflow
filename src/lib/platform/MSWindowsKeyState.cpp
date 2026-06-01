@@ -737,16 +737,75 @@ void MSWindowsKeyState::sendKeyEvent(
   }
 }
 
+KeyID MSWindowsKeyState::normalizeFullwidthKey(KeyID id) const
+{
+  // Some IMEs (e.g. Microsoft Pinyin) hand us a finished fullwidth glyph
+  // that has no physical key on the local keyboard, so the key would be
+  // dropped.  We translate such glyphs to the ASCII character that lives on
+  // the same physical key, then let the local IME re-apply the fullwidth
+  // form according to its own punctuation mode.  This keeps the width
+  // decision on the target side instead of the source.
+  KeyID ascii = kKeyNone;
+
+  // fullwidth ASCII variants (U+FF01 - U+FF5E) are a fixed offset from their
+  // halfwidth counterparts (U+0021 - U+007E)
+  if (id >= 0xff01u && id <= 0xff5eu) {
+    ascii = id - 0xfee0u;
+  } else {
+    // CJK punctuation that has no fullwidth-form block entry.  Each glyph is
+    // mapped to the ASCII character on its physical key position.
+    struct FullwidthKey
+    {
+      KeyID m_fullwidth;
+      KeyID m_ascii;
+    };
+    static const FullwidthKey s_fullwidthKeys[] = {
+        {0x3002, '.'},  // ideographic full stop
+        {0x3001, '\\'}, // ideographic comma
+        {0x300a, '<'},  // left double angle bracket
+        {0x300b, '>'},  // right double angle bracket
+        {0x3010, '['},  // left black lenticular bracket
+        {0x3011, ']'},  // right black lenticular bracket
+        {0x2014, '_'},  // em dash (chinese dash uses two of these)
+        {0x2026, '^'},  // horizontal ellipsis
+        {0x201c, '"'},  // left double quotation mark
+        {0x201d, '"'},  // right double quotation mark
+        {0x2018, '\''}, // left single quotation mark
+        {0x2019, '\''}, // right single quotation mark
+        {0x00b7, '`'},  // middle dot
+        {0xffe5, '$'},  // fullwidth yen/yuan sign
+    };
+    for (const auto &entry : s_fullwidthKeys) {
+      if (entry.m_fullwidth == id) {
+        ascii = entry.m_ascii;
+        break;
+      }
+    }
+  }
+
+  if (ascii == kKeyNone) {
+    return id;
+  }
+
+  // only substitute when the original glyph isn't on the local keyboard
+  if (getButton(id, pollActiveGroup()) != 0) {
+    return id;
+  }
+
+  LOG_DEBUG("normalized fullwidth key %04x to %04x", id, ascii);
+  return ascii;
+}
+
 void MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
-  KeyState::fakeKeyDown(id, mask, button, lang);
+  KeyState::fakeKeyDown(normalizeFullwidthKey(id), mask, button, lang);
 }
 
 bool MSWindowsKeyState::fakeKeyRepeat(
     KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
 )
 {
-  return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
+  return KeyState::fakeKeyRepeat(normalizeFullwidthKey(id), mask, count, button, lang);
 }
 
 // We must use SendSAS (Secure Attention Sequence) to simulate Ctrl+Alt+Del (since Windows Vista).
