@@ -239,7 +239,7 @@ void MainWindow::connectSlots()
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
-  connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
+  connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine, Qt::QueuedConnection);
   connect(
       &m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged,
       Qt::QueuedConnection
