@@ -100,6 +100,9 @@ public:
   */
   void setOptions(const OptionsList &options);
 
+  //! Restore Windows system cursors if they were replaced while off-screen.
+  void restoreSystemCursor();
+
   //! Update the key state
   /*!
   Causes the key state to get updated to reflect the physical keyboard
@@ -197,6 +200,7 @@ private:
   void destroyClass(ATOM windowClass) const;
   HWND createWindow(ATOM windowClass, const wchar_t *name) const;
   void destroyWindow(HWND) const;
+  void hideSystemCursor();
 
   // message handlers
   void deskMouseMove(int32_t x, int32_t y) const;
@@ -241,6 +245,7 @@ private:
   // our resources
   ATOM m_deskClass;
   HCURSOR m_cursor;
+  bool m_systemCursorHidden = false;
 
   // screen shape stuff
   int32_t m_x = 0;

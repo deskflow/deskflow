@@ -155,6 +155,8 @@ void MSWindowsDesks::enable()
 
 void MSWindowsDesks::disable()
 {
+  restoreSystemCursor();
+
   // remove timer
   if (m_timer != nullptr) {
     m_events->removeHandler(EventTypes::Timer, m_timer);
@@ -176,6 +178,19 @@ void MSWindowsDesks::enter()
 void MSWindowsDesks::leave(HKL keyLayout)
 {
   sendMessage(DESKFLOW_MSG_LEAVE, (WPARAM)keyLayout, 0);
+}
+
+void MSWindowsDesks::restoreSystemCursor()
+{
+  if (!m_systemCursorHidden) {
+    return;
+  }
+
+  if (!SystemParametersInfo(SPI_SETCURSORS, 0, nullptr, 0)) {
+    LOG_WARN("failed to restore system cursors: %d", GetLastError());
+  }
+
+  m_systemCursorHidden = false;
 }
 
 void MSWindowsDesks::resetOptions()
@@ -367,8 +382,9 @@ void MSWindowsDesks::destroyClass(ATOM windowClass) const
 
 HWND MSWindowsDesks::createWindow(ATOM windowClass, const wchar_t *name) const
 {
+  const DWORD exStyle = WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
   HWND window = CreateWindowEx(
-      WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
+      exStyle, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
       MSWindowsScreen::getWindowInstance(), nullptr
   );
   if (window == nullptr) {
@@ -385,8 +401,54 @@ void MSWindowsDesks::destroyWindow(HWND hwnd) const
   }
 }
 
+void MSWindowsDesks::hideSystemCursor()
+{
+  if (m_systemCursorHidden) {
+    return;
+  }
+
+  static constexpr DWORD cursorIds[] = {
+      32512, // OCR_NORMAL
+      32513, // OCR_IBEAM
+      32514, // OCR_WAIT
+      32515, // OCR_CROSS
+      32516, // OCR_UP
+      32640, // OCR_SIZE
+      32641, // OCR_ICON
+      32642, // OCR_SIZENWSE
+      32643, // OCR_SIZENESW
+      32644, // OCR_SIZEWE
+      32645, // OCR_SIZENS
+      32646, // OCR_SIZEALL
+      32648, // OCR_NO
+      32649, // OCR_HAND
+      32650, // OCR_APPSTARTING
+      32651, // OCR_HELP
+  };
+
+  for (const auto cursorId : cursorIds) {
+    HCURSOR cursor = createBlankCursor();
+    if (cursor == nullptr) {
+      LOG_WARN("failed to create blank system cursor for cursor id %u", cursorId);
+      continue;
+    }
+
+    if (!SetSystemCursor(cursor, cursorId)) {
+      LOG_WARN("failed to replace system cursor id %u: %d", cursorId, GetLastError());
+      DestroyCursor(cursor);
+    }
+  }
+
+  m_systemCursorHidden = true;
+}
+
 LRESULT CALLBACK MSWindowsDesks::primaryDeskProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+  if (msg == WM_SETCURSOR) {
+    SetCursor(reinterpret_cast<HCURSOR>(GetClassLongPtr(hwnd, GCLP_HCURSOR)));
+    return TRUE;
+  }
+
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
@@ -396,6 +458,10 @@ LRESULT CALLBACK MSWindowsDesks::secondaryDeskProc(HWND hwnd, UINT msg, WPARAM w
   // window but for now we just detect mouse motion.
   bool hide = false;
   switch (msg) {
+  case WM_SETCURSOR:
+    SetCursor(reinterpret_cast<HCURSOR>(GetClassLongPtr(hwnd, GCLP_HCURSOR)));
+    return TRUE;
+
   case WM_MOUSEMOVE:
     if (LOWORD(lParam) != 0 || HIWORD(lParam) != 0) {
       hide = true;
@@ -494,25 +560,28 @@ void setCursorVisibility(bool visible)
 
 void MSWindowsDesks::deskEnter(Desk *desk)
 {
-  if (!m_isPrimary) {
+  if (GetCapture() == desk->m_window) {
     ReleaseCapture();
   }
 
+  restoreSystemCursor();
   setCursorVisibility(true);
 
   SetWindowPos(desk->m_window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
 
-  // restore the foreground window
-  // XXX -- this raises the window to the top of the Z-order.  we
-  // want it to stay wherever it was to properly support X-mouse
-  // (mouse over activation) but i've no idea how to do that.
-  // the obvious workaround of using SetWindowPos() to move it back
-  // after being raised doesn't work.
-  DWORD thisThread = GetWindowThreadProcessId(desk->m_window, nullptr);
-  DWORD thatThread = GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
-  AttachThreadInput(thatThread, thisThread, TRUE);
-  SetForegroundWindow(desk->m_foregroundWindow);
-  AttachThreadInput(thatThread, thisThread, FALSE);
+  if (desk->m_foregroundWindow != nullptr) {
+    // restore the foreground window
+    // XXX -- this raises the window to the top of the Z-order.  we
+    // want it to stay wherever it was to properly support X-mouse
+    // (mouse over activation) but i've no idea how to do that.
+    // the obvious workaround of using SetWindowPos() to move it back
+    // after being raised doesn't work.
+    DWORD thisThread = GetWindowThreadProcessId(desk->m_window, nullptr);
+    DWORD thatThread = GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
+    AttachThreadInput(thatThread, thisThread, TRUE);
+    SetForegroundWindow(desk->m_foregroundWindow);
+    AttachThreadInput(thatThread, thisThread, FALSE);
+  }
   EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
   desk->m_foregroundWindow = nullptr;
 }
@@ -522,6 +591,8 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
   setCursorVisibility(false);
 
   if (m_isPrimary) {
+    hideSystemCursor();
+
     // map a window to hide the cursor and to use whatever keyboard
     // layout we choose rather than the keyboard layout of the last
     // active window.
@@ -543,6 +614,9 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
       h = m_h;
     }
     SetWindowPos(desk->m_window, HWND_TOP, x, y, w, h, SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    EnableWindow(desk->m_window, TRUE);
+    SetCapture(desk->m_window);
+    SetCursor(m_cursor);
 
     // switch to requested keyboard layout
     ActivateKeyboardLayout(keyLayout, 0);
@@ -555,26 +629,11 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
       SetActiveWindow(desk->m_window);
     }
 
-    // if using low-level hooks then disable the foreground window
-    // so it can't mess up any of our keyboard events.  the console
-    // program, for example, will cause characters to be reported as
-    // unshifted, regardless of the shift key state.  interestingly
-    // we do see the shift key go down and up.
-    //
-    // note that we must enable the window to activate it and we
-    // need to disable the window on deskEnter.
+    // With low-level hooks, avoid taking the foreground window. Changing
+    // foreground focus causes some active Windows apps to visibly flicker
+    // during screen transitions.
     else {
-      desk->m_foregroundWindow = getForegroundWindow();
-      if (desk->m_foregroundWindow != nullptr) {
-        EnableWindow(desk->m_window, TRUE);
-        SetActiveWindow(desk->m_window);
-        DWORD thisThread = GetWindowThreadProcessId(desk->m_window, nullptr);
-        DWORD thatThread = GetWindowThreadProcessId(desk->m_foregroundWindow, nullptr);
-
-        AttachThreadInput(thatThread, thisThread, TRUE);
-        SetForegroundWindow(desk->m_window);
-        AttachThreadInput(thatThread, thisThread, FALSE);
-      }
+      desk->m_foregroundWindow = nullptr;
     }
   } else {
     // move hider window under the cursor center, raise, and show it
@@ -585,6 +644,7 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
     // mouse if desired.  we'd rather not capture the mouse but
     // we aren't notified when the mouse leaves our window.
     SetCapture(desk->m_window);
+    SetCursor(m_cursor);
 
     // windows can take a while to hide the cursor, so wait a few milliseconds to ensure the cursor
     // is hidden before centering. this doesn't seem to affect the fluidity of the transition.
