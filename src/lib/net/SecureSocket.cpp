@@ -414,8 +414,8 @@ int SecureSocket::secureAccept(int socket)
 
   // set connection socket to SSL state
   SSL_set_fd(m_ssl->m_ssl, socket);
-
-  LOG_VERBOSE("accepting secure socket");
+  const std::string &remotePeer = remotePeerNameOrAddress();
+  LOG_VERBOSE("accepting secure socket from '%s'", remotePeer.c_str());
   int r = SSL_accept(m_ssl->m_ssl);
 
   static int retry;
@@ -433,13 +433,15 @@ int SecureSocket::secureAccept(int socket)
 
   // If not fatal and no retry, state is good
   if (retry == 0) {
-    if (m_securityLevel == SecurityLevel::PeerAuth && !verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
+    if (const auto &localPeer = Settings::value(Settings::Core::ComputerName).toString().toStdString();
+        m_securityLevel == SecurityLevel::PeerAuth &&
+        !verifyCertFingerprint(Settings::tlsTrustedClientsDb(), localPeer, remotePeer)) {
       retry = 0;
       disconnect();
       return -1; // Fail
     }
     m_secureReady = true;
-    LOG_INFO("accepted secure socket");
+    LOG_INFO("accepted secure socket from '%s'", remotePeer.c_str());
     SslLogger::logSecureCipherInfo(m_ssl->m_ssl);
     SslLogger::logSecureConnectInfo(m_ssl->m_ssl);
     return 1;
@@ -499,7 +501,7 @@ int SecureSocket::secureConnect(int socket)
   retry = 0;
   // No error, set ready, process and return ok
   m_secureReady = true;
-  if (verifyCertFingerprint(Settings::tlsTrustedServersDb())) {
+  if (verifyCertFingerprint(Settings::tlsTrustedServersDb(), name, remotePeerNameOrAddress())) {
     LOG_INFO("connected to secure socket");
     if (!showCertificate()) {
       disconnect();
@@ -619,7 +621,9 @@ void SecureSocket::disconnect()
   sendEvent(StreamInputShutdown);
 }
 
-bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath) const
+bool SecureSocket::verifyCertFingerprint(
+    const QString &FingerprintDatabasePath, const std::string &localPeer, const std::string &remotePeer
+) const
 {
   const auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
   const auto sha256 = deskflow::sslCertFingerprint(cert, QCryptographicHash::Sha256);
@@ -632,7 +636,12 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
 
   const auto fingerprint = deskflow::formatSSLFingerprint(sha256.data, false);
   LOG_DEBUG("peer fingerprint: %s", qPrintable(fingerprint));
-  ipcSendToClient("peerFingerprint", fingerprint);
+  QString payload{};
+  if (!localPeer.empty() && !remotePeer.empty()) {
+    payload = QStringLiteral("%1|%2|%3")
+                  .arg(fingerprint, QString::fromStdString(localPeer), QString::fromStdString(remotePeer));
+  }
+  ipcSendToClient("peerFingerprint", (payload.isEmpty() ? fingerprint : payload));
 
   QFile file(FingerprintDatabasePath);
 

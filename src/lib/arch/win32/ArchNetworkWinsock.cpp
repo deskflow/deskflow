@@ -826,6 +826,16 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
   return (a == b || (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0));
 }
 
+ArchNetAddress ArchNetworkWinsock::getRemotePeerAddress(ArchSocket s)
+{
+  ArchNetAddress addr = newAnyAddr(IArchNetwork::AddressFamily::INet);
+  if (getpeername(s->m_socket, reinterpret_cast<struct sockaddr *>(addr), &addr->m_len) != 0) {
+    closeAddr(addr);
+    return nullptr;
+  }
+  return addr;
+}
+
 [[noreturn]] void ArchNetworkWinsock::throwError(int err) const
 {
   switch (err) {
