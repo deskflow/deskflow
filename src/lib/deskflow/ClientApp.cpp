@@ -284,7 +284,10 @@ bool ClientApp::startClient()
     }
 
     m_client->setServerAddress(getCurrentServerAddress());
-    m_client->connect(m_lastServerAddressIndex);
+    if (!m_client->connect(m_lastServerAddressIndex)) {
+      LOG_DEBUG("client connection deferred while screen is suspended");
+      scheduleClientRestart(retryTime());
+    }
 
     return true;
   } catch (ScreenUnavailableException &e) {

@@ -72,14 +72,14 @@ void Client::setServerAddress(const NetworkAddress &address)
   m_serverAddress = address;
 }
 
-void Client::connect(size_t addressIndex)
+bool Client::connect(size_t addressIndex)
 {
   if (m_stream != nullptr) {
-    return;
+    return true;
   }
   if (m_suspended) {
     m_connectOnResume = true;
-    return;
+    return false;
   }
 
   auto securityLevel = m_useSecureNetwork ? SecurityLevel::PeerAuth : SecurityLevel::PlainText;
@@ -120,8 +120,10 @@ void Client::connect(size_t addressIndex)
     cleanupStream();
     LOG_VERBOSE("connection failed");
     sendConnectionFailedEvent(e.what());
-    return;
+    return true;
   }
+
+  return true;
 }
 
 void Client::disconnect(const char *msg)

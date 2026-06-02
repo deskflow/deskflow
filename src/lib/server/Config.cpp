@@ -21,10 +21,51 @@
 #include <cstdlib>
 #include <istream>
 #include <ostream>
+#include <vector>
 
 using namespace deskflow::string;
 
 namespace deskflow::server {
+namespace {
+
+std::string trim(const std::string &value)
+{
+  const auto start = value.find_first_not_of(" \t");
+  if (start == std::string::npos) {
+    return "";
+  }
+
+  const auto end = value.find_last_not_of(" \t");
+  return value.substr(start, end - start + 1);
+}
+
+std::vector<std::string> splitCommaSeparated(const std::string &value)
+{
+  std::vector<std::string> result;
+  std::string::size_type start = 0;
+  for (;;) {
+    const auto end = value.find(',', start);
+    result.push_back(trim(value.substr(start, end - start)));
+    if (end == std::string::npos) {
+      break;
+    }
+    start = end + 1;
+  }
+  return result;
+}
+
+float parseFloat(ConfigReadContext &context, const std::string &value)
+{
+  char *end = nullptr;
+  const double parsed = strtod(value.c_str(), &end);
+  if (value.empty() || end == nullptr || *end != '\0') {
+    throw ServerConfigReadException(context, "invalid physical layout number \"%{1}\"", value);
+  }
+  return static_cast<float>(parsed);
+}
+
+} // namespace
+
 //
 // Config
 //
@@ -70,6 +111,12 @@ bool Config::renameScreen(const std::string &oldName, const std::string &newName
   m_map.erase(index);
   m_map.insert(std::make_pair(newName, tmpCell));
 
+  if (auto physicalIndex = m_physicalScreens.find(oldCanonical); physicalIndex != m_physicalScreens.end()) {
+    PhysicalScreen physicalScreen = physicalIndex->second;
+    m_physicalScreens.erase(physicalIndex);
+    m_physicalScreens.insert(std::make_pair(newName, physicalScreen));
+  }
+
   // update name
   m_nameToCanonicalName.erase(oldCanonical);
   m_nameToCanonicalName.insert(std::make_pair(newName, newName));
@@ -103,6 +150,7 @@ void Config::removeScreen(const std::string &name)
 
   // remove from map
   m_map.erase(index);
+  m_physicalScreens.erase(canonical);
 
   // disconnect
   Name nameObj(this, name);
@@ -124,6 +172,7 @@ void Config::removeAllScreens()
 {
   m_map.clear();
   m_nameToCanonicalName.clear();
+  m_physicalScreens.clear();
 }
 
 bool Config::addAlias(const std::string &canonical, const std::string &alias)
@@ -312,6 +361,17 @@ bool Config::removeOptions(const std::string &name)
   return true;
 }
 
+bool Config::setPhysicalScreen(const std::string &name, const PhysicalScreen &screen)
+{
+  const auto canonical = getCanonicalName(name);
+  if (canonical.empty() || screen.width <= 0.0f || screen.height <= 0.0f) {
+    return false;
+  }
+
+  m_physicalScreens[canonical] = screen;
+  return true;
+}
+
 bool Config::isValidScreenName(const std::string &name) const
 {
   // name is valid if matches validname
@@ -429,6 +489,22 @@ std::string Config::getNeighbor(const std::string &srcName, Direction srcSide, f
   }
 }
 
+const Config::PhysicalScreen *Config::getPhysicalScreen(const std::string &name) const
+{
+  const auto canonical = getCanonicalName(name);
+  if (canonical.empty()) {
+    return nullptr;
+  }
+
+  const auto index = m_physicalScreens.find(canonical);
+  return index == m_physicalScreens.end() ? nullptr : &index->second;
+}
+
+bool Config::hasPhysicalLayout() const
+{
+  return !m_physicalScreens.empty();
+}
+
 bool Config::hasNeighbor(const std::string &srcName, Direction srcSide) const
 {
   return hasNeighbor(srcName, srcSide, 0.0f, 1.0f);
@@ -504,6 +580,9 @@ bool Config::operator==(const Config &x) const
   if (m_globalOptions != x.m_globalOptions) {
     return false;
   }
+  if (m_physicalScreens != x.m_physicalScreens) {
+    return false;
+  }
 
   auto index2map = x.m_map.cbegin();
   for (auto const &index1 : m_map) {
@@ -575,6 +654,7 @@ void Config::readSection(ConfigReadContext &s)
   static const char s_options[] = "options";
   static const char s_screens[] = "screens";
   static const char s_links[] = "links";
+  static const char s_physicalLayout[] = "physical-layout";
   static const char s_aliases[] = "aliases";
 
   std::string line;
@@ -606,6 +686,8 @@ void Config::readSection(ConfigReadContext &s)
     readSectionScreens(s);
   } else if (name == s_links) {
     readSectionLinks(s);
+  } else if (name == s_physicalLayout) {
+    readSectionPhysicalLayout(s);
   } else if (name == s_aliases) {
     readSectionAliases(s);
   } else {
@@ -876,6 +958,43 @@ void Config::readSectionLinks(ConfigReadContext &s)
     }
   }
   throw ServerConfigReadException(s, "unexpected end of links section");
+}
+
+void Config::readSectionPhysicalLayout(ConfigReadContext &s)
+{
+  std::string line;
+  while (s.readLine(line)) {
+    if (line == "end") {
+      return;
+    }
+
+    const auto separator = line.find('=');
+    if (separator == std::string::npos) {
+      throw ServerConfigReadException(s, "missing =");
+    }
+
+    const auto screen = trim(line.substr(0, separator));
+    if (!isScreen(screen)) {
+      throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", screen);
+    }
+    if (!isCanonicalName(screen)) {
+      throw ServerConfigReadException(s, "cannot use screen name alias here");
+    }
+
+    const auto args = splitCommaSeparated(line.substr(separator + 1));
+    if (args.size() != 4) {
+      throw ServerConfigReadException(s, "physical layout requires x,y,width,height for \"%{1}\"", screen);
+    }
+
+    PhysicalScreen physicalScreen{
+        parseFloat(s, args[0]), parseFloat(s, args[1]), parseFloat(s, args[2]), parseFloat(s, args[3])
+    };
+    if (!setPhysicalScreen(screen, physicalScreen)) {
+      throw ServerConfigReadException(s, "invalid physical layout for \"%{1}\"", screen);
+    }
+  }
+
+  throw ServerConfigReadException(s, "unexpected end of physical-layout section");
 }
 
 void Config::readSectionAliases(ConfigReadContext &s)
@@ -1609,6 +1728,21 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
     }
   }
   s << "end" << std::endl;
+
+  if (!config.m_physicalScreens.empty()) {
+    s << "section: physical-layout" << std::endl;
+    for (const auto &screen : config) {
+      const auto index = config.m_physicalScreens.find(screen);
+      if (index == config.m_physicalScreens.end()) {
+        continue;
+      }
+
+      const auto &physicalScreen = index->second;
+      s << "\t" << screen.c_str() << " = " << physicalScreen.x << "," << physicalScreen.y << "," << physicalScreen.width
+        << "," << physicalScreen.height << std::endl;
+    }
+    s << "end" << std::endl;
+  }
 
   // aliases section (if there are any)
   if (config.m_map.size() != config.m_nameToCanonicalName.size()) {

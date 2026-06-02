@@ -9,6 +9,8 @@
 
 #include "server/Config.h"
 
+#include <sstream>
+
 class OnlySystemFilter : public InputFilter::Condition
 {
 public:
@@ -159,6 +161,49 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
   QVERIFY(b.addScreen("screenC"));
   QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenC", 0.5f, 1.0f));
   QVERIFY(a != b);
+}
+
+void ServerConfigTests::equalityCheck_diff_physicalLayout()
+{
+  Config a(nullptr);
+  Config b(nullptr);
+  QVERIFY(a.addScreen("screenA"));
+  QVERIFY(b.addScreen("screenA"));
+  QVERIFY(a.setPhysicalScreen("screenA", Config::PhysicalScreen{0.0f, 0.0f, 600.0f, 340.0f}));
+  QVERIFY(a != b);
+
+  QVERIFY(b.setPhysicalScreen("screenA", Config::PhysicalScreen{0.0f, 0.0f, 600.0f, 340.0f}));
+  QVERIFY(a == b);
+}
+
+void ServerConfigTests::physicalLayout_readWrite()
+{
+  std::stringstream input;
+  input << "section: screens\n"
+        << "\tscreenA:\n"
+        << "\tscreenB:\n"
+        << "end\n"
+        << "section: physical-layout\n"
+        << "\tscreenA = 0,40,598,336\n"
+        << "\tscreenB = 598,0,527,296\n"
+        << "end\n";
+
+  Config actual(nullptr);
+  input >> actual;
+
+  const auto *screenA = actual.getPhysicalScreen("screenA");
+  QVERIFY(screenA != nullptr);
+  QCOMPARE(screenA->x, 0.0f);
+  QCOMPARE(screenA->y, 40.0f);
+  QCOMPARE(screenA->width, 598.0f);
+  QCOMPARE(screenA->height, 336.0f);
+
+  std::stringstream output;
+  output << actual;
+
+  Config roundTrip(nullptr);
+  output >> roundTrip;
+  QVERIFY(actual == roundTrip);
 }
 
 QTEST_MAIN(ServerConfigTests)

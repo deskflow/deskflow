@@ -75,7 +75,7 @@ public:
   Starts an attempt to connect to the server.  This is ignored if
   the client is trying to connect or is already connected.
   */
-  void connect(size_t addressIndex = 0);
+  bool connect(size_t addressIndex = 0);
   void setServerAddress(const NetworkAddress &address);
 
   //! Disconnect

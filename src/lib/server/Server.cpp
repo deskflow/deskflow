@@ -36,6 +36,77 @@
 
 using namespace deskflow::server;
 
+namespace {
+
+bool containsPhysicalPosition(float start, float length, float position)
+{
+  return position >= start && position < start + length;
+}
+
+bool isCandidateInDirection(
+    const Config::PhysicalScreen &src, const Config::PhysicalScreen &dst, Direction direction, float &distance
+)
+{
+  switch (direction) {
+    using enum Direction;
+  case Left:
+    if (dst.x + dst.width > src.x) {
+      return false;
+    }
+    distance = src.x - (dst.x + dst.width);
+    return true;
+
+  case Right:
+    if (dst.x < src.x + src.width) {
+      return false;
+    }
+    distance = dst.x - (src.x + src.width);
+    return true;
+
+  case Top:
+    if (dst.y + dst.height > src.y) {
+      return false;
+    }
+    distance = src.y - (dst.y + dst.height);
+    return true;
+
+  case Bottom:
+    if (dst.y < src.y + src.height) {
+      return false;
+    }
+    distance = dst.y - (src.y + src.height);
+    return true;
+
+  case NoDirection:
+    break;
+  }
+
+  return false;
+}
+
+bool overlapsPerpendicularAxis(
+    const Config::PhysicalScreen &src, const Config::PhysicalScreen &dst, Direction direction
+)
+{
+  switch (direction) {
+    using enum Direction;
+  case Left:
+  case Right:
+    return src.y < dst.y + dst.height && dst.y < src.y + src.height;
+
+  case Top:
+  case Bottom:
+    return src.x < dst.x + dst.width && dst.x < src.x + src.width;
+
+  case NoDirection:
+    break;
+  }
+
+  return false;
+}
+
+} // namespace
+
 //
 // Server
 //
@@ -559,7 +630,127 @@ bool Server::hasAnyNeighbor(const BaseClientProxy *client, Direction dir) const
 {
   assert(client != nullptr);
 
-  return m_config->hasNeighbor(getName(client), dir);
+  return hasPhysicalNeighbor(client, dir) || m_config->hasNeighbor(getName(client), dir);
+}
+
+bool Server::hasPhysicalNeighbor(const BaseClientProxy *src, Direction direction) const
+{
+  const auto *srcPhysical = m_config->getPhysicalScreen(getName(src));
+  if (srcPhysical == nullptr) {
+    return false;
+  }
+
+  for (const auto &[dstName, dstClient] : m_clients) {
+    if (dstClient == src) {
+      continue;
+    }
+
+    const auto *dstPhysical = m_config->getPhysicalScreen(dstName);
+    float distance = 0.0f;
+    if (dstPhysical != nullptr && isCandidateInDirection(*srcPhysical, *dstPhysical, direction, distance) &&
+        overlapsPerpendicularAxis(*srcPhysical, *dstPhysical, direction)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+BaseClientProxy *
+Server::mapToPhysicalNeighbor(const BaseClientProxy *src, Direction direction, int32_t &x, int32_t &y) const
+{
+  const auto *srcPhysical = m_config->getPhysicalScreen(getName(src));
+  if (srcPhysical == nullptr) {
+    return nullptr;
+  }
+
+  int32_t sx;
+  int32_t sy;
+  int32_t sw;
+  int32_t sh;
+  src->getShape(sx, sy, sw, sh);
+
+  const bool horizontalSwitch = direction == Direction::Left || direction == Direction::Right;
+  const float positionFraction =
+      horizontalSwitch ? (y - sy + 0.5f) / static_cast<float>(sh) : (x - sx + 0.5f) / static_cast<float>(sw);
+  const float physicalPosition = horizontalSwitch ? srcPhysical->y + positionFraction * srcPhysical->height
+                                                  : srcPhysical->x + positionFraction * srcPhysical->width;
+
+  BaseClientProxy *bestClient = nullptr;
+  const Config::PhysicalScreen *bestPhysical = nullptr;
+  float bestDistance = 0.0f;
+  bool found = false;
+
+  for (const auto &[dstName, dstClient] : m_clients) {
+    if (dstClient == src) {
+      continue;
+    }
+
+    const auto *dstPhysical = m_config->getPhysicalScreen(dstName);
+    if (dstPhysical == nullptr) {
+      continue;
+    }
+
+    float distance = 0.0f;
+    if (!isCandidateInDirection(*srcPhysical, *dstPhysical, direction, distance)) {
+      continue;
+    }
+
+    const bool containsPosition = horizontalSwitch
+                                      ? containsPhysicalPosition(dstPhysical->y, dstPhysical->height, physicalPosition)
+                                      : containsPhysicalPosition(dstPhysical->x, dstPhysical->width, physicalPosition);
+    if (!containsPosition || (found && distance >= bestDistance)) {
+      continue;
+    }
+
+    bestClient = dstClient;
+    bestPhysical = dstPhysical;
+    bestDistance = distance;
+    found = true;
+  }
+
+  if (bestClient == nullptr || bestPhysical == nullptr) {
+    return nullptr;
+  }
+
+  int32_t dx;
+  int32_t dy;
+  int32_t dw;
+  int32_t dh;
+  bestClient->getShape(dx, dy, dw, dh);
+
+  switch (direction) {
+    using enum Direction;
+  case Left:
+    x = dx + dw - 1;
+    y = dy + static_cast<int32_t>(((physicalPosition - bestPhysical->y) / bestPhysical->height) * dh);
+    break;
+
+  case Right:
+    x = dx;
+    y = dy + static_cast<int32_t>(((physicalPosition - bestPhysical->y) / bestPhysical->height) * dh);
+    break;
+
+  case Top:
+    x = dx + static_cast<int32_t>(((physicalPosition - bestPhysical->x) / bestPhysical->width) * dw);
+    y = dy + dh - 1;
+    break;
+
+  case Bottom:
+    x = dx + static_cast<int32_t>(((physicalPosition - bestPhysical->x) / bestPhysical->width) * dw);
+    y = dy;
+    break;
+
+  case NoDirection:
+    return nullptr;
+  }
+
+  avoidJumpZone(bestClient, direction, x, y);
+  LOG_VERBOSE(
+      "physical layout maps \"%s\" to \"%s\" on %s at %d,%d", getName(src).c_str(), getName(bestClient).c_str(),
+      Config::dirName(direction), x, y
+  );
+  return bestClient;
 }
 
 BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, Direction dir, int32_t &x, int32_t &y) const
@@ -612,6 +803,10 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
   // note -- must be locked on entry
 
   assert(src != nullptr);
+
+  if (m_config->getPhysicalScreen(getName(src)) != nullptr && hasPhysicalNeighbor(src, srcSide)) {
+    return mapToPhysicalNeighbor(src, srcSide, x, y);
+  }
 
   // get the first neighbor
   BaseClientProxy *dst = getNeighbor(src, srcSide, x, y);
@@ -738,22 +933,24 @@ void Server::avoidJumpZone(const BaseClientProxy *dst, Direction dir, int32_t &x
   switch (dir) {
     using enum Direction;
   case Left:
-    if (!m_config->getNeighbor(dstName, Right, t, nullptr).empty() && x > dx + dw - 1 - z)
+    if ((!m_config->getNeighbor(dstName, Right, t, nullptr).empty() || hasPhysicalNeighbor(dst, Right)) &&
+        x > dx + dw - 1 - z)
       x = dx + dw - 1 - z;
     break;
 
   case Right:
-    if (!m_config->getNeighbor(dstName, Left, t, nullptr).empty() && x < dx + z)
+    if ((!m_config->getNeighbor(dstName, Left, t, nullptr).empty() || hasPhysicalNeighbor(dst, Left)) && x < dx + z)
       x = dx + z;
     break;
 
   case Top:
-    if (!m_config->getNeighbor(dstName, Bottom, t, nullptr).empty() && y > dy + dh - 1 - z)
+    if ((!m_config->getNeighbor(dstName, Bottom, t, nullptr).empty() || hasPhysicalNeighbor(dst, Bottom)) &&
+        y > dy + dh - 1 - z)
       y = dy + dh - 1 - z;
     break;
 
   case Bottom:
-    if (!m_config->getNeighbor(dstName, Top, t, nullptr).empty() && y < dy + z)
+    if ((!m_config->getNeighbor(dstName, Top, t, nullptr).empty() || hasPhysicalNeighbor(dst, Top)) && y < dy + z)
       y = dy + z;
     break;
 
@@ -1117,10 +1314,8 @@ void Server::processOptions()
     } else if (id == kOptionClipboardSharingSize) {
       if (value <= 0) {
         m_maximumClipboardSize = 0;
-        LOG_INFO(
-            "clipboard sharing is disabled because the "
-            "maximum shared clipboard size is set to 0"
-        );
+        LOG_INFO("clipboard sharing is disabled because the "
+                 "maximum shared clipboard size is set to 0");
       } else {
         m_maximumClipboardSize = static_cast<size_t>(value);
       }

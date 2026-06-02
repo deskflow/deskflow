@@ -238,6 +238,13 @@ private:
   // indicated by the direction.
   bool hasAnyNeighbor(const BaseClientProxy *, Direction) const;
 
+  // returns true if the physical layout has a connected neighbor
+  // anywhere along the edge indicated by the direction.
+  bool hasPhysicalNeighbor(const BaseClientProxy *, Direction) const;
+
+  // lookup neighboring screen using physical layout rectangles.
+  BaseClientProxy *mapToPhysicalNeighbor(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
+
   // lookup neighboring screen, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
   BaseClientProxy *getNeighbor(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;

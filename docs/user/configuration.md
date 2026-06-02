@@ -384,6 +384,26 @@ This indicates that computer ''larry'' is to the right of computer ''moe'' (so m
 
 Note that links do not have to be symmetrical; for instance, here the edge between ''moe'' and ''curly'' maps to different ranges depending on if you're going up or down. In fact links don't have to be bidirectional. You can configure the right of ''moe'' to go to ''larry'' without a link from the left of ''larry'' to ''moe''. It's possible to configure a computer with no outgoing links; the cursor will get stuck on that computer unless you have a hot key configured to switch off of that computer.
 
+### physical-layout section
+
+The optional ''physical-layout'' section describes each computer as a rectangle in a shared physical coordinate space:
+
+```
+section: physical-layout
+	moe = 0,40,598,336
+	larry = 598,0,527,296
+	curly = 1125,70,620,350
+end
+```
+
+Each line has the form:
+
+```
+ name = x,y,width,height
+```
+
+The units can be millimeters or any other consistent unit. When this section is present, Deskflow preserves the physical crossing position between computers. For example, moving off the right edge of ''moe'' at a physical height of 120 enters ''larry'' at the same physical height, converted to ''larry'''s pixel coordinates. If that physical position does not overlap the target computer, Deskflow does not switch there.
+
 ### options section
 
 ''args'' is a list of lines of the form <code>name = value</code>. These set the global options.

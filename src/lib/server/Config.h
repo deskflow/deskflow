@@ -55,6 +55,16 @@ public:
   using ScreenOptions = std::map<OptionID, OptionValue>;
   using Interval = std::pair<float, float>;
 
+  struct PhysicalScreen
+  {
+    float x = 0.0f;
+    float y = 0.0f;
+    float width = 0.0f;
+    float height = 0.0f;
+
+    bool operator==(const PhysicalScreen &) const = default;
+  };
+
   class CellEdge
   {
   public:
@@ -136,6 +146,7 @@ private:
   };
   using CellMap = std::map<std::string, Cell, deskflow::string::CaselessCmp>;
   using NameMap = std::map<std::string, std::string, deskflow::string::CaselessCmp>;
+  using PhysicalScreenMap = std::map<std::string, PhysicalScreen, deskflow::string::CaselessCmp>;
 
 public:
   using link_const_iterator = Cell::const_iterator;
@@ -321,6 +332,9 @@ public:
   */
   bool removeOptions(const std::string &name);
 
+  //! Set physical layout rectangle for a screen.
+  bool setPhysicalScreen(const std::string &name, const PhysicalScreen &screen);
+
   //! Get the hot key input filter
   /*!
   Returns the hot key input filter.  Clients can modify hotkeys using
@@ -376,6 +390,12 @@ public:
   \c nullptr.
   */
   std::string getNeighbor(const std::string &, Direction, float position, float *positionOut) const;
+
+  //! Get physical layout rectangle for a screen.
+  const PhysicalScreen *getPhysicalScreen(const std::string &name) const;
+
+  //! Check whether any physical layout rectangles are configured.
+  bool hasPhysicalLayout() const;
 
   //! Check for neighbor
   /*!
@@ -454,6 +474,7 @@ private:
   void readSectionOptions(ConfigReadContext &);
   void readSectionScreens(ConfigReadContext &);
   void readSectionLinks(ConfigReadContext &);
+  void readSectionPhysicalLayout(ConfigReadContext &);
   void readSectionAliases(ConfigReadContext &);
 
   InputFilter::Condition *
@@ -472,6 +493,7 @@ private:
   NameMap m_nameToCanonicalName;
   NetworkAddress m_deskflowAddress;
   ScreenOptions m_globalOptions;
+  PhysicalScreenMap m_physicalScreens;
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction = false;
   IEventQueue *m_events;
