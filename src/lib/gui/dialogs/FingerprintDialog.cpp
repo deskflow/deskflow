@@ -23,7 +23,7 @@ FingerprintDialog::FingerprintDialog(
       m_buttonBox{new QDialogButtonBox(QDialogButtonBox::Help, this)}
 {
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-  m_lblHeader->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  m_lblHeader->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 
   const bool localMode = mode == FingerprintDialogMode::Local;
   const bool isServer = mode == FingerprintDialogMode::Server;
