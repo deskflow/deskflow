@@ -38,6 +38,8 @@ using namespace deskflow::server;
 
 namespace {
 
+constexpr int32_t kSecondarySwitchEdgeMargin = 16;
+
 bool containsPhysicalPosition(float start, float length, float position)
 {
   return position >= start && position < start + length;
@@ -913,11 +915,6 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
 
 void Server::avoidJumpZone(const BaseClientProxy *dst, Direction dir, int32_t &x, int32_t &y) const
 {
-  // we only need to avoid jump zones on the primary screen
-  if (dst != m_primaryClient) {
-    return;
-  }
-
   const std::string dstName(getName(dst));
   int32_t dx;
   int32_t dy;
@@ -926,6 +923,10 @@ void Server::avoidJumpZone(const BaseClientProxy *dst, Direction dir, int32_t &x
   dst->getShape(dx, dy, dw, dh);
   float t = mapToFraction(dst, dir, x, y);
   int32_t z = getJumpZoneSize(dst);
+  const int32_t minZoneSize = (dst == m_primaryClient) ? 1 : kSecondarySwitchEdgeMargin;
+  if (z < minZoneSize) {
+    z = minZoneSize;
+  }
 
   // move in far enough to avoid the jump zone.  if entering a side
   // that doesn't have a neighbor (i.e. an asymmetrical side) then we
@@ -1406,8 +1407,11 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
 
   if (grabber == m_primaryClient && m_active != m_primaryClient) {
     LOG_INFO("clipboard grabbed while active screen was changed, resending clipboard data");
+    const auto primaryName = getName(m_primaryClient);
     for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-      onClipboardChanged(m_primaryClient, id, m_clipboards[id].m_clipboardSeqNum);
+      if (m_clipboards[id].m_clipboardOwner == primaryName) {
+        onClipboardChanged(m_primaryClient, id, m_clipboards[id].m_clipboardSeqNum);
+      }
     }
   }
 }
@@ -1646,11 +1650,31 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
     return;
   }
 
-  // should be the expected client
-  assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
+  const auto owner = m_clients.find(clipboard.m_clipboardOwner);
+  if (owner == m_clients.end()) {
+    LOG_INFO(
+        "ignored screen \"%s\" update of clipboard %d because owner \"%s\" is not connected",
+        getName(sender).c_str(), id, clipboard.m_clipboardOwner.c_str()
+    );
+    return;
+  }
+  if (sender != owner->second) {
+    LOG_INFO(
+        "ignored screen \"%s\" update of clipboard %d because owner is \"%s\"",
+        getName(sender).c_str(), id, clipboard.m_clipboardOwner.c_str()
+    );
+    return;
+  }
 
   // get data
-  sender->getClipboard(id, &clipboard.m_clipboard);
+  if (!sender->getClipboard(id, &clipboard.m_clipboard)) {
+    LOG_INFO(
+        "ignored screen \"%s\" update of clipboard %d because clipboard data is unavailable",
+        getName(sender).c_str(), id
+    );
+    return;
+  }
+  clipboard.m_clipboardSeqNum = seqNum;
 
   std::string data = clipboard.m_clipboard.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {

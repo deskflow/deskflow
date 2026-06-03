@@ -131,6 +131,24 @@ function Get-IniValue {
   return $null
 }
 
+function Show-WindowsCursor {
+  $NativeMethods = "DeskflowCursorRestore.NativeMethods" -as [type]
+  if (-not $NativeMethods) {
+    Add-Type -Namespace DeskflowCursorRestore -Name NativeMethods -MemberDefinition @"
+[System.Runtime.InteropServices.DllImport("user32.dll")]
+public static extern int ShowCursor(bool bShow);
+"@
+    $NativeMethods = "DeskflowCursorRestore.NativeMethods" -as [type]
+  }
+
+  for ($Attempt = 0; $Attempt -lt 10; $Attempt++) {
+    $DisplayCounter = $NativeMethods::ShowCursor($true)
+    if ($DisplayCounter -ge 0) {
+      return
+    }
+  }
+}
+
 Write-Host "Stopping Deskflow processes from $BinPath"
 $ProcessNames = @("deskflow", "deskflow-core", "deskflow-daemon")
 $BinPathFull = [System.IO.Path]::GetFullPath($BinPath).TrimEnd("\", "/")
@@ -185,6 +203,9 @@ Get-Process -Name $ProcessNames -ErrorAction SilentlyContinue | ForEach-Object {
     Write-Warning "Leaving $($Process.ProcessName) [$($Process.Id)] running because its path is not accessible. Use -StopAll to stop every Deskflow process."
   }
 }
+
+Write-Host "Restoring Windows cursor visibility"
+Show-WindowsCursor
 
 $Targets = @($BuildTarget)
 if (-not $NoDaemon -and $BuildTarget -ne "deskflow-daemon") {
