@@ -315,7 +315,7 @@ jobs:
 
       - name: Update Development Documentation
         if: matrix.target.like == 'arch' && github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           branch: gh-pages
           folder: build/docs/dev/html
