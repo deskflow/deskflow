@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.216</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.220</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,6 +96,7 @@ $(function(){initNavTree('StyleUtils_8h.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &lt;QDir&gt;</code><br />
 <code>#include &lt;QFileInfoList&gt;</code><br />
+<code>#include &lt;QFontDatabase&gt;</code><br />
 <code>#include &lt;QIcon&gt;</code><br />
 <code>#include &lt;QPalette&gt;</code><br />
 <code>#include &lt;QStyleHints&gt;</code><br />
@@ -105,19 +106,21 @@ Include dependency graph for StyleUtils.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="StyleUtils_8h__incl.png" border="0" usemap="#asrc_2lib_2gui_2StyleUtils_8h" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2gui_2StyleUtils_8h" id="asrc_2lib_2gui_2StyleUtils_8h">
-<area shape="rect" title=" " alt="" coords="195,5,344,30"/>
+<area shape="rect" title=" " alt="" coords="287,5,436,30"/>
 <area shape="rect" title=" " alt="" coords="5,78,54,103"/>
-<area shape="poly" title=" " alt="" coords="229,33,70,80,68,74,228,28"/>
+<area shape="poly" title=" " alt="" coords="291,31,192,53,69,80,68,75,191,47,296,30"/>
 <area shape="rect" title=" " alt="" coords="78,78,173,103"/>
-<area shape="poly" title=" " alt="" coords="248,30,164,73,162,68,243,31"/>
-<area shape="rect" title=" " alt="" coords="197,78,254,103"/>
-<area shape="poly" title=" " alt="" coords="265,29,242,67,239,63,260,32"/>
-<area shape="rect" title=" " alt="" coords="277,78,350,103"/>
-<area shape="poly" title=" " alt="" coords="278,28,301,66,296,64,275,33"/>
-<area shape="rect" title=" " alt="" coords="374,78,466,103"/>
-<area shape="poly" title=" " alt="" coords="295,28,384,71,379,71,294,33"/>
-<area shape="rect" title=" " alt="" coords="491,78,637,103"/>
-<area shape="poly" title=" " alt="" coords="318,28,503,73,498,75,318,33"/>
+<area shape="poly" title=" " alt="" coords="325,31,180,76,179,70,320,30"/>
+<area shape="rect" title=" " alt="" coords="197,78,310,103"/>
+<area shape="poly" title=" " alt="" coords="346,30,285,72,283,67,341,31"/>
+<area shape="rect" title=" " alt="" coords="333,78,390,103"/>
+<area shape="poly" title=" " alt="" coords="363,29,364,64,359,61,360,32"/>
+<area shape="rect" title=" " alt="" coords="413,78,486,103"/>
+<area shape="poly" title=" " alt="" coords="377,28,426,69,421,68,375,33"/>
+<area shape="rect" title=" " alt="" coords="510,78,602,103"/>
+<area shape="poly" title=" " alt="" coords="394,28,513,72,507,72,393,33"/>
+<area shape="rect" title=" " alt="" coords="627,78,773,103"/>
+<area shape="poly" title=" " alt="" coords="418,28,631,74,626,75,418,33"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -125,11 +128,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="StyleUtils_8h__dep__incl.png" border="0" usemap="#asrc_2lib_2gui_2StyleUtils_8hdep" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2gui_2StyleUtils_8hdep" id="asrc_2lib_2gui_2StyleUtils_8hdep">
-<area shape="rect" title=" " alt="" coords="100,5,249,30"/>
+<area shape="rect" title=" " alt="" coords="291,5,440,30"/>
 <area shape="rect" href="deskflow-gui_8cpp.html" title=" " alt="" coords="5,78,155,117"/>
-<area shape="poly" title=" " alt="" coords="152,39,104,80,101,75,147,41"/>
+<area shape="poly" title=" " alt="" coords="308,37,150,80,148,75,307,32"/>
 <area shape="rect" href="MainWindow_8cpp.html" title=" " alt="" coords="179,85,360,110"/>
-<area shape="poly" title=" " alt="" coords="201,37,258,85,253,85,199,42"/>
+<area shape="poly" title=" " alt="" coords="342,39,285,87,282,82,337,41"/>
+<area shape="rect" href="FingerprintPreview_8cpp.html" title=" " alt="" coords="384,78,542,117"/>
+<area shape="poly" title=" " alt="" coords="392,37,442,78,437,77,391,42"/>
+<area shape="rect" href="LogWidget_8cpp.html" title=" " alt="" coords="566,78,692,117"/>
+<area shape="poly" title=" " alt="" coords="420,32,569,77,563,78,419,37"/>
 </map>
 </div>
 </div>
@@ -147,7 +154,34 @@ Functions</h2></td></tr>
 <tr class="memitem:a6c3353d5cbfbd26b2acd734e71d61b12" id="r_a6c3353d5cbfbd26b2acd734e71d61b12"><td class="memItemLeft">QString&#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">deskflow::gui::iconMode</a> ()</td></tr>
 <tr class="memdesc:a6c3353d5cbfbd26b2acd734e71d61b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">get a string for the iconMode  <br /></td></tr>
 <tr class="memitem:aaa991ba0f8b1c14f114fa29eb3fbdc4b" id="r_aaa991ba0f8b1c14f114fa29eb3fbdc4b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="namespacedeskflow_1_1gui.html#aaa991ba0f8b1c14f114fa29eb3fbdc4b">deskflow::gui::updateIconTheme</a> ()</td></tr>
+<tr class="memitem:ad99ab7efdde3fc647e822e0842c2e899" id="r_ad99ab7efdde3fc647e822e0842c2e899"><td class="memItemLeft">QFont&#160;</td><td class="memItemRight"><a class="el" href="#ad99ab7efdde3fc647e822e0842c2e899">fixedFont</a> ()</td></tr>
 </table>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ad99ab7efdde3fc647e822e0842c2e899" name="ad99ab7efdde3fc647e822e0842c2e899"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad99ab7efdde3fc647e822e0842c2e899">&#9670;&#160;</a></span>fixedFont()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QFont fixedFont </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

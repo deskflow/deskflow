@@ -18,6 +18,7 @@ var NAVTREEINDEX5 =
 "String_8h.html":[7,0,1,1,1,27],
 "String_8h_source.html":[7,0,1,1,1,27],
 "StyleUtils_8h.html":[7,0,1,1,5,26],
+"StyleUtils_8h.html#ad99ab7efdde3fc647e822e0842c2e899":[7,0,1,1,5,26,0],
 "StyleUtils_8h_source.html":[7,0,1,1,5,26],
 "TCPListenSocket_8cpp.html":[7,0,1,1,8,25],
 "TCPListenSocket_8h.html":[7,0,1,1,8,26],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classAppUtilUnix.html":[6,0,8],
 "classAppUtilUnix.html#a38bb7cb0ef62a92541337051b103cd82":[6,0,8,3],
 "classAppUtilUnix.html#a5af7ccaa14cba7e6bc40d1cb9c0c3517":[6,0,8,1],
-"classAppUtilUnix.html#abdd106a8abd59dfcd692176881f72ac6":[6,0,8,2],
-"classAppUtilUnix.html#ad494eae903b08c6c6c43cdf01167c067":[6,0,8,0]
+"classAppUtilUnix.html#abdd106a8abd59dfcd692176881f72ac6":[6,0,8,2]
 };

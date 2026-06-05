@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"classTrashScreenWidget.html#a2e5944864a2fba0b610e854d5eac0ace":[6,0,240,0],
 "classTrashScreenWidget.html#ad0e1725ce39323068e535366e87c68a4":[6,0,240,2],
 "classTrashScreenWidget.html#ad3bec5b7e997975cc22daadb14485745":[6,0,240,1],
 "classUnicode.html":[6,0,242],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "classXWindowsScreen.html#a8af145455ca1a8f2057cca9aab6048bc":[6,0,259,22],
 "classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad":[6,0,259,2],
 "classXWindowsScreen.html#a8fb29b0d9400b0b52cf973dc6337c33c":[6,0,259,16],
-"classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38":[6,0,259,4],
-"classXWindowsScreen.html#a92b282938b2583610a0a1940e6ef2998":[6,0,259,12]
+"classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38":[6,0,259,4]
 };

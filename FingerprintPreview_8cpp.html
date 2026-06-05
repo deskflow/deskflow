@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.216</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.220</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -95,39 +95,63 @@ $(function(){initNavTree('FingerprintPreview_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="FingerprintPreview_8h_source.html">FingerprintPreview.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="PlatformInfo_8h_source.html">common/PlatformInfo.h</a>&quot;</code><br />
 <code>#include &lt;QFont&gt;</code><br />
 <code>#include &lt;QHBoxLayout&gt;</code><br />
 <code>#include &lt;QLabel&gt;</code><br />
+<code>#include &lt;<a class="el" href="StyleUtils_8h_source.html">gui/StyleUtils.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SecureUtils_8h_source.html">net/SecureUtils.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for FingerprintPreview.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="FingerprintPreview_8cpp__incl.png" border="0" usemap="#asrc_2lib_2gui_2widgets_2FingerprintPreview_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2gui_2widgets_2FingerprintPreview_8cpp" id="asrc_2lib_2gui_2widgets_2FingerprintPreview_8cpp">
-<area shape="rect" title=" " alt="" coords="223,5,381,44"/>
-<area shape="rect" href="FingerprintPreview_8h.html" title=" " alt="" coords="5,92,146,117"/>
-<area shape="poly" title=" " alt="" coords="246,47,125,89,123,84,249,42"/>
-<area shape="rect" title=" " alt="" coords="170,92,227,117"/>
-<area shape="poly" title=" " alt="" coords="275,46,228,85,224,80,279,43"/>
-<area shape="rect" title=" " alt="" coords="251,92,353,117"/>
-<area shape="poly" title=" " alt="" coords="304,42,305,77,300,75,301,47"/>
-<area shape="rect" title=" " alt="" coords="378,92,440,117"/>
-<area shape="poly" title=" " alt="" coords="328,42,383,83,378,83,328,47"/>
-<area shape="rect" href="SecureUtils_8h.html" title=" " alt="" coords="464,92,586,117"/>
-<area shape="poly" title=" " alt="" coords="356,42,480,86,475,87,356,47"/>
-<area shape="rect" title=" " alt="" coords="41,165,110,189"/>
-<area shape="poly" title=" " alt="" coords="76,115,78,150,73,149,75,120"/>
-<area shape="rect" href="Fingerprint_8h.html" title=" " alt="" coords="232,165,348,189"/>
-<area shape="poly" title=" " alt="" coords="111,115,242,158,238,161,111,120"/>
-<area shape="rect" title=" " alt="" coords="104,237,194,262"/>
-<area shape="poly" title=" " alt="" coords="269,189,187,232,185,228,264,190"/>
-<area shape="rect" title=" " alt="" coords="218,237,362,262"/>
-<area shape="poly" title=" " alt="" coords="292,188,292,223,288,220,288,192"/>
-<area shape="rect" title=" " alt="" coords="386,237,456,262"/>
-<area shape="poly" title=" " alt="" coords="312,187,389,230,384,230,311,192"/>
-<area shape="poly" title=" " alt="" coords="484,118,344,162,343,157,489,116"/>
-<area shape="rect" title=" " alt="" coords="470,165,580,189"/>
-<area shape="poly" title=" " alt="" coords="527,115,527,151,523,148,523,119"/>
+<area shape="rect" title=" " alt="" coords="424,5,582,44"/>
+<area shape="rect" href="FingerprintPreview_8h.html" title=" " alt="" coords="206,92,346,117"/>
+<area shape="poly" title=" " alt="" coords="446,46,326,89,324,84,451,43"/>
+<area shape="rect" href="PlatformInfo_8h.html" title=" " alt="" coords="24,92,182,117"/>
+<area shape="poly" title=" " alt="" coords="422,44,179,91,178,86,425,39"/>
+<area shape="rect" title=" " alt="" coords="370,92,428,117"/>
+<area shape="poly" title=" " alt="" coords="480,43,428,85,425,80,475,46"/>
+<area shape="rect" title=" " alt="" coords="452,92,554,117"/>
+<area shape="poly" title=" " alt="" coords="505,42,505,78,501,75,501,47"/>
+<area shape="rect" title=" " alt="" coords="578,92,641,117"/>
+<area shape="poly" title=" " alt="" coords="529,42,584,83,579,83,528,47"/>
+<area shape="rect" href="StyleUtils_8h.html" title=" " alt="" coords="1060,92,1170,117"/>
+<area shape="poly" title=" " alt="" coords="582,33,1047,93,1042,95,582,39"/>
+<area shape="rect" href="SecureUtils_8h.html" title=" " alt="" coords="664,92,787,117"/>
+<area shape="poly" title=" " alt="" coords="557,42,681,86,675,87,557,47"/>
+<area shape="rect" title=" " alt="" coords="242,165,310,189"/>
+<area shape="poly" title=" " alt="" coords="278,115,279,150,274,148,275,119"/>
+<area shape="rect" href="Fingerprint_8h.html" title=" " alt="" coords="433,165,549,189"/>
+<area shape="poly" title=" " alt="" coords="312,115,444,159,439,160,312,120"/>
+<area shape="rect" title=" " alt="" coords="305,237,394,262"/>
+<area shape="poly" title=" " alt="" coords="470,189,388,232,386,227,465,190"/>
+<area shape="rect" title=" " alt="" coords="419,237,563,262"/>
+<area shape="poly" title=" " alt="" coords="493,188,493,223,489,220,489,192"/>
+<area shape="rect" title=" " alt="" coords="587,237,656,262"/>
+<area shape="poly" title=" " alt="" coords="513,187,590,230,584,229,512,192"/>
+<area shape="rect" title=" " alt="" coords="104,165,179,189"/>
+<area shape="poly" title=" " alt="" coords="110,115,131,151,125,151,109,120"/>
+<area shape="rect" title=" " alt="" coords="5,165,81,189"/>
+<area shape="poly" title=" " alt="" coords="92,120,65,155,60,151,94,115"/>
+<area shape="rect" title=" " alt="" coords="1043,165,1091,189"/>
+<area shape="poly" title=" " alt="" coords="1109,116,1085,154,1082,150,1105,119"/>
+<area shape="rect" title=" " alt="" coords="1115,165,1211,189"/>
+<area shape="poly" title=" " alt="" coords="1124,115,1149,153,1144,151,1122,120"/>
+<area shape="rect" title=" " alt="" coords="1235,165,1347,189"/>
+<area shape="poly" title=" " alt="" coords="1145,115,1251,159,1245,158,1144,120"/>
+<area shape="rect" title=" " alt="" coords="1371,165,1427,189"/>
+<area shape="poly" title=" " alt="" coords="1165,115,1358,164,1353,164,1165,120"/>
+<area shape="rect" title=" " alt="" coords="1451,165,1523,189"/>
+<area shape="poly" title=" " alt="" coords="1171,112,1438,164,1433,164,1171,118"/>
+<area shape="rect" title=" " alt="" coords="756,165,848,189"/>
+<area shape="poly" title=" " alt="" coords="1066,117,864,165,863,159,1060,118"/>
+<area shape="rect" title=" " alt="" coords="872,165,1019,189"/>
+<area shape="poly" title=" " alt="" coords="1090,117,988,161,987,156,1084,118"/>
+<area shape="poly" title=" " alt="" coords="690,117,545,162,544,157,684,118"/>
+<area shape="rect" title=" " alt="" coords="622,165,731,189"/>
+<area shape="poly" title=" " alt="" coords="720,116,695,154,692,150,715,119"/>
 </map>
 </div>
 </div></div><!-- contents -->
