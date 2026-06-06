@@ -434,6 +434,12 @@ jobs:
           echo "Build: ${{env.DESKFLOW_VERSION }}" > sums.txt
           sha256sum deskflow-* >> sums.txt
 
+      - name: Update continuous tag
+        if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
+        run: gh release delete continuous --cleanup-tag
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
       - name: Deploy continuous
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
         uses: softprops/action-gh-release@v3
@@ -442,6 +448,7 @@ jobs:
           tag_name: "continuous"
           name: "Continuous v${{env.DESKFLOW_VERSION}}"
           prerelease: true
+          append_body: false
           generate_release_notes: true
           files: |
             deskflow-*
