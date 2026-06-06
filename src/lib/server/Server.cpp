@@ -242,10 +242,27 @@ void Server::adoptClient(BaseClientProxy *client)
 
   // add client to client list
   if (!addClient(client)) {
-    // can only have one screen with a given name at any given time
-    LOG_WARN("a client with name \"%s\" is already connected", getName(client).c_str());
-    closeClient(client, kMsgEBusy);
-    return;
+    // A client with this name is already connected. This is almost always a
+    // stale/half-open connection left behind when the previous client dropped
+    // ungracefully (display sleep, network blip, OOM): the dead client keeps
+    // holding the screen name and there is no keepalive to reap it, so the real
+    // client could never reconnect until the server was restarted. Instead,
+    // disconnect the existing client and let the new one take over.
+    const std::string name = getName(client);
+    BaseClientProxy *stale = nullptr;
+    if (auto it = m_clients.find(name); it != m_clients.end()) {
+      stale = it->second;
+    }
+    if (stale != nullptr && stale != client && stale != m_primaryClient) {
+      LOG_WARN("client \"%s\" already connected; replacing stale connection", name.c_str());
+      closeClient(stale, kMsgCClose);
+    }
+    if (!addClient(client)) {
+      // could not free the name (e.g. it is the primary screen) -- give up
+      LOG_WARN("a client with name \"%s\" is already connected", name.c_str());
+      closeClient(client, kMsgEBusy);
+      return;
+    }
   }
   LOG_DEBUG("client \"%s\" has connected", getName(client).c_str());
   ipcSendConnectionState(deskflow::core::ConnectionState::Connected);
