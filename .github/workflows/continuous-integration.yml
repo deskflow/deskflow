@@ -433,6 +433,8 @@ jobs:
           rm -rf $GITHUB_WORKSPACE/package-*
           echo "Build: ${{env.DESKFLOW_VERSION }}" > sums.txt
           sha256sum deskflow-* >> sums.txt
+          export changes=$(git log --abbrev=8 --abbrev-commit --pretty=format:" - %s(%h) by %an" continuous..HEAD)
+          echo -e "## Latest Changes:\n$changes" > changelog.txt
 
       - name: Update continuous tag
         if: (github.ref == 'refs/heads/master') && !(contains(github.ref, '/tags/v'))
@@ -449,7 +451,8 @@ jobs:
           name: "Continuous v${{env.DESKFLOW_VERSION}}"
           prerelease: true
           append_body: false
-          generate_release_notes: true
+          generate_release_notes: false
+          body_path: changelog.txt
           files: |
             deskflow-*
             sums.txt
