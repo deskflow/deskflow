@@ -21,7 +21,7 @@ LineEditValidator::LineEditValidator(QLineEdit *lineEdit, ValidationError *error
 {
 
   if (!m_pLineEdit) {
-    qFatal("validator line edit not set");
+    qCritical("validator line edit not set");
   }
 }
 
@@ -32,7 +32,10 @@ void LineEditValidator::addValidator(std::unique_ptr<IStringValidator> validator
 
 QValidator::State LineEditValidator::validate(QString &input, int &) const
 {
-  assert(m_pLineEdit);
+  if (!m_pLineEdit) {
+    qCritical("cannot validate input, no line edit set");
+    return Intermediate;
+  }
 
   QString errorMessage;
   for (const auto &validator : m_Validators) {
