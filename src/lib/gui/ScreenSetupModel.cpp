@@ -8,11 +8,12 @@
 
 #include "ScreenSetupModel.h"
 
+#include "common/Constants.h"
+#include "gui/config/Screen.h"
+
 #include <QIODevice>
 #include <QIcon>
 #include <QMimeData>
-
-#include "gui/config/Screen.h"
 
 const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
 
@@ -22,17 +23,19 @@ ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numR
       m_NumColumns(numColumns),
       m_NumRows(numRows)
 {
-
-  // bound rows and columns to prevent multiply overflow.
-  // this is unlikely to happen, as the grid size is only 3x9.
-  if (m_NumColumns > 100 || m_NumRows > 100) {
-    qFatal("grid size out of bounds: %d columns x %d rows", m_NumColumns, m_NumRows);
-    return;
+  // bound the grid so that multiplying columns by rows cannot overflow.
+  if (m_NumColumns < 1 || m_NumColumns > kMaxGridSize || m_NumRows < 1 || m_NumRows > kMaxGridSize) {
+    qCritical("grid size out of bounds: %d columns x %d rows", m_NumColumns, m_NumRows);
+    m_NumColumns = kServerGridWidth;
+    m_NumRows = kServerGridHeight;
   }
 
-  const long span = static_cast<long>(m_NumColumns) * m_NumRows;
-  if (span > screens.size()) {
-    qFatal("scrren list (%lld) too small for %d columns x %d rows", screens.size(), m_NumColumns, m_NumRows);
+  const int span = m_NumColumns * m_NumRows;
+  if (span > m_Screens.size()) {
+    qCritical(
+        "screen list too small for grid, screens: %lld, cells: %d", static_cast<long long>(m_Screens.size()), span
+    );
+    m_Screens.resize(span);
   }
 }
 
