@@ -258,7 +258,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
     outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
 
   if (config.protocol() == NetworkProtocol::Unknown)
-    qFatal("unrecognized protocol when writing config");
+    qCritical("unrecognized protocol when writing config");
   outStream << "\t" << "protocol = " << networkProtocolToOption(config.protocol()) << Qt::endl;
 
   outStream << "\t"
