@@ -23,6 +23,7 @@ const auto kCopyright = //
 const auto kCoreBinName = "@CORE_BINARY@";
 const auto kCoreIpcName = "@CMAKE_PROJECT_NAME@-core";
 
+const auto kServerGridHeight = 3;
 const auto kServerGridWidth = 5;
 
 #ifdef _WIN32

@@ -105,6 +105,7 @@ public:
   {
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
+    inline static const auto GridHeight = QStringLiteral("server/gridHeight");
     inline static const auto GridWidth = QStringLiteral("server/gridWidth");
     inline static const auto Protocol = QStringLiteral("server/protocol");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
@@ -242,6 +243,7 @@ private:
     , Settings::Security::TlsEnabled
     , Settings::Server::ExternalConfig
     , Settings::Server::ExternalConfigFile
+    , Settings::Server::GridHeight
     , Settings::Server::GridWidth
     , Settings::Server::Protocol
     , Settings::Server::XdpRestoreToken
@@ -291,6 +293,7 @@ private:
   inline static const QStringList m_oldServerConfigKeys = {
       QStringLiteral("internalConfig/protocol")
     , QStringLiteral("internalConfig/numColumns")
+    , QStringLiteral("internalConfig/numRows")
   };
   // clang-format on
 };
