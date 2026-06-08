@@ -25,11 +25,13 @@ using enum ScreenConfig::SwitchCorner;
 ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ServerConfigDialog>()},
+      m_columns{Settings::value(Settings::Server::GridWidth).toInt()},
+      m_rows{Settings::value(Settings::Server::GridHeight).toInt()},
       m_originalServerConfig(config),
       m_originalServerConfigIsExternal(config.useExternalConfig()),
       m_originalServerConfigUsesExternalFile(config.configFile()),
       m_serverConfig(config),
-      m_screenSetupModel(m_serverConfig.screens(), m_serverConfig.numColumns(), m_serverConfig.numRows())
+      m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows)
 {
   ui->setupUi(this);
 
@@ -164,7 +166,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   if (server == screens.end()) {
     Screen serverScreen(serverConfig().getServerName());
     serverScreen.markAsServer();
-    model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = serverScreen;
+    model().screen(m_columns / 2, m_rows / 2) = serverScreen;
   } else {
     server->markAsServer();
   }

@@ -33,7 +33,7 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_Columns(columns), m_Rows(rows)
+ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_columns(columns), m_rows(rows)
 {
   recall();
 }
@@ -53,8 +53,6 @@ bool ServerConfig::save(const QString &fileName) const
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
   return m_Screens == sc.m_Screens &&                                   //
-         m_Columns == sc.m_Columns &&                                   //
-         m_Rows == sc.m_Rows &&                                         //
          m_HasHeartbeat == sc.m_HasHeartbeat &&                         //
          m_Heartbeat == sc.m_Heartbeat &&                               //
          m_Protocol == sc.m_Protocol &&                                 //
@@ -91,7 +89,7 @@ void ServerConfig::setupScreens()
 
   // There must always be screen objects for each cell in the screens QList.
   // Unused screens are identified by having an empty name.
-  for (int i = 0; i < numColumns() * numRows(); i++)
+  for (int i = 0; i < m_columns * m_rows; i++)
     addScreen(Screen());
 }
 
@@ -146,8 +144,8 @@ void ServerConfig::recall()
 
   settings().beginGroup("internalConfig");
 
-  setNumColumns(Settings::value(Settings::Server::GridWidth).toInt());
-  setNumRows(Settings::value(Settings::Server::GridHeight).toInt());
+  m_columns = Settings::value(Settings::Server::GridWidth).toInt();
+  m_rows = Settings::value(Settings::Server::GridHeight).toInt();
 
   // we need to know the number of columns and rows before we can set up
   // ourselves
@@ -202,10 +200,10 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
   // if we're at the left or right end of the table, don't find results going
   // further left or right
-  if ((deltaColumn > 0 && (idx + 1) % numColumns() == 0) || (deltaColumn < 0 && idx % numColumns() == 0))
+  if ((deltaColumn > 0 && (idx + 1) % m_columns == 0) || (deltaColumn < 0 && idx % m_columns == 0))
     return -1;
 
-  int arrayPos = idx + deltaColumn + deltaRow * numColumns();
+  int arrayPos = idx + deltaColumn + deltaRow * m_columns;
 
   if (arrayPos >= screens().size() || arrayPos < 0)
     return -1;

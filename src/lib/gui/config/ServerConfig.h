@@ -47,14 +47,6 @@ public:
   //
   // New methods
   //
-  int numColumns() const
-  {
-    return m_Columns;
-  }
-  int numRows() const
-  {
-    return m_Rows;
-  }
   bool hasHeartbeat() const
   {
     return m_HasHeartbeat;
@@ -153,14 +145,6 @@ private:
   {
     m_Screens.append(screen);
   }
-  void setNumColumns(int n)
-  {
-    m_Columns = n;
-  }
-  void setNumRows(int n)
-  {
-    m_Rows = n;
-  }
   void haveHeartbeat(bool on)
   {
     m_HasHeartbeat = on;
@@ -251,8 +235,8 @@ private:
   HotkeyList m_Hotkeys;
 
   ScreenList m_Screens;
-  int m_Columns;
-  int m_Rows;
+  int m_columns;
+  int m_rows;
   size_t m_ClipboardSharingSize = defaultClipboardSharingSize();
 };
 
