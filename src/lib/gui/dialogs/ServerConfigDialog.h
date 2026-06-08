@@ -97,6 +97,8 @@ protected:
 private:
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
+  int m_columns;
+  int m_rows;
   ServerConfig &m_originalServerConfig;
   NetworkProtocol m_originalProtocol;
   bool m_originalServerConfigIsExternal;
