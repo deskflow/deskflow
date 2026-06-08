@@ -111,7 +111,7 @@ void Settings::cleanSettings()
 {
   const QStringList keys = m_settings->allKeys();
   for (const QString &key : keys) {
-    if (key.startsWith(QStringLiteral("internalConfig/protocol")))
+    if (m_oldServerConfigKeys.contains(key))
       m_settings->remove(key);
     if (key.startsWith(QStringLiteral("internalConfig")))
       continue;
@@ -209,6 +209,9 @@ QVariant Settings::defaultValue(const QString &key)
 
   if (key == Server::Protocol)
     return QVariant::fromValue(NetworkProtocol::Barrier);
+
+  if (key == Server::GridWidth)
+    return kServerGridWidth;
 
   return QVariant();
 }

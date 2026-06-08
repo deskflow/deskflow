@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "common/Constants.h"
 #include "common/NetworkProtocol.h"
 #include "gui/Hotkey.h"
 #include "gui/config/ScreenConfig.h"
@@ -14,7 +15,6 @@
 
 #include <QList>
 
-const auto kDefaultColumns = 5;
 const auto kDefaultRows = 3;
 
 class QTextStream;
@@ -36,7 +36,7 @@ class ServerConfig : public ScreenConfig
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
-  explicit ServerConfig(int columns = kDefaultColumns, int rows = kDefaultRows);
+  explicit ServerConfig(int columns = kServerGridWidth, int rows = kDefaultRows);
   ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;

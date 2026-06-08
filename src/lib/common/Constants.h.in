@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -22,6 +22,8 @@ const auto kCopyright = //
 
 const auto kCoreBinName = "@CORE_BINARY@";
 const auto kCoreIpcName = "@CMAKE_PROJECT_NAME@-core";
+
+const auto kServerGridWidth = 5;
 
 #ifdef _WIN32
 
