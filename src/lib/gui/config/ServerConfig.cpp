@@ -102,7 +102,6 @@ void ServerConfig::commit()
   settings().beginGroup("internalConfig");
   settings().remove("");
 
-  settings().setValue("numColumns", numColumns());
   settings().setValue("numRows", numRows());
 
   settings().setValue("hasHeartbeat", hasHeartbeat());
@@ -149,7 +148,7 @@ void ServerConfig::recall()
 
   settings().beginGroup("internalConfig");
 
-  setNumColumns(settings().value("numColumns", 5).toInt());
+  setNumColumns(Settings::value(Settings::Server::GridWidth).toInt());
   setNumRows(settings().value("numRows", 3).toInt());
 
   // we need to know the number of columns and rows before we can set up
