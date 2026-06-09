@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ScreenSetupModel.h"
+#include "common/NetworkProtocol.h"
 #include "config/ServerConfig.h"
 
 #include <QDialog>
