@@ -470,8 +470,10 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->widgetExternalConfigControls->setEnabled(checked);
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
-  ui->tabWidget->setTabEnabled(2, !checked);
-
+  ui->groupMisc->setEnabled(!checked);
+  ui->groupCorners->setEnabled(!checked);
+  ui->groupSwitch->setEnabled(!checked);
+  ui->widgetHeartbeat->setEnabled(!checked);
   serverConfig().setUseExternalConfig(checked);
   onChange();
 }
