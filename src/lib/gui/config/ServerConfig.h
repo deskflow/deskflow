@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,7 +9,6 @@
 #pragma once
 
 #include "common/Constants.h"
-#include "common/NetworkProtocol.h"
 #include "gui/Hotkey.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"
@@ -20,13 +20,6 @@ class QSettings;
 class QString;
 class QFile;
 class ServerConfigDialog;
-
-namespace deskflow::gui {
-
-// The default protocol was decided by a community vote.
-const auto kDefaultProtocol = NetworkProtocol::Barrier;
-
-} // namespace deskflow::gui
 
 class ServerConfig : public ScreenConfig
 {
@@ -54,10 +47,6 @@ public:
   int heartbeat() const
   {
     return m_Heartbeat;
-  }
-  NetworkProtocol protocol() const
-  {
-    return m_Protocol;
   }
   bool relativeMouseMoves() const
   {
@@ -153,10 +142,6 @@ private:
   {
     m_Heartbeat = val;
   }
-  void setProtocol(NetworkProtocol val)
-  {
-    m_Protocol = val;
-  }
   void setRelativeMouseMoves(bool on)
   {
     m_RelativeMouseMoves = on;
@@ -219,7 +204,6 @@ private:
 private:
   bool m_HasHeartbeat = false;
   int m_Heartbeat = 0;
-  NetworkProtocol m_Protocol = deskflow::gui::kDefaultProtocol;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
   bool m_HasSwitchDelay = false;

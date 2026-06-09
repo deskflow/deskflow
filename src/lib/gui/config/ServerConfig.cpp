@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -55,7 +55,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
   return m_Screens == sc.m_Screens &&                                   //
          m_HasHeartbeat == sc.m_HasHeartbeat &&                         //
          m_Heartbeat == sc.m_Heartbeat &&                               //
-         m_Protocol == sc.m_Protocol &&                                 //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
          m_HasSwitchDelay == sc.m_HasSwitchDelay &&                     //
@@ -153,7 +152,6 @@ void ServerConfig::recall()
 
   haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
   setHeartbeat(settings().value("heartbeat", 5000).toInt());
-  setProtocol(Settings::value(Settings::Server::Protocol).value<NetworkProtocol>());
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
@@ -251,10 +249,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   if (config.hasHeartbeat())
     outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
-
-  if (config.protocol() == NetworkProtocol::Unknown)
-    qFatal("unrecognized protocol when writing config");
-  outStream << "\t" << "protocol = " << networkProtocolToOption(config.protocol()) << Qt::endl;
 
   outStream << "\t"
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;

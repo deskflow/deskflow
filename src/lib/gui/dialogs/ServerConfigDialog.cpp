@@ -70,8 +70,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->lineConfigFile->setText(serverConfig().configFile());
 
-  ui->rbProtocolSynergy->setChecked(serverConfig().protocol() == NetworkProtocol::Synergy);
-  ui->rbProtocolBarrier->setChecked(serverConfig().protocol() == NetworkProtocol::Barrier);
+  const auto networkProtocol = networkProtocolFromString(Settings::value(Settings::Server::Protocol).toString());
+  ui->rbProtocolSynergy->setChecked(networkProtocol == NetworkProtocol::Synergy);
+  ui->rbProtocolBarrier->setChecked(networkProtocol == NetworkProtocol::Barrier);
   connect(ui->rbProtocolBarrier, &QRadioButton::toggled, this, &ServerConfigDialog::toggleProtocol);
 
   ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
@@ -368,7 +369,6 @@ void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
 void ServerConfigDialog::toggleProtocol()
 {
   auto proto = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
-  serverConfig().setProtocol(proto);
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(proto));
   onChange();
 }
