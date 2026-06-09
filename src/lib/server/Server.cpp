@@ -1130,7 +1130,7 @@ void Server::processOptions()
     stopRelativeMoves();
   }
   m_relativeMoves = newRelativeMoves;
-  m_protocol = networkProtocolFromString(Settings::value(Settings::Server::Protocol).toString());
+  m_protocol = Settings::networkProtocol();
 }
 
 void Server::handleShapeChanged(BaseClientProxy *client)

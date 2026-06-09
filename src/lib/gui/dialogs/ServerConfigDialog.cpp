@@ -35,7 +35,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 {
   ui->setupUi(this);
 
-  m_originalProtocol = Settings::value(Settings::Server::Protocol).value<NetworkProtocol>();
+  m_protocol = Settings::networkProtocol();
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::reject);
 
@@ -70,7 +70,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->lineConfigFile->setText(serverConfig().configFile());
 
-  const auto networkProtocol = networkProtocolFromString(Settings::value(Settings::Server::Protocol).toString());
+  const auto networkProtocol = Settings::networkProtocol();
   ui->rbProtocolSynergy->setChecked(networkProtocol == NetworkProtocol::Synergy);
   ui->rbProtocolBarrier->setChecked(networkProtocol == NetworkProtocol::Barrier);
   connect(ui->rbProtocolBarrier, &QRadioButton::toggled, this, &ServerConfigDialog::toggleProtocol);
@@ -201,6 +201,7 @@ void ServerConfigDialog::accept()
   // now that the dialog has been accepted, copy the new server config to the
   // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
+  Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
 
   QDialog::accept();
 }
@@ -368,8 +369,7 @@ void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
 
 void ServerConfigDialog::toggleProtocol()
 {
-  auto proto = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
-  Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(proto));
+  m_protocol = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
   onChange();
 }
 
@@ -511,10 +511,9 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 
 void ServerConfigDialog::onChange()
 {
-  bool isAppConfigDataEqual =
-      m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
-      m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
-      m_originalProtocol == Settings::value(Settings::Server::Protocol).value<NetworkProtocol>();
+  bool isAppConfigDataEqual = m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
+                              m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
+                              m_protocol == Settings::networkProtocol();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }
