@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.229</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.26.0.230</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,7 +96,7 @@ $(function(){initNavTree('MSWindowsDesks_8h_source.html','',''); });
 <div class="contents">
 <a href="MSWindowsDesks_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
@@ -199,98 +199,104 @@ $(function(){initNavTree('MSWindowsDesks_8h_source.html','',''); });
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    HWND m_window;</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    HWND m_foregroundWindow;</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">bool</span> m_lowLevel;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  };</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  <span class="keyword">using </span>Desks = std::map&lt;std::wstring, Desk *&gt;;</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  <span class="comment">// initialization and shutdown operations</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  HCURSOR createBlankCursor() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  <span class="keywordtype">void</span> destroyCursor(HCURSOR cursor) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  ATOM createDeskWindowClass(<span class="keywordtype">bool</span> isPrimary) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keywordtype">void</span> destroyClass(ATOM windowClass) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  HWND createWindow(ATOM windowClass, <span class="keyword">const</span> <span class="keywordtype">wchar_t</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  <span class="keywordtype">void</span> destroyWindow(HWND) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  <span class="comment">// message handlers</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="keywordtype">void</span> deskMouseMove(int32_t <a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  <span class="keywordtype">void</span> deskMouseRelativeMove(int32_t dx, int32_t dy) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keywordtype">void</span> deskEnter(Desk *desk);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keywordtype">void</span> deskLeave(Desk *desk, HKL keyLayout);</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  <span class="keywordtype">void</span> deskThread(<span class="keyword">const</span> <span class="keywordtype">void</span> *vdesk);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  <span class="comment">// desk switch checking and handling</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  Desk *addDesk(<span class="keyword">const</span> std::wstring &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, HDESK hdesk);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  <span class="keywordtype">void</span> removeDesks();</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keywordtype">void</span> checkDesk();</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  <span class="keywordtype">bool</span> isDeskAccessible(<span class="keyword">const</span> Desk *desk) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordtype">void</span> handleCheckDesk();</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="comment">// communication with desk threads</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keywordtype">void</span> waitForDesk() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="keywordtype">void</span> sendMessage(UINT, WPARAM, LPARAM) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  <span class="comment">// work around for messed up keyboard events from low-level hooks</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  HWND getForegroundWindow() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  <span class="comment">// desk API wrappers</span></div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  HDESK openInputDesktop();</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  <span class="keywordtype">void</span> closeDesktop(HDESK);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  std::wstring getDesktopName(HDESK);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordtype">bool</span> m_hasRelativeRestorePosition = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    int32_t m_relativeRestoreX = 0;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    int32_t m_relativeRestoreY = 0;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  };</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  <span class="keyword">using </span>Desks = std::map&lt;std::wstring, Desk *&gt;;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <span class="comment">// initialization and shutdown operations</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  HCURSOR createBlankCursor() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  <span class="keywordtype">void</span> destroyCursor(HCURSOR cursor) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  ATOM createDeskWindowClass(<span class="keywordtype">bool</span> isPrimary) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  <span class="keywordtype">void</span> destroyClass(ATOM windowClass) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  HWND createWindow(ATOM windowClass, <span class="keyword">const</span> <span class="keywordtype">wchar_t</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="keywordtype">void</span> destroyWindow(HWND) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="comment">// message handlers</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keywordtype">void</span> deskMouseMove(int32_t <a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  <span class="keywordtype">void</span> deskMouseRelativeMove(int32_t dx, int32_t dy) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>  <span class="keywordtype">void</span> saveRelativeRestorePosition(Desk *desk) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  <span class="keywordtype">bool</span> restoreRelativeCursorPosition(Desk *desk) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <span class="keywordtype">void</span> deskEnter(Desk *desk);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  <span class="keywordtype">void</span> deskLeave(Desk *desk, HKL keyLayout);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keywordtype">void</span> deskThread(<span class="keyword">const</span> <span class="keywordtype">void</span> *vdesk);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="comment">// desk switch checking and handling</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  Desk *addDesk(<span class="keyword">const</span> std::wstring &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, HDESK hdesk);</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="keywordtype">void</span> removeDesks();</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keywordtype">void</span> checkDesk();</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="keywordtype">bool</span> isDeskAccessible(<span class="keyword">const</span> Desk *desk) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  <span class="keywordtype">void</span> handleCheckDesk();</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="comment">// communication with desk threads</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="keywordtype">void</span> waitForDesk() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  <span class="keywordtype">void</span> sendMessage(UINT, WPARAM, LPARAM) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  <span class="comment">// work around for messed up keyboard events from low-level hooks</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  HWND getForegroundWindow() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  <span class="comment">// our desk window procs</span></div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  <span class="keyword">static</span> LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  <span class="keyword">static</span> LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="comment">// true if screen is being used as a primary screen, false otherwise</span></div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keywordtype">bool</span> m_isPrimary;</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="comment">// true if hooks are to be installed (when debugging, it can be useful to disable hooks)</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="keywordtype">bool</span> m_useHooks;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  <span class="comment">// true if mouse has entered the screen</span></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  <span class="keywordtype">bool</span> m_isOnScreen;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  <span class="comment">// our resources</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>  ATOM m_deskClass;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  HCURSOR m_cursor;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="comment">// screen shape stuff</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  int32_t m_x = 0;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  int32_t m_y = 9;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  int32_t m_w = 0;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>  int32_t m_h = 0;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  int32_t m_xCenter = 0;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  int32_t m_yCenter = 0;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  <span class="comment">// true if system appears to have multiple monitors</span></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <span class="keywordtype">bool</span> m_multimon = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  <span class="comment">// the timer used to check for desktop switching</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *m_timer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="comment">// screen saver stuff</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_threadID;</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  <span class="keyword">const</span> <a class="code hl_class" href="classIScreenSaver.html">IScreenSaver</a> *m_screensaver;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  <span class="keywordtype">bool</span> m_screensaverNotify = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  <span class="comment">// desk API wrappers</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  HDESK openInputDesktop();</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  <span class="keywordtype">void</span> closeDesktop(HDESK);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>  std::wstring getDesktopName(HDESK);</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="comment">// our desk window procs</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keyword">static</span> LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keyword">static</span> LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="comment">// true if screen is being used as a primary screen, false otherwise</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  <span class="keywordtype">bool</span> m_isPrimary;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <span class="comment">// true if hooks are to be installed (when debugging, it can be useful to disable hooks)</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  <span class="keywordtype">bool</span> m_useHooks;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="comment">// true if mouse has entered the screen</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  <span class="keywordtype">bool</span> m_isOnScreen;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="comment">// our resources</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  ATOM m_deskClass;</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  HCURSOR m_cursor;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  <span class="comment">// screen shape stuff</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  int32_t m_x = 0;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  int32_t m_y = 9;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  int32_t m_w = 0;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  int32_t m_h = 0;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  int32_t m_xCenter = 0;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  int32_t m_yCenter = 0;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  <span class="comment">// true if system appears to have multiple monitors</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="keywordtype">bool</span> m_multimon = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  <span class="comment">// the timer used to check for desktop switching</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *m_timer = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>  <span class="comment">// the current desk and it&#39;s name</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>  Desk *m_activeDesk = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  std::wstring m_activeDeskName;</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  <span class="comment">// one desk per desktop and a cond var to communicate with it</span></div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  <a class="code hl_class" href="classMutex.html">Mutex</a> m_mutex;</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  <a class="code hl_class" href="classCondVar.html">CondVar&lt;bool&gt;</a> m_deskReady;</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>  Desks m_desks;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>  <span class="comment">// screen saver stuff</span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_threadID;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  <span class="keyword">const</span> <a class="code hl_class" href="classIScreenSaver.html">IScreenSaver</a> *m_screensaver;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>  <span class="keywordtype">bool</span> m_screensaverNotify = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  <span class="comment">// the current desk and it&#39;s name</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  Desk *m_activeDesk = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>  std::wstring m_activeDeskName;</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>  <span class="comment">// keyboard stuff</span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  <a class="code hl_class" href="classIJob.html">IJob</a> *m_updateKeys;</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>  HKL m_keyLayout;</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>  <span class="comment">// options</span></div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>  <span class="keywordtype">bool</span> m_leaveForegroundOption;</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>};</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>  <span class="comment">// one desk per desktop and a cond var to communicate with it</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  <a class="code hl_class" href="classMutex.html">Mutex</a> m_mutex;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>  <a class="code hl_class" href="classCondVar.html">CondVar&lt;bool&gt;</a> m_deskReady;</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>  Desks m_desks;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>  <span class="comment">// keyboard stuff</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>  <a class="code hl_class" href="classIJob.html">IJob</a> *m_updateKeys;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>  HKL m_keyLayout;</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>  <span class="comment">// options</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>  <span class="keywordtype">bool</span> m_leaveForegroundOption;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  <span class="keywordtype">bool</span> m_relativeMouseMoves = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:28</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a268ed61838e67a46467dcebfee0dcbe7"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></div><div class="ttdeci">static const WSAEVENT FAR DWORD</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:55</div></div>
@@ -310,24 +316,24 @@ $(function(){initNavTree('MSWindowsDesks_8h_source.html','',''); });
 <div class="ttc" id="aclassIJob_html"><div class="ttname"><a href="classIJob.html">IJob</a></div><div class="ttdoc">Job interface.</div><div class="ttdef"><b>Definition</b> IJob.h:16</div></div>
 <div class="ttc" id="aclassIScreenSaver_html"><div class="ttname"><a href="classIScreenSaver.html">IScreenSaver</a></div><div class="ttdoc">Screen saver interface.</div><div class="ttdef"><b>Definition</b> IScreenSaver.h:16</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a3378c0c3e7cec291e6fc56690a350e96"><div class="ttname"><a href="classMSWindowsDesks.html#a3378c0c3e7cec291e6fc56690a350e96">MSWindowsDesks::enter</a></div><div class="ttdeci">void enter()</div><div class="ttdoc">Notify of entering a desk.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:171</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a34a92c3b7b3fa5a6a2fe116e7971a0b9"><div class="ttname"><a href="classMSWindowsDesks.html#a34a92c3b7b3fa5a6a2fe116e7971a0b9">MSWindowsDesks::fakeInputEnd</a></div><div class="ttdeci">void fakeInputEnd()</div><div class="ttdoc">Stop ignoring user input.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:227</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a4a6bc7878c59dd81c7585e98b83ca0d7"><div class="ttname"><a href="classMSWindowsDesks.html#a4a6bc7878c59dd81c7585e98b83ca0d7">MSWindowsDesks::fakeMouseWheel</a></div><div class="ttdeci">void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const</div><div class="ttdoc">Fake mouse wheel.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:307</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a34a92c3b7b3fa5a6a2fe116e7971a0b9"><div class="ttname"><a href="classMSWindowsDesks.html#a34a92c3b7b3fa5a6a2fe116e7971a0b9">MSWindowsDesks::fakeInputEnd</a></div><div class="ttdeci">void fakeInputEnd()</div><div class="ttdoc">Stop ignoring user input.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:233</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a4a6bc7878c59dd81c7585e98b83ca0d7"><div class="ttname"><a href="classMSWindowsDesks.html#a4a6bc7878c59dd81c7585e98b83ca0d7">MSWindowsDesks::fakeMouseWheel</a></div><div class="ttdeci">void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const</div><div class="ttdoc">Fake mouse wheel.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:313</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a50ba26901c283286adfc6bd11529c835"><div class="ttname"><a href="classMSWindowsDesks.html#a50ba26901c283286adfc6bd11529c835">MSWindowsDesks::MSWindowsDesks</a></div><div class="ttdeci">MSWindowsDesks(bool isPrimary, bool useHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:113</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a57a9163936a37a68dbc64ee272301729"><div class="ttname"><a href="classMSWindowsDesks.html#a57a9163936a37a68dbc64ee272301729">MSWindowsDesks::leave</a></div><div class="ttdeci">void leave(HKL keyLayout)</div><div class="ttdoc">Notify of leaving a desk.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:176</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a69250cbc821eb9d51e1a3f73a903187f"><div class="ttname"><a href="classMSWindowsDesks.html#a69250cbc821eb9d51e1a3f73a903187f">MSWindowsDesks::disable</a></div><div class="ttdeci">void disable()</div><div class="ttdoc">Disable desk tracking.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:156</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a6cefc3140066e5a68189bdd0c5ac636c"><div class="ttname"><a href="classMSWindowsDesks.html#a6cefc3140066e5a68189bdd0c5ac636c">MSWindowsDesks::fakeMouseButton</a></div><div class="ttdeci">void fakeMouseButton(ButtonID id, bool press)</div><div class="ttdoc">Fake mouse press/release.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:245</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a77f9c306e7567bc52cb64fa829bbee6b"><div class="ttname"><a href="classMSWindowsDesks.html#a77f9c306e7567bc52cb64fa829bbee6b">MSWindowsDesks::fakeInputBegin</a></div><div class="ttdeci">void fakeInputBegin()</div><div class="ttdoc">Start ignoring user input.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:222</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a8818fa1d78eb2b2925af9409e23f7ba8"><div class="ttname"><a href="classMSWindowsDesks.html#a8818fa1d78eb2b2925af9409e23f7ba8">MSWindowsDesks::setOptions</a></div><div class="ttdeci">void setOptions(const OptionsList &amp;options)</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:186</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a6cefc3140066e5a68189bdd0c5ac636c"><div class="ttname"><a href="classMSWindowsDesks.html#a6cefc3140066e5a68189bdd0c5ac636c">MSWindowsDesks::fakeMouseButton</a></div><div class="ttdeci">void fakeMouseButton(ButtonID id, bool press)</div><div class="ttdoc">Fake mouse press/release.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:251</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a77f9c306e7567bc52cb64fa829bbee6b"><div class="ttname"><a href="classMSWindowsDesks.html#a77f9c306e7567bc52cb64fa829bbee6b">MSWindowsDesks::fakeInputBegin</a></div><div class="ttdeci">void fakeInputBegin()</div><div class="ttdoc">Start ignoring user input.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:228</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a8818fa1d78eb2b2925af9409e23f7ba8"><div class="ttname"><a href="classMSWindowsDesks.html#a8818fa1d78eb2b2925af9409e23f7ba8">MSWindowsDesks::setOptions</a></div><div class="ttdeci">void setOptions(const OptionsList &amp;options)</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:190</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a8f5ccf474c6102b90a4846268f6c2fa7"><div class="ttname"><a href="classMSWindowsDesks.html#a8f5ccf474c6102b90a4846268f6c2fa7">MSWindowsDesks::enable</a></div><div class="ttdeci">void enable()</div><div class="ttdoc">Enable desk tracking.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:139</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a93eb3b27c3c55a7434b656f083b9cad0"><div class="ttname"><a href="classMSWindowsDesks.html#a93eb3b27c3c55a7434b656f083b9cad0">MSWindowsDesks::updateKeys</a></div><div class="ttdeci">void updateKeys()</div><div class="ttdoc">Update the key state.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:196</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a93eb3b27c3c55a7434b656f083b9cad0"><div class="ttname"><a href="classMSWindowsDesks.html#a93eb3b27c3c55a7434b656f083b9cad0">MSWindowsDesks::updateKeys</a></div><div class="ttdeci">void updateKeys()</div><div class="ttdoc">Update the key state.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:202</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a94db1aa9652b4f1f07d59727a1e7ff24"><div class="ttname"><a href="classMSWindowsDesks.html#a94db1aa9652b4f1f07d59727a1e7ff24">MSWindowsDesks::resetOptions</a></div><div class="ttdeci">void resetOptions()</div><div class="ttdoc">Notify of options changes.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:181</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a9ede24dee0f8eaacfa46a802c0f3282f"><div class="ttname"><a href="classMSWindowsDesks.html#a9ede24dee0f8eaacfa46a802c0f3282f">MSWindowsDesks::fakeMouseRelativeMove</a></div><div class="ttdeci">void fakeMouseRelativeMove(int32_t dx, int32_t dy) const</div><div class="ttdoc">Fake mouse move.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:302</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_aa60c459fdbf699c1b5d1d7487f627eec"><div class="ttname"><a href="classMSWindowsDesks.html#aa60c459fdbf699c1b5d1d7487f627eec">MSWindowsDesks::fakeMouseMove</a></div><div class="ttdeci">void fakeMouseMove(int32_t x, int32_t y) const</div><div class="ttdoc">Fake mouse move.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:297</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_aa8612aa127c003cea6f71a5469567f60"><div class="ttname"><a href="classMSWindowsDesks.html#aa8612aa127c003cea6f71a5469567f60">MSWindowsDesks::fakeKeyEvent</a></div><div class="ttdeci">void fakeKeyEvent(WORD virtualKey, WORD scanCode, DWORD flags, bool isAutoRepeat) const</div><div class="ttdoc">Fake key press/release.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:240</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_aab6bb29648272c03a4d07c1fab386eb1"><div class="ttname"><a href="classMSWindowsDesks.html#aab6bb29648272c03a4d07c1fab386eb1">MSWindowsDesks::installScreensaverHooks</a></div><div class="ttdeci">void installScreensaverHooks(bool install)</div><div class="ttdoc">Install/uninstall screensaver hooks.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:214</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a9ede24dee0f8eaacfa46a802c0f3282f"><div class="ttname"><a href="classMSWindowsDesks.html#a9ede24dee0f8eaacfa46a802c0f3282f">MSWindowsDesks::fakeMouseRelativeMove</a></div><div class="ttdeci">void fakeMouseRelativeMove(int32_t dx, int32_t dy) const</div><div class="ttdoc">Fake mouse move.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:308</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_aa60c459fdbf699c1b5d1d7487f627eec"><div class="ttname"><a href="classMSWindowsDesks.html#aa60c459fdbf699c1b5d1d7487f627eec">MSWindowsDesks::fakeMouseMove</a></div><div class="ttdeci">void fakeMouseMove(int32_t x, int32_t y) const</div><div class="ttdoc">Fake mouse move.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:303</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_aa8612aa127c003cea6f71a5469567f60"><div class="ttname"><a href="classMSWindowsDesks.html#aa8612aa127c003cea6f71a5469567f60">MSWindowsDesks::fakeKeyEvent</a></div><div class="ttdeci">void fakeKeyEvent(WORD virtualKey, WORD scanCode, DWORD flags, bool isAutoRepeat) const</div><div class="ttdoc">Fake key press/release.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:246</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_aab6bb29648272c03a4d07c1fab386eb1"><div class="ttname"><a href="classMSWindowsDesks.html#aab6bb29648272c03a4d07c1fab386eb1">MSWindowsDesks::installScreensaverHooks</a></div><div class="ttdeci">void installScreensaverHooks(bool install)</div><div class="ttdoc">Install/uninstall screensaver hooks.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:220</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_ad2301c3e811efd5e8760ce1a64ef6fad"><div class="ttname"><a href="classMSWindowsDesks.html#ad2301c3e811efd5e8760ce1a64ef6fad">MSWindowsDesks::~MSWindowsDesks</a></div><div class="ttdeci">~MSWindowsDesks()</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:131</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_ae6442ce988c18c8ee1d4cba7d21d8f72"><div class="ttname"><a href="classMSWindowsDesks.html#ae6442ce988c18c8ee1d4cba7d21d8f72">MSWindowsDesks::setShape</a></div><div class="ttdeci">void setShape(int32_t x, int32_t y, int32_t width, int32_t height, int32_t xCenter, int32_t yCenter, bool isMultimon)</div><div class="ttdoc">Tell desk about new size.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:201</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_af62898cd3f884c040dc33990d2bc7afb"><div class="ttname"><a href="classMSWindowsDesks.html#af62898cd3f884c040dc33990d2bc7afb">MSWindowsDesks::getCursorPos</a></div><div class="ttdeci">void getCursorPos(int32_t &amp;x, int32_t &amp;y) const</div><div class="ttdoc">Get cursor position.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:232</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_ae6442ce988c18c8ee1d4cba7d21d8f72"><div class="ttname"><a href="classMSWindowsDesks.html#ae6442ce988c18c8ee1d4cba7d21d8f72">MSWindowsDesks::setShape</a></div><div class="ttdeci">void setShape(int32_t x, int32_t y, int32_t width, int32_t height, int32_t xCenter, int32_t yCenter, bool isMultimon)</div><div class="ttdoc">Tell desk about new size.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:207</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_af62898cd3f884c040dc33990d2bc7afb"><div class="ttname"><a href="classMSWindowsDesks.html#af62898cd3f884c040dc33990d2bc7afb">MSWindowsDesks::getCursorPos</a></div><div class="ttdeci">void getCursorPos(int32_t &amp;x, int32_t &amp;y) const</div><div class="ttdoc">Get cursor position.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:238</div></div>
 <div class="ttc" id="aclassMutex_html"><div class="ttname"><a href="classMutex.html">Mutex</a></div><div class="ttdoc">Mutual exclusion.</div><div class="ttdef"><b>Definition</b> Mutex.h:22</div></div>
 <div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
 </div><!-- fragment --></div><!-- contents -->
