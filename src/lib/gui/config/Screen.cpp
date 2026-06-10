@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -26,6 +27,8 @@ void Screen::loadSettings(QSettingsProxy &settings)
     return;
 
   setSwitchCornerSize(settings.value("switchCornerSize").toInt());
+  setWidth(settings.value("width", 1).toInt());
+  setHeight(settings.value("height", 1).toInt());
 
   readSettings(settings, aliases(), "alias", QString(""));
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
@@ -41,6 +44,8 @@ void Screen::saveSettings(QSettingsProxy &settings) const
     return;
 
   settings.setValue("switchCornerSize", switchCornerSize());
+  settings.setValue("width", width());
+  settings.setValue("height", height());
 
   writeSettings(settings, aliases(), "alias");
   writeSettings(settings, modifiers(), "modifier");
@@ -89,5 +94,6 @@ bool Screen::operator==(const Screen &screen) const
 {
   return m_Name == screen.m_Name && m_Aliases == screen.m_Aliases && m_Modifiers == screen.m_Modifiers &&
          m_SwitchCorners == screen.m_SwitchCorners && m_SwitchCornerSize == screen.m_SwitchCornerSize &&
-         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped && m_isServer == screen.m_isServer;
+         m_Fixes == screen.m_Fixes && m_isServer == screen.m_isServer && m_Width == screen.m_Width &&
+         m_Height == screen.m_Height;
 }

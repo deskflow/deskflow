@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -25,6 +26,11 @@ class ScreenSetupModel : public QAbstractTableModel
   friend class ServerConfigDialog;
 
 public:
+  // QSize(width, height), in grid cells, of the screen at the index -- so a
+  // delegate can distinguish a 1x1 screen from a spanning one, and a wide span
+  // from a tall one, without reaching into the model
+  static constexpr int SpanRole = Qt::UserRole + 1;
+
   ScreenSetupModel(ScreenList &screens, int numColumns, int numRows);
 
   static const QString &mimeType()
@@ -54,6 +60,10 @@ public:
   QMimeData *mimeData(const QModelIndexList &indexes) const override;
   bool isFull() const;
 
+  //! Resize the screen anchored at the given cell, rejecting spans that
+  //! would leave the grid or cover an occupied cell
+  bool trySetSpan(int column, int row, int width, int height);
+
 Q_SIGNALS:
   void screensChanged();
 
@@ -82,6 +92,10 @@ private:
   ScreenList &m_Screens;
   const int m_NumColumns;
   const int m_NumRows;
+
+  // set by dropMimeData when it moves a screen within the grid, so startDrag
+  // knows the source was already handled and only a trash drop must clear it
+  bool m_dropHandled = false;
 
   static const QString m_MimeType;
 };
