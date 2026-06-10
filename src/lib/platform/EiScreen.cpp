@@ -340,16 +340,11 @@ void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 void EiScreen::enable()
 {
   // Nothing really to be done here
-  if (m_clipboard && m_clipboard->isAvailable()) {
-    m_clipboard->startMonitoring();
-  }
 }
 
 void EiScreen::disable()
 {
-  if (m_clipboard && m_clipboard->isAvailable()) {
-    m_clipboard->stopMonitoring();
-  }
+  // Nothing really to be done here
 }
 
 void EiScreen::enter()
@@ -411,17 +406,17 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 
 void EiScreen::checkClipboards()
 {
-  // do nothing, we're always up to date
   if (!m_clipboard || !m_clipboard->isAvailable()) {
     return;
   }
 
-  if (m_clipboard->hasChanged()) {
-    // Send clipboard change events for all clipboard types
-    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+  // this runs when leaving the screen, the one moment the focus blip of
+  // wl-paste cannot interrupt the user's typing
+  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+    if (m_clipboard->hasChanged(id)) {
       sendClipboardEvent(EventTypes::ClipboardChanged, id);
+      m_clipboard->resetChanged(id);
     }
-    m_clipboard->resetChanged();
   }
 }
 

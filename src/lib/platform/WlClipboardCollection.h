@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -33,17 +33,13 @@ public:
   //! Get clipboard for specific ID
   IClipboard *getClipboard(ClipboardID id) const;
 
-  //! Check if any clipboard has changed
-  bool hasChanged() const;
+  //! Check the given clipboard for an external change since the last call.
+  //! Spawns wl-paste, so only call when a focus blip cannot interrupt the
+  //! user (e.g. when leaving the screen).
+  bool hasChanged(ClipboardID id) const;
 
-  //! Start monitoring clipboard changes
-  void startMonitoring();
-
-  //! Stop monitoring clipboard changes
-  void stopMonitoring();
-
-  //! Reset change detection
-  void resetChanged() const;
+  //! Reset change detection for the given clipboard
+  void resetChanged(ClipboardID id) const;
 
 private:
   //! Initialize clipboard backends
@@ -55,7 +51,6 @@ private:
 private:
   std::vector<std::unique_ptr<WlClipboard>> m_clipboards;
   bool m_available = false;
-  bool m_monitoring = false;
 };
 
 } // namespace deskflow

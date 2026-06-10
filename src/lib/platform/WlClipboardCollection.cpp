@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -35,62 +35,22 @@ IClipboard *WlClipboardCollection::getClipboard(ClipboardID id) const
   return m_clipboards[id].get();
 }
 
-bool WlClipboardCollection::hasChanged() const
+bool WlClipboardCollection::hasChanged(ClipboardID id) const
 {
-  if (!m_available) {
+  if (!m_available || id >= m_clipboards.size() || !m_clipboards[id]) {
     return false;
   }
 
-  for (const auto &clipboard : m_clipboards) {
-    if (clipboard && clipboard->hasChanged()) {
-      return true;
-    }
-  }
-
-  return false;
+  return m_clipboards[id]->hasChanged();
 }
 
-void WlClipboardCollection::startMonitoring()
+void WlClipboardCollection::resetChanged(ClipboardID id) const
 {
-  if (!m_available || m_monitoring) {
+  if (!m_available || id >= m_clipboards.size() || !m_clipboards[id]) {
     return;
   }
 
-  for (const auto &clipboard : m_clipboards) {
-    if (clipboard) {
-      clipboard->startMonitoring();
-    }
-  }
-
-  m_monitoring = true;
-}
-
-void WlClipboardCollection::stopMonitoring()
-{
-  if (!m_available || !m_monitoring) {
-    return;
-  }
-
-  for (const auto &clipboard : m_clipboards) {
-    if (clipboard) {
-      clipboard->stopMonitoring();
-    }
-  }
-
-  m_monitoring = false;
-}
-
-void WlClipboardCollection::resetChanged() const
-{
-  if (!m_available) {
-    return;
-  }
-
-  for (const auto &clipboard : m_clipboards) {
-    if (clipboard) {
-      clipboard->resetChanged();
-    }
-  }
+  m_clipboards[id]->resetChanged();
 }
 
 void WlClipboardCollection::initialize()
@@ -127,10 +87,6 @@ void WlClipboardCollection::initialize()
 
 void WlClipboardCollection::cleanup()
 {
-  if (m_monitoring) {
-    stopMonitoring();
-  }
-
   m_clipboards.clear();
   m_available = false;
 }

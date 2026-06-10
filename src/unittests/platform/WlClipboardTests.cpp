@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -227,15 +227,9 @@ void WlClipboardTests::getTime()
 void WlClipboardTests::monitoring()
 {
   WlClipboard clipboard(kClipboardClipboard);
-  QVERIFY(clipboard.open(0));
 
-  // Clear clipboard first
-  QVERIFY(clipboard.empty());
-
-  // Start monitoring
-  clipboard.startMonitoring();
-
-  // Initially should not have changed
+  // The first check only records a baseline
+  QVERIFY(!clipboard.hasChanged());
   QVERIFY(!clipboard.hasChanged());
 
   // Make a change to the clipboard using a separate clipboard instance
@@ -243,20 +237,18 @@ void WlClipboardTests::monitoring()
   WlClipboard externalClipboard(kClipboardClipboard);
   if (externalClipboard.open(1)) {
     externalClipboard.empty();
-    externalClipboard.add(IClipboard::Format::Text, m_testString);
+    externalClipboard.add(IClipboard::Format::Text, "monitoring change test");
     externalClipboard.close();
   }
 
-  // Wait for monitoring thread to detect change
+  // Each hasChanged() call re-checks the clipboard on demand
   auto changeDetected = [&clipboard]() { return clipboard.hasChanged(); };
-  waitForClipboardCondition(clipboard, changeDetected, 1000);
+  if (!waitForClipboardCondition(clipboard, changeDetected, 3000)) {
+    QSKIP("Clipboard change detection not working in this test environment");
+  }
 
-  // Stop monitoring
-  clipboard.stopMonitoring();
-  clipboard.close();
-
-  // Note: Change detection might not work reliably in all test environments
-  // This test mainly verifies that monitoring doesn't crash
+  // The change is only reported once
+  QVERIFY(!clipboard.hasChanged());
 }
 
 void WlClipboardTests::primaryClipboard()
@@ -328,6 +320,98 @@ void WlClipboardTests::getWithoutOpen()
   // Should still be able to open and use normally
   QVERIFY(clipboard.open(0));
   clipboard.close();
+}
+
+void WlClipboardTests::commitOnClose()
+{
+  // write a transaction with several formats
+  {
+    WlClipboard clipboard(kClipboardClipboard);
+    QVERIFY(clipboard.open(0));
+    QVERIFY(clipboard.empty());
+    clipboard.add(IClipboard::Format::Text, m_testString);
+    clipboard.add(IClipboard::Format::HTML, m_testHtml);
+    clipboard.close();
+  }
+
+  // a fresh instance reads the committed selection, which offers the
+  // priority format only (wl-copy serves a single mime type)
+  WlClipboard reader(kClipboardClipboard);
+  QVERIFY(reader.open(0));
+  if (!waitForClipboardContent(reader, IClipboard::Format::Text, m_testString, 3000)) {
+    reader.close();
+    QSKIP("Wl-clipboard did not receive contents in time");
+  }
+  QCOMPARE(reader.get(IClipboard::Format::Text), m_testString);
+  reader.close();
+}
+
+void WlClipboardTests::binaryRoundTrip()
+{
+  // bitmap data contains NUL bytes, which only survive stdin transport
+  std::string binary("BM\0\x01\x02\0\x03binary\0data", 17);
+
+  {
+    WlClipboard clipboard(kClipboardClipboard);
+    QVERIFY(clipboard.open(0));
+    QVERIFY(clipboard.empty());
+    clipboard.add(IClipboard::Format::Bitmap, binary);
+    QCOMPARE(clipboard.get(IClipboard::Format::Bitmap), binary);
+    clipboard.close();
+  }
+
+  WlClipboard reader(kClipboardClipboard);
+  QVERIFY(reader.open(0));
+  if (!waitForClipboardContent(reader, IClipboard::Format::Bitmap, binary, 3000)) {
+    reader.close();
+    QSKIP("Wl-clipboard did not receive contents in time");
+  }
+  QCOMPARE(reader.get(IClipboard::Format::Bitmap), binary);
+  reader.close();
+}
+
+void WlClipboardTests::sameTypeChangeDetected()
+{
+  const auto externalWrite = [](const std::string &text) {
+    WlClipboard external(kClipboardClipboard);
+    QVERIFY(external.open(0));
+    QVERIFY(external.empty());
+    external.add(IClipboard::Format::Text, text);
+    external.close();
+  };
+
+  WlClipboard clipboard(kClipboardClipboard);
+
+  // establish a baseline
+  externalWrite(m_testString);
+  auto changeDetected = [&clipboard]() { return clipboard.hasChanged(); };
+  waitForClipboardCondition(clipboard, changeDetected, 3000);
+
+  // a copy with identical mime types must still be detected as a change
+  externalWrite(m_testString2);
+  if (!waitForClipboardCondition(clipboard, changeDetected, 5000)) {
+    QSKIP("Clipboard change detection not working in this test environment");
+  }
+}
+
+void WlClipboardTests::ownWriteSuppressed()
+{
+  WlClipboard clipboard(kClipboardClipboard);
+
+  // take a baseline
+  clipboard.hasChanged();
+
+  // our own write must not be reported as an external change
+  QVERIFY(clipboard.open(0));
+  QVERIFY(clipboard.empty());
+  clipboard.add(IClipboard::Format::Text, "own write suppression test");
+  clipboard.close();
+
+  // re-check a few times while the committed wl-copy takes the selection
+  for (int i = 0; i < 5; ++i) {
+    QVERIFY(!clipboard.hasChanged());
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+  }
 }
 
 bool WlClipboardTests::waitForClipboardCondition(WlClipboard &, std::function<bool()> condition, int timeoutMs)
