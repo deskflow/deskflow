@@ -1,7 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"StatusBar_8h_source.html":[7,0,1,1,5,5,15],
-"Stopwatch_8cpp.html":[7,0,1,1,1,24],
 "Stopwatch_8h.html":[7,0,1,1,1,25],
 "Stopwatch_8h_source.html":[7,0,1,1,1,25],
 "StreamBuffer_8cpp.html":[7,0,1,1,6,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX5 =
 "classAppUtilUnix.html":[6,0,8],
 "classAppUtilUnix.html#a38bb7cb0ef62a92541337051b103cd82":[6,0,8,3],
 "classAppUtilUnix.html#a5af7ccaa14cba7e6bc40d1cb9c0c3517":[6,0,8,1],
-"classAppUtilUnix.html#abdd106a8abd59dfcd692176881f72ac6":[6,0,8,2]
+"classAppUtilUnix.html#abdd106a8abd59dfcd692176881f72ac6":[6,0,8,2],
+"classAppUtilUnix.html#ad494eae903b08c6c6c43cdf01167c067":[6,0,8,0],
+"classAppUtilUnix.html#ae4bc733d6f992b07a9e83064e741aa9e":[6,0,8,6]
 };

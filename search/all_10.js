@@ -40,12 +40,10 @@ var searchData=
   ['none_37',['None',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfa928ed0ea45cdd0bb91c21da315112b98',1,'Settings::None'],['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a6adf97f83acf6453d4a6a4b1070f3754',1,'ScreenConfig::None']]],
   ['notfound_38',['NotFound',['../classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a38c300f4fc9ce8a77aad4a30de05cad8',1,'SocketAddressException']]],
   ['numbuttonids_39',['NumButtonIDs',['../MouseTypes_8h.html#afb8283e11d4d520390cfdf6bae83f1cc',1,'MouseTypes.h']]],
-  ['numcolumns_40',['numColumns',['../classServerConfig.html#abd4a8f5e8607088ad68ded7b099a0bb1',1,'ServerConfig']]],
-  ['numdirections_41',['NumDirections',['../DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6ac9c069620433eed024689459b556cafd',1,'DirectionTypes.h']]],
-  ['numfixes_42',['NumFixes',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5af2fb27420a8d2d658ec170b9fad506eb',1,'ScreenConfig']]],
-  ['numlock_43',['NumLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5acf6cc0261135c6d163fd4305375773d2',1,'ScreenConfig']]],
-  ['nummodifiers_44',['NumModifiers',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a1e1d357a199c55b82db55f2992a484f0',1,'ScreenConfig']]],
-  ['numrows_45',['numRows',['../classServerConfig.html#afe2a6dfcba324a343229cf583c515e02',1,'ServerConfig']]],
-  ['numscreens_46',['numScreens',['../classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358',1,'ServerConfig']]],
-  ['numswitchcorners_47',['NumSwitchCorners',['../classScreenConfig.html#a8998f4fde8b4d01dde07d3eccfbea73da4000ff2f520f31580950263b6032bd11',1,'ScreenConfig']]]
+  ['numdirections_40',['NumDirections',['../DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6ac9c069620433eed024689459b556cafd',1,'DirectionTypes.h']]],
+  ['numfixes_41',['NumFixes',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5af2fb27420a8d2d658ec170b9fad506eb',1,'ScreenConfig']]],
+  ['numlock_42',['NumLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5acf6cc0261135c6d163fd4305375773d2',1,'ScreenConfig']]],
+  ['nummodifiers_43',['NumModifiers',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a1e1d357a199c55b82db55f2992a484f0',1,'ScreenConfig']]],
+  ['numscreens_44',['numScreens',['../classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358',1,'ServerConfig']]],
+  ['numswitchcorners_45',['NumSwitchCorners',['../classScreenConfig.html#a8998f4fde8b4d01dde07d3eccfbea73da4000ff2f520f31580950263b6032bd11',1,'ScreenConfig']]]
 ];

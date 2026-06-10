@@ -70,7 +70,7 @@ var searchData=
   ['sequencewidget_67',['sequenceWidget',['../classHotkeyDialog.html#af7bfd1146080aa63ea6190a93065543a',1,'HotkeyDialog']]],
   ['server_68',['Server',['../classServer.html#a34e2068b4a374bfc327b8aa3a426756f',1,'Server::Server(ServerConfig &amp;config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events)'],['../classServer.html#ac0a402ca54125d9f8f97d191a5649965',1,'Server::Server(Server const &amp;)=delete'],['../classServer.html#a7350ff05dceefad892dc8213a1e20dc2',1,'Server::Server(Server &amp;&amp;)=delete']]],
   ['serverapp_69',['ServerApp',['../classServerApp.html#a7f5d62dfd98d076059e1bd1f479cbda8',1,'ServerApp']]],
-  ['serverconfig_70',['ServerConfig',['../classServerConfig.html#abe4249e71bb58791526297608989b20f',1,'ServerConfig']]],
+  ['serverconfig_70',['ServerConfig',['../classServerConfig.html#abf11d2adabdc83a82b64b6679cbc7469',1,'ServerConfig']]],
   ['serverconfig_71',['serverConfig',['../classServerConfigDialog.html#a8bb7866a8f9ecd02fda0785191f01c27',1,'ServerConfigDialog::serverConfig()'],['../classMainWindow.html#aa0ee1fdc634179b66566f3599595393a',1,'MainWindow::serverConfig()']]],
   ['serverconfigdialog_72',['ServerConfigDialog',['../classServerConfigDialog.html#ae7b274d6f24e48bdc6b2781b1304ffb7',1,'ServerConfigDialog']]],
   ['serverconfigfile_73',['serverConfigFile',['../classSettings.html#ace87ffc019dee661124504049eae06c9',1,'Settings']]],

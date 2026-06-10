@@ -170,7 +170,7 @@ var searchData=
   ['serverappforcereconnect_167',['ServerAppForceReconnect',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a87779aca6f652e7b1edb7a999ede22f3',1,'deskflow']]],
   ['serverappreloadconfig_168',['ServerAppReloadConfig',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0ae6e170e568c20bb7238c4c97737050',1,'deskflow']]],
   ['serverappresetserver_169',['ServerAppResetServer',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aafcedfec63fc7f07f162450b4955ebdc',1,'deskflow']]],
-  ['serverconfig_170',['ServerConfig',['../classServerConfig.html',1,'ServerConfig'],['../classServerConfig.html#abe4249e71bb58791526297608989b20f',1,'ServerConfig::ServerConfig()']]],
+  ['serverconfig_170',['ServerConfig',['../classServerConfig.html',1,'ServerConfig'],['../classServerConfig.html#abf11d2adabdc83a82b64b6679cbc7469',1,'ServerConfig::ServerConfig()']]],
   ['serverconfig_171',['serverConfig',['../classServerConfigDialog.html#a8bb7866a8f9ecd02fda0785191f01c27',1,'ServerConfigDialog::serverConfig()'],['../classMainWindow.html#aa0ee1fdc634179b66566f3599595393a',1,'MainWindow::serverConfig()']]],
   ['serverconfig_2ecpp_172',['ServerConfig.cpp',['../ServerConfig_8cpp.html',1,'']]],
   ['serverconfig_2eh_173',['ServerConfig.h',['../ServerConfig_8h.html',1,'']]],

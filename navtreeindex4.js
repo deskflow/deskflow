@@ -216,8 +216,6 @@ var NAVTREEINDEX4 =
 "ServerConfig_8cpp.html#ad93a94bd88fe624000405f7b84c40334":[7,0,1,1,5,0,6,6],
 "ServerConfig_8h.html":[7,0,1,1,5,0,7],
 "ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2":[7,0,1,1,5,0,7,1],
-"ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,7,4],
-"ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,7,2],
 "ServerConfig_8h_source.html":[7,0,1,1,5,0,7],
 "ServerProxy_8cpp.html":[7,0,1,1,2,2],
 "ServerProxy_8h.html":[7,0,1,1,2,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX4 =
 "StatusBar_8cpp.html":[7,0,1,1,5,5,14],
 "StatusBar_8h.html":[7,0,1,1,5,5,15],
 "StatusBar_8h.html#a1398aa3370cc4c379c51f9837dabcd3b":[7,0,1,1,5,5,15,1],
-"StatusBar_8h.html#a2c61bdc878f442f4efbefb327251d895":[7,0,1,1,5,5,15,2]
+"StatusBar_8h.html#a2c61bdc878f442f4efbefb327251d895":[7,0,1,1,5,5,15,2],
+"StatusBar_8h_source.html":[7,0,1,1,5,5,15],
+"Stopwatch_8cpp.html":[7,0,1,1,1,24]
 };

@@ -20,7 +20,5 @@ var searchData=
   ['newsocket_17',['newSocket',['../classIArchNetwork.html#aff6ee17374a4c4d4a2988ec6ec152fce',1,'IArchNetwork::newSocket()'],['../classArchNetworkBSD.html#a05665cd209d136ea319d8d8ff2d24ea1',1,'ArchNetworkBSD::newSocket()'],['../classArchNetworkWinsock.html#a264ece975c6da5186e95d0fd1654ed3d',1,'ArchNetworkWinsock::newSocket()']]],
   ['newthread_18',['newThread',['../classIArchMultithread.html#adf565c898b28b8642a1ab68468d0c4a9',1,'IArchMultithread::newThread()'],['../classArchMultithreadPosix.html#aab9aa5fd5c4a51d4b639386d444b94b0',1,'ArchMultithreadPosix::newThread()'],['../classArchMultithreadWindows.html#abff94ca2fd9418f3bf1905c2cbe4a10d',1,'ArchMultithreadWindows::newThread()']]],
   ['newtimer_19',['newTimer',['../classEventQueue.html#a626d3de0f708e20e674204adfd0e1acf',1,'EventQueue::newTimer()'],['../classIEventQueue.html#a135df3daf33f6ac2e13e70895bedfd56',1,'IEventQueue::newTimer()']]],
-  ['numcolumns_20',['numColumns',['../classServerConfig.html#abd4a8f5e8607088ad68ded7b099a0bb1',1,'ServerConfig']]],
-  ['numrows_21',['numRows',['../classServerConfig.html#afe2a6dfcba324a343229cf583c515e02',1,'ServerConfig']]],
-  ['numscreens_22',['numScreens',['../classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358',1,'ServerConfig']]]
+  ['numscreens_20',['numScreens',['../classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358',1,'ServerConfig']]]
 ];

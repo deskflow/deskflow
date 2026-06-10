@@ -1,7 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classMSWindowsScreen.html#a33af023fc02f55588c735749623273e9":[6,0,161,8],
-"classMSWindowsScreen.html#a3d804755a4632c7af7064d3fc13684c5":[6,0,161,43],
 "classMSWindowsScreen.html#a3eb0a27687fab4beded9e48c65b71ad7":[6,0,161,1],
 "classMSWindowsScreen.html#a407ab83fad280d82cb3d9f35e897b057":[6,0,161,32],
 "classMSWindowsScreen.html#a4bd50c26515edc3551699f61366fa116":[6,0,161,7],
@@ -249,5 +247,7 @@ var NAVTREEINDEX12 =
 "classOSXScreenSaver.html#af44294a5b89c07a490b7140a71be03da":[6,0,182,3],
 "classOSXScreenSaver.html#af518f4c82f47f805c61275533f702cba":[6,0,182,2],
 "classOSXUchrKeyResource.html":[6,0,183],
-"classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f":[6,0,183,0]
+"classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f":[6,0,183,0],
+"classOSXUchrKeyResource.html#a114c7c96e804afc45d33712cab412db9":[6,0,183,2],
+"classOSXUchrKeyResource.html#a5143d9dc52f047be322b0ef78fd13793":[6,0,183,3]
 };

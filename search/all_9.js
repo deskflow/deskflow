@@ -167,10 +167,12 @@ var searchData=
   ['getwindowinstance_164',['getWindowInstance',['../classMSWindowsScreen.html#a191ffb095bbac747eda76bb883b44872',1,'MSWindowsScreen']]],
   ['getwindowproperty_165',['getWindowProperty',['../classXWindowsUtil.html#aa225a3a10a43d139294773550eb65840',1,'XWindowsUtil']]],
   ['grabclipboard_166',['grabClipboard',['../classClient.html#a183b738f8eb2be95edd0da90ec6302b6',1,'Client::grabClipboard()'],['../classIClient.html#a0b888dcea257c93782f015675c8ce75c',1,'IClient::grabClipboard()'],['../classdeskflow_1_1Screen.html#ad625109983215a61cca9ebe2893df4c6',1,'deskflow::Screen::grabClipboard()'],['../classBaseClientProxy.html#adee8e5f163c3679dfcbea18740b6af99',1,'BaseClientProxy::grabClipboard()'],['../classClientProxy.html#a04dfd314810bcaae2796b219974cf691',1,'ClientProxy::grabClipboard()'],['../classClientProxy1__0.html#a9fa2709b05fbd08eb4bb8f9f505758e3',1,'ClientProxy1_0::grabClipboard()'],['../classPrimaryClient.html#abfe9feedb6f69601d4047c8c32efcec4',1,'PrimaryClient::grabClipboard()']]],
-  ['group_167',['Group',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html',1,'deskflow::KeyMap::Keystroke::Group'],['../classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7a03937134cedab9078be39a77ee3a48a0',1,'deskflow::KeyMap::Keystroke::Group']]],
-  ['guardruntimeversion_168',['guardRuntimeVersion',['../classArchMiscWindows.html#a6a0f920c122e781c4a3bcbae40a82a0e',1,'ArchMiscWindows']]],
-  ['gui_169',['Gui',['../structSettings_1_1Gui.html',1,'Settings']]],
-  ['guide_170',['Version Migration Guide',['../protocol_reference.html#autotoc_md30',1,'']]],
-  ['guidebug_171',['GuiDebug',['../structSettings_1_1Log.html#a2cf2eda726a37ebbd8bc31dc076dbde1',1,'Settings::Log']]],
-  ['guidelines_172',['Read the Full Guidelines',['../contributing_guide.html#autotoc_md10',1,'']]]
+  ['gridheight_167',['GridHeight',['../structSettings_1_1Server.html#affe7a4c694abaa24955c935dcdb4d93e',1,'Settings::Server']]],
+  ['gridwidth_168',['GridWidth',['../structSettings_1_1Server.html#a63a96aa457427c9bb2e509a3fd69b83f',1,'Settings::Server']]],
+  ['group_169',['Group',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html',1,'deskflow::KeyMap::Keystroke::Group'],['../classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7a03937134cedab9078be39a77ee3a48a0',1,'deskflow::KeyMap::Keystroke::Group']]],
+  ['guardruntimeversion_170',['guardRuntimeVersion',['../classArchMiscWindows.html#a6a0f920c122e781c4a3bcbae40a82a0e',1,'ArchMiscWindows']]],
+  ['gui_171',['Gui',['../structSettings_1_1Gui.html',1,'Settings']]],
+  ['guide_172',['Version Migration Guide',['../protocol_reference.html#autotoc_md30',1,'']]],
+  ['guidebug_173',['GuiDebug',['../structSettings_1_1Log.html#a2cf2eda726a37ebbd8bc31dc076dbde1',1,'Settings::Log']]],
+  ['guidelines_174',['Read the Full Guidelines',['../contributing_guide.html#autotoc_md10',1,'']]]
 ];

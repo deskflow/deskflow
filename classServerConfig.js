@@ -1,6 +1,6 @@
 var classServerConfig =
 [
-    [ "ServerConfig", "classServerConfig.html#abe4249e71bb58791526297608989b20f", null ],
+    [ "ServerConfig", "classServerConfig.html#abf11d2adabdc83a82b64b6679cbc7469", null ],
     [ "~ServerConfig", "classServerConfig.html#aa61aefe50c21475d1df21afc28ad7167", null ],
     [ "addClient", "classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33", null ],
     [ "clipboardSharing", "classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa", null ],
@@ -17,8 +17,6 @@ var classServerConfig =
     [ "heartbeat", "classServerConfig.html#ad3b599bd08a258a8b7cb960ce00e8c87", null ],
     [ "hotkeys", "classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8", null ],
     [ "isFull", "classServerConfig.html#a98b506f2dbbd7597dddb53831a583d4d", null ],
-    [ "numColumns", "classServerConfig.html#abd4a8f5e8607088ad68ded7b099a0bb1", null ],
-    [ "numRows", "classServerConfig.html#afe2a6dfcba324a343229cf583c515e02", null ],
     [ "numScreens", "classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358", null ],
     [ "operator==", "classServerConfig.html#a5aab296dceacaa7cf3e5758fe35f8e4e", null ],
     [ "protocol", "classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956", null ],
