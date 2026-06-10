@@ -55,6 +55,7 @@ ServerProxy::~ServerProxy()
 {
   setKeepAliveRate(-1.0);
   m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
+  m_events->removeHandler(EventTypes::ClipboardSending, this);
 }
 
 void ServerProxy::resetKeepAliveAlarm()
