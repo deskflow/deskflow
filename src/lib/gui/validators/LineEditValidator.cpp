@@ -21,7 +21,7 @@ LineEditValidator::LineEditValidator(QLineEdit *lineEdit, ValidationError *error
 {
 
   if (!m_pLineEdit) {
-    qFatal("validator line edit not set");
+    qCritical("validator line edit not set");
   }
 }
 
