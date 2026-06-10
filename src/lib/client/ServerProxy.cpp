@@ -55,6 +55,12 @@ ServerProxy::~ServerProxy()
 {
   setKeepAliveRate(-1.0);
   m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
+  // The ClipboardSending handler is registered against `this` in the constructor
+  // and must be removed here. Otherwise a ClipboardSending event still queued at
+  // destruction (e.g. a reconnect racing an in-flight image transfer) is later
+  // dispatched against this freed object, dereferencing a dangling `this` --
+  // a use-after-free that crashes with SIGSEGV in ClipboardChunk::send.
+  m_events->removeHandler(EventTypes::ClipboardSending, this);
 }
 
 void ServerProxy::resetKeepAliveAlarm()
