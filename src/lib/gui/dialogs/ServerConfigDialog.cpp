@@ -16,6 +16,7 @@
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
+#include "gui/StyleUtils.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -150,6 +151,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
   ui->sbClipboardSizeLimit->setValue(clipboardSharingSizeM);
   ui->sbClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
+
+  applyManagedLocks();
 
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->listHotkeys->addItem(hotkey.text());
@@ -329,6 +332,9 @@ void ServerConfigDialog::removeAction()
 
 void ServerConfigDialog::toggleClipboard(bool enabled)
 {
+  if (Settings::isManaged(QStringLiteral("ClipboardSharingEnabled"))) {
+    return;
+  }
   ui->sbClipboardSizeLimit->setEnabled(enabled);
   if (enabled && !ui->sbClipboardSizeLimit->value()) {
     auto size = static_cast<int>((ServerConfig::defaultClipboardSharingSize() + 512) / 1024);
@@ -515,4 +521,11 @@ void ServerConfigDialog::onChange()
       m_originalProtocol == Settings::value(Settings::Server::Protocol).value<NetworkProtocol>();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
+}
+
+void ServerConfigDialog::applyManagedLocks()
+{
+  ui->cbEnableClipboard->setProperty("managedSetting", QStringLiteral("ClipboardSharingEnabled"));
+  ui->sbClipboardSizeLimit->setProperty("managedSetting", QStringLiteral("ClipboardSharingEnabled"));
+  deskflow::gui::applyManagedLocks(this, tr("Managed by your organization"));
 }

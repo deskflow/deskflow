@@ -172,7 +172,9 @@ void ServerConfig::recall()
       settings().value("clipboardSharingSize", (int)ServerConfig::defaultClipboardSharingSize()).toULongLong()
   );
   setClipboardSharing(settings().value("clipboardSharing", true).toBool());
-
+  if (Settings::isManaged(QStringLiteral("ClipboardSharingEnabled"))) {
+    setClipboardSharing(Settings::value(QStringLiteral("ClipboardSharingEnabled")).toBool());
+  }
   readSettings(settings(), switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
 
   int numScreens = settings().beginReadArray("screens");
@@ -433,6 +435,14 @@ size_t ServerConfig::setClipboardSharingSize(size_t size)
   using std::swap;
   swap(size, m_ClipboardSharingSize);
   return size;
+}
+bool ServerConfig::clipboardSharing() const
+{
+  static const QString kKey = QStringLiteral("ClipboardSharingEnabled");
+  if (Settings::isManaged(kKey)) {
+    return Settings::value(kKey).toBool();
+  }
+  return m_ClipboardSharing;
 }
 
 QSettingsProxy &ServerConfig::settings()

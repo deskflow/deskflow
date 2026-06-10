@@ -10,6 +10,7 @@
 #include "NetworkProtocol.h"
 #include "UrlConstants.h"
 
+#include "ManagedSettings.h"
 #include <QCoreApplication>
 #include <QFile>
 #include <QRect>
@@ -289,8 +290,16 @@ QString Settings::logLevelText()
   return Settings::value(Log::Level).toString();
 }
 
+bool Settings::isManaged(const QString &key)
+{
+  return m_managedKeys.contains(key) && hasManagedValue(key);
+}
+
 void Settings::setValue(const QString &key, const QVariant &value)
 {
+  if (Settings::isManaged(key)) {
+    return;
+  }
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
 
@@ -314,6 +323,9 @@ QVariant Settings::value(const QString &key)
 {
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
+  if (Settings::isManaged(key)) {
+    return managedSettingValue(key);
+  }
   return settings->value(key, defaultValue(key));
 }
 
