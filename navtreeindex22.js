@@ -82,13 +82,12 @@ var NAVTREEINDEX22 =
 "namespacedeskflow_1_1core_1_1ipc.html#ae8df3756ee143032db0c15044c875285":[5,0,0,0,0,3],
 "namespacedeskflow_1_1gui.html":[5,0,0,4],
 "namespacedeskflow_1_1gui.html#a302e57e11bdb1ecd18afd06b9180ee7e":[5,0,0,4,10],
-"namespacedeskflow_1_1gui.html#a5b38d733ad00fd5d2681a25a8c30e6da":[5,0,0,4,15],
+"namespacedeskflow_1_1gui.html#a5b38d733ad00fd5d2681a25a8c30e6da":[5,0,0,4,14],
 "namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12":[5,0,0,4,8],
-"namespacedeskflow_1_1gui.html#a78e6dcd2ccaf9f1da1f4aa50905067ee":[5,0,0,4,13],
+"namespacedeskflow_1_1gui.html#a78e6dcd2ccaf9f1da1f4aa50905067ee":[5,0,0,4,12],
 "namespacedeskflow_1_1gui.html#aaa991ba0f8b1c14f114fa29eb3fbdc4b":[5,0,0,4,11],
 "namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918":[5,0,0,4,9],
-"namespacedeskflow_1_1gui.html#abcbdcbeeb5309fe706a35d40a3c1c719":[5,0,0,4,12],
-"namespacedeskflow_1_1gui.html#ac9ebe41f2673365ae4519947119c63c5":[5,0,0,4,14],
+"namespacedeskflow_1_1gui.html#ac9ebe41f2673365ae4519947119c63c5":[5,0,0,4,13],
 "namespacedeskflow_1_1gui_1_1TlsUtility.html":[5,0,0,4,3],
 "namespacedeskflow_1_1gui_1_1TlsUtility.html#a1768f15e74168a3e5b621f2981ba5029":[5,0,0,4,3,3],
 "namespacedeskflow_1_1gui_1_1TlsUtility.html#a63117db72e713097624c35d8458e462c":[5,0,0,4,3,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX22 =
 "structFingerprint.html#ac4467dd44454e8be054a8228a5288903":[6,0,92,8],
 "structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a":[6,0,92,0],
 "structIArchNetwork_1_1PollEventMask.html":[6,0,105,0],
-"structIArchNetwork_1_1PollEventMask.html#a2a37fe75c8d7a7b0b533ad4a3827a1aa":[6,0,105,0,3]
+"structIArchNetwork_1_1PollEventMask.html#a2a37fe75c8d7a7b0b533ad4a3827a1aa":[6,0,105,0,3],
+"structIArchNetwork_1_1PollEventMask.html#a63c05ada1c4ff3608177a5df753753e2":[6,0,105,0,0]
 };

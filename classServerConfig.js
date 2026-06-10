@@ -19,7 +19,6 @@ var classServerConfig =
     [ "isFull", "classServerConfig.html#a98b506f2dbbd7597dddb53831a583d4d", null ],
     [ "numScreens", "classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358", null ],
     [ "operator==", "classServerConfig.html#a5aab296dceacaa7cf3e5758fe35f8e4e", null ],
-    [ "protocol", "classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956", null ],
     [ "relativeMouseMoves", "classServerConfig.html#a7e70843d41deda17e8275886f7329748", null ],
     [ "save", "classServerConfig.html#af2ba8a16687598fc1a5c5f0a0c1694f0", null ],
     [ "save", "classServerConfig.html#a7673c39c55e2ce0daa9b6c1a6c770786", null ],

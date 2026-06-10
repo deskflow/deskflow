@@ -42,9 +42,8 @@ var searchData=
   ['processrequest_39',['processRequest',['../classXWindowsClipboard.html#a7f1db99d5f8feebcb2e443717d63a3aa',1,'XWindowsClipboard']]],
   ['processstate_40',['processState',['../classdeskflow_1_1gui_1_1CoreProcess.html#a689253f2679161ad8ca04f07a1e67004',1,'deskflow::gui::CoreProcess']]],
   ['processstatechanged_41',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae7fb7d3a914aeca7b5c57edb4c1f9695',1,'deskflow::gui::CoreProcess']]],
-  ['protocol_42',['protocol',['../classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956',1,'ServerConfig']]],
-  ['protocolstring_43',['protocolString',['../classServer.html#a8195b7d8e6d9030d92b66a77e99774bf',1,'Server']]],
-  ['proxy_44',['proxy',['../classSettings.html#a6debf0cebe43970f836cd1969ded08e9',1,'Settings']]],
-  ['push_45',['push',['../classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39',1,'PriorityQueue']]],
-  ['pushreplies_46',['pushReplies',['../classXWindowsClipboard.html#aa8b2d798b957c0852744977f49ea311b',1,'XWindowsClipboard::pushReplies()'],['../classXWindowsClipboard.html#a4d85e3fd8cb8276ac4a33febfd547dea',1,'XWindowsClipboard::pushReplies(ReplyMap::iterator &amp;, ReplyList &amp;, ReplyList::iterator)']]]
+  ['protocolstring_42',['protocolString',['../classServer.html#a8195b7d8e6d9030d92b66a77e99774bf',1,'Server']]],
+  ['proxy_43',['proxy',['../classSettings.html#a6debf0cebe43970f836cd1969ded08e9',1,'Settings']]],
+  ['push_44',['push',['../classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39',1,'PriorityQueue']]],
+  ['pushreplies_45',['pushReplies',['../classXWindowsClipboard.html#aa8b2d798b957c0852744977f49ea311b',1,'XWindowsClipboard::pushReplies()'],['../classXWindowsClipboard.html#a4d85e3fd8cb8276ac4a33febfd547dea',1,'XWindowsClipboard::pushReplies(ReplyMap::iterator &amp;, ReplyList &amp;, ReplyList::iterator)']]]
 ];

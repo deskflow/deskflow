@@ -22,6 +22,7 @@ var classSettings =
     [ "isServerConfigFileReadable", "classSettings.html#a583b5103dd67ea8a837b5b06ce221820", null ],
     [ "isWritable", "classSettings.html#acc77a634afaed3905e6545630c71d5f2", null ],
     [ "logLevelText", "classSettings.html#ae9e80e06caddd4c619dc286848b1f187", null ],
+    [ "networkProtocol", "classSettings.html#a29924315919d2728c98ac610092e8922", null ],
     [ "portableSettingsFile", "classSettings.html#a5e492f42c603dcc42007ae7b34c04a83", null ],
     [ "proxy", "classSettings.html#a6debf0cebe43970f836cd1969ded08e9", null ],
     [ "restoreDefaultSettings", "classSettings.html#aa6e367eea7196300fc008ca44c727a92", null ],

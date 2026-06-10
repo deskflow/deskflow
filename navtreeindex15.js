@@ -1,11 +1,11 @@
 var NAVTREEINDEX15 =
 {
-"classSettings.html#ad3ba2f3025c98073226c0d896158ad17":[6,0,210,32],
+"classSettings.html#ad3ba2f3025c98073226c0d896158ad17":[6,0,210,33],
 "classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a":[6,0,210,10],
-"classSettings.html#ae251f1cdec2bce2dbbf133c18550888c":[6,0,210,18],
-"classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d":[6,0,210,25],
+"classSettings.html#ae251f1cdec2bce2dbbf133c18550888c":[6,0,210,19],
+"classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d":[6,0,210,26],
 "classSettings.html#ae9e80e06caddd4c619dc286848b1f187":[6,0,210,14],
-"classSettings.html#afd0a8dbda15587467729da0b489dd97d":[6,0,210,23],
+"classSettings.html#afd0a8dbda15587467729da0b489dd97d":[6,0,210,24],
 "classSettingsDialog.html":[6,0,211],
 "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,211,3],
 "classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,211,4],

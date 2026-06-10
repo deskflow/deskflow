@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structIArchNetwork_1_1PollEventMask.html#a63c05ada1c4ff3608177a5df753753e2":[6,0,105,0,0],
 "structIArchNetwork_1_1PollEventMask.html#ac5d78f713bee0e3d288def3d5b737911":[6,0,105,0,1],
 "structIArchNetwork_1_1PollEventMask.html#adc3edc69b9ea00a4f6ea46cf7c45b22c":[6,0,105,0,2],
 "structIScreen_1_1ClipboardInfo.html":[6,0,129,0],

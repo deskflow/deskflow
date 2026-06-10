@@ -1,14 +1,20 @@
 <map id="src/lib/gui/TlsUtility.h" name="src/lib/gui/TlsUtility.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="35,5,179,30"/>
-<area shape="rect" id="Node000002" href="$Settings_8h.html" title=" " alt="" coords="40,78,174,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,28,109,63,104,62,106,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="130,223,209,248"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,105,48,119,23,135,9,154,9,164,13,174,33,195,59,210,87,221,117,229,112,230,86,226,57,215,30,199,9,177,3,164,4,152,19,131,45,114,76,101"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="23,151,71,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="96,105,68,141,64,137,98,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="95,151,241,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="118,101,151,139,146,139,116,106"/>
-<area shape="rect" id="Node000006" href="$QSettingsProxy_8h.html" title=" " alt="" coords="265,151,442,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="148,101,300,144,296,148,147,106"/>
-<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="326,176,215,220,213,215,320,176"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="98,5,241,30"/>
+<area shape="rect" id="Node000002" href="$Settings_8h.html" title=" " alt="" coords="102,78,237,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,28,172,63,167,62,169,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="131,223,211,248"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,104,62,115,28,131,16,140,10,150,9,161,15,174,35,195,60,210,89,221,119,229,113,230,87,226,58,215,32,199,10,177,3,162,5,148,13,136,25,126,61,110,104,100"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="24,151,72,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="148,105,83,145,80,141,151,101"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="96,151,243,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="171,101,172,136,167,134,168,105"/>
+<area shape="rect" id="Node000006" href="$NetworkProtocol_8h.html" title=" " alt="" coords="467,151,651,175"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="235,101,481,146,477,149,234,106"/>
+<area shape="rect" id="Node000009" href="$QSettingsProxy_8h.html" title=" " alt="" coords="266,151,444,175"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="201,101,313,144,308,146,200,106"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="478,223,547,248"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="554,175,530,213,527,208,549,177"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="572,223,637,248"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="568,174,591,211,586,209,565,178"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="327,176,216,220,215,215,322,176"/>
 </map>
