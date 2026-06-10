@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -15,6 +16,35 @@
 #include "gui/config/Screen.h"
 
 const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
+
+namespace {
+
+// a layout is valid when every screen's span stays inside the grid and
+// covers only empty cells
+bool isValidLayout(const ScreenList &screens, int numColumns)
+{
+  const int numRows = static_cast<int>(screens.size()) / numColumns;
+  for (int i = 0; i < screens.size(); i++) {
+    const auto &screen = screens[i];
+    if (screen.isNull() || (screen.width() == 1 && screen.height() == 1))
+      continue;
+
+    const int column = i % numColumns;
+    const int row = i / numColumns;
+    if (column + screen.width() > numColumns || row + screen.height() > numRows)
+      return false;
+
+    for (int r = row; r < row + screen.height(); r++) {
+      for (int c = column; c < column + screen.width(); c++) {
+        if (r * numColumns + c != i && !screens[r * numColumns + c].isNull())
+          return false;
+      }
+    }
+  }
+  return true;
+}
+
+} // namespace
 
 ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numRows)
     : QAbstractTableModel(nullptr),
@@ -52,7 +82,8 @@ QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
   case Qt::ToolTipRole:
     return QString(tr("<center>Screen: <b>%1</b></center>"
                       "<br>Double click to edit settings"
-                      "<br>Drag screen to the trashcan to remove it"))
+                      "<br>Drag screen to the trashcan to remove it"
+                      "<br>Drag the right or bottom edge to span more cells"))
         .arg(screen(index).name());
 
   case Qt::DisplayRole:
@@ -124,6 +155,12 @@ bool ScreenSetupModel::dropMimeData(
   stream >> sourceColumn;
   stream >> sourceRow;
 
+  // the mime payload is external input, the source is either -1/-1 for a
+  // new screen or a cell inside the grid
+  const bool hasSource = sourceColumn != -1 || sourceRow != -1;
+  if (hasSource && (sourceColumn < 0 || sourceColumn >= m_NumColumns || sourceRow < 0 || sourceRow >= m_NumRows))
+    return false;
+
   const auto pColumn = parent.column();
   const auto pRow = parent.row();
 
@@ -133,6 +170,15 @@ bool ScreenSetupModel::dropMimeData(
 
   Screen droppedScreen;
   stream >> droppedScreen;
+
+  // simulate the drop (and swap) to reject moves where a spanning screen
+  // would stick out of the grid or cover an occupied cell
+  ScreenList trial = m_Screens;
+  if (sourceColumn != -1 && sourceRow != -1)
+    trial[sourceRow * m_NumColumns + sourceColumn] = screen(pColumn, pRow);
+  trial[pRow * m_NumColumns + pColumn] = droppedScreen;
+  if (!isValidLayout(trial, m_NumColumns))
+    return false;
 
   if (auto oldScreen = Screen(screen(pColumn, pRow)); !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
@@ -154,8 +200,30 @@ void ScreenSetupModel::addScreen(const Screen &newScreen)
   Q_EMIT screensChanged();
 }
 
+bool ScreenSetupModel::trySetSpan(int column, int row, int width, int height)
+{
+  auto &target = screen(column, row);
+  if (target.isNull() || (width == target.width() && height == target.height()))
+    return false;
+
+  ScreenList trial = m_Screens;
+  auto &trialScreen = trial[row * m_NumColumns + column];
+  trialScreen.setWidth(width);
+  trialScreen.setHeight(height);
+  if (!isValidLayout(trial, m_NumColumns))
+    return false;
+
+  target.setWidth(width);
+  target.setHeight(height);
+  Q_EMIT screensChanged();
+  return true;
+}
+
 bool ScreenSetupModel::isFull() const
 {
-  auto emptyScreen = std::ranges::find_if(m_Screens, [](const Screen &item) { return item.isNull(); });
-  return (static_cast<QList<Screen>::const_iterator>(emptyScreen) == m_Screens.cend());
+  for (int i = 0; i < m_Screens.size(); i++) {
+    if (m_Screens.screenIndexAt(i % m_NumColumns, i / m_NumColumns) == -1)
+      return false;
+  }
+  return true;
 }

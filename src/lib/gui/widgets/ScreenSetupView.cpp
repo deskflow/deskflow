@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -19,6 +20,8 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 
+#include <algorithm>
+
 ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
 {
   setDropIndicatorShown(true);
@@ -31,12 +34,17 @@ ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
   setIconSize(QSize(96, 96));
   horizontalHeader()->hide();
   verticalHeader()->hide();
+
+  // needed to show resize cursors when hovering over a screen's edges
+  setMouseTracking(true);
 }
 
 void ScreenSetupView::setModel(QAbstractItemModel *model)
 {
   QTableView::setModel(model);
   setTableSize();
+  connect(this->model(), &ScreenSetupModel::screensChanged, this, &ScreenSetupView::updateSpans);
+  updateSpans();
 }
 
 ScreenSetupModel *ScreenSetupView::model() const
@@ -49,6 +57,100 @@ void ScreenSetupView::showScreenConfig(int col, int row)
   ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
   dlg.exec();
   Q_EMIT model()->screensChanged();
+}
+
+void ScreenSetupView::updateSpans()
+{
+  clearSpans();
+  for (int row = 0; row < model()->rowCount(); row++) {
+    for (int col = 0; col < model()->columnCount(); col++) {
+      if (const auto &screen = model()->screen(col, row);
+          !screen.isNull() && (screen.width() > 1 || screen.height() > 1))
+        setSpan(row, col, screen.height(), screen.width());
+    }
+  }
+}
+
+QModelIndex ScreenSetupView::resizeGripAt(const QPoint &pos, Qt::Orientation &orientation) const
+{
+  const auto index = indexAt(pos);
+  if (!index.isValid() || model()->screen(index).isNull())
+    return {};
+
+  // visualRect() covers the whole span for a spanning screen
+  const QRect rect = visualRect(index);
+  const int gripSize = 10;
+  if (pos.x() >= rect.right() - gripSize) {
+    orientation = Qt::Horizontal;
+    return index;
+  }
+  if (pos.y() >= rect.bottom() - gripSize) {
+    orientation = Qt::Vertical;
+    return index;
+  }
+  return {};
+}
+
+void ScreenSetupView::resizeSpanTo(const QPoint &pos)
+{
+  if (!m_resizeIndex.isValid())
+    return;
+
+  const auto &screen = model()->screen(m_resizeIndex.column(), m_resizeIndex.row());
+  int width = screen.width();
+  int height = screen.height();
+
+  if (m_resizeOrientation == Qt::Horizontal) {
+    int col = columnAt(pos.x());
+    if (col == -1)
+      col = pos.x() < 0 ? 0 : model()->columnCount() - 1;
+    width = std::max(col - m_resizeIndex.column() + 1, 1);
+  } else {
+    int row = rowAt(pos.y());
+    if (row == -1)
+      row = pos.y() < 0 ? 0 : model()->rowCount() - 1;
+    height = std::max(row - m_resizeIndex.row() + 1, 1);
+  }
+
+  model()->trySetSpan(m_resizeIndex.column(), m_resizeIndex.row(), width, height);
+}
+
+void ScreenSetupView::mousePressEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton) {
+    Qt::Orientation orientation = Qt::Horizontal;
+    if (const auto grip = resizeGripAt(event->pos(), orientation); grip.isValid()) {
+      m_resizeIndex = grip;
+      m_resizeOrientation = orientation;
+      return;
+    }
+  }
+  QTableView::mousePressEvent(event);
+}
+
+void ScreenSetupView::mouseMoveEvent(QMouseEvent *event)
+{
+  if (m_resizeIndex.isValid()) {
+    resizeSpanTo(event->pos());
+    return;
+  }
+
+  Qt::Orientation orientation = Qt::Horizontal;
+  if (resizeGripAt(event->pos(), orientation).isValid())
+    viewport()->setCursor(orientation == Qt::Horizontal ? Qt::SizeHorCursor : Qt::SizeVerCursor);
+  else
+    viewport()->unsetCursor();
+
+  QTableView::mouseMoveEvent(event);
+}
+
+void ScreenSetupView::mouseReleaseEvent(QMouseEvent *event)
+{
+  if (m_resizeIndex.isValid()) {
+    m_resizeIndex = QPersistentModelIndex();
+    return;
+  }
+  QTableView::mouseReleaseEvent(event);
 }
 
 void ScreenSetupView::setTableSize()
@@ -69,11 +171,11 @@ void ScreenSetupView::resizeEvent(QResizeEvent *event)
 void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
 {
   if (event->buttons() & Qt::LeftButton) {
-    int col = columnAt(event->pos().x());
-    int row = rowAt(event->pos().y());
+    // indexAt() resolves clicks inside a span to its top left cell
+    const auto index = indexAt(event->pos());
 
-    if (!model()->screen(col, row).isNull()) {
-      showScreenConfig(col, row);
+    if (index.isValid() && !model()->screen(index).isNull()) {
+      showScreenConfig(index.column(), index.row());
     }
   } else
     event->ignore();
@@ -103,7 +205,7 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
       int row = rowAt(point.y());
 
       // a drop from outside is not allowed if there's a screen already there.
-      if (!model()->screen(col, row).isNull())
+      if (model()->m_Screens.screenIndexAt(col, row) != -1)
         event->ignore();
       else {
         event->acceptProposedAction();

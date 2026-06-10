@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -53,6 +54,10 @@ public:
   QStringList mimeTypes() const override;
   QMimeData *mimeData(const QModelIndexList &indexes) const override;
   bool isFull() const;
+
+  //! Resize the screen anchored at the given cell, rejecting spans that
+  //! would leave the grid or cover an occupied cell
+  bool trySetSpan(int column, int row, int width, int height);
 
 Q_SIGNALS:
   void screensChanged();
