@@ -19,11 +19,16 @@
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
 #include "deskflow/ipc/CoreIpc.h"
+#include "common/Settings.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
+#include "server/MouserBridge.h"
 #include "server/PrimaryClient.h"
+
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #ifdef _WIN32
 #include <algorithm>
@@ -120,6 +125,8 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
     m_primaryClient->fakeInputEnd();
   });
 
+  initMouserBridge();
+
   // add connection
   addClient(m_primaryClient);
 
@@ -143,6 +150,11 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
 
 Server::~Server()
 {
+  if (m_mouserBridge) {
+    m_mouserBridge->stop();
+    m_events->removeHandler(EventTypes::ServerMouserBridgeLine, this);
+  }
+
   // remove event handlers and timers
   using enum EventTypes;
   m_events->removeHandler(KeyStateKeyDown, m_inputFilter);
@@ -484,11 +496,99 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
       }
     }
 
+    updateMouserVirtualHost(m_active);
+
     auto *info = new Server::SwitchToScreenInfo(m_active->getName());
     m_events->addEvent(Event(EventTypes::ServerScreenSwitched, this, info));
   } else {
     m_active->mouseMove(x, y);
   }
+}
+
+void Server::initMouserBridge()
+{
+  if (!Settings::value(Settings::Server::MouserBridgeEnabled).toBool()) {
+    return;
+  }
+  const int port = Settings::value(Settings::Server::MouserBridgePort).toInt();
+  const std::string token = Settings::value(Settings::Server::MouserBridgeToken).toString().toStdString();
+  auto bridge = std::make_unique<MouserBridge>(m_events, this, port, token);
+  if (!bridge->start()) {
+    return;
+  }
+  m_mouserBridge = std::move(bridge);
+  m_events->addHandler(EventTypes::ServerMouserBridgeLine, this, [this](const auto &e) {
+    handleMouserBridgeLine(e);
+  });
+  // Seed the focus state so Mouser knows it starts local.
+  m_mouserBridge->notifyFocus(getName(m_active), m_active == m_primaryClient);
+}
+
+void Server::handleMouserBridgeLine(const Event &event)
+{
+  const auto *data = static_cast<MouserBridgeLineData *>(event.getDataObject());
+  if (data == nullptr) {
+    return;
+  }
+  const std::string &line = data->line();
+
+  const auto doc = QJsonDocument::fromJson(QByteArray(line.data(), static_cast<int>(line.size())));
+  if (!doc.isObject()) {
+    LOG_DEBUG("mouser bridge: ignoring malformed line");
+    return;
+  }
+  const QString type = doc.object()[QStringLiteral("type")].toString();
+
+  if (type == QStringLiteral("connect")) {
+    // Cache the device identity so it can be replayed to whichever client
+    // gains focus later, then connect it on the current remote host.
+    m_mouserConnectLine = line;
+    if (m_active != m_primaryClient) {
+      m_active->sendMouserData(line);
+      m_mouserVirtualHost = m_active;
+    }
+    return;
+  }
+
+  if (type == QStringLiteral("disconnect")) {
+    m_mouserConnectLine.clear();
+    if (m_mouserVirtualHost != nullptr) {
+      m_mouserVirtualHost->sendMouserData(line);
+      m_mouserVirtualHost = nullptr;
+    }
+    return;
+  }
+
+  if (type == QStringLiteral("event")) {
+    // Only relay to the client that currently hosts the virtual device.
+    if (m_mouserVirtualHost != nullptr && m_mouserVirtualHost == m_active) {
+      m_active->sendMouserData(line);
+    }
+    return;
+  }
+
+  LOG_DEBUG("mouser bridge: ignoring line with unknown type");
+}
+
+void Server::updateMouserVirtualHost(BaseClientProxy *dst)
+{
+  if (!m_mouserBridge) {
+    return;
+  }
+  const bool dstIsPrimary = (dst == m_primaryClient);
+
+  // The virtual device follows focus: disconnect it from the departed
+  // client before connecting it on the new one.
+  if (m_mouserVirtualHost != nullptr && m_mouserVirtualHost != dst) {
+    m_mouserVirtualHost->sendMouserData(R"({"type": "disconnect"})");
+    m_mouserVirtualHost = nullptr;
+  }
+  if (!dstIsPrimary && !m_mouserConnectLine.empty() && m_mouserVirtualHost != dst) {
+    dst->sendMouserData(m_mouserConnectLine);
+    m_mouserVirtualHost = dst;
+  }
+
+  m_mouserBridge->notifyFocus(getName(dst), dstIsPrimary);
 }
 
 void Server::jumpToScreen(BaseClientProxy *newScreen)
@@ -1269,6 +1369,11 @@ void Server::handleSwitchWaitTimeout()
 
 void Server::handleClientDisconnected(BaseClientProxy *client)
 {
+  // never leave a dangling virtual-device host pointer behind
+  if (m_mouserVirtualHost == client) {
+    m_mouserVirtualHost = nullptr;
+  }
+
   // client has disconnected.  it might be an old client or an
   // active client.  we don't care so just handle it both ways.
   removeActiveClient(client);

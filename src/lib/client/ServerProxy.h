@@ -12,7 +12,10 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/KeyboardLayoutManager.h"
 
+#include <memory>
+
 class Client;
+class MouserClient;
 class ClientInfo;
 class EventQueueTimer;
 class IClipboard;
@@ -98,6 +101,7 @@ private:
   void secureInputNotification();
   void setServerLanguages();
   void setActiveServerLanguage(const std::string_view &language);
+  void mouserData();
 
 private:
   using MessageParser = ConnectionResult (ServerProxy::*)(const uint8_t *);
@@ -126,4 +130,6 @@ private:
   std::string m_serverLayout = "";
   bool m_isUserNotifiedAboutLayoutSyncError = false;
   deskflow::KeyboardLayoutManager m_layoutManager;
+  // Mouser integration (fork extension); created lazily on first DMSR.
+  std::unique_ptr<MouserClient> m_mouserClient;
 };

@@ -43,6 +43,11 @@ public:
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
+    // Mouser integration (fork extension): forward DMSR payloads from the
+    // server into the local Mouser instance's remote-device port.
+    inline static const auto MouserEnabled = QStringLiteral("client/mouserEnabled");
+    inline static const auto MouserPort = QStringLiteral("client/mouserPort");
+    inline static const auto MouserToken = QStringLiteral("client/mouserToken");
   };
   struct Core
   {
@@ -121,6 +126,11 @@ public:
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
+    // Mouser integration (fork extension): loopback bridge listener that
+    // the local Mouser instance connects to for focus + event relay.
+    inline static const auto MouserBridgeEnabled = QStringLiteral("server/mouserBridgeEnabled");
+    inline static const auto MouserBridgePort = QStringLiteral("server/mouserBridgePort");
+    inline static const auto MouserBridgeToken = QStringLiteral("server/mouserBridgeToken");
   };
 
   struct Screen
@@ -252,6 +262,9 @@ private:
     , Settings::Client::YScrollScale
     , Settings::Client::XScrollScale
     , Settings::Client::XdpRestoreToken
+    , Settings::Client::MouserEnabled
+    , Settings::Client::MouserPort
+    , Settings::Client::MouserToken
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion
@@ -310,6 +323,9 @@ private:
     , Settings::Server::SwitchDoubleTap
     , Settings::Server::Win32KeepForeground
     , Settings::Server::XdpRestoreToken
+    , Settings::Server::MouserBridgeEnabled
+    , Settings::Server::MouserBridgePort
+    , Settings::Server::MouserBridgeToken
   };
 
   // When checking the default values this list contains the ones that default to false.
@@ -335,6 +351,8 @@ private:
     , Settings::Server::EnableSwitchDoubleTap
     , Settings::Server::ExternalConfig
     , Settings::Server::RelativeMouseMoves
+    , Settings::Client::MouserEnabled
+    , Settings::Server::MouserBridgeEnabled
   };
 
   // When checking the default values this list contains the ones that default to true.

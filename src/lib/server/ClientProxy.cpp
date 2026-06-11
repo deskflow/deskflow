@@ -8,6 +8,7 @@
 #include "server/ClientProxy.h"
 
 #include "base/Log.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
 
@@ -37,6 +38,12 @@ void ClientProxy::close(const char *msg) const
 deskflow::IStream *ClientProxy::getStream() const
 {
   return m_stream;
+}
+
+void ClientProxy::sendMouserData(const std::string &line)
+{
+  LOG_VERBOSE("send mouser data to \"%s\": %.96s", getName().c_str(), line.c_str());
+  ProtocolUtil::writef(getStream(), kMsgDMouserData, &line);
 }
 
 void *ClientProxy::getEventTarget() const

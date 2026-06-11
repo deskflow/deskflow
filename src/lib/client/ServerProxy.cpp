@@ -11,6 +11,8 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "client/Client.h"
+#include "client/MouserClient.h"
+#include "common/Settings.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/DeskflowException.h"
@@ -215,6 +217,10 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
 
   else if (memcmp(code, kMsgDMouseRelMove, 4) == 0) {
     mouseRelativeMove();
+  }
+
+  else if (memcmp(code, kMsgDMouserData, 4) == 0) {
+    mouserData();
   }
 
   else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
@@ -829,6 +835,22 @@ void ServerProxy::setServerLanguages()
   std::string serverLayout;
   ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLayout);
   m_layoutManager.setRemoteLayouts(serverLayout);
+}
+
+void ServerProxy::mouserData()
+{
+  std::string line;
+  ProtocolUtil::readf(m_stream, kMsgDMouserData + 4, &line);
+  if (m_mouserClient == nullptr) {
+    if (!Settings::value(Settings::Client::MouserEnabled).toBool()) {
+      return; // accepted and discarded when the integration is off
+    }
+    m_mouserClient = std::make_unique<MouserClient>(
+        Settings::value(Settings::Client::MouserPort).toInt(),
+        Settings::value(Settings::Client::MouserToken).toString().toStdString()
+    );
+  }
+  m_mouserClient->deliver(line);
 }
 
 void ServerProxy::setActiveServerLanguage(const std::string_view &language)

@@ -1126,6 +1126,25 @@ extern const char *const kMsgDSecureInputNotification;
  */
 extern const char *const kMsgDLanguageSynchronisation;
 
+/**
+ * @brief Mouser data relay (fork extension)
+ *
+ * **Message Code**: `"DMSR"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DMSR%s"`
+ * **Parameters**:
+ * - `$1`: One line-delimited JSON message in the Mouser remote-device
+ *   protocol (connect / event / disconnect), relayed verbatim.
+ *
+ * Carries Logitech HID++ device identity and events from the Mouser
+ * instance on the primary to the Mouser instance on the active secondary,
+ * which executes them locally. Only sent when the Mouser bridge is enabled
+ * in settings; stock clients never receive it.
+ *
+ * @note Fork extension; not part of the upstream protocol.
+ */
+extern const char *const kMsgDMouserData;
+
 /** @} */ // end of protocol_system group
 
 /** @} */ // end of protocol_data group

@@ -78,6 +78,12 @@ public:
   void setOptions(const OptionsList &options) override = 0;
   virtual void sendDragInfo(uint32_t fileCount, const char *info, size_t size) = 0;
   virtual void fileChunkSending(uint8_t mark, char *data, size_t dataSize) = 0;
+  //! Relay one Mouser-protocol JSON line (fork extension). Default no-op:
+  //! the primary client has no remote Mouser to feed.
+  virtual void sendMouserData(const std::string &line)
+  {
+    (void)line;
+  }
   virtual std::string getSecureInputApp() const = 0;
   virtual void secureInputNotification(const std::string &app) const = 0;
   std::string getName() const override;

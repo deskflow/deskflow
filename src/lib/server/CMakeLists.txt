@@ -34,6 +34,8 @@ add_library(server STATIC
   Config.h
   InputFilter.cpp
   InputFilter.h
+  MouserBridge.cpp
+  MouserBridge.h
   PrimaryClient.cpp
   PrimaryClient.h
   Server.cpp
@@ -41,6 +43,10 @@ add_library(server STATIC
 )
 
 target_link_libraries(server PUBLIC common)
+
+if(WIN32)
+  target_link_libraries(server PUBLIC ws2_32)
+endif()
 
 if(UNIX)
   target_link_libraries(server PUBLIC app)

@@ -199,6 +199,14 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Core::Port)
     return 24800;
 
+  // Mouser integration (fork extension): client forwards into the local
+  // Mouser remote-device port; server bridge listens for the local Mouser.
+  if (key == Client::MouserPort)
+    return 19795;
+
+  if (key == Server::MouserBridgePort)
+    return 19796;
+
   if (key == Core::ProcessMode) {
 #ifdef Q_OS_WIN
     if (!Settings::isPortableMode())

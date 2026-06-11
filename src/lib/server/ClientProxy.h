@@ -75,6 +75,7 @@ public:
   void sendDragInfo(uint32_t fileCount, const char *info, size_t size) override = 0;
   void fileChunkSending(uint8_t mark, char *data, size_t dataSize) override = 0;
   void secureInputNotification(const std::string &app) const override = 0;
+  void sendMouserData(const std::string &line) override;
 
 private:
   deskflow::IStream *m_stream;

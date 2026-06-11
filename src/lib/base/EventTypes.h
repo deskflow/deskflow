@@ -234,5 +234,11 @@ enum class EventTypes : uint32_t
 
   /// Stop libei
   EISessionClosed,
+
+  /** This event is sent when the Mouser bridge listener receives a line
+      from the local Mouser instance. Event data object is a pointer to
+      MouserBridgeLineData (Server handles it on the event loop thread).
+  */
+  ServerMouserBridgeLine,
 };
 } // namespace deskflow

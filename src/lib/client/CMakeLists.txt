@@ -6,11 +6,17 @@
 add_library(client STATIC
   Client.cpp
   Client.h
+  MouserClient.cpp
+  MouserClient.h
   ServerProxy.cpp
   ServerProxy.h
 )
 
 target_link_libraries(client PUBLIC common)
+
+if(WIN32)
+  target_link_libraries(client PUBLIC ws2_32)
+endif()
 
 if(UNIX)
   target_link_libraries(client PUBLIC app io)

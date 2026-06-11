@@ -19,10 +19,12 @@
 
 #include <climits>
 #include <map>
+#include <memory>
 #include <set>
 #include <vector>
 
 class BaseClientProxy;
+class MouserBridge;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
@@ -316,6 +318,11 @@ private:
   void handleWheelEvent(const Event &event);
   void handleSwitchWaitTimeout();
   void handleClientDisconnected(BaseClientProxy *client);
+
+  // Mouser bridge (fork extension)
+  void initMouserBridge();
+  void handleMouserBridgeLine(const Event &event);
+  void updateMouserVirtualHost(BaseClientProxy *dst);
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToScreenEvent(const Event &event);
   void handleSwitchInDirectionEvent(const Event &event);
@@ -386,6 +393,13 @@ private:
 
   // state saved when screen saver activates
   BaseClientProxy *m_activeSaver = nullptr;
+
+  // Mouser bridge (fork extension): loopback listener fed by the local
+  // Mouser, the cached device-connect line, and which remote client
+  // currently hosts the virtual device.
+  std::unique_ptr<MouserBridge> m_mouserBridge;
+  std::string m_mouserConnectLine;
+  BaseClientProxy *m_mouserVirtualHost = nullptr;
 
   BaseClientProxy *m_switchScreen = nullptr;
   double m_switchWaitDelay = 0.0;
