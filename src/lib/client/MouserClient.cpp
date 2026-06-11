@@ -17,6 +17,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netinet/in.h>
+#include <sys/select.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #endif
@@ -144,10 +145,45 @@ bool MouserClient::ensureConnected()
   addr.sin_family = AF_INET;
   addr.sin_port = htons(static_cast<uint16_t>(m_port));
   addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-  if (::connect(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) != 0) {
+
+  // Bound the connect (loopback, but a wedged peer's full accept queue
+  // can still stall a blocking connect) so the worker never hangs.
+#if !defined(_WIN32)
+  const int connectFlags = ::fcntl(fd, F_GETFL, 0);
+  ::fcntl(fd, F_SETFL, connectFlags | O_NONBLOCK);
+#else
+  u_long nonBlockingConnect = 1;
+  ::ioctlsocket(fd, FIONBIO, &nonBlockingConnect);
+#endif
+  const auto rc = ::connect(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
+  bool connected = (rc == 0);
+  if (!connected) {
+    fd_set writeSet;
+    FD_ZERO(&writeSet);
+    FD_SET(fd, &writeSet);
+    timeval timeout{};
+    timeout.tv_sec = 2;
+    if (::select(fd + 1, nullptr, &writeSet, nullptr, &timeout) == 1) {
+      int error = 0;
+#if defined(_WIN32)
+      int errorLen = sizeof(error);
+#else
+      socklen_t errorLen = sizeof(error);
+#endif
+      ::getsockopt(fd, SOL_SOCKET, SO_ERROR, reinterpret_cast<char *>(&error), &errorLen);
+      connected = (error == 0);
+    }
+  }
+  if (!connected) {
     platformCloseSocket(fd);
     return false;
   }
+#if !defined(_WIN32)
+  ::fcntl(fd, F_SETFL, connectFlags); // blocking again for the hello round-trip
+#else
+  u_long blockingAgain = 0;
+  ::ioctlsocket(fd, FIONBIO, &blockingAgain);
+#endif
 
   // Bound the hello round-trip so a wedged peer cannot hang the worker.
 #if !defined(_WIN32)
