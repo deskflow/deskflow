@@ -16,9 +16,13 @@ if (OSX_BUNDLE)
   else()
     set(MAC_DEPLOY_CODESIGN_ID "-")
   endif()
+  # -executable: macdeployqt only rewrites the bundle's main executable by
+  # default; deskflow-core would keep absolute Qt paths and load a second
+  # Qt at runtime (fatal cocoa-plugin clash on machines that have one).
   install(CODE "execute_process(COMMAND
     ${DEPLOYQT}
     \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
+    \"-executable=\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app/Contents/MacOS/deskflow-core\"
     -timestamp \"-codesign=${MAC_DEPLOY_CODESIGN_ID}\"
   )")
   set(CPACK_PACKAGE_ICON "${MY_DIR}/dmg-volume.icns")
