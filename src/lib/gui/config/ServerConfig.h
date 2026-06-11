@@ -40,10 +40,6 @@ public:
   //
   // New methods
   //
-  bool hasHeartbeat() const
-  {
-    return m_HasHeartbeat;
-  }
   int heartbeat() const
   {
     return m_Heartbeat;
@@ -134,10 +130,6 @@ private:
   {
     m_Screens.append(screen);
   }
-  void haveHeartbeat(bool on)
-  {
-    m_HasHeartbeat = on;
-  }
   void setHeartbeat(int val)
   {
     m_Heartbeat = val;
@@ -202,7 +194,6 @@ private:
   bool fixNoServer(const QString &name, int &index);
 
 private:
-  bool m_HasHeartbeat = false;
   int m_Heartbeat = 0;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;

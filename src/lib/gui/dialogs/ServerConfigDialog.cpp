@@ -76,6 +76,7 @@ void ServerConfigDialog::accept()
   // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
+  Settings::setValue(Settings::Server::EnableHeatbeat, m_enableHeartbeat);
 
   QDialog::accept();
 }
@@ -224,8 +225,8 @@ void ServerConfigDialog::setClipboardLimit(int limit)
 
 void ServerConfigDialog::toggleHeartbeat(bool enabled)
 {
+  m_enableHeartbeat = enabled;
   ui->sbHeartbeat->setEnabled(enabled);
-  serverConfig().haveHeartbeat(enabled);
   onChange();
 }
 
@@ -378,7 +379,9 @@ void ServerConfigDialog::loadFromConfig()
   ui->rbProtocolBarrier->setChecked(m_protocol == NetworkProtocol::Barrier);
 
   ui->lineConfigFile->setText(serverConfig().configFile());
-  ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
+
+  m_enableHeartbeat = Settings::value(Settings::Server::EnableHeatbeat).toBool();
+  ui->cbHeartbeat->setChecked(m_enableHeartbeat);
   ui->sbHeartbeat->setEnabled(ui->cbHeartbeat->isChecked());
   ui->sbHeartbeat->setValue(serverConfig().heartbeat());
   ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
@@ -503,7 +506,8 @@ void ServerConfigDialog::onChange()
 {
   bool isAppConfigDataEqual = m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
                               m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
-                              m_protocol == Settings::networkProtocol();
+                              m_protocol == Settings::networkProtocol() &&
+                              m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }

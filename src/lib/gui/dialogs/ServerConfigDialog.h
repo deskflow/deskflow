@@ -104,6 +104,7 @@ private:
   int m_rows;
   ServerConfig &m_originalServerConfig;
   NetworkProtocol m_protocol;
+  bool m_enableHeartbeat;
   bool m_originalServerConfigIsExternal;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
