@@ -38,8 +38,21 @@ PeerList parsePeerList(const std::string &setting)
     }
 
     const auto equals = entry.find('=');
-    if (equals == std::string::npos || equals == 0 || equals == entry.size() - 1) {
-      continue; // malformed: no name or no address
+    if (equals == std::string::npos) {
+      // Bare entry: a machine name or address. The peer name is the first
+      // dot-label, the token itself is the stable address, and a plain
+      // name additionally gets its mDNS `.local` form as the LAN
+      // candidate (probed first; see behavior-spec §3.4).
+      Peer peer;
+      const auto dot = entry.find('.');
+      peer.name = dot == std::string::npos ? entry : entry.substr(0, dot);
+      peer.ip = entry;
+      peer.lan = dot == std::string::npos ? entry + ".local" : entry;
+      peers.push_back(std::move(peer));
+      continue;
+    }
+    if (equals == 0 || equals == entry.size() - 1) {
+      continue; // malformed: empty name or empty address
     }
 
     Peer peer;

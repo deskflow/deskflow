@@ -47,13 +47,13 @@ void CoordinationProtocolTests::statusRoundTrip()
 
 void CoordinationProtocolTests::decodesLegacyCoordinatorClaim()
 {
-  // Exact bytes the legacy Python coordinator emits.
-  const std::string legacy = R"({"t":"claim","name":"macbookpro","ip":"100.75.218.20","lan":"macbookpro.local","seq":183464})";
+  // Exact shape the legacy Python coordinator emits (no token field).
+  const std::string legacy = R"({"t":"claim","name":"bravo","ip":"100.64.0.20","lan":"bravo.local","seq":183464})";
   const auto message = protocol::decode(legacy);
 
   QCOMPARE(message.type, Message::Type::Claim);
-  QCOMPARE(message.name, std::string("macbookpro"));
-  QCOMPARE(message.lan, std::string("macbookpro.local"));
+  QCOMPARE(message.name, std::string("bravo"));
+  QCOMPARE(message.lan, std::string("bravo.local"));
   QCOMPARE(message.seq, 183464);
   QVERIFY(message.token.empty());
 }
@@ -93,16 +93,28 @@ void CoordinationProtocolTests::statusReplyMatchesLegacyShape()
 
 void CoordinationProtocolTests::peerListParsing()
 {
-  const auto peers = parsePeerList(" macbookpro=100.75.218.20|macbookpro.local, tiny11=100.90.248.22 ,bad,=x,name= ");
+  const auto peers = parsePeerList(" desktop=192.0.2.10|desktop.local, laptop=192.0.2.11 ,=x,name= ");
 
   QCOMPARE(peers.size(), static_cast<size_t>(2));
-  QCOMPARE(peers[0].name, std::string("macbookpro"));
-  QCOMPARE(peers[0].ip, std::string("100.75.218.20"));
-  QCOMPARE(peers[0].lan, std::string("macbookpro.local"));
-  QCOMPARE(peers[1].name, std::string("tiny11"));
-  QCOMPARE(peers[1].lan, std::string("100.90.248.22")); // lan defaults to ip
-  QVERIFY(peers[1].hasAddress("100.90.248.22"));
+  QCOMPARE(peers[0].name, std::string("desktop"));
+  QCOMPARE(peers[0].ip, std::string("192.0.2.10"));
+  QCOMPARE(peers[0].lan, std::string("desktop.local"));
+  QCOMPARE(peers[1].name, std::string("laptop"));
+  QCOMPARE(peers[1].lan, std::string("192.0.2.11")); // lan defaults to ip
+  QVERIFY(peers[1].hasAddress("192.0.2.11"));
   QVERIFY(!peers[1].hasAddress(""));
+
+  // Bare entries: machine names or addresses, no `=` required.
+  const auto bare = parsePeerList("gamepc, laptop.local, studio.example.net");
+  QCOMPARE(bare.size(), static_cast<size_t>(3));
+  QCOMPARE(bare[0].name, std::string("gamepc"));
+  QCOMPARE(bare[0].ip, std::string("gamepc"));
+  QCOMPARE(bare[0].lan, std::string("gamepc.local")); // mDNS candidate for plain names
+  QCOMPARE(bare[1].name, std::string("laptop"));      // name is the first dot-label
+  QCOMPARE(bare[1].ip, std::string("laptop.local"));
+  QCOMPARE(bare[1].lan, std::string("laptop.local"));
+  QCOMPARE(bare[2].name, std::string("studio"));
+  QCOMPARE(bare[2].ip, std::string("studio.example.net"));
 }
 
 QTEST_MAIN(CoordinationProtocolTests)

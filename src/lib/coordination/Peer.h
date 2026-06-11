@@ -30,10 +30,20 @@ struct Peer
 
 using PeerList = std::vector<Peer>;
 
-//! Parse a peers setting string: comma-separated `name=ip[|lan]` entries.
+//! Parse a peers setting string: comma-separated peer entries.
 /*!
+Each entry is either `name=address[|lan]` or a bare name/address:
+
+- `desktop=192.0.2.10|desktop.local` — explicit name, stable address, and
+  preferred LAN address.
+- `laptop=laptop.example.net` — explicit name and address (LAN defaults to
+  the same address).
+- `gamepc` — bare machine name: address is the name itself (DNS / search
+  domain) and `gamepc.local` is the LAN candidate.
+- `gamepc.local` — bare address: the peer name is the first dot-label.
+
 Whitespace around entries is ignored; malformed entries are skipped.
-Example: `"macbookpro=100.75.218.20|macbookpro.local, tiny11=100.90.248.22"`.
+Example: `"desktop=192.0.2.10|desktop.local, laptop, gamepc.local"`.
 */
 PeerList parsePeerList(const std::string &setting);
 
