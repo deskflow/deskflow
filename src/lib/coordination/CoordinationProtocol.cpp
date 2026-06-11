@@ -104,4 +104,28 @@ std::string encodeStatusReply(
   return serialize(object);
 }
 
+StatusReply decodeStatusReply(const std::string &line)
+{
+  StatusReply reply;
+  const auto doc = QJsonDocument::fromJson(QByteArray(line.data(), static_cast<int>(line.size())));
+  if (!doc.isObject()) {
+    return reply;
+  }
+  const QJsonObject object = doc.object();
+  const QString role = object[QStringLiteral("role")].toString();
+  if (role == QStringLiteral("server")) {
+    reply.role = Role::Server;
+  } else if (role == QStringLiteral("client")) {
+    reply.role = Role::Client;
+  } else if (role == QStringLiteral("init")) {
+    reply.role = Role::Init;
+  } else {
+    return reply; // not a status reply
+  }
+  reply.valid = true;
+  reply.serverAddress = object[QStringLiteral("server_ip")].toString().toStdString();
+  reply.name = object[QStringLiteral("name")].toString().toStdString();
+  return reply;
+}
+
 } // namespace deskflow::coordination::protocol

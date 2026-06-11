@@ -53,6 +53,17 @@ std::string encodeStatusReply(
     Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name
 );
 
+//! A decoded status reply.
+struct StatusReply
+{
+  bool valid = false;
+  Role role = Role::Init;
+  std::string serverAddress;
+  std::string name;
+};
+
+StatusReply decodeStatusReply(const std::string &line);
+
 } // namespace protocol
 
 } // namespace deskflow::coordination

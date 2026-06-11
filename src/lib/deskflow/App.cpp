@@ -168,6 +168,12 @@ void App::handleScreenError() const
   getEvents()->addEvent(Event(EventTypes::Quit));
 }
 
+int App::runSynchronously()
+{
+  appUtil().adoptApp(this);
+  return appUtil().run();
+}
+
 void App::quit() const
 {
   LOG_INFO("quitting");

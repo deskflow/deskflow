@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "AutoModeRunner.h"
 #include "CoreArgParser.h"
 
 #include "arch/Arch.h"
@@ -118,6 +119,33 @@ int main(int argc, char **argv)
 
   EventQueue events;
   const auto processName = QFileInfo(argv[0]).fileName();
+
+  if (parser.autoMode()) {
+    // Coordinated mode: the epoch loop elects and runs the role in-process.
+    QApplication app(argc, argv);
+    QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
+
+    AutoModeRunner runner(events, processName);
+
+    const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
+    QObject::connect(ipcServer, &deskflow::core::ipc::IpcServer::stopProcessRequested, &app, [&runner] {
+      runner.requestQuit();
+    });
+    ipcServer->listen();
+
+    QThread coreThread;
+    QObject::connect(&coreThread, &QThread::finished, &app, &QApplication::quit);
+    runner.run(coreThread);
+
+    int exitCode = QApplication::exec();
+    coreThread.wait();
+
+    if (exitCode == s_exitSuccess) {
+      exitCode = runner.exitCode();
+    }
+    LOG_DEBUG("core exited, code: %d", exitCode);
+    return exitCode;
+  }
 
   App *coreApp = createApp(parser, events, processName);
 

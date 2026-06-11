@@ -33,6 +33,7 @@ public:
   bool version() const;
   bool serverMode() const;
   bool clientMode() const;
+  bool autoMode() const;
   bool singleInstanceOnly() const;
 
 private:
@@ -41,6 +42,7 @@ private:
   QString m_helpText;
   bool m_clientMode = false;
   bool m_serverMode = false;
+  bool m_autoMode = false;
   bool m_singleInstance = true;
   static const QString s_headerText;
 };

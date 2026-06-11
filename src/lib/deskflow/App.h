@@ -77,6 +77,14 @@ public:
   }
 
   void run(QThread &coreThread);
+
+  //! Adopt into arch and run the platform loop on the calling thread.
+  /*!
+  Used by auto (coordinated) mode, where an epoch loop runs role apps
+  synchronously and constructs the next one after this returns.
+  */
+  int runSynchronously();
+
   void quit() const;
   void setupFileLogging();
   void loggingFilterWarning() const;

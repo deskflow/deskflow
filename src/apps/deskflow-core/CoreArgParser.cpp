@@ -18,7 +18,7 @@ const QString CoreArgParser::s_headerText = QStringLiteral("%1: %2\n").arg(kCore
 CoreArgParser::CoreArgParser(const QStringList &args)
 {
   m_parser.setApplicationDescription(kAppDescription);
-  m_parser.addPositionalArgument("coremode", "The mode to start in either: server or client", "coremode");
+  m_parser.addPositionalArgument("coremode", "The mode to start in: server, client, or auto", "coremode");
 
   m_parser.addOptions(CoreArgs::options);
   m_parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
@@ -42,8 +42,9 @@ void CoreArgParser::parse()
   const QString mode = posArgs.takeFirst();
   m_serverMode = (mode.compare("server", Qt::CaseInsensitive) == 0);
   m_clientMode = (mode.compare("client", Qt::CaseInsensitive) == 0);
+  m_autoMode = (mode.compare("auto", Qt::CaseInsensitive) == 0);
 
-  if ((!m_clientMode && !m_serverMode) || mode.isEmpty()) {
+  if ((!m_clientMode && !m_serverMode && !m_autoMode) || mode.isEmpty()) {
     showHelpText();
     exit(s_exitSuccess);
   }
@@ -96,6 +97,11 @@ bool CoreArgParser::serverMode() const
 bool CoreArgParser::clientMode() const
 {
   return m_clientMode;
+}
+
+bool CoreArgParser::autoMode() const
+{
+  return m_autoMode;
 }
 
 bool CoreArgParser::singleInstanceOnly() const

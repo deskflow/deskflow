@@ -207,6 +207,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::MouserBridgePort)
     return 19796;
 
+  if (key == Coordination::Port)
+    return 24851;
+
   if (key == Core::ProcessMode) {
 #ifdef Q_OS_WIN
     if (!Settings::isPortableMode())

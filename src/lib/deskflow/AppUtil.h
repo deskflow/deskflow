@@ -18,7 +18,7 @@ class AppUtil
 {
 public:
   AppUtil();
-  virtual ~AppUtil() = default;
+  virtual ~AppUtil();
 
   void adoptApp(IApp *app);
   IApp &app() const;

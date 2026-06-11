@@ -7,6 +7,8 @@ set(target ${CMAKE_PROJECT_NAME}-core)
 
 add_executable(${target}
   "${target}.cpp"
+  AutoModeRunner.cpp
+  AutoModeRunner.h
   CoreArgs.h
   CoreArgParser.h
   CoreArgParser.cpp
@@ -30,6 +32,7 @@ target_link_libraries(
   arch
   base
   client
+  coordination
   io
   mt
   net

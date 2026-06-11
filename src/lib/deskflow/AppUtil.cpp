@@ -16,6 +16,16 @@ AppUtil::AppUtil()
   s_instance = this;
 }
 
+AppUtil::~AppUtil()
+{
+  // App objects (and their AppUtil member) are constructed and destroyed
+  // per role epoch in auto mode; a dangling static here would make
+  // instance() return a dead object in the next epoch.
+  if (s_instance == this) {
+    s_instance = nullptr;
+  }
+}
+
 void AppUtil::adoptApp(IApp *app)
 {
   app->setByeFunc(&exitAppStatic);

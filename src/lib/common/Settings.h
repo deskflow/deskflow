@@ -49,6 +49,16 @@ public:
     inline static const auto MouserPort = QStringLiteral("client/mouserPort");
     inline static const auto MouserToken = QStringLiteral("client/mouserToken");
   };
+  // Native KVM coordination (fork extension): election mesh that lets a
+  // cluster of deskflow-core instances pick the server by genuine local
+  // input ("auto" core mode). See docs/coordination/design.md.
+  struct Coordination
+  {
+    inline static const auto Enabled = QStringLiteral("coordination/enabled");
+    inline static const auto Port = QStringLiteral("coordination/port");
+    inline static const auto Peers = QStringLiteral("coordination/peers");
+    inline static const auto Token = QStringLiteral("coordination/token");
+  };
   struct Core
   {
     inline static const auto CoreMode = QStringLiteral("core/coreMode");
@@ -265,6 +275,10 @@ private:
     , Settings::Client::MouserEnabled
     , Settings::Client::MouserPort
     , Settings::Client::MouserToken
+    , Settings::Coordination::Enabled
+    , Settings::Coordination::Port
+    , Settings::Coordination::Peers
+    , Settings::Coordination::Token
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion
@@ -353,6 +367,7 @@ private:
     , Settings::Server::RelativeMouseMoves
     , Settings::Client::MouserEnabled
     , Settings::Server::MouserBridgeEnabled
+    , Settings::Coordination::Enabled
   };
 
   // When checking the default values this list contains the ones that default to true.
