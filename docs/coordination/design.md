@@ -91,7 +91,7 @@ New keys (registered in `common/Settings.h`, defaults in `Settings.cpp`):
 |---|---|---|
 | `coordination/enabled` | `false` | master switch for `auto` mode |
 | `coordination/port` | `24851` | mesh port |
-| `coordination/peers` | `""` | comma-separated `name=ip[\|lan]` entries |
+| `coordination/peers` | `""` | comma-separated peers: bare `name` (resolves `name.local` LAN-first, then `name`) or explicit `name=ip[\|lan]` |
 | `coordination/token` | `""` | optional shared mesh token |
 
 Machine name reuses `core/computerName`. The Mouser bridge/client keys

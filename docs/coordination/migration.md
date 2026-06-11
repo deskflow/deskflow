@@ -12,7 +12,7 @@ Legacy `kvm-config.json` / `kvm-config.txt` keys map to Deskflow settings:
 | `my_name` | `core/computerName` |
 | `coord_port` | `coordination/port` (default 24851) |
 | `deskflow_port` | `core/port` |
-| `peers[] {name, ip, lan}` | `coordination/peers` = `name=ip\|lan, name2=ip2, ...` |
+| `peers[] {name, ip, lan}` | `coordination/peers` = `name, name2, ...` (or `name=ip\|lan` for explicit addresses) |
 | (none -- mesh was open) | `coordination/token` (recommended) |
 | `mouser_bridge_token/port` | `server/mouserBridgeToken` / `server/mouserBridgePort` |
 | `mouser_token/port` | `client/mouserToken` / `client/mouserPort` |
@@ -21,13 +21,13 @@ Example settings file for a three-machine cluster:
 
 ```ini
 [core]
-computerName=hackintosh
+computerName=desktop
 port=24800
 
 [coordination]
 enabled=true
 port=24851
-peers=macbookpro=100.75.218.20|macbookpro.local, hackintosh=100.126.157.97|hackintosh.local, tiny11=100.90.248.22|tiny11.local
+peers=desktop, laptop, gamepc
 token=<shared secret>
 
 [server]
@@ -44,6 +44,15 @@ mouserToken=<mouser device secret>
 
 [security]
 tlsEnabled=false
+```
+
+Peer entries are names by default: a bare `laptop` entry connects to
+`laptop.local` when reachable (mDNS, LAN-first) and falls back to `laptop`
+via DNS / search domain (e.g. Tailscale MagicDNS). Use the full
+`name=address[|lan]` form only when a peer needs an explicit address:
+
+```ini
+peers=desktop, laptop=192.0.2.11|laptop.local, gamepc=gamepc.example.ts.net
 ```
 
 Because roles flip in-process, the Mouser bridge/client keys live in the
@@ -80,14 +89,10 @@ nodes (same `status` / `promote` messages). If a mesh token is set, add
 - **Login-window injection** (`deskflow_vhid_bridge` + Karabiner
   DriverKit): still a separate binary; native auto mode covers logged-in
   sessions. (Hook point documented in design.md.)
-- **Wake-on-LAN** (`wake-tiny11.sh`): unchanged.
+- **Wake-on-LAN** helper scripts: unchanged.
 
 ## 5. Known follow-ups
 
-- `cursorHere` strict-burst regime is wired in the coordinator but not yet
-  fed by the running client's enter/leave events (Coordinator
-  notifyCursorHere is plumbed for it); until then the normal burst
-  threshold applies everywhere.
 - Windows session/desktop switching (Winlogon vs Default) remains the
   deskflow daemon's domain, as before.
 - Run the repo clang-format (scripts/install_deps.py --only-python) over
