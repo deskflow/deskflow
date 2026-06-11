@@ -108,6 +108,7 @@ private:
   std::thread m_worker;
   std::condition_variable m_workerWake;
   bool m_workerStop = false;
+  bool m_broadcastPending = false;
   double m_startedAt = 0.0;
   int m_wedgeStrikes = 0;
 };

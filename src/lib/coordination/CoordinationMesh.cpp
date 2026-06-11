@@ -24,6 +24,7 @@ using SocketLen = socklen_t;
 #endif
 
 #include <cerrno>
+#include <chrono>
 #include <cstring>
 #include <utility>
 
@@ -34,6 +35,7 @@ namespace {
 const int kSendConnectTimeoutMs = 700;
 const int kClientReadTimeoutMs = 2000;
 const size_t kMaxLineBytes = 16 * 1024;
+const int kMaxConcurrentClients = 8;
 
 void platformCloseSocket(int fd)
 {
@@ -191,6 +193,20 @@ void CoordinationMesh::stop()
   if (m_thread.joinable()) {
     m_thread.join();
   }
+  // Unblock every in-flight handler, then wait for them to drain so a
+  // handler thread can never touch *this after destruction.
+  {
+    std::scoped_lock lock{m_clientsMutex};
+    for (const int fd : m_clientFds) {
+#if defined(_WIN32)
+      ::shutdown(fd, SD_BOTH);
+#else
+      ::shutdown(fd, SHUT_RDWR);
+#endif
+    }
+  }
+  std::unique_lock lock{m_clientsMutex};
+  m_clientsDone.wait_for(lock, std::chrono::seconds(5), [this] { return m_activeClients.load() == 0; });
 }
 
 void CoordinationMesh::sendTo(const std::string &host, const std::string &line)
@@ -275,8 +291,31 @@ void CoordinationMesh::serveLoop()
     if (clientFd < 0) {
       break; // listener closed by stop()
     }
-    handleClient(clientFd);
-    platformCloseSocket(clientFd);
+    if (!m_running) {
+      platformCloseSocket(clientFd);
+      break;
+    }
+    if (m_activeClients.load() >= kMaxConcurrentClients) {
+      // A stalled or hostile peer set must not starve the mesh; excess
+      // connections are refused rather than queued behind them.
+      platformCloseSocket(clientFd);
+      continue;
+    }
+    {
+      std::scoped_lock lock{m_clientsMutex};
+      m_clientFds.insert(clientFd);
+    }
+    ++m_activeClients;
+    std::thread([this, clientFd] {
+      handleClient(clientFd);
+      {
+        std::scoped_lock lock{m_clientsMutex};
+        m_clientFds.erase(clientFd);
+      }
+      platformCloseSocket(clientFd);
+      --m_activeClients;
+      m_clientsDone.notify_all();
+    }).detach();
   }
 }
 

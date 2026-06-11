@@ -9,8 +9,10 @@
 #include "coordination/CoordinationProtocol.h"
 
 #include <atomic>
+#include <condition_variable>
 #include <functional>
 #include <mutex>
+#include <set>
 #include <string>
 #include <thread>
 
@@ -23,10 +25,11 @@ one-shot messages to peer addresses. Mirrors the legacy coordinator's
 connection model (one TCP connect per send, no persistent mesh channel)
 so it is wire-compatible with kvmctl.
 
-Threading: a dedicated accept thread receives; sends happen on the
-caller's thread (short-lived blocking connects with a small timeout).
-The receive callback is invoked on the accept thread -- the Coordinator
-marshals it onto the event-queue thread.
+Threading: a dedicated accept thread hands each connection to its own
+short-lived handler thread (capped), so one slow or stalled peer can
+never head-of-line block the mesh. Sends happen on the caller's thread
+(short-lived blocking connects with a small timeout). The receive
+callback is invoked on a handler thread.
 */
 class CoordinationMesh
 {
@@ -67,6 +70,13 @@ private:
   std::thread m_thread;
   std::atomic<bool> m_running{false};
   int m_listenFd = -1;
+
+  // Per-connection handler bookkeeping so stop() can unblock and drain
+  // every handler before returning (handlers must never outlive *this).
+  std::mutex m_clientsMutex;
+  std::set<int> m_clientFds;
+  std::atomic<int> m_activeClients{0};
+  std::condition_variable m_clientsDone;
 };
 
 } // namespace deskflow::coordination

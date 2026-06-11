@@ -57,8 +57,10 @@ bool Coordinator::start()
   m_startedAt = monotonicSeconds();
   m_workerStop = false;
   m_worker = std::thread([this] { workerLoop(); });
-  LOG_INFO("coordination: started as \"%s\" with %d peer(s)", m_config.selfName.c_str(),
-           static_cast<int>(m_config.peers.size()));
+  LOG_INFO(
+      "coordination: started as \"%s\" with %d peer(s)", m_config.selfName.c_str(),
+      static_cast<int>(m_config.peers.size())
+  );
   return true;
 }
 
@@ -163,8 +165,7 @@ void Coordinator::onMessage(const Message &message, const std::function<void(con
     {
       std::scoped_lock lock{m_mutex};
       snapshot = protocol::encodeStatusReply(
-          m_election.role(), m_election.serverAddress(), m_election.seq(), m_election.lastSwitchAt(),
-          m_config.selfName
+          m_election.role(), m_election.serverAddress(), m_election.seq(), m_election.lastSwitchAt(), m_config.selfName
       );
     }
     reply(snapshot);
@@ -199,9 +200,13 @@ void Coordinator::promoteSelf(const char *reason)
       return; // already primary; heartbeats keep claiming
     }
     LOG_INFO("coordination: promoting to server (%s)", reason);
+    // The claim broadcast does blocking connects to every peer; hand it
+    // to the worker so this thread (often the input monitor's event-tap
+    // thread, which macOS disables when stalled) returns immediately.
+    m_broadcastPending = true;
   }
-  broadcastClaim();
   decide(Role::Server, {});
+  m_workerWake.notify_all();
 }
 
 void Coordinator::followSender(const Message &claim)
@@ -273,15 +278,24 @@ void Coordinator::workerLoop()
   int tick = 0;
 
   while (true) {
+    bool broadcastNow = false;
     {
       std::unique_lock lock{m_mutex};
-      m_workerWake.wait_for(lock, std::chrono::duration<double>(kWorkerTickS), [this] { return m_workerStop; });
+      m_workerWake.wait_for(lock, std::chrono::duration<double>(kWorkerTickS), [this] {
+        return m_workerStop || m_broadcastPending;
+      });
       if (m_workerStop) {
         return;
       }
+      broadcastNow = m_broadcastPending;
+      m_broadcastPending = false;
     }
     ++tick;
     const double now = monotonicSeconds();
+    if (broadcastNow) {
+      broadcastClaim();
+      lastHeartbeatAt = now;
+    }
 
     Role role;
     {
