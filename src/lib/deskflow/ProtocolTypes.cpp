@@ -43,6 +43,7 @@ const char *const kMsgDDragInfo = "DDRG%2i%s";
 const char *const kMsgDSecureInputNotification = "SECN%s";
 const char *const kMsgDLanguageSynchronisation = "LSYN%s";
 const char *const kMsgDMouserData = "DMSR%s";
+const char *const kMsgDHidReport = "HIDR%2i%s";
 const char *const kMsgQInfo = "QINF";
 const char *const kMsgEIncompatible = "EICV%2i%2i";
 const char *const kMsgEBusy = "EBSY";

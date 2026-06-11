@@ -28,6 +28,9 @@ class MouserBridge;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
+namespace deskflow::server {
+class HidPassthrough;
+}
 namespace deskflow {
 class Screen;
 }
@@ -323,6 +326,11 @@ private:
   void initMouserBridge();
   void handleMouserBridgeLine(const Event &event);
   void updateMouserVirtualHost(BaseClientProxy *dst);
+
+  // HID pass-through (fork extension)
+  void initHidPassthrough();
+  void handleHidPassthroughEvent(const Event &event);
+  void updateHidVirtualHost(BaseClientProxy *dst);
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToScreenEvent(const Event &event);
   void handleSwitchInDirectionEvent(const Event &event);
@@ -400,6 +408,13 @@ private:
   std::unique_ptr<MouserBridge> m_mouserBridge;
   std::string m_mouserConnectLine;
   BaseClientProxy *m_mouserVirtualHost = nullptr;
+
+  // HID pass-through (fork extension): grabber orchestrator, the cached
+  // device-connect line, and which remote client currently hosts the
+  // passed-through device.
+  std::unique_ptr<deskflow::server::HidPassthrough> m_hidPassthrough;
+  std::string m_hidConnectLine;
+  BaseClientProxy *m_hidVirtualHost = nullptr;
 
   BaseClientProxy *m_switchScreen = nullptr;
   double m_switchWaitDelay = 0.0;

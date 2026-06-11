@@ -141,6 +141,10 @@ public:
     inline static const auto MouserBridgeEnabled = QStringLiteral("server/mouserBridgeEnabled");
     inline static const auto MouserBridgePort = QStringLiteral("server/mouserBridgePort");
     inline static const auto MouserBridgeToken = QStringLiteral("server/mouserBridgeToken");
+    // HID pass-through (fork extension): seize the selected devices'
+    // vendor interfaces while focus is remote and relay raw reports.
+    inline static const auto HidPassthroughEnabled = QStringLiteral("server/hidPassthroughEnabled");
+    inline static const auto HidPassthroughDevices = QStringLiteral("server/hidPassthroughDevices");
   };
 
   struct Screen
@@ -187,7 +191,8 @@ public:
   {
     None,
     Client,
-    Server
+    Server,
+    Auto
   };
   Q_ENUM(CoreMode)
 
@@ -367,6 +372,7 @@ private:
     , Settings::Server::RelativeMouseMoves
     , Settings::Client::MouserEnabled
     , Settings::Server::MouserBridgeEnabled
+    , Settings::Server::HidPassthroughEnabled
     , Settings::Coordination::Enabled
   };
 

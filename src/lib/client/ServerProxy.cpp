@@ -223,6 +223,10 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     mouserData();
   }
 
+  else if (memcmp(code, kMsgDHidReport, 4) == 0) {
+    hidReport();
+  }
+
   else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
     mouseWheel();
   }
@@ -837,20 +841,50 @@ void ServerProxy::setServerLanguages()
   m_layoutManager.setRemoteLayouts(serverLayout);
 }
 
-void ServerProxy::mouserData()
+MouserClient *ServerProxy::mouserClientOrNull()
 {
-  std::string line;
-  ProtocolUtil::readf(m_stream, kMsgDMouserData + 4, &line);
   if (m_mouserClient == nullptr) {
     if (!Settings::value(Settings::Client::MouserEnabled).toBool()) {
-      return; // accepted and discarded when the integration is off
+      return nullptr; // accepted and discarded when the integration is off
     }
     m_mouserClient = std::make_unique<MouserClient>(
         Settings::value(Settings::Client::MouserPort).toInt(),
         Settings::value(Settings::Client::MouserToken).toString().toStdString()
     );
   }
-  m_mouserClient->deliver(line);
+  return m_mouserClient.get();
+}
+
+void ServerProxy::mouserData()
+{
+  std::string line;
+  ProtocolUtil::readf(m_stream, kMsgDMouserData + 4, &line);
+  if (auto *client = mouserClientOrNull(); client != nullptr) {
+    client->deliver(line);
+  }
+}
+
+void ServerProxy::hidReport()
+{
+  uint16_t deviceId = 0;
+  std::string bytes;
+  ProtocolUtil::readf(m_stream, kMsgDHidReport + 4, &deviceId, &bytes);
+  auto *client = mouserClientOrNull();
+  if (client == nullptr || bytes.empty()) {
+    return;
+  }
+  // Re-encode the raw frame for the line-JSON loopback consumer protocol.
+  static const char *digits = "0123456789abcdef";
+  std::string hex;
+  hex.reserve(bytes.size() * 2);
+  for (const char c : bytes) {
+    const auto byte = static_cast<unsigned char>(c);
+    hex.push_back(digits[byte >> 4]);
+    hex.push_back(digits[byte & 0xF]);
+  }
+  std::string line =
+      R"({"type": "report", "device_id": )" + std::to_string(deviceId) + R"(, "data": ")" + hex + R"("})";
+  client->deliver(line);
 }
 
 void ServerProxy::setActiveServerLanguage(const std::string_view &language)

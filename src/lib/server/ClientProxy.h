@@ -76,6 +76,7 @@ public:
   void fileChunkSending(uint8_t mark, char *data, size_t dataSize) override = 0;
   void secureInputNotification(const std::string &app) const override = 0;
   void sendMouserData(const std::string &line) override;
+  void sendHidFrame(uint16_t deviceId, const std::string &bytes) override;
 
 private:
   deskflow::IStream *m_stream;

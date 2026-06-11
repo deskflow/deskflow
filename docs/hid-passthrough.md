@@ -213,18 +213,39 @@ This **supersedes** the decoded-event `DMSR` path. Migration:
   meaningless unless the far side speaks MX Master HID++. Deskflow stays
   device-agnostic; the decoder stays pluggable on the endpoints.
 
-## Implementation phases
+## Implementation status
 
-1. **Build the fork green** — the coordination/Mouser code (committed Jun 11)
-   has never been compiled; nothing below is trustworthy until `deskflow-core`
-   links and runs.
-2. **Host grab** — vendor-interface enumeration + focus-driven seize
-   (macOS `kIOHIDOptionsTypeSeizeDevice` first), input-report callback →
-   forward. Release on focus-return / exit.
-3. **Raw channel** — `attach`/`report`/`detach` over the Deskflow connection,
-   replacing `DMSR`'s decoded payload.
-4. **Tier-1 consumer socket** on the client + Mouser raw-frame input source.
-5. **Two-checkbox UX** + auto-generated loopback token + tray status.
-6. **Tier 2 (later)** — virtual-HID re-injection on the client via DriverKit.
+Implemented (Tier 1, macOS host):
+
+1. **Host grab** — `src/lib/server/OSXHidGrabber.mm`: IOHIDManager discovery
+   by VID/PID, vendor-collection filter (usage page >= 0xFF00), focus-driven
+   `kIOHIDOptionsTypeSeizeDevice`, input-report callback. Windows/Linux are
+   honest stubs (`StubHidGrabber.cpp`) until their grabs are written.
+2. **Raw channel** — attach/detach ride the existing `DMSR` relay as
+   consumer-protocol `connect`/`disconnect` JSON; raw frames travel as the
+   new binary `HIDR` message (`kMsgDHidReport`). `Server` follows focus with
+   the same virtual-host bookkeeping as the Mouser bridge
+   (`Server::updateHidVirtualHost`).
+3. **Client sink** — `ServerProxy::hidReport()` re-encodes frames as
+   `{"type": "report", "data": hex}` lines into the existing loopback
+   consumer connection (`MouserClient`), so no new client settings exist.
+4. **Mouser raw-frame source** — Mouser's `core/remote_device.py` decodes
+   `report` messages with a detached `HidGestureListener` seeded from
+   `connect.decode` or `settings.remote_device.decode`
+   (`feat_idx`/`gesture_cid`/`extra_diverts`).
+5. Settings: `server/hidPassthroughEnabled` + `server/hidPassthroughDevices`
+   (`VID:PID` list, `*` PID wildcard); unit-tested selector parsing.
+
+Remaining:
+
+- **Decode-context handoff** — the host's consumer knows `feat_idx` /
+  `gesture_cid` (it armed the diverts before the seize); shipping that to
+  the focused client automatically (instead of the manual
+  `settings.remote_device.decode` override) needs a small host-consumer →
+  Deskflow message before the first seize.
+- **Windows/Linux host grabs** (exclusive `CreateFile` / `EVIOCGRAB`).
+- **Two-checkbox UX polish** — auto-generated loopback tokens, tray status
+  line, device picker UI (selectors are settings-only today).
+- **Tier 2** — virtual-HID re-injection on the client via DriverKit.
 </content>
 </invoke>

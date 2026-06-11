@@ -1145,6 +1145,26 @@ extern const char *const kMsgDLanguageSynchronisation;
  */
 extern const char *const kMsgDMouserData;
 
+/**
+ * @brief Raw HID report frame relay (fork extension)
+ *
+ * **Message Code**: `"HIDR"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"HIDR%2i%s"`
+ * **Parameters**:
+ * - `$1`: pass-through device id assigned by the primary's grabber
+ * - `$2`: one raw input report, report id first, as opaque bytes
+ *
+ * Carries vendor-interface input reports from a device seized on the
+ * primary (HID pass-through) to the focused secondary, which feeds them to
+ * its local consumer. Device attach/detach travels as consumer-protocol
+ * JSON over kMsgDMouserData. Only sent when pass-through is enabled;
+ * stock clients never receive it.
+ *
+ * @note Fork extension; not part of the upstream protocol.
+ */
+extern const char *const kMsgDHidReport;
+
 /** @} */ // end of protocol_system group
 
 /** @} */ // end of protocol_data group

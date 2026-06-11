@@ -10,6 +10,7 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "common/Settings.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
@@ -19,11 +20,11 @@
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
 #include "deskflow/ipc/CoreIpc.h"
-#include "common/Settings.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
+#include "server/HidPassthrough.h"
 #include "server/MouserBridge.h"
 #include "server/PrimaryClient.h"
 
@@ -126,6 +127,7 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   });
 
   initMouserBridge();
+  initHidPassthrough();
 
   // add connection
   addClient(m_primaryClient);
@@ -153,6 +155,10 @@ Server::~Server()
   if (m_mouserBridge) {
     m_mouserBridge->stop();
     m_events->removeHandler(EventTypes::ServerMouserBridgeLine, this);
+  }
+  if (m_hidPassthrough) {
+    m_hidPassthrough->stop();
+    m_events->removeHandler(EventTypes::ServerHidPassthroughEvent, this);
   }
 
   // remove event handlers and timers
@@ -497,6 +503,7 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     }
 
     updateMouserVirtualHost(m_active);
+    updateHidVirtualHost(m_active);
 
     auto *info = new Server::SwitchToScreenInfo(m_active->getName());
     m_events->addEvent(Event(EventTypes::ServerScreenSwitched, this, info));
@@ -517,9 +524,7 @@ void Server::initMouserBridge()
     return;
   }
   m_mouserBridge = std::move(bridge);
-  m_events->addHandler(EventTypes::ServerMouserBridgeLine, this, [this](const auto &e) {
-    handleMouserBridgeLine(e);
-  });
+  m_events->addHandler(EventTypes::ServerMouserBridgeLine, this, [this](const auto &e) { handleMouserBridgeLine(e); });
   // Seed the focus state so Mouser knows it starts local.
   m_mouserBridge->notifyFocus(getName(m_active), m_active == m_primaryClient);
 }
@@ -589,6 +594,88 @@ void Server::updateMouserVirtualHost(BaseClientProxy *dst)
   }
 
   m_mouserBridge->notifyFocus(getName(dst), dstIsPrimary);
+}
+
+void Server::initHidPassthrough()
+{
+  if (!Settings::value(Settings::Server::HidPassthroughEnabled).toBool()) {
+    return;
+  }
+  if (Settings::value(Settings::Server::MouserBridgeEnabled).toBool()) {
+    LOG_WARN(
+        "hid passthrough and the mouser bridge are both enabled; "
+        "they relay the same virtual device and will conflict"
+    );
+  }
+  auto passthrough = std::make_unique<deskflow::server::HidPassthrough>(m_events, this);
+  if (!passthrough->start()) {
+    return;
+  }
+  m_hidPassthrough = std::move(passthrough);
+  m_events->addHandler(EventTypes::ServerHidPassthroughEvent, this, [this](const auto &e) {
+    handleHidPassthroughEvent(e);
+  });
+  // Seed the seize state: at server start the focus is local.
+  m_hidPassthrough->setFocusRemote(m_active != m_primaryClient);
+}
+
+void Server::handleHidPassthroughEvent(const Event &event)
+{
+  using Kind = deskflow::server::HidPassthroughEventData::Kind;
+  const auto *data = static_cast<deskflow::server::HidPassthroughEventData *>(event.getDataObject());
+  if (data == nullptr) {
+    return;
+  }
+
+  switch (data->kind()) {
+  case Kind::Attach:
+    // Cache the device identity so it can be replayed to whichever client
+    // gains focus later, then connect it on the current remote host.
+    m_hidConnectLine = data->payload();
+    if (m_active != m_primaryClient) {
+      m_active->sendMouserData(m_hidConnectLine);
+      m_hidVirtualHost = m_active;
+    }
+    break;
+
+  case Kind::Detach:
+    m_hidConnectLine.clear();
+    if (m_hidVirtualHost != nullptr) {
+      m_hidVirtualHost->sendMouserData(data->payload());
+      m_hidVirtualHost = nullptr;
+    }
+    break;
+
+  case Kind::Frame:
+    // Frames go only to the client currently hosting the device.
+    if (m_hidVirtualHost != nullptr && m_hidVirtualHost == m_active) {
+      m_active->sendHidFrame(data->deviceId(), data->payload());
+    }
+    break;
+  }
+}
+
+void Server::updateHidVirtualHost(BaseClientProxy *dst)
+{
+  if (!m_hidPassthrough) {
+    return;
+  }
+  const bool dstIsPrimary = (dst == m_primaryClient);
+
+  // The passed-through device follows focus: disconnect it from the
+  // departed client before connecting it on the new one.
+  if (m_hidVirtualHost != nullptr && m_hidVirtualHost != dst) {
+    m_hidVirtualHost->sendMouserData(R"({"type": "disconnect"})");
+    m_hidVirtualHost = nullptr;
+  }
+  if (!dstIsPrimary && !m_hidConnectLine.empty() && m_hidVirtualHost != dst) {
+    dst->sendMouserData(m_hidConnectLine);
+    m_hidVirtualHost = dst;
+  }
+
+  // Focus drives the seize: remote focus takes the vendor interface away
+  // from the host's own consumer; local focus returns it.
+  m_hidPassthrough->setFocusRemote(!dstIsPrimary);
 }
 
 void Server::jumpToScreen(BaseClientProxy *newScreen)

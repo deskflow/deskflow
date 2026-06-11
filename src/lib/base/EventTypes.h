@@ -250,5 +250,12 @@ enum class EventTypes : uint32_t
 
   /// Counterpart of CoordinationScreenEntered (kMsgCLeave).
   CoordinationScreenLeft,
+
+  /** This event is sent when the HID pass-through grabber attaches a
+      device, reads a raw report frame, or detaches a device. Event data
+      object is a pointer to HidPassthroughEventData (Server relays it to
+      the focused client on the event loop thread).
+  */
+  ServerHidPassthroughEvent,
 };
 } // namespace deskflow

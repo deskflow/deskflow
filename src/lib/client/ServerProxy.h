@@ -102,9 +102,13 @@ private:
   void setServerLanguages();
   void setActiveServerLanguage(const std::string_view &language);
   void mouserData();
+  void hidReport();
 
 private:
   using MessageParser = ConnectionResult (ServerProxy::*)(const uint8_t *);
+
+  //! Lazily create the loopback consumer connection; null when disabled.
+  MouserClient *mouserClientOrNull();
 
   Client *m_client = nullptr;
   deskflow::IStream *m_stream = nullptr;

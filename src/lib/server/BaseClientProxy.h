@@ -84,6 +84,13 @@ public:
   {
     (void)line;
   }
+  //! Relay one raw HID report frame (fork extension, pass-through).
+  //! Default no-op for the same reason.
+  virtual void sendHidFrame(uint16_t deviceId, const std::string &bytes)
+  {
+    (void)deviceId;
+    (void)bytes;
+  }
   virtual std::string getSecureInputApp() const = 0;
   virtual void secureInputNotification(const std::string &app) const = 0;
   std::string getName() const override;

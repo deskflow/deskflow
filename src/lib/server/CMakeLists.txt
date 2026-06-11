@@ -32,6 +32,8 @@ add_library(server STATIC
   ClientProxyUnknown.h
   Config.cpp
   Config.h
+  HidPassthrough.cpp
+  HidPassthrough.h
   InputFilter.cpp
   InputFilter.h
   MouserBridge.cpp
@@ -41,6 +43,13 @@ add_library(server STATIC
   Server.cpp
   Server.h
 )
+
+if(APPLE)
+  target_sources(server PRIVATE OSXHidGrabber.mm)
+  target_link_libraries(server PUBLIC "-framework IOKit" "-framework CoreFoundation")
+else()
+  target_sources(server PRIVATE StubHidGrabber.cpp)
+endif()
 
 target_link_libraries(server PUBLIC common)
 
