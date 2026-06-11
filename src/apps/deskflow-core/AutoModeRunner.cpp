@@ -145,8 +145,10 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
   } else {
     app = std::make_unique<ClientApp>(&m_events, m_processName);
   }
-  LOG_INFO("coordination: starting %s epoch%s%s", roleName(role), serverAddress.empty() ? "" : " towards ",
-           serverAddress.c_str());
+  LOG_INFO(
+      "coordination: starting %s epoch%s%s", roleName(role), serverAddress.empty() ? "" : " towards ",
+      serverAddress.c_str()
+  );
 
   m_appRunning = true;
   // A decision can land in the gap before this epoch's loop starts;
