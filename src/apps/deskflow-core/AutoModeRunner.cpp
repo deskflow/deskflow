@@ -6,7 +6,6 @@
 
 #include "AutoModeRunner.h"
 
-#include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "common/ExitCodes.h"
@@ -18,6 +17,9 @@
 #include "deskflow/ServerApp.h"
 
 #include <QThread>
+
+#include <chrono>
+#include <thread>
 
 using deskflow::coordination::Coordinator;
 using deskflow::coordination::CoordinatorConfig;
@@ -106,8 +108,10 @@ void AutoModeRunner::epochLoop()
     const int result = runEpoch(decision.role, decision.serverAddress);
     if (result != s_exitSuccess) {
       LOG_WARN("coordination: %s epoch ended with code %d", roleName(decision.role), result);
-      // Pause briefly so a persistent failure cannot hot-loop.
-      Arch::sleep(0.5);
+      // Pause briefly so a persistent failure cannot hot-loop. Plain
+      // std sleep: Arch::sleep() requires an Arch-registered thread and
+      // this is a QThread (it crashes in testCancelThread otherwise).
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
     m_coordinator->notifyEpochEnded();
   }
@@ -146,7 +150,7 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
     result = e.getCode();
   } catch (DisplayInvalidException &die) {
     LOG_CRIT("a display invalid exception error occurred: %s\n", die.what());
-    Arch::sleep(10);
+    std::this_thread::sleep_for(std::chrono::seconds(10));
   } catch (std::runtime_error &re) {
     LOG_CRIT("a runtime error occurred: %s\n", re.what());
   } catch (std::exception &e) {
