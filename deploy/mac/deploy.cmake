@@ -9,10 +9,17 @@ set(OSX_BUNDLE ${BUILD_OSX_BUNDLE})
 set(OS_STRING "macos-${BUILD_ARCHITECTURE}")
 
 if (OSX_BUNDLE)
+  # Sign the deployed bundle with the developer identity when one is
+  # configured (stable TCC identity across installs); ad-hoc otherwise.
+  if(APPLE_CODESIGN_DEV)
+    set(MAC_DEPLOY_CODESIGN_ID "${APPLE_CODESIGN_DEV}")
+  else()
+    set(MAC_DEPLOY_CODESIGN_ID "-")
+  endif()
   install(CODE "execute_process(COMMAND
     ${DEPLOYQT}
     \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
-    -timestamp -codesign=-
+    -timestamp \"-codesign=${MAC_DEPLOY_CODESIGN_ID}\"
   )")
   set(CPACK_PACKAGE_ICON "${MY_DIR}/dmg-volume.icns")
   set(CPACK_DMG_BACKGROUND_IMAGE "${MY_DIR}/dmg-background.tiff")

@@ -33,8 +33,17 @@ function(_finalize_mac_codesign)
   set(stamp_file "${CMAKE_BINARY_DIR}/CMakeFiles/codesign-dev.stamp")
 
   # Use a stamp file because codesign modifies the binaries it signs.
+  # Nested executables are signed before the bundle: the x86_64 linker
+  # does not ad-hoc sign its output (unlike arm64), and signing a bundle
+  # fails on unsigned subcomponents.
   add_custom_command(
     OUTPUT ${stamp_file}
+    COMMAND /usr/bin/codesign
+            --force
+            --options runtime
+            --entitlements "${CMAKE_SOURCE_DIR}/src/apps/res/entitlements-dev.plist"
+            --sign "${APPLE_CODESIGN_DEV}"
+            ${depends}
     COMMAND /usr/bin/codesign
             --force
             --options runtime
