@@ -38,9 +38,10 @@ part of this change:
    `App::App` then holds).
 2. `ServerApp::mainLoop` removes its `ServerAppResetServer` handler on
    exit (pre-existing leak; fixed).
-3. Role flips are requested only via an event posted to the queue
-   (`EventTypes::CoordinationRoleChange`), so the running app quits at a
-   well-defined point in its own loop.
+3. Role flips are requested only via an event posted to the queue (the
+   coordinator's interrupt callback posts `EventTypes::Quit` to the
+   running app), so the app exits at a well-defined point in its own
+   loop and the epoch loop starts the next role.
 
 Fallback: if a platform accumulates hidden screen state across epochs,
 `RoleController::flip` can switch to self-re-exec (`execv` keeps the PID
