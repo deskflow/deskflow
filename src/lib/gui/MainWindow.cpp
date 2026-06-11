@@ -207,10 +207,12 @@ void MainWindow::setupControls()
 
   ui->serverOptions->setVisible(false);
   ui->clientOptions->setVisible(false);
+  ui->autoOptions->setVisible(false);
 
   const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
   ui->rbModeClient->setChecked(coreMode == Settings::CoreMode::Client);
   ui->rbModeServer->setChecked(coreMode == Settings::CoreMode::Server);
+  ui->rbModeAuto->setChecked(coreMode == Settings::CoreMode::Auto);
 
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
@@ -293,6 +295,8 @@ void MainWindow::connectSlots()
 
   connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
+  connect(ui->rbModeAuto, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
+  connect(ui->linePeers, &QLineEdit::textChanged, this, [this] { toggleCanRunCore(canRunCore()); });
 
   connect(m_logDock->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
 
@@ -506,6 +510,8 @@ void MainWindow::coreModeToggled(bool checked)
     mode = Settings::CoreMode::Server;
   if (ui->rbModeClient->isChecked())
     mode = Settings::CoreMode::Client;
+  if (ui->rbModeAuto->isChecked())
+    mode = Settings::CoreMode::Auto;
 
   qDebug() << QStringLiteral("change mode to: %1").arg(QVariant::fromValue(mode).toString());
 
@@ -514,6 +520,7 @@ void MainWindow::coreModeToggled(bool checked)
   m_coreProcess.setMode(mode);
 
   Settings::setValue(Settings::Core::CoreMode, mode);
+  Settings::setValue(Settings::Coordination::Enabled, mode == Settings::CoreMode::Auto);
   Settings::save();
 
   updateModeControls();
@@ -524,32 +531,36 @@ void MainWindow::updateModeControls()
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
+  const bool isAuto = mode == Settings::CoreMode::Auto;
 
-  ui->serverOptions->setVisible(isServer);
+  // Auto mode can become the server, so it keeps the server layout tools.
+  ui->serverOptions->setVisible(isServer || isAuto);
   ui->clientOptions->setVisible(isClient);
-  ui->lblNoMode->setVisible(!isServer && !isClient);
+  ui->autoOptions->setVisible(isAuto);
+  ui->lblNoMode->setVisible(!isServer && !isClient && !isAuto);
   toggleCanRunCore(canRunCore());
 
   ui->lblIpAddresses->setVisible(
-      (isClient && !Settings::value(Settings::Core::Interface).toString().isEmpty()) || isServer
+      (isClient && !Settings::value(Settings::Core::Interface).toString().isEmpty()) || isServer || isAuto
   );
 
   if (ui->lblIpAddresses->isVisible())
     updateNetworkInfo();
 
-  if (isServer) {
+  if (isServer || isAuto) {
     m_networkMonitor->startMonitoring();
   } else {
     m_networkMonitor->stopMonitoring();
   }
 
-  if (isServer || isClient)
+  if (isServer || isClient || isAuto)
     updateModeControlLabels();
 }
 
 void MainWindow::updateModeControlLabels()
 {
-  const bool isServer = m_coreProcess.mode() == CoreMode::Server;
+  const auto mode = m_coreProcess.mode();
+  const bool isServer = mode == CoreMode::Server || mode == CoreMode::Auto;
   const bool isStarted = m_coreProcess.isStarted();
 
   QString startText;
@@ -651,6 +662,8 @@ void MainWindow::open()
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
       return;
+    if (ui->rbModeAuto->isChecked() && ui->linePeers->text().isEmpty())
+      return;
     startCore();
   }
 }
@@ -706,6 +719,11 @@ void MainWindow::applyConfig()
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
     ui->lineHostname->setText(host);
 
+  // INI commas may have turned the peers value into a QStringList.
+  if (const auto peers = Settings::value(Settings::Coordination::Peers).toStringList().join(QStringLiteral(", "));
+      !peers.isEmpty())
+    ui->linePeers->setText(peers);
+
   updateLocalFingerprint();
   setTrayIcon();
 
@@ -723,9 +741,13 @@ void MainWindow::saveSettings() const
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Client);
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
+  } else if (ui->rbModeAuto->isChecked()) {
+    Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Auto);
   }
   if (!ui->lineHostname->text().isEmpty())
     Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+  if (!ui->linePeers->text().isEmpty())
+    Settings::setValue(Settings::Coordination::Peers, ui->linePeers->text());
   Settings::save();
 }
 
@@ -1284,5 +1306,10 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  const bool isAuto = mode == Settings::CoreMode::Auto;
+  if (isClient)
+    return !ui->lineHostname->text().isEmpty();
+  if (isAuto)
+    return !ui->linePeers->text().isEmpty();
+  return isServer;
 }

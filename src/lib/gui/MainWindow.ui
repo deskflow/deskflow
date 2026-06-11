@@ -196,6 +196,23 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QRadioButton" name="rbModeAuto">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;Every computer runs in auto mode; whichever one receives real keyboard or mouse input becomes the server and the others follow it.&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Auto switch
+(the computer you touch becomes the server)</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -408,6 +425,44 @@
                </property>
                <property name="toolTip">
                 <string>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="autoOptions" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayoutAuto">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lblPeers">
+               <property name="text">
+                <string>Computers:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="linePeers">
+               <property name="toolTip">
+                <string>&lt;html&gt;Comma separated names of the computers that auto switch between each other, including this one (e.g. desktop, laptop).&lt;br/&gt;Each name should resolve on your network (mDNS .local or DNS); use name=address to override.&lt;/html&gt;</string>
                </property>
               </widget>
              </item>

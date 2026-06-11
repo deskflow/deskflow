@@ -388,7 +388,8 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   QStringList args = {coreMode};
 
-  if (m_mode == Settings::CoreMode::Server) {
+  // Auto mode runs server epochs too, so it needs the layout persisted.
+  if (m_mode == Settings::CoreMode::Server || m_mode == Settings::CoreMode::Auto) {
     const auto [hasNeededPermissions, configFilename] = persistServerConfig();
     if (configFilename.isEmpty()) {
       qFatal("config file name empty for server args");

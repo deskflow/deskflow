@@ -594,6 +594,23 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <source>&lt;p&gt;Keyboard layout support requires matching layouts on all computers. The following layouts from the other computer are not installed on this computer:&lt;/p&gt;&lt;p&gt;&lt;b&gt;%1&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please install them to enable support for these layouts.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&lt;html&gt;Every computer runs in auto mode; whichever one receives real keyboard or mouse input becomes the server and the others follow it.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto switch
+(the computer you touch becomes the server)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computers:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Comma separated names of the computers that auto switch between each other, including this one (e.g. desktop, laptop).&lt;br/&gt;Each name should resolve on your network (mDNS .local or DNS); use name=address to override.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
