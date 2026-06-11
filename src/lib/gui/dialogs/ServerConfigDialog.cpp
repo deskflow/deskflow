@@ -78,6 +78,7 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
   Settings::setValue(Settings::Server::EnableHeatbeat, m_enableHeartbeat);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
+  Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
 
   QDialog::accept();
 }
@@ -288,8 +289,8 @@ void ServerConfigDialog::listActionsSelectionChanged(const QItemSelection &selec
 
 void ServerConfigDialog::toggleSwitchDoubleTap(bool enable)
 {
+  m_enableSwitchDoubleTap = enable;
   ui->sbSwitchDoubleTap->setEnabled(enable);
-  serverConfig().haveSwitchDoubleTap(enable);
   onChange();
 }
 
@@ -391,10 +392,13 @@ void ServerConfigDialog::loadFromConfig()
   m_enableSwitchDelay = Settings::value(Settings::Server::EnableSwitchDelay).toBool();
   ui->cbSwitchDelay->setChecked(m_enableSwitchDelay);
   ui->sbSwitchDelay->setValue(serverConfig().switchDelay());
-  ui->cbSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
   ui->sbSwitchDelay->setEnabled(ui->cbSwitchDelay->isChecked());
-  ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
+
+  m_enableSwitchDoubleTap = Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool();
+  ui->cbSwitchDoubleTap->setChecked(m_enableSwitchDoubleTap);
   ui->sbSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
+  ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
+
   ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
 
   ui->widgetExternalConfigControls->setEnabled(ui->groupExternalConfig->isChecked());
@@ -507,11 +511,13 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 
 void ServerConfigDialog::onChange()
 {
-  bool isAppConfigDataEqual = m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
-                              m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
-                              m_protocol == Settings::networkProtocol() &&
-                              m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool() &&
-                              m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool();
+  bool isAppConfigDataEqual =
+      m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
+      m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
+      m_protocol == Settings::networkProtocol() &&
+      m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool() &&
+      m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool() &&
+      m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }
