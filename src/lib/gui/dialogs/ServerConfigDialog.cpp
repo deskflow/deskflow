@@ -35,7 +35,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 {
   ui->setupUi(this);
 
-  m_protocol = Settings::networkProtocol();
+  loadFromConfig();
+
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::reject);
 
@@ -68,40 +69,24 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->tabWidget->setCurrentIndex(0);
 
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
-  ui->lineConfigFile->setText(serverConfig().configFile());
 
-  const auto networkProtocol = Settings::networkProtocol();
-  ui->rbProtocolSynergy->setChecked(networkProtocol == NetworkProtocol::Synergy);
-  ui->rbProtocolBarrier->setChecked(networkProtocol == NetworkProtocol::Barrier);
   connect(ui->rbProtocolBarrier, &QRadioButton::toggled, this, &ServerConfigDialog::toggleProtocol);
 
-  ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
   connect(ui->cbHeartbeat, &QCheckBox::toggled, this, &ServerConfigDialog::toggleHeartbeat);
 
-  ui->sbHeartbeat->setEnabled(ui->cbHeartbeat->isChecked());
-  ui->sbHeartbeat->setValue(serverConfig().heartbeat());
   connect(ui->sbHeartbeat, QOverload<int>::of(&QSpinBox::valueChanged), this, &ServerConfigDialog::setHeartbeat);
-
-  ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
 
-  ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
   connect(ui->cbWin32KeepForeground, &QCheckBox::toggled, this, &ServerConfigDialog::toggleWin32Foreground);
 
-  ui->cbSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
   connect(ui->cbSwitchDelay, &QCheckBox::toggled, this, &ServerConfigDialog::toggleSwitchDelay);
 
-  ui->sbSwitchDelay->setEnabled(ui->cbSwitchDelay->isChecked());
-  ui->sbSwitchDelay->setValue(serverConfig().switchDelay());
   connect(ui->sbSwitchDelay, QOverload<int>::of(&QSpinBox::valueChanged), this, &ServerConfigDialog::setSwitchDelay);
 
-  ui->cbSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
   connect(ui->cbSwitchDoubleTap, &QCheckBox::toggled, this, &ServerConfigDialog::toggleSwitchDoubleTap);
 
-  ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
-  ui->sbSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
   connect(
       ui->sbSwitchDoubleTap, QOverload<int>::of(&QSpinBox::valueChanged), this, &ServerConfigDialog::setSwitchDoubleTap
   );
@@ -111,11 +96,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
 
-  ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
-  ui->widgetExternalConfigControls->setEnabled(ui->groupExternalConfig->isChecked());
-  ui->tabWidget->setTabEnabled(0, !ui->groupExternalConfig->isChecked());
-  ui->tabWidget->setTabEnabled(1, !ui->groupExternalConfig->isChecked());
-  ui->tabWidget->setTabEnabled(2, !ui->groupExternalConfig->isChecked());
   connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
 
   connect(
@@ -127,50 +107,19 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       &ServerConfigDialog::setClipboardLimit
   );
 
-  ui->cbCornerTopLeft->setChecked(serverConfig().switchCorner(static_cast<int>(TopLeft)));
   connect(ui->cbCornerTopLeft, &QCheckBox::toggled, this, &ServerConfigDialog::toggleCornerTopLeft);
 
-  ui->cbCornerTopRight->setChecked(serverConfig().switchCorner(static_cast<int>(TopRight)));
   connect(ui->cbCornerTopRight, &QCheckBox::toggled, this, &ServerConfigDialog::toggleCornerTopRight);
 
-  ui->cbCornerBottomLeft->setChecked(serverConfig().switchCorner(static_cast<int>(BottomLeft)));
   connect(ui->cbCornerBottomLeft, &QCheckBox::toggled, this, &ServerConfigDialog::toggleCornerBottomLeft);
 
-  ui->cbCornerBottomRight->setChecked(serverConfig().switchCorner(static_cast<int>(BottomRight)));
   connect(ui->cbCornerBottomRight, &QCheckBox::toggled, this, &ServerConfigDialog::toggleCornerBottomRight);
 
-  ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
-
-  ui->cbDefaultLockToScreenState->setChecked(serverConfig().defaultLockToScreenState());
   connect(
       ui->cbDefaultLockToScreenState, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDefaultLockToScreenState
   );
 
-  ui->cbDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
   connect(ui->cbDisableLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToScreen);
-
-  ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
-  auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
-  ui->sbClipboardSizeLimit->setValue(clipboardSharingSizeM);
-  ui->sbClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
-
-  for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
-    ui->listHotkeys->addItem(hotkey.text());
-
-  ui->screenSetupView->setModel(&m_screenSetupModel);
-
-  auto &screens = serverConfig().screens();
-  auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
-    return (screen.name() == serverConfig().getServerName());
-  });
-
-  if (server == screens.end()) {
-    Screen serverScreen(serverConfig().getServerName());
-    serverScreen.markAsServer();
-    model().screen(m_columns / 2, m_rows / 2) = serverScreen;
-  } else {
-    server->markAsServer();
-  }
 
   onChange();
 
@@ -495,6 +444,63 @@ bool ServerConfigDialog::browseConfigFile()
   }
 
   return false;
+}
+
+void ServerConfigDialog::loadFromConfig()
+{
+  m_protocol = Settings::networkProtocol();
+  ui->rbProtocolSynergy->setChecked(m_protocol == NetworkProtocol::Synergy);
+  ui->rbProtocolBarrier->setChecked(m_protocol == NetworkProtocol::Barrier);
+
+  ui->lineConfigFile->setText(serverConfig().configFile());
+  ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
+  ui->sbHeartbeat->setEnabled(ui->cbHeartbeat->isChecked());
+  ui->sbHeartbeat->setValue(serverConfig().heartbeat());
+  ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
+  ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
+  ui->cbSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
+  ui->sbSwitchDelay->setValue(serverConfig().switchDelay());
+  ui->cbSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
+  ui->sbSwitchDelay->setEnabled(ui->cbSwitchDelay->isChecked());
+  ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
+  ui->sbSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
+  ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
+
+  ui->widgetExternalConfigControls->setEnabled(ui->groupExternalConfig->isChecked());
+  toggleExternalConfig(ui->groupExternalConfig->isChecked());
+
+  ui->cbCornerTopLeft->setChecked(serverConfig().switchCorner(static_cast<int>(TopLeft)));
+  ui->cbCornerTopRight->setChecked(serverConfig().switchCorner(static_cast<int>(TopRight)));
+  ui->cbCornerBottomLeft->setChecked(serverConfig().switchCorner(static_cast<int>(BottomLeft)));
+  ui->cbCornerBottomRight->setChecked(serverConfig().switchCorner(static_cast<int>(BottomRight)));
+  ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
+  ui->cbDefaultLockToScreenState->setChecked(serverConfig().defaultLockToScreenState());
+
+  ui->cbDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
+  ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
+
+  auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
+  ui->sbClipboardSizeLimit->setValue(clipboardSharingSizeM);
+  ui->sbClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
+
+  ui->listHotkeys->clear();
+  for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
+    ui->listHotkeys->addItem(hotkey.text());
+
+  ui->screenSetupView->setModel(&m_screenSetupModel);
+
+  auto &screens = serverConfig().screens();
+  auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
+    return (screen.name() == serverConfig().getServerName());
+  });
+
+  if (server == screens.end()) {
+    Screen serverScreen(serverConfig().getServerName());
+    serverScreen.markAsServer();
+    model().screen(m_columns / 2, m_rows / 2) = serverScreen;
+  } else {
+    server->markAsServer();
+  }
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
