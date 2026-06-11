@@ -169,7 +169,8 @@ void ClientApp::scheduleClientRestart(double retryTime)
 
 void ClientApp::handleClientConnected()
 {
-  LOG_DEBUG("connected to server");
+  // INFO, not DEBUG: external supervisors key link health off this line.
+  LOG_INFO("connected to server");
   ipcSendConnectionState(deskflow::core::ConnectionState::Connected);
   // Reset server index on successful connection
   m_currentServerIndex = 0;
@@ -223,7 +224,8 @@ void ClientApp::handleClientRefused(const Event &e)
 void ClientApp::handleClientDisconnected()
 {
   m_retryCount = 0;
-  LOG_DEBUG("disconnected from server");
+  // INFO, not DEBUG: external supervisors key link health off this line.
+  LOG_INFO("disconnected from server");
   ipcSendConnectionState(deskflow::core::ConnectionState::Disconnected);
   if (!m_suspended) {
     scheduleClientRestart(retryTime());
