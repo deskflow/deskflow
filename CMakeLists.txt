@@ -203,3 +203,18 @@ install(
   DESTINATION ${CMAKE_INSTALL_LICENSE_DIR}
   RENAME LICENSE_EXCEPTION
 )
+
+if(BUILD_OSX_BUNDLE AND BUILD_INSTALLER)
+  # The license files above land in Contents/Resources after macdeployqt
+  # signed the bundle, breaking its resource seal; re-sign last.
+  if(APPLE_CODESIGN_DEV)
+    set(MAC_FINAL_CODESIGN_ID "${APPLE_CODESIGN_DEV}")
+  else()
+    set(MAC_FINAL_CODESIGN_ID "-")
+  endif()
+  install(CODE "execute_process(COMMAND
+    /usr/bin/codesign --force --deep
+    \"--sign=${MAC_FINAL_CODESIGN_ID}\"
+    \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
+  )")
+endif()
