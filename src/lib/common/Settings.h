@@ -105,6 +105,7 @@ public:
   struct Server
   {
     inline static const auto EnableHeatbeat = QStringLiteral("server/enableHeatbeat");
+    inline static const auto EnableSwitchDelay = QStringLiteral("server/enableSwitchDelay");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
     inline static const auto GridHeight = QStringLiteral("server/gridHeight");
@@ -245,6 +246,7 @@ private:
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
     , Settings::Server::EnableHeatbeat
+    , Settings::Server::EnableSwitchDelay
     , Settings::Server::ExternalConfig
     , Settings::Server::ExternalConfigFile
     , Settings::Server::GridHeight
@@ -263,15 +265,16 @@ private:
     , Settings::Gui::IgnoreMissingKeyboardLayouts
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
-    , Settings::Server::EnableHeatbeat
     , Settings::Core::EnableEnterCommand
     , Settings::Core::EnableExitCommand
     , Settings::Client::DynamicConnectionRetry
-    , Settings::Server::ExternalConfig
     , Settings::Client::InvertYScroll
     , Settings::Client::InvertXScroll
     , Settings::Log::ToFile
     , Settings::Log::GuiDebug
+    , Settings::Server::EnableHeatbeat
+    , Settings::Server::EnableSwitchDelay
+    , Settings::Server::ExternalConfig
   };
 
   // When checking the default values this list contains the ones that default to true.
@@ -297,6 +300,7 @@ private:
   // Contains settings removed from server-configuration file
   inline static const QStringList m_oldServerConfigKeys = {
       QStringLiteral("internalConfig/hasHeartbeat")
+    , QStringLiteral("internalConfig/hasSwitchDelay")
     , QStringLiteral("internalConfig/protocol")
     , QStringLiteral("internalConfig/numColumns")
     , QStringLiteral("internalConfig/numRows")
