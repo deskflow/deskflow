@@ -77,6 +77,7 @@ void ServerConfigDialog::accept()
   setOriginalServerConfig(serverConfig());
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
   Settings::setValue(Settings::Server::EnableHeatbeat, m_enableHeartbeat);
+  Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
 
   QDialog::accept();
 }
@@ -300,8 +301,8 @@ void ServerConfigDialog::setSwitchDoubleTap(int within)
 
 void ServerConfigDialog::toggleSwitchDelay(bool enable)
 {
+  m_enableSwitchDelay = enable;
   ui->sbSwitchDelay->setEnabled(enable);
-  serverConfig().haveSwitchDelay(enable);
   onChange();
 }
 
@@ -386,7 +387,9 @@ void ServerConfigDialog::loadFromConfig()
   ui->sbHeartbeat->setValue(serverConfig().heartbeat());
   ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
   ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
-  ui->cbSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
+
+  m_enableSwitchDelay = Settings::value(Settings::Server::EnableSwitchDelay).toBool();
+  ui->cbSwitchDelay->setChecked(m_enableSwitchDelay);
   ui->sbSwitchDelay->setValue(serverConfig().switchDelay());
   ui->cbSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
   ui->sbSwitchDelay->setEnabled(ui->cbSwitchDelay->isChecked());
@@ -507,7 +510,8 @@ void ServerConfigDialog::onChange()
   bool isAppConfigDataEqual = m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
                               m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
                               m_protocol == Settings::networkProtocol() &&
-                              m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool();
+                              m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool() &&
+                              m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }

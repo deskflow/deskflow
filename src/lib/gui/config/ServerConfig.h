@@ -52,10 +52,6 @@ public:
   {
     return m_Win32KeepForeground;
   }
-  bool hasSwitchDelay() const
-  {
-    return m_HasSwitchDelay;
-  }
   int switchDelay() const
   {
     return m_SwitchDelay;
@@ -142,10 +138,6 @@ private:
   {
     m_Win32KeepForeground = on;
   }
-  void haveSwitchDelay(bool on)
-  {
-    m_HasSwitchDelay = on;
-  }
   void setSwitchDelay(int val)
   {
     m_SwitchDelay = val;
@@ -197,7 +189,6 @@ private:
   int m_Heartbeat = 0;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
-  bool m_HasSwitchDelay = false;
   int m_SwitchDelay = 0;
   bool m_HasSwitchDoubleTap = false;
   int m_SwitchDoubleTap = 0;

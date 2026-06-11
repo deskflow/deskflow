@@ -56,7 +56,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
          m_Heartbeat == sc.m_Heartbeat &&                               //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
-         m_HasSwitchDelay == sc.m_HasSwitchDelay &&                     //
          m_SwitchDelay == sc.m_SwitchDelay &&                           //
          m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&             //
          m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&                   //
@@ -101,7 +100,6 @@ void ServerConfig::commit()
   settings().setValue("heartbeat", heartbeat());
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
-  settings().setValue("hasSwitchDelay", hasSwitchDelay());
   settings().setValue("switchDelay", switchDelay());
   settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
   settings().setValue("switchDoubleTap", switchDoubleTap());
@@ -151,7 +149,6 @@ void ServerConfig::recall()
   setHeartbeat(settings().value("heartbeat", 5000).toInt());
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
-  haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
   setSwitchDelay(settings().value("switchDelay", 250).toInt());
   haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
   setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
@@ -260,7 +257,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "\t"
             << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
 
-  if (config.hasSwitchDelay())
+  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool())
     outStream << "\t"
               << "switchDelay = " << config.switchDelay() << Qt::endl;
 
