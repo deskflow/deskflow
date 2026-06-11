@@ -240,5 +240,15 @@ enum class EventTypes : uint32_t
       MouserBridgeLineData (Server handles it on the event loop thread).
   */
   ServerMouserBridgeLine,
+
+  /** This event is sent when the running client observes the shared cursor
+      entering this screen (kMsgCEnter). Posted with no target (system
+      target); consumed by auto (coordinated) mode to harden the local-input
+      promotion threshold while forwarded motion is being injected here.
+  */
+  CoordinationScreenEntered,
+
+  /// Counterpart of CoordinationScreenEntered (kMsgCLeave).
+  CoordinationScreenLeft,
 };
 } // namespace deskflow

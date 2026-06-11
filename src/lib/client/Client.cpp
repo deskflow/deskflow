@@ -205,6 +205,7 @@ void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, b
   }
   m_screen->mouseMove(xAbs, yAbs);
   m_screen->enter(mask);
+  m_events->addEvent(Event(EventTypes::CoordinationScreenEntered));
 }
 
 bool Client::leave()
@@ -215,6 +216,7 @@ bool Client::leave()
   m_active = false;
 
   m_screen->leave();
+  m_events->addEvent(Event(EventTypes::CoordinationScreenLeft));
 
   if (m_enableClipboard) {
     // send clipboards that we own and that have changed
