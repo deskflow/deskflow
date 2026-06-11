@@ -56,10 +56,6 @@ public:
   {
     return m_SwitchDelay;
   }
-  bool hasSwitchDoubleTap() const
-  {
-    return m_HasSwitchDoubleTap;
-  }
   int switchDoubleTap() const
   {
     return m_SwitchDoubleTap;
@@ -142,10 +138,6 @@ private:
   {
     m_SwitchDelay = val;
   }
-  void haveSwitchDoubleTap(bool on)
-  {
-    m_HasSwitchDoubleTap = on;
-  }
   void setSwitchDoubleTap(int val)
   {
     m_SwitchDoubleTap = val;
@@ -190,7 +182,6 @@ private:
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
   int m_SwitchDelay = 0;
-  bool m_HasSwitchDoubleTap = false;
   int m_SwitchDoubleTap = 0;
   int m_SwitchCornerSize = 0;
   bool m_DefaultLockToScreenState = false;

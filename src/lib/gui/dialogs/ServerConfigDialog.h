@@ -106,6 +106,7 @@ private:
   NetworkProtocol m_protocol;
   bool m_enableHeartbeat;
   bool m_enableSwitchDelay;
+  bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
