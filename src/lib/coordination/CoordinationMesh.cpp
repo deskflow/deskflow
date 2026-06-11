@@ -205,8 +205,13 @@ void CoordinationMesh::stop()
 #endif
     }
   }
+  // Handlers are time-bounded (2s read timeout, 700ms probes, sockets
+  // shut down above), so this converges; returning early would let a
+  // detached handler touch *this after destruction.
   std::unique_lock lock{m_clientsMutex};
-  m_clientsDone.wait_for(lock, std::chrono::seconds(5), [this] { return m_activeClients.load() == 0; });
+  while (!m_clientsDone.wait_for(lock, std::chrono::seconds(5), [this] { return m_activeClients.load() == 0; })) {
+    LOG_WARN("coordination: still draining %d mesh handler(s) at shutdown", m_activeClients.load());
+  }
 }
 
 void CoordinationMesh::sendTo(const std::string &host, const std::string &line)

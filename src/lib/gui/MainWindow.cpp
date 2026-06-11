@@ -401,6 +401,10 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
 
 void MainWindow::startCore()
 {
+  // The core is a separate process reading the settings file; unsaved
+  // edits (peers, hostname) must land on disk before it launches.
+  saveSettings();
+
   // Save current IP state when server starts
   if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
     m_serverStartIPs = NetworkMonitor::validAddresses();

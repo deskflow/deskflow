@@ -83,7 +83,7 @@ public:
   {
     // IOHID objects are only safe to drive from the run loop they are
     // scheduled on; marshal the state change there.
-    CFRunLoopRef loop = m_runLoop;
+    CFRunLoopRef loop = m_runLoop.load();
     if (loop == nullptr) {
       m_pendingSeize = seized; // run loop not up yet; applied on entry
       return;
@@ -97,8 +97,8 @@ public:
   void stop() override
   {
     m_running = false;
-    if (m_runLoop != nullptr) {
-      CFRunLoopStop(m_runLoop);
+    if (CFRunLoopRef loop = m_runLoop.load(); loop != nullptr) {
+      CFRunLoopStop(loop);
     }
     if (m_thread.joinable()) {
       m_thread.join();
@@ -140,6 +140,9 @@ private:
 
   void onDeviceMatched(IOHIDDeviceRef device)
   {
+    if (m_devices.find(device) != m_devices.end()) {
+      return; // IOKit can re-announce a device it already matched
+    }
     const auto usagePage = static_cast<uint32_t>(numberProperty(device, CFSTR(kIOHIDPrimaryUsagePageKey)));
     if (usagePage < kVendorUsagePageFloor) {
       return; // never touch standard collections (pointer, keyboard)
@@ -219,7 +222,7 @@ private:
         grabbed.device, grabbed.reportBuffer.data(), static_cast<CFIndex>(grabbed.reportBuffer.size()), inputReport,
         this
     );
-    IOHIDDeviceScheduleWithRunLoop(grabbed.device, m_runLoop, kCFRunLoopDefaultMode);
+    IOHIDDeviceScheduleWithRunLoop(grabbed.device, m_runLoop.load(), kCFRunLoopDefaultMode);
     grabbed.open = true;
     LOG_INFO("hid passthrough: seized device %u (focus is remote)", grabbed.descriptor.deviceId);
   }
@@ -232,7 +235,7 @@ private:
     IOHIDDeviceRegisterInputReportCallback(
         grabbed.device, grabbed.reportBuffer.data(), static_cast<CFIndex>(grabbed.reportBuffer.size()), nullptr, this
     );
-    IOHIDDeviceUnscheduleFromRunLoop(grabbed.device, m_runLoop, kCFRunLoopDefaultMode);
+    IOHIDDeviceUnscheduleFromRunLoop(grabbed.device, m_runLoop.load(), kCFRunLoopDefaultMode);
     IOHIDDeviceClose(grabbed.device, kIOHIDOptionsTypeSeizeDevice);
     grabbed.open = false;
     LOG_INFO("hid passthrough: released device %u (focus is local)", grabbed.descriptor.deviceId);
@@ -286,23 +289,23 @@ private:
     IOHIDManagerRegisterDeviceRemovalCallback(m_manager, deviceRemoved, this);
 
     m_runLoop = CFRunLoopGetCurrent();
-    IOHIDManagerScheduleWithRunLoop(m_manager, m_runLoop, kCFRunLoopDefaultMode);
+    IOHIDManagerScheduleWithRunLoop(m_manager, m_runLoop.load(), kCFRunLoopDefaultMode);
     // Discovery-only open: devices are opened individually (with seize)
     // when focus goes remote.
     IOHIDManagerOpen(m_manager, kIOHIDManagerOptionNone);
     LOG_DEBUG("hid passthrough: grabber run loop started");
 
-    if (m_pendingSeize) {
-      applySeized(true);
-      m_pendingSeize = false;
-    }
-
     while (m_running) {
+      // A seize requested before m_runLoop was published lands here
+      // instead of as a performed block; drain it each pass.
+      if (m_pendingSeize.exchange(false)) {
+        applySeized(true);
+      }
       CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.25, true);
     }
 
     applySeized(false);
-    IOHIDManagerUnscheduleFromRunLoop(m_manager, m_runLoop, kCFRunLoopDefaultMode);
+    IOHIDManagerUnscheduleFromRunLoop(m_manager, m_runLoop.load(), kCFRunLoopDefaultMode);
     IOHIDManagerClose(m_manager, kIOHIDManagerOptionNone);
     CFRelease(m_manager);
     m_manager = nullptr;
@@ -317,8 +320,8 @@ private:
   std::thread m_thread;
   std::atomic<bool> m_running{false};
   std::atomic<bool> m_pendingSeize{false};
-  IOHIDManagerRef m_manager = nullptr;
-  CFRunLoopRef m_runLoop = nullptr;
+  IOHIDManagerRef m_manager = nullptr;               // run-loop thread only
+  std::atomic<CFRunLoopRef> m_runLoop{nullptr};      // written by run loop; read cross-thread
   std::map<IOHIDDeviceRef, GrabbedDevice> m_devices; // run-loop thread only
   bool m_seized = false;                             // run-loop thread only
   uint16_t m_nextDeviceId = 1;                       // run-loop thread only
