@@ -13,6 +13,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include <atomic>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -38,7 +39,7 @@ class MSWindowsWatchdog
 
 public:
   explicit MSWindowsWatchdog(bool foreground, FileLogOutputter &fileLogOutputter);
-  ~MSWindowsWatchdog() = default;
+  ~MSWindowsWatchdog();
 
   /**
    * @brief Start threads for main loop and and output loop.
@@ -51,7 +52,7 @@ public:
   void setProcessConfig(const std::string_view &command, bool elevate);
 
   /**
-   * @brief Stop the main loop and output loop threads.
+   * @brief Stop the watchdog threads, blocking until they have all exited.
    */
   void stop();
 
@@ -129,7 +130,7 @@ private:
   static void shutdownExistingProcesses();
 
 private:
-  bool m_running = true;
+  std::atomic<bool> m_running = true;
   std::unique_ptr<Thread> m_mainThread;
   std::unique_ptr<Thread> m_outputThread;
   std::unique_ptr<Thread> m_sasThread;
