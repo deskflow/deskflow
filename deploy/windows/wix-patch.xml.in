@@ -37,6 +37,38 @@
 
     <Binary Id="CustomDLL" SourceFile="@CMAKE_CURRENT_BINARY_DIR@/wix-custom.dll" />
 
+    <!--
+      Close any running Deskflow processes before file replacement so the
+      installer does not have to schedule files for replace-on-reboot.
+      Legacy names (deskflow-server.exe, deskflow-client.exe) are still
+      listed so upgrades from pre-1.24 installs (separate server/client
+      binaries) also complete without prompting for a reboot.
+    -->
+    <util:CloseApplication
+      Id="CloseDeskflowGui"
+      Target="deskflow.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowCore"
+      Target="deskflow-core.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowServer"
+      Target="deskflow-server.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowClient"
+      Target="deskflow-client.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+
     <UI>
        <Publish Dialog="ExitDialog"
            Control="Finish"
