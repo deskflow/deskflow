@@ -153,6 +153,9 @@ void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
   // discard old timer
   getEvents()->deleteTimer(timer);
   getEvents()->removeHandler(EventTypes::Timer, timer);
+  if (m_clientRestartTimer == timer) {
+    m_clientRestartTimer = nullptr;
+  }
 
   // reconnect
   startClient();
@@ -162,9 +165,26 @@ void ClientApp::scheduleClientRestart(double retryTime)
 {
   LOG_DEBUG("retry in %.0f seconds", retryTime);
   ipcSendToClient("retryIn", QString::number(retryTime, 'f', 0));
+  // Cancel any restart already pending so exactly one timer is ever live.
+  // This also guarantees the timer cannot outlive this ClientApp: in auto
+  // mode the EventQueue is shared across role epochs, so a leaked client
+  // restart timer would fire into the next (server) epoch and dispatch a
+  // handler bound to this destroyed ClientApp -- a use-after-free crash.
+  cancelClientRestart();
   // install a timer and handler to retry later
-  EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
-  getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
+  m_clientRestartTimer = getEvents()->newOneShotTimer(retryTime, nullptr);
+  getEvents()->addHandler(EventTypes::Timer, m_clientRestartTimer, [this, timer = m_clientRestartTimer](const auto &e) {
+    handleClientRestart(e, timer);
+  });
+}
+
+void ClientApp::cancelClientRestart()
+{
+  if (m_clientRestartTimer != nullptr) {
+    getEvents()->removeHandler(EventTypes::Timer, m_clientRestartTimer);
+    getEvents()->deleteTimer(m_clientRestartTimer);
+    m_clientRestartTimer = nullptr;
+  }
 }
 
 void ClientApp::handleClientConnected()
@@ -310,6 +330,9 @@ bool ClientApp::startClient()
 
 void ClientApp::stopClient()
 {
+  // Cancel any pending reconnect first: its handler is bound to this app,
+  // and in auto mode the EventQueue is reused by the next role epoch.
+  cancelClientRestart();
   closeClient(m_client);
   closeClientScreen(m_clientScreen);
   m_client = nullptr;

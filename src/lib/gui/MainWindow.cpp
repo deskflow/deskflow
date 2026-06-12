@@ -188,8 +188,14 @@ void MainWindow::restoreWindow()
     move(screenGeometry.center() - rect().center());
   }
 
-  if (!Settings::value(Settings::Gui::LogExpanded).toBool())
+  if (!Settings::value(Settings::Gui::LogExpanded).toBool()) {
+    // Floor the restored size to the layout's hint: a geometry saved before
+    // the layout grew taller (e.g. from an older build, or before auto mode
+    // was selected) must not clip the current mode's controls.
+    const auto hint = sizeHint();
+    resize(qMax(width(), hint.width()), qMax(height(), hint.height()));
     setFixedSize(size());
+  }
 }
 
 void MainWindow::setupControls()
@@ -586,6 +592,18 @@ void MainWindow::updateModeControls()
 
   if (isServer || isClient || isAuto)
     updateModeControlLabels();
+
+  // The set of visible mode controls just changed -- auto mode in
+  // particular reveals the peer list and add/remove row. The window is
+  // pinned to a fixed size, so re-fit it to the new layout or the freshly
+  // shown controls get clipped. Skipped during construction (not yet
+  // visible; restoreWindow() floors the initial size) and while the log
+  // dock is expanded (that path owns its own geometry).
+  if (isVisible() && !isMinimized() && !Settings::value(Settings::Gui::LogExpanded).toBool()) {
+    setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    adjustSize();
+    setFixedSize(size());
+  }
 }
 
 void MainWindow::updateModeControlLabels()

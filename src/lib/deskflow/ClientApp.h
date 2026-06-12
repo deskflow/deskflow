@@ -56,6 +56,7 @@ public:
   void closeClientScreen(deskflow::Screen *screen);
   void handleClientRestart(const Event &, EventQueueTimer *vtimer);
   void scheduleClientRestart(double retryTime);
+  void cancelClientRestart();
   void handleClientConnected();
   void handleClientFailed(const Event &e);
   void handleClientRefused(const Event &e);
@@ -92,6 +93,11 @@ private:
   bool m_suspended = false;
   Client *m_client = nullptr;
   deskflow::Screen *m_clientScreen = nullptr;
+  // The pending reconnect timer, owned by the shared EventQueue. Tracked so
+  // it can be cancelled when the client stops -- in auto mode the queue
+  // outlives this ClientApp across role epochs, and a leaked timer would
+  // fire its `this`-bound handler into the next epoch (use-after-free).
+  EventQueueTimer *m_clientRestartTimer = nullptr;
   QList<NetworkAddress> m_serverAddresses;
   size_t m_currentServerIndex = 0;
   size_t m_lastServerAddressIndex = 0;
