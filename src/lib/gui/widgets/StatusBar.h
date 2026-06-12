@@ -22,6 +22,8 @@ class StatusBar : public QStatusBar
 public:
   explicit StatusBar(QWidget *parent = nullptr);
   void setStatus(ConnectionState connectionState, ProcessState processState, bool isServer);
+  //! Override the status text directly (e.g. live auto-switch role).
+  void setMessage(const QString &text);
   void setServerClients(const QStringList &clients);
   void setSecurityIconVisible(bool visible);
   void setConnectionInterval(int newInterval);

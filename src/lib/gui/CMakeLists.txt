@@ -19,6 +19,8 @@ add_library(${target} STATIC
   Action.h
   Diagnostic.cpp
   Diagnostic.h
+  CoordinationStatus.cpp
+  CoordinationStatus.h
   FileTail.cpp
   FileTail.h
   Hotkey.cpp

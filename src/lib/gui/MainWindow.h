@@ -40,6 +40,10 @@ namespace deskflow::gui::ipc {
 class DaemonIpcClient;
 }
 
+namespace deskflow::gui {
+class CoordinationStatus;
+}
+
 class MainWindow : public QMainWindow
 {
   using ConnectionState = deskflow::core::ConnectionState;
@@ -189,6 +193,7 @@ private:
 
   LogDock *m_logDock;
   StatusBar *m_statusBar = nullptr;
+  deskflow::gui::CoordinationStatus *m_coordStatus = nullptr;
 
   // Window Menu
   QMenu *m_menuFile = nullptr;

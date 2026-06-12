@@ -58,6 +58,13 @@ StatusBar::StatusBar(QWidget *parent)
 }
 
 // clang-format off
+void StatusBar::setMessage(const QString &text)
+{
+  if (m_retryTimer->isActive())
+    m_retryTimer->stop();
+  m_lblStatus->setText(text);
+}
+
 void StatusBar::setStatus(ConnectionState connectionState, ProcessState processState, bool isServer)
 {
   if (m_retryTimer->isActive())

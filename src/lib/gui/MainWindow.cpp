@@ -10,6 +10,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "CoordinationStatus.h"
+
 #include "Diagnostic.h"
 #include "StyleUtils.h"
 
@@ -253,6 +255,25 @@ void MainWindow::connectSlots()
       &m_coreProcess, &CoreProcess::daemonIpcClientConnectionFailed, this, &MainWindow::daemonIpcClientConnectionFailed
   );
   connect(&m_coreProcess, &CoreProcess::securityLevelChanged, m_statusBar, &StatusBar::setSecurityLevel);
+
+  // Live auto-switch status: poll the local coordination mesh and show the
+  // real fleet role, whether the core was started here or by a background
+  // agent. Falls back to the normal process status when nothing answers.
+  m_coordStatus = new deskflow::gui::CoordinationStatus(this);
+  connect(m_coordStatus, &deskflow::gui::CoordinationStatus::online, this, [this](const QString &role, const QString &server) {
+    QString text;
+    if (role == QLatin1String("server"))
+      text = tr("Auto switch: this computer is in control");
+    else if (role == QLatin1String("client"))
+      text = tr("Auto switch: following %1").arg(server.isEmpty() ? tr("the active computer") : server);
+    else
+      text = tr("Auto switch: finding the active computer…");
+    m_statusBar->setMessage(text);
+    if (m_trayIcon)
+      m_trayIcon->setToolTip(QStringLiteral("%1 — %2").arg(kAppName, text));
+  });
+  connect(m_coordStatus, &deskflow::gui::CoordinationStatus::offline, this, &MainWindow::updateStatus);
+  m_coordStatus->start(static_cast<quint16>(Settings::value(Settings::Coordination::Port).toInt()));
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
