@@ -144,6 +144,11 @@ private:
 
   bool canRunCore() const;
 
+  //! Comma-joined names of the auto-switch computer list.
+  QString computerListText() const;
+  //! Persist the computer list to coordination/peers and refresh run state.
+  void saveComputerList();
+
   /**
    * @brief trustedFingerprintDatabase get the FingerprintDatabase for the trusted clients or trusted servers.
    * @return The path to the trusted fingerprint file

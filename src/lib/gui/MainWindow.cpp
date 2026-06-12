@@ -296,7 +296,23 @@ void MainWindow::connectSlots()
   connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeAuto, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
-  connect(ui->linePeers, &QLineEdit::textChanged, this, [this] { toggleCanRunCore(canRunCore()); });
+
+  // Auto-mode computer list: add by name, remove the selection, persist to
+  // coordination/peers on every change.
+  const auto addComputer = [this] {
+    const auto name = ui->lineAddComputer->text().trimmed();
+    if (name.isEmpty())
+      return;
+    ui->listComputers->addItem(name);
+    ui->lineAddComputer->clear();
+    saveComputerList();
+  };
+  connect(ui->btnAddComputer, &QPushButton::clicked, this, addComputer);
+  connect(ui->lineAddComputer, &QLineEdit::returnPressed, this, addComputer);
+  connect(ui->btnRemoveComputer, &QPushButton::clicked, this, [this] {
+    delete ui->listComputers->takeItem(ui->listComputers->currentRow());
+    saveComputerList();
+  });
 
   connect(m_logDock->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
 
@@ -666,7 +682,7 @@ void MainWindow::open()
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
       return;
-    if (ui->rbModeAuto->isChecked() && ui->linePeers->text().isEmpty())
+    if (ui->rbModeAuto->isChecked() && ui->listComputers->count() == 0)
       return;
     startCore();
   }
@@ -723,10 +739,14 @@ void MainWindow::applyConfig()
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
     ui->lineHostname->setText(host);
 
-  // INI commas may have turned the peers value into a QStringList.
-  if (const auto peers = Settings::value(Settings::Coordination::Peers).toStringList().join(QStringLiteral(", "));
-      !peers.isEmpty())
-    ui->linePeers->setText(peers);
+  // Populate the computer list from coordination/peers (a comma list that
+  // INI storage may have turned into a QStringList).
+  ui->listComputers->clear();
+  const auto peers = Settings::value(Settings::Coordination::Peers).toStringList().join(QLatin1Char(','));
+  for (const auto &entry : peers.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
+    if (const auto name = entry.trimmed(); !name.isEmpty())
+      ui->listComputers->addItem(name);
+  }
 
   updateLocalFingerprint();
   setTrayIcon();
@@ -750,8 +770,7 @@ void MainWindow::saveSettings() const
   }
   if (!ui->lineHostname->text().isEmpty())
     Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
-  if (!ui->linePeers->text().isEmpty())
-    Settings::setValue(Settings::Coordination::Peers, ui->linePeers->text());
+  Settings::setValue(Settings::Coordination::Peers, computerListText());
   Settings::save();
 }
 
@@ -1305,6 +1324,22 @@ void MainWindow::updateTimeoutDelay(int newDelay)
   m_statusBar->setConnectionInterval(newDelay);
 }
 
+QString MainWindow::computerListText() const
+{
+  QStringList names;
+  names.reserve(ui->listComputers->count());
+  for (int i = 0; i < ui->listComputers->count(); ++i)
+    names << ui->listComputers->item(i)->text();
+  return names.join(QStringLiteral(", "));
+}
+
+void MainWindow::saveComputerList()
+{
+  Settings::setValue(Settings::Coordination::Peers, computerListText());
+  Settings::save();
+  toggleCanRunCore(canRunCore());
+}
+
 bool MainWindow::canRunCore() const
 {
   const auto mode = m_coreProcess.mode();
@@ -1314,6 +1349,6 @@ bool MainWindow::canRunCore() const
   if (isClient)
     return !ui->lineHostname->text().isEmpty();
   if (isAuto)
-    return !ui->linePeers->text().isEmpty();
+    return ui->listComputers->count() > 0;
   return isServer;
 }

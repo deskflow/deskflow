@@ -445,7 +445,7 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayoutAuto">
+            <layout class="QVBoxLayout" name="verticalLayoutAuto">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -461,16 +461,65 @@
              <item>
               <widget class="QLabel" name="lblPeers">
                <property name="text">
-                <string>Computers:</string>
+                <string>Computers that auto-switch (include this one):</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="linePeers">
+              <widget class="QListWidget" name="listComputers">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>110</height>
+                </size>
+               </property>
                <property name="toolTip">
-                <string>&lt;html&gt;Comma separated names of the computers that auto switch between each other, including this one (e.g. desktop, laptop).&lt;br/&gt;Each name should resolve on your network (mDNS .local or DNS); use name=address to override.&lt;/html&gt;</string>
+                <string>&lt;html&gt;The computers that hand control to whichever one you touch. Add each by name (e.g. desktop, laptop); names should resolve on your network (mDNS .local or DNS). Use name=address to override.&lt;/html&gt;</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayoutAddComputer">
+               <item>
+                <widget class="QLineEdit" name="lineAddComputer">
+                 <property name="placeholderText">
+                  <string>Add a computer by name…</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnAddComputer">
+                 <property name="maximumSize">
+                  <size>
+                   <width>36</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Add this computer to the list</string>
+                 </property>
+                 <property name="text">
+                  <string>+</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnRemoveComputer">
+                 <property name="maximumSize">
+                  <size>
+                   <width>36</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Remove the selected computer</string>
+                 </property>
+                 <property name="text">
+                  <string>−</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
