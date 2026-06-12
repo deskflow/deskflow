@@ -135,6 +135,8 @@ void SettingsDialog::initConnections() const
   connect(ui->groupLogToFile, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupGestureSharing, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->lineGestureSecret, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineLogFilename, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineTlsCertPath, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbRunEnterCommand, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
@@ -247,6 +249,16 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Core::ScreenEnterCommand, ui->lineCommandEnter->text());
   Settings::setValue(Settings::Core::ScreenExitCommand, ui->lineCommandExit->text());
 
+  // Gesture sharing (Mouser bridge). One UI toggle enables both roles --
+  // relaying when this machine is the server and receiving when it is the
+  // focused client -- and the one secret feeds both loopback hops.
+  const bool gestureShare = ui->groupGestureSharing->isChecked();
+  const auto gestureSecret = ui->lineGestureSecret->text();
+  Settings::setValue(Settings::Server::MouserBridgeEnabled, gestureShare);
+  Settings::setValue(Settings::Client::MouserEnabled, gestureShare);
+  Settings::setValue(Settings::Server::MouserBridgeToken, gestureSecret);
+  Settings::setValue(Settings::Client::MouserToken, gestureSecret);
+
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
     mode = Settings::ProcessMode::Service;
@@ -274,6 +286,9 @@ void SettingsDialog::loadFromConfig()
   ui->cbRunExitCommand->setChecked(Settings::value(Settings::Core::EnableExitCommand).toBool());
   ui->lineCommandEnter->setText(Settings::value(Settings::Core::ScreenEnterCommand).toString());
   ui->lineCommandExit->setText(Settings::value(Settings::Core::ScreenExitCommand).toString());
+
+  ui->groupGestureSharing->setChecked(Settings::value(Settings::Server::MouserBridgeEnabled).toBool());
+  ui->lineGestureSecret->setText(Settings::value(Settings::Server::MouserBridgeToken).toString());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);

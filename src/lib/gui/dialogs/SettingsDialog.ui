@@ -858,6 +858,69 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabSharing">
+      <attribute name="title">
+       <string>S&amp;haring</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutSharing">
+       <item>
+        <widget class="QGroupBox" name="groupGestureSharing">
+         <property name="title">
+          <string>Share device controls (gestures)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutGesture">
+          <item>
+           <widget class="QLabel" name="lblGestureHelp">
+            <property name="text">
+             <string>Forwards your Logitech mouse's extra controls (the MX Master Sense panel swipes, thumb button, gestures) to whichever computer the cursor is currently on. Requires the Mouser app running on each computer.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayoutSecret">
+            <item>
+             <widget class="QLabel" name="lblGestureSecret">
+              <property name="text">
+               <string>Shared secret</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineGestureSecret">
+              <property name="toolTip">
+               <string>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine's Mouser settings.&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacerSharing">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
