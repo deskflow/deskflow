@@ -921,6 +921,135 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabLoginBridge">
+      <attribute name="title">
+       <string>Login &amp;Window</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutLoginBridge">
+       <item>
+        <widget class="QGroupBox" name="groupLoginBridge">
+         <property name="title">
+          <string>Control this computer at the login window</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutLoginBridgeGroup">
+          <item>
+           <widget class="QLabel" name="lblLoginBridgeHelp">
+            <property name="text">
+             <string>macOS blocks normal input injection at the login window. The bundled bridge replays the controlling computer's input through the Karabiner virtual HID driver, so you can unlock this Mac from another machine. Runs only while the login window is showing; takes effect after the next logout or restart.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayoutBridgeScale">
+            <item>
+             <widget class="QLabel" name="lblBridgeScale">
+              <property name="text">
+               <string>Pointer sensitivity</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="sbBridgeScale">
+              <property name="toolTip">
+               <string>Counts-per-point multiplier for relayed motion. 4.0 reaches the whole screen 1:1 on a 2x Retina display; lower is gentler but reaches less.</string>
+              </property>
+              <property name="minimum">
+               <double>0.500000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>16.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.500000000000000</double>
+              </property>
+              <property name="value">
+               <double>4.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacerBridgeScale">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayoutBridgeStatus">
+         <item>
+          <widget class="QLabel" name="lblBridgeStatusCaption">
+           <property name="text">
+            <string>Driver status:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblBridgeStatus">
+           <property name="text">
+            <string>Unknown</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerBridgeStatus">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnGetKarabinerDriver">
+           <property name="toolTip">
+            <string>Opens the Karabiner DriverKit VirtualHIDDevice releases page. Install the package and approve the system extension, then re-open this dialog.</string>
+           </property>
+           <property name="text">
+            <string>Get Karabiner Driver...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacerLoginBridge">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>

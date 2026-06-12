@@ -58,6 +58,11 @@ public:
     inline static const auto Port = QStringLiteral("coordination/port");
     inline static const auto Peers = QStringLiteral("coordination/peers");
     inline static const auto Token = QStringLiteral("coordination/token");
+    // macOS login-window bridge (Karabiner DriverKit virtual HID): lets the
+    // elected server drive this machine at the login window, where
+    // CGEventPost is blocked. Managed from the GUI settings dialog.
+    inline static const auto LoginBridgeEnabled = QStringLiteral("coordination/loginBridgeEnabled");
+    inline static const auto LoginBridgeScale = QStringLiteral("coordination/loginBridgeScale");
   };
   struct Core
   {

@@ -210,6 +210,11 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Coordination::Port)
     return 24851;
 
+  // Login-window bridge sensitivity: counts-per-point multiplier. 4.0 is the
+  // calibrated full-reach 1:1 on a 2x Retina panel.
+  if (key == Coordination::LoginBridgeScale)
+    return 4.0;
+
   if (key == Core::ProcessMode) {
 #ifdef Q_OS_WIN
     if (!Settings::isPortableMode())

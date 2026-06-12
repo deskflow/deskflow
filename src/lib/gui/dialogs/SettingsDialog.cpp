@@ -18,9 +18,15 @@
 #include "gui/core/NetworkMonitor.h"
 
 #include <QComboBox>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QUrl>
+
+#ifdef Q_OS_MAC
+#include "gui/LoginBridgeManager.h"
+#endif
 
 using namespace deskflow::gui;
 
@@ -53,6 +59,14 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
   ui->tabWidget->setCurrentIndex(0);
+
+#ifdef Q_OS_MAC
+  ui->lblBridgeStatus->setText(LoginBridgeManager::statusText());
+  ui->btnGetKarabinerDriver->setVisible(!LoginBridgeManager::driverInstalled());
+#else
+  // The login-window bridge is a macOS-only concept (Karabiner DriverKit).
+  ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabLoginBridge));
+#endif
 
   // Populate the list of IP addresses
   const auto validAddresses = NetworkMonitor::validAddresses();
@@ -137,6 +151,13 @@ void SettingsDialog::initConnections() const
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupGestureSharing, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineGestureSecret, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupLoginBridge, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->sbBridgeScale, &QDoubleSpinBox::valueChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+#ifdef Q_OS_MAC
+  connect(ui->btnGetKarabinerDriver, &QPushButton::clicked, this, [] {
+    QDesktopServices::openUrl(QUrl(deskflow::gui::LoginBridgeManager::driverDownloadUrl()));
+  });
+#endif
   connect(ui->lineLogFilename, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineTlsCertPath, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->cbRunEnterCommand, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
@@ -259,6 +280,29 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Server::MouserBridgeToken, gestureSecret);
   Settings::setValue(Settings::Client::MouserToken, gestureSecret);
 
+#ifdef Q_OS_MAC
+  // Login-window bridge: the installed LaunchAgent (not the setting) is the
+  // source of truth, so only prompt for admin rights when the system state
+  // actually has to change. Re-apply on a scale change too -- the value is
+  // baked into the agent plist.
+  using deskflow::gui::LoginBridgeManager;
+  const bool bridgeWanted = ui->groupLoginBridge->isChecked();
+  const double bridgeScale = ui->sbBridgeScale->value();
+  const bool bridgeScaleChanged =
+      !qFuzzyCompare(bridgeScale, Settings::value(Settings::Coordination::LoginBridgeScale).toDouble());
+  if (bridgeWanted != LoginBridgeManager::agentInstalled() || (bridgeWanted && bridgeScaleChanged)) {
+    QString bridgeError;
+    if (!LoginBridgeManager::apply(bridgeWanted, bridgeScale, &bridgeError)) {
+      QMessageBox::warning(
+          this, tr("Login Window Bridge"), tr("Could not update the login-window bridge: %1").arg(bridgeError)
+      );
+      ui->groupLoginBridge->setChecked(LoginBridgeManager::agentInstalled());
+    }
+  }
+  Settings::setValue(Settings::Coordination::LoginBridgeEnabled, ui->groupLoginBridge->isChecked());
+  Settings::setValue(Settings::Coordination::LoginBridgeScale, bridgeScale);
+#endif
+
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
     mode = Settings::ProcessMode::Service;
@@ -289,6 +333,9 @@ void SettingsDialog::loadFromConfig()
 
   ui->groupGestureSharing->setChecked(Settings::value(Settings::Server::MouserBridgeEnabled).toBool());
   ui->lineGestureSecret->setText(Settings::value(Settings::Server::MouserBridgeToken).toString());
+
+  ui->groupLoginBridge->setChecked(Settings::value(Settings::Coordination::LoginBridgeEnabled).toBool());
+  ui->sbBridgeScale->setValue(Settings::value(Settings::Coordination::LoginBridgeScale).toDouble());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
@@ -526,6 +573,9 @@ void SettingsDialog::resetToDefault()
 
   const auto processMode = Settings::defaultValue(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
+
+  ui->groupLoginBridge->setChecked(false);
+  ui->sbBridgeScale->setValue(Settings::defaultValue(Settings::Coordination::LoginBridgeScale).toDouble());
 
   if (!deskflow::platform::isWindows())
     ui->groupService->setVisible(false);

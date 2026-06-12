@@ -10,6 +10,8 @@ if(APPLE)
   set (platform_sources
     OSXHelpers.h
     OSXHelpers.mm
+    LoginBridgeManager.cpp
+    LoginBridgeManager.h
   )
 endif()
 
