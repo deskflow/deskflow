@@ -144,6 +144,9 @@ private:
 
   bool canRunCore() const;
 
+  //! The mode currently chosen in the mode dropdown.
+  Settings::CoreMode selectedMode() const;
+
   //! Comma-joined names of the auto-switch computer list.
   QString computerListText() const;
   //! Persist the computer list to coordination/peers and refresh run state.

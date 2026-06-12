@@ -169,55 +169,37 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QRadioButton" name="rbModeServer">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>Use this computer's keyboard and mouse — make this computer the server that others connect to.</string>
-            </property>
+           <widget class="QLabel" name="lblMode">
             <property name="text">
-             <string>Server
-(this computer)</string>
+             <string>This computer is the:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="rbModeClient">
+           <widget class="QComboBox" name="comboMode">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>Use another computer's mouse and keyboard — make this computer a client of a server.</string>
-            </property>
-            <property name="text">
-             <string>Client
-(another computer)</string>
+             <string>&lt;html&gt;&lt;b&gt;Server&lt;/b&gt; — this computer's keyboard and mouse drive the others.&lt;br/&gt;&lt;b&gt;Client&lt;/b&gt; — this computer is driven by another.&lt;br/&gt;&lt;b&gt;Auto switch&lt;/b&gt; — whichever computer you touch takes over automatically.&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="rbModeAuto">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <spacer name="horizontalSpacerMode">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;Every computer runs in auto mode; whichever one you touch (real keyboard or mouse input) becomes the server and the others follow it.&lt;/html&gt;</string>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>0</height>
+             </size>
             </property>
-            <property name="text">
-             <string>Auto switch
-(touch to take over)</string>
-            </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </widget>

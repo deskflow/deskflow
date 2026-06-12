@@ -209,18 +209,19 @@ void MainWindow::setupControls()
   ui->clientOptions->setVisible(false);
   ui->autoOptions->setVisible(false);
 
+  ui->comboMode->clear();
+  ui->comboMode->addItem(tr("Server (this computer)"), QVariant::fromValue(Settings::CoreMode::Server));
+  ui->comboMode->addItem(tr("Client (another computer)"), QVariant::fromValue(Settings::CoreMode::Client));
+  ui->comboMode->addItem(tr("Auto switch (touch to take over)"), QVariant::fromValue(Settings::CoreMode::Auto));
   const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
-  ui->rbModeClient->setChecked(coreMode == Settings::CoreMode::Client);
-  ui->rbModeServer->setChecked(coreMode == Settings::CoreMode::Server);
-  ui->rbModeAuto->setChecked(coreMode == Settings::CoreMode::Auto);
+  if (const int idx = ui->comboMode->findData(QVariant::fromValue(coreMode)); idx >= 0)
+    ui->comboMode->setCurrentIndex(idx);
 
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
   ui->lineEditName->installEventFilter(this);
 
   if (deskflow::platform::isMac()) {
-    ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, false);
-    ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->btnSaveServerConfig->setFixedWidth(ui->btnSaveServerConfig->height());
   } else {
     ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
@@ -293,9 +294,7 @@ void MainWindow::connectSlots()
   connect(ui->btnConfigureClient, &QPushButton::clicked, this, [this] { showConfigureClient(); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
 
-  connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
-  connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
-  connect(ui->rbModeAuto, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
+  connect(ui->comboMode, &QComboBox::currentIndexChanged, this, [this](int) { coreModeToggled(true); });
 
   // Auto-mode computer list: add by name, remove the selection, persist to
   // coordination/peers on every change.
@@ -518,20 +517,11 @@ void MainWindow::showMyFingerprint()
 
 void MainWindow::coreModeToggled(bool checked)
 {
-  // this method is called when rbClient or rbServer toggles
-  // with both being in the same group one must be turned on if the other is turned off
-  // only react to toggle on to avoid calling everything twice when the user switches modes
-  if (!checked)
-    return;
+  // Driven by the mode dropdown; (the bool is unused, kept for the slot
+  // signature). Every dropdown change is a real mode change.
+  Q_UNUSED(checked)
 
-  Settings::CoreMode mode = Settings::CoreMode::None;
-
-  if (ui->rbModeServer->isChecked())
-    mode = Settings::CoreMode::Server;
-  if (ui->rbModeClient->isChecked())
-    mode = Settings::CoreMode::Client;
-  if (ui->rbModeAuto->isChecked())
-    mode = Settings::CoreMode::Auto;
+  const Settings::CoreMode mode = selectedMode();
 
   qDebug() << QStringLiteral("change mode to: %1").arg(QVariant::fromValue(mode).toString());
 
@@ -680,9 +670,9 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (selectedMode() == Settings::CoreMode::Client && ui->lineHostname->text().isEmpty())
       return;
-    if (ui->rbModeAuto->isChecked() && ui->listComputers->count() == 0)
+    if (selectedMode() == Settings::CoreMode::Auto && ui->listComputers->count() == 0)
       return;
     startCore();
   }
@@ -761,13 +751,8 @@ void MainWindow::applyConfig()
 
 void MainWindow::saveSettings() const
 {
-  if (ui->rbModeClient->isChecked()) {
-    Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Client);
-  } else if (ui->rbModeServer->isChecked()) {
-    Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
-  } else if (ui->rbModeAuto->isChecked()) {
-    Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Auto);
-  }
+  if (const auto mode = selectedMode(); mode != Settings::CoreMode::None)
+    Settings::setValue(Settings::Core::CoreMode, mode);
   if (!ui->lineHostname->text().isEmpty())
     Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
   Settings::setValue(Settings::Coordination::Peers, computerListText());
@@ -1186,7 +1171,7 @@ void MainWindow::setHostName()
   if (text == screenName)
     return;
 
-  const bool isServer = ui->rbModeServer->isChecked();
+  const bool isServer = selectedMode() == Settings::CoreMode::Server;
   bool existingScreen = false;
   if (isServer)
     existingScreen = serverConfig().screenExists(text);
@@ -1264,7 +1249,7 @@ void MainWindow::toggleCanRunCore(bool enableButtons)
 void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 {
   m_coreProcess.setAddress(newRemoteHost);
-  toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());
+  toggleCanRunCore(!newRemoteHost.isEmpty() && selectedMode() == Settings::CoreMode::Client);
   if (newRemoteHost.isEmpty()) {
     Settings::setValue(Settings::Client::RemoteHost);
   } else {
@@ -1322,6 +1307,12 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
 void MainWindow::updateTimeoutDelay(int newDelay)
 {
   m_statusBar->setConnectionInterval(newDelay);
+}
+
+Settings::CoreMode MainWindow::selectedMode() const
+{
+  const auto data = ui->comboMode->currentData();
+  return data.isValid() ? data.value<Settings::CoreMode>() : Settings::CoreMode::None;
 }
 
 QString MainWindow::computerListText() const
