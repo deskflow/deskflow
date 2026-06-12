@@ -59,7 +59,9 @@ using namespace deskflow::gui;
 MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
       m_coreProcess(m_serverConfig),
+#ifndef Q_OS_MACOS
       m_trayIcon{new QSystemTrayIcon(this)},
+#endif
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
       m_logDock{new LogDock(this)},
@@ -160,6 +162,10 @@ MainWindow::MainWindow()
 }
 MainWindow::~MainWindow()
 {
+#ifdef Q_OS_MACOS
+  cleanupMacOSStatusItem();
+#endif
+
   // Stop network monitoring
   if (m_networkMonitor) {
     m_networkMonitor->stopMonitoring();
@@ -264,9 +270,9 @@ void MainWindow::connectSlots()
   connect(m_actionRestartCore, &QAction::triggered, this, &MainWindow::resetCore);
   connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
 
-  // Mac os tray will only show a menu
-  if (!deskflow::platform::isMac())
-    connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
+#ifndef Q_OS_MACOS
+  connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
+#endif
 
   connect(&m_coreProcess, &CoreProcess::connectedClientsChanged, this, &MainWindow::serverClientsChanged);
   connect(&m_coreProcess, &CoreProcess::unrecognisedClient, this, &MainWindow::handleUnrecognisedClient);
@@ -366,12 +372,14 @@ void MainWindow::serverConfigSaving()
   m_serverConfig.commit();
 }
 
+#ifndef Q_OS_MACOS
 void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
   if (reason != QSystemTrayIcon::Trigger)
     return;
   isVisible() ? hide() : showAndActivate();
 }
+#endif
 
 void MainWindow::coreProcessError(CoreProcess::Error error)
 {
@@ -428,7 +436,9 @@ void MainWindow::clearSettings()
   disconnect(&m_coreProcess, nullptr, this, nullptr);
   disconnect(&m_versionChecker, nullptr, this, nullptr);
   disconnect(m_guiDupeChecker, nullptr, this, nullptr);
+#ifndef Q_OS_MACOS
   disconnect(m_trayIcon, nullptr, this, nullptr);
+#endif
   disconnect(m_logDock->toggleViewAction(), nullptr, this, nullptr);
 
   m_coreProcess.stop();
@@ -689,10 +699,16 @@ void MainWindow::setupTrayIcon()
   );
   trayMenu->insertSeparator(m_actionMinimize);
   trayMenu->insertSeparator(m_actionTrayQuit);
+#ifdef Q_OS_MACOS
+  setupMacOSStatusItem(trayMenu);
+#else
   m_trayIcon->setContextMenu(trayMenu);
+#endif
 
   setTrayIcon();
+#ifndef Q_OS_MACOS
   m_trayIcon->show();
+#endif
 }
 
 void MainWindow::applyConfig()
@@ -732,13 +748,22 @@ void MainWindow::saveSettings() const
 void MainWindow::setTrayIcon()
 {
   static const auto fallbackPath = QStringLiteral(":/icons/%1-%2/apps/64/%3");
+#ifdef Q_OS_MACOS
+  const auto applyTrayIcon = [](const QIcon &icon) {
+    setMacOSStatusItemIcon(icon);
+  };
+#else
+  const auto applyTrayIcon = [this](const QIcon &icon) {
+    m_trayIcon->setIcon(icon);
+  };
+#endif
 
   QString themeIcon = kRevFqdnName;
   if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
     if (deskflow::platform::isMac())
-      m_trayIcon->setIcon(QIcon::fromTheme(themeIcon));
+      applyTrayIcon(QIcon::fromTheme(themeIcon));
     else
-      m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
+      applyTrayIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
     return;
   }
 
@@ -751,13 +776,13 @@ void MainWindow::setTrayIcon()
     );
     const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
                                                                                              : QStringLiteral("dark");
-    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
+    applyTrayIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
     return;
   }
 
   auto icon = QIcon::fromTheme(themeIcon, QIcon(fallbackPath.arg(kAppId, iconMode(), themeIcon)));
   icon.setIsMask(true);
-  m_trayIcon->setIcon(icon);
+  applyTrayIcon(icon);
 }
 
 void MainWindow::handleLogLine(const QString &line)

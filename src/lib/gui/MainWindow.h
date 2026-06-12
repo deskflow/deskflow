@@ -12,7 +12,6 @@
 #include <QMainWindow>
 #include <QProcess>
 #include <QRegularExpression>
-#include <QSystemTrayIcon>
 
 #include "VersionChecker.h"
 #include "config/ServerConfig.h"
@@ -22,6 +21,8 @@
 
 #ifdef Q_OS_MACOS
 #include "gui/OSXHelpers.h"
+#else
+#include <QSystemTrayIcon>
 #endif
 
 class QAction;
@@ -90,7 +91,9 @@ private:
   void coreConnectionStateChanged(ConnectionState state);
   void coreProcessStateChanged(ProcessState state);
 
+#ifndef Q_OS_MACOS
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+#endif
   void serverConnectionConfigureClient(const QString &clientName);
 
   void clearSettings();
@@ -175,7 +178,9 @@ private:
   QSize m_expandedSize = QSize();
   QStringList m_checkedClients;
   QStringList m_checkedServers;
+#ifndef Q_OS_MACOS
   QSystemTrayIcon *m_trayIcon = nullptr;
+#endif
   QLocalServer *m_guiDupeChecker = nullptr;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 

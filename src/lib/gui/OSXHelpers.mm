@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -16,8 +17,211 @@
 
 #import <QtGlobal>
 
+#include <QAction>
+#include <QIcon>
+#include <QImage>
+#include <QMenu>
+#include <QPixmap>
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+namespace {
+QString statusItemTitle(const QString &text)
+{
+  QString title;
+  title.reserve(text.size());
+
+  for (auto i = 0; i < text.size(); ++i) {
+    if (text.at(i) != u'&') {
+      title.append(text.at(i));
+      continue;
+    }
+
+    if ((i + 1) < text.size() && text.at(i + 1) == u'&') {
+      title.append(u'&');
+      ++i;
+    }
+  }
+
+  return title;
+}
+} // namespace
+
+@interface DeskflowStatusItemActionTarget : NSObject {
+  QAction *m_action;
+}
+- (instancetype)initWithAction:(QAction *)action;
+- (void)trigger:(id)sender;
+@end
+
+@implementation DeskflowStatusItemActionTarget
+
+- (instancetype)initWithAction:(QAction *)action
+{
+  self = [super init];
+  if (self != nil) {
+    m_action = action;
+  }
+  return self;
+}
+
+- (void)trigger:(id)sender
+{
+  Q_UNUSED(sender);
+  if (m_action != nullptr && m_action->isEnabled()) {
+    m_action->trigger();
+  }
+}
+
+@end
+
+@interface DeskflowStatusItemController : NSObject <NSMenuDelegate> {
+  NSStatusItem *m_statusItem;
+  NSMenu *m_menu;
+  QMenu *m_qtMenu;
+  NSMutableArray *m_targets;
+}
+- (void)setQtMenu:(QMenu *)menu;
+- (void)setIcon:(const QIcon &)icon;
+- (void)cleanup;
+@end
+
+@implementation DeskflowStatusItemController
+
+- (instancetype)init
+{
+  self = [super init];
+  if (self != nil) {
+    m_statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
+    m_menu = [[NSMenu alloc] initWithTitle:@"Deskflow"];
+    [m_menu setDelegate:self];
+    [m_statusItem setMenu:m_menu];
+    [m_statusItem button].imagePosition = NSImageOnly;
+    [m_statusItem button].toolTip = @"Deskflow";
+    m_targets = [[NSMutableArray alloc] init];
+  }
+  return self;
+}
+
+- (void)dealloc
+{
+  [self cleanup];
+  [super dealloc];
+}
+
+- (void)setQtMenu:(QMenu *)menu
+{
+  m_qtMenu = menu;
+}
+
+- (void)clearMenu
+{
+  [m_targets removeAllObjects];
+  [m_menu removeAllItems];
+}
+
+- (void)addActions:(const QList<QAction *> &)actions toMenu:(NSMenu *)menu
+{
+  for (auto *action : actions) {
+    if (action == nullptr || !action->isVisible()) {
+      continue;
+    }
+
+    if (action->isSeparator()) {
+      [menu addItem:[NSMenuItem separatorItem]];
+      continue;
+    }
+
+    auto *target = [[DeskflowStatusItemActionTarget alloc] initWithAction:action];
+    [m_targets addObject:target];
+    [target release];
+
+    auto *item = [[NSMenuItem alloc] initWithTitle:statusItemTitle(action->text()).toNSString()
+                                           action:@selector(trigger:)
+                                    keyEquivalent:@""];
+    [item setTarget:target];
+    [item setEnabled:action->isEnabled()];
+
+    if (action->isCheckable()) {
+      [item setState:action->isChecked() ? NSControlStateValueOn : NSControlStateValueOff];
+    }
+
+    if (auto *subMenu = action->menu(); subMenu != nullptr) {
+      auto *nativeSubMenu = [[NSMenu alloc] initWithTitle:statusItemTitle(subMenu->title()).toNSString()];
+      [self addActions:subMenu->actions() toMenu:nativeSubMenu];
+      [item setSubmenu:nativeSubMenu];
+      [nativeSubMenu release];
+    }
+
+    [menu addItem:item];
+    [item release];
+  }
+}
+
+- (void)menuWillOpen:(NSMenu *)menu
+{
+  Q_UNUSED(menu);
+  [self clearMenu];
+  if (m_qtMenu != nullptr) {
+    [self addActions:m_qtMenu->actions() toMenu:m_menu];
+  }
+}
+
+- (void)setIcon:(const QIcon &)icon
+{
+  if (m_statusItem == nil || icon.isNull()) {
+    return;
+  }
+
+  auto pixmap = icon.pixmap(QSize(22, 22));
+  if (pixmap.isNull()) {
+    return;
+  }
+
+  const auto image = pixmap.toImage();
+  CGImageRef cgImage = image.toCGImage();
+  if (cgImage == nullptr) {
+    return;
+  }
+
+  const auto scale = pixmap.devicePixelRatio();
+  auto *statusImage = [[NSImage alloc] initWithCGImage:cgImage
+                                                 size:NSMakeSize(pixmap.width() / scale, pixmap.height() / scale)];
+  [statusImage setTemplate:icon.isMask()];
+  [[m_statusItem button] setImage:statusImage];
+  [statusImage release];
+  CGImageRelease(cgImage);
+}
+
+- (void)cleanup
+{
+  if (m_statusItem != nil) {
+    [m_statusItem setMenu:nil];
+    [[NSStatusBar systemStatusBar] removeStatusItem:m_statusItem];
+    [m_statusItem release];
+    m_statusItem = nil;
+  }
+
+  [m_targets release];
+  m_targets = nil;
+
+  [m_menu release];
+  m_menu = nil;
+  m_qtMenu = nullptr;
+}
+
+@end
+
+static DeskflowStatusItemController *s_statusItemController = nil;
+
+static DeskflowStatusItemController *statusItemController()
+{
+  if (s_statusItemController == nil) {
+    s_statusItemController = [[DeskflowStatusItemController alloc] init];
+  }
+  return s_statusItemController;
+}
 
 void requestOSXNotificationPermission()
 {
@@ -106,4 +310,21 @@ void macOSNativeHide()
 {
   [NSApp hide:nil];
   [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
+}
+
+void setupMacOSStatusItem(QMenu *menu)
+{
+  [statusItemController() setQtMenu:menu];
+}
+
+void setMacOSStatusItemIcon(const QIcon &icon)
+{
+  [statusItemController() setIcon:icon];
+}
+
+void cleanupMacOSStatusItem()
+{
+  [s_statusItemController cleanup];
+  [s_statusItemController release];
+  s_statusItemController = nil;
 }
