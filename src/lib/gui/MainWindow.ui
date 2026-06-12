@@ -176,9 +176,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>Use this computer's keyboard and mouse — make this computer the server that others connect to.</string>
+            </property>
             <property name="text">
-             <string>Use this computer's keyboard and mouse
-(make this computer the server)</string>
+             <string>Server
+(this computer)</string>
             </property>
            </widget>
           </item>
@@ -190,9 +193,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>Use another computer's mouse and keyboard — make this computer a client of a server.</string>
+            </property>
             <property name="text">
-             <string>Use another computer’s mouse and keyboard
-(make this computer the client)</string>
+             <string>Client
+(another computer)</string>
             </property>
            </widget>
           </item>
@@ -205,11 +211,11 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;Every computer runs in auto mode; whichever one receives real keyboard or mouse input becomes the server and the others follow it.&lt;/html&gt;</string>
+             <string>&lt;html&gt;Every computer runs in auto mode; whichever one you touch (real keyboard or mouse input) becomes the server and the others follow it.&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Auto switch
-(the computer you touch becomes the server)</string>
+(touch to take over)</string>
             </property>
            </widget>
           </item>
