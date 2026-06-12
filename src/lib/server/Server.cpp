@@ -474,12 +474,9 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     m_active->enter(x, y, m_seqNum, m_primaryClient->getToggleMask(), forScreensaver);
 
     if (m_enableClipboard) {
-      // send the clipboard data to new active screen
+      // send the clipboard data to new active screen. oversized data is
+      // filtered upstream in onClipboardChanged so the cache here is safe.
       for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        // Hackity hackity hack
-        if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
-          continue;
-        }
         m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
       }
     }
@@ -1454,10 +1451,12 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
   // should be the expected client
   assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
 
-  // get data
-  sender->getClipboard(id, &clipboard.m_clipboard);
+  // read into a temporary so oversized data never lands in the cached
+  // clipboard. otherwise the next switchScreen would forward it on.
+  Clipboard incoming;
+  sender->getClipboard(id, &incoming);
 
-  std::string data = clipboard.m_clipboard.marshall();
+  std::string data = incoming.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {
     LOG_INFO(
         "not updating clipboard because it's over the size limit (%i KB) configured by the server",
@@ -1474,6 +1473,7 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   // got new data
   LOG_INFO("screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id);
+  Clipboard::copy(&clipboard.m_clipboard, &incoming);
   clipboard.m_clipboardData = data;
 
   // tell all clients except the sender that the clipboard is dirty
