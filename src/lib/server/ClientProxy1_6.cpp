@@ -26,6 +26,14 @@ ClientProxy1_6::ClientProxy1_6(const std::string &name, deskflow::IStream *strea
   });
 }
 
+ClientProxy1_6::~ClientProxy1_6()
+{
+  // Mirror the constructor's ClipboardSending registration (bound to `this`).
+  // Without this removal, a ClipboardSending event still queued when the proxy
+  // is destroyed is dispatched against the freed object -- a use-after-free.
+  m_events->removeHandler(EventTypes::ClipboardSending, this);
+}
+
 void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
   // ignore if this clipboard is already clean
