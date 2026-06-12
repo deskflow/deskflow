@@ -1,5 +1,8 @@
 var structSettings_1_1Server =
 [
+    [ "EnableHeatbeat", "structSettings_1_1Server.html#ad6416ae75de1587af98610274943c18e", null ],
+    [ "EnableSwitchDelay", "structSettings_1_1Server.html#a7a470669189671df13aceb4c749dfa62", null ],
+    [ "EnableSwitchDoubleTap", "structSettings_1_1Server.html#af20eb9adccdef8015847b776d03c438e", null ],
     [ "ExternalConfig", "structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2", null ],
     [ "ExternalConfigFile", "structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d", null ],
     [ "GridHeight", "structSettings_1_1Server.html#affe7a4c694abaa24955c935dcdb4d93e", null ],

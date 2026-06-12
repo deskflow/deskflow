@@ -142,15 +142,15 @@ var NAVTREEINDEX =
 "classMSWindowsScreen.html#a3eb0a27687fab4beded9e48c65b71ad7",
 "classOSXUchrKeyResource.html#a6a74fddd74f2c0e4882aa3659c5ae5a4",
 "classScreenSetupModel.html#ad940770e28d0c34fc632025d6b614a2d",
-"classSettings.html#ad3ba2f3025c98073226c0d896158ad17",
-"classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e",
-"classXWindowsScreen.html#ab4024495e489c5429fc709b9668677f8",
-"classdeskflow_1_1KeyMap.html#a9c17f533313debc42b773f6d37fa1cd9",
-"classdeskflow_1_1gui_1_1CoreProcess.html#a2bd697f4ca8d32e594ddbd35a6e07484",
-"classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe",
-"functions_func_d.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a39e7e2600eadfe0f329caa9cd5b78ebc",
-"structIArchNetwork_1_1PollEventMask.html#ac5d78f713bee0e3d288def3d5b737911"
+"classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d",
+"classUnicode.html#a6cf183d92569cbd9d50211908810ffec",
+"classXWindowsScreen.html#ac62d6b5b8242feb2819086a550d23836",
+"classdeskflow_1_1KeyMap.html#aa20482dc7cf49a36c89397da1d3001ec",
+"classdeskflow_1_1gui_1_1CoreProcess.html#a3da8510b96ea0915afb70462649dc2d4",
+"classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e",
+"functions_func_g.html",
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a55a9a46b4d6ca6c6cdca12c1361ff1aa",
+"structIScreen_1_1ClipboardInfo.html#a7738ad80c618ba7007173d8bd0f23969"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

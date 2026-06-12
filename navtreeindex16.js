@@ -1,8 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e":[6,0,242,2],
-"classUnicode.html#a318adabcf876bf85a933412df0732c97":[6,0,242,0],
-"classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b":[6,0,242,4],
 "classUnicode.html#a6cf183d92569cbd9d50211908810ffec":[6,0,242,3],
 "classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c":[6,0,242,1],
 "classUnknownClientException.html":[6,0,243],
@@ -249,5 +246,8 @@ var NAVTREEINDEX16 =
 "classXWindowsScreen.html#a92b282938b2583610a0a1940e6ef2998":[6,0,259,12],
 "classXWindowsScreen.html#a9d043bb0916b10d64716a54dc0c55e8e":[6,0,259,35],
 "classXWindowsScreen.html#a9d34e7b8ec494fbbd8151276c189405e":[6,0,259,26],
-"classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086":[6,0,259,3]
+"classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086":[6,0,259,3],
+"classXWindowsScreen.html#ab4024495e489c5429fc709b9668677f8":[6,0,259,8],
+"classXWindowsScreen.html#abe8e659ae73b4a16f6dbd04c4cbc5c71":[6,0,259,34],
+"classXWindowsScreen.html#ac505509005f68909a31d73a7f5e9dd47":[6,0,259,6]
 };
