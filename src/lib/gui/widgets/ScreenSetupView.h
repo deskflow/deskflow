@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -27,9 +28,15 @@ public:
 
 private:
   void showScreenConfig(int col, int row);
+  void updateSpans();
+  QModelIndex resizeGripAt(const QPoint &pos, Qt::Orientation &orientation) const;
+  void resizeSpanTo(const QPoint &pos);
 
 protected:
   void mouseDoubleClickEvent(QMouseEvent *) override;
+  void mousePressEvent(QMouseEvent *) override;
+  void mouseMoveEvent(QMouseEvent *) override;
+  void mouseReleaseEvent(QMouseEvent *) override;
   void setTableSize();
   void resizeEvent(QResizeEvent *) override;
   void dragEnterEvent(QDragEnterEvent *event) override;
@@ -40,4 +47,8 @@ protected:
   {
     // do nothing
   }
+
+private:
+  QPersistentModelIndex m_resizeIndex;
+  Qt::Orientation m_resizeOrientation = Qt::Horizontal;
 };

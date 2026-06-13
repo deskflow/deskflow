@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -14,24 +15,21 @@
 #include <QAbstractButton>
 #include <QPushButton>
 
+#include <algorithm>
+
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
-static const struct
-{
-  int x;
-  int y;
-  const char *name;
-} neighbourDirs[] = {
-    {1, 0, "right"},
-    {-1, 0, "left"},
-    {0, -1, "up"},
-    {0, 1, "down"},
-
-};
-
 const int serverDefaultIndex = 7;
+
+// formats a link range as "(start,end)" percentages, omitted for a full edge
+static QString formatInterval(double start, double end)
+{
+  if (start == 0.0 && end == 1.0)
+    return {};
+  return QStringLiteral("(%1,%2)").arg(qRound(start * 100)).arg(qRound(end * 100));
+}
 
 ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_columns(columns), m_rows(rows)
 {
@@ -170,6 +168,34 @@ void ServerConfig::recall()
   }
   settings().endArray();
 
+  // clamp spans that no longer fit the grid or would cover another screen
+  const int numRows = screens().size() / m_columns;
+  for (int i = 0; i < screens().size(); i++) {
+    auto &screen = screens()[i];
+    if (screen.isNull())
+      continue;
+    const int column = i % m_columns;
+    const int row = i / m_columns;
+
+    int maxWidth = m_columns - column;
+    for (int next = 1; next < maxWidth; next++) {
+      if (!screens()[i + next].isNull()) {
+        maxWidth = next;
+        break;
+      }
+    }
+    screen.setWidth(std::min(screen.width(), maxWidth));
+
+    int maxHeight = numRows - row;
+    for (int next = 1; next < maxHeight; next++) {
+      if (!screens()[i + next * m_columns].isNull()) {
+        maxHeight = next;
+        break;
+      }
+    }
+    screen.setHeight(std::min(screen.height(), maxHeight));
+  }
+
   int numHotkeys = settings().beginReadArray("hotkeys");
   for (int i = 0; i < numHotkeys; i++) {
     settings().setArrayIndex(i);
@@ -182,22 +208,49 @@ void ServerConfig::recall()
   settings().endGroup();
 }
 
-int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const
+QString ServerConfig::linksSection(int idx) const
 {
-  if (screens()[idx].isNull())
-    return -1;
+  const int row = idx / m_columns;
+  const int column = idx % m_columns;
+  const int width = screens()[idx].width();
+  const int height = screens()[idx].height();
+  const auto lineTemplate = QStringLiteral("\t\t%1%2 = %3%4\n");
 
-  // if we're at the left or right end of the table, don't find results going
-  // further left or right
-  if ((deltaColumn > 0 && (idx + 1) % m_columns == 0) || (deltaColumn < 0 && idx % m_columns == 0))
-    return -1;
+  QString out;
 
-  int arrayPos = idx + deltaColumn + deltaRow * m_columns;
+  // Walk one edge of the screen. A spanning screen can border several
+  // screens along an edge, so each link covers the overlapping part of both
+  // edges as a range. Vertical edges run along rows, horizontal ones along
+  // columns; adjacentLine is the column or row just past that edge.
+  const auto walkEdge = [&](const QString &dirName, bool verticalEdge, int adjacentLine) {
+    const int start = verticalEdge ? row : column;
+    const int extent = verticalEdge ? height : width;
+    for (int p = start; p < start + extent;) {
+      const int i = verticalEdge ? screens().screenIndexAt(adjacentLine, p) : screens().screenIndexAt(p, adjacentLine);
+      if (i == -1) {
+        p++;
+        continue;
+      }
+      const int neighbourStart = verticalEdge ? i / m_columns : i % m_columns;
+      const int neighbourExtent = verticalEdge ? screens()[i].height() : screens()[i].width();
+      const double overlapStart = std::max(start, neighbourStart);
+      const double overlapEnd = std::min(start + extent, neighbourStart + neighbourExtent);
+      out.append(lineTemplate.arg(
+          dirName, formatInterval((overlapStart - start) / extent, (overlapEnd - start) / extent), screens()[i].name(),
+          formatInterval(
+              (overlapStart - neighbourStart) / neighbourExtent, (overlapEnd - neighbourStart) / neighbourExtent
+          )
+      ));
+      p = neighbourStart + neighbourExtent;
+    }
+  };
 
-  if (arrayPos >= screens().size() || arrayPos < 0)
-    return -1;
+  walkEdge(QStringLiteral("right"), true, column + width);
+  walkEdge(QStringLiteral("left"), true, column - 1);
+  walkEdge(QStringLiteral("up"), false, row - 1);
+  walkEdge(QStringLiteral("down"), false, row + height);
 
-  return arrayPos;
+  return out;
 }
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
@@ -223,14 +276,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "section: links" << Qt::endl;
 
   for (int i = 0; const auto &screen : config.screens()) {
-    if (!screen.isNull()) {
-      outStream << "\t" << screen.name() << ":\n";
-      for (const auto &neighbour : std::as_const(neighbourDirs)) {
-        int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
-        if (idx != -1 && !config.screens()[idx].isNull())
-          outStream << "\t\t" << neighbour.name << " = " << config.screens()[idx].name() << Qt::endl;
-      }
-    }
+    if (!screen.isNull())
+      outStream << "\t" << screen.name() << ":\n" << config.linksSection(i);
     i++;
   }
 
