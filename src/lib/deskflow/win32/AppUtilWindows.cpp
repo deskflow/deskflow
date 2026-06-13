@@ -23,8 +23,11 @@
 #include "mt/Thread.h"
 #include "platform/MSWindowsScreen.h"
 
+#include "base/ThreadJoin.h"
+
 #include <Windows.h>
 #include <conio.h>
+#include <thread>
 
 AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMode(kExitModeNormal)
 {
@@ -38,14 +41,17 @@ AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMo
   // where the dtor is called just before the event loop starts.
   LOG_DEBUG("waiting for event thread to start");
   std::unique_lock lock(m_eventThreadStartedMutex);
-  m_eventThreadStartedCond.wait(lock, [this] { return m_eventThreadRunning; });
+  m_eventThreadStartedCond.wait(lock, [this] { return m_eventThreadRunning.load(); });
   LOG_DEBUG("event thread started");
 }
 
 AppUtilWindows::~AppUtilWindows()
 {
   m_eventThreadRunning = false;
-  m_eventThread.join();
+  // Must not throw out of this noexcept destructor; see joinNoThrow. In auto
+  // mode this util is built and torn down once per role epoch, so a recycled
+  // event-thread id would otherwise std::terminate on every switch.
+  deskflow::joinNoThrow(m_eventThread);
 }
 
 BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)

@@ -12,6 +12,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h" // IWYU pragma: keep
 
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
@@ -47,7 +48,7 @@ private:
   AppExitMode m_exitMode;
   IEventQueue *m_events;
   std::thread m_eventThread; // NOSONAR - No jthread on Windows
-  bool m_eventThreadRunning = false;
+  std::atomic<bool> m_eventThreadRunning = false;
   std::condition_variable m_eventThreadStartedCond;
   std::mutex m_eventThreadStartedMutex;
 

@@ -104,7 +104,13 @@ private:
 
   static ArchMultithreadWindows *s_instance;
 
-  std::mutex m_threadMutex;
+  // Recursive by design: this lock guards the thread list, and locked methods
+  // re-enter each other on the same thread (e.g. testCancelThread() holds it
+  // while calling testCancelThreadImpl(), which locks again). The original
+  // implementation used a Win32 CRITICAL_SECTION, which is recursive; a plain
+  // std::mutex throws resource_deadlock_would_occur on that re-entry and, via
+  // the thread-cancel path, terminates the process on every role switch.
+  std::recursive_mutex m_threadMutex;
 
   ThreadList m_threadList;
   ArchThread m_mainThread;

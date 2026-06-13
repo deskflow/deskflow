@@ -7,6 +7,7 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "base/ThreadJoin.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -135,9 +136,7 @@ void MouserBridge::stop()
     }
   }
   closeFd(m_listenFd);
-  if (m_thread.joinable()) {
-    m_thread.join();
-  }
+  deskflow::joinNoThrow(m_thread);
 }
 
 void MouserBridge::notifyFocus(const std::string &screenName, bool isLocal)

@@ -6,6 +6,7 @@
 #include "client/MouserClient.h"
 
 #include "base/Log.h"
+#include "base/ThreadJoin.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -83,9 +84,7 @@ MouserClient::~MouserClient()
   m_wake.notify_all();
   // The worker owns m_fd; join first (its blocking ops are bounded by the
   // handshake receive timeout), then tear the socket down.
-  if (m_thread.joinable()) {
-    m_thread.join();
-  }
+  deskflow::joinNoThrow(m_thread);
   disconnect();
 }
 
