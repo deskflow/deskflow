@@ -51,13 +51,10 @@ bool ServerConfig::save(const QString &fileName) const
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
   return m_Screens == sc.m_Screens &&                                   //
-         m_HasHeartbeat == sc.m_HasHeartbeat &&                         //
          m_Heartbeat == sc.m_Heartbeat &&                               //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
-         m_HasSwitchDelay == sc.m_HasSwitchDelay &&                     //
          m_SwitchDelay == sc.m_SwitchDelay &&                           //
-         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&             //
          m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&                   //
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
          m_SwitchCorners == sc.m_SwitchCorners &&                       //
@@ -97,13 +94,10 @@ void ServerConfig::commit()
   settings().beginGroup("internalConfig");
   settings().remove("");
 
-  settings().setValue("hasHeartbeat", hasHeartbeat());
   settings().setValue("heartbeat", heartbeat());
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
-  settings().setValue("hasSwitchDelay", hasSwitchDelay());
   settings().setValue("switchDelay", switchDelay());
-  settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
   settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
   settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
@@ -148,13 +142,10 @@ void ServerConfig::recall()
   // ourselves
   setupScreens();
 
-  haveHeartbeat(settings().value("hasHeartbeat", false).toBool());
   setHeartbeat(settings().value("heartbeat", 5000).toInt());
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
-  haveSwitchDelay(settings().value("hasSwitchDelay", false).toBool());
   setSwitchDelay(settings().value("switchDelay", 250).toInt());
-  haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
   setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
   setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
@@ -294,7 +285,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   outStream << "section: options" << Qt::endl;
 
-  if (config.hasHeartbeat())
+  if (Settings::value(Settings::Server::EnableHeatbeat).toBool())
     outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
 
   outStream << "\t"
@@ -310,11 +301,11 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "\t"
             << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
 
-  if (config.hasSwitchDelay())
+  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool())
     outStream << "\t"
               << "switchDelay = " << config.switchDelay() << Qt::endl;
 
-  if (config.hasSwitchDoubleTap())
+  if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool())
     outStream << "\t"
               << "switchDoubleTap = " << config.switchDoubleTap() << Qt::endl;
 

@@ -142,6 +142,9 @@ This section contains options used when in server mode it will begin with `[serv
 
 |Option              |    Valid Values   |Description|
 |:-------------------|:-----------------:|:-----------|
+| enableHeartbeat    | `true` or `false` | Send a heartbeat to connected clients; this has been replaced by internal keep alive (default: false)|
+| enableSwitchDelay  | `true` or `false` | Switching will be delayed by the set value (default: false)|
+| enableSwitchDoubleTap  | `true` or `false` | Enables the doubletap to switch method (default: false)|
 | externalConfig     | `true` or `false` | When true use the external config path |
 | externalConfigFile | Filepath          | Path the server config file if it does not exist the GUI will it generated based on the `internalConfig` section.|
 | gridHeight         | int               | Height of the server's intenal grid used for the computer layout (default: 3)|
@@ -160,9 +163,6 @@ clipboardSharing=true
 clipboardSharingSize=@Variant(\0\0\0\x84\0\0\0\0\0\0<\0)
 defaultLockToScreenState=false
 disableLockToScreen=false
-hasHeartbeat=false
-hasSwitchDelay=false
-hasSwitchDoubleTap=false
 heartbeat=5000
 hotkeys\1\actions\1\activeOnRelease=false
 hotkeys\1\actions\1\hasScreens=true
@@ -178,8 +178,6 @@ hotkeys\1\actions\size=1
 hotkeys\1\keys\1\key=83
 hotkeys\1\keys\size=1
 hotkeys\size=1
-numColumns=5
-numRows=3
 relativeMouseMoves=false
 screens\1\name=
 screens\10\aliasArray\size=0
