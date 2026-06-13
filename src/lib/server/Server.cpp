@@ -564,8 +564,9 @@ void Server::handleMouserBridgeLine(const Event &event)
     return;
   }
 
-  if (type == QStringLiteral("event")) {
-    // Only relay to the client that currently hosts the virtual device.
+  if (type == QStringLiteral("event") || type == QStringLiteral("report")) {
+    // Decoded events and raw HID++ frames both follow focus: relay only to
+    // the client that currently hosts the virtual device.
     if (m_mouserVirtualHost != nullptr && m_mouserVirtualHost == m_active) {
       m_active->sendMouserData(line);
     }
