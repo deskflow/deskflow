@@ -107,6 +107,14 @@ private:
   bool updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
 
+  /**
+   * @brief Modifier flags to apply to synthetic mouse events.
+   *
+   * Combines the server-tracked modifier state with the live session-wide
+   * modifier state.
+   */
+  CGEventFlags getModifiers() const;
+
   // convenience function to send events
   void sendEvent(EventTypes type, void * = nullptr) const;
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;

@@ -466,9 +466,7 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
   // Dragging events also need the click state
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
-  // Fix for sticky keys
-  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-  CGEventSetFlags(event, modifiers);
+  CGEventSetFlags(event, getModifiers());
 
   // Set movement deltas to fix issues with certain 3D programs
   SInt64 deltaX = pos.x;
@@ -489,6 +487,17 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
   CGEventPost(kCGHIDEventTap, event);
 
   CFRelease(event);
+}
+
+CGEventFlags OSXScreen::getModifiers() const
+{
+  // Server-tracked modifier state (modifiers held on the remote/server side).
+  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+  // OR in only physically-held local modifiers. HIDSystemState reflects real
+  // hardware devices and excludes deskflow's own injected events, which avoids
+  // the sticky-modifier feedback loop that CombinedSessionState causes.
+  modifiers |= CGEventSourceFlagsState(kCGEventSourceStateHIDSystemState);
+  return modifiers;
 }
 
 void OSXScreen::fakeMouseButton(ButtonID id, bool press)
@@ -549,9 +558,7 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
-  // Fix for sticky keys
-  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-  CGEventSetFlags(event, modifiers);
+  CGEventSetFlags(event, getModifiers());
 
   m_buttonState.set(index, state);
   CGEventPost(kCGHIDEventTap, event);
@@ -609,9 +616,7 @@ void OSXScreen::fakeMouseWheel(ScrollDelta delta) const
     // is the right choice here over kCGScrollEventUnitPixel
     CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, delta.y, delta.x);
 
-    // Fix for sticky keys
-    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-    CGEventSetFlags(scrollEvent, modifiers);
+    CGEventSetFlags(scrollEvent, getModifiers());
 
     CGEventPost(kCGHIDEventTap, scrollEvent);
     CFRelease(scrollEvent);
