@@ -12,6 +12,7 @@
 
 #include <Carbon/Carbon.h>
 
+#include <atomic>
 #include <map>
 #include <vector>
 
@@ -153,10 +154,20 @@ private:
   using GroupMap = std::map<CFDataRef, int32_t>;
   using VirtualKeyMap = std::map<uint32_t, KeyID>;
 
+  // Refresh m_activeGroupCache from the current TIS keyboard layout. MUST run
+  // on the main dispatch queue -- macOS 14+ asserts the main queue inside the
+  // Text Input Source APIs, so calling them off the deskflow event thread
+  // crashes via _dispatch_assert_queue_fail.
+  int32_t updateActiveGroupCache();
+
   VirtualKeyMap m_virtualKeyMap;
   mutable uint32_t m_deadKeyState;
   AutoCFArray m_groups{nullptr, CFRelease};
   GroupMap m_groupMap;
+  // Last keyboard group resolved on the main queue. pollActiveGroup() reads
+  // this off the event thread (where the TIS calls would crash) and kicks an
+  // async refresh; on the main thread it refreshes synchronously.
+  mutable std::atomic<int32_t> m_activeGroupCache{0};
   bool m_shiftPressed;
   bool m_controlPressed;
   bool m_altPressed;
