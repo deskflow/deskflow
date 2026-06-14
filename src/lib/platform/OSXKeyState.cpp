@@ -13,6 +13,8 @@
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
+#include <dispatch/dispatch.h>
+#include <pthread.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -431,8 +433,10 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
   return outMask;
 }
 
-int32_t OSXKeyState::pollActiveGroup() const
+int32_t OSXKeyState::updateActiveGroupCache()
 {
+  // MUST run on the main dispatch queue: macOS 14+ asserts the main queue
+  // inside the Text Input Source APIs.
   AutoTISInputSourceRef keyboardLayout(nullptr, CFRelease);
   CFDataRef id = nullptr;
   {
@@ -442,14 +446,27 @@ int32_t OSXKeyState::pollActiveGroup() const
       id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceID);
   }
 
-  GroupMap::const_iterator i = m_groupMap.find(id);
-  if (i != m_groupMap.end()) {
-    return i->second;
+  int32_t group = 0;
+  if (GroupMap::const_iterator i = m_groupMap.find(id); i != m_groupMap.end()) {
+    group = i->second;
   }
+  m_activeGroupCache.store(group, std::memory_order_relaxed);
+  return group;
+}
 
-  LOG_WARN("can't get the active group, use the first group instead");
-
-  return 0;
+int32_t OSXKeyState::pollActiveGroup() const
+{
+  // The TIS calls in updateActiveGroupCache() assert the main dispatch queue
+  // (macOS 14+); deskflow injects keys (fakeKeyDown -> pollActiveGroup) on its
+  // event thread, where calling them crashes via _dispatch_assert_queue_fail.
+  // On the main thread refresh synchronously; off it, kick a non-blocking
+  // refresh and return the last cached group (no blocking -> no deadlock).
+  if (pthread_main_np() != 0) {
+    return const_cast<OSXKeyState *>(this)->updateActiveGroupCache();
+  }
+  auto *self = const_cast<OSXKeyState *>(this);
+  dispatch_async(dispatch_get_main_queue(), ^{ self->updateActiveGroupCache(); });
+  return m_activeGroupCache.load(std::memory_order_relaxed);
 }
 
 void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
