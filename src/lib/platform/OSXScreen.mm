@@ -491,9 +491,12 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
 
 CGEventFlags OSXScreen::getModifiers() const
 {
-  // Fix for sticky keys
+  // Server-tracked modifier state (modifiers held on the remote/server side).
   CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-  modifiers |= CGEventSourceFlagsState(kCGEventSourceStateCombinedSessionState);
+  // OR in only physically-held local modifiers. HIDSystemState reflects real
+  // hardware devices and excludes deskflow's own injected events, which avoids
+  // the sticky-modifier feedback loop that CombinedSessionState causes.
+  modifiers |= CGEventSourceFlagsState(kCGEventSourceStateHIDSystemState);
   return modifiers;
 }
 
