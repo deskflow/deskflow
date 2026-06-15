@@ -12,7 +12,9 @@
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/Arch.h"
 #include "arch/ArchException.h"
+#include "base/Log.h"
 
+#include <exception>
 #include <process.h>
 
 //
@@ -607,14 +609,17 @@ void ArchMultithreadWindows::doThreadFunc(ArchThread thread)
 
   catch (ThreadCancelException &) {
     // client called cancel()
+  } catch (const std::exception &e) {
+    // A stray exception escaping a worker thread used to rethrow here and
+    // std::terminate the whole core -- in auto mode a single transient error
+    // during a role-epoch teardown (mesh switching server<->client) took the
+    // entire KVM down. Contain it: log and let just this thread exit so the
+    // core survives the role switch.
+    LOG_ERR("worker thread terminated by unhandled exception: %s", e.what());
+    result = nullptr;
   } catch (...) {
-    // note -- don't catch (...) to avoid masking bugs
-    {
-      std::scoped_lock lock{m_threadMutex};
-      SetEvent(thread->m_exit);
-    }
-    closeThread(thread);
-    throw;
+    LOG_ERR("worker thread terminated by unknown unhandled exception");
+    result = nullptr;
   }
 
   // thread has exited
