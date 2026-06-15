@@ -106,6 +106,7 @@ private:
   NetworkProtocol m_protocol;
   bool m_enableHeartbeat;
   int m_heartbeatRate;
+  int m_switchDelay;
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;

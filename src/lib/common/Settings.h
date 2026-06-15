@@ -113,6 +113,7 @@ public:
     inline static const auto GridWidth = QStringLiteral("server/gridWidth");
     inline static const auto Heartbeat = QStringLiteral("server/heartbeat");
     inline static const auto Protocol = QStringLiteral("server/protocol");
+    inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
 
@@ -256,6 +257,7 @@ private:
     , Settings::Server::GridWidth
     , Settings::Server::Heartbeat
     , Settings::Server::Protocol
+    , Settings::Server::SwitchDelay
     , Settings::Server::XdpRestoreToken
   };
 
@@ -311,6 +313,7 @@ private:
     , QStringLiteral("internalConfig/protocol")
     , QStringLiteral("internalConfig/numColumns")
     , QStringLiteral("internalConfig/numRows")
+    , QStringLiteral("internalConfig/switchDelay")
   };
   // clang-format on
 };

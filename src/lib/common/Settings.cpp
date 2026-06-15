@@ -219,6 +219,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Heartbeat)
     return 5000;
 
+  if (key == Server::SwitchDelay)
+    return 250;
+
   return QVariant();
 }
 

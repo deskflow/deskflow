@@ -55,7 +55,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
   return m_Screens == sc.m_Screens &&                                   //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
-         m_SwitchDelay == sc.m_SwitchDelay &&                           //
          m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&                   //
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
          m_SwitchCorners == sc.m_SwitchCorners &&                       //
@@ -97,7 +96,6 @@ void ServerConfig::commit()
 
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
-  settings().setValue("switchDelay", switchDelay());
   settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
   settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
@@ -144,7 +142,6 @@ void ServerConfig::recall()
 
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
-  setSwitchDelay(settings().value("switchDelay", 250).toInt());
   setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
   setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
@@ -247,10 +244,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
-
-  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool())
-    outStream << "\t"
-              << "switchDelay = " << config.switchDelay() << Qt::endl;
 
   if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool())
     outStream << "\t"
