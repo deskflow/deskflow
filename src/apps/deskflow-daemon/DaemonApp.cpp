@@ -84,6 +84,13 @@ void DaemonApp::applyWatchdogCommand() const
     modeArg = QStringLiteral("server");
   } else if (coreMode == Settings::CoreMode::Client) {
     modeArg = QStringLiteral("client");
+  } else if (coreMode == Settings::CoreMode::Auto) {
+    // Auto (native coordination mesh) runs server and client epochs in one
+    // core process. The watchdog relaunches it across desktops including the
+    // secure/Winlogon desktop, so the elected-server/client role is driven by
+    // the mesh and the machine is reachable at the login window -- the Windows
+    // counterpart to the macOS vhid-bridge LoginWindow agent.
+    modeArg = QStringLiteral("auto");
   } else {
     LOG_ERR("cannot apply watchdog command: invalid core mode in config: %d", coreMode);
     return;
