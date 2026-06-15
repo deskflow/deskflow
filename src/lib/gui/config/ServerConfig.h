@@ -48,10 +48,6 @@ public:
   {
     return m_Win32KeepForeground;
   }
-  int switchDelay() const
-  {
-    return m_SwitchDelay;
-  }
   int switchDoubleTap() const
   {
     return m_SwitchDoubleTap;
@@ -126,10 +122,6 @@ private:
   {
     m_Win32KeepForeground = on;
   }
-  void setSwitchDelay(int val)
-  {
-    m_SwitchDelay = val;
-  }
   void setSwitchDoubleTap(int val)
   {
     m_SwitchDoubleTap = val;
@@ -172,7 +164,6 @@ private:
 private:
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
-  int m_SwitchDelay = 0;
   int m_SwitchDoubleTap = 0;
   int m_SwitchCornerSize = 0;
   bool m_DefaultLockToScreenState = false;

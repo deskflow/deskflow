@@ -637,7 +637,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
     bool handled = true;
 
     // Skip old protocol name
-    if (name == "protocol" || name == "heartbeat") {
+    if (name == "protocol" || name == "heartbeat" || name == "switchDelay") {
       continue;
     }
 
@@ -652,8 +652,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
     } else if (name == "switchCornerSize") {
       addOption("", kOptionScreenSwitchCornerSize, s.parseInt(value));
-    } else if (name == "switchDelay") {
-      addOption("", kOptionScreenSwitchDelay, s.parseInt(value));
     } else if (name == "switchDoubleTap") {
       addOption("", kOptionScreenSwitchTwoTap, s.parseInt(value));
     } else if (name == "switchNeedsShift") {
@@ -724,6 +722,10 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
   if (Settings::value(Settings::Server::EnableHeatbeat).toBool()) {
     addOption("", kOptionHeartbeat, Settings::value(Settings::Server::Heartbeat).toInt());
+  }
+
+  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
+    addOption("", kOptionScreenSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
   }
 
   throw ServerConfigReadException(s, "unexpected end of options section");
