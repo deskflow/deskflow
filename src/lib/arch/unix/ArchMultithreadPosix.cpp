@@ -9,8 +9,10 @@
 
 #include "arch/Arch.h"
 #include "arch/ArchException.h"
+#include "base/Log.h"
 
 #include <cerrno>
+#include <exception>
 #include <signal.h>
 #include <sys/time.h>
 #include <time.h>
@@ -638,14 +640,18 @@ void ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     // client called cancel()
     // set base value
     result = nullptr;
+  } catch (const std::exception &e) {
+    // A stray exception escaping a worker thread used to rethrow here and
+    // std::terminate the whole core (SIGABRT) -- which in auto mode meant a
+    // single transient error during a role-epoch teardown (e.g. a socket/screen
+    // error while the mesh switches server<->client) took the entire KVM down.
+    // For this always-on coordinated KVM, contain it: log and let just this
+    // thread exit so the core survives the role switch.
+    LOG_ERR("worker thread terminated by unhandled exception: %s", e.what());
+    result = nullptr;
   } catch (...) {
-    // note -- don't catch (...) to avoid masking bugs
-    {
-      std::scoped_lock lock{m_threadMutex};
-      thread->m_exited = true;
-    }
-    closeThread(thread);
-    throw;
+    LOG_ERR("worker thread terminated by unknown unhandled exception");
+    result = nullptr;
   }
 
   // thread has exited
