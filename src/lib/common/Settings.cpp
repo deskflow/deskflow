@@ -216,6 +216,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::GridHeight)
     return kServerGridHeight;
 
+  if (key == Server::Heartbeat)
+    return 5000;
+
   return QVariant();
 }
 

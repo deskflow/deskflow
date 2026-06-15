@@ -111,6 +111,7 @@ public:
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
     inline static const auto GridHeight = QStringLiteral("server/gridHeight");
     inline static const auto GridWidth = QStringLiteral("server/gridWidth");
+    inline static const auto Heartbeat = QStringLiteral("server/heartbeat");
     inline static const auto Protocol = QStringLiteral("server/protocol");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
@@ -253,6 +254,7 @@ private:
     , Settings::Server::ExternalConfigFile
     , Settings::Server::GridHeight
     , Settings::Server::GridWidth
+    , Settings::Server::Heartbeat
     , Settings::Server::Protocol
     , Settings::Server::XdpRestoreToken
   };
@@ -305,6 +307,7 @@ private:
       QStringLiteral("internalConfig/hasHeartbeat")
     , QStringLiteral("internalConfig/hasSwitchDelay")
     , QStringLiteral("internalConfig/hasSwitchDoubleTap")
+    , QStringLiteral("internalConfig/heartbeat")
     , QStringLiteral("internalConfig/protocol")
     , QStringLiteral("internalConfig/numColumns")
     , QStringLiteral("internalConfig/numRows")

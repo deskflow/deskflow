@@ -77,6 +77,7 @@ void ServerConfigDialog::accept()
   setOriginalServerConfig(serverConfig());
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
   Settings::setValue(Settings::Server::EnableHeatbeat, m_enableHeartbeat);
+  Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
 
@@ -234,7 +235,9 @@ void ServerConfigDialog::toggleHeartbeat(bool enabled)
 
 void ServerConfigDialog::setHeartbeat(int rate)
 {
-  serverConfig().setHeartbeat(rate);
+  if (rate == m_heartbeatRate)
+    return;
+  m_heartbeatRate = rate;
   onChange();
 }
 
@@ -350,7 +353,6 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->groupMisc->setEnabled(!checked);
   ui->groupCorners->setEnabled(!checked);
   ui->groupSwitch->setEnabled(!checked);
-  ui->widgetHeartbeat->setEnabled(!checked);
   serverConfig().setUseExternalConfig(checked);
   onChange();
 }
@@ -385,7 +387,10 @@ void ServerConfigDialog::loadFromConfig()
   m_enableHeartbeat = Settings::value(Settings::Server::EnableHeatbeat).toBool();
   ui->cbHeartbeat->setChecked(m_enableHeartbeat);
   ui->sbHeartbeat->setEnabled(ui->cbHeartbeat->isChecked());
-  ui->sbHeartbeat->setValue(serverConfig().heartbeat());
+
+  m_heartbeatRate = Settings::value(Settings::Server::Heartbeat).toInt();
+  ui->sbHeartbeat->setValue(m_heartbeatRate);
+
   ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
   ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
 
@@ -516,6 +521,7 @@ void ServerConfigDialog::onChange()
       m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
       m_protocol == Settings::networkProtocol() &&
       m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool() &&
+      m_heartbeatRate == Settings::value(Settings::Server::Heartbeat).toInt() &&
       m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool() &&
       m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)

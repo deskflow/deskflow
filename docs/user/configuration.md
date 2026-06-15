@@ -149,6 +149,7 @@ This section contains options used when in server mode it will begin with `[serv
 | externalConfigFile | Filepath          | Path the server config file if it does not exist the GUI will it generated based on the `internalConfig` section.|
 | gridHeight         | int               | Height of the server's intenal grid used for the computer layout (default: 3)|
 | gridWidth          | int               | Width of the server's intenal grid used for the computer layout (default: 5) |
+| heartbeat          | int               | The server will expect each client to send a message no less than every `N` milliseconds. If no message arrives from a client within `3N` seconds the server forces that client to disconnect. If deskflow fails to detect clients disconnecting while the server is sleeping or vice versa, try using this option. |
 | protocol           | `barrier` or `synergy` | The protocol to use when saying hello to clients. Can be set to barrier or synergy. If not set barrier is used as the default |
 | xdpRestoreToken   | UUID               | Restore token provided by XDG portals |
 
@@ -163,7 +164,6 @@ clipboardSharing=true
 clipboardSharingSize=@Variant(\0\0\0\x84\0\0\0\0\0\0<\0)
 defaultLockToScreenState=false
 disableLockToScreen=false
-heartbeat=5000
 hotkeys\1\actions\1\activeOnRelease=false
 hotkeys\1\actions\1\hasScreens=true
 hotkeys\1\actions\1\keys\1\key=83
@@ -390,8 +390,7 @@ Note that links do not have to be symmetrical; for instance, here the edge betwe
 
 ```
 section: options
-	heartbeat = 5000
-	switchDelay = 500
+        switchDelay = 500
 end
 ```
 
@@ -399,7 +398,6 @@ end
 
 | Options | Value Values| Description|
 |:--------|:-----------:|:-----------|
-|heartbeat| integer (N) | The server will expect each client to send a message no less than every `N` milliseconds. If no message arrives from a client within `3N` seconds the server forces that client to disconnect. If deskflow fails to detect clients disconnecting while the server is sleeping or vice versa, try using this option. |
 |switchCorners | none top-left top-right bottom-left bottom-right left right top bottom all | Deskflow won't switch computers when the mouse reaches the edge of the computer if it's in a listed corner. The size of all corners is given by the `switchCornerSize` option. The first name in the list is one of the above names and defines the initial set of corners. Subsequent names are prefixed with + or - to add the corner to or remove the corner from the set, respectively. For example: `all -left +top-left` starts will all corners, removes the left corners (top and bottom) then adds the top-left back in, resulting in the top-left, bottom-left and bottom-right corners.|
 |switchCornerSize | integer (N) | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|
 |switchDelay | integer| Deskflow won't switch computers when the mouse reaches edge of a computer unless it stays on the edge for `N` milliseconds. This helps prevent unintentional switching when working near an edge.|
