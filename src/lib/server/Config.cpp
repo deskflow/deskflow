@@ -9,7 +9,6 @@
 #include "server/Config.h"
 
 #include "base/IEventQueue.h"
-#include "deskflow/DeskflowException.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -635,11 +634,12 @@ void Config::readSectionOptions(ConfigReadContext &s)
     ++i;
     s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
 
-    // Skip old protocol name
-    if (name == "protocol")
-      continue;
-
     bool handled = true;
+
+    // Skip old protocol name
+    if (name == "protocol" || name == "heartbeat") {
+      continue;
+    }
 
     if (name == "address") {
       try {
@@ -648,8 +648,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       } catch (SocketAddressException &e) {
         throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
       }
-    } else if (name == "heartbeat") {
-      addOption("", kOptionHeartbeat, s.parseInt(value));
     } else if (name == "switchCorners") {
       addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
     } else if (name == "switchCornerSize") {
@@ -723,6 +721,11 @@ void Config::readSectionOptions(ConfigReadContext &s)
       m_inputFilter.addFilterRule(rule);
     }
   }
+
+  if (Settings::value(Settings::Server::EnableHeatbeat).toBool()) {
+    addOption("", kOptionHeartbeat, Settings::value(Settings::Server::Heartbeat).toInt());
+  }
+
   throw ServerConfigReadException(s, "unexpected end of options section");
 }
 

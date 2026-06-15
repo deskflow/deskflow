@@ -53,7 +53,6 @@ bool ServerConfig::save(const QString &fileName) const
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
   return m_Screens == sc.m_Screens &&                                   //
-         m_Heartbeat == sc.m_Heartbeat &&                               //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
          m_SwitchDelay == sc.m_SwitchDelay &&                           //
@@ -96,7 +95,6 @@ void ServerConfig::commit()
   settings().beginGroup("internalConfig");
   settings().remove("");
 
-  settings().setValue("heartbeat", heartbeat());
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
   settings().setValue("switchDelay", switchDelay());
@@ -144,7 +142,6 @@ void ServerConfig::recall()
   // ourselves
   setupScreens();
 
-  setHeartbeat(settings().value("heartbeat", 5000).toInt());
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   setSwitchDelay(settings().value("switchDelay", 250).toInt());
@@ -237,9 +234,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "end" << Qt::endl << Qt::endl;
 
   outStream << "section: options" << Qt::endl;
-
-  if (Settings::value(Settings::Server::EnableHeatbeat).toBool())
-    outStream << "\t" << "heartbeat = " << config.heartbeat() << Qt::endl;
 
   outStream << "\t"
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
