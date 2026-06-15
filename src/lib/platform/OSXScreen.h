@@ -106,6 +106,7 @@ private:
   bool updateScreenShape();
   bool updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
+  void activateWindowAtCursor(CGPoint) const;
 
   // convenience function to send events
   void sendEvent(EventTypes type, void * = nullptr) const;
