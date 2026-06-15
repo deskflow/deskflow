@@ -102,7 +102,12 @@ private:
 
   bool m_newThreadCalled = false;
 
-  std::mutex m_threadMutex;
+  // Recursive by design: locked methods re-enter each other on the same
+  // thread (testCancelThread() holds it while calling testCancelThreadImpl(),
+  // which locks again). A plain std::mutex throws resource_deadlock_would_occur
+  // on that re-entry; the throw escapes the cancelled deskflow Thread job and
+  // std::terminates the core (SIGABRT) on every role switch / client teardown.
+  std::recursive_mutex m_threadMutex;
   ArchThread m_mainThread;
   ThreadList m_threadList;
   ThreadID m_nextID = 0;
