@@ -80,6 +80,7 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
   Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
+  Settings::setValue(Settings::Server::DisableLockToComputer, m_disableLockToComputer);
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
@@ -332,9 +333,11 @@ void ServerConfigDialog::toggleDefaultLockToScreenState(bool state)
   onChange();
 }
 
-void ServerConfigDialog::toggleLockToScreen(bool disabled)
+void ServerConfigDialog::toggleLockToComputer(bool disabled)
 {
-  serverConfig().setDisableLockToScreen(disabled);
+  if (m_disableLockToComputer == disabled)
+    return;
+  m_disableLockToComputer = disabled;
   onChange();
 }
 
@@ -363,7 +366,6 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
   ui->cbDefaultLockToScreenState->setEnabled(!checked);
-  ui->cbDisableLockToScreen->setEnabled(!checked);
   ui->cbEnableClipboard->setEnabled(!checked);
   ui->label_7->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
   ui->sbClipboardSizeLimit->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
@@ -438,7 +440,9 @@ void ServerConfigDialog::loadFromConfig()
   ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
   ui->cbDefaultLockToScreenState->setChecked(serverConfig().defaultLockToScreenState());
 
-  ui->cbDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
+  m_disableLockToComputer = Settings::value(Settings::Server::DisableLockToComputer).toBool();
+  ui->cbDisableLockToComputer->setChecked(m_disableLockToComputer);
+
   ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
 
   auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
@@ -518,7 +522,7 @@ void ServerConfigDialog::initConnections()
   connect(
       ui->cbDefaultLockToScreenState, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDefaultLockToScreenState
   );
-  connect(ui->cbDisableLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToScreen);
+  connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
   connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
 }
 
@@ -549,7 +553,8 @@ void ServerConfigDialog::onChange()
       m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() &&
       m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt() &&
       m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool() &&
-      m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool();
+      m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool() &&
+      m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }

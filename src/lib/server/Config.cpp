@@ -658,8 +658,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionScreenSwitchNeedsAlt, s.parseBoolean(value));
     } else if (name == "defaultLockToScreenState") {
       addOption("", kOptionDefaultLockToScreenState, s.parseBoolean(value));
-    } else if (name == "disableLockToScreen") {
-      addOption("", kOptionDisableLockToScreen, s.parseBoolean(value));
     } else if (name == "clipboardSharing") {
       addOption("", kOptionClipboardSharing, s.parseBoolean(value));
     } else if (name == "clipboardSharingSize") {
@@ -724,6 +722,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
     addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
   }
 
+  addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toInt());
   addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toInt());
   addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toInt());
 

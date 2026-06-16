@@ -142,6 +142,7 @@ This section contains options used when in server mode it will begin with `[serv
 
 |Option              |    Valid Values   |Description|
 |:-------------------|:-----------------:|:-----------|
+| disableLockToComputer| `true` or `false` | If false pressing scroll lock will toggle your cursor to be locked to current computer. (default: false) |
 | enableHeartbeat    | `true` or `false` | Send a heartbeat to connected clients; this has been replaced by internal keep alive (default: false)|
 | enableSwitchDelay  | `true` or `false` | Switching will be delayed by the set value (default: false)|
 | enableSwitchDoubleTap  | `true` or `false` | Enables the doubletap to switch method (default: false)|
@@ -169,7 +170,6 @@ block of a server config file as seen below. This section is used by the GUI to 
 clipboardSharing=true
 clipboardSharingSize=@Variant(\0\0\0\x84\0\0\0\0\0\0<\0)
 defaultLockToScreenState=false
-disableLockToScreen=false
 hotkeys\1\actions\1\activeOnRelease=false
 hotkeys\1\actions\1\hasScreens=true
 hotkeys\1\actions\1\keys\1\key=83

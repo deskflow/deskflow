@@ -61,7 +61,7 @@ protected:
   void setSwitchDelay(int delay);
 
   void toggleDefaultLockToScreenState(bool state);
-  void toggleLockToScreen(bool disabled);
+  void toggleLockToComputer(bool disabled);
   void toggleWin32Foreground(bool enabled);
 
   void toggleClipboard(bool enabled);
@@ -113,6 +113,7 @@ private:
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;
   bool m_win32keepForeground;
+  bool m_disableLockToComputer;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;
