@@ -435,7 +435,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbDefaultLockToScreenState">
+           <widget class="QCheckBox" name="cbDefaultLockToComputerState">
             <property name="text">
              <string>Enable lock to computer at startup</string>
             </property>
