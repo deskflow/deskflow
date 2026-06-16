@@ -116,6 +116,7 @@ public:
     inline static const auto RelativeMouseMoves = QStringLiteral("server/relativeMouseMoves");
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
+    inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
 
@@ -262,6 +263,7 @@ private:
     , Settings::Server::RelativeMouseMoves
     , Settings::Server::SwitchDelay
     , Settings::Server::SwitchDoubleTap
+    , Settings::Server::Win32KeepForeground
     , Settings::Server::XdpRestoreToken
   };
 
@@ -299,6 +301,7 @@ private:
     , Settings::Gui::SymbolicTrayIcon
     , Settings::Security::TlsEnabled
     , Settings::Security::CheckPeers
+    , Settings::Server::Win32KeepForeground
   };
 
   // Settings saved in our State file
@@ -321,6 +324,7 @@ private:
     , QStringLiteral("interlanConfig/relativeMouseMoves")
     , QStringLiteral("internalConfig/switchDelay")
     , QStringLiteral("internalConfig/switchDoubleTap")
+    , QStringLiteral("internalConfig/win32KeepForeground")
   };
   // clang-format on
 };

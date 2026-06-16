@@ -636,11 +636,8 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
     bool handled = true;
 
-    // Skip old option names
-    if (name == "protocol" || name == "heartbeat" || name == "switchDelay" || name == "switchDoubleTap" ||
-        name == "relativeMouseMoves") {
+    if (m_oldNames.contains(name))
       continue;
-    }
 
     if (name == "address") {
       try {
@@ -659,8 +656,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionScreenSwitchNeedsControl, s.parseBoolean(value));
     } else if (name == "switchNeedsAlt") {
       addOption("", kOptionScreenSwitchNeedsAlt, s.parseBoolean(value));
-    } else if (name == "win32KeepForeground") {
-      addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
     } else if (name == "defaultLockToScreenState") {
       addOption("", kOptionDefaultLockToScreenState, s.parseBoolean(value));
     } else if (name == "disableLockToScreen") {
@@ -730,6 +725,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
   }
 
   addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toInt());
+  addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toInt());
 
   throw ServerConfigReadException(s, "unexpected end of options section");
 }

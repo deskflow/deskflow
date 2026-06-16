@@ -40,10 +40,6 @@ public:
   //
   // New methods
   //
-  bool win32KeepForeground() const
-  {
-    return m_Win32KeepForeground;
-  }
   bool switchCorner(int c) const
   {
     return m_SwitchCorners[c];
@@ -106,10 +102,6 @@ private:
   {
     m_Screens.append(screen);
   }
-  void setWin32KeepForeground(bool on)
-  {
-    m_Win32KeepForeground = on;
-  }
   void setSwitchCorner(int c, bool on)
   {
     m_SwitchCorners[c] = on;
@@ -146,7 +138,6 @@ private:
   bool fixNoServer(const QString &name, int &index);
 
 private:
-  bool m_Win32KeepForeground = false;
   int m_SwitchCornerSize = 0;
   bool m_DefaultLockToScreenState = false;
   bool m_DisableLockToScreen = false;

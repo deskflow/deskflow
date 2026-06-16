@@ -53,7 +53,6 @@ bool ServerConfig::save(const QString &fileName) const
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
   return m_Screens == sc.m_Screens &&                                   //
-         m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
          m_SwitchCorners == sc.m_SwitchCorners &&                       //
          m_Hotkeys == sc.m_Hotkeys &&                                   //
@@ -92,7 +91,6 @@ void ServerConfig::commit()
   settings().beginGroup("internalConfig");
   settings().remove("");
 
-  settings().setValue("win32KeepForeground", win32KeepForeground());
   settings().setValue("switchCornerSize", switchCornerSize());
   settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
   settings().setValue("disableLockToScreen", disableLockToScreen());
@@ -136,7 +134,6 @@ void ServerConfig::recall()
   // ourselves
   setupScreens();
 
-  setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
   setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
   setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
@@ -225,9 +222,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "end" << Qt::endl << Qt::endl;
 
   outStream << "section: options" << Qt::endl;
-
-  outStream << "\t"
-            << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "defaultLockToScreenState = " << (config.defaultLockToScreenState() ? "true" : "false") << Qt::endl;
   outStream << "\t"

@@ -112,6 +112,7 @@ private:
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;
+  bool m_win32keepForeground;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;
