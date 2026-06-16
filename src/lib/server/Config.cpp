@@ -636,8 +636,8 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
     bool handled = true;
 
-    // Skip old protocol name
-    if (name == "protocol" || name == "heartbeat" || name == "switchDelay") {
+    // Skip old option names
+    if (name == "protocol" || name == "heartbeat" || name == "switchDelay" || name == "switchDoubleTap") {
       continue;
     }
 
@@ -652,8 +652,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
     } else if (name == "switchCornerSize") {
       addOption("", kOptionScreenSwitchCornerSize, s.parseInt(value));
-    } else if (name == "switchDoubleTap") {
-      addOption("", kOptionScreenSwitchTwoTap, s.parseInt(value));
     } else if (name == "switchNeedsShift") {
       addOption("", kOptionScreenSwitchNeedsShift, s.parseBoolean(value));
     } else if (name == "switchNeedsControl") {
@@ -726,6 +724,10 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
   if (Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
     addOption("", kOptionScreenSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
+  }
+
+  if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool()) {
+    addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
   }
 
   throw ServerConfigReadException(s, "unexpected end of options section");

@@ -114,6 +114,7 @@ public:
     inline static const auto Heartbeat = QStringLiteral("server/heartbeat");
     inline static const auto Protocol = QStringLiteral("server/protocol");
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
+    inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
 
@@ -258,6 +259,7 @@ private:
     , Settings::Server::Heartbeat
     , Settings::Server::Protocol
     , Settings::Server::SwitchDelay
+    , Settings::Server::SwitchDoubleTap
     , Settings::Server::XdpRestoreToken
   };
 
@@ -314,6 +316,7 @@ private:
     , QStringLiteral("internalConfig/numColumns")
     , QStringLiteral("internalConfig/numRows")
     , QStringLiteral("internalConfig/switchDelay")
+    , QStringLiteral("internalConfig/switchDoubleTap")
   };
   // clang-format on
 };

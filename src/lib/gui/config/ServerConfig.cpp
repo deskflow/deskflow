@@ -55,7 +55,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
   return m_Screens == sc.m_Screens &&                                   //
          m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
-         m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&                   //
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
          m_SwitchCorners == sc.m_SwitchCorners &&                       //
          m_Hotkeys == sc.m_Hotkeys &&                                   //
@@ -96,7 +95,6 @@ void ServerConfig::commit()
 
   settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
-  settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
   settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
   settings().setValue("disableLockToScreen", disableLockToScreen());
@@ -142,7 +140,6 @@ void ServerConfig::recall()
 
   setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
-  setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
   setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
   setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
@@ -244,11 +241,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
-
-  if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool())
-    outStream << "\t"
-              << "switchDoubleTap = " << config.switchDoubleTap() << Qt::endl;
-
   outStream << "\t"
             << "switchCorners = none ";
   for (int i = 0; i < config.switchCorners().size(); i++)
