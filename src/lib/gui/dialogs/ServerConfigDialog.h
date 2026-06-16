@@ -107,6 +107,7 @@ private:
   bool m_enableHeartbeat;
   int m_heartbeatRate;
   int m_switchDelay;
+  int m_switchDoubleTap;
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;

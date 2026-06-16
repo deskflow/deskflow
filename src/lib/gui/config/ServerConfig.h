@@ -48,10 +48,6 @@ public:
   {
     return m_Win32KeepForeground;
   }
-  int switchDoubleTap() const
-  {
-    return m_SwitchDoubleTap;
-  }
   bool switchCorner(int c) const
   {
     return m_SwitchCorners[c];
@@ -122,10 +118,6 @@ private:
   {
     m_Win32KeepForeground = on;
   }
-  void setSwitchDoubleTap(int val)
-  {
-    m_SwitchDoubleTap = val;
-  }
   void setSwitchCorner(int c, bool on)
   {
     m_SwitchCorners[c] = on;
@@ -164,7 +156,6 @@ private:
 private:
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
-  int m_SwitchDoubleTap = 0;
   int m_SwitchCornerSize = 0;
   bool m_DefaultLockToScreenState = false;
   bool m_DisableLockToScreen = false;

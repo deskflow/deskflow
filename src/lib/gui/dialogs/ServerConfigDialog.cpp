@@ -81,6 +81,7 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
   Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
+  Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
 
   QDialog::accept();
 }
@@ -300,7 +301,9 @@ void ServerConfigDialog::toggleSwitchDoubleTap(bool enable)
 
 void ServerConfigDialog::setSwitchDoubleTap(int within)
 {
-  serverConfig().setSwitchDoubleTap(within);
+  if (m_switchDoubleTap == within)
+    return;
+  m_switchDoubleTap = within;
   onChange();
 }
 
@@ -355,7 +358,6 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->tabWidget->setTabEnabled(1, !checked);
   ui->groupMisc->setEnabled(!checked);
   ui->groupCorners->setEnabled(!checked);
-  ui->sbSwitchDoubleTap->setEnabled(!checked);
   serverConfig().setUseExternalConfig(checked);
   onChange();
 }
@@ -406,8 +408,10 @@ void ServerConfigDialog::loadFromConfig()
 
   m_enableSwitchDoubleTap = Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool();
   ui->cbSwitchDoubleTap->setChecked(m_enableSwitchDoubleTap);
-  ui->sbSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
   ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
+
+  m_switchDoubleTap = Settings::value(Settings::Server::SwitchDoubleTap).toInt();
+  ui->sbSwitchDoubleTap->setValue(m_switchDoubleTap);
 
   ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
 
@@ -529,7 +533,8 @@ void ServerConfigDialog::onChange()
       m_heartbeatRate == Settings::value(Settings::Server::Heartbeat).toInt() &&
       m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool() &&
       m_switchDelay == Settings::value(Settings::Server::SwitchDelay).toInt() &&
-      m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool();
+      m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() &&
+      m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }
