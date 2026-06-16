@@ -428,7 +428,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="QCheckBox" name="cbDisableLockToScreen">
+           <widget class="QCheckBox" name="cbDisableLockToComputer">
             <property name="text">
              <string>Disable lock to computer (scroll lock key)</string>
             </property>
