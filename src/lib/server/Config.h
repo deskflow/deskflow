@@ -475,6 +475,10 @@ private:
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction = false;
   IEventQueue *m_events;
+  inline static const QStringList m_oldNames = {
+      QStringLiteral("protocol"),        QStringLiteral("heartbeat"),          QStringLiteral("switchDelay"),
+      QStringLiteral("switchDoubleTap"), QStringLiteral("relativeMouseMoves"), QStringLiteral("win32KeepForeground")
+  };
 };
 
 //! Configuration read context

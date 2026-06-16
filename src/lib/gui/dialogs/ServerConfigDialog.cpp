@@ -83,6 +83,7 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
+  Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
 
   QDialog::accept();
 }
@@ -339,7 +340,9 @@ void ServerConfigDialog::toggleLockToScreen(bool disabled)
 
 void ServerConfigDialog::toggleWin32Foreground(bool enabled)
 {
-  serverConfig().setWin32KeepForeground(enabled);
+  if (m_win32keepForeground == enabled)
+    return;
+  m_win32keepForeground = enabled;
   onChange();
 }
 
@@ -361,7 +364,6 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->tabWidget->setTabEnabled(1, !checked);
   ui->cbDefaultLockToScreenState->setEnabled(!checked);
   ui->cbDisableLockToScreen->setEnabled(!checked);
-  ui->cbWin32KeepForeground->setEnabled(!checked);
   ui->cbEnableClipboard->setEnabled(!checked);
   ui->label_7->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
   ui->sbClipboardSizeLimit->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
@@ -407,7 +409,8 @@ void ServerConfigDialog::loadFromConfig()
   m_relativeMouseMoves = Settings::value(Settings::Server::RelativeMouseMoves).toBool();
   ui->cbRelativeMouseMoves->setChecked(m_relativeMouseMoves);
 
-  ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
+  m_win32keepForeground = Settings::value(Settings::Server::Win32KeepForeground).toBool();
+  ui->cbWin32KeepForeground->setChecked(m_win32keepForeground);
 
   m_enableSwitchDelay = Settings::value(Settings::Server::EnableSwitchDelay).toBool();
   ui->cbSwitchDelay->setChecked(m_enableSwitchDelay);
@@ -545,7 +548,8 @@ void ServerConfigDialog::onChange()
       m_switchDelay == Settings::value(Settings::Server::SwitchDelay).toInt() &&
       m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() &&
       m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt() &&
-      m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool();
+      m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool() &&
+      m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }
