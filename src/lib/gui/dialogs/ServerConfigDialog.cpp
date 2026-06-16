@@ -80,6 +80,7 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
   Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
+  Settings::setValue(Settings::Server::DefaultLockToComputerState, m_defaultLockToComputerState);
   Settings::setValue(Settings::Server::DisableLockToComputer, m_disableLockToComputer);
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
@@ -329,7 +330,9 @@ void ServerConfigDialog::setSwitchDelay(int delay)
 
 void ServerConfigDialog::toggleDefaultLockToScreenState(bool state)
 {
-  serverConfig().setDefaultLockToScreenState(state);
+  if (m_defaultLockToComputerState == state)
+    return;
+  m_defaultLockToComputerState = state;
   onChange();
 }
 
@@ -365,7 +368,6 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->widgetExternalConfigControls->setEnabled(checked);
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
-  ui->cbDefaultLockToScreenState->setEnabled(!checked);
   ui->cbEnableClipboard->setEnabled(!checked);
   ui->label_7->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
   ui->sbClipboardSizeLimit->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
@@ -438,7 +440,9 @@ void ServerConfigDialog::loadFromConfig()
   ui->cbCornerBottomLeft->setChecked(serverConfig().switchCorner(static_cast<int>(BottomLeft)));
   ui->cbCornerBottomRight->setChecked(serverConfig().switchCorner(static_cast<int>(BottomRight)));
   ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
-  ui->cbDefaultLockToScreenState->setChecked(serverConfig().defaultLockToScreenState());
+
+  m_defaultLockToComputerState = Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
+  ui->cbDefaultLockToScreenState->setChecked(m_defaultLockToComputerState);
 
   m_disableLockToComputer = Settings::value(Settings::Server::DisableLockToComputer).toBool();
   ui->cbDisableLockToComputer->setChecked(m_disableLockToComputer);
@@ -554,7 +558,8 @@ void ServerConfigDialog::onChange()
       m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt() &&
       m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool() &&
       m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool() &&
-      m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool();
+      m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool() &&
+      m_defaultLockToComputerState == Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }

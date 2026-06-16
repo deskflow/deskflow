@@ -56,10 +56,6 @@ public:
   {
     return m_Hotkeys;
   }
-  bool defaultLockToScreenState() const
-  {
-    return m_DefaultLockToScreenState;
-  }
   bool clipboardSharing() const
   {
     return m_ClipboardSharing;
@@ -106,10 +102,6 @@ private:
   {
     m_SwitchCornerSize = val;
   }
-  void setDefaultLockToScreenState(bool on)
-  {
-    m_DefaultLockToScreenState = on;
-  }
   void setClipboardSharing(bool on)
   {
     m_ClipboardSharing = on;
@@ -131,7 +123,6 @@ private:
 
 private:
   int m_SwitchCornerSize = 0;
-  bool m_DefaultLockToScreenState = false;
   bool m_ClipboardSharing = true;
   QList<bool> m_SwitchCorners;
   HotkeyList m_Hotkeys;

@@ -114,6 +114,7 @@ private:
   bool m_originalServerConfigIsExternal;
   bool m_win32keepForeground;
   bool m_disableLockToComputer;
+  bool m_defaultLockToComputerState;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;
