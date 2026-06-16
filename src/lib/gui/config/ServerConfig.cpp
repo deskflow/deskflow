@@ -52,12 +52,11 @@ bool ServerConfig::save(const QString &fileName) const
 
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
-  return m_Screens == sc.m_Screens &&                                   //
-         m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
-         m_SwitchCorners == sc.m_SwitchCorners &&                       //
-         m_Hotkeys == sc.m_Hotkeys &&                                   //
-         m_DefaultLockToScreenState == sc.m_DefaultLockToScreenState && //
-         m_ClipboardSharing == sc.m_ClipboardSharing &&                 //
+  return m_Screens == sc.m_Screens &&                   //
+         m_SwitchCornerSize == sc.m_SwitchCornerSize && //
+         m_SwitchCorners == sc.m_SwitchCorners &&       //
+         m_Hotkeys == sc.m_Hotkeys &&                   //
+         m_ClipboardSharing == sc.m_ClipboardSharing && //
          m_ClipboardSharingSize == sc.m_ClipboardSharingSize;
 }
 
@@ -91,7 +90,6 @@ void ServerConfig::commit()
   settings().remove("");
 
   settings().setValue("switchCornerSize", switchCornerSize());
-  settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
   settings().setValue("clipboardSharing", clipboardSharing());
   settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
 
@@ -133,7 +131,6 @@ void ServerConfig::recall()
   setupScreens();
 
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
-  setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
   setClipboardSharingSize(
       settings().value("clipboardSharingSize", (int)ServerConfig::defaultClipboardSharingSize()).toULongLong()
   );
@@ -219,8 +216,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "end" << Qt::endl << Qt::endl;
 
   outStream << "section: options" << Qt::endl;
-  outStream << "\t"
-            << "defaultLockToScreenState = " << (config.defaultLockToScreenState() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << Qt::endl;
   outStream << "\t"

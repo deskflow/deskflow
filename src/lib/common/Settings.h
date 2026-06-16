@@ -104,6 +104,7 @@ public:
   };
   struct Server
   {
+    inline static const auto DefaultLockToComputerState = QStringLiteral("server/defaultLockToComputerState");
     inline static const auto DisableLockToComputer = QStringLiteral("server/disableLockToComputer");
     inline static const auto EnableHeatbeat = QStringLiteral("server/enableHeatbeat");
     inline static const auto EnableSwitchDelay = QStringLiteral("server/enableSwitchDelay");
@@ -252,6 +253,7 @@ private:
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
+    , Settings::Server::DefaultLockToComputerState
     , Settings::Server::DisableLockToComputer
     , Settings::Server::EnableHeatbeat
     , Settings::Server::EnableSwitchDelay
@@ -286,6 +288,7 @@ private:
     , Settings::Client::InvertXScroll
     , Settings::Log::ToFile
     , Settings::Log::GuiDebug
+    , Settings::Server::DefaultLockToComputerState
     , Settings::Server::DisableLockToComputer
     , Settings::Server::EnableHeatbeat
     , Settings::Server::EnableSwitchDelay
@@ -317,7 +320,8 @@ private:
   };
   // Contains settings removed from server-configuration file
   inline static const QStringList m_oldServerConfigKeys = {
-      QStringLiteral("internalConfig/disableLockToScreen")
+      QStringLiteral("internalConfig/defaultLockToScreenState")
+    , QStringLiteral("internalConfig/disableLockToScreen")
     , QStringLiteral("internalConfig/hasHeartbeat")
     , QStringLiteral("internalConfig/hasSwitchDelay")
     , QStringLiteral("internalConfig/hasSwitchDoubleTap")
