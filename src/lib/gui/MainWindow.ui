@@ -399,7 +399,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineHostname">
+              <widget class="QComboBox" name="comboHostname">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -408,6 +408,40 @@
                </property>
                <property name="toolTip">
                 <string>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</string>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::NoInsert</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnRemoveHostname">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Remove saved hostname</string>
+               </property>
+               <property name="text">
+                <string>Remove</string>
                </property>
               </widget>
              </item>

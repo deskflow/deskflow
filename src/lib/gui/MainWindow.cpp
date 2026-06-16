@@ -31,10 +31,12 @@
 #include "net/FingerprintDatabase.h"
 #include "widgets/StatusBar.h"
 
+#include <QAbstractItemView>
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include <QKeyEvent>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QMenu>
@@ -283,8 +285,9 @@ void MainWindow::connectSlots()
 
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->comboHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
+  connect(ui->comboHostname, &QComboBox::editTextChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->btnRemoveHostname, &QPushButton::clicked, this, &MainWindow::removeHostname);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -401,6 +404,8 @@ void MainWindow::startCore()
   if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
     m_serverStartIPs = NetworkMonitor::validAddresses();
     m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
+  } else if (m_coreProcess.mode() == CoreMode::Client) {
+    saveServerAddressHistory(ui->comboHostname->currentText());
   }
 
   m_actionStartCore->setVisible(false);
@@ -649,7 +654,7 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (ui->rbModeClient->isChecked() && ui->comboHostname->currentText().isEmpty())
       return;
     startCore();
   }
@@ -703,8 +708,9 @@ void MainWindow::applyConfig()
     setWindowTitle(kAppName);
   }
 
+  loadServerAddressHistory();
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
-    ui->lineHostname->setText(host);
+    ui->comboHostname->setCurrentText(host);
 
   updateLocalFingerprint();
   setTrayIcon();
@@ -724,8 +730,8 @@ void MainWindow::saveSettings() const
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  if (!ui->lineHostname->text().isEmpty())
-    Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+  if (!ui->comboHostname->currentText().isEmpty())
+    Settings::setValue(Settings::Client::RemoteHost, ui->comboHostname->currentText());
   Settings::save();
 }
 
@@ -1024,6 +1030,37 @@ void MainWindow::changeEvent(QEvent *e)
   }
 }
 
+void MainWindow::removeHostname()
+{
+  const QString itemToRemove = ui->comboHostname->currentText();
+  if (itemToRemove.isEmpty() || ui->comboHostname->count() == 0) {
+    return;
+  }
+
+  QStringList history = Settings::value(Settings::Client::ServerAddressHistory).toStringList();
+  for (int i = 0; i < history.size(); ++i) {
+    if (history[i].compare(itemToRemove, Qt::CaseInsensitive) == 0) {
+      history.removeAt(i);
+      break;
+    }
+  }
+
+  Settings::setValue(Settings::Client::ServerAddressHistory, history);
+
+  const int index = ui->comboHostname->findText(itemToRemove);
+  if (index >= 0) {
+    ui->comboHostname->removeItem(index);
+  }
+
+  if (ui->comboHostname->currentText() == itemToRemove) {
+    ui->comboHostname->setCurrentText(QString());
+  }
+
+  if (ui->comboHostname->count() == 0) {
+    ui->btnRemoveHostname->setEnabled(false);
+  }
+}
+
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (obj != ui->lineEditName || event->type() != QEvent::KeyPress)
@@ -1284,5 +1321,45 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  return ((isServer || isClient) && (isClient && !ui->comboHostname->currentText().isEmpty()) || isServer);
+}
+
+void MainWindow::loadServerAddressHistory()
+{
+  const auto history = Settings::value(Settings::Client::ServerAddressHistory).toStringList();
+  ui->comboHostname->clear();
+  ui->comboHostname->addItems(history);
+  ui->btnRemoveHostname->setEnabled(ui->comboHostname->count() > 0);
+}
+
+void MainWindow::saveServerAddressHistory(const QString &address)
+{
+  QString normalized = address.trimmed().toLower();
+  if (normalized.isEmpty())
+    return;
+
+  QStringList history = Settings::value(Settings::Client::ServerAddressHistory).toStringList();
+
+  // Remove existing entry to move it to the top (case-insensitive check)
+  for (int i = 0; i < history.size(); ++i) {
+    if (history[i].compare(normalized, Qt::CaseInsensitive) == 0) {
+      history.removeAt(i);
+      break;
+    }
+  }
+
+  history.prepend(normalized);
+
+  while (history.size() > 10) {
+    history.removeLast();
+  }
+
+  Settings::setValue(Settings::Client::ServerAddressHistory, history);
+
+  // Reload combo box while preserving current text
+  const QString current = ui->comboHostname->currentText();
+  ui->comboHostname->clear();
+  ui->comboHostname->addItems(history);
+  ui->comboHostname->setCurrentText(current);
+  ui->btnRemoveHostname->setEnabled(ui->comboHostname->count() > 0);
 }

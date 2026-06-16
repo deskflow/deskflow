@@ -126,6 +126,8 @@ private:
   void handleLogLine(const QString &line);
   void updateLocalFingerprint();
   void updateScreenName();
+  void loadServerAddressHistory();
+  void saveServerAddressHistory(const QString &address);
   void saveSettings() const;
   void showConfigureServer(const QString &message);
   void showConfigureClient();
@@ -139,6 +141,7 @@ private:
   void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString &newRemoteHost);
+  void removeHostname();
   void updateIpLabel(const QStringList &addresses);
   void updateTimeoutDelay(int newDelay);
 
