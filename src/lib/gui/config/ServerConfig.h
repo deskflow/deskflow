@@ -160,7 +160,6 @@ private:
   bool m_DefaultLockToScreenState = false;
   bool m_DisableLockToScreen = false;
   bool m_ClipboardSharing = true;
-  QString m_ClientAddress = "";
   QList<bool> m_SwitchCorners;
   HotkeyList m_Hotkeys;
 
