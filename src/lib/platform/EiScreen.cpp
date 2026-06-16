@@ -20,6 +20,7 @@
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#include "platform/PortalGlobalShortcuts.h"
 
 #include <algorithm>
 #include <cmath>
@@ -57,8 +58,10 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
-      m_portalInputCapture = new PortalInputCapture(this, m_events);
       // Portal input capture manages its own clipboard
+      m_portalInputCapture = new PortalInputCapture(this, m_events);
+      // Portal global shortcuts
+      m_portalShortcuts = new PortalGlobalShortcuts(this, m_events);
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
@@ -95,6 +98,7 @@ EiScreen::~EiScreen()
   delete m_clipboard;
 
   delete m_portalRemoteDesktop;
+  delete m_portalShortcuts;
 }
 
 void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
@@ -232,6 +236,9 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     set = m_hotkeys.find(key);
   }
   set->second.addItem(HotKeyItem(mask, id));
+
+  if (m_portalShortcuts)
+    m_portalShortcuts->updateShortcuts();
 
   return id;
 }

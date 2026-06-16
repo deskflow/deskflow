@@ -27,6 +27,7 @@ namespace deskflow {
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class PortalGlobalShortcuts;
 class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
@@ -117,7 +118,9 @@ private:
   void onPointerScrollDiscreteEvent(ei_event *event);
   void onMotionEvent(ei_event *event);
   void onAbsMotionEvent(const ei_event *) const;
+  public:
   bool onHotkey(KeyID key, bool isPressed, KeyModifierMask mask);
+  private:
   void eiLogEvent(ei_log_priority priority, const char *message) const;
 
   void handleConnectedToEisEvent(const Event &event);
@@ -174,6 +177,7 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+  PortalGlobalShortcuts* m_portalShortcuts = nullptr;
 
   struct HotKeyItem
   {
@@ -203,12 +207,15 @@ private:
 
   private:
     KeyID m_id = 0;
+  public:
     std::vector<HotKeyItem> m_set;
   };
 
   using HotKeyMap = std::map<KeyID, HotKeySet>;
 
+  public:
   HotKeyMap m_hotkeys;
+  private:
   [[no_unique_address]] XDGPowerManager m_powerManager;
 };
 
