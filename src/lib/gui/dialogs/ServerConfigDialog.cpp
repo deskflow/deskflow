@@ -328,7 +328,7 @@ void ServerConfigDialog::setSwitchDelay(int delay)
   onChange();
 }
 
-void ServerConfigDialog::toggleDefaultLockToScreenState(bool state)
+void ServerConfigDialog::toggleDefaultLockToComputerState(bool state)
 {
   if (m_defaultLockToComputerState == state)
     return;
@@ -442,7 +442,7 @@ void ServerConfigDialog::loadFromConfig()
   ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
   m_defaultLockToComputerState = Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
-  ui->cbDefaultLockToScreenState->setChecked(m_defaultLockToComputerState);
+  ui->cbDefaultLockToComputerState->setChecked(m_defaultLockToComputerState);
 
   m_disableLockToComputer = Settings::value(Settings::Server::DisableLockToComputer).toBool();
   ui->cbDisableLockToComputer->setChecked(m_disableLockToComputer);
@@ -524,7 +524,7 @@ void ServerConfigDialog::initConnections()
   connect(ui->cbCornerBottomLeft, &QCheckBox::toggled, this, &ServerConfigDialog::toggleCornerBottomLeft);
   connect(ui->cbCornerBottomRight, &QCheckBox::toggled, this, &ServerConfigDialog::toggleCornerBottomRight);
   connect(
-      ui->cbDefaultLockToScreenState, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDefaultLockToScreenState
+      ui->cbDefaultLockToComputerState, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDefaultLockToComputerState
   );
   connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
   connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
