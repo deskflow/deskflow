@@ -82,6 +82,7 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
+  Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
 
   QDialog::accept();
 }
@@ -245,7 +246,9 @@ void ServerConfigDialog::setHeartbeat(int rate)
 
 void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
 {
-  serverConfig().setRelativeMouseMoves(enabled);
+  if (m_relativeMouseMoves == enabled)
+    return;
+  m_relativeMouseMoves = enabled;
   onChange();
 }
 
@@ -356,7 +359,12 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->widgetExternalConfigControls->setEnabled(checked);
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
-  ui->groupMisc->setEnabled(!checked);
+  ui->cbDefaultLockToScreenState->setEnabled(!checked);
+  ui->cbDisableLockToScreen->setEnabled(!checked);
+  ui->cbWin32KeepForeground->setEnabled(!checked);
+  ui->cbEnableClipboard->setEnabled(!checked);
+  ui->label_7->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
+  ui->sbClipboardSizeLimit->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
   ui->groupCorners->setEnabled(!checked);
   serverConfig().setUseExternalConfig(checked);
   onChange();
@@ -396,7 +404,9 @@ void ServerConfigDialog::loadFromConfig()
   m_heartbeatRate = Settings::value(Settings::Server::Heartbeat).toInt();
   ui->sbHeartbeat->setValue(m_heartbeatRate);
 
-  ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
+  m_relativeMouseMoves = Settings::value(Settings::Server::RelativeMouseMoves).toBool();
+  ui->cbRelativeMouseMoves->setChecked(m_relativeMouseMoves);
+
   ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
 
   m_enableSwitchDelay = Settings::value(Settings::Server::EnableSwitchDelay).toBool();
@@ -534,7 +544,8 @@ void ServerConfigDialog::onChange()
       m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool() &&
       m_switchDelay == Settings::value(Settings::Server::SwitchDelay).toInt() &&
       m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() &&
-      m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt();
+      m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt() &&
+      m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }

@@ -40,10 +40,6 @@ public:
   //
   // New methods
   //
-  bool relativeMouseMoves() const
-  {
-    return m_RelativeMouseMoves;
-  }
   bool win32KeepForeground() const
   {
     return m_Win32KeepForeground;
@@ -110,10 +106,6 @@ private:
   {
     m_Screens.append(screen);
   }
-  void setRelativeMouseMoves(bool on)
-  {
-    m_RelativeMouseMoves = on;
-  }
   void setWin32KeepForeground(bool on)
   {
     m_Win32KeepForeground = on;
@@ -154,7 +146,6 @@ private:
   bool fixNoServer(const QString &name, int &index);
 
 private:
-  bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
   int m_SwitchCornerSize = 0;
   bool m_DefaultLockToScreenState = false;

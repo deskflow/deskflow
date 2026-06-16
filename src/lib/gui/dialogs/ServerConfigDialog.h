@@ -108,6 +108,7 @@ private:
   int m_heartbeatRate;
   int m_switchDelay;
   int m_switchDoubleTap;
+  bool m_relativeMouseMoves;
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;

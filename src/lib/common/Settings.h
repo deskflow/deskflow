@@ -113,6 +113,7 @@ public:
     inline static const auto GridWidth = QStringLiteral("server/gridWidth");
     inline static const auto Heartbeat = QStringLiteral("server/heartbeat");
     inline static const auto Protocol = QStringLiteral("server/protocol");
+    inline static const auto RelativeMouseMoves = QStringLiteral("server/relativeMouseMoves");
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
@@ -258,6 +259,7 @@ private:
     , Settings::Server::GridWidth
     , Settings::Server::Heartbeat
     , Settings::Server::Protocol
+    , Settings::Server::RelativeMouseMoves
     , Settings::Server::SwitchDelay
     , Settings::Server::SwitchDoubleTap
     , Settings::Server::XdpRestoreToken
@@ -284,6 +286,7 @@ private:
     , Settings::Server::EnableSwitchDelay
     , Settings::Server::EnableSwitchDoubleTap
     , Settings::Server::ExternalConfig
+    , Settings::Server::RelativeMouseMoves
   };
 
   // When checking the default values this list contains the ones that default to true.
@@ -315,6 +318,7 @@ private:
     , QStringLiteral("internalConfig/protocol")
     , QStringLiteral("internalConfig/numColumns")
     , QStringLiteral("internalConfig/numRows")
+    , QStringLiteral("interlanConfig/relativeMouseMoves")
     , QStringLiteral("internalConfig/switchDelay")
     , QStringLiteral("internalConfig/switchDoubleTap")
   };

@@ -53,7 +53,6 @@ bool ServerConfig::save(const QString &fileName) const
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
   return m_Screens == sc.m_Screens &&                                   //
-         m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
          m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
          m_SwitchCorners == sc.m_SwitchCorners &&                       //
@@ -93,7 +92,6 @@ void ServerConfig::commit()
   settings().beginGroup("internalConfig");
   settings().remove("");
 
-  settings().setValue("relativeMouseMoves", relativeMouseMoves());
   settings().setValue("win32KeepForeground", win32KeepForeground());
   settings().setValue("switchCornerSize", switchCornerSize());
   settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
@@ -138,7 +136,6 @@ void ServerConfig::recall()
   // ourselves
   setupScreens();
 
-  setRelativeMouseMoves(settings().value("relativeMouseMoves", false).toBool());
   setWin32KeepForeground(settings().value("win32KeepForeground", false).toBool());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
   setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
@@ -229,8 +226,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   outStream << "section: options" << Qt::endl;
 
-  outStream << "\t"
-            << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
   outStream << "\t"
