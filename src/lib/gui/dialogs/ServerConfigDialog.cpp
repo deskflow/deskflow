@@ -76,6 +76,7 @@ void ServerConfigDialog::accept()
   // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
+  Settings::setValue(Settings::Server::EnableClipboard, m_enableClipboard);
   Settings::setValue(Settings::Server::EnableHeatbeat, m_enableHeartbeat);
   Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
@@ -217,12 +218,16 @@ void ServerConfigDialog::removeAction()
 
 void ServerConfigDialog::toggleClipboard(bool enabled)
 {
+  if (m_enableClipboard == enabled)
+    return;
+
+  m_enableClipboard = enabled;
+
   ui->sbClipboardSizeLimit->setEnabled(enabled);
   if (enabled && !ui->sbClipboardSizeLimit->value()) {
     auto size = static_cast<int>((ServerConfig::defaultClipboardSharingSize() + 512) / 1024);
     ui->sbClipboardSizeLimit->setValue(size ? size : 1);
   }
-  serverConfig().setClipboardSharing(enabled);
   onChange();
 }
 
@@ -368,7 +373,6 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->widgetExternalConfigControls->setEnabled(checked);
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
-  ui->cbEnableClipboard->setEnabled(!checked);
   ui->label_7->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
   ui->sbClipboardSizeLimit->setEnabled(checked ? !checked : ui->cbEnableClipboard->isChecked());
   ui->groupCorners->setEnabled(!checked);
@@ -447,11 +451,12 @@ void ServerConfigDialog::loadFromConfig()
   m_disableLockToComputer = Settings::value(Settings::Server::DisableLockToComputer).toBool();
   ui->cbDisableLockToComputer->setChecked(m_disableLockToComputer);
 
-  ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
+  m_enableClipboard = Settings::value(Settings::Server::EnableClipboard).toBool();
+  ui->cbEnableClipboard->setChecked(m_enableClipboard);
+  ui->sbClipboardSizeLimit->setEnabled(m_enableClipboard);
 
   auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
   ui->sbClipboardSizeLimit->setValue(clipboardSharingSizeM);
-  ui->sbClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
   ui->listHotkeys->clear();
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
@@ -550,6 +555,7 @@ void ServerConfigDialog::onChange()
       m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
       m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
       m_protocol == Settings::networkProtocol() &&
+      m_enableClipboard == Settings::value(Settings::Server::EnableClipboard).toBool() &&
       m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool() &&
       m_heartbeatRate == Settings::value(Settings::Server::Heartbeat).toInt() &&
       m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool() &&

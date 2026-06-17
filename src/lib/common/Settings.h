@@ -105,6 +105,7 @@ public:
   {
     inline static const auto DefaultLockToComputerState = QStringLiteral("server/defaultLockToComputerState");
     inline static const auto DisableLockToComputer = QStringLiteral("server/disableLockToComputer");
+    inline static const auto EnableClipboard = QStringLiteral("server/enableClipboard");
     inline static const auto EnableHeatbeat = QStringLiteral("server/enableHeatbeat");
     inline static const auto EnableSwitchDelay = QStringLiteral("server/enableSwitchDelay");
     inline static const auto EnableSwitchDoubleTap = QStringLiteral("server/enableSwitchDoubleTap");
@@ -253,6 +254,7 @@ private:
     , Settings::Security::TlsEnabled
     , Settings::Server::DefaultLockToComputerState
     , Settings::Server::DisableLockToComputer
+    , Settings::Server::EnableClipboard
     , Settings::Server::EnableHeatbeat
     , Settings::Server::EnableSwitchDelay
     , Settings::Server::EnableSwitchDoubleTap
@@ -304,6 +306,7 @@ private:
     , Settings::Gui::SymbolicTrayIcon
     , Settings::Security::TlsEnabled
     , Settings::Security::CheckPeers
+    , Settings::Server::EnableClipboard
     , Settings::Server::Win32KeepForeground
   };
 
@@ -319,6 +322,7 @@ private:
   inline static const QStringList m_oldServerConfigKeys = {
       QStringLiteral("internalConfig/defaultLockToScreenState")
     , QStringLiteral("internalConfig/disableLockToScreen")
+    , QStringLiteral("internalConfig/clipboardSharing")
     , QStringLiteral("internalConfig/hasHeartbeat")
     , QStringLiteral("internalConfig/hasSwitchDelay")
     , QStringLiteral("internalConfig/hasSwitchDoubleTap")
