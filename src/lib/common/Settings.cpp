@@ -222,6 +222,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::SwitchDelay || key == Server::SwitchDoubleTap)
     return 250;
 
+  if (key == Server::ClipboardSize)
+    return 3; // 3 MiB
+
   return QVariant();
 }
 
