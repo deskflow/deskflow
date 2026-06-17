@@ -656,8 +656,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionScreenSwitchNeedsControl, s.parseBoolean(value));
     } else if (name == "switchNeedsAlt") {
       addOption("", kOptionScreenSwitchNeedsAlt, s.parseBoolean(value));
-    } else if (name == "clipboardSharing") {
-      addOption("", kOptionClipboardSharing, s.parseBoolean(value));
     } else if (name == "clipboardSharingSize") {
       addOption("", kOptionClipboardSharingSize, s.parseInt(value));
     } else {
@@ -724,6 +722,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
   addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toInt());
   addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toInt());
   addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toInt());
+  addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());
 
   throw ServerConfigReadException(s, "unexpected end of options section");
 }

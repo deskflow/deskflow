@@ -104,6 +104,7 @@ private:
   int m_rows;
   ServerConfig &m_originalServerConfig;
   NetworkProtocol m_protocol;
+  bool m_enableClipboard;
   bool m_enableHeartbeat;
   int m_heartbeatRate;
   int m_switchDelay;

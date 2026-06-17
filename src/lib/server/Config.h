@@ -476,6 +476,7 @@ private:
   bool m_hasLockToScreenAction = false;
   IEventQueue *m_events;
   inline static const QStringList m_oldNames = {
+      QStringLiteral("clipboardSharing"),
       QStringLiteral("protocol"),
       QStringLiteral("heartbeat"),
       QStringLiteral("switchDelay"),
