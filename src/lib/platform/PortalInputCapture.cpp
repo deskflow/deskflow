@@ -366,9 +366,9 @@ void PortalInputCapture::handleStart(GObject *object, GAsyncResult *res)
     return;
   }
 
-  auto restoreToken = xdp_input_capture_session_get_restore_token(m_session);
-  if (restoreToken) {
-    Settings::setValue(Settings::Server::XdpRestoreToken, QString(restoreToken));
+  auto restoreToken = QString(xdp_input_capture_session_get_restore_token(m_session));
+  if (!restoreToken.isEmpty()) {
+    Settings::setValue(Settings::Server::XdpRestoreToken, restoreToken);
   }
 #endif
   setupSession(m_session);
