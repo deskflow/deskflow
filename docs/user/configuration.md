@@ -77,7 +77,6 @@ This section contains general options it will begin with `[core]`
 | computerName  | string            | Name used to identify the computer [default: machine's hostname] |
 | useHooks      | `true` or `false` | If Windows uses hooks or not [default: true] |
 | language      | 639 language      | The language to display the GUI in [default: en] |
-| wlClipboard   | `true` or `false` | When true the wl-clipboard backend will be enabled [default: false] |
 | enableEnterCommand | `true` or `false` | Should the enter command be triggered when the screen is entered [defaut: false] |
 | enterCommand  | command | A command to run when the screen is entered. |
 | enableExitCommand | `true` or `false` | Should the exit command be triggered when the screen is exited [defaut: false] |
