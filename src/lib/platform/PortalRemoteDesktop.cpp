@@ -245,7 +245,7 @@ void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const cha
 #endif
 }
 
-void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner)
+void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (isOwner) {
