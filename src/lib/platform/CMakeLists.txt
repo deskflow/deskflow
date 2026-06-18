@@ -151,10 +151,6 @@ elseif(UNIX)
       EiKeyState.h
       EiScreen.cpp
       EiScreen.h
-      WlClipboardCollection.cpp
-      WlClipboardCollection.h
-      WlClipboard.cpp
-      WlClipboard.h
     )
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)

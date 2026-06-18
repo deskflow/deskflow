@@ -34,15 +34,4 @@ elseif(UNIX)
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
   endif()
-
-  # Add Wayland clipboard tests when Wayland support is available
-  if(LIBEI_FOUND AND LIBPORTAL_FOUND)
-    create_test(
-      NAME WlClipboardTests
-      DEPENDS platform
-      LIBS base arch
-      SOURCE WlClipboardTests.cpp
-      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
-    )
-  endif()
 endif()
