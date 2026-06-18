@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
+ * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -11,6 +11,7 @@
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
 
+#include <climits>
 #include <libei.h>
 #include <map>
 #include <mutex>
@@ -23,10 +24,11 @@ struct ei_device;
 
 namespace deskflow {
 
-class WlClipboardCollection;
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class PortalGlobalShortcuts;
+class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
 
@@ -78,6 +80,21 @@ public:
   void setSequenceNumber(std::uint32_t) override;
   bool isPrimary() const override;
 
+  // Send clipboard event (needed by PortalInputCapture)
+  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
+
+  // Local clipboard cache (used by PortalRemoteDesktop to land selection reads)
+  EiClipboard *getClipboardCache() const
+  {
+    return m_clipboard;
+  }
+
+  // Maximum clipboard size in KB, configured by the server
+  size_t maximumClipboardSize() const
+  {
+    return m_maximumClipboardSize;
+  }
+
 protected:
   // IPlatformScreen overrides
   void handleSystemEvent(const Event &event) override;
@@ -93,7 +110,6 @@ private:
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
-  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);
@@ -102,7 +118,9 @@ private:
   void onPointerScrollDiscreteEvent(ei_event *event);
   void onMotionEvent(ei_event *event);
   void onAbsMotionEvent(const ei_event *) const;
+  public:
   bool onHotkey(KeyID key, bool isPressed, KeyModifierMask mask);
+  private:
   void eiLogEvent(ei_log_priority priority, const char *message) const;
 
   void handleConnectedToEisEvent(const Event &event);
@@ -125,7 +143,8 @@ private:
   KeyID m_lastPressed = kKeyNone;
 
   // clipboard stuff
-  WlClipboardCollection *m_clipboard = nullptr;
+  EiClipboard *m_clipboard = nullptr;
+  size_t m_maximumClipboardSize = INT_MAX;
 
   std::vector<ei_device *> m_eiDevices;
 
@@ -158,6 +177,7 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+  PortalGlobalShortcuts* m_portalShortcuts = nullptr;
 
   struct HotKeyItem
   {
@@ -187,12 +207,15 @@ private:
 
   private:
     KeyID m_id = 0;
+  public:
     std::vector<HotKeyItem> m_set;
   };
 
   using HotKeyMap = std::map<KeyID, HotKeySet>;
 
+  public:
   HotKeyMap m_hotkeys;
+  private:
   [[no_unique_address]] XDGPowerManager m_powerManager;
 };
 
