@@ -254,7 +254,7 @@ void PortalInputCapture::claimClipboardOwnership(XdpSession *session)
 #endif
 }
 
-void PortalInputCapture::readClipboardSelection(XdpSession *session)
+void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   const qint64 maxBytes = static_cast<qint64>(m_screen->maximumClipboardSize()) * 1024;
