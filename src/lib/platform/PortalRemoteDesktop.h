@@ -23,7 +23,7 @@ public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
   ~PortalRemoteDesktop();
 
-  void claimClipboard();
+  void claimClipboard() const;
 
 private:
   void glibThread(const void *);

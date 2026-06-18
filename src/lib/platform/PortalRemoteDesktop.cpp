@@ -219,7 +219,7 @@ void PortalRemoteDesktop::glibThread(const void *)
   }
 }
 
-void PortalRemoteDesktop::claimClipboard()
+void PortalRemoteDesktop::claimClipboard() const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (!m_session) {
