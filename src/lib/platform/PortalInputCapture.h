@@ -59,7 +59,7 @@ private:
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
 
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
-  void readClipboardSelection(XdpSession *session);
+  void readClipboardSelection(XdpSession *session) const;
   void claimClipboardOwnership(XdpSession *session);
 
   /// g_signal_connect callback wrapper
