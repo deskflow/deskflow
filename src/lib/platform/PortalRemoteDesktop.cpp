@@ -234,7 +234,7 @@ void PortalRemoteDesktop::claimClipboard() const
 #endif
 }
 
-void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
+void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   PortalClipboard::serveSelectionTransfer(m_screen->getClipboardCache(), session, mimeType, serial);
