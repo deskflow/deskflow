@@ -1179,12 +1179,12 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
   // screen to grab.
   ClipboardInfo &clipboard = m_clipboards[info->m_id];
   if (grabber != m_primaryClient && info->m_sequenceNumber < clipboard.m_clipboardSeqNum) {
-    LOG_INFO("ignored screen \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id);
+    LOG_DEBUG("ignored screen \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id);
     return;
   }
 
   // mark screen as owning clipboard
-  LOG_INFO(
+  LOG_DEBUG(
       "screen \"%s\" grabbed clipboard %d from \"%s\"", getName(grabber).c_str(), info->m_id,
       clipboard.m_clipboardOwner.c_str()
   );
@@ -1210,7 +1210,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
   }
 
   if (grabber == m_primaryClient && m_active != m_primaryClient) {
-    LOG_INFO("clipboard grabbed while active screen was changed, resending clipboard data");
+    LOG_DEBUG("clipboard grabbed while active screen was changed, resending clipboard data");
     onClipboardChanged(m_primaryClient, info->m_id, clipboard.m_clipboardSeqNum);
   }
 }
