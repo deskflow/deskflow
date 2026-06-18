@@ -33,7 +33,7 @@ private:
   void handleSessionStarted(GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
-  void handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner);
+  void handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner) const;
   void reconnect(unsigned int timeout = 1000);
 
   static void handleSessionClosedCallback(XdpSession *session, gpointer data)
