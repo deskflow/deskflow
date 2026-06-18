@@ -19,6 +19,9 @@ namespace deskflow::gui {
 namespace {
 
 const auto kAgentLabel = QStringLiteral("org.deskflow.vhid-bridge");
+// Retired pre-native-mode login-window coordinator. Enabling the bridge
+// removes it so the two never both run at the login screen.
+const auto kLegacyAgentPlist = QStringLiteral("/Library/LaunchAgents/com.kvm.autoswitch.loginwindow.plist");
 const auto kDaemonAppPath = QStringLiteral(
     "/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/"
     "Applications/Karabiner-VirtualHIDDevice-Daemon.app"
@@ -201,9 +204,12 @@ bool LoginBridgeManager::apply(bool enabled, double scale, QString *error)
   // install(1) sets root:wheel 644 in one step; launchd ignores plists with
   // looser ownership. The agent loads at the next login-window session
   // (logout or restart) -- LoginWindow agents cannot be bootstrapped from a
-  // user session.
-  const auto command = QStringLiteral("install -d /Library/LaunchAgents && install -m 644 -o root -g wheel '%1' '%2'")
-                           .arg(staged.fileName(), agentPlistPath());
+  // user session. The same privileged pass retires the legacy coordinator
+  // agent so enabling is a clean one-click migration.
+  const auto command =
+      QStringLiteral("install -d /Library/LaunchAgents && install -m 644 -o root -g wheel '%1' '%2' && "
+                     "rm -f '%3'; pkill -f '.kvm-autoswitch/coordinator.py' || true")
+          .arg(staged.fileName(), agentPlistPath(), kLegacyAgentPlist);
   return runPrivileged(command, error);
 }
 
