@@ -85,6 +85,8 @@ void ScreenSettingsDialog::accept()
 
   m_screen->setName(ui->lineNameEdit->text());
 
+  m_screen->aliases().clear();
+
   for (int i = 0; i < ui->listAliases->count(); i++) {
     QString alias(ui->listAliases->item(i)->text());
     if (alias == ui->lineNameEdit->text()) {
@@ -95,7 +97,8 @@ void ScreenSettingsDialog::accept()
       );
       return;
     }
-    m_screen->addAlias(alias);
+    if (!m_screen->aliases().contains(alias))
+      m_screen->addAlias(alias);
   }
 
   m_screen->setModifier(Shift, ui->comboShift->currentIndex());
