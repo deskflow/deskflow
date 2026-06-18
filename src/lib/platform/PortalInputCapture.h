@@ -93,7 +93,6 @@ private:
     static_cast<PortalInputCapture *>(data)->handleSelectionTransfer(session, mimeType, serial);
   }
 
-private:
   enum class Signal : uint8_t
   {
     SessionClosed,
