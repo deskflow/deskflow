@@ -15,6 +15,7 @@
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
 #include "mt/Thread.h"
+#include "net/ISocket.h"
 #include "net/ISocketMultiplexerJob.h"
 
 #include <vector>
@@ -45,6 +46,18 @@ SocketMultiplexer::~SocketMultiplexer()
   m_thread->cancel();
   m_thread->unblockPollSocket();
   m_thread->wait();
+
+  // Sever every still-registered socket's back-pointer to us before our state
+  // (m_mutex, condvars) is freed below. A socket can outlive this multiplexer
+  // when it is owned by an event still queued across an auto-mode role switch;
+  // without this, that socket's later close() would call removeSocket() on
+  // freed memory -- the EXC_BAD_ACCESS in Mutex::lock() on role churn.
+  for (const auto &[socket, jobCursor] : m_socketJobMap) {
+    if (socket != nullptr) {
+      socket->onMultiplexerShutdown();
+    }
+  }
+
   delete m_thread;
   delete m_jobsReady;
   delete m_jobListLock;

@@ -22,6 +22,7 @@ private Q_SLOTS:
   void claimFromSelfIgnored();
   void claimDuringServerCooldownIgnored();
   void claimAfterServerCooldownFollowed();
+  void clientSelfCooldownBlocksForeignClaim();
   void sameHostHeartbeatIsNoOp();
   void claimMergesSequenceNumbers();
   void transitionsResetBurstAndCursor();

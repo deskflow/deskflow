@@ -76,7 +76,20 @@ ElectionState::onClaim(const std::string &senderName, const std::string &ip, con
   }
 
   const double now = m_clock();
+
+  // Server stickiness: a fresh server ignores rival claims for a short window.
   if (m_role == Role::Server && now - m_lastSwitchAt < m_tuning.claimCooldownS) {
+    return ClaimAction::Ignore;
+  }
+
+  // Client/Init anti-flap, symmetric with onLocalInput(): a node that just
+  // switched must not immediately follow a DIFFERENT peer's claim. Without
+  // this guard two machines ping-pong leadership and churn epochs many times a
+  // second -- which in turn races the socket/multiplexer teardown. A freshly
+  // booted node is exempt (m_lastSwitchAt starts at -1e9), so first-join
+  // following is unaffected, as is following the current server's heartbeat
+  // (handled as a strict no-op just below).
+  if (m_role != Role::Server && now - m_lastSwitchAt < m_tuning.selfCooldownS) {
     return ClaimAction::Ignore;
   }
 

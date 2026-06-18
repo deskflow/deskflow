@@ -358,8 +358,26 @@ TCPSocket::JobResult TCPSocket::doWrite()
   return JobResult::Retry;
 }
 
+void TCPSocket::onMultiplexerShutdown()
+{
+  // The multiplexer is being destroyed; drop our back-pointer so a later
+  // close()/setJob() can't dereference its freed mutex. Runs after the
+  // multiplexer's service thread has stopped, on the teardown thread, so it
+  // is not racing this socket's own I/O.
+  Lock lock(&m_mutex);
+  m_socketMultiplexer = nullptr;
+}
+
 void TCPSocket::setJob(ISocketMultiplexerJob *job)
 {
+  // The multiplexer severs this pointer on its own teardown (see
+  // onMultiplexerShutdown). Once it is gone there is nothing to (un)register
+  // with, so a late close() is a no-op -- but we still own any job we were
+  // handed and must not leak it.
+  if (m_socketMultiplexer == nullptr) {
+    delete job;
+    return;
+  }
   // multiplexer will delete the old job
   if (job == nullptr) {
     m_socketMultiplexer->removeSocket(this);

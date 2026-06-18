@@ -129,6 +129,23 @@ void ElectionStateTests::claimAfterServerCooldownFollowed()
   QCOMPARE(f.state.onClaim("beta", "10.0.0.2", "beta.local", 1), ClaimAction::FollowSender);
 }
 
+void ElectionStateTests::clientSelfCooldownBlocksForeignClaim()
+{
+  // Regression: a client that just switched must NOT immediately follow a
+  // claim from a different peer, or two machines ping-pong leadership and
+  // churn epochs (which raced socket teardown into a use-after-free).
+  Fixture f;
+  f.state.becameClient("10.0.0.2"); // lastSwitchAt = now
+
+  // Within the 2.5s self-cooldown a foreign peer's claim is ignored...
+  f.now += 1.0;
+  QCOMPARE(f.state.onClaim("other", "10.0.0.3", "other.local", 5), ClaimAction::Ignore);
+
+  // ...but once the cooldown elapses the same claim is followed.
+  f.now += 2.0; // 3.0s since the switch, past the cooldown
+  QCOMPARE(f.state.onClaim("other", "10.0.0.3", "other.local", 6), ClaimAction::FollowSender);
+}
+
 void ElectionStateTests::sameHostHeartbeatIsNoOp()
 {
   Fixture f;

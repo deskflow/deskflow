@@ -44,5 +44,17 @@ public:
   */
   virtual void *getEventTarget() const = 0;
 
+  //! Notify that the owning SocketMultiplexer is being destroyed
+  /*!
+  Called by \c SocketMultiplexer's destructor for every socket still
+  registered with it. A socket that outlives its multiplexer (e.g. one held
+  by a queued event across an auto-mode role switch) must drop its
+  back-pointer here so a later \c close() cannot dereference freed state.
+  Default is a no-op for sockets that hold no multiplexer reference.
+  */
+  virtual void onMultiplexerShutdown()
+  {
+  }
+
   //@}
 };

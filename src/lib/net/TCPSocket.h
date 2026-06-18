@@ -43,6 +43,7 @@ public:
   void bind(const NetworkAddress &) override;
   void close() override;
   void *getEventTarget() const override;
+  void onMultiplexerShutdown() override;
 
   // IStream overrides
   uint32_t read(void *buffer, uint32_t n) override;
