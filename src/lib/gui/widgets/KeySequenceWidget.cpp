@@ -74,9 +74,6 @@ bool KeySequenceWidget::event(QEvent *event)
       return true;
 
     case QEvent::MouseButtonRelease:
-      event->accept();
-      return true;
-
     case QEvent::ShortcutOverride:
       event->accept();
       return true;
