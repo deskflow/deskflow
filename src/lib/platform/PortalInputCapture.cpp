@@ -273,7 +273,7 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 #endif
 }
 
-void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial)
+void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (m_isActive) {

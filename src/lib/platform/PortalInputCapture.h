@@ -58,7 +58,7 @@ private:
   handleDeactivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, const GVariant *options);
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
 
-  void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial);
+  void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const;
   void readClipboardSelection(XdpSession *session) const;
   void claimClipboardOwnership(XdpSession *session) const;
 
