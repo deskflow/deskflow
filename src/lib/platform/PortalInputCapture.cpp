@@ -247,7 +247,7 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   m_signals.at(Signal::SessionClosed) = 0;
 }
 
-void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *session)
+void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   PortalClipboard::claimOwnership(m_clipboard, session);
