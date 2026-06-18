@@ -39,6 +39,9 @@ int main(int argc, char **argv)
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
+  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
+  QCoreApplication app(argc, argv);
+
   Arch arch;
   arch.init();
 
@@ -47,9 +50,6 @@ int main(int argc, char **argv)
 
   // Daemon deliberately does not have a parent, as it will be moved to a new thread.
   DaemonApp daemon(events);
-
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
 
   QCommandLineParser parser;
   parser.addHelpOption();
