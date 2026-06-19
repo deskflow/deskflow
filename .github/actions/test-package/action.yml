@@ -41,7 +41,7 @@ runs:
             echo "Unknown like: ${{inputs.like}}"
             exit 1
           fi
-          deskflow-core --version
+          QT_QPA_PLATFORM=minimal deskflow-core --version
 
         else
           echo "Unknown OS: $RUNNER_OS"
