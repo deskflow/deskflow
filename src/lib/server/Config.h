@@ -478,6 +478,8 @@ private:
   inline static const QStringList m_oldNames = {
       QStringLiteral("clipboardSharing"),
       QStringLiteral("clipboardSharingSize"),
+      QStringLiteral("switchCornerSize"),
+      QStringLiteral("switchCorners"),
       QStringLiteral("protocol"),
       QStringLiteral("heartbeat"),
       QStringLiteral("switchDelay"),

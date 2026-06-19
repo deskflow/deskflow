@@ -995,34 +995,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>詳細設定</translation>
     </message>
     <message>
-        <source>&amp;Dead corners (for this computer)</source>
-        <translation>無効領域(&amp;D) (このコンピューター)</translation>
-    </message>
-    <message>
-        <source>&amp;Bottom-left</source>
-        <translation>左下(&amp;B)</translation>
-    </message>
-    <message>
-        <source>To&amp;p-left</source>
-        <translation>左上(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Bottom-ri&amp;ght</source>
-        <translation>右下(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Top-rig&amp;ht</source>
-        <translation>右上(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Cor&amp;ner size</source>
-        <translation>大きさ(&amp;N)</translation>
-    </message>
-    <message>
-        <source>px</source>
-        <translation>ピクセル</translation>
-    </message>
-    <message>
         <source>&amp;Misc</source>
         <translation>その他(&amp;M)</translation>
     </message>

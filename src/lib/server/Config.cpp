@@ -665,10 +665,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       } catch (SocketAddressException &e) {
         throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
       }
-    } else if (name == "switchCorners") {
-      addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
-    } else if (name == "switchCornerSize") {
-      addOption("", kOptionScreenSwitchCornerSize, s.parseInt(value));
     } else if (name == "switchNeedsShift") {
       addOption("", kOptionScreenSwitchNeedsShift, s.parseBoolean(value));
     } else if (name == "switchNeedsControl") {

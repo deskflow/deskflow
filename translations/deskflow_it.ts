@@ -993,34 +993,6 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>Avanzate</translation>
     </message>
     <message>
-        <source>&amp;Dead corners (for this computer)</source>
-        <translation>&amp;Angoli morti (per questo computer)</translation>
-    </message>
-    <message>
-        <source>&amp;Bottom-left</source>
-        <translation>&amp;In basso a sinistra</translation>
-    </message>
-    <message>
-        <source>To&amp;p-left</source>
-        <translation>In a&amp;lto a sinistra</translation>
-    </message>
-    <message>
-        <source>Bottom-ri&amp;ght</source>
-        <translation>In basso a de&amp;stra</translation>
-    </message>
-    <message>
-        <source>Top-rig&amp;ht</source>
-        <translation>In alto a de&amp;stra</translation>
-    </message>
-    <message>
-        <source>Cor&amp;ner size</source>
-        <translation>Di&amp;mensioni angolo</translation>
-    </message>
-    <message>
-        <source>px</source>
-        <translation>px</translation>
-    </message>
-    <message>
         <source>&amp;Misc</source>
         <translation>&amp;Varie</translation>
     </message>

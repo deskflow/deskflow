@@ -73,12 +73,6 @@ protected:
   void toggleRelativeMouseMoves(bool enabled);
   void toggleProtocol();
 
-  void setSwitchCornerSize(int size);
-  void toggleCornerBottomLeft(bool enable);
-  void toggleCornerTopLeft(bool enable);
-  void toggleCornerBottomRight(bool enable);
-  void toggleCornerTopRight(bool enable);
-
   void toggleExternalConfig(bool enable = false);
   bool browseConfigFile();
 

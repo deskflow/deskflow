@@ -995,34 +995,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>高级</translation>
     </message>
     <message>
-        <source>&amp;Dead corners (for this computer)</source>
-        <translation>屏幕死角 (针对此计算机)(&amp;D)</translation>
-    </message>
-    <message>
-        <source>&amp;Bottom-left</source>
-        <translation>左下(&amp;B)</translation>
-    </message>
-    <message>
-        <source>To&amp;p-left</source>
-        <translation>左上(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Bottom-ri&amp;ght</source>
-        <translation>右下(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Top-rig&amp;ht</source>
-        <translation>右上(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Cor&amp;ner size</source>
-        <translation>角落大小(&amp;N)</translation>
-    </message>
-    <message>
-        <source>px</source>
-        <translation>像素</translation>
-    </message>
-    <message>
         <source>&amp;Misc</source>
         <translation>杂项(&amp;M)</translation>
     </message>
