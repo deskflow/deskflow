@@ -18,6 +18,7 @@ EiClipboard::EiClipboard(ClipboardID id) : m_id(id)
 
 bool EiClipboard::empty()
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot empty clipboard, not open");
     return false;
@@ -40,6 +41,7 @@ bool EiClipboard::empty()
 
 void EiClipboard::add(Format format, const std::string &data)
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot add to clipboard, not open");
     return;
@@ -57,6 +59,7 @@ void EiClipboard::add(Format format, const std::string &data)
 
 bool EiClipboard::open(Time time) const
 {
+  std::scoped_lock lock{m_mutex};
   if (m_open) {
     LOG_DEBUG("skipping clipboard open, already open");
     return true;
@@ -70,6 +73,7 @@ bool EiClipboard::open(Time time) const
 
 void EiClipboard::close() const
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("clipboard is not open");
   }
@@ -83,6 +87,7 @@ EiClipboard::Time EiClipboard::getTime() const
 
 bool EiClipboard::has(Format format) const
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot check for clipboard format, not open");
     return false;
@@ -92,6 +97,7 @@ bool EiClipboard::has(Format format) const
 
 std::string EiClipboard::get(Format format) const
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot get clipboard format, not open");
     return "";
