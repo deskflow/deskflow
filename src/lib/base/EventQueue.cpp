@@ -69,8 +69,7 @@ int EventQueue::loop()
     getEvent(event);
   }
   int exitCode = s_exitSuccess;
-  auto *exitEvent = dynamic_cast<ExitEventData *>(event.getDataObject());
-  if (exitEvent != nullptr) {
+  if (auto *exitEvent = dynamic_cast<ExitEventData *>(event.getDataObject()); exitEvent != nullptr) {
     exitCode = exitEvent->exitCode();
   }
   return exitCode;

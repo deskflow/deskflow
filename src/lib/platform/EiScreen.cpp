@@ -69,8 +69,7 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
     }
   } else {
     // Note: socket backend does not support reconnections
-    auto rc = ei_setup_backend_socket(m_ei, nullptr);
-    if (rc != 0) {
+    if (auto rc = ei_setup_backend_socket(m_ei, nullptr); rc != 0) {
       LOG_ERR("ei init error: %s", strerror(-rc));
       throw std::runtime_error("failed to init ei context");
     }
