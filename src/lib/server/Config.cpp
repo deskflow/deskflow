@@ -614,6 +614,25 @@ void Config::readSection(ConfigReadContext &s)
 
 void Config::readSectionOptions(ConfigReadContext &s)
 {
+  if (Settings::value(Settings::Server::EnableHeatbeat).toBool()) {
+    addOption("", kOptionHeartbeat, Settings::value(Settings::Server::Heartbeat).toInt());
+  }
+
+  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
+    addOption("", kOptionScreenSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
+  }
+
+  if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool()) {
+    addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
+  }
+
+  addOption("", kOptionDefaultLockToScreenState, Settings::value(Settings::Server::DefaultLockToComputerState).toInt());
+  addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toInt());
+  addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toInt());
+  addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toInt());
+  addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());
+  addOption("", kOptionClipboardSharingSize, Settings::value(Settings::Server::ClipboardSize).toUInt() * 1024);
+
   std::string line;
   while (s.readLine(line)) {
     // check for end of section
@@ -703,25 +722,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       m_inputFilter.addFilterRule(rule);
     }
   }
-
-  if (Settings::value(Settings::Server::EnableHeatbeat).toBool()) {
-    addOption("", kOptionHeartbeat, Settings::value(Settings::Server::Heartbeat).toInt());
-  }
-
-  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
-    addOption("", kOptionScreenSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
-  }
-
-  if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool()) {
-    addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
-  }
-
-  addOption("", kOptionDefaultLockToScreenState, Settings::value(Settings::Server::DefaultLockToComputerState).toInt());
-  addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toInt());
-  addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toInt());
-  addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toInt());
-  addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());
-  addOption("", kOptionClipboardSharingSize, Settings::value(Settings::Server::ClipboardSize).toUInt() * 1024);
 
   throw ServerConfigReadException(s, "unexpected end of options section");
 }
