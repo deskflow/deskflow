@@ -21,6 +21,7 @@ Clipboard::Clipboard()
 
 bool Clipboard::empty()
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot empty clipboard, not open");
     return false;
@@ -43,6 +44,7 @@ bool Clipboard::empty()
 
 void Clipboard::add(Format format, const std::string &data)
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot add to clipboard, not open");
     return;
@@ -60,6 +62,7 @@ void Clipboard::add(Format format, const std::string &data)
 
 bool Clipboard::open(Time time) const
 {
+  std::scoped_lock lock{m_mutex};
   if (m_open) {
     LOG_DEBUG("skipping clipboard open, already open");
     return true;
@@ -73,6 +76,7 @@ bool Clipboard::open(Time time) const
 
 void Clipboard::close() const
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("clipboard is not open");
   }
@@ -86,6 +90,7 @@ Clipboard::Time Clipboard::getTime() const
 
 bool Clipboard::has(Format format) const
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot check for clipboard format, not open");
     return false;
@@ -95,6 +100,7 @@ bool Clipboard::has(Format format) const
 
 std::string Clipboard::get(Format format) const
 {
+  std::scoped_lock lock{m_mutex};
   if (!m_open) {
     LOG_WARN("cannot get clipboard format, not open");
     return "";
