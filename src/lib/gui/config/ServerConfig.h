@@ -40,18 +40,6 @@ public:
   //
   // New methods
   //
-  bool switchCorner(int c) const
-  {
-    return m_SwitchCorners[c];
-  }
-  int switchCornerSize() const
-  {
-    return m_SwitchCornerSize;
-  }
-  const QList<bool> &switchCorners() const
-  {
-    return m_SwitchCorners;
-  }
   const HotkeyList &hotkeys() const
   {
     return m_Hotkeys;
@@ -85,20 +73,8 @@ private:
   {
     m_Screens.append(screen);
   }
-  void setSwitchCorner(int c, bool on)
-  {
-    m_SwitchCorners[c] = on;
-  }
-  void setSwitchCornerSize(int val)
-  {
-    m_SwitchCornerSize = val;
-  }
   void setConfigFile(const QString &configFile) const;
   void setUseExternalConfig(bool useExternalConfig) const;
-  QList<bool> &switchCorners()
-  {
-    return m_SwitchCorners;
-  }
   HotkeyList &hotkeys()
   {
     return m_Hotkeys;
@@ -108,8 +84,6 @@ private:
   bool fixNoServer(const QString &name, int &index);
 
 private:
-  int m_SwitchCornerSize = 0;
-  QList<bool> m_SwitchCorners;
   HotkeyList m_Hotkeys;
 
   ScreenList m_Screens;

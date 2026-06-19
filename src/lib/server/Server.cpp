@@ -825,7 +825,6 @@ bool Server::isSwitchOkay(
     if (i != options->end()) {
       size = i->second;
     }
-
     // see if we're in a locked corner
     if ((getCorner(m_active, xActive, yActive, size) & corners) != 0) {
       // yep, no switching

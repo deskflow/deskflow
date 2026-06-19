@@ -993,34 +993,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>고급</translation>
     </message>
     <message>
-        <source>&amp;Dead corners (for this computer)</source>
-        <translation>화면 걸림 방지(&amp;D) (이 컴퓨터)</translation>
-    </message>
-    <message>
-        <source>&amp;Bottom-left</source>
-        <translation>왼쪽 아래(&amp;B)</translation>
-    </message>
-    <message>
-        <source>To&amp;p-left</source>
-        <translation>왼쪽 위(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Bottom-ri&amp;ght</source>
-        <translation>오른쪽 아래(&amp;G)</translation>
-    </message>
-    <message>
-        <source>Top-rig&amp;ht</source>
-        <translation>오른쪽 위(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Cor&amp;ner size</source>
-        <translation>모서리 크기(&amp;N)</translation>
-    </message>
-    <message>
-        <source>px</source>
-        <translation>픽셀</translation>
-    </message>
-    <message>
         <source>&amp;Misc</source>
         <translation>기타(&amp;M)</translation>
     </message>

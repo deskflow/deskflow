@@ -993,34 +993,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>Расширенные</translation>
     </message>
     <message>
-        <source>&amp;Dead corners (for this computer)</source>
-        <translation>&amp;Мертвые зоны (для этого компьютера)</translation>
-    </message>
-    <message>
-        <source>&amp;Bottom-left</source>
-        <translation>&amp;Снизу слева</translation>
-    </message>
-    <message>
-        <source>To&amp;p-left</source>
-        <translation>Свер&amp;ху слева</translation>
-    </message>
-    <message>
-        <source>Bottom-ri&amp;ght</source>
-        <translation>Снизу с&amp;права</translation>
-    </message>
-    <message>
-        <source>Top-rig&amp;ht</source>
-        <translation>Сверху спр&amp;ава</translation>
-    </message>
-    <message>
-        <source>Cor&amp;ner size</source>
-        <translation>Разме&amp;р угла</translation>
-    </message>
-    <message>
-        <source>px</source>
-        <translation>пикс</translation>
-    </message>
-    <message>
         <source>&amp;Misc</source>
         <translation>&amp;Разное</translation>
     </message>
