@@ -9,6 +9,8 @@
 
 #include "deskflow/IClipboard.h"
 
+#include <mutex>
+
 //! Memory buffer clipboard
 /*!
 This class implements a clipboard that stores data in memory.
@@ -53,6 +55,7 @@ public:
 
 private:
   mutable bool m_open = false;
+  mutable std::mutex m_mutex;
   mutable Time m_time;
   bool m_owner = false;
   Time m_timeOwned;
