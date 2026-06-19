@@ -96,8 +96,9 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
 void Settings::upgradeSettings()
 {
-  const auto logValue = m_settings->value(Settings::Log::Level).toString();
-  if (!LogLevel::logLevelOptions().contains(logValue, Qt::CaseInsensitive))
+
+  if (const auto logValue = m_settings->value(Settings::Log::Level).toString();
+      !LogLevel::logLevelOptions().contains(logValue, Qt::CaseInsensitive))
     m_settings->setValue(Settings::Log::Level, defaultValue(Settings::Log::Level));
 
   for (const auto [oldKey, newKey] : m_upgradedMap.asKeyValueRange()) {

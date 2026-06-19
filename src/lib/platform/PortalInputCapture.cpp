@@ -431,8 +431,7 @@ PortalInputCapture::mapPortalActivationToScreenPosition(guint barrierId, double 
   std::int32_t screenH;
   m_screen->getShape(screenX, screenY, screenW, screenH);
 
-  Bounds portalBounds;
-  if (getPortalBounds(portalBounds)) {
+  if (Bounds portalBounds; getPortalBounds(portalBounds)) {
     x = scaleCoordinateBetweenRanges(rawX, portalBounds.left, portalBounds.right, screenX, screenX + screenW - 1);
     y = scaleCoordinateBetweenRanges(rawY, portalBounds.top, portalBounds.bottom, screenY, screenY + screenH - 1);
   } else {
@@ -481,8 +480,9 @@ std::pair<double, double> PortalInputCapture::mapPortalReleasePosition(double x,
 
   auto mappedX = scaleCoordinateBetweenRanges(x, screenLeft, screenRight, portalBounds.left, portalBounds.right);
   auto mappedY = scaleCoordinateBetweenRanges(y, screenTop, screenBottom, portalBounds.top, portalBounds.bottom);
-  BarrierInfo releaseBarrier;
-  if (getClosestReleaseBarrier(x, y, screenLeft, screenTop, screenRight, screenBottom, portalBounds, releaseBarrier)) {
+
+  if (BarrierInfo releaseBarrier;
+      getClosestReleaseBarrier(x, y, screenLeft, screenTop, screenRight, screenBottom, portalBounds, releaseBarrier)) {
     const Bounds releaseBounds = {
         releaseBarrier.x, releaseBarrier.y, releaseBarrier.x + static_cast<gint>(releaseBarrier.width) - 1,
         releaseBarrier.y + static_cast<gint>(releaseBarrier.height) - 1
@@ -706,9 +706,9 @@ void PortalInputCapture::handleActivated(
       auto warpY = static_cast<int>(y);
 
       guint barrierId = 0;
-      const bool hasBarrierId = g_variant_lookup(options, "barrier_id", "u", &barrierId);
 
-      if (hasBarrierId && barrierId > 0) {
+      if (const bool hasBarrierId = g_variant_lookup(options, "barrier_id", "u", &barrierId);
+          hasBarrierId && barrierId > 0) {
         auto [mappedX, mappedY] = mapPortalActivationToScreenPosition(barrierId, x, y);
         warpX = mappedX;
         warpY = mappedY;
