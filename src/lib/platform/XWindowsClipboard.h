@@ -15,6 +15,7 @@
 
 #include <list>
 #include <map>
+#include <mutex>
 #include <vector>
 
 #include <X11/Xlib.h>
@@ -286,6 +287,7 @@ private:
   Window m_window;
   ClipboardID m_id;
   Atom m_selection;
+  mutable std::mutex m_mutex;
   mutable bool m_open = false;
   mutable Time m_time = 0;
   bool m_owner = false;
