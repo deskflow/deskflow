@@ -8,6 +8,7 @@
 
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IClipboard.h"
+#include <mutex>
 
 namespace deskflow {
 
@@ -43,6 +44,7 @@ private:
   ClipboardID m_id;
   mutable bool m_open = false;
   mutable Time m_time = 0;
+  mutable std::mutex m_mutex;
   bool m_owner = false;
   Time m_timeOwned = 0;
   bool m_added[static_cast<int>(Format::TotalFormats)] = {false, false, false};
