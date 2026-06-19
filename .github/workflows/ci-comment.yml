@@ -40,7 +40,7 @@ jobs:
       # find the one with the same head SHA as the triggering workflow.
       - name: Get PR number
         id: get-pr-number
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           script: |
             const head_sha = "${{ github.event.workflow_run.head_sha }}";
