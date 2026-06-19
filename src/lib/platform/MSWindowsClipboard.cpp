@@ -125,6 +125,7 @@ bool MSWindowsClipboard::open(Time time) const
 
   for (int i = 0; i < kMaxRetries; ++i) {
     if (OpenClipboard(m_window)) {
+      std::scoped_lock lock{m_mutex};
       m_time = time;
       return true;
     }
@@ -147,6 +148,7 @@ void MSWindowsClipboard::close() const
 
 IClipboard::Time MSWindowsClipboard::getTime() const
 {
+  std::scoped_lock lock{m_mutex};
   return m_time;
 }
 

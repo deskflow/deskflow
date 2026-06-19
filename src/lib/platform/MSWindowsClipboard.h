@@ -10,6 +10,7 @@
 
 #include "deskflow/IClipboard.h"
 
+#include <mutex>
 #include <vector>
 
 #define WIN32_LEAN_AND_MEAN
@@ -68,6 +69,7 @@ private:
   using ConverterList = std::vector<IMSWindowsClipboardConverter *>;
 
   HWND m_window;
+  mutable std::mutex m_mutex;
   mutable Time m_time;
   ConverterList m_converters;
   static UINT s_ownershipFormat;
