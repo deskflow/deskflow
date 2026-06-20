@@ -162,6 +162,15 @@ This section contains options used when in server mode it will begin with `[serv
 
  - You can use both the ''switchDelay'' and ''switchDoubleTap'' options at the same time. Deskflow will switch when either requirement is satisfied.
 
+### Screen Settings
+
+Each screen will have a section where its configuration will be stored, if the screen was named "foo" the section will be named `[screen_foo]`
+
+|Option              |    Valid Values    |Description|
+|:-------------------|:------------------:|:-----------|
+| aliases            | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
+
+
 ### InternalConfig
 
 This section contains options used when in server mode it will begin with `[internalConfig]`
@@ -184,7 +193,6 @@ hotkeys\1\keys\1\key=83
 hotkeys\1\keys\size=1
 hotkeys\size=1
 screens\1\name=
-screens\10\aliasArray\size=0
 screens\10\fixArray\1\fix=false
 screens\10\fixArray\2\fix=false
 screens\10\fixArray\3\fix=false
@@ -214,7 +222,6 @@ screens\3\name=
 screens\4\name=
 screens\5\name=
 screens\6\name=
-screens\7\aliasArray\size=0
 screens\7\fixArray\1\fix=false
 screens\7\fixArray\2\fix=false
 screens\7\fixArray\3\fix=false
@@ -234,7 +241,6 @@ screens\7\switchCornerArray\3\switchCorner=false
 screens\7\switchCornerArray\4\switchCorner=false
 screens\7\switchCornerArray\size=4
 screens\7\switchCornerSize=0
-screens\8\aliasArray\size=0
 screens\8\fixArray\1\fix=false
 screens\8\fixArray\2\fix=false
 screens\8\fixArray\3\fix=false
@@ -254,7 +260,6 @@ screens\8\switchCornerArray\3\switchCorner=false
 screens\8\switchCornerArray\4\switchCorner=false
 screens\8\switchCornerArray\size=4
 screens\8\switchCornerSize=0
-screens\9\aliasArray\size=0
 screens\9\fixArray\1\fix=false
 screens\9\fixArray\2\fix=false
 screens\9\fixArray\3\fix=false
@@ -292,11 +297,10 @@ end
 Comments are introduced by ''#'' and continue to the end of the line. ''name'' must be one of the following:
 
 * ''screens''
-* ''aliases''
 * ''links''
 * ''options''
 
-The file is parsed top to bottom and names cannot be used before they've been defined in the <code>screens</code> or <code>aliases</code> sections. So the <code>links</code> and <code>aliases</code> must appear after the <code>screens</code> and <code>links</code> cannot refer to aliases unless the <code>aliases</code> appear before the <code>links</code>.
+The file is parsed top to bottom and names cannot be used before they've been defined in the `screens` or as an alias in the general config. So the `links` must appear after the `screens`.
 
 ### The screens section
 
@@ -332,21 +336,6 @@ A computer can have the following options:
 |alt | shift ctrl alt meta super none | Map the server's alt modifer to different key on a client computer|
 |meta|  shift ctrl alt meta super none | Map the server's meta modifer to different key on a client computer|
 |super|  shift ctrl alt meta super none | Map the server's super modifer to different key on a client computer|
-
-### aliases section
-
-''args'' is a list of computer names just like in the ''screens'' section except each computer is followed by a list of aliases, one per line, not followed by a colon. An ''alias'' is a computer name and must be unique. When searching for computers each alias is equivalent to the computer name it aliases. So a client can connect using its canonical computer name or any of its aliases.
-
-```
-section: aliases
-	larry:
-		larry.stooges.com
-	curly:
-		shemp
-end
-```
-
-Computer ''larry'' is also known as ''larry.stooges.com'' and can connect as either name. Computer ''curly'' is also known as ''shemp'' (hey, it's just an example).
 
 ### links secion
 
@@ -596,6 +585,8 @@ Valid key names are:
 Additionally, a name of the form `\uXXXX` where ''XXXX'' is a hexadecimal number is interpreted as a unicode character code. Key and modifier names are case-insensitive. Keys that don't exist on the keyboard or in the default keyboard layout will not work.
 
 ### Example textual configuration file
+
+The alias section is no longer in the server config
 
 This example comes from doc/deskflow-basic.conf
 

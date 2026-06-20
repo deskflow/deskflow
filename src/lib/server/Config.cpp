@@ -46,6 +46,11 @@ bool Config::addScreen(const std::string &name)
   // add name
   m_nameToCanonicalName.try_emplace(name, name);
 
+  // add aliases
+  const auto aliases = Settings::value(Settings::Screen::Aliases.arg(QString::fromStdString(name))).toStringList();
+  for (const auto &alias : aliases)
+    m_nameToCanonicalName.try_emplace(alias.toStdString(), name);
+
   return true;
 }
 
@@ -88,6 +93,12 @@ bool Config::renameScreen(const std::string &oldName, const std::string &newName
     }
   }
 
+  // Update Settings
+  const auto aliasList = Settings::value(Settings::Screen::Aliases.arg(QString::fromStdString(oldName))).toStringList();
+  if (aliasList.isEmpty())
+    return true;
+  Settings::setValue(Settings::Screen::Aliases.arg(QString::fromStdString(oldName)), QVariant());
+  Settings::setValue(Settings::Screen::Aliases.arg(QString::fromStdString(newName)), aliasList);
   return true;
 }
 
@@ -109,6 +120,7 @@ void Config::removeScreen(const std::string &name)
     index->second.remove(nameObj);
   }
 
+  Settings::setValue(Settings::Screen::Aliases.arg(QString::fromStdString(name)), QVariant());
   // remove aliases (and canonical name)
   for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end();) {
     if (iter->second == canonical) {
@@ -554,10 +566,10 @@ void Config::readSection(ConfigReadContext &s)
     readSectionOptions(s);
   } else if (name == s_screens) {
     readSectionScreens(s);
-  } else if (name == s_links) {
-    readSectionLinks(s);
   } else if (name == s_aliases) {
     readSectionAliases(s);
+  } else if (name == s_links) {
+    readSectionLinks(s);
   } else {
     throw ServerConfigReadException(s, "unknown section name \"%{1}\"", name);
   }
@@ -827,38 +839,13 @@ void Config::readSectionLinks(ConfigReadContext &s)
 
 void Config::readSectionAliases(ConfigReadContext &s)
 {
+  qWarning(
+  ) << "Your server config has an alias section. Alias have moved to the general config this section will no be "
+       "parsed.";
   std::string line;
-  std::string screen;
   while (s.readLine(line)) {
-    // check for end of section
     if (line == "end") {
       return;
-    }
-
-    // see if it's the next screen
-    if (line[line.size() - 1] == ':') {
-      // strip :
-      screen = line.substr(0, line.size() - 1);
-
-      // verify we know about the screen
-      if (!isScreen(screen)) {
-        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", screen);
-      }
-      if (!isCanonicalName(screen)) {
-        throw ServerConfigReadException(s, "cannot use screen name alias here");
-      }
-    } else if (screen.empty()) {
-      throw ServerConfigReadException(s, "argument before first screen");
-    } else {
-      // verify validity of screen name
-      if (!isValidScreenName(line)) {
-        throw ServerConfigReadException(s, "invalid screen alias \"%{1}\"", line);
-      }
-
-      // add alias
-      if (!addAlias(screen, line)) {
-        throw ServerConfigReadException(s, "alias \"%{1}\" is already used", line);
-      }
     }
   }
   throw ServerConfigReadException(s, "unexpected end of aliases section");
@@ -1556,30 +1543,6 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
     }
   }
   s << "end" << std::endl;
-
-  // aliases section (if there are any)
-  if (config.m_map.size() != config.m_nameToCanonicalName.size()) {
-    // map canonical to alias
-    using CMNameMap = std::multimap<std::string, std::string, CaselessCmp>;
-    CMNameMap aliases;
-    for (auto index = config.m_nameToCanonicalName.begin(); index != config.m_nameToCanonicalName.end(); ++index) {
-      if (index->first != index->second) {
-        aliases.insert(std::make_pair(index->second, index->first));
-      }
-    }
-
-    // dump it
-    std::string screen;
-    s << "section: aliases" << std::endl;
-    for (CMNameMap::const_iterator index = aliases.begin(); index != aliases.end(); ++index) {
-      if (index->first != screen) {
-        screen = index->first;
-        s << "\t" << screen.c_str() << ":" << std::endl;
-      }
-      s << "\t\t" << index->second.c_str() << std::endl;
-    }
-    s << "end" << std::endl;
-  }
 
   // options section
   s << "section: options" << std::endl;

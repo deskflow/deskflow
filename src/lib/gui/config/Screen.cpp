@@ -8,6 +8,7 @@
 
 #include "Screen.h"
 #include "config/ScreenConfig.h"
+#include <common/Settings.h>
 
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
@@ -20,29 +21,34 @@ Screen::Screen(const QString &name)
 
 void Screen::loadSettings(QSettingsProxy &settings)
 {
-  setName(settings.value("name").toString());
+  const auto name = settings.value("name").toString();
+  setName(name);
 
-  if (name().isEmpty())
+  if (name.isEmpty())
     return;
 
   setSwitchCornerSize(settings.value("switchCornerSize").toInt());
 
-  readSettings(settings, aliases(), "alias", QString(""));
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
   readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
+
+  m_Aliases = Settings::value(Settings::Screen::Aliases.arg(name)).toStringList();
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const
 {
-  settings.setValue("name", name());
 
-  if (name().isEmpty())
+  const auto screenName = name();
+  settings.setValue("name", screenName);
+
+  if (screenName.isEmpty())
     return;
+
+  Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
 
   settings.setValue("switchCornerSize", switchCornerSize());
 
-  writeSettings(settings, aliases(), "alias");
   writeSettings(settings, modifiers(), "modifier");
   writeSettings(settings, switchCorners(), "switchCorner");
   writeSettings(settings, fixes(), "fix");
@@ -70,18 +76,6 @@ QString Screen::screensSection() const
 
   out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
 
-  return out;
-}
-
-QString Screen::aliasesSection() const
-{
-  QString out;
-  if (!aliases().isEmpty()) {
-    out = QStringLiteral("\t%1:\n").arg(name());
-
-    for (const QString &alias : aliases())
-      out.append(QStringLiteral("\t\t%1\n").arg(alias));
-  }
   return out;
 }
 
