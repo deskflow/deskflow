@@ -167,15 +167,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   outStream << "end" << Qt::endl << Qt::endl;
 
-  outStream << "section: aliases" << Qt::endl;
-
-  for (const Screen &s : config.screens()) {
-    if (!s.isNull())
-      outStream << s.aliasesSection();
-  }
-
-  outStream << "end" << Qt::endl << Qt::endl;
-
   outStream << "section: links" << Qt::endl;
 
   for (int i = 0; const auto &screen : config.screens()) {

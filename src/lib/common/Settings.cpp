@@ -116,10 +116,11 @@ void Settings::cleanSettings()
       m_settings->remove(key);
     if (key.startsWith(QStringLiteral("internalConfig")))
       continue;
-    if (!m_validKeys.contains(key))
+    if (const auto group = key.mid(0, key.indexOf('/')); !m_validKeys.contains(key) && m_validGroup.contains(group))
       m_settings->remove(key);
-    if (m_settings->value(key).toString().isEmpty())
+    if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toString().isEmpty()) {
       m_settings->remove(key);
+    }
   }
 }
 

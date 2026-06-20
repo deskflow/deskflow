@@ -123,6 +123,11 @@ public:
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
 
+  struct Screen
+  {
+    inline static const auto Aliases = QStringLiteral("screen_%1/aliases");
+  };
+
   // Enums types used in settings
   // The use of enum classes is not use for these
   // enum classes are more specific when used with QVariant
@@ -166,6 +171,7 @@ public:
   static NetworkProtocol networkProtocol();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+  static QStringList validGroups();
   static QString portableSettingsFile();
 
 Q_SIGNALS:
@@ -204,6 +210,17 @@ private:
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
+  inline static const QStringList m_validGroup = {
+      QStringLiteral("client")
+    , QStringLiteral("core")
+    , QStringLiteral("daemon")
+    , QStringLiteral("gui")
+    , QStringLiteral("log")
+    , QStringLiteral("security")
+    , QStringLiteral("server")
+    , QStringLiteral("internalConfig")
+  };
+
   inline static const QStringList m_validKeys = {
       Settings::Client::DynamicConnectionRetry
     , Settings::Client::InvertYScroll
