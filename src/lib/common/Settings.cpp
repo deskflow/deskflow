@@ -352,3 +352,13 @@ QString Settings::portableSettingsFile()
       QStringLiteral("%1/settings/%2.conf").arg(QCoreApplication::applicationDirPath(), kAppName);
   return QFileInfo(filename).absoluteFilePath();
 }
+
+void Settings::removeUnknownScreens(const QStringList &knownScreens)
+{
+  const QStringList knownGroups = instance()->m_settings->childGroups();
+  for (const auto &group : knownGroups) {
+    if (m_validGroup.contains(group) || knownScreens.contains(group))
+      continue;
+    instance()->m_settings->remove(group);
+  }
+}
