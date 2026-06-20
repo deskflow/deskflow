@@ -173,6 +173,7 @@ public:
   static QStringList validKeys();
   static QStringList validGroups();
   static QString portableSettingsFile();
+  static void removeUnknownScreens(const QStringList &knownScreens);
 
 Q_SIGNALS:
   void settingsChanged(const QString key);

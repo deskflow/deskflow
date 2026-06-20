@@ -89,6 +89,16 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
   Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
 
+  QStringList screenNames;
+  const auto screenList = m_screenSetupModel.m_Screens;
+  for (const auto &screen : screenList) {
+    const auto &screenName = screen.name();
+    if (screenName.isEmpty())
+      continue;
+    screenNames.append(QStringLiteral("screen_%1").arg(screenName));
+    Settings::setValue(Settings::Screen::Aliases.arg(screenName), screen.aliases());
+  }
+  Settings::removeUnknownScreens(screenNames);
   QDialog::accept();
 }
 
