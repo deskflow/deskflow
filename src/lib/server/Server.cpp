@@ -1907,7 +1907,7 @@ bool Server::addClient(BaseClientProxy *client)
 
   // add to list
   m_clientSet.insert(client);
-  m_clients.insert(std::make_pair(name, client));
+  m_clients.try_emplace(name, client);
 
   // initialize client data
   int32_t x;
@@ -1970,7 +1970,7 @@ void Server::closeClient(BaseClientProxy *client, const char *msg)
   // move client to closing list
   removeClient(client);
 
-  m_oldClients.insert(std::make_pair(client, timer));
+  m_oldClients.try_emplace(client, timer);
 
   // if this client is the active screen then we have to
   // jump off of it

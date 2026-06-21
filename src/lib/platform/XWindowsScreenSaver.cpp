@@ -431,7 +431,7 @@ void XWindowsScreenSaver::addWatchXScreenSaver(Window window)
     }
     if (!error) {
       // if successful then add the window to our list
-      m_watchWindows.insert(std::make_pair(window, attr.your_event_mask));
+      m_watchWindows.try_emplace(window, attr.your_event_mask);
     }
   }
 }

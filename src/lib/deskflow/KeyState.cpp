@@ -1100,10 +1100,10 @@ void KeyState::updateModifierKeyState(
   deskflow::KeyMap::ButtonToKeyMap oldKeys;
   deskflow::KeyMap::ButtonToKeyMap newKeys;
   for (const auto &[modifier, keyItem] : oldModifiers) {
-    oldKeys.insert(std::make_pair(keyItem.m_button, &keyItem));
+    oldKeys.try_emplace(keyItem.m_button, &keyItem);
   }
   for (const auto &[modifier, keyItem] : newModifiers) {
-    newKeys.insert(std::make_pair(keyItem.m_button, &keyItem));
+    newKeys.try_emplace(keyItem.m_button, &keyItem);
   }
 
   // get the modifier buttons that were pressed or released

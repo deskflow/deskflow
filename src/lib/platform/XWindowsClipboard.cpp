@@ -701,7 +701,7 @@ void XWindowsClipboard::motifFillCache()
     }
 
     // save it
-    motifFormats.insert(std::make_pair(motifFormat.m_type, data));
+    motifFormats.try_emplace(motifFormat.m_type, data);
   }
 
   // try each converter in order (because they're in order of

@@ -595,7 +595,7 @@ uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   }
 
   if (!err) {
-    m_hotKeys.insert(std::make_pair(id, HotKeyItem(vk, modifiers)));
+    m_hotKeys.try_emplace(id, HotKeyItem(vk, modifiers));
     m_hotKeyToIDMap[HotKeyItem(vk, modifiers)] = id;
   } else {
     m_oldHotKeyIDs.push_back(id);
