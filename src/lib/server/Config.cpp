@@ -628,12 +628,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       } catch (SocketAddressException &e) {
         throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
       }
-    } else if (name == "switchNeedsShift") {
-      addOption("", kOptionScreenSwitchNeedsShift, s.parseBoolean(value));
-    } else if (name == "switchNeedsControl") {
-      addOption("", kOptionScreenSwitchNeedsControl, s.parseBoolean(value));
-    } else if (name == "switchNeedsAlt") {
-      addOption("", kOptionScreenSwitchNeedsAlt, s.parseBoolean(value));
     } else {
       handled = false;
     }

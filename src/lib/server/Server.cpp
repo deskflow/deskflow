@@ -841,16 +841,6 @@ bool Server::isSwitchOkay(
     stopSwitch();
   }
 
-  // check for optional needed modifiers
-  if (KeyModifierMask mods = this->m_primaryClient->getToggleMask();
-      !preventSwitch && ((this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
-                         (this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
-                         (this->m_switchNeedsAlt && ((mods & KeyModifierAlt) != KeyModifierAlt)))) {
-    LOG_VERBOSE("need modifiers to switch");
-    preventSwitch = true;
-    stopSwitch();
-  }
-
   return !preventSwitch;
 }
 
@@ -1076,10 +1066,6 @@ void Server::processOptions()
     return;
   }
 
-  m_switchNeedsShift = false;   // it seems if i don't add these
-  m_switchNeedsControl = false; // lines, the 'reload config' option
-  m_switchNeedsAlt = false;     // doesnt' work correct.
-
   bool newRelativeMoves = m_relativeMoves;
   for (auto [optionId, optionValue] : *options) {
     const OptionID id = optionId;
@@ -1096,12 +1082,6 @@ void Server::processOptions()
         m_switchTwoTapDelay = 0.0;
       }
       stopSwitchTwoTap();
-    } else if (id == kOptionScreenSwitchNeedsControl) {
-      m_switchNeedsControl = (value != 0);
-    } else if (id == kOptionScreenSwitchNeedsShift) {
-      m_switchNeedsShift = (value != 0);
-    } else if (id == kOptionScreenSwitchNeedsAlt) {
-      m_switchNeedsAlt = (value != 0);
     } else if (id == kOptionRelativeMouseMoves) {
       newRelativeMoves = (value != 0);
     } else if (id == kOptionDefaultLockToScreenState) {

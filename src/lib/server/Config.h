@@ -460,6 +460,7 @@ private:
       QStringLiteral("clipboardSharingSize"),
       QStringLiteral("switchCornerSize"),
       QStringLiteral("switchCorners"),
+      QStringLiteral("switchNeeds"),
       QStringLiteral("protocol"),
       QStringLiteral("heartbeat"),
       QStringLiteral("switchDelay"),
