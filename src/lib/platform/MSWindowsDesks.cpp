@@ -806,7 +806,7 @@ MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const std::wstring &name, HDESK hd
   desk->m_targetID = GetCurrentThreadId();
   desk->m_thread = new Thread(new TMethodJob<MSWindowsDesks>(this, &MSWindowsDesks::deskThread, desk));
   waitForDesk();
-  m_desks.insert(std::make_pair(name, desk));
+  m_desks.try_emplace(name, desk);
   return desk;
 }
 

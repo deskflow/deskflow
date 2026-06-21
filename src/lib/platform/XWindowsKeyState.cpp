@@ -398,7 +398,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
   for (unsigned int i = 0; i < 8; ++i) {
     const KeyCode *buttons = modifiers->modifiermap + i * modifiers->max_keypermod;
     for (int j = 0; j < modifiers->max_keypermod; ++j) {
-      modifierButtons.insert(std::make_pair(buttons[j], i));
+      modifierButtons.try_emplace(buttons[j], i);
     }
   }
   XFreeModifiermap(modifiers);
@@ -722,7 +722,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 
             // save modifier
             m_modifierFromX[8 * group + j] |= (1u << modifierBit);
-            m_modifierToX.insert(std::make_pair(1u << modifierBit, 1u << j));
+            m_modifierToX.try_emplace(1u << modifierBit, 1u << j);
           }
         }
 

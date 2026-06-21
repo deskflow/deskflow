@@ -41,10 +41,10 @@ bool Config::addScreen(const std::string &name)
   }
 
   // add cell
-  m_map.insert(std::make_pair(name, Cell()));
+  m_map.try_emplace(name, Cell());
 
   // add name
-  m_nameToCanonicalName.insert(std::make_pair(name, name));
+  m_nameToCanonicalName.try_emplace(name, name);
 
   return true;
 }
@@ -67,11 +67,11 @@ bool Config::renameScreen(const std::string &oldName, const std::string &newName
   // update cell
   Cell tmpCell = index->second;
   m_map.erase(index);
-  m_map.insert(std::make_pair(newName, tmpCell));
+  m_map.try_emplace(newName, tmpCell);
 
   // update name
   m_nameToCanonicalName.erase(oldCanonical);
-  m_nameToCanonicalName.insert(std::make_pair(newName, newName));
+  m_nameToCanonicalName.try_emplace(newName, newName);
 
   // update connections
   Name oldNameObj(this, oldName);
@@ -138,7 +138,7 @@ bool Config::addAlias(const std::string &canonical, const std::string &alias)
   }
 
   // insert alias
-  m_nameToCanonicalName.insert(std::make_pair(alias, canonical));
+  m_nameToCanonicalName.try_emplace(alias, canonical);
 
   return true;
 }
@@ -1442,7 +1442,7 @@ bool Config::Cell::add(const CellEdge &src, const CellEdge &dst)
   }
 
   m_neighbors.erase(src);
-  m_neighbors.insert(std::make_pair(src, dst));
+  m_neighbors.try_emplace(src, dst);
   return true;
 }
 

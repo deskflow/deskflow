@@ -358,7 +358,7 @@ uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     return 0;
   }
 
-  m_hotKeys.insert(std::make_pair(id, HotKeyItem(ref, macKey, macMask)));
+  m_hotKeys.try_emplace(id, HotKeyItem(ref, macKey, macMask));
 
   LOG_DEBUG(
       "registered hotkey %s (id=%04x mask=%04x) as id=%d", deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, id
