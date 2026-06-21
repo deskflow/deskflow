@@ -143,55 +143,6 @@ bool Config::addAlias(const std::string &canonical, const std::string &alias)
   return true;
 }
 
-bool Config::removeAlias(const std::string &alias)
-{
-  // must not be a canonical name
-  if (m_map.contains(alias)) {
-    return false;
-  }
-
-  // find alias
-  NameMap::iterator index = m_nameToCanonicalName.find(alias);
-  if (index == m_nameToCanonicalName.end()) {
-    return false;
-  }
-
-  // remove alias
-  m_nameToCanonicalName.erase(index);
-
-  return true;
-}
-
-bool Config::removeAliases(const std::string &canonical)
-{
-  // must be a canonical name
-  if (!m_map.contains(canonical)) {
-    return false;
-  }
-
-  // find and removing matching aliases
-  for (auto index = m_nameToCanonicalName.begin(); index != m_nameToCanonicalName.end();) {
-    if (index->second == canonical && index->first != canonical) {
-      m_nameToCanonicalName.erase(index++);
-    } else {
-      ++index;
-    }
-  }
-
-  return true;
-}
-
-void Config::removeAllAliases()
-{
-  // remove all names
-  m_nameToCanonicalName.clear();
-
-  // put the canonical names back in
-  for (auto index = m_map.begin(); index != m_map.end(); ++index) {
-    m_nameToCanonicalName.insert(std::make_pair(index->first, index->first));
-  }
-}
-
 bool Config::connect(
     const std::string &srcName, Direction srcSide, float srcStart, float srcEnd, const std::string &dstName,
     float dstStart, float dstEnd
