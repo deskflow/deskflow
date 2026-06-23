@@ -54,89 +54,6 @@ bool Config::addScreen(const std::string &name)
   return true;
 }
 
-bool Config::renameScreen(const std::string &oldName, const std::string &newName)
-{
-  // get canonical name and find cell
-  std::string oldCanonical = getCanonicalName(oldName);
-  CellMap::iterator index = m_map.find(oldCanonical);
-  if (index == m_map.end()) {
-    return false;
-  }
-
-  // accept if names are equal but replace with new name to maintain
-  // case.  otherwise, the new name must not exist.
-  if (!CaselessCmp::equal(oldName, newName) && m_nameToCanonicalName.contains(newName)) {
-    return false;
-  }
-
-  // update cell
-  Cell tmpCell = index->second;
-  m_map.erase(index);
-  m_map.try_emplace(newName, tmpCell);
-
-  // update name
-  m_nameToCanonicalName.erase(oldCanonical);
-  m_nameToCanonicalName.try_emplace(newName, newName);
-
-  // update connections
-  Name oldNameObj(this, oldName);
-  for (index = m_map.begin(); index != m_map.end(); ++index) {
-    index->second.rename(oldNameObj, newName);
-  }
-
-  // update alias targets
-  if (CaselessCmp::equal(oldName, oldCanonical)) {
-    for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end(); ++iter) {
-      if (CaselessCmp::equal(iter->second, oldCanonical)) {
-        iter->second = newName;
-      }
-    }
-  }
-
-  // Update Settings
-  const auto aliasList = Settings::value(Settings::Screen::Aliases.arg(QString::fromStdString(oldName))).toStringList();
-  if (aliasList.isEmpty())
-    return true;
-  Settings::setValue(Settings::Screen::Aliases.arg(QString::fromStdString(oldName)), QVariant());
-  Settings::setValue(Settings::Screen::Aliases.arg(QString::fromStdString(newName)), aliasList);
-  return true;
-}
-
-void Config::removeScreen(const std::string &name)
-{
-  // get canonical name and find cell
-  std::string canonical = getCanonicalName(name);
-  CellMap::iterator index = m_map.find(canonical);
-  if (index == m_map.end()) {
-    return;
-  }
-
-  // remove from map
-  m_map.erase(index);
-
-  // disconnect
-  Name nameObj(this, name);
-  for (index = m_map.begin(); index != m_map.end(); ++index) {
-    index->second.remove(nameObj);
-  }
-
-  Settings::setValue(Settings::Screen::Aliases.arg(QString::fromStdString(name)), QVariant());
-  // remove aliases (and canonical name)
-  for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end();) {
-    if (iter->second == canonical) {
-      m_nameToCanonicalName.erase(iter++);
-    } else {
-      ++iter;
-    }
-  }
-}
-
-void Config::removeAllScreens()
-{
-  m_map.clear();
-  m_nameToCanonicalName.clear();
-}
-
 bool Config::addAlias(const std::string &canonical, const std::string &alias)
 {
   // alias name must not exist
@@ -229,48 +146,6 @@ bool Config::addOption(const std::string &name, OptionID option, OptionValue val
 
   // add option
   options->insert(std::make_pair(option, value));
-  return true;
-}
-
-bool Config::removeOption(const std::string &name, OptionID option)
-{
-  // find options
-  ScreenOptions *options = nullptr;
-  if (name.empty()) {
-    options = &m_globalOptions;
-  } else {
-    CellMap::iterator index = m_map.find(name);
-    if (index != m_map.end()) {
-      options = &index->second.m_options;
-    }
-  }
-  if (options == nullptr) {
-    return false;
-  }
-
-  // remove option
-  options->erase(option);
-  return true;
-}
-
-bool Config::removeOptions(const std::string &name)
-{
-  // find options
-  ScreenOptions *options = nullptr;
-  if (name.empty()) {
-    options = &m_globalOptions;
-  } else {
-    CellMap::iterator index = m_map.find(name);
-    if (index != m_map.end()) {
-      options = &index->second.m_options;
-    }
-  }
-  if (options == nullptr) {
-    return false;
-  }
-
-  // remove options
-  options->clear();
   return true;
 }
 

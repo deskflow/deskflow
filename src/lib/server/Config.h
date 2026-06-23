@@ -205,27 +205,6 @@ public:
   */
   bool addScreen(const std::string &name);
 
-  //! Rename screen
-  /*!
-  Renames a screen.  All references to the name are updated.
-  Returns true iff successful.
-  */
-  bool renameScreen(const std::string &oldName, const std::string &newName);
-
-  //! Remove screen
-  /*!
-  Removes a screen.  This also removes aliases for the screen and
-  disconnects any connections to the screen.  \c name may be an
-  alias.
-  */
-  void removeScreen(const std::string &name);
-
-  //! Remove all screens
-  /*!
-  Removes all screens, aliases, and connections.
-  */
-  void removeAllScreens();
-
   //! Add alias
   /*!
   Adds an alias for a screen name.  An alias can be used
@@ -285,21 +264,6 @@ public:
   is a known screen.
   */
   bool addOption(const std::string &name, OptionID option, OptionValue value);
-
-  //! Remove a screen option
-  /*!
-  Removes an option and its value from the named screen.  Does
-  nothing if the option doesn't exist on the screen.  Returns true
-  iff \c name is a known screen.
-  */
-  bool removeOption(const std::string &name, OptionID option);
-
-  //! Remove a screen options
-  /*!
-  Removes all options and values from the named screen.  Returns true
-  iff \c name is a known screen.
-  */
-  bool removeOptions(const std::string &name);
 
   //! Get the hot key input filter
   /*!
