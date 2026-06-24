@@ -55,7 +55,7 @@ public:
 
 private:
   mutable bool m_open = false;
-  mutable std::mutex m_mutex;
+  mutable std::recursive_mutex m_mutex;
   mutable Time m_time;
   bool m_owner = false;
   Time m_timeOwned;
