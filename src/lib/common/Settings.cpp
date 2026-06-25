@@ -96,13 +96,18 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
 void Settings::upgradeSettings()
 {
-
   if (const auto logValue = m_settings->value(Settings::Log::Level).toString();
       !LogLevel::logLevelOptions().contains(logValue, Qt::CaseInsensitive))
     m_settings->setValue(Settings::Log::Level, defaultValue(Settings::Log::Level));
 
   for (const auto [oldKey, newKey] : m_upgradedMap.asKeyValueRange()) {
-    if (m_settings->contains(oldKey) && !m_settings->contains(newKey)) {
+    if (m_settings->contains(newKey) || !m_settings->contains(oldKey))
+      continue;
+    if (oldKey == InternalConfig::Protocol) {
+      m_settings->setValue(newKey, networkProtocolToOption(NetworkProtocol(m_settings->value(oldKey).toInt())));
+    } else if (oldKey == InternalConfig::ClipboardSharingSize) {
+      m_settings->setValue(newKey, m_settings->value(oldKey).toUInt() / 1024);
+    } else {
       m_settings->setValue(newKey, m_settings->value(oldKey));
     }
   }
@@ -118,9 +123,8 @@ void Settings::cleanSettings()
       continue;
     if (const auto group = key.mid(0, key.indexOf('/')); !m_validKeys.contains(key) && m_validGroup.contains(group))
       m_settings->remove(key);
-    if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toString().isEmpty()) {
+    if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toString().isEmpty())
       m_settings->remove(key);
-    }
   }
 }
 
