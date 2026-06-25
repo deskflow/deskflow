@@ -169,6 +169,7 @@ Each screen will have a section where its configuration will be stored, if the s
 |Option              |    Valid Values    |Description|
 |:-------------------|:------------------:|:-----------|
 | aliases            | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
+| name               | Valid hostname | The name of the client. |
 
 
 ### InternalConfig

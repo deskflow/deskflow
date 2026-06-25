@@ -126,6 +126,7 @@ public:
   struct Screen
   {
     inline static const auto Aliases = QStringLiteral("screen_%1/aliases");
+    inline static const auto Name = QStringLiteral("screen_%1/name");
   };
 
   // Track Removed keys to make upgrading config easier

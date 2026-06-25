@@ -97,6 +97,7 @@ void ServerConfigDialog::accept()
       continue;
     screenNames.append(QStringLiteral("screen_%1").arg(screenName));
     Settings::setValue(Settings::Screen::Aliases.arg(screenName), screen.aliases());
+    Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
   }
   Settings::removeUnknownScreens(screenNames);
   QDialog::accept();

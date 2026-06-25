@@ -38,13 +38,13 @@ void Screen::loadSettings(QSettingsProxy &settings)
 
 void Screen::saveSettings(QSettingsProxy &settings) const
 {
-
   const auto screenName = name();
   settings.setValue("name", screenName);
 
   if (screenName.isEmpty())
     return;
 
+  Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
   Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
 
   settings.setValue("switchCornerSize", switchCornerSize());
