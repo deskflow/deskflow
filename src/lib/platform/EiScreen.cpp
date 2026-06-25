@@ -88,6 +88,8 @@ EiScreen::~EiScreen()
   m_events->adoptBuffer(nullptr);
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
 
+  cancelIdleEmulationTimer();
+
   cleanupEi();
 
   delete m_keyState;
@@ -294,6 +296,7 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press)
     break;
   }
 
+  ensureEmulating();
   ei_device_button_button(m_eiPointer, code, press);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
@@ -310,6 +313,7 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
   if (!m_eiAbs)
     return;
 
+  ensureEmulating();
   ei_device_pointer_motion_absolute(m_eiAbs, x, y);
   ei_device_frame(m_eiAbs, ei_now(m_ei));
 }
@@ -319,6 +323,7 @@ void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
   if (!m_eiPointer)
     return;
 
+  ensureEmulating();
   ei_device_pointer_motion(m_eiPointer, dx, dy);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
@@ -332,6 +337,7 @@ void EiScreen::fakeMouseWheel(ScrollDelta delta) const
   // libei and deskflow seem to use opposite directions, so we have
   // to send EI the opposite of the value received if we want to remain
   // compatible with other platforms (including X11).
+  ensureEmulating();
   ei_device_scroll_discrete(m_eiPointer, -delta.x, -delta.y);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
@@ -343,6 +349,7 @@ void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 
   auto xkbKeycode = keycode + 8;
   m_keyState->updateXkbState(xkbKeycode, isDown);
+  ensureEmulating();
   ei_device_keyboard_key(m_eiKeyboard, keycode, isDown);
   ei_device_frame(m_eiKeyboard, ei_now(m_ei));
 }
@@ -361,22 +368,62 @@ void EiScreen::disable()
   // Socket-based clipboard is passive (no monitoring needed)
 }
 
+void EiScreen::cancelIdleEmulationTimer() const
+{
+  if (m_idleEmulationTimer) {
+    m_events->removeHandler(EventTypes::Timer, m_idleEmulationTimer);
+    m_events->deleteTimer(m_idleEmulationTimer);
+    m_idleEmulationTimer = nullptr;
+  }
+}
+
+void EiScreen::ensureEmulating() const
+{
+  if (m_isPrimary || !m_isOnScreen)
+    return;
+
+  if (!m_isEmulating) {
+    ++m_sequenceNumber;
+    if (m_eiPointer)
+      ei_device_start_emulating(m_eiPointer, m_sequenceNumber);
+    if (m_eiKeyboard)
+      ei_device_start_emulating(m_eiKeyboard, m_sequenceNumber);
+    if (m_eiAbs)
+      ei_device_start_emulating(m_eiAbs, m_sequenceNumber);
+    m_isEmulating = true;
+  }
+
+  cancelIdleEmulationTimer();
+  if (Settings::value(Settings::Core::PreventSleep).toBool())
+    return;
+
+  m_idleEmulationTimer = m_events->newOneShotTimer(s_idleEmulationTimeout, nullptr);
+  m_events->addHandler(EventTypes::Timer, m_idleEmulationTimer, [this](const auto &) { stopEmulating(); });
+}
+
+void EiScreen::stopEmulating() const
+{
+  cancelIdleEmulationTimer();
+  if (!m_isEmulating)
+    return;
+  if (m_eiPointer)
+    ei_device_stop_emulating(m_eiPointer);
+  if (m_eiKeyboard)
+    ei_device_stop_emulating(m_eiKeyboard);
+  if (m_eiAbs)
+    ei_device_stop_emulating(m_eiAbs);
+  m_isEmulating = false;
+}
+
 void EiScreen::enter()
 {
   m_isOnScreen = true;
-  if (!m_isPrimary) {
-    ++m_sequenceNumber;
-    if (m_eiPointer) {
-      ei_device_start_emulating(m_eiPointer, m_sequenceNumber);
-    }
-    if (m_eiKeyboard) {
-      ei_device_start_emulating(m_eiKeyboard, m_sequenceNumber);
-    }
-    if (m_eiAbs) {
-      ei_device_start_emulating(m_eiAbs, m_sequenceNumber);
-      fakeMouseMove(m_cursorX, m_cursorY);
-    }
-  } else {
+  if (!m_isPrimary && m_eiAbs) {
+    // Emulation is started lazily by ensureEmulating() on the first injected
+    // input and released again after a short idle, so this screen can DPMS-sleep
+    // while the cursor sits here with no relayed activity.
+    fakeMouseMove(m_cursorX, m_cursorY);
+  } else if (m_isPrimary) {
     LOG_DEBUG("releasing input capture at x=%i y=%i", m_cursorX, m_cursorY);
     m_portalInputCapture->release(m_cursorX, m_cursorY);
   }
@@ -390,15 +437,7 @@ bool EiScreen::canLeave()
 void EiScreen::leave()
 {
   if (!m_isPrimary) {
-    if (m_eiPointer) {
-      ei_device_stop_emulating(m_eiPointer);
-    }
-    if (m_eiKeyboard) {
-      ei_device_stop_emulating(m_eiKeyboard);
-    }
-    if (m_eiAbs) {
-      ei_device_stop_emulating(m_eiAbs);
-    }
+    stopEmulating();
   }
 
   m_isOnScreen = false;
@@ -577,12 +616,24 @@ void EiScreen::removeDevice(struct ei_device *device)
 {
   LOG_DEBUG("removing device %s", ei_device_get_name(device));
 
-  if (device == m_eiPointer)
+  bool wasTracked = false;
+  if (device == m_eiPointer) {
     m_eiPointer = ei_device_unref(m_eiPointer);
-  if (device == m_eiKeyboard)
+    wasTracked = true;
+  }
+  if (device == m_eiKeyboard) {
     m_eiKeyboard = ei_device_unref(m_eiKeyboard);
-  if (device == m_eiAbs)
+    wasTracked = true;
+  }
+  if (device == m_eiAbs) {
     m_eiAbs = ei_device_unref(m_eiAbs);
+    wasTracked = true;
+  }
+
+  if (wasTracked) {
+    m_isEmulating = false;
+    cancelIdleEmulationTimer();
+  }
 
   for (auto it = m_eiDevices.begin(); it != m_eiDevices.end(); it++) {
     if (*it == device) {
@@ -894,11 +945,13 @@ void EiScreen::handleSystemEvent(const Event &)
       break;
     case EI_EVENT_DEVICE_PAUSED:
       LOG_DEBUG("device %s is paused", ei_device_get_name(device));
+      m_isEmulating = false;
+      cancelIdleEmulationTimer();
       break;
     case EI_EVENT_DEVICE_RESUMED:
       LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
       if (!m_isPrimary && m_isOnScreen) {
-        ei_device_start_emulating(device, ++m_sequenceNumber);
+        ensureEmulating();
       }
       break;
     case EI_EVENT_KEYBOARD_MODIFIERS:
