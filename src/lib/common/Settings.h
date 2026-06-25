@@ -195,6 +195,7 @@ public:
   static QStringList validGroups();
   static QString portableSettingsFile();
   static void removeUnknownScreens(const QStringList &knownScreens);
+  static QVariant screenDefaults(const QString &key);
 
 Q_SIGNALS:
   void settingsChanged(const QString key);

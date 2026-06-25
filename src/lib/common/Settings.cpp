@@ -123,6 +123,8 @@ void Settings::cleanSettings()
       continue;
     if (const auto group = key.mid(0, key.indexOf('/')); !m_validKeys.contains(key) && m_validGroup.contains(group))
       m_settings->remove(key);
+    if (m_settings->value(key) == "QStringList" && m_settings->value(key).toStringList().isEmpty())
+      m_settings->remove(key);
     if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toString().isEmpty())
       m_settings->remove(key);
   }
@@ -169,6 +171,11 @@ QString Settings::cleanComputerName(const QString &name)
 
 QVariant Settings::defaultValue(const QString &key)
 {
+  if (key.startsWith(QStringLiteral("screen_"))) {
+    const auto screenKey = key.mid(0, key.indexOf('/') + 1);
+    return screenDefaults(screenKey);
+  }
+
   if (m_defaultFalseValues.contains(key))
     return false;
 
@@ -365,4 +372,9 @@ void Settings::removeUnknownScreens(const QStringList &knownScreens)
       continue;
     instance()->m_settings->remove(group);
   }
+}
+
+QVariant Settings::screenDefaults(const QString &key)
+{
+  return QVariant();
 }
