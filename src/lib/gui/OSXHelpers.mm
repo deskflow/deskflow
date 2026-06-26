@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <CoreData/CoreData.h>
+#import <ServiceManagement/ServiceManagement.h>
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UNNotification.h>
 #import <UserNotifications/UNNotificationContent.h>
@@ -106,4 +107,26 @@ void macOSNativeHide()
 {
   [NSApp hide:nil];
   [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
+}
+
+bool macSetStartAtLogin(bool enable)
+{
+  if (@available(macOS 13.0, *)) {
+    SMAppService *service = [SMAppService mainAppService];
+    NSError *error = nil;
+    const BOOL ok = enable ? [service registerAndReturnError:&error] : [service unregisterAndReturnError:&error];
+    if (!ok && error != nil) {
+      NSLog(@"Deskflow start-at-login %@ failed: %@", enable ? @"register" : @"unregister", error);
+    }
+    return ok;
+  }
+  return false;
+}
+
+bool macStartAtLoginEnabled()
+{
+  if (@available(macOS 13.0, *)) {
+    return [SMAppService mainAppService].status == SMAppServiceStatusEnabled;
+  }
+  return false;
 }
