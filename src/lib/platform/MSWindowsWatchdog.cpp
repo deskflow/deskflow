@@ -24,6 +24,7 @@
 #include <Windows.h>
 #include <shlobj.h>
 #include <tchar.h>
+#include <tlhelp32.h>
 
 #include <QStringDecoder>
 
@@ -177,8 +178,13 @@ void MSWindowsWatchdog::mainLoop(const void *)
     LOG_VERBOSE("locking process state mutex in watchdog main loop");
     std::unique_lock lock(m_processStateMutex);
 
-    if (m_processState == Running && !m_command.empty() && !m_foreground && m_session.hasChanged()) {
-      LOG_DEBUG("session changed, queueing process start");
+    // Auto-elevate: relaunch when the session changes, or (when elevation is
+    // enabled) when the secure/login desktop appears or clears, so the core's
+    // integrity matches the desktop it must inject on. The secureDesktopActive()
+    // process scan is short-circuited to the running steady state.
+    if (m_processState == Running && !m_command.empty() && !m_foreground &&
+        (m_session.hasChanged() || (m_elevateProcess && secureDesktopActive() != m_lastElevated))) {
+      LOG_DEBUG("session or secure-desktop changed, queueing process start");
       m_processState = StartPending;
       m_nextStartTime.reset();
     }
@@ -274,7 +280,13 @@ void MSWindowsWatchdog::startProcess()
 
   m_process = std::make_unique<deskflow::platform::MSWindowsProcess>(m_command, m_outputWritePipe, m_outputWritePipe);
 
-  LOG_INFO("running command (%s): %ls", m_elevateProcess ? "elevated" : "not elevated", m_command.c_str());
+  // Auto-elevate: when elevation is enabled, only run the core SYSTEM while the
+  // secure/login desktop is active; otherwise run at the user's (medium)
+  // integrity so user-level hook tools (PowerToys, Mouser) can see its input.
+  const bool elevate = m_elevateProcess && secureDesktopActive();
+  m_lastElevated = elevate;
+
+  LOG_INFO("running command (%s): %ls", elevate ? "elevated" : "not elevated", m_command.c_str());
 
   BOOL createRet;
   if (m_foreground) {
@@ -285,7 +297,7 @@ void MSWindowsWatchdog::startProcess()
 
     SECURITY_ATTRIBUTES sa;
     ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-    HANDLE userToken = getUserToken(&sa, m_elevateProcess);
+    HANDLE userToken = getUserToken(&sa, elevate);
 
     // set UIAccess to fix Windows 8 GUI interaction
     DWORD uiAccess = 1;
@@ -315,9 +327,34 @@ void MSWindowsWatchdog::startProcess()
     LOG_DEBUG("started core process from watchdog");
     LOG_VERBOSE(
         "process info, session=%i, elevated=%s, command: %s", //
-        m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no", m_command.c_str()
+        m_session.getActiveSessionId(), elevate ? "yes" : "no", m_command.c_str()
     );
   }
+}
+
+bool MSWindowsWatchdog::secureDesktopActive()
+{
+  // session-0 daemon can't query session 1's input desktop directly, so detect
+  // the secure/login desktop by the processes that own it: consent.exe (UAC
+  // elevation prompt) and LogonUI.exe (lock/login screen).
+  MSWindowsHandle snapshot(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0));
+  if (snapshot.get() == INVALID_HANDLE_VALUE) {
+    return false;
+  }
+
+  PROCESSENTRY32 entry;
+  entry.dwSize = sizeof(PROCESSENTRY32);
+  if (!Process32First(snapshot.get(), &entry)) {
+    return false;
+  }
+
+  do {
+    if (_wcsicmp(entry.szExeFile, L"consent.exe") == 0 || _wcsicmp(entry.szExeFile, L"LogonUI.exe") == 0) {
+      return true;
+    }
+  } while (Process32Next(snapshot.get(), &entry));
+
+  return false;
 }
 
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)

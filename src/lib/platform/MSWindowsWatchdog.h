@@ -97,6 +97,17 @@ private:
   void startProcess();
 
   /**
+   * @brief True while the secure/login desktop is active.
+   *
+   * The daemon runs in session 0 and cannot query session 1's input desktop, so
+   * this detects it by the presence of consent.exe (UAC elevation prompt) or
+   * LogonUI.exe (lock/login screen). Only a SYSTEM-level core can inject on
+   * those desktops; otherwise a medium-integrity core is preferred so user-level
+   * hook tools (PowerToys, Mouser) can see its input. Drives "auto" elevation.
+   */
+  bool secureDesktopActive();
+
+  /**
    * @brief Controls whether the process should restart immediately or delay start.
    */
   ProcessState handleStartError(const std::string_view &message = "");
@@ -136,6 +147,7 @@ private:
   HANDLE m_outputWritePipe = nullptr;
   HANDLE m_outputReadPipe = nullptr;
   bool m_elevateProcess = false;
+  bool m_lastElevated = false; // integrity the running core was launched at (for auto-elevate transitions)
   MSWindowsSession m_session;
   int m_startFailures = 0;
   FileLogOutputter &m_fileLogOutputter;
