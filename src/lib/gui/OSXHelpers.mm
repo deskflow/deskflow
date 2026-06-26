@@ -6,6 +6,7 @@
 
 #import "OSXHelpers.h"
 
+#import <ApplicationServices/ApplicationServices.h>
 #import <Cocoa/Cocoa.h>
 #import <CoreData/CoreData.h>
 #import <ServiceManagement/ServiceManagement.h>
@@ -129,4 +130,17 @@ bool macStartAtLoginEnabled()
     return [SMAppService mainAppService].status == SMAppServiceStatusEnabled;
   }
   return false;
+}
+
+bool isOSXAccessibilityGranted(bool promptUser)
+{
+  NSDictionary *options = @{(__bridge id)kAXTrustedCheckOptionPrompt : promptUser ? @YES : @NO};
+  return AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
+}
+
+void openOSXAccessibilitySettings()
+{
+  NSURL *url =
+      [NSURL URLWithString:@"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"];
+  [[NSWorkspace sharedWorkspace] openURL:url];
 }

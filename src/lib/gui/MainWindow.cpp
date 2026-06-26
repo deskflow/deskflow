@@ -408,8 +408,45 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
   }
 }
 
+bool MainWindow::ensureAccessibilityPermission()
+{
+#ifdef Q_OS_MACOS
+  if (isOSXAccessibilityGranted(false))
+    return true;
+
+  QMessageBox box(this);
+  box.setIcon(QMessageBox::Warning);
+  box.setWindowTitle(tr("Accessibility permission required"));
+  box.setText(tr("Deskflow needs Accessibility permission to control the keyboard and mouse."));
+  box.setInformativeText(
+      tr("Open System Settings > Privacy & Security > Accessibility, enable Deskflow, then press Start again.")
+  );
+  auto *openButton = box.addButton(tr("Open System Settings"), QMessageBox::AcceptRole);
+  box.addButton(QMessageBox::Cancel);
+  box.exec();
+
+  if (box.clickedButton() == openButton) {
+    // Trigger the native prompt so Deskflow is added to the Accessibility list,
+    // then open the pane so the user only has to flip the switch.
+    isOSXAccessibilityGranted(true);
+    openOSXAccessibilitySettings();
+  }
+
+  return false;
+#else
+  return true;
+#endif
+}
+
 void MainWindow::startCore()
 {
+  if (!ensureAccessibilityPermission())
+    return;
+
+  // The core is a separate process reading the settings file; unsaved
+  // edits (peers, hostname) must land on disk before it launches.
+  saveSettings();
+
   // Save current IP state when server starts
   if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).toString().isEmpty()) {
     m_serverStartIPs = NetworkMonitor::validAddresses();
