@@ -52,6 +52,7 @@
 
 #if defined(Q_OS_MACOS)
 #include <ApplicationServices/ApplicationServices.h>
+#include "OSXHelpers.h"
 #endif
 
 using namespace deskflow::gui;
@@ -157,6 +158,18 @@ MainWindow::MainWindow()
   applyConfig();
   m_statusBar->setSecurityIcon(TlsUtility::isEnabled());
   restoreWindow();
+
+#if defined(Q_OS_MACOS)
+  // Self-managed launch: register the app as a login item once so Deskflow
+  // starts itself at login with no external LaunchAgent or keepalive script --
+  // the app owns its own lifecycle. Gated on a one-time flag so a later
+  // opt-out in System Settings > Login Items is respected.
+  if (!Settings::value(Settings::Gui::LoginItemConfigured).toBool()) {
+    macSetStartAtLogin(true);
+    Settings::setValue(Settings::Gui::LoginItemConfigured, true);
+    Settings::save();
+  }
+#endif
 }
 MainWindow::~MainWindow()
 {

@@ -75,6 +75,10 @@ public:
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoStartCore = QStringLiteral("gui/startCoreWithGui");
+    // One-time flag: the app has registered itself as a macOS login item
+    // (SMAppService). Set after first registration so a later user opt-out in
+    // System Settings is not overridden on the next launch.
+    inline static const auto LoginItemConfigured = QStringLiteral("gui/loginItemConfigured");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
     inline static const auto UpdateCheckUrl = QStringLiteral("gui/updateCheckUrl");
     inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
@@ -277,6 +281,7 @@ private:
     , Settings::Log::GuiDebug
     , Settings::Gui::Autohide
     , Settings::Gui::AutoStartCore
+    , Settings::Gui::LoginItemConfigured
     , Settings::Gui::AutoUpdateCheck
     , Settings::Gui::UpdateCheckUrl
     , Settings::Gui::CloseReminder

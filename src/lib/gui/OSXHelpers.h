@@ -14,3 +14,13 @@ bool showOSXNotification(const QString &title, const QString &body);
 bool isOSXInterfaceStyleDark();
 void forceAppActive();
 void macOSNativeHide();
+
+//! Register/unregister this .app as a macOS login item (SMAppService).
+/*! Lets Deskflow start itself at login with no external LaunchAgent --
+    the app owns its own launch. Returns true when the resulting state
+    matches \p enable. No-op/false on macOS < 13. */
+bool macSetStartAtLogin(bool enable);
+
+//! True when this .app is registered as a login item (the system is the
+//! source of truth, like the login-window bridge).
+bool macStartAtLoginEnabled();

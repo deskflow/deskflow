@@ -136,3 +136,9 @@ if(WIN32)
     net
   )
 endif()
+
+if(APPLE)
+  # SMAppService (login-item self-registration) lives in ServiceManagement and
+  # does not module-auto-link, so link it explicitly.
+  target_link_libraries(${target} "-framework ServiceManagement")
+endif()
