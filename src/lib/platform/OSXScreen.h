@@ -93,6 +93,8 @@ public:
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
   std::string getSecureInputApp() const override;
+  void switchToAsciiInputSource() override;
+  void restoreInputSource() override;
 
   void waitForCarbonLoop() const;
 
@@ -219,6 +221,10 @@ private:
 
   // true if screen is being used as a primary screen, false otherwise
   bool m_isPrimary;
+
+  // input source id remembered by switchToAsciiInputSource() so it can be
+  // restored by restoreInputSource(); empty when nothing is remembered
+  std::string m_savedInputSourceId;
 
   // true if mouse has entered the screen
   bool m_isOnScreen;

@@ -145,6 +145,9 @@ void Screen::enter(KeyModifierMask toggleMask)
   m_screen->enter();
   if (m_isPrimary) {
     enterPrimary();
+    if (Settings::value(Settings::Server::SwitchToAsciiOnLeave).toBool()) {
+      m_screen->restoreInputSource();
+    }
   } else {
     enterSecondary(toggleMask);
   }
@@ -171,6 +174,9 @@ bool Screen::leave()
 
   if (m_isPrimary) {
     leavePrimary();
+    if (Settings::value(Settings::Server::SwitchToAsciiOnLeave).toBool()) {
+      m_screen->switchToAsciiInputSource();
+    }
   } else {
     leaveSecondary();
   }
