@@ -112,6 +112,16 @@ private:
   void updateNetworkInfo();
 
   void coreModeToggled(bool checked);
+
+  /**
+   * @brief ensureAccessibilityPermission On macOS, make sure Deskflow is trusted to
+   * control the keyboard and mouse before the core starts. When permission is missing
+   * the user is guided to the Accessibility settings pane. No-op (returns true) on
+   * other platforms.
+   * @return true when the core is allowed to start.
+   */
+  bool ensureAccessibilityPermission();
+
   void updateModeControls();
   void updateModeControlLabels();
   std::unique_ptr<Ui::MainWindow> ui;

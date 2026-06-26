@@ -145,4 +145,7 @@ if(APPLE)
   # SMAppService (login-item self-registration) lives in ServiceManagement and
   # does not module-auto-link, so link it explicitly.
   target_link_libraries(${target} "-framework ServiceManagement")
+  # AXIsProcessTrustedWithOptions / accessibility permission checks
+  find_library(APPLICATION_SERVICES_LIBRARY ApplicationServices)
+  target_link_libraries(${target} ${APPLICATION_SERVICES_LIBRARY})
 endif()
