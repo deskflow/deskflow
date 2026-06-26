@@ -97,6 +97,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
       m_pmMutex(new Mutex),
       m_pmWatchThread(nullptr),
       m_pmThreadReady(new CondVar<bool>(m_pmMutex, false)),
+      m_pmRunloop(nullptr),
       m_pmRootPort(0),
       m_activeModifierHotKey(0),
       m_activeModifierHotKeyMask(0),
@@ -194,9 +195,14 @@ OSXScreen::~OSXScreen()
       }
     }
 
-    // now exit the thread's runloop and wait for it to exit
+    // now exit the thread's runloop and wait for it to exit.
+    // m_pmRunloop is null when the power thread failed to register for system
+    // power (e.g. in a VM) and exited early without ever entering its run loop;
+    // in that case its CFRunLoop is already gone and stopping it would crash.
     LOG_DEBUG("stopping watchSystemPowerThread");
-    CFRunLoopStop(m_pmRunloop);
+    if (m_pmRunloop) {
+      CFRunLoopStop(m_pmRunloop);
+    }
     m_pmWatchThread->wait();
     delete m_pmWatchThread;
     m_pmWatchThread = nullptr;
@@ -1406,6 +1412,10 @@ void OSXScreen::watchSystemPowerThread(const void *)
   m_pmRootPort = IORegisterForSystemPower(this, &notificationPortRef, powerChangeCallback, &notifier);
   if (m_pmRootPort == 0) {
     LOG_WARN("IORegisterForSystemPower failed");
+    // this thread exits early below without running its CFRunLoop, so the run
+    // loop must not be stopped from the destructor. clear it before signalling
+    // ready so the destructor (which waits on that signal) sees it as unset.
+    m_pmRunloop = nullptr;
   } else {
     runloopSourceRef = IONotificationPortGetRunLoopSource(notificationPortRef);
     CFRunLoopAddSource(m_pmRunloop, runloopSourceRef, kCFRunLoopCommonModes);
