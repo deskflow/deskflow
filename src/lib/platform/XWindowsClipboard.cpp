@@ -37,6 +37,7 @@ XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardI
       m_window(window),
       m_id(id)
 {
+  std::scoped_lock lock{m_mutex};
   // get some atoms
   m_atomTargets = XInternAtom(m_display, "TARGETS", False);
   m_atomMultiple = XInternAtom(m_display, "MULTIPLE", False);
@@ -76,12 +77,14 @@ XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardI
 
 XWindowsClipboard::~XWindowsClipboard()
 {
+  std::scoped_lock lock{m_mutex};
   clearReplies();
   clearConverters();
 }
 
 void XWindowsClipboard::lost(Time time)
 {
+  std::scoped_lock lock{m_mutex};
   LOG_DEBUG("lost clipboard %d ownership at %d", m_id, time);
   if (m_owner) {
     m_owner = false;
@@ -92,6 +95,7 @@ void XWindowsClipboard::lost(Time time)
 
 void XWindowsClipboard::addRequest(Window owner, Window requestor, Atom target, ::Time time, Atom property)
 {
+  std::scoped_lock lock{m_mutex};
   // must be for our window and we must have owned the selection
   // at the given time.
   bool success = false;
@@ -176,6 +180,7 @@ bool XWindowsClipboard::addSimpleRequest(Window requestor, Atom target, ::Time t
 
 bool XWindowsClipboard::processRequest(Window requestor, ::Time /*time*/, Atom property)
 {
+  std::scoped_lock lock{m_mutex};
   ReplyMap::iterator index = m_replies.find(requestor);
   if (index == m_replies.end()) {
     // unknown requestor window
@@ -264,6 +269,7 @@ bool XWindowsClipboard::empty()
 
 void XWindowsClipboard::add(Format format, const std::string &data)
 {
+  std::scoped_lock lock{m_mutex};
   assert(m_open);
   assert(m_owner);
 
@@ -316,11 +322,11 @@ bool XWindowsClipboard::open(Time time) const
 
 void XWindowsClipboard::close() const
 {
+  std::scoped_lock lock{m_mutex};
   assert(m_open);
 
   LOG_DEBUG("close clipboard %d", m_id);
 
-  std::scoped_lock lock{m_mutex};
   // unlock clipboard
   if (m_motif) {
     motifUnlockClipboard();
@@ -332,13 +338,14 @@ void XWindowsClipboard::close() const
 
 IClipboard::Time XWindowsClipboard::getTime() const
 {
-  checkCache();
   std::scoped_lock lock{m_mutex};
+  checkCache();
   return m_timeOwned;
 }
 
 bool XWindowsClipboard::has(Format format) const
 {
+  std::scoped_lock lock{m_mutex};
   assert(m_open);
 
   fillCache();
@@ -347,6 +354,7 @@ bool XWindowsClipboard::has(Format format) const
 
 std::string XWindowsClipboard::get(Format format) const
 {
+  std::scoped_lock lock{m_mutex};
   assert(m_open);
 
   fillCache();
@@ -386,7 +394,6 @@ IXWindowsClipboardConverter *XWindowsClipboard::getConverter(Atom target, bool o
 
 void XWindowsClipboard::checkCache() const
 {
-  std::scoped_lock lock{m_mutex};
   if (!m_checkCache) {
     return;
   }
@@ -418,7 +425,6 @@ void XWindowsClipboard::clearCache() const
 
 void XWindowsClipboard::doClearCache()
 {
-  std::scoped_lock lock{m_mutex};
   m_checkCache = false;
   m_cached = false;
   for (int32_t index = 0; index < static_cast<int>(Format::TotalFormats); ++index) {
@@ -438,7 +444,6 @@ void XWindowsClipboard::fillCache() const
 
 void XWindowsClipboard::doFillCache()
 {
-  std::scoped_lock lock{m_mutex};
   if (m_motif) {
     motifFillCache();
   } else {
@@ -524,7 +529,6 @@ bool XWindowsClipboard::icccmGetSelection(Atom target, Atom *actualTarget, std::
   assert(actualTarget != nullptr);
   assert(data != nullptr);
 
-  std::scoped_lock lock{m_mutex};
   // request data conversion
   if (CICCCMGetClipboard getter(m_window, m_time, m_atomData);
       !getter.readClipboard(m_display, m_selection, target, actualTarget, data)) {
@@ -985,7 +989,6 @@ bool XWindowsClipboard::sendReply(Reply *reply)
     }
 
     if (!reply->m_replied) {
-      std::scoped_lock lock{m_mutex};
       sendNotify(reply->m_requestor, m_selection, reply->m_target, None, reply->m_time);
 
       // don't wait for any reply (because we're not expecting one)
@@ -1011,7 +1014,6 @@ bool XWindowsClipboard::sendReply(Reply *reply)
 
   // nothing to log
   if (CLOG->getFilter() < LogLevel::Level::Verbose) {
-    std::scoped_lock lock{m_mutex};
     sendNotify(
         reply->m_requestor, m_selection, reply->m_target, reply->m_property, static_cast<unsigned int>(reply->m_time)
     );
@@ -1060,7 +1062,6 @@ bool XWindowsClipboard::sendReply(Reply *reply)
   if (props != nullptr) {
     XFree(props);
   }
-  std::scoped_lock lck{m_mutex};
   sendNotify(reply->m_requestor, m_selection, reply->m_target, reply->m_property, reply->m_time);
 
   // wait for delete notify
@@ -1102,7 +1103,6 @@ bool XWindowsClipboard::wasOwnedAtTime(::Time time) const
 {
   // not owned if we've never owned the selection
   checkCache();
-  std::scoped_lock lock{m_mutex};
   if (m_timeOwned == 0) {
     return false;
   }
@@ -1158,7 +1158,6 @@ Atom XWindowsClipboard::getTimestampData(std::string &data, int *format) const
   assert(format != nullptr);
 
   checkCache();
-  std::scoped_lock lock{m_mutex};
   XWindowsUtil::appendTimeData(data, m_timeOwned);
   *format = 32;
   return m_atomInteger;
