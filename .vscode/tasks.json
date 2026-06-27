@@ -1,0 +1,49 @@
+{
+  // Build, sign, and install Deskflow from this fork onto the local machine.
+  // Run in VS Code (Terminal → Run Task… or ⇧⌘B) so codesign runs in your
+  // GUI/login-keychain context — signing over SSH fails with errSecInternalComponent.
+  //
+  // Signing identity: free "Apple Development: Duff Hughes (MVDT65NPA4)" cert
+  // (present in this Mac's and the hackintosh VM's login keychain). Signing with
+  // a stable identity keeps Accessibility/Input-Monitoring grants across rebuilds
+  // (see docs/building-signed.md). SKIP_BUILD_TESTS=ON avoids the OSXKeyStateTests
+  // build-time failure that needs an interactive window-server session.
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}",
+    "env": {
+      "DESKFLOW_CODESIGN_ID": "Apple Development: Duff Hughes (MVDT65NPA4)"
+    }
+  },
+  "tasks": [
+    {
+      "label": "Deskflow: Configure (signed)",
+      "type": "shell",
+      "command": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=\"$(brew --prefix qt);$(brew --prefix openssl@3)\" -DAPPLE_CODESIGN_DEV=\"$DESKFLOW_CODESIGN_ID\" -DSKIP_BUILD_TESTS=ON",
+      "problemMatcher": []
+    },
+    {
+      "label": "Deskflow: Build + Sign",
+      "type": "shell",
+      "command": "cmake --build build -j$(sysctl -n hw.ncpu)",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Deskflow: Install to /Applications",
+      "type": "shell",
+      "command": "osascript -e 'quit app \"Deskflow\"' >/dev/null 2>&1; pkill -f deskflow-core >/dev/null 2>&1; sleep 1; rm -rf /Applications/Deskflow.app && cp -R build/bin/Deskflow.app /Applications/Deskflow.app && xattr -cr /Applications/Deskflow.app && codesign --verify --deep --strict /Applications/Deskflow.app && echo '== Signed install verified ==' && codesign -dv /Applications/Deskflow.app/Contents/MacOS/deskflow-core 2>&1 | grep -E 'Authority=Apple Development|TeamIdentifier' && open -a Deskflow",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build, Sign & Install Deskflow",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Deskflow: Configure (signed)",
+        "Deskflow: Build + Sign",
+        "Deskflow: Install to /Applications"
+      ],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}
