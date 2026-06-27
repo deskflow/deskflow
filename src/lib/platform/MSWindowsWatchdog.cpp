@@ -274,7 +274,10 @@ void MSWindowsWatchdog::startProcess()
 
   if (m_process != nullptr) {
     LOG_DEBUG("closing existing process to make way for new one");
-    m_process->shutdown();
+    // Short timeout: on a relaunch (esp. auto-elevate desktop transitions) the
+    // core is being replaced immediately, so don't wait the full graceful
+    // window -- a slow exit there delays reaching the secure desktop for UAC.
+    m_process->shutdown(2);
     m_process.reset();
   }
 
