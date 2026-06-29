@@ -399,7 +399,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineHostname">
+              <widget class="QComboBox" name="lineHostname">
+               <property name="editable">
+                <bool>true</bool>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>

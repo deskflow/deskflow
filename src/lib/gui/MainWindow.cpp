@@ -33,10 +33,12 @@
 
 #include <QCheckBox>
 #include <QCloseEvent>
+#include <QComboBox>
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -283,8 +285,8 @@ void MainWindow::connectSlots()
 
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->lineHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
+  connect(ui->lineHostname, &QComboBox::currentTextChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -649,7 +651,7 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (ui->rbModeClient->isChecked() && ui->lineHostname->currentText().isEmpty())
       return;
     startCore();
   }
@@ -703,8 +705,13 @@ void MainWindow::applyConfig()
     setWindowTitle(kAppName);
   }
 
+  ui->lineHostname->clear();
+
+  const auto hostnames = Settings::value(QStringLiteral("client/hostnames")).toStringList();
+  ui->lineHostname->addItems(hostnames);
+
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
-    ui->lineHostname->setText(host);
+    ui->lineHostname->setCurrentText(host);
 
   updateLocalFingerprint();
   setTrayIcon();
@@ -724,8 +731,23 @@ void MainWindow::saveSettings() const
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  if (!ui->lineHostname->text().isEmpty())
-    Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+
+  const auto hostname = ui->lineHostname->currentText().trimmed();
+
+  if (!hostname.isEmpty()) {
+    Settings::setValue(Settings::Client::RemoteHost, hostname);
+
+    auto hostnames = Settings::value(QStringLiteral("client/hostnames")).toStringList();
+    hostnames.removeAll(hostname);
+    hostnames.prepend(hostname);
+
+    while (hostnames.size() > 10) {
+      hostnames.removeLast();
+    }
+
+    Settings::setValue(QStringLiteral("client/hostnames"), hostnames);
+  }
+
   Settings::save();
 }
 
@@ -1284,5 +1306,5 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  return ((isServer || isClient) && (isClient && !ui->lineHostname->currentText().isEmpty()) || isServer);
 }
