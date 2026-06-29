@@ -34,6 +34,7 @@
 
 #include <QCheckBox>
 #include <QCloseEvent>
+#include <QComboBox>
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QLocalServer>
@@ -48,6 +49,7 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
+#include <QSignalBlocker>
 
 #include <memory>
 
@@ -287,8 +289,8 @@ void MainWindow::connectSlots()
 
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->cbHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
+  connect(ui->cbHostname, &QComboBox::editTextChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -651,7 +653,7 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (ui->rbModeClient->isChecked() && ui->cbHostname->currentText().isEmpty())
       return;
     startCore();
   }
@@ -703,8 +705,12 @@ void MainWindow::applyConfig()
     setWindowTitle(kAppName);
   }
 
-  if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
-    ui->lineHostname->setText(host);
+  const auto host = Settings::value(Settings::Client::RemoteHost).toString();
+  QSignalBlocker hostnameBlocker(ui->cbHostname);
+  ui->cbHostname->clear();
+  ui->cbHostname->addItems(Settings::value(Settings::Client::RecentRemoteHosts).toStringList());
+  if (!host.isEmpty())
+    ui->cbHostname->setCurrentText(host);
 
   updateFingerprintButton();
   setTrayIcon();
@@ -724,8 +730,9 @@ void MainWindow::saveSettings() const
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  if (!ui->lineHostname->text().isEmpty())
-    Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+  if (!ui->cbHostname->currentText().isEmpty()) {
+    Settings::setValue(Settings::Client::RemoteHost, ui->cbHostname->currentText());
+  }
   Settings::save();
 }
 
@@ -995,8 +1002,28 @@ void MainWindow::coreConnectionStateChanged(ConnectionState state)
   // when the correct TLS version string is detected.
   if (state != ConnectionState::Connected) {
     secureSocket(false);
-  } else if (isVisible()) {
-    showFirstConnectedMessage();
+  } else {
+    if (m_coreProcess.mode() == CoreMode::Client) {
+      if (const auto host = ui->cbHostname->currentText(); !host.isEmpty()) {
+        QStringList recentHosts = Settings::value(Settings::Client::RecentRemoteHosts).toStringList();
+        if (recentHosts.isEmpty() || recentHosts.first() != host) {
+          recentHosts.removeAll(host);
+          recentHosts.prepend(host);
+          while (recentHosts.size() > 10) {
+            recentHosts.removeLast();
+          }
+          Settings::setValue(Settings::Client::RecentRemoteHosts, recentHosts);
+          ui->cbHostname->blockSignals(true);
+          ui->cbHostname->clear();
+          ui->cbHostname->addItems(recentHosts);
+          ui->cbHostname->setCurrentText(host);
+          ui->cbHostname->blockSignals(false);
+        }
+      }
+    }
+    if (isVisible()) {
+      showFirstConnectedMessage();
+    }
   }
 }
 
@@ -1094,8 +1121,11 @@ void MainWindow::showConfigureServer(const QString &message)
 void MainWindow::showConfigureClient()
 {
   ClientConfigDialog dialog(this);
-  if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
-    m_coreProcess.restart();
+  if (dialog.exec() == QDialog::Accepted) {
+    applyConfig();
+    if (m_coreProcess.isStarted()) {
+      m_coreProcess.restart();
+    }
   }
 }
 
@@ -1325,5 +1355,5 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  return ((isServer || isClient) && (isClient && !ui->cbHostname->currentText().isEmpty()) || isServer);
 }

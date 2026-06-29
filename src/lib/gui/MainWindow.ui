@@ -399,7 +399,13 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineHostname">
+              <widget class="QComboBox" name="cbHostname">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -408,6 +414,9 @@
                </property>
                <property name="toolTip">
                 <string>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</string>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
