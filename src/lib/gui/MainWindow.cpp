@@ -45,6 +45,7 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QComboBox>
 #include <QScreen>
 #include <QScrollBar>
 
@@ -283,8 +284,8 @@ void MainWindow::connectSlots()
 
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->lineHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
+  connect(ui->lineHostname, &QComboBox::editTextChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -649,7 +650,7 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (ui->rbModeClient->isChecked() && ui->lineHostname->currentText().isEmpty())
       return;
     startCore();
   }
@@ -703,8 +704,11 @@ void MainWindow::applyConfig()
     setWindowTitle(kAppName);
   }
 
+  const auto recentHosts = Settings::value(Settings::Client::RecentRemoteHosts).toStringList();
+  ui->lineHostname->addItems(recentHosts);
+
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
-    ui->lineHostname->setText(host);
+    ui->lineHostname->setCurrentText(host);
 
   updateLocalFingerprint();
   setTrayIcon();
@@ -724,8 +728,20 @@ void MainWindow::saveSettings() const
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  if (!ui->lineHostname->text().isEmpty())
-    Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+  const QString currentHost = ui->lineHostname->currentText();
+  if (!currentHost.isEmpty()) {
+    Settings::setValue(Settings::Client::RemoteHost, currentHost);
+    
+    QStringList recentHosts = Settings::value(Settings::Client::RecentRemoteHosts).toStringList();
+    if (recentHosts.isEmpty() || recentHosts.first() != currentHost) {
+      recentHosts.removeAll(currentHost);
+      recentHosts.prepend(currentHost);
+      while (recentHosts.size() > 10) {
+        recentHosts.removeLast();
+      }
+      Settings::setValue(Settings::Client::RecentRemoteHosts, recentHosts);
+    }
+  }
   Settings::save();
 }
 
@@ -1284,5 +1300,5 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  return ((isServer || isClient) && (isClient && !ui->lineHostname->currentText().isEmpty()) || isServer);
 }
