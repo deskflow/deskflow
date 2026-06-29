@@ -74,6 +74,8 @@ private:
    */
   void save();
 
+  void clearServerHistory();
+
   Ui::ClientConfigDialog *ui = nullptr;
   SettingsDialogButtonBox *m_buttonBox = nullptr;
 };

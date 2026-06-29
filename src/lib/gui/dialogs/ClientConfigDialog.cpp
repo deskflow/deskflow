@@ -19,6 +19,7 @@ ClientConfigDialog::ClientConfigDialog(QWidget *parent)
 {
   ui->setupUi(this);
   layout()->addWidget(m_buttonBox);
+  ui->btnClearServerHistory->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
   initConnections();
   load();
   updateControls();
@@ -46,6 +47,9 @@ void ClientConfigDialog::updateControls() const
   ui->sbXScrollScale->setEnabled(writable);
   ui->cbYScrollInvert->setEnabled(writable);
   ui->sbYScrollScale->setEnabled(writable);
+  ui->btnClearServerHistory->setEnabled(
+      writable && !Settings::value(Settings::Client::RecentRemoteHosts).toStringList().isEmpty()
+  );
 }
 
 void ClientConfigDialog::initConnections() const
@@ -58,6 +62,7 @@ void ClientConfigDialog::initConnections() const
   connect(
       ui->cbDynamicConnectTime, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons
   );
+  connect(ui->btnClearServerHistory, &QPushButton::clicked, this, &ClientConfigDialog::clearServerHistory);
   connect(ui->cbLanguageSync, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->cbYScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
@@ -104,6 +109,7 @@ void ClientConfigDialog::load()
   ui->sbYScrollScale->setValue(Settings::value(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::value(Settings::Client::InvertXScroll).toBool());
   ui->sbXScrollScale->setValue(Settings::value(Settings::Client::XScrollScale).toDouble());
+  setButtonBoxEnabledButtons();
 }
 
 void ClientConfigDialog::resetToDefault()
@@ -125,4 +131,10 @@ void ClientConfigDialog::save()
   Settings::setValue(Settings::Client::InvertXScroll, ui->cbXScrollInvert->isChecked());
   Settings::setValue(Settings::Client::XScrollScale, ui->sbXScrollScale->value());
   QDialog::accept();
+}
+
+void ClientConfigDialog::clearServerHistory()
+{
+  Settings::setValue(Settings::Client::RecentRemoteHosts, QVariant());
+  ui->btnClearServerHistory->setEnabled(false);
 }

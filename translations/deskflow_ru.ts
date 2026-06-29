@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Использовать динамическое время переподключения в зависимости от попыток подключения</translation>
     </message>
+    <message>
+        <source>Clear Server History</source>
+        <translation type="unfinished">Очистить историю серверов</translation>
+    </message>
 </context>
 <context>
     <name>ComputerSettingsDialog</name>

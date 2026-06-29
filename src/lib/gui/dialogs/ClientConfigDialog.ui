@@ -164,6 +164,13 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QPushButton" name="btnClearServerHistory">
+     <property name="text">
+      <string>Clear Server History</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
