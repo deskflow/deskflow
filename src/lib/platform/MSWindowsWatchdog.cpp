@@ -302,9 +302,16 @@ void MSWindowsWatchdog::startProcess()
     ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
     HANDLE userToken = getUserToken(&sa, elevate);
 
-    // set UIAccess to fix Windows 8 GUI interaction
-    DWORD uiAccess = 1;
-    SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+    // UIAccess lets the core drive higher-integrity / secure-desktop UI, but a
+    // UIAccess token also raises the core's *injected* input above normal
+    // user-level hooks -- so PowerToys/Keyboard Manager (UIAccess=0) can't see
+    // deskflow's input. Only grant it when elevated (secure/login desktop, where
+    // those hooks are out of the picture anyway); on the normal desktop keep a
+    // plain token so user-level hook tools intercept deskflow input.
+    if (elevate) {
+      DWORD uiAccess = 1;
+      SetTokenInformation(userToken, TokenUIAccess, &uiAccess, sizeof(DWORD));
+    }
 
     createRet = m_process->startAsUser(userToken, &sa);
   }
