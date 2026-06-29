@@ -55,6 +55,14 @@ void ClientConfigDialog::initConnections() const
   connect(
       ui->cbDynamicConnectTime, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons
   );
+  connect(ui->btnClearServerHistory, &QPushButton::clicked, this, []() {
+      QString currentHost = Settings::value(Settings::Client::RemoteHost).toString();
+      QStringList recentHosts;
+      if (!currentHost.isEmpty()) {
+          recentHosts.append(currentHost);
+      }
+      Settings::setValue(Settings::Client::RecentRemoteHosts, recentHosts);
+  });
   connect(ui->cbLanguageSync, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->cbYScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
