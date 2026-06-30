@@ -6,7 +6,11 @@
 add_subdirectory(lib)
 add_subdirectory(apps)
 
+option(SKIP_BUILD_TESTS "Skip building and running unit tests" OFF)
 option(BUILD_TESTS "Build tests" ON)
+if(SKIP_BUILD_TESTS)
+  set(BUILD_TESTS OFF)
+endif()
 if(BUILD_TESTS)
   add_subdirectory(unittests)
 endif()

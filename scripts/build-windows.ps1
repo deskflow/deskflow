@@ -17,7 +17,7 @@ $root = Split-Path $PSScriptRoot -Parent
 function Import-DeskflowEnv {
   $envFile = Join-Path $root '.env'
   if (-not (Test-Path $envFile)) {
-    throw "No .env at $envFile — copy env.example to .env and fill it in."
+    throw "No .env at $envFile - copy env.example to .env and fill it in."
   }
   Get-Content $envFile | ForEach-Object {
     if ($_ -match '^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$' -and $_ -notmatch '^\s*#') {
@@ -61,7 +61,7 @@ $vcvars = @(
   'C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat',
   'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat'
 ) | Where-Object { Test-Path $_ } | Select-Object -First 1
-if (-not $vcvars) { throw 'vcvars64.bat not found — install Visual Studio Build Tools (C++ workload).' }
+if (-not $vcvars) { throw 'vcvars64.bat not found - install Visual Studio Build Tools (C++ workload).' }
 
 Write-Host "Building Deskflow: Qt=$qt OpenSSL=$ossl Build=$build"
 $cmakeArgs = @(
@@ -70,7 +70,8 @@ $cmakeArgs = @(
   '-DCMAKE_BUILD_TYPE=Release',
   "-DCMAKE_PREFIX_PATH=$qt",
   "-DOPENSSL_ROOT_DIR=$ossl",
-  '-DSKIP_BUILD_TESTS=ON'
+  '-DSKIP_BUILD_TESTS=ON',
+  '-DBUILD_TESTS=OFF'
 )
 $buildTargets = 'deskflow-core;deskflow-daemon;deskflow;deskflow-vhid-bridge'
 cmd /c "`"$vcvars`" >nul 2>&1 && cmake $($cmakeArgs -join ' ') && cmake --build `"$build`" --config Release --target $buildTargets -j $env:NUMBER_OF_PROCESSORS"
