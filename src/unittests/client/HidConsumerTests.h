@@ -16,6 +16,7 @@ private Q_SLOTS:
   void shouldDeliverRejectsEmptyAndOversizedPayloads();
   void deliverRawHidReportSkipsEmptyPayload();
   void deliverRawHidReportForwardsNonEmptyPayload();
+  void encodesSinkFrame();
   void mouserHidDeliveryEnabledFromSettings();
   void deliverRawHidReportToMouserSkipsNullClient();
 };

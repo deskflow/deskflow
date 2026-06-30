@@ -7,6 +7,7 @@
 
 #include "base/Log.h"
 #include "base/ThreadJoin.h"
+#include "client/HidSink.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -40,15 +41,45 @@ void platformCloseSocket(int fd)
 #endif
 }
 
+bool sendWouldBlock()
+{
+#if defined(_WIN32)
+  return WSAGetLastError() == WSAEWOULDBLOCK;
+#else
+  return errno == EAGAIN || errno == EWOULDBLOCK;
+#endif
+}
+
+bool waitWritable(int fd, int timeoutSec)
+{
+  fd_set writeSet;
+  FD_ZERO(&writeSet);
+  FD_SET(fd, &writeSet);
+  timeval timeout{};
+  timeout.tv_sec = timeoutSec;
+  timeout.tv_usec = 0;
+  return ::select(fd + 1, nullptr, &writeSet, nullptr, &timeout) == 1;
+}
+
 bool sendAll(int fd, const std::string &payload)
 {
   size_t sent = 0;
   while (sent < payload.size()) {
     const auto wrote = ::send(fd, payload.data() + sent, payload.size() - sent, 0);
-    if (wrote <= 0) {
+    if (wrote > 0) {
+      sent += static_cast<size_t>(wrote);
+      continue;
+    }
+    if (wrote == 0) {
       return false;
     }
-    sent += static_cast<size_t>(wrote);
+    if (sendWouldBlock()) {
+      if (!waitWritable(fd, 5)) {
+        return false;
+      }
+      continue;
+    }
+    return false;
   }
   return true;
 }
@@ -93,9 +124,24 @@ void MouserClient::deliver(const std::string &line)
   {
     std::scoped_lock lock{m_mutex};
     if (m_queue.size() >= kMaxQueuedLines) {
-      m_queue.pop_front(); // drop oldest; gestures are ephemeral
+      m_queue.pop_front();
     }
-    m_queue.push_back(line);
+    m_queue.push_back(OutboundJson{line});
+  }
+  m_wake.notify_one();
+}
+
+void MouserClient::deliverReport(const std::string &frame)
+{
+  if (!deskflow::client::isHidReportFrame(frame)) {
+    return;
+  }
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_queue.size() >= kMaxQueuedLines) {
+      m_queue.pop_front();
+    }
+    m_queue.push_back(OutboundReport{frame});
   }
   m_wake.notify_one();
 }
@@ -103,25 +149,34 @@ void MouserClient::deliver(const std::string &line)
 void MouserClient::workerLoop()
 {
   while (m_running) {
-    std::string line;
+    Outbound item;
     {
       std::unique_lock lock{m_mutex};
       m_wake.wait(lock, [this] { return !m_running || !m_queue.empty(); });
       if (!m_running) {
         return;
       }
-      line = m_queue.front();
+      item = std::move(m_queue.front());
       m_queue.pop_front();
     }
 
     if (!ensureConnected()) {
-      // Mouser is not reachable; drop the line and back off briefly so a
-      // burst of events does not spin the CPU on failed connects.
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
       continue;
     }
     drainReplies();
-    if (!sendLine(line)) {
+    const bool sent = std::visit(
+        [this](const auto &payload) -> bool {
+          using T = std::decay_t<decltype(payload)>;
+          if constexpr (std::is_same_v<T, OutboundJson>) {
+            return sendLine(payload.line);
+          } else {
+            return sendFrame(payload.frame);
+          }
+        },
+        item
+    );
+    if (!sent) {
       disconnect();
     }
   }
@@ -232,27 +287,12 @@ bool MouserClient::sendLine(const std::string &line)
 {
   std::string payload = line;
   payload.push_back('\n');
-  size_t sent = 0;
-  while (sent < payload.size()) {
-    const auto wrote = ::send(m_fd, payload.data() + sent, payload.size() - sent, 0);
-    if (wrote > 0) {
-      sent += static_cast<size_t>(wrote);
-      continue;
-    }
-#if !defined(_WIN32)
-    if (wrote < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
-#else
-    if (wrote < 0 && WSAGetLastError() == WSAEWOULDBLOCK) {
-#endif
-      if (!m_running) {
-        return false;
-      }
-      std::this_thread::sleep_for(std::chrono::milliseconds(5));
-      continue;
-    }
-    return false;
-  }
-  return true;
+  return sendAll(m_fd, payload);
+}
+
+bool MouserClient::sendFrame(const std::string &frame)
+{
+  return sendAll(m_fd, frame);
 }
 
 void MouserClient::drainReplies()

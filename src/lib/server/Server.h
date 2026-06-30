@@ -343,6 +343,7 @@ private:
   void virtualHostOnFocusChange(VirtualHostTracker &tracker, BaseClientProxy *dst, const std::string &connectPayload = {});
   //! Merge cached decode context from the host Mouser into the passthrough connect line.
   std::string hidConnectLineForClient() const;
+  void tryProbeHidDecodeFromConnectLine(const std::string &connectLine);
   void applyHidDecodeAvailable();
   void maybeCompleteDeferredHidSeize();
   void handleClientCloseTimeout(BaseClientProxy *client);

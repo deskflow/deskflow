@@ -111,6 +111,7 @@ private:
 
   //! Lazily create the loopback Mouser client; null when sharing/HID delivery is off.
   MouserClient *mouserDeliveryOrNull();
+  void stopMouserHidDelivery();
 
   Client *m_client = nullptr;
   deskflow::IStream *m_stream = nullptr;

@@ -13,6 +13,7 @@
 #include "client/Client.h"
 #include "client/HidConsumer.h"
 #include "client/MouserClient.h"
+#include "client/MouserSinkManifest.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
@@ -56,9 +57,16 @@ ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue 
 
 ServerProxy::~ServerProxy()
 {
+  stopMouserHidDelivery();
   setKeepAliveRate(-1.0);
   m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
   m_events->removeHandler(EventTypes::ClipboardSending, this);
+}
+
+void ServerProxy::stopMouserHidDelivery()
+{
+  deskflow::client::clearMouserSinkManifest();
+  m_mouserClient.reset();
 }
 
 void ServerProxy::resetKeepAliveAlarm()
@@ -845,13 +853,16 @@ void ServerProxy::setServerLanguages()
 MouserClient *ServerProxy::mouserDeliveryOrNull()
 {
   if (!deskflow::client::mouserHidDeliveryEnabled()) {
+    if (m_mouserClient != nullptr) {
+      stopMouserHidDelivery();
+    }
     return nullptr;
   }
   if (m_mouserClient == nullptr) {
-    m_mouserClient = std::make_unique<MouserClient>(
-        Settings::value(Settings::Client::MouserPort).toInt(),
-        Settings::value(Settings::Client::MouserToken).toString().toStdString()
-    );
+    const auto port = Settings::value(Settings::Client::MouserPort).toInt();
+    const auto token = Settings::value(Settings::Client::MouserToken).toString();
+    m_mouserClient = std::make_unique<MouserClient>(port, token.toStdString());
+    deskflow::client::writeMouserSinkManifest(port, token, true);
   }
   return m_mouserClient.get();
 }

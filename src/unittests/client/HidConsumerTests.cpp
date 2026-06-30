@@ -7,6 +7,7 @@
 #include "HidConsumerTests.h"
 
 #include "client/HidConsumer.h"
+#include "client/HidSink.h"
 #include "common/Settings.h"
 
 #include <QTest>
@@ -41,11 +42,20 @@ void HidConsumerTests::deliverRawHidReportSkipsEmptyPayload()
 
 void HidConsumerTests::deliverRawHidReportForwardsNonEmptyPayload()
 {
-  std::vector<std::string> lines;
+  std::vector<std::string> frames;
   const std::string bytes = {'\x01', '\x02'};
-  deskflow::client::deliverRawHidReport([&lines](const std::string &line) { lines.push_back(line); }, 3, bytes);
-  QCOMPARE(lines.size(), static_cast<size_t>(1));
-  QCOMPARE(lines[0], deskflow::client::encodeHidReportAsMouserLine(3, bytes));
+  deskflow::client::deliverRawHidReport([&frames](const std::string &frame) { frames.push_back(frame); }, 3, bytes);
+  QCOMPARE(frames.size(), static_cast<size_t>(1));
+  QVERIFY(deskflow::client::isHidReportFrame(frames[0]));
+  QCOMPARE(frames[0], deskflow::client::encodeHidReportFrame(3, bytes));
+}
+
+void HidConsumerTests::encodesSinkFrame()
+{
+  const std::string bytes = {'\x11', '\xFF', '\x0B'};
+  const auto frame = deskflow::client::encodeHidReportFrame(9, bytes);
+  QVERIFY(deskflow::client::isHidReportFrame(frame));
+  QCOMPARE(frame.size(), deskflow::client::kHidSinkHeaderBytes + bytes.size());
 }
 
 void HidConsumerTests::mouserHidDeliveryEnabledFromSettings()
@@ -64,7 +74,7 @@ void HidConsumerTests::deliverRawHidReportToMouserSkipsNullClient()
 {
   const std::string bytes = {'\x01'};
   deskflow::client::deliverRawHidReportToMouser(nullptr, 1, bytes);
-  QVERIFY(true); // no crash; delivery is a no-op
+  // no crash; null client is a no-op (no frame to verify)
 }
 
 QTEST_MAIN(HidConsumerTests)

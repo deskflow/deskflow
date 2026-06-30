@@ -16,6 +16,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <variant>
 
 class MouserClient
 {
@@ -31,10 +32,24 @@ public:
   //! Thread-safe: enqueue one Mouser-protocol JSON line for delivery.
   void deliver(const std::string &line);
 
+  //! Thread-safe: enqueue one binary DFHR HID report frame for delivery.
+  void deliverReport(const std::string &frame);
+
 private:
+  struct OutboundJson
+  {
+    std::string line;
+  };
+  struct OutboundReport
+  {
+    std::string frame;
+  };
+  using Outbound = std::variant<OutboundJson, OutboundReport>;
+
   void workerLoop();
   bool ensureConnected();
   bool sendLine(const std::string &line);
+  bool sendFrame(const std::string &frame);
   void drainReplies();
   void disconnect();
 
@@ -45,7 +60,7 @@ private:
   std::atomic<bool> m_running{true};
   std::mutex m_mutex;
   std::condition_variable m_wake;
-  std::deque<std::string> m_queue;
+  std::deque<Outbound> m_queue;
 
   int m_fd = -1;
 };

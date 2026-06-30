@@ -25,6 +25,7 @@
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 #include "server/HidPassthrough.h"
+#include "server/HidppProbe.h"
 #include "server/MouserBridge.h"
 #include "server/PrimaryClient.h"
 #include "server/VirtualHostTracker.h"
@@ -523,7 +524,11 @@ void Server::initMouserBridge()
     return;
   }
   if (hidDecodeSync && !gestureRelay) {
-    LOG_INFO("mouser bridge: starting for HID passthrough decode sync");
+    if (deskflow::server::hidppProbeCapable()) {
+      LOG_INFO("mouser bridge: decode-sync fallback (host HID++ probe preferred)");
+    } else {
+      LOG_INFO("mouser bridge: starting for HID passthrough decode sync");
+    }
   }
   if (gestureRelay && hidDecodeSync) {
     LOG_WARN("mouser bridge: gesture relay and HID passthrough both enabled — prefer HID passthrough only");
@@ -686,6 +691,7 @@ void Server::handleHidPassthroughEvent(const Event &event)
   switch (data->kind()) {
   case Kind::Attach:
     m_hidVirtualHostTracker.setConnectLine(data->payload());
+    tryProbeHidDecodeFromConnectLine(data->payload());
     virtualHostAttachIfRemote(m_hidVirtualHostTracker, hidConnectLineForClient());
     break;
 
@@ -729,6 +735,46 @@ void Server::updateHidVirtualHost(BaseClientProxy *dst)
   // Focus drives the seize: remote focus takes the vendor interface away
   // from the host's own consumer; local focus returns it.
   m_hidPassthrough->setFocusRemote(remoteFocus && !awaitDecode);
+}
+
+void Server::tryProbeHidDecodeFromConnectLine(const std::string &connectLine)
+{
+  if (!m_hidDecodeCache.isEmpty()) {
+    return;
+  }
+
+  const auto doc = QJsonDocument::fromJson(
+      QByteArray(connectLine.data(), static_cast<int>(connectLine.size()))
+  );
+  if (!doc.isObject()) {
+    return;
+  }
+
+  const QJsonObject device = doc.object()[QStringLiteral("device")].toObject();
+  const auto parseHex = [](const QString &text) -> uint16_t {
+    bool ok = false;
+    const uint value = text.toUInt(&ok, 0);
+    return ok ? static_cast<uint16_t>(value) : uint16_t{0};
+  };
+
+  uint16_t vid = parseHex(device[QStringLiteral("vendor_id")].toString());
+  uint16_t pid = parseHex(device[QStringLiteral("product_id")].toString());
+  if (vid == 0) {
+    vid = 0x046D;
+  }
+  if (pid == 0) {
+    LOG_WARN("hid passthrough: connect line missing product_id; skipping HID++ probe");
+    return;
+  }
+
+  const auto context = deskflow::server::probeHidppDecode(vid, pid);
+  if (!context.valid()) {
+    return;
+  }
+
+  m_hidDecodeCache = deskflow::server::hidppDecodeToJson(context);
+  LOG_INFO("hid passthrough: host HID++ probe populated decode cache");
+  applyHidDecodeAvailable();
 }
 
 void Server::applyHidDecodeAvailable()

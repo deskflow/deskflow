@@ -1221,6 +1221,14 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>설정 파일 경로</translation>
     </message>
     <message>
+        <source>HID passthrough</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter at least one device selector (for example %1) before enabling HID passthrough.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
         <translation>%1 설정 (*.conf);;모든 파일 (*.*)</translation>

@@ -6,6 +6,7 @@
 
 #include "client/HidConsumer.h"
 
+#include "client/HidSink.h"
 #include "client/MouserClient.h"
 #include "common/BytesHex.h"
 #include "common/Settings.h"
@@ -23,6 +24,11 @@ std::string encodeHidReportAsMouserLine(uint16_t deviceId, std::string_view byte
          + deskflow::bytesToLowerHex(bytes) + R"("})";
 }
 
+std::string encodeHidReportAsSinkFrame(uint16_t deviceId, std::string_view bytes)
+{
+  return encodeHidReportFrame(deviceId, bytes);
+}
+
 bool shouldDeliverRawHidReport(size_t byteCount)
 {
   return byteCount > 0 && byteCount <= kMaxHidReportPayloadBytes;
@@ -33,7 +39,7 @@ void deliverRawHidReportToMouser(MouserClient *client, uint16_t deviceId, const 
   if (client == nullptr) {
     return;
   }
-  deliverRawHidReport([client](const std::string &line) { client->deliver(line); }, deviceId, bytes);
+  deliverRawHidReport([client](const std::string &frame) { client->deliverReport(frame); }, deviceId, bytes);
 }
 
 } // namespace deskflow::client
