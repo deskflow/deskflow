@@ -1407,14 +1407,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Share device controls (gestures)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Forwards your Logitech mouse&apos;s extra controls (the MX Master Sense panel swipes, thumb button, gestures) to whichever computer the cursor is currently on. Requires the Mouser app running on each computer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Shared secret</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1464,6 +1456,34 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Could not update the login-window bridge: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share Logitech controls (HID passthrough)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When the cursor is on another screen, takes the Logitech vendor interface away from Logitech Options+ on this computer and forwards raw HID++ reports to the focused computer. Requires the Mouser app on each computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Vendor:product selectors for the mice to pass through, comma-separated.&lt;br&gt;&lt;b&gt;046D:*&lt;/b&gt; matches all Logitech devices; &lt;b&gt;046D:B042&lt;/b&gt; pins one model.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>046D:*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share device controls (legacy Mouser bridge)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alternative: Mouser on this computer reads gestures locally and relays them through Deskflow. Do not enable both sharing modes at once.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
