@@ -47,6 +47,8 @@ add_library(server STATIC
 if(APPLE)
   target_sources(server PRIVATE OSXHidGrabber.mm)
   target_link_libraries(server PUBLIC "-framework IOKit" "-framework CoreFoundation")
+elseif(WIN32)
+  target_sources(server PRIVATE WinHidGrabber.cpp)
 else()
   target_sources(server PRIVATE StubHidGrabber.cpp)
 endif()
@@ -54,7 +56,7 @@ endif()
 target_link_libraries(server PUBLIC common)
 
 if(WIN32)
-  target_link_libraries(server PUBLIC ws2_32)
+  target_link_libraries(server PUBLIC ws2_32 setupapi hid)
 endif()
 
 if(UNIX)

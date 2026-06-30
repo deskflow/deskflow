@@ -1,0 +1,56 @@
+;
+; Deskflow virtual HID driver (VHF) — keyboard + mouse for secure-desktop injection.
+;
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = System
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider    = %ManufacturerName%
+CatalogFile = deskflow-vhid.cat
+DriverVer   = 06/30/2026,1.0.0.0
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,
+
+[SourceDisksFiles]
+deskflow-vhid.sys = 1
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%DeviceDesc% = DeskflowVhid_Install, Root\DeskflowVhid
+
+[DeskflowVhid_Install.NT]
+CopyFiles = Drivers_Dir
+
+[DeskflowVhid_Install.NT.HW]
+AddReg = DeskflowVhid_AddReg
+
+[DeskflowVhid_AddReg]
+HKR,,"LowerFilters",0x00010000,"vhf"
+
+[DeskflowVhid_Install.NT.Services]
+AddService = DeskflowVhid,%SPSVCINST_ASSOCSERVICE%, DeskflowVhid_Service_Inst
+
+[DeskflowVhid_Service_Inst]
+DisplayName    = %ServiceDesc%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %13%\deskflow-vhid.sys
+
+[Drivers_Dir]
+deskflow-vhid.sys
+
+[Strings]
+ManufacturerName = "Deskflow"
+DiskName         = "Deskflow Virtual HID Installation Disk"
+DeviceDesc       = "Deskflow Virtual HID Device"
+ServiceDesc      = "Deskflow Virtual HID Driver"
+SPSVCINST_ASSOCSERVICE = 0x00000002

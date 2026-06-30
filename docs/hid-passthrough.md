@@ -215,13 +215,15 @@ This **supersedes** the decoded-event `DMSR` path. Migration:
 
 ## Implementation status
 
-Implemented (Tier 1, macOS host):
+Implemented (Tier 1):
 
-1. **Host grab** — `src/lib/server/OSXHidGrabber.mm`: IOHIDManager discovery
+1. **Host grab — macOS** — `src/lib/server/OSXHidGrabber.mm`: IOHIDManager discovery
    by VID/PID, vendor-collection filter (usage page >= 0xFF00), focus-driven
-   `kIOHIDOptionsTypeSeizeDevice`, input-report callback. Windows/Linux are
-   honest stubs (`StubHidGrabber.cpp`) until their grabs are written.
-2. **Raw channel** — attach/detach ride the existing `DMSR` relay as
+   `kIOHIDOptionsTypeSeizeDevice`, input-report callback.
+2. **Host grab — Windows** — `src/lib/server/WinHidGrabber.cpp`: SetupAPI enumeration,
+   vendor-collection filter, focus-driven exclusive `CreateFile`, overlapped
+   `ReadFile`. Linux remains a stub (`StubHidGrabber.cpp`).
+3. **Raw channel** — attach/detach ride the existing `DMSR` relay as
    consumer-protocol `connect`/`disconnect` JSON; raw frames travel as the
    new binary `HIDR` message (`kMsgDHidReport`). `Server` follows focus with
    the same virtual-host bookkeeping as the Mouser bridge
@@ -241,9 +243,9 @@ Remaining:
 - **Decode-context handoff** — the host's consumer knows `feat_idx` /
   `gesture_cid` (it armed the diverts before the seize); shipping that to
   the focused client automatically (instead of the manual
-  `settings.remote_device.decode` override) needs a small host-consumer →
-  Deskflow message before the first seize.
-- **Windows/Linux host grabs** (exclusive `CreateFile` / `EVIOCGRAB`).
+   `settings.remote_device.decode` override) needs a small host-consumer →
+   Deskflow message before the first seize.
+- **Linux host grab** (`EVIOCGRAB` / hidraw exclusive).
 - **Two-checkbox UX polish** — auto-generated loopback tokens, tray status
   line, device picker UI (selectors are settings-only today).
 - **Tier 2** — virtual-HID re-injection on the client via DriverKit.

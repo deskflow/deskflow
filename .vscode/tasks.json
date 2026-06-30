@@ -1,38 +1,47 @@
 {
-  // Build, sign, and install Deskflow from this fork onto the local machine.
-  // Run in VS Code (Terminal → Run Task… or ⇧⌘B) so codesign runs in your
-  // GUI/login-keychain context — signing over SSH fails with errSecInternalComponent.
+  // Build and install Deskflow on macOS or Windows.
+  // Run in VS Code / Cursor: Terminal → Run Task… or the default build shortcut.
   //
-  // Signing identity: free "Apple Development: Duff Hughes (MVDT65NPA4)" cert
-  // (present in this Mac's and the hackintosh VM's login keychain). Signing with
-  // a stable identity keeps Accessibility/Input-Monitoring grants across rebuilds
-  // (see docs/building-signed.md). SKIP_BUILD_TESTS=ON avoids the OSXKeyStateTests
-  // build-time failure that needs an interactive window-server session.
-  // Signing identity comes from the DESKFLOW_CODESIGN_ID env var (set it in
-  // ~/.zshenv to your Apple Development cert's SHA-1 hash -- the hash is required
-  // if you have two same-named certs, where signing by name is ambiguous). The
-  // Configure task falls back to resolving the hash from the keychain if unset.
+  // macOS: DESKFLOW_CODESIGN_ID in .env or ~/.zshenv (Apple Development cert SHA-1).
+  // Signing in a GUI/login-keychain context is required; signing over SSH fails.
+  // SKIP_BUILD_TESTS=ON avoids OSXKeyStateTests build-time window-server requirement.
+  //
+  // Windows: auto-detects Qt under C:\Qt. Installs to Program Files with UAC elevation,
+  // replaces any prior install, and registers the Deskflow Windows service.
+  // Optional Authenticode signing uses DESKFLOW_SIGN_THUMBPRINT (or "Mariner License Prep").
+  // Requires Visual Studio Build Tools (C++ workload) and CMake 3.24+.
+  // Copy env.example to .env and edit values there.
   "version": "2.0.0",
   "options": {
-    "cwd": "${workspaceFolder}"
+    "cwd": "${workspaceFolder}",
+    "envFile": "${workspaceFolder}/.env"
   },
   "tasks": [
     {
       "label": "Deskflow: Configure (signed)",
       "type": "shell",
       "command": "set -a; [ -f .env ] && . ./.env; set +a; cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=\"$(brew --prefix qt);$(brew --prefix openssl@3)\" -DAPPLE_CODESIGN_DEV=\"${DESKFLOW_CODESIGN_ID:-$(security find-identity -v -p codesigning | awk '/Apple Development/{print $2; exit}')}\" -DSKIP_BUILD_TESTS=ON",
+      "windows": {
+        "command": "$qtPath = $env:DESKFLOW_QT_PATH; if (-not $qtPath) { foreach ($c in @('C:\\Qt\\6.8.3\\msvc2022_64','C:\\Qt\\6.7.3\\msvc2022_64','C:\\Qt\\6.7.3\\msvc2019_64')) { if (Test-Path (Join-Path $c 'lib\\cmake\\Qt6\\Qt6Config.cmake')) { $qtPath = $c; break } }; if (-not $qtPath) { $found = Get-ChildItem 'C:\\Qt\\*\\msvc*_64\\lib\\cmake\\Qt6\\Qt6Config.cmake' -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1; if ($found) { $qtPath = (Resolve-Path (Join-Path $found.Directory.Parent.Parent.Parent.FullName)).Path } } }; if (-not $qtPath) { Write-Error 'Qt 6.7+ not found. Install via the Qt online installer or set DESKFLOW_QT_PATH.'; exit 1 }; Write-Host \"Using Qt at $qtPath\"; cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSKIP_BUILD_TESTS=ON \"-DCMAKE_PREFIX_PATH=$qtPath\""
+      },
       "problemMatcher": []
     },
     {
       "label": "Deskflow: Build + Sign",
       "type": "shell",
       "command": "cmake --build build -j$(sysctl -n hw.ncpu)",
+      "windows": {
+        "command": "cmake --build build --config Release -j $env:NUMBER_OF_PROCESSORS; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; $signtool = (Get-ChildItem 'C:\\Program Files*\\Windows Kits\\10\\bin\\*\\x64\\signtool.exe' -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1).FullName; $thumb = $env:DESKFLOW_SIGN_THUMBPRINT; if (-not $thumb) { $cert = Get-ChildItem Cert:\\CurrentUser\\My | Where-Object { $_.HasPrivateKey -and $_.Subject -match 'Mariner License Prep' } | Select-Object -First 1; if ($cert) { $thumb = $cert.Thumbprint } }; if ($thumb -and $signtool) { Get-ChildItem build\\bin\\*.exe, build\\bin\\Release\\*.exe -ErrorAction SilentlyContinue | ForEach-Object { & $signtool sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /sha1 $thumb $_.FullName; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }; Write-Host '== Signed with developer certificate ==' } else { Write-Host 'Built unsigned (no cert found; fine for local use).' }"
+      },
       "problemMatcher": ["$gcc"]
     },
     {
-      "label": "Deskflow: Install to /Applications",
+      "label": "Deskflow: Install locally",
       "type": "shell",
       "command": "osascript -e 'quit app \"Deskflow\"' >/dev/null 2>&1; pkill -f deskflow-core >/dev/null 2>&1; sleep 1; rm -rf /Applications/Deskflow.app && cp -R build/bin/Deskflow.app /Applications/Deskflow.app && xattr -cr /Applications/Deskflow.app && codesign --verify --deep --strict /Applications/Deskflow.app && echo '== Signed install verified ==' && codesign -dv /Applications/Deskflow.app/Contents/MacOS/deskflow-core 2>&1 | grep -E 'Authority=Apple Development|TeamIdentifier' && open -a Deskflow",
+      "windows": {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\build-windows.ps1\" -Install"
+      },
       "problemMatcher": []
     },
     {
@@ -41,7 +50,7 @@
       "dependsOn": [
         "Deskflow: Configure (signed)",
         "Deskflow: Build + Sign",
-        "Deskflow: Install to /Applications"
+        "Deskflow: Install locally"
       ],
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": []

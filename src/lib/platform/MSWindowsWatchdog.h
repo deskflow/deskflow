@@ -148,6 +148,9 @@ private:
   HANDLE m_outputReadPipe = nullptr;
   bool m_elevateProcess = false;
   bool m_lastElevated = false; // integrity the running core was launched at (for auto-elevate transitions)
+  std::optional<bool> m_pendingElevated; // debounced secure-desktop target integrity
+  std::optional<double> m_pendingElevatedSince; // Arch::time() when pending transition began
+  static constexpr double kSecureDesktopDebounceSeconds = 1.5;
   MSWindowsSession m_session;
   int m_startFailures = 0;
   FileLogOutputter &m_fileLogOutputter;

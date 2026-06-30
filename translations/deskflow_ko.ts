@@ -344,13 +344,13 @@ Do you want to connect to the server?
     <message>
         <source>Use this computer&apos;s keyboard and mouse
 (make this computer the server)</source>
-        <translation>이 컴퓨터의 키보드와 마우스를 사용
+        <translation type="vanished">이 컴퓨터의 키보드와 마우스를 사용
 (이 컴퓨터를 서버로 설정)</translation>
     </message>
     <message>
         <source>Use another computer’s mouse and keyboard
 (make this computer the client)</source>
-        <translation>다른 컴퓨터의 키보드와 마우스를 사용
+        <translation type="vanished">다른 컴퓨터의 키보드와 마우스를 사용
 (이 컴퓨터를 클라이언트로 설정)</translation>
     </message>
     <message>
@@ -595,20 +595,83 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;html&gt;Every computer runs in auto mode; whichever one receives real keyboard or mouse input becomes the server and the others follow it.&lt;/html&gt;</source>
+        <source>This computer is the:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Auto switch
-(the computer you touch becomes the server)</source>
+        <source>&lt;html&gt;&lt;b&gt;Server&lt;/b&gt; — this computer&apos;s keyboard and mouse drive the others.&lt;br/&gt;&lt;b&gt;Client&lt;/b&gt; — this computer is driven by another.&lt;br/&gt;&lt;b&gt;Auto switch&lt;/b&gt; — whichever computer you touch takes over automatically.&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Computers:</source>
+        <source>Computers that auto-switch (include this one):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;html&gt;Comma separated names of the computers that auto switch between each other, including this one (e.g. desktop, laptop).&lt;br/&gt;Each name should resolve on your network (mDNS .local or DNS); use name=address to override.&lt;/html&gt;</source>
+        <source>&lt;html&gt;The computers that hand control to whichever one you touch. Add each by name (e.g. desktop, laptop); names should resolve on your network (mDNS .local or DNS). Use name=address to override.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add a computer by name…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add this computer to the list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove the selected computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>−</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server (this computer)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Client (another computer)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto switch (touch to take over)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto switch: this computer is in control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto switch: following %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>the active computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto switch: finding the active computer…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accessibility permission required</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deskflow needs Accessibility permission to control the keyboard and mouse.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open System Settings &gt; Privacy &amp; Security &gt; Accessibility, enable Deskflow, then press Start again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open System Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -776,6 +839,38 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>%1 is already running</source>
         <translation>%1이(가) 이미 실행 중입니다</translation>
+    </message>
+    <message>
+        <source>Bridge binary missing from this build</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Karabiner driver not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Karabiner driver installed, daemon not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Active (driver running, login-window agent installed)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ready to enable (driver running)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no coordination peers configured -- add the other computers first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bridge binary not found at %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>could not stage the agent plist</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1308,6 +1403,70 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
         <translation type="unfinished">Info보다 높은 로그 레벨을 사용하면 성능에 영향을 미칠 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>S&amp;haring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share device controls (gestures)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Forwards your Logitech mouse&apos;s extra controls (the MX Master Sense panel swipes, thumb button, gestures) to whichever computer the cursor is currently on. Requires the Mouser app running on each computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shared secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine&apos;s Mouser settings.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Login &amp;Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Control this computer at the login window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>macOS blocks normal input injection at the login window. The bundled bridge replays the controlling computer&apos;s input through the Karabiner virtual HID driver, so you can unlock this Mac from another machine. Runs only while the login window is showing; takes effect after the next logout or restart.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pointer sensitivity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Counts-per-point multiplier for relayed motion. 4.0 reaches the whole screen 1:1 on a 2x Retina display; lower is gentler but reaches less.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver status:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opens the Karabiner DriverKit VirtualHIDDevice releases page. Install the package and approve the system extension, then re-open this dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Get Karabiner Driver...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Login Window Bridge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not update the login-window bridge: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

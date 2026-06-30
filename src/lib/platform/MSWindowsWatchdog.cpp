@@ -28,6 +28,8 @@
 
 #include <QStringDecoder>
 
+#include <algorithm>
+
 //
 // Free functions
 //
@@ -180,13 +182,36 @@ void MSWindowsWatchdog::mainLoop(const void *)
 
     // Auto-elevate: relaunch when the session changes, or (when elevation is
     // enabled) when the secure/login desktop appears or clears, so the core's
-    // integrity matches the desktop it must inject on. The secureDesktopActive()
-    // process scan is short-circuited to the running steady state.
-    if (m_processState == Running && !m_command.empty() && !m_foreground &&
-        (m_session.hasChanged() || (m_elevateProcess && secureDesktopActive() != m_lastElevated))) {
-      LOG_DEBUG("session or secure-desktop changed, queueing process start");
-      m_processState = StartPending;
-      m_nextStartTime.reset();
+    // integrity matches the desktop it must inject on. Secure-desktop changes
+    // are debounced so a brief consent.exe/LogonUI flicker does not kill the
+    // core and drop every peer in the coordination mesh.
+    if (m_processState == Running && !m_command.empty() && !m_foreground) {
+      if (m_session.hasChanged()) {
+        LOG_DEBUG("session changed, queueing process start");
+        m_processState = StartPending;
+        m_nextStartTime.reset();
+        m_pendingElevated.reset();
+        m_pendingElevatedSince.reset();
+      } else if (m_elevateProcess) {
+        const bool secureNow = secureDesktopActive();
+        if (secureNow == m_lastElevated) {
+          m_pendingElevated.reset();
+          m_pendingElevatedSince.reset();
+        } else if (!m_pendingElevated.has_value() || m_pendingElevated.value() != secureNow) {
+          m_pendingElevated = secureNow;
+          m_pendingElevatedSince = Arch::time();
+          LOG_DEBUG(
+              "secure-desktop transition pending (target elevated=%s), debouncing %.1fs",
+              secureNow ? "yes" : "no", kSecureDesktopDebounceSeconds
+          );
+        } else if (Arch::time() - m_pendingElevatedSince.value() >= kSecureDesktopDebounceSeconds) {
+          LOG_DEBUG("secure-desktop transition stable, queueing process start");
+          m_processState = StartPending;
+          m_nextStartTime.reset();
+          m_pendingElevated.reset();
+          m_pendingElevatedSince.reset();
+        }
+      }
     }
 
     switch (m_processState) {
@@ -476,8 +501,6 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 
 MSWindowsWatchdog::ProcessState MSWindowsWatchdog::handleStartError(const std::string_view &message)
 {
-  const auto kStartDelaySeconds = 1;
-
   m_startFailures++;
 
   if (!message.empty()) {
@@ -486,17 +509,18 @@ MSWindowsWatchdog::ProcessState MSWindowsWatchdog::handleStartError(const std::s
     LOG_CRIT("daemon failed to start process, unknown error");
   }
 
-  // When there has been more than one consecutive failure, slow down the retry rate.
+  // Exponential backoff so a crash loop on one node does not hammer the mesh.
   if (m_startFailures > 1) {
-    m_nextStartTime = Arch::time() + kStartDelaySeconds;
-    LOG_WARN("start failed %d times, delaying start", m_startFailures);
-    LOG_DEBUG("start delay, seconds=%d, time=%f", kStartDelaySeconds, m_nextStartTime.value());
+    const int delaySeconds = std::min(1 << (m_startFailures - 2), 30);
+    m_nextStartTime = Arch::time() + delaySeconds;
+    LOG_WARN("start failed %d times, delaying start %ds", m_startFailures, delaySeconds);
+    LOG_DEBUG("start delay, seconds=%d, time=%f", delaySeconds, m_nextStartTime.value());
     return ProcessState::StartScheduled;
-  } else {
-    LOG_INFO("retrying process start immediately");
-    m_nextStartTime.reset();
-    return ProcessState::StartPending;
   }
+
+  LOG_INFO("retrying process start immediately");
+  m_nextStartTime.reset();
+  return ProcessState::StartPending;
 }
 
 std::string MSWindowsWatchdog::processStateToString(MSWindowsWatchdog::ProcessState state)

@@ -78,7 +78,7 @@ public:
   virtual void stop() = 0;
 };
 
-//! Platform factory (macOS implementation; stub elsewhere for now).
+//! Platform factory (macOS + Windows implementations; stub on other platforms).
 std::unique_ptr<IHidGrabber> createHidGrabber();
 
 //! Event data for EventTypes::ServerHidPassthroughEvent.

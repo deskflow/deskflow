@@ -658,6 +658,22 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <source>−</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Accessibility permission required</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deskflow needs Accessibility permission to control the keyboard and mouse.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open System Settings &gt; Privacy &amp; Security &gt; Accessibility, enable Deskflow, then press Start again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open System Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
