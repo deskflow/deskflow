@@ -26,6 +26,10 @@ static const uint32_t s_controlVK = kVK_Control;
 static const uint32_t s_altVK = kVK_Option;
 static const uint32_t s_superVK = kVK_Command;
 static const uint32_t s_capsLockVK = kVK_CapsLock;
+static const uint32_t s_shiftRightVK = kVK_RightShift;
+static const uint32_t s_controlRightVK = kVK_RightControl;
+static const uint32_t s_altRightVK = kVK_RightOption;
+static const uint32_t s_superRightVK = kVK_RightCommand;
 static const uint32_t s_numLockVK = kVK_ANSI_KeypadClear; // 71
 
 static const uint32_t s_brightnessUp = 144;
@@ -95,18 +99,18 @@ static const KeyEntry s_controlKeys[] = {
     // to map to.  also the enter key with numlock on is a modifier but i
     // don't know which.
 
-    // modifier keys.  OS X doesn't seem to support right handed versions
-    // of modifier keys so we map them to the left handed versions.
+    // modifier keys.  map the left and right variants to their respective
+    // macOS virtual keys so the modifier side is preserved on the client.
     {kKeyShift_L, s_shiftVK},
-    {kKeyShift_R, s_shiftVK}, // 60
+    {kKeyShift_R, s_shiftRightVK},
     {kKeyControl_L, s_controlVK},
-    {kKeyControl_R, s_controlVK}, // 62
+    {kKeyControl_R, s_controlRightVK},
     {kKeyAlt_L, s_altVK},
-    {kKeyAlt_R, s_altVK},
+    {kKeyAlt_R, s_altRightVK},
     {kKeySuper_L, s_superVK},
-    {kKeySuper_R, s_superVK}, // 61
+    {kKeySuper_R, s_superRightVK},
     {kKeyMeta_L, s_superVK},
-    {kKeyMeta_R, s_superVK}, // 61
+    {kKeyMeta_R, s_superRightVK},
 
     // toggle modifiers
     {kKeyNumLock, s_numLockVK},
@@ -168,7 +172,8 @@ io_connect_t getEventDriver()
 
 bool isModifier(uint8_t virtualKey)
 {
-  static std::set<uint8_t> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK};
+  static std::set<uint8_t> modifiers{s_shiftVK,      s_controlVK,      s_altVK,      s_superVK,     s_capsLockVK,
+                                     s_shiftRightVK, s_controlRightVK, s_altRightVK, s_superRightVK};
 
   return (modifiers.find(virtualKey) != modifiers.end());
 }
@@ -201,6 +206,10 @@ void OSXKeyState::init()
   m_altPressed = false;
   m_superPressed = false;
   m_capsPressed = false;
+  m_shiftRightPressed = false;
+  m_controlRightPressed = false;
+  m_altRightPressed = false;
+  m_superRightPressed = false;
 
   // build virtual key map
   for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]); ++i) {
@@ -523,19 +532,19 @@ CGEventFlags OSXKeyState::getDeviceDependedFlags() const
   CGEventFlags modifiers = 0;
 
   if (m_shiftPressed) {
-    modifiers |= NX_DEVICELSHIFTKEYMASK;
+    modifiers |= m_shiftRightPressed ? NX_DEVICERSHIFTKEYMASK : NX_DEVICELSHIFTKEYMASK;
   }
 
   if (m_controlPressed) {
-    modifiers |= NX_DEVICELCTLKEYMASK;
+    modifiers |= m_controlRightPressed ? NX_DEVICERCTLKEYMASK : NX_DEVICELCTLKEYMASK;
   }
 
   if (m_altPressed) {
-    modifiers |= NX_DEVICELALTKEYMASK;
+    modifiers |= m_altRightPressed ? NX_DEVICERALTKEYMASK : NX_DEVICELALTKEYMASK;
   }
 
   if (m_superPressed) {
-    modifiers |= NX_DEVICELCMDKEYMASK;
+    modifiers |= m_superRightPressed ? NX_DEVICERCMDKEYMASK : NX_DEVICELCMDKEYMASK;
   }
 
   return modifiers;
@@ -559,15 +568,39 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
   switch (virtualKey) {
   case s_shiftVK:
     m_shiftPressed = keyDown;
+    if (keyDown)
+      m_shiftRightPressed = false;
+    break;
+  case s_shiftRightVK:
+    m_shiftPressed = keyDown;
+    m_shiftRightPressed = keyDown;
     break;
   case s_controlVK:
     m_controlPressed = keyDown;
+    if (keyDown)
+      m_controlRightPressed = false;
+    break;
+  case s_controlRightVK:
+    m_controlPressed = keyDown;
+    m_controlRightPressed = keyDown;
     break;
   case s_altVK:
     m_altPressed = keyDown;
+    if (keyDown)
+      m_altRightPressed = false;
+    break;
+  case s_altRightVK:
+    m_altPressed = keyDown;
+    m_altRightPressed = keyDown;
     break;
   case s_superVK:
     m_superPressed = keyDown;
+    if (keyDown)
+      m_superRightPressed = false;
+    break;
+  case s_superRightVK:
+    m_superPressed = keyDown;
+    m_superRightPressed = keyDown;
     break;
   case s_capsLockVK:
     m_capsPressed = keyDown;
