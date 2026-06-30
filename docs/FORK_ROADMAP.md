@@ -21,16 +21,16 @@ local `master` is current with upstream (merge `6afa46dca`).
 
 ## Upstream PR stack
 
-Open a [discussion on deskflow/deskflow](https://github.com/deskflow/deskflow/discussions)
-before large features (coordination, HID passthrough).
+Open an RFC **issue** on [deskflow/deskflow](https://github.com/deskflow/deskflow/issues)
+(Discussions are not enabled on the upstream repo) before large features.
 
 | PR | Branch | Scope | Status |
 |----|--------|-------|--------|
-| PR-1 | `fix/posix-recursive-mutex` | `recursive_mutex` for `m_threadMutex` | Not started |
-| PR-2 | `fix/macos-poll-active-group` | Main-queue fix for `pollActiveGroup` | Not started |
-| PR-3 | `fix/arch-worker-exceptions` | Contain worker-thread exceptions | Not started |
-| PR-4 | `fix/client-connect-logging` | Info-level connect/disconnect logs | Not started |
-| PR-5 | `fix/core-qapplication-auto` | Single `QApplication` in auto mode | **Merged on master** (`e4c7052bb`) |
+| PR-1 | `fix/posix-recursive-mutex` | `recursive_mutex` for `m_threadMutex` | **Open** — [deskflow#9908](https://github.com/deskflow/deskflow/pull/9908) |
+| PR-2 | `fix/macos-poll-active-group` | Main-queue fix for `pollActiveGroup` | **Open** — [deskflow#9909](https://github.com/deskflow/deskflow/pull/9909) |
+| PR-3 | `fix/arch-worker-exceptions` | Contain worker-thread exceptions | **Open** — [deskflow#9910](https://github.com/deskflow/deskflow/pull/9910) |
+| PR-4 | `fix/client-connect-logging` | Info-level connect/disconnect logs | **Open** — [deskflow#9911](https://github.com/deskflow/deskflow/pull/9911) |
+| PR-5 | `fix/core-qapplication-auto` | Single `QApplication` in auto mode | **Fork-only** (upstream has no auto mode yet) |
 | PR-3.1 | `refactor/virtual-host-tracker` | Extract focus-follow helper from `Server.cpp` | **Merged on master** (Sprint 3) |
 | PR-3.2 | `refactor/hid-mouser-tiering` | HID auto-starts Mouser bridge for decode sync | **Merged on master** (Sprint 3) |
 | PR-3.3 | `feat/hid-consumer` | Pluggable client HID consumer (`HidConsumer`) | **Merged on master** (Sprint 3) |
