@@ -36,14 +36,21 @@ function(_finalize_mac_codesign)
   # Nested executables are signed before the bundle: the x86_64 linker
   # does not ad-hoc sign its output (unlike arm64), and signing a bundle
   # fails on unsigned subcomponents.
+  set(_codesign_cmds)
+  foreach(_bin IN LISTS depends)
+    list(APPEND _codesign_cmds
+      COMMAND /usr/bin/codesign
+              --force
+              --options runtime
+              --entitlements "${CMAKE_SOURCE_DIR}/src/apps/res/entitlements-dev.plist"
+              --sign "${APPLE_CODESIGN_DEV}"
+              "${_bin}"
+    )
+  endforeach()
+
   add_custom_command(
     OUTPUT ${stamp_file}
-    COMMAND /usr/bin/codesign
-            --force
-            --options runtime
-            --entitlements "${CMAKE_SOURCE_DIR}/src/apps/res/entitlements-dev.plist"
-            --sign "${APPLE_CODESIGN_DEV}"
-            ${depends}
+    ${_codesign_cmds}
     COMMAND /usr/bin/codesign
             --force
             --options runtime

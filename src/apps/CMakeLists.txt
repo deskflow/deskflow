@@ -49,6 +49,6 @@ endif()
 
 add_subdirectory(deskflow-core)
 add_subdirectory(deskflow-daemon) #Only used on windows
+add_subdirectory(deskflow-vhid-bridge) # macOS login-window bridge (before gui: codesign order)
 add_subdirectory(deskflow-gui)
-add_subdirectory(deskflow-vhid-bridge) # macOS login-window bridge
 add_subdirectory(deskflow-vhid-bridge-win) # Windows secure-desktop VHF bridge
