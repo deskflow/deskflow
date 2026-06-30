@@ -8,18 +8,19 @@
   // a stable identity keeps Accessibility/Input-Monitoring grants across rebuilds
   // (see docs/building-signed.md). SKIP_BUILD_TESTS=ON avoids the OSXKeyStateTests
   // build-time failure that needs an interactive window-server session.
+  // Signing identity comes from the DESKFLOW_CODESIGN_ID env var (set it in
+  // ~/.zshenv to your Apple Development cert's SHA-1 hash -- the hash is required
+  // if you have two same-named certs, where signing by name is ambiguous). The
+  // Configure task falls back to resolving the hash from the keychain if unset.
   "version": "2.0.0",
   "options": {
-    "cwd": "${workspaceFolder}",
-    "env": {
-      "DESKFLOW_CODESIGN_ID": "Apple Development: Duff Hughes (MVDT65NPA4)"
-    }
+    "cwd": "${workspaceFolder}"
   },
   "tasks": [
     {
       "label": "Deskflow: Configure (signed)",
       "type": "shell",
-      "command": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=\"$(brew --prefix qt);$(brew --prefix openssl@3)\" -DAPPLE_CODESIGN_DEV=\"$DESKFLOW_CODESIGN_ID\" -DSKIP_BUILD_TESTS=ON",
+      "command": "set -a; [ -f .env ] && . ./.env; set +a; cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=\"$(brew --prefix qt);$(brew --prefix openssl@3)\" -DAPPLE_CODESIGN_DEV=\"${DESKFLOW_CODESIGN_ID:-$(security find-identity -v -p codesigning | awk '/Apple Development/{print $2; exit}')}\" -DSKIP_BUILD_TESTS=ON",
       "problemMatcher": []
     },
     {

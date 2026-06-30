@@ -21,6 +21,7 @@ deskflow-config.toml
 .DS_Store
 *.code-workspace
 .env*
+!.env.example
 /scripts/*.egg-info
 /*.user
 *.ui.autosave
