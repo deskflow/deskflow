@@ -284,8 +284,9 @@ void MainWindow::connectSlots()
 
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
-  connect(ui->lineHostname, &QComboBox::editTextChanged, this, &MainWindow::remoteHostChanged);
+  ui->cbHostname->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
+  connect(ui->cbHostname->lineEdit(), &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
+  connect(ui->cbHostname, &QComboBox::editTextChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -650,7 +651,7 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->currentText().isEmpty())
+    if (ui->rbModeClient->isChecked() && ui->cbHostname->currentText().isEmpty())
       return;
     startCore();
   }
@@ -705,10 +706,11 @@ void MainWindow::applyConfig()
   }
 
   const auto recentHosts = Settings::value(Settings::Client::RecentRemoteHosts).toStringList();
-  ui->lineHostname->addItems(recentHosts);
+  ui->cbHostname->clear();
+  ui->cbHostname->addItems(recentHosts);
 
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
-    ui->lineHostname->setCurrentText(host);
+    ui->cbHostname->setCurrentText(host);
 
   updateLocalFingerprint();
   setTrayIcon();
@@ -728,19 +730,9 @@ void MainWindow::saveSettings() const
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  const QString currentHost = ui->lineHostname->currentText();
+  const QString currentHost = ui->cbHostname->currentText();
   if (!currentHost.isEmpty()) {
     Settings::setValue(Settings::Client::RemoteHost, currentHost);
-    
-    QStringList recentHosts = Settings::value(Settings::Client::RecentRemoteHosts).toStringList();
-    if (recentHosts.isEmpty() || recentHosts.first() != currentHost) {
-      recentHosts.removeAll(currentHost);
-      recentHosts.prepend(currentHost);
-      while (recentHosts.size() > 10) {
-        recentHosts.removeLast();
-      }
-      Settings::setValue(Settings::Client::RecentRemoteHosts, recentHosts);
-    }
   }
   Settings::save();
 }
@@ -1002,8 +994,29 @@ void MainWindow::coreConnectionStateChanged(ConnectionState state)
   // when the correct TLS version string is detected.
   if (state != ConnectionState::Connected) {
     secureSocket(false);
-  } else if (isVisible()) {
-    showFirstConnectedMessage();
+  } else {
+    if (ui->rbModeClient->isChecked()) {
+      const QString currentHost = ui->cbHostname->currentText();
+      if (!currentHost.isEmpty()) {
+        QStringList recentHosts = Settings::value(Settings::Client::RecentRemoteHosts).toStringList();
+        if (recentHosts.isEmpty() || recentHosts.first() != currentHost) {
+          recentHosts.removeAll(currentHost);
+          recentHosts.prepend(currentHost);
+          while (recentHosts.size() > 10) {
+            recentHosts.removeLast();
+          }
+          Settings::setValue(Settings::Client::RecentRemoteHosts, recentHosts);
+          ui->cbHostname->blockSignals(true);
+          ui->cbHostname->clear();
+          ui->cbHostname->addItems(recentHosts);
+          ui->cbHostname->setCurrentText(currentHost);
+          ui->cbHostname->blockSignals(false);
+        }
+      }
+    }
+    if (isVisible()) {
+      showFirstConnectedMessage();
+    }
   }
 }
 
@@ -1300,5 +1313,5 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->currentText().isEmpty()) || isServer);
+  return ((isServer || isClient) && (isClient && !ui->cbHostname->currentText().isEmpty()) || isServer);
 }
