@@ -14,6 +14,8 @@
 
 #include <memory>
 
+#include "client/HidConsumer.h"
+
 class Client;
 class MouserClient;
 class ClientInfo;
@@ -109,6 +111,7 @@ private:
 
   //! Lazily create the loopback consumer connection; null when disabled.
   MouserClient *mouserClientOrNull();
+  deskflow::client::HidConsumer *hidConsumerOrNull();
 
   Client *m_client = nullptr;
   deskflow::IStream *m_stream = nullptr;
@@ -134,6 +137,8 @@ private:
   std::string m_serverLayout = "";
   bool m_isUserNotifiedAboutLayoutSyncError = false;
   deskflow::KeyboardLayoutManager m_layoutManager;
-  // Mouser integration (fork extension); created lazily on first DMSR.
+  deskflow::client::HidConsumerMode m_hidConsumerMode = deskflow::client::HidConsumerMode::None;
+  // Mouser integration (fork extension); created lazily on first DMSR/HIDR.
   std::unique_ptr<MouserClient> m_mouserClient;
+  std::unique_ptr<deskflow::client::MouserHidConsumer> m_mouserHidConsumer;
 };

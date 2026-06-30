@@ -29,3 +29,11 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/server"
 )
 
+create_test(
+  NAME VirtualHostTrackerTests
+  DEPENDS server
+  LIBS base arch ${extra_libs}
+  SOURCE VirtualHostTrackerTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/server"
+)
+

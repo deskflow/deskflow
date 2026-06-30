@@ -203,6 +203,15 @@ This **supersedes** the decoded-event `DMSR` path. Migration:
    vocabulary from Deskflow's wire entirely — Deskflow no longer encodes any
    device semantics.
 
+## Mouser bridge dependency (decode sync)
+
+When HID passthrough is enabled on the server, Deskflow automatically starts
+the loopback Mouser bridge (`Server::initMouserBridge`) even if legacy gesture
+sharing is off. The bridge receives `decode` messages from the host Mouser so
+`feat_idx` / `gesture_cid` can be merged into HID connect lines before vendor
+interface seize. The Sharing tab hides the legacy gesture-only toggle while HID
+passthrough is selected.
+
 ## Scope / non-goals
 
 - **Not** re-teleporting the pointer/clicks/keyboard — Deskflow's normal path
@@ -225,12 +234,12 @@ Implemented (Tier 1):
    `ReadFile`. Linux remains a stub (`StubHidGrabber.cpp`).
 3. **Raw channel** — attach/detach ride the existing `DMSR` relay as
    consumer-protocol `connect`/`disconnect` JSON; raw frames travel as the
-   new binary `HIDR` message (`kMsgDHidReport`). `Server` follows focus with
-   the same virtual-host bookkeeping as the Mouser bridge
-   (`Server::updateHidVirtualHost`).
-3. **Client sink** — `ServerProxy::hidReport()` re-encodes frames as
-   `{"type": "report", "data": hex}` lines into the existing loopback
-   consumer connection (`MouserClient`), so no new client settings exist.
+   new binary `HIDR` message (`kMsgDHidReport`). `Server` follows focus via
+   `VirtualHostTracker` (`Server::updateHidVirtualHost`).
+3. **Client sink** — `ServerProxy::hidReport()` delivers raw bytes through
+   the pluggable `deskflow::client::HidConsumer` interface. The default
+   `MouserHidConsumer` adapter re-encodes frames as loopback JSON for Mouser;
+   set `client/hidConsumer=none` to drop reports locally.
 4. **Mouser raw-frame source** — Mouser's `core/remote_device.py` decodes
    `report` messages with a detached `HidGestureListener` seeded from
    `connect.decode` or `settings.remote_device.decode`

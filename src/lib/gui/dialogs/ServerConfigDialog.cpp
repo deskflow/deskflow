@@ -103,6 +103,9 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::HidPassthroughDevices, hidDevices);
   Settings::setValue(Settings::Server::MouserBridgeEnabled, gestureShare);
   Settings::setValue(Settings::Client::MouserEnabled, hidPassthrough || gestureShare);
+  if (hidPassthrough) {
+    Settings::setValue(Settings::Client::HidConsumer, QStringLiteral("mouser"));
+  }
   Settings::setValue(Settings::Server::MouserBridgeToken, sharingSecret);
   Settings::setValue(Settings::Client::MouserToken, sharingSecret);
 
@@ -491,10 +494,12 @@ void ServerConfigDialog::loadFromConfig()
 void ServerConfigDialog::updateSharingControls()
 {
   const bool writable = Settings::isWritable();
-  const bool sharingEnabled = ui->groupHidPassthrough->isChecked() || ui->groupGestureSharing->isChecked();
+  const bool hidEnabled = ui->groupHidPassthrough->isChecked();
+  const bool sharingEnabled = hidEnabled || ui->groupGestureSharing->isChecked();
   ui->groupHidPassthrough->setEnabled(writable);
-  ui->groupGestureSharing->setEnabled(writable);
-  ui->lineHidPassthroughDevices->setEnabled(writable && ui->groupHidPassthrough->isChecked());
+  ui->groupGestureSharing->setVisible(!hidEnabled);
+  ui->groupGestureSharing->setEnabled(writable && !hidEnabled);
+  ui->lineHidPassthroughDevices->setEnabled(writable && hidEnabled);
   ui->lineGestureSecret->setEnabled(writable && sharingEnabled);
 }
 

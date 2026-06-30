@@ -48,6 +48,8 @@ public:
     inline static const auto MouserEnabled = QStringLiteral("client/mouserEnabled");
     inline static const auto MouserPort = QStringLiteral("client/mouserPort");
     inline static const auto MouserToken = QStringLiteral("client/mouserToken");
+    // Raw HID report consumer: mouser (loopback JSON) or none. Default follows MouserEnabled.
+    inline static const auto HidConsumer = QStringLiteral("client/hidConsumer");
   };
   // Native KVM coordination (fork extension): election mesh that lets a
   // cluster of deskflow-core instances pick the server by genuine local
@@ -289,7 +291,7 @@ private:
     , Settings::Client::MouserEnabled
     , Settings::Client::MouserPort
     , Settings::Client::MouserToken
-    , Settings::Coordination::Enabled
+    , Settings::Client::HidConsumer
     , Settings::Coordination::Port
     , Settings::Coordination::Peers
     , Settings::Coordination::Token

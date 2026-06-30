@@ -11,6 +11,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "client/Client.h"
+#include "client/HidConsumer.h"
 #include "client/MouserClient.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
@@ -32,7 +33,8 @@
 ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
-      m_events(events)
+      m_events(events),
+      m_hidConsumerMode(deskflow::client::hidConsumerModeFromSettings())
 {
   assert(m_client != nullptr);
   assert(m_stream != nullptr);
@@ -855,6 +857,22 @@ MouserClient *ServerProxy::mouserClientOrNull()
   return m_mouserClient.get();
 }
 
+deskflow::client::HidConsumer *ServerProxy::hidConsumerOrNull()
+{
+  if (m_hidConsumerMode == deskflow::client::HidConsumerMode::None) {
+    return nullptr;
+  }
+  if (m_hidConsumerMode == deskflow::client::HidConsumerMode::Mouser) {
+    if (auto *client = mouserClientOrNull(); client != nullptr) {
+      if (m_mouserHidConsumer == nullptr) {
+        m_mouserHidConsumer = std::make_unique<deskflow::client::MouserHidConsumer>(client);
+      }
+      return m_mouserHidConsumer.get();
+    }
+  }
+  return nullptr;
+}
+
 void ServerProxy::mouserData()
 {
   std::string line;
@@ -869,22 +887,9 @@ void ServerProxy::hidReport()
   uint16_t deviceId = 0;
   std::string bytes;
   ProtocolUtil::readf(m_stream, kMsgDHidReport + 4, &deviceId, &bytes);
-  auto *client = mouserClientOrNull();
-  if (client == nullptr || bytes.empty()) {
-    return;
+  if (auto *consumer = hidConsumerOrNull(); consumer != nullptr && !bytes.empty()) {
+    consumer->deliverRawReport(deviceId, bytes);
   }
-  // Re-encode the raw frame for the line-JSON loopback consumer protocol.
-  static const char *digits = "0123456789abcdef";
-  std::string hex;
-  hex.reserve(bytes.size() * 2);
-  for (const char c : bytes) {
-    const auto byte = static_cast<unsigned char>(c);
-    hex.push_back(digits[byte >> 4]);
-    hex.push_back(digits[byte & 0xF]);
-  }
-  std::string line =
-      R"({"type": "report", "device_id": )" + std::to_string(deviceId) + R"(, "data": ")" + hex + R"("})";
-  client->deliver(line);
 }
 
 void ServerProxy::setActiveServerLanguage(const std::string_view &language)

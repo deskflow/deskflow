@@ -6,6 +6,8 @@
 add_library(client STATIC
   Client.cpp
   Client.h
+  HidConsumer.cpp
+  HidConsumer.h
   MouserClient.cpp
   MouserClient.h
   ServerProxy.cpp

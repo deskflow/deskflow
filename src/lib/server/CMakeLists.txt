@@ -38,6 +38,8 @@ add_library(server STATIC
   InputFilter.h
   MouserBridge.cpp
   MouserBridge.h
+  VirtualHostTracker.cpp
+  VirtualHostTracker.h
   PrimaryClient.cpp
   PrimaryClient.h
   Server.cpp

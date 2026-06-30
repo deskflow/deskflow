@@ -16,6 +16,7 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "server/Config.h"
+#include "server/VirtualHostTracker.h"
 
 #include <QJsonObject>
 
@@ -413,20 +414,18 @@ private:
   // Mouser, the cached device-connect line, and which remote client
   // currently hosts the virtual device.
   std::unique_ptr<MouserBridge> m_mouserBridge;
-  std::string m_mouserConnectLine;
-  BaseClientProxy *m_mouserVirtualHost = nullptr;
+  VirtualHostTracker m_mouserVirtualHostTracker;
 
   // HID pass-through (fork extension): grabber orchestrator, the cached
   // device-connect line, and which remote client currently hosts the
   // passed-through device.
   std::unique_ptr<deskflow::server::HidPassthrough> m_hidPassthrough;
-  std::string m_hidConnectLine;
+  VirtualHostTracker m_hidVirtualHostTracker;
   //! REPROG_V4 decode map from the host Mouser (feat_idx, gesture_cid, ...).
   QJsonObject m_hidDecodeCache;
   //! Remote focus is active but seize waits for decode (host Mouser still has the device).
   bool m_hidSeizeDeferred = false;
   std::chrono::steady_clock::time_point m_hidSeizeDeferStart{};
-  BaseClientProxy *m_hidVirtualHost = nullptr;
 
   BaseClientProxy *m_switchScreen = nullptr;
   double m_switchWaitDelay = 0.0;

@@ -31,6 +31,9 @@ before large features (coordination, HID passthrough).
 | PR-3 | `fix/arch-worker-exceptions` | Contain worker-thread exceptions | Not started |
 | PR-4 | `fix/client-connect-logging` | Info-level connect/disconnect logs | Not started |
 | PR-5 | `fix/core-qapplication-auto` | Single `QApplication` in auto mode | **Merged on master** (`e4c7052bb`) |
+| PR-3.1 | `refactor/virtual-host-tracker` | Extract focus-follow helper from `Server.cpp` | **Merged on master** (Sprint 3) |
+| PR-3.2 | `refactor/hid-mouser-tiering` | HID auto-starts Mouser bridge for decode sync | **Merged on master** (Sprint 3) |
+| PR-3.3 | `feat/hid-consumer` | Pluggable client HID consumer (`HidConsumer`) | **Merged on master** (Sprint 3) |
 | PR-6 | `feat/mouser-bridge` | Mouser JSON relay | Not started |
 | PR-7 | `feat/hid-passthrough-tier1` | HID seize + relay | Not started |
 | PR-8 | `feat/coordination-core` | Election + mesh + auto mode | Not started |
