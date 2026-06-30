@@ -864,9 +864,55 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayoutSharing">
        <item>
+        <widget class="QGroupBox" name="groupHidPassthrough">
+         <property name="title">
+          <string>Share Logitech controls (HID passthrough)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutHidPassthrough">
+          <item>
+           <widget class="QLabel" name="lblHidPassthroughHelp">
+            <property name="text">
+             <string>When the cursor is on another screen, takes the Logitech vendor interface away from Logitech Options+ on this computer and forwards raw HID++ reports to the focused computer. Requires the Mouser app on each computer.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayoutHidDevices">
+            <item>
+             <widget class="QLabel" name="lblHidPassthroughDevices">
+              <property name="text">
+               <string>Devices</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineHidPassthroughDevices">
+              <property name="toolTip">
+               <string>&lt;html&gt;Vendor:product selectors for the mice to pass through, comma-separated.&lt;br&gt;&lt;b&gt;046D:*&lt;/b&gt; matches all Logitech devices; &lt;b&gt;046D:B042&lt;/b&gt; pins one model.&lt;/html&gt;</string>
+              </property>
+              <property name="placeholderText">
+               <string>046D:*</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupGestureSharing">
          <property name="title">
-          <string>Share device controls (gestures)</string>
+          <string>Share device controls (legacy Mouser bridge)</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -878,33 +924,33 @@
           <item>
            <widget class="QLabel" name="lblGestureHelp">
             <property name="text">
-             <string>Forwards your Logitech mouse's extra controls (the MX Master Sense panel swipes, thumb button, gestures) to whichever computer the cursor is currently on. Requires the Mouser app running on each computer.</string>
+             <string>Alternative: Mouser on this computer reads gestures locally and relays them through Deskflow. Do not enable both sharing modes at once.</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayoutSecret">
-            <item>
-             <widget class="QLabel" name="lblGestureSecret">
-              <property name="text">
-               <string>Shared secret</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineGestureSecret">
-              <property name="toolTip">
-               <string>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine's Mouser settings.&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayoutSecret">
+         <item>
+          <widget class="QLabel" name="lblGestureSecret">
+           <property name="text">
+            <string>Shared secret</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineGestureSecret">
+           <property name="toolTip">
+            <string>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine's Mouser settings.&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="verticalSpacerSharing">

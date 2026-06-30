@@ -82,6 +82,9 @@ private:
    */
   void setButtonBoxEnabledButtons() const;
 
+  void onHidPassthroughToggled(bool enabled);
+  void onGestureSharingToggled(bool enabled);
+
   bool m_interfaceSetOnLoad = false;
   std::unique_ptr<Ui::SettingsDialog> ui;
   const ServerConfig &m_serverConfig;
