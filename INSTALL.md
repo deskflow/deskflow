@@ -1,46 +1,46 @@
 # Installing this fork across your devices
 
 This guide is for building and installing **this fork** of Deskflow
-(`hughesyadaddy/deskflow`, branch `claude/karibeener-extension-install-mggwmq`)
-on each of your machines over SSH.
+(`hughesyadaddy/deskflow`, branch **`master`**) on each of your machines.
 
-## What this branch adds / preserves
+## What this fork adds
 
-- **macOS onboarding gate (new):** pressing **Start** now checks for Accessibility
-  permission first. If it is missing, Deskflow shows a dialog that triggers the
-  native macOS permission prompt and opens
-  **System Settings → Privacy & Security → Accessibility**, instead of silently
-  launching a core that fails. See `src/lib/gui/MainWindow.cpp` (`ensureAccessibilityPermission`).
-- **HID passthrough (unchanged):** macOS key injection still goes through
-  `OSXKeyState::postHIDVirtualKey()` → `IOHIDPostEvent()`, with a CGEvent fallback
-  (`src/lib/platform/OSXKeyState.cpp`). The onboarding change does not touch this path.
+- **Native auto-switch:** in-process role election (`deskflow-core auto`) replaces
+  external `coordinator.py` / `KvmSwitch.exe` supervisors. See `docs/coordination/`.
+- **HID passthrough:** relay raw vendor HID reports to the focused machine.
+  See `docs/hid-passthrough.md`.
+- **Mouser bridge (legacy):** Logitech HID++ gesture relay via loopback JSON.
+  See `docs/mouser-bridge.md`.
+- **macOS onboarding:** pressing **Start** checks Accessibility permission first
+  (`MainWindow.cpp` → `ensureAccessibilityPermission`).
+- **macOS login bridge (optional):** Karabiner-based login-window injection for
+  auto-switch on the login screen. Configured in Settings → Login bridge; not
+  required for normal desktop use.
+- **Fleet install scripts:** `scripts/install-macos.sh`, `scripts/install-windows.ps1`.
 
-> Note: this fork uses Deskflow's own input system. It does **not** depend on
-> Karabiner-Elements, and there is no account/login. Those belong to the separate
-> commercial *Synergy* product, not this project.
+> Day-to-day KVM does **not** require Karabiner-Elements. The optional login bridge
+> uses Karabiner DriverKit only for login-screen injection.
 
 ---
 
 ## Step 0 — Keep the fork up to date with upstream
 
-Run this once per clone (these commands must be run by you, from a machine with
-network access to GitHub — CI/cloud agents are scoped to the fork only):
+Run periodically from a machine with GitHub access:
 
 ```bash
 git remote add upstream https://github.com/deskflow/deskflow.git   # first time only
 git fetch upstream
 git checkout master && git merge --ff-only upstream/master && git push origin master
-# rebase this feature branch onto the refreshed master:
-git checkout claude/karibeener-extension-install-mggwmq && git rebase master
-git push --force-with-lease origin claude/karibeener-extension-install-mggwmq
 ```
+
+Track upstream PR progress in `docs/FORK_ROADMAP.md`.
 
 ## Step 1 — Get the code on each device
 
 ```bash
 git clone https://github.com/hughesyadaddy/deskflow.git
 cd deskflow
-git checkout claude/karibeener-extension-install-mggwmq
+git checkout master
 ```
 
 ## Step 2 — Build & install
@@ -110,12 +110,22 @@ Build + install in one step: `pwsh scripts\build-windows.ps1 -Install`
 cmake --build build --target package        # dmg (macOS), deb/rpm/archive (Linux), etc.
 ```
 
+## Developer workflow (VS Code / Cursor)
+
+Debug builds use `build-debug/` and never overwrite `/Applications` by default.
+
+1. Copy launcher config (`.vscode/` is gitignored):
+   ```bash
+   mkdir -p .vscode
+   cp docs/dev/launch.json.example .vscode/launch.json
+   cp docs/dev/tasks.json.example .vscode/tasks.json
+   ```
+2. Install the **CodeLLDB** extension on macOS.
+3. Read `docs/dev/MACOS_DEBUG.md` for GUI vs core vs attach workflows.
+
 ---
 
 ## If it crashes — collect this and send it
-
-The onboarding/HID code can't be fixed blind. On a machine that crashes, grab the
-stack trace:
 
 ```bash
 # macOS crash report (preferred — has the faulting line):
@@ -125,4 +135,4 @@ cat "$(ls -t ~/Library/Logs/DiagnosticReports/Deskflow* 2>/dev/null | head -1)"
 tail -200 ~/Library/Logs/Deskflow/*.log
 ```
 
-Paste the output back so the crash can be pinpointed and patched on this branch.
+Paste the output back so the crash can be pinpointed and patched on `master`.

@@ -5,6 +5,7 @@
 
 # temp dirs created during build
 /build
+/build-debug
 /dist
 /deps
 /tmp
