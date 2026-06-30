@@ -54,11 +54,20 @@ Requirements (all platforms): CMake 3.24+, Qt 6.7+, OpenSSL 3.0+.
 # Toolchain + deps via Homebrew
 brew install cmake qt openssl@3
 
-# Configure, build, and produce the .app bundle
+# Configure, build, and install to /Applications (quits, deploys, restarts)
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
+bash scripts/install-macos.sh
+# or: bash scripts/install.sh
+```
 
-# The bundle lands at build/bin/Deskflow.app — copy it to /Applications
+`scripts/install-macos.sh` quits Deskflow (GUI, deskflow-core, deskflow-vhid-bridge), stages a
+`cmake --install` (macdeployqt), copies only `Deskflow.app` to `/Applications`, clears
+quarantine, and relaunches from the install path.
+
+Manual copy (same end state without macdeployqt):
+
+```bash
 cp -R build/bin/Deskflow.app /Applications/
 xattr -c /Applications/Deskflow.app    # clear quarantine on unsigned local builds
 ```
@@ -86,9 +95,14 @@ Use the Qt online installer (or `-DVCPKG_QT=ON`), then:
 ```bat
 cmake -S . -B build
 cmake --build build --config Release
+pwsh scripts\install-windows.ps1
 ```
 
-See `docs/dev/build.md` for the full Windows/vcpkg details.
+`scripts/install-windows.ps1` stops the Deskflow service and all deskflow processes, runs
+`cmake --install` into `C:\Program Files\Deskflow` (elevates if needed), registers/updates the
+Windows service, and launches `deskflow.exe` from that directory.
+
+Build + install in one step: `pwsh scripts\build-windows.ps1 -Install`
 
 ## Step 3 — Optional: build installable packages
 

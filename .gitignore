@@ -44,8 +44,10 @@ CMakeFiles/*
 # vscode folder
 /.vscode
 
-# scripts folder
-/scripts
+# scripts folder (upstream python tooling); keep build/install scripts tracked
+/scripts/*
+!/scripts/*.ps1
+!/scripts/*.sh
 
 # Ai helperfilers
 **/[cC]laude.[mM][dD]

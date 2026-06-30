@@ -38,9 +38,9 @@
     {
       "label": "Deskflow: Install locally",
       "type": "shell",
-      "command": "osascript -e 'quit app \"Deskflow\"' >/dev/null 2>&1; pkill -f deskflow-core >/dev/null 2>&1; sleep 1; rm -rf /Applications/Deskflow.app && cp -R build/bin/Deskflow.app /Applications/Deskflow.app && xattr -cr /Applications/Deskflow.app && codesign --verify --deep --strict /Applications/Deskflow.app && echo '== Signed install verified ==' && codesign -dv /Applications/Deskflow.app/Contents/MacOS/deskflow-core 2>&1 | grep -E 'Authority=Apple Development|TeamIdentifier' && open -a Deskflow",
+      "command": "bash scripts/install-macos.sh",
       "windows": {
-        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\build-windows.ps1\" -Install"
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\install-windows.ps1\""
       },
       "problemMatcher": []
     },
