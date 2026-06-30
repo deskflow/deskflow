@@ -1,0 +1,97 @@
+{
+  // Run → Start Debugging (F5) or the debug dropdown.
+  // Uses build-debug/ so Release installs stay untouched.
+  // macOS: docs/dev/MACOS_DEBUG.md — requires CodeLLDB (vadimcn.vscode-lldb).
+  // Windows: docs/dev/WINDOWS_DEBUG.md — requires C/C++ (ms-vscode.cpptools).
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Deskflow GUI (macOS Debug)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Deskflow.app/Contents/MacOS/Deskflow",
+      "args": ["--show"],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Deskflow: Prepare Debug Session (macOS)"
+    },
+    {
+      "name": "deskflow-core (Debug, client)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Deskflow.app/Contents/MacOS/deskflow-core",
+      "args": ["client", "--settings", "${env:HOME}/Library/Deskflow/Deskflow.conf"],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Deskflow: Prepare Debug Session (macOS)"
+    },
+    {
+      "name": "deskflow-core (Debug, server)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Deskflow.app/Contents/MacOS/deskflow-core",
+      "args": ["server", "--settings", "${env:HOME}/Library/Deskflow/Deskflow.conf"],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Deskflow: Prepare Debug Session (macOS)"
+    },
+    {
+      "name": "deskflow-core (Debug, auto)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Deskflow.app/Contents/MacOS/deskflow-core",
+      "args": ["auto", "--settings", "${env:HOME}/Library/Deskflow/Deskflow.conf"],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Deskflow: Prepare Debug Session (macOS)"
+    },
+    {
+      "name": "Attach to deskflow-core (macOS)",
+      "type": "lldb",
+      "request": "attach",
+      "pid": "${command:pickProcess}"
+    },
+    {
+      "name": "Deskflow GUI (Windows Debug)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Debug/deskflow.exe",
+      "args": ["--show"],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "preLaunchTask": "Deskflow: Prepare Debug Session (Windows)"
+    },
+    {
+      "name": "deskflow-core (Windows Debug, client)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Debug/deskflow-core.exe",
+      "args": ["client", "--settings", "${env:APPDATA}/Deskflow/Deskflow.conf"],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "preLaunchTask": "Deskflow: Prepare Debug Session (Windows)"
+    },
+    {
+      "name": "deskflow-core (Windows Debug, server)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Debug/deskflow-core.exe",
+      "args": ["server", "--settings", "${env:APPDATA}/Deskflow/Deskflow.conf"],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "preLaunchTask": "Deskflow: Prepare Debug Session (Windows)"
+    },
+    {
+      "name": "deskflow-core (Windows Debug, auto)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/bin/Debug/deskflow-core.exe",
+      "args": ["auto", "--settings", "${env:APPDATA}/Deskflow/Deskflow.conf"],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "preLaunchTask": "Deskflow: Prepare Debug Session (Windows)"
+    },
+    {
+      "name": "Attach to deskflow-core (Windows)",
+      "type": "cppvsdbg",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
+}

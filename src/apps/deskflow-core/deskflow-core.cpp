@@ -122,9 +122,6 @@ int main(int argc, char **argv)
 
   if (parser.autoMode()) {
     // Coordinated mode: the epoch loop elects and runs the role in-process.
-    QApplication app(argc, argv);
-    QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
-
     AutoModeRunner runner(events, processName);
 
     const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
