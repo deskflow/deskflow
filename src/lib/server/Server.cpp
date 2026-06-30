@@ -564,6 +564,21 @@ void Server::handleMouserBridgeLine(const Event &event)
     return;
   }
 
+  if (type == QStringLiteral("decode")) {
+    // Host Mouser publishes the live REPROG_V4 decode map while focus is
+    // local; merge it into HID passthrough connect lines for the remote.
+    const QJsonObject decode = doc.object()[QStringLiteral("decode")].toObject();
+    const auto featIdx = decode[QStringLiteral("feat_idx")];
+    const bool featOk = featIdx.isDouble()
+        ? featIdx.toInt() > 0
+        : (featIdx.isString() && !featIdx.toString().isEmpty());
+    if (!decode.isEmpty() && featOk) {
+      m_hidDecodeCache = decode;
+      applyHidDecodeAvailable();
+    }
+    return;
+  }
+
   if (type == QStringLiteral("event") || type == QStringLiteral("report")) {
     // Decoded events and raw HID++ frames both follow focus: relay only to
     // the client that currently hosts the virtual device.
@@ -603,9 +618,8 @@ void Server::initHidPassthrough()
     return;
   }
   if (Settings::value(Settings::Server::MouserBridgeEnabled).toBool()) {
-    LOG_WARN(
-        "hid passthrough and the mouser bridge are both enabled; "
-        "they relay the same virtual device and will conflict"
+    LOG_INFO(
+        "hid passthrough with mouser bridge: bridge used for decode sync from host Mouser"
     );
   }
   auto passthrough = std::make_unique<deskflow::server::HidPassthrough>(m_events, this);
@@ -634,13 +648,15 @@ void Server::handleHidPassthroughEvent(const Event &event)
     // gains focus later, then connect it on the current remote host.
     m_hidConnectLine = data->payload();
     if (m_active != m_primaryClient) {
-      m_active->sendMouserData(m_hidConnectLine);
+      m_active->sendMouserData(hidConnectLineForClient());
       m_hidVirtualHost = m_active;
     }
     break;
 
   case Kind::Detach:
     m_hidConnectLine.clear();
+    m_hidDecodeCache = QJsonObject();
+    m_hidSeizeDeferred = false;
     if (m_hidVirtualHost != nullptr) {
       m_hidVirtualHost->sendMouserData(data->payload());
       m_hidVirtualHost = nullptr;
@@ -648,6 +664,7 @@ void Server::handleHidPassthroughEvent(const Event &event)
     break;
 
   case Kind::Frame:
+    maybeCompleteDeferredHidSeize();
     // Frames go only to the client currently hosting the device.
     if (m_hidVirtualHost != nullptr && m_hidVirtualHost == m_active) {
       m_active->sendHidFrame(data->deviceId(), data->payload());
@@ -670,13 +687,76 @@ void Server::updateHidVirtualHost(BaseClientProxy *dst)
     m_hidVirtualHost = nullptr;
   }
   if (!dstIsPrimary && !m_hidConnectLine.empty() && m_hidVirtualHost != dst) {
-    dst->sendMouserData(m_hidConnectLine);
+    dst->sendMouserData(hidConnectLineForClient());
     m_hidVirtualHost = dst;
+  }
+
+  // Defer vendor-interface seize while awaiting decode from host Mouser so
+  // feat_idx can be discovered before the device is pulled away.
+  const bool remoteFocus = !dstIsPrimary;
+  const bool awaitDecode = remoteFocus && m_mouserBridge && m_hidDecodeCache.isEmpty();
+  if (awaitDecode) {
+    m_hidSeizeDeferred = true;
+    m_hidSeizeDeferStart = std::chrono::steady_clock::now();
+    LOG_INFO("hid passthrough: deferring seize until decode context arrives");
+  } else {
+    m_hidSeizeDeferred = false;
   }
 
   // Focus drives the seize: remote focus takes the vendor interface away
   // from the host's own consumer; local focus returns it.
-  m_hidPassthrough->setFocusRemote(!dstIsPrimary);
+  m_hidPassthrough->setFocusRemote(remoteFocus && !awaitDecode);
+}
+
+void Server::applyHidDecodeAvailable()
+{
+  if (m_hidDecodeCache.isEmpty() || !m_hidPassthrough) {
+    return;
+  }
+
+  const bool remoteFocus = m_active != m_primaryClient;
+  if (m_hidSeizeDeferred && remoteFocus) {
+    m_hidSeizeDeferred = false;
+    m_hidPassthrough->setFocusRemote(true);
+    LOG_INFO("hid passthrough: decode received, seizing vendor interface");
+  }
+
+  if (m_hidVirtualHost == nullptr || m_hidVirtualHost != m_active || m_hidConnectLine.empty()) {
+    return;
+  }
+
+  m_hidVirtualHost->sendMouserData(
+      deskflow::server::makeUpdateDecodeLine(m_hidDecodeCache)
+  );
+}
+
+void Server::maybeCompleteDeferredHidSeize()
+{
+  if (!m_hidSeizeDeferred || !m_hidPassthrough || m_active == m_primaryClient) {
+    if (m_active == m_primaryClient) {
+      m_hidSeizeDeferred = false;
+    }
+    return;
+  }
+
+  if (!m_hidDecodeCache.isEmpty()) {
+    applyHidDecodeAvailable();
+    return;
+  }
+
+  constexpr auto kDecodeWait = std::chrono::seconds(10);
+  if (std::chrono::steady_clock::now() - m_hidSeizeDeferStart < kDecodeWait) {
+    return;
+  }
+
+  m_hidSeizeDeferred = false;
+  m_hidPassthrough->setFocusRemote(true);
+  LOG_WARN("hid passthrough: seizing without decode context after timeout");
+}
+
+std::string Server::hidConnectLineForClient() const
+{
+  return deskflow::server::mergeDecodeIntoConnectLine(m_hidConnectLine, m_hidDecodeCache);
 }
 
 void Server::jumpToScreen(BaseClientProxy *newScreen)

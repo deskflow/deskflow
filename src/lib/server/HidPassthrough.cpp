@@ -166,6 +166,34 @@ void HidPassthrough::stop()
   m_started = false;
 }
 
+std::string mergeDecodeIntoConnectLine(const std::string &connectLine, const QJsonObject &decode)
+{
+  if (connectLine.empty() || decode.isEmpty()) {
+    return connectLine;
+  }
+
+  const auto doc = QJsonDocument::fromJson(
+      QByteArray(connectLine.data(), static_cast<int>(connectLine.size()))
+  );
+  if (!doc.isObject()) {
+    return connectLine;
+  }
+
+  QJsonObject line = doc.object();
+  QJsonObject device = line[QStringLiteral("device")].toObject();
+  device[QStringLiteral("decode")] = decode;
+  line[QStringLiteral("device")] = device;
+  return QJsonDocument(line).toJson(QJsonDocument::Compact).toStdString();
+}
+
+std::string makeUpdateDecodeLine(const QJsonObject &decode)
+{
+  QJsonObject line;
+  line[QStringLiteral("type")] = QStringLiteral("update_decode");
+  line[QStringLiteral("decode")] = decode;
+  return QJsonDocument(line).toJson(QJsonDocument::Compact).toStdString();
+}
+
 void HidPassthrough::setFocusRemote(bool remote)
 {
   if (m_started && m_grabber) {

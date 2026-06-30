@@ -20,6 +20,11 @@ machine A (server, mouse attached)            machine B (client, has focus)
   default 19796). Mouser A connects, authenticates with
   `server/mouserBridgeToken`, sends device-identity + event JSON lines, and
   receives `{"type": "focus", ...}` notifications on every screen switch.
+- **`decode` messages** (host Mouser → bridge, not relayed to clients):
+  `{"type": "decode", "decode": {"feat_idx": 11, "gesture_cid": "0x01A0", ...}}`.
+  Published while focus is local when HID passthrough is enabled; merged into
+  the passthrough `connect` line so the remote Mouser can decode raw `HIDR`
+  frames without a manual `settings.remote_device.decode` override.
 - **DMSR protocol message** (`"DMSR%s"`, server → client): one Mouser
   JSON line relayed verbatim. Only ever sent when the bridge is enabled;
   stock clients never see it.

@@ -9,6 +9,8 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 
+#include <QJsonObject>
+
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -38,6 +40,12 @@ std::vector<HidDeviceSelector> parseHidDeviceSelectors(const std::string &settin
 
 //! Lowercase hex encoding for raw report frames (consumer protocol).
 std::string hidBytesToHex(const uint8_t *bytes, size_t len);
+
+//! Merge a host-published decode map into a consumer-protocol connect line.
+std::string mergeDecodeIntoConnectLine(const std::string &connectLine, const QJsonObject &decode);
+
+//! Consumer-protocol line that updates decode context on an existing virtual device.
+std::string makeUpdateDecodeLine(const QJsonObject &decode);
 
 //! Identity of a grabbed device, as advertised to the focused client.
 struct HidDeviceDescriptor

@@ -15,4 +15,7 @@ private Q_SLOTS:
   void parsesDeviceSelectors();
   void rejectsMalformedSelectors();
   void encodesFrameHex();
+  void mergesDecodeIntoConnectLine();
+  void mergeLeavesMalformedConnectUntouched();
+  void makesUpdateDecodeLine();
 };

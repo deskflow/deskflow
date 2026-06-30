@@ -23,7 +23,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSignalBlocker>
+#include <QTabWidget>
 #include <QUrl>
+
+#include <algorithm>
 
 #ifdef Q_OS_MAC
 #include "gui/LoginBridgeManager.h"
@@ -86,13 +89,12 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
   loadFromConfig();
   logLevelChanged();
 
-  adjustSize();
-  QApplication::processEvents();
-  setFixedHeight(height());
+  updateDialogHeight();
   setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
 
   setButtonBoxEnabledButtons();
   initConnections();
+  connect(ui->tabWidget, &QTabWidget::currentChanged, this, [this](int) { updateDialogHeight(); });
 }
 
 void SettingsDialog::changeEvent(QEvent *e)
@@ -442,6 +444,22 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   ui->lblTlsCertInfo->setToolTip(QStringLiteral("Key length: %1 bits").arg(QString::number(length)));
 }
 
+void SettingsDialog::updateDialogHeight()
+{
+  const int current = ui->tabWidget->currentIndex();
+  int maxHeight = 0;
+  for (int i = 0; i < ui->tabWidget->count(); ++i) {
+    ui->tabWidget->setCurrentIndex(i);
+    setMaximumHeight(QWIDGETSIZE_MAX);
+    setMinimumHeight(0);
+    adjustSize();
+    QApplication::processEvents();
+    maxHeight = std::max(maxHeight, height());
+  }
+  ui->tabWidget->setCurrentIndex(current);
+  setFixedHeight(maxHeight);
+}
+
 void SettingsDialog::onHidPassthroughToggled(bool enabled)
 {
   if (enabled) {
@@ -449,6 +467,7 @@ void SettingsDialog::onHidPassthroughToggled(bool enabled)
     ui->groupGestureSharing->setChecked(false);
   }
   updateControls();
+  updateDialogHeight();
   setButtonBoxEnabledButtons();
 }
 
@@ -459,6 +478,7 @@ void SettingsDialog::onGestureSharingToggled(bool enabled)
     ui->groupHidPassthrough->setChecked(false);
   }
   updateControls();
+  updateDialogHeight();
   setButtonBoxEnabledButtons();
 }
 

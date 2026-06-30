@@ -8,9 +8,13 @@
 
 #include "server/HidPassthrough.h"
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QTest>
 
 using deskflow::server::hidBytesToHex;
+using deskflow::server::makeUpdateDecodeLine;
+using deskflow::server::mergeDecodeIntoConnectLine;
 using deskflow::server::parseHidDeviceSelectors;
 
 void HidPassthroughTests::parsesDeviceSelectors()
@@ -46,6 +50,39 @@ void HidPassthroughTests::encodesFrameHex()
   const uint8_t frame[] = {0x11, 0xFF, 0x0B, 0x00, 0xC3};
   QCOMPARE(hidBytesToHex(frame, sizeof(frame)), std::string("11ff0b00c3"));
   QCOMPARE(hidBytesToHex(frame, 0), std::string());
+}
+
+void HidPassthroughTests::mergesDecodeIntoConnectLine()
+{
+  const std::string connect = R"({"type":"connect","device":{"product_id":"0xB042"}})";
+  QJsonObject decode;
+  decode[QStringLiteral("feat_idx")] = 11;
+  decode[QStringLiteral("gesture_cid")] = QStringLiteral("0x01A0");
+
+  const auto merged = mergeDecodeIntoConnectLine(connect, decode);
+  const auto doc = QJsonDocument::fromJson(QByteArray::fromStdString(merged));
+  QVERIFY(doc.isObject());
+  const auto device = doc.object()[QStringLiteral("device")].toObject();
+  QCOMPARE(device[QStringLiteral("decode")].toObject()[QStringLiteral("feat_idx")].toInt(), 11);
+}
+
+void HidPassthroughTests::mergeLeavesMalformedConnectUntouched()
+{
+  const std::string garbage = "not-json";
+  QJsonObject decode;
+  decode[QStringLiteral("feat_idx")] = 11;
+  QCOMPARE(mergeDecodeIntoConnectLine(garbage, decode), garbage);
+}
+
+void HidPassthroughTests::makesUpdateDecodeLine()
+{
+  QJsonObject decode;
+  decode[QStringLiteral("feat_idx")] = 11;
+  const auto line = makeUpdateDecodeLine(decode);
+  const auto doc = QJsonDocument::fromJson(QByteArray::fromStdString(line));
+  QVERIFY(doc.isObject());
+  QCOMPARE(doc.object()[QStringLiteral("type")].toString(), QStringLiteral("update_decode"));
+  QCOMPARE(doc.object()[QStringLiteral("decode")].toObject()[QStringLiteral("feat_idx")].toInt(), 11);
 }
 
 QTEST_MAIN(HidPassthroughTests)

@@ -17,6 +17,9 @@
 #include "deskflow/MouseTypes.h"
 #include "server/Config.h"
 
+#include <QJsonObject>
+
+#include <chrono>
 #include <climits>
 #include <map>
 #include <memory>
@@ -331,6 +334,10 @@ private:
   void initHidPassthrough();
   void handleHidPassthroughEvent(const Event &event);
   void updateHidVirtualHost(BaseClientProxy *dst);
+  //! Merge cached decode context from the host Mouser into the passthrough connect line.
+  std::string hidConnectLineForClient() const;
+  void applyHidDecodeAvailable();
+  void maybeCompleteDeferredHidSeize();
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToScreenEvent(const Event &event);
   void handleSwitchInDirectionEvent(const Event &event);
@@ -414,6 +421,11 @@ private:
   // passed-through device.
   std::unique_ptr<deskflow::server::HidPassthrough> m_hidPassthrough;
   std::string m_hidConnectLine;
+  //! REPROG_V4 decode map from the host Mouser (feat_idx, gesture_cid, ...).
+  QJsonObject m_hidDecodeCache;
+  //! Remote focus is active but seize waits for decode (host Mouser still has the device).
+  bool m_hidSeizeDeferred = false;
+  std::chrono::steady_clock::time_point m_hidSeizeDeferStart{};
   BaseClientProxy *m_hidVirtualHost = nullptr;
 
   BaseClientProxy *m_switchScreen = nullptr;

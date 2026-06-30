@@ -82,6 +82,9 @@ private:
    */
   void setButtonBoxEnabledButtons() const;
 
+  /// @brief Resize the dialog to fit the active tab (tabs differ in height).
+  void updateDialogHeight();
+
   void onHidPassthroughToggled(bool enabled);
   void onGestureSharingToggled(bool enabled);
 
