@@ -206,6 +206,10 @@ OSXScreen::~OSXScreen()
     m_pmWatchThread->wait();
     delete m_pmWatchThread;
     m_pmWatchThread = nullptr;
+    if (m_pmRunloop) {
+      CFRelease(m_pmRunloop);
+      m_pmRunloop = nullptr;
+    }
   }
   delete m_pmThreadReady;
   delete m_pmMutex;
@@ -712,12 +716,16 @@ void OSXScreen::enable()
       // Use a semaphore to ensure m_eventTapRunLoop is set before enable() returns.
       auto sem = dispatch_semaphore_create(0);
       m_eventTapThread = std::thread([this, sem]() {
-        m_eventTapRunLoop = CFRunLoopGetCurrent();
+        // Retain the run loop so it stays valid even after this thread exits.
+        // CFRunLoopGetCurrent() returns a loop owned by the thread; without a
+        // retain it is freed on thread exit and disable()'s CFRunLoopStop would
+        // trap on the dangling pointer (SIGTRAP in __CFCheckCFInfoPACSignature)
+        // -- which crashed every auto-mode epoch teardown. disable() releases it.
+        m_eventTapRunLoop = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
         CFRunLoopAddSource(m_eventTapRunLoop, m_eventTapRLSR, kCFRunLoopDefaultMode);
         dispatch_semaphore_signal(sem);
         CFRunLoopRun();
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
-        m_eventTapRunLoop = nullptr;
       });
       dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
       dispatch_release(sem);
@@ -740,6 +748,10 @@ void OSXScreen::disable()
   }
   if (m_eventTapThread.joinable()) {
     m_eventTapThread.join();
+  }
+  if (m_eventTapRunLoop) {
+    CFRelease(m_eventTapRunLoop);
+    m_eventTapRunLoop = nullptr;
   }
 
   if (m_eventTapRLSR) {
@@ -1407,7 +1419,10 @@ void OSXScreen::watchSystemPowerThread(const void *)
   IONotificationPortRef notificationPortRef;
   CFRunLoopSourceRef runloopSourceRef = 0;
 
-  m_pmRunloop = CFRunLoopGetCurrent();
+  // Retain the run loop so it survives this thread exiting; the destructor
+  // releases it after stopping+joining. Without the retain, CFRunLoopStop in
+  // the destructor traps on a freed run loop at epoch teardown.
+  m_pmRunloop = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
   // install system power change callback
   m_pmRootPort = IORegisterForSystemPower(this, &notificationPortRef, powerChangeCallback, &notifier);
   if (m_pmRootPort == 0) {
@@ -1415,6 +1430,7 @@ void OSXScreen::watchSystemPowerThread(const void *)
     // this thread exits early below without running its CFRunLoop, so the run
     // loop must not be stopped from the destructor. clear it before signalling
     // ready so the destructor (which waits on that signal) sees it as unset.
+    CFRelease(m_pmRunloop);
     m_pmRunloop = nullptr;
   } else {
     runloopSourceRef = IONotificationPortGetRunLoopSource(notificationPortRef);
