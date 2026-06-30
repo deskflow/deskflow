@@ -103,6 +103,7 @@ static const KeyEntry s_controlKeys[] = {
     {kKeyControl_R, kVK_RightControl},
     {kKeyAlt_L, s_altVK},
     {kKeyAlt_R, kVK_RightOption},
+    {kKeyAltGr, kVK_RightOption}, // macOS has no AltGr; treat it as right Option
     {kKeySuper_L, s_superVK},
     {kKeySuper_R, kVK_RightCommand},
     {kKeyMeta_L, s_superVK},
@@ -815,6 +816,18 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
       for (std::set<uint32_t>::iterator k = required.begin(); k != required.end(); ++k) {
         item.m_required = mapModifiersFromOSX(*k << 16);
         keyMap.addKeyEntry(item);
+
+        // macOS has no AltGr modifier; characters on the Option (Alt) layer are
+        // reachable via the right Option key, which a remote AltGr maps to.
+        // Register an AltGr-required variant of every Alt(Option) entry so an
+        // incoming AltGr both matches these characters and is synthesized via
+        // the right Option key, keeping left Alt and AltGr distinct.
+        if ((item.m_required & KeyModifierAlt) != 0) {
+          auto altGrItem = item;
+          altGrItem.m_required = (item.m_required & ~KeyModifierAlt) | KeyModifierAltGr;
+          altGrItem.m_sensitive = item.m_sensitive | KeyModifierAltGr;
+          keyMap.addKeyEntry(altGrItem);
+        }
       }
     }
   }
@@ -871,6 +884,9 @@ void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyM
   }
   if ((changed & KeyModifierAlt) != 0) {
     handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
+  }
+  if ((changed & KeyModifierAltGr) != 0) {
+    handleModifierKey(target, kVK_RightOption, kKeyAltGr, (newMask & KeyModifierAltGr) != 0, newMask);
   }
   if ((changed & KeyModifierSuper) != 0) {
     handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
