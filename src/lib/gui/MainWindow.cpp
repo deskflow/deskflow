@@ -49,6 +49,7 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
+#include <QSettings>
 
 #include <memory>
 
@@ -302,7 +303,7 @@ void MainWindow::connectSlots()
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
-  connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
+  connect(m_actionSettings, &QAction::triggered, this, [this] { openSettings(); });
   connect(m_actionStartCore, &QAction::triggered, this, &MainWindow::startCore);
   connect(m_actionRestartCore, &QAction::triggered, this, &MainWindow::resetCore);
   connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
@@ -332,7 +333,7 @@ void MainWindow::connectSlots()
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->btnConfigureClient, &QPushButton::clicked, this, [this] { showConfigureClient(); });
-  connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
+  connect(ui->lblComputerName, &QLabel::linkActivated, this, [this](const QString &) { openSettings(); });
 
   connect(ui->comboMode, &QComboBox::currentIndexChanged, this, [this](int) { coreModeToggled(true); });
 
@@ -564,7 +565,7 @@ void MainWindow::openGetNewVersionUrl() const
 
 void MainWindow::openSettings()
 {
-  auto dialog = SettingsDialog(this, m_serverConfig);
+  SettingsDialog dialog(this, m_serverConfig);
 
   if (dialog.exec() == QDialog::Accepted) {
     Settings::save();
@@ -724,9 +725,9 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 // End slots
 //////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::open()
+void MainWindow::open(bool showWindow)
 {
-  if (!Settings::value(Settings::Gui::Autohide).toBool())
+  if (showWindow || !Settings::value(Settings::Gui::Autohide).toBool())
     showAndActivate();
   else if (deskflow::platform::isMac())
     // macOS to call hide after this function ends
@@ -849,28 +850,38 @@ void MainWindow::setTrayIcon()
   static const auto fallbackPath = QStringLiteral(":/icons/%1-%2/apps/64/%3");
 
   QString themeIcon = kRevFqdnName;
-  if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
-    if (deskflow::platform::isMac())
-      m_trayIcon->setIcon(QIcon::fromTheme(themeIcon));
-    else
-      m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
+  const auto trayMode = [&]() -> QString {
+    if (deskflow::platform::isWindows()) {
+      QSettings settings(
+          QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+          QSettings::NativeFormat
+      );
+      return settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
+                                                                               : QStringLiteral("dark");
+    }
+    return iconMode();
+  }();
+
+  const bool symbolic = Settings::value(Settings::Gui::SymbolicTrayIcon).toBool();
+  if (!symbolic) {
+    themeIcon = kRevFqdnName;
+  } else {
+    themeIcon.append(QStringLiteral("-symbolic"));
+  }
+
+  const QString resource = fallbackPath.arg(kAppId, trayMode, themeIcon);
+
+#if defined(Q_OS_MACOS)
+  m_trayIcon->setIcon(macMenuBarTrayIcon(resource, symbolic));
+  return;
+#endif
+
+  if (!symbolic) {
+    m_trayIcon->setIcon(QIcon::fromTheme(kRevFqdnName, QIcon(resource)));
     return;
   }
 
-  themeIcon.append(QStringLiteral("-symbolic"));
-
-  if (deskflow::platform::isWindows()) {
-    QSettings settings(
-        QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
-        QSettings::NativeFormat
-    );
-    const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
-                                                                                             : QStringLiteral("dark");
-    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
-    return;
-  }
-
-  auto icon = QIcon::fromTheme(themeIcon, QIcon(fallbackPath.arg(kAppId, iconMode(), themeIcon)));
+  auto icon = QIcon::fromTheme(themeIcon, QIcon(resource));
   icon.setIsMask(true);
   m_trayIcon->setIcon(icon);
 }

@@ -47,14 +47,13 @@ done
 quit_deskflow() {
   echo "== Stopping Deskflow processes =="
   osascript -e 'tell application "Deskflow" to quit' 2>/dev/null || true
-  sleep 1
 
   local -a patterns=(
     deskflow-core
     "${APP_NAME}.app/Contents/MacOS/${APP_NAME}"
     deskflow-vhid-bridge
   )
-  for _ in 1 2 3; do
+  for _ in $(seq 1 20); do
     local alive=0
     for pat in "${patterns[@]}"; do
       if pgrep -f "$pat" >/dev/null 2>&1; then
@@ -63,12 +62,32 @@ quit_deskflow() {
       fi
     done
     [[ "$alive" -eq 0 ]] && break
-    sleep 1
+    sleep 0.5
   done
   for pat in "${patterns[@]}"; do
     pkill -9 -f "$pat" 2>/dev/null || true
   done
-  sleep 1
+
+  # Wait until the GUI singleton lock is released before replacing the bundle.
+  for _ in $(seq 1 20); do
+    if ! pgrep -f "${APP_NAME}.app/Contents/MacOS/${APP_NAME}" >/dev/null 2>&1 &&
+       ! pgrep -x deskflow-core >/dev/null 2>&1; then
+      return 0
+    fi
+    sleep 0.5
+  done
+  echo "warning: some Deskflow processes may still be running" >&2
+}
+
+restart_deskflow() {
+  [[ "$RESTART" -eq 1 ]] || return 0
+  # Brief pause: macOS may relaunch login-item apps after the bundle is replaced.
+  sleep 2
+  echo "== Launching $INSTALL_APP =="
+  # --show brings the window to the front and sets a regular menu-bar presence.
+  # If an instance is already running, a second launch pings it via the GUI socket
+  # and exits immediately (single-instance), so this is safe after reinstall.
+  open "$INSTALL_APP" --args --show
 }
 
 install_bundle() {
@@ -112,12 +131,6 @@ install_bundle() {
   else
     echo "== Installed unsigned (codesign verify skipped or failed) =="
   fi
-}
-
-restart_deskflow() {
-  [[ "$RESTART" -eq 1 ]] || return 0
-  echo "== Launching $INSTALL_APP =="
-  open "$INSTALL_APP"
 }
 
 quit_deskflow

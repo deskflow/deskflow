@@ -9,8 +9,11 @@
 #include <QDir>
 #include <QFileInfoList>
 #include <QFontDatabase>
+#include <QGuiApplication>
 #include <QIcon>
+#include <QImage>
 #include <QPalette>
+#include <QScreen>
 #include <QStyleHints>
 
 #include "common/Constants.h"
@@ -41,14 +44,55 @@ inline QString iconMode()
 
 inline void updateIconTheme()
 {
-  // Sets the fallback icon path and fallback theme
+  // Bundled icons live at :/icons/<themeName>/ (see deskflow.qrc). Qt's icon theme
+  // engine expects search paths to be the parent of those theme directories.
   const auto themeName = QStringLiteral("%1-%2").arg(kAppId, iconMode());
+  const auto iconRoot = QStringLiteral(":/icons");
   if (QIcon::themeName().isEmpty() || QIcon::themeName().startsWith(kAppId))
     QIcon::setThemeName(themeName);
   else
     QIcon::setFallbackThemeName(themeName);
-  QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
+  QIcon::setThemeSearchPaths({iconRoot});
+  QIcon::setFallbackSearchPaths({iconRoot});
 }
+
+#if defined(Q_OS_MACOS)
+/**
+ * @brief Build a menu-bar tray icon from bundled SVG resources.
+ *
+ * Qt's QIcon::setIsMask on complex SVGs produces a solid colored blob in the
+ * macOS status item; rasterize first and, for symbolic icons, reduce to a
+ * black+alpha template image before marking as mask.
+ */
+inline QIcon macMenuBarTrayIcon(const QString &resourcePath, bool asTemplate)
+{
+  const qreal dpr = QGuiApplication::primaryScreen() ? QGuiApplication::primaryScreen()->devicePixelRatio() : 2.0;
+  constexpr int logicalSize = 18;
+  const int px = qRound(logicalSize * dpr);
+  QPixmap pm = QIcon(resourcePath).pixmap(px, px);
+  pm.setDevicePixelRatio(dpr);
+
+  if (asTemplate) {
+    QImage img = pm.toImage().convertToFormat(QImage::Format_ARGB32);
+    for (int y = 0; y < img.height(); ++y) {
+      auto *line = reinterpret_cast<QRgb *>(img.scanLine(y));
+      for (int x = 0; x < img.width(); ++x) {
+        const int alpha = qAlpha(line[x]);
+        line[x] = alpha > 16 ? qRgba(0, 0, 0, alpha) : qRgba(0, 0, 0, 0);
+      }
+    }
+    pm = QPixmap::fromImage(img);
+    pm.setDevicePixelRatio(dpr);
+  }
+
+  QIcon icon;
+  icon.addPixmap(pm);
+  if (asTemplate) {
+    icon.setIsMask(true);
+  }
+  return icon;
+}
+#endif
 } // namespace deskflow::gui
 
 inline QFont fixedFont()

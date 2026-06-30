@@ -6,11 +6,14 @@
   // Signing in a GUI/login-keychain context is required; signing over SSH fails.
   // SKIP_BUILD_TESTS=ON avoids OSXKeyStateTests build-time window-server requirement.
   //
-  // Windows: auto-detects Qt under C:\Qt. Installs to Program Files with UAC elevation,
-  // replaces any prior install, and registers the Deskflow Windows service.
-  // Optional Authenticode signing uses DESKFLOW_SIGN_THUMBPRINT (or "Mariner License Prep").
-  // Requires Visual Studio Build Tools (C++ workload) and CMake 3.24+.
-  // Copy env.example to .env and edit values there.
+  // Reinstall (Deskflow: Install locally / default build task step 3):
+  //   macOS — scripts/install-macos.sh quits all processes, deploys to
+  //           /Applications, relaunches with --show (menu bar + main window).
+  //   Windows — scripts/install-windows.ps1 stops service/processes, deploys to
+  //             Program Files, updates the service, launches deskflow.exe --show.
+  //
+  // Windows build: auto-detects Qt under C:\Qt. Optional Authenticode signing uses
+  // DESKFLOW_SIGN_THUMBPRINT. Requires VS Build Tools + CMake 3.24+. See .env.example.
   "version": "2.0.0",
   "options": {
     "cwd": "${workspaceFolder}",
@@ -42,6 +45,7 @@
       "windows": {
         "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}\\scripts\\install-windows.ps1\""
       },
+      "detail": "Quit all Deskflow processes, reinstall to /Applications or Program Files, relaunch with --show",
       "problemMatcher": []
     },
     {

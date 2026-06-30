@@ -207,8 +207,8 @@ function Start-DeskflowGui {
     throw 'deskflow.exe still running after cleanup; refusing to launch another instance.'
   }
 
-  Write-Host "== Launching single GUI: $gui =="
-  Start-Process -FilePath $gui -WorkingDirectory $InstallRoot
+  Write-Host "== Launching single GUI: $gui --show =="
+  Start-Process -FilePath $gui -WorkingDirectory $InstallRoot -ArgumentList '--show'
 }
 
 function Assert-CanonicalRuntime {

@@ -92,6 +92,10 @@ protected:
 private:
   void loadFromConfig();
   void initConnections() const;
+  void updateSharingControls();
+  void onHidPassthroughToggled(bool enabled);
+  void onGestureSharingToggled(bool enabled);
+  bool isSharingModified() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
   int m_columns;
@@ -111,6 +115,10 @@ private:
   bool m_win32keepForeground;
   bool m_disableLockToComputer;
   bool m_defaultLockToComputerState;
+  bool m_hidPassthroughEnabled = false;
+  bool m_gestureShareEnabled = false;
+  QString m_hidPassthroughDevices;
+  QString m_sharingSecret;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;

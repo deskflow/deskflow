@@ -19,6 +19,7 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSignalBlocker>
 
 using enum ScreenConfig::SwitchCorner;
 
@@ -88,6 +89,20 @@ void ServerConfigDialog::accept()
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
   Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
+
+  const bool hidPassthrough = ui->groupHidPassthrough->isChecked();
+  const bool gestureShare = ui->groupGestureSharing->isChecked();
+  const auto sharingSecret = ui->lineGestureSecret->text();
+  auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
+  if (hidDevices.isEmpty()) {
+    hidDevices = QStringLiteral("046D:*");
+  }
+  Settings::setValue(Settings::Server::HidPassthroughEnabled, hidPassthrough);
+  Settings::setValue(Settings::Server::HidPassthroughDevices, hidDevices);
+  Settings::setValue(Settings::Server::MouserBridgeEnabled, gestureShare);
+  Settings::setValue(Settings::Client::MouserEnabled, hidPassthrough || gestureShare);
+  Settings::setValue(Settings::Server::MouserBridgeToken, sharingSecret);
+  Settings::setValue(Settings::Client::MouserToken, sharingSecret);
 
   QStringList screenNames;
   const auto screenList = m_screenSetupModel.m_Screens;
@@ -451,6 +466,60 @@ void ServerConfigDialog::loadFromConfig()
   } else {
     server->markAsServer();
   }
+
+  m_hidPassthroughEnabled = Settings::value(Settings::Server::HidPassthroughEnabled).toBool();
+  m_gestureShareEnabled = Settings::value(Settings::Server::MouserBridgeEnabled).toBool();
+  m_hidPassthroughDevices = Settings::value(Settings::Server::HidPassthroughDevices).toString();
+  m_sharingSecret = Settings::value(Settings::Server::MouserBridgeToken).toString();
+  ui->groupHidPassthrough->setChecked(m_hidPassthroughEnabled);
+  ui->groupGestureSharing->setChecked(m_gestureShareEnabled && !m_hidPassthroughEnabled);
+  ui->lineHidPassthroughDevices->setText(
+      m_hidPassthroughDevices.isEmpty() ? QStringLiteral("046D:*") : m_hidPassthroughDevices
+  );
+  ui->lineGestureSecret->setText(m_sharingSecret);
+  updateSharingControls();
+}
+
+void ServerConfigDialog::updateSharingControls()
+{
+  const bool writable = Settings::isWritable();
+  const bool sharingEnabled = ui->groupHidPassthrough->isChecked() || ui->groupGestureSharing->isChecked();
+  ui->groupHidPassthrough->setEnabled(writable);
+  ui->groupGestureSharing->setEnabled(writable);
+  ui->lineHidPassthroughDevices->setEnabled(writable && ui->groupHidPassthrough->isChecked());
+  ui->lineGestureSecret->setEnabled(writable && sharingEnabled);
+}
+
+void ServerConfigDialog::onHidPassthroughToggled(bool enabled)
+{
+  if (enabled) {
+    QSignalBlocker blocker(ui->groupGestureSharing);
+    ui->groupGestureSharing->setChecked(false);
+  }
+  updateSharingControls();
+  onChange();
+}
+
+void ServerConfigDialog::onGestureSharingToggled(bool enabled)
+{
+  if (enabled) {
+    QSignalBlocker blocker(ui->groupHidPassthrough);
+    ui->groupHidPassthrough->setChecked(false);
+  }
+  updateSharingControls();
+  onChange();
+}
+
+bool ServerConfigDialog::isSharingModified() const
+{
+  auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
+  if (hidDevices.isEmpty()) {
+    hidDevices = QStringLiteral("046D:*");
+  }
+  const auto loadedDevices = m_hidPassthroughDevices.isEmpty() ? QStringLiteral("046D:*") : m_hidPassthroughDevices;
+  return ui->groupHidPassthrough->isChecked() != m_hidPassthroughEnabled ||
+         ui->groupGestureSharing->isChecked() != m_gestureShareEnabled || hidDevices != loadedDevices ||
+         ui->lineGestureSecret->text() != m_sharingSecret;
 }
 
 void ServerConfigDialog::initConnections() const
@@ -501,6 +570,10 @@ void ServerConfigDialog::initConnections() const
   );
   connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
   connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+  connect(ui->groupHidPassthrough, &QGroupBox::toggled, this, &ServerConfigDialog::onHidPassthroughToggled);
+  connect(ui->groupGestureSharing, &QGroupBox::toggled, this, &ServerConfigDialog::onGestureSharingToggled);
+  connect(ui->lineHidPassthroughDevices, &QLineEdit::textChanged, this, &ServerConfigDialog::onChange);
+  connect(ui->lineGestureSecret, &QLineEdit::textChanged, this, &ServerConfigDialog::onChange);
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
@@ -536,5 +609,5 @@ void ServerConfigDialog::onChange()
       m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool() &&
       m_defaultLockToComputerState == Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
   ui->buttonBox->button(QDialogButtonBox::Ok)
-      ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
+      ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig) || isSharingModified());
 }

@@ -152,10 +152,6 @@ void SettingsDialog::initConnections() const
   connect(ui->groupLogToFile, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
-  connect(ui->groupHidPassthrough, &QGroupBox::toggled, this, &SettingsDialog::onHidPassthroughToggled);
-  connect(ui->groupGestureSharing, &QGroupBox::toggled, this, &SettingsDialog::onGestureSharingToggled);
-  connect(ui->lineHidPassthroughDevices, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
-  connect(ui->lineGestureSecret, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->groupLoginBridge, &QGroupBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->sbBridgeScale, &QDoubleSpinBox::valueChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
 #ifdef Q_OS_MAC
@@ -275,23 +271,6 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Core::ScreenEnterCommand, ui->lineCommandEnter->text());
   Settings::setValue(Settings::Core::ScreenExitCommand, ui->lineCommandExit->text());
 
-  // Device sharing: HID passthrough (preferred) or the legacy Mouser bridge.
-  // Both modes need Mouser on the focused client; only the bridge needs it on
-  // the host too. The shared secret feeds both loopback hops.
-  const bool hidPassthrough = ui->groupHidPassthrough->isChecked();
-  const bool gestureShare = ui->groupGestureSharing->isChecked();
-  const auto sharingSecret = ui->lineGestureSecret->text();
-  auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
-  if (hidDevices.isEmpty()) {
-    hidDevices = QStringLiteral("046D:*");
-  }
-  Settings::setValue(Settings::Server::HidPassthroughEnabled, hidPassthrough);
-  Settings::setValue(Settings::Server::HidPassthroughDevices, hidDevices);
-  Settings::setValue(Settings::Server::MouserBridgeEnabled, gestureShare);
-  Settings::setValue(Settings::Client::MouserEnabled, hidPassthrough || gestureShare);
-  Settings::setValue(Settings::Server::MouserBridgeToken, sharingSecret);
-  Settings::setValue(Settings::Client::MouserToken, sharingSecret);
-
 #ifdef Q_OS_MAC
   // Login-window bridge: the installed LaunchAgent (not the setting) is the
   // source of truth, so only prompt for admin rights when the system state
@@ -342,14 +321,6 @@ void SettingsDialog::loadFromConfig()
   ui->cbRunExitCommand->setChecked(Settings::value(Settings::Core::EnableExitCommand).toBool());
   ui->lineCommandEnter->setText(Settings::value(Settings::Core::ScreenEnterCommand).toString());
   ui->lineCommandExit->setText(Settings::value(Settings::Core::ScreenExitCommand).toString());
-
-  const bool hidPassthrough = Settings::value(Settings::Server::HidPassthroughEnabled).toBool();
-  const bool gestureShare = Settings::value(Settings::Server::MouserBridgeEnabled).toBool();
-  ui->groupHidPassthrough->setChecked(hidPassthrough);
-  ui->groupGestureSharing->setChecked(gestureShare && !hidPassthrough);
-  const auto hidDevices = Settings::value(Settings::Server::HidPassthroughDevices).toString();
-  ui->lineHidPassthroughDevices->setText(hidDevices.isEmpty() ? QStringLiteral("046D:*") : hidDevices);
-  ui->lineGestureSecret->setText(Settings::value(Settings::Server::MouserBridgeToken).toString());
 
   ui->groupLoginBridge->setChecked(Settings::value(Settings::Coordination::LoginBridgeEnabled).toBool());
   ui->sbBridgeScale->setValue(Settings::value(Settings::Coordination::LoginBridgeScale).toDouble());
@@ -446,6 +417,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
 
 void SettingsDialog::updateDialogHeight()
 {
+  QSignalBlocker tabBlocker(ui->tabWidget);
   const int current = ui->tabWidget->currentIndex();
   int maxHeight = 0;
   for (int i = 0; i < ui->tabWidget->count(); ++i) {
@@ -458,28 +430,6 @@ void SettingsDialog::updateDialogHeight()
   }
   ui->tabWidget->setCurrentIndex(current);
   setFixedHeight(maxHeight);
-}
-
-void SettingsDialog::onHidPassthroughToggled(bool enabled)
-{
-  if (enabled) {
-    QSignalBlocker blocker(ui->groupGestureSharing);
-    ui->groupGestureSharing->setChecked(false);
-  }
-  updateControls();
-  updateDialogHeight();
-  setButtonBoxEnabledButtons();
-}
-
-void SettingsDialog::onGestureSharingToggled(bool enabled)
-{
-  if (enabled) {
-    QSignalBlocker blocker(ui->groupHidPassthrough);
-    ui->groupHidPassthrough->setChecked(false);
-  }
-  updateControls();
-  updateDialogHeight();
-  setButtonBoxEnabledButtons();
 }
 
 void SettingsDialog::updateControls()
@@ -506,12 +456,6 @@ void SettingsDialog::updateControls()
   ui->cbRunExitCommand->setEnabled(writable);
   ui->lineCommandEnter->setEnabled(writable && ui->cbRunEnterCommand->isChecked());
   ui->lineCommandExit->setEnabled(writable && ui->cbRunExitCommand->isChecked());
-
-  const bool sharingEnabled = ui->groupHidPassthrough->isChecked() || ui->groupGestureSharing->isChecked();
-  ui->groupHidPassthrough->setEnabled(writable);
-  ui->groupGestureSharing->setEnabled(writable);
-  ui->lineHidPassthroughDevices->setEnabled(writable && ui->groupHidPassthrough->isChecked());
-  ui->lineGestureSecret->setEnabled(writable && sharingEnabled);
 
   // Portable mode only ever applies to Windows.
   // Daemon options should only be available on Windows when *not* in portable mode.
