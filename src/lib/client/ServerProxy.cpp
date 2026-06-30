@@ -33,8 +33,7 @@
 ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
-      m_events(events),
-      m_hidConsumerMode(deskflow::client::hidConsumerModeFromSettings())
+      m_events(events)
 {
   assert(m_client != nullptr);
   assert(m_stream != nullptr);
@@ -843,12 +842,12 @@ void ServerProxy::setServerLanguages()
   m_layoutManager.setRemoteLayouts(serverLayout);
 }
 
-MouserClient *ServerProxy::mouserClientOrNull()
+MouserClient *ServerProxy::mouserDeliveryOrNull()
 {
+  if (!deskflow::client::mouserHidDeliveryEnabled()) {
+    return nullptr;
+  }
   if (m_mouserClient == nullptr) {
-    if (!Settings::value(Settings::Client::MouserEnabled).toBool()) {
-      return nullptr; // accepted and discarded when the integration is off
-    }
     m_mouserClient = std::make_unique<MouserClient>(
         Settings::value(Settings::Client::MouserPort).toInt(),
         Settings::value(Settings::Client::MouserToken).toString().toStdString()
@@ -857,27 +856,11 @@ MouserClient *ServerProxy::mouserClientOrNull()
   return m_mouserClient.get();
 }
 
-deskflow::client::HidConsumer *ServerProxy::hidConsumerOrNull()
-{
-  if (m_hidConsumerMode == deskflow::client::HidConsumerMode::None) {
-    return nullptr;
-  }
-  if (m_hidConsumerMode == deskflow::client::HidConsumerMode::Mouser) {
-    if (auto *client = mouserClientOrNull(); client != nullptr) {
-      if (m_mouserHidConsumer == nullptr) {
-        m_mouserHidConsumer = std::make_unique<deskflow::client::MouserHidConsumer>(client);
-      }
-      return m_mouserHidConsumer.get();
-    }
-  }
-  return nullptr;
-}
-
 void ServerProxy::mouserData()
 {
   std::string line;
   ProtocolUtil::readf(m_stream, kMsgDMouserData + 4, &line);
-  if (auto *client = mouserClientOrNull(); client != nullptr) {
+  if (auto *client = mouserDeliveryOrNull(); client != nullptr) {
     client->deliver(line);
   }
 }
@@ -887,9 +870,7 @@ void ServerProxy::hidReport()
   uint16_t deviceId = 0;
   std::string bytes;
   ProtocolUtil::readf(m_stream, kMsgDHidReport + 4, &deviceId, &bytes);
-  if (auto *consumer = hidConsumerOrNull(); consumer != nullptr && !bytes.empty()) {
-    consumer->deliverRawReport(deviceId, bytes);
-  }
+  deskflow::client::deliverRawHidReportToMouser(mouserDeliveryOrNull(), deviceId, bytes);
 }
 
 void ServerProxy::setActiveServerLanguage(const std::string_view &language)

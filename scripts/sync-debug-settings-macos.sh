@@ -72,10 +72,22 @@ if [[ -z "${peers}" ]]; then
 fi
 
 if grep -q '^\[coordination\]' "${CONF}"; then
-  sed -i '' "/^\[coordination\]/a\\
-enabled=true\\
-peers=${peers}
-" "${CONF}"
+  if ! awk '/^\[coordination\]/{in_c=1; next} /^\[/{in_c=0} in_c && /^peers=/{found=1} END{exit found?0:1}' "${CONF}"; then
+    tmp="$(mktemp)"
+    awk -v peers="${peers}" '
+      /^\[coordination\]/ {
+        print
+        if (!seen_enabled) print "enabled=true"
+        print "peers=" peers
+        in_c=1
+        next
+      }
+      /^\[/ { in_c=0 }
+      in_c && /^enabled=/ { seen_enabled=1 }
+      { print }
+    ' "${CONF}" >"${tmp}"
+    mv "${tmp}" "${CONF}"
+  fi
 else
   cat >>"${CONF}" <<EOF
 

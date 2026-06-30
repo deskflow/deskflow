@@ -335,6 +335,12 @@ private:
   void initHidPassthrough();
   void handleHidPassthroughEvent(const Event &event);
   void updateHidVirtualHost(BaseClientProxy *dst);
+  void sendMouserLine(BaseClientProxy *client, const std::string &line);
+  void setMouserBridgeActive(bool active);
+  void detachOtherVirtualHosts(const VirtualHostTracker *keep);
+  void virtualHostAttachIfRemote(VirtualHostTracker &tracker, const std::string &connectPayload);
+  void virtualHostDetach(VirtualHostTracker &tracker, const std::string &disconnectLine, bool clearCachedLine = true);
+  void virtualHostOnFocusChange(VirtualHostTracker &tracker, BaseClientProxy *dst, const std::string &connectPayload = {});
   //! Merge cached decode context from the host Mouser into the passthrough connect line.
   std::string hidConnectLineForClient() const;
   void applyHidDecodeAvailable();

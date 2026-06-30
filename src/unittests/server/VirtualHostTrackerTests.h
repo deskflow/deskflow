@@ -15,5 +15,8 @@ private Q_SLOTS:
   void connectsOnRemoteFocus();
   void movesVirtualHostWhenFocusChanges();
   void skipsConnectOnPrimaryFocus();
-  void detachClearsHost();
+  void clearHostIfClearsMatchingHost();
+  void detachSendsDisconnectAndClearsHost();
+  void hostsActiveClientMatchesRelayTarget();
+  void connectPayloadOverrideBypassesCachedLine();
 };

@@ -14,6 +14,7 @@
 #include "base/Log.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "deskflow/App.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
 #include "deskflow/ipc/CoreIpcServer.h"
@@ -27,6 +28,8 @@
 #include <QSharedMemory>
 #include <QTextStream>
 #include <QThread>
+
+#include <memory>
 
 void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
 {
@@ -144,11 +147,15 @@ int main(int argc, char **argv)
     return exitCode;
   }
 
-  App *coreApp = createApp(parser, events, processName);
+  std::unique_ptr<App> coreApp(createApp(parser, events, processName));
+  if (coreApp == nullptr) {
+    LOG_ERR("deskflow core requires --server or --client mode");
+    return s_exitArgs;
+  }
 
   const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
   QObject::connect(
-      ipcServer, &deskflow::core::ipc::IpcServer::stopProcessRequested, coreApp, &App::quit, Qt::DirectConnection
+      ipcServer, &deskflow::core::ipc::IpcServer::stopProcessRequested, coreApp.get(), &App::quit, Qt::DirectConnection
   );
   ipcServer->listen();
 

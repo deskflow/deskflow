@@ -49,6 +49,7 @@ public:
     inline static const auto MouserPort = QStringLiteral("client/mouserPort");
     inline static const auto MouserToken = QStringLiteral("client/mouserToken");
     // Raw HID report consumer: mouser (loopback JSON) or none. Default follows MouserEnabled.
+    //! Deprecated: use `MouserEnabled` until a non-Mouser HID consumer exists.
     inline static const auto HidConsumer = QStringLiteral("client/hidConsumer");
   };
   // Native KVM coordination (fork extension): election mesh that lets a
@@ -152,6 +153,8 @@ public:
     inline static const auto MouserBridgeEnabled = QStringLiteral("server/mouserBridgeEnabled");
     inline static const auto MouserBridgePort = QStringLiteral("server/mouserBridgePort");
     inline static const auto MouserBridgeToken = QStringLiteral("server/mouserBridgeToken");
+    //! Runtime status: loopback bridge listener is active (written by core, not the GUI).
+    inline static const auto MouserBridgeActive = QStringLiteral("server/mouserBridgeActive");
     // HID pass-through (fork extension): seize the selected devices'
     // vendor interfaces while focus is remote and relay raw reports.
     inline static const auto HidPassthroughEnabled = QStringLiteral("server/hidPassthroughEnabled");
@@ -357,6 +360,9 @@ private:
     , Settings::Server::MouserBridgeEnabled
     , Settings::Server::MouserBridgePort
     , Settings::Server::MouserBridgeToken
+    , Settings::Server::MouserBridgeActive
+    , Settings::Server::HidPassthroughEnabled
+    , Settings::Server::HidPassthroughDevices
   };
 
   // When checking the default values this list contains the ones that default to false.
@@ -384,6 +390,7 @@ private:
     , Settings::Server::RelativeMouseMoves
     , Settings::Client::MouserEnabled
     , Settings::Server::MouserBridgeEnabled
+    , Settings::Server::MouserBridgeActive
     , Settings::Server::HidPassthroughEnabled
     , Settings::Coordination::Enabled
   };

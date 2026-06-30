@@ -8,6 +8,7 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "common/BytesHex.h"
 #include "common/Settings.h"
 
 #include <QJsonDocument>
@@ -95,14 +96,7 @@ std::vector<HidDeviceSelector> parseHidDeviceSelectors(const std::string &settin
 
 std::string hidBytesToHex(const uint8_t *bytes, size_t len)
 {
-  static const char *digits = "0123456789abcdef";
-  std::string out;
-  out.reserve(len * 2);
-  for (size_t i = 0; i < len; ++i) {
-    out.push_back(digits[bytes[i] >> 4]);
-    out.push_back(digits[bytes[i] & 0xF]);
-  }
-  return out;
+  return deskflow::bytesToLowerHex(bytes, len);
 }
 
 HidPassthrough::HidPassthrough(IEventQueue *events, void *eventTarget) : m_events(events), m_eventTarget(eventTarget)

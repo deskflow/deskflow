@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <string_view>
 
@@ -14,34 +15,26 @@ class MouserClient;
 
 namespace deskflow::client {
 
+inline constexpr size_t kMaxHidReportPayloadBytes = 4096;
+
+//! True when raw HID reports should be delivered to the local Mouser loopback client.
+[[nodiscard]] bool mouserHidDeliveryEnabled();
+
 //! Encode a raw HID report frame as a Mouser loopback JSON line.
 std::string encodeHidReportAsMouserLine(uint16_t deviceId, std::string_view bytes);
 
-enum class HidConsumerMode
+[[nodiscard]] bool shouldDeliverRawHidReport(size_t byteCount);
+
+//! Deliver an encoded report line when payload size is valid; no-op when deliver is empty.
+template<typename DeliverFn>
+void deliverRawHidReport(DeliverFn &&deliver, uint16_t deviceId, const std::string &bytes)
 {
-  None,
-  Mouser,
-};
+  if (!shouldDeliverRawHidReport(bytes.size())) {
+    return;
+  }
+  deliver(encodeHidReportAsMouserLine(deviceId, bytes));
+}
 
-HidConsumerMode hidConsumerModeFromSettings();
-
-//! Delivers raw HID report bytes to a local consumer (Mouser loopback today).
-class HidConsumer
-{
-public:
-  virtual ~HidConsumer() = default;
-  virtual void deliverRawReport(uint16_t deviceId, const std::string &bytes) = 0;
-};
-
-class MouserHidConsumer : public HidConsumer
-{
-public:
-  explicit MouserHidConsumer(MouserClient *client);
-
-  void deliverRawReport(uint16_t deviceId, const std::string &bytes) override;
-
-private:
-  MouserClient *m_client;
-};
+void deliverRawHidReportToMouser(MouserClient *client, uint16_t deviceId, const std::string &bytes);
 
 } // namespace deskflow::client

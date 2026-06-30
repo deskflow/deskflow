@@ -7,8 +7,12 @@
 #include "HidConsumerTests.h"
 
 #include "client/HidConsumer.h"
+#include "common/Settings.h"
 
 #include <QTest>
+
+#include <string>
+#include <vector>
 
 void HidConsumerTests::encodesRawReportAsMouserLine()
 {
@@ -20,10 +24,47 @@ void HidConsumerTests::encodesRawReportAsMouserLine()
   );
 }
 
-void HidConsumerTests::emptyBytesProduceNoDelivery()
+void HidConsumerTests::shouldDeliverRejectsEmptyAndOversizedPayloads()
 {
-  const auto line = deskflow::client::encodeHidReportAsMouserLine(1, std::string{});
-  QCOMPARE(line, R"({"type": "report", "device_id": 1, "data": ""})");
+  QVERIFY(!deskflow::client::shouldDeliverRawHidReport(0));
+  QVERIFY(deskflow::client::shouldDeliverRawHidReport(1));
+  QVERIFY(deskflow::client::shouldDeliverRawHidReport(deskflow::client::kMaxHidReportPayloadBytes));
+  QVERIFY(!deskflow::client::shouldDeliverRawHidReport(deskflow::client::kMaxHidReportPayloadBytes + 1));
+}
+
+void HidConsumerTests::deliverRawHidReportSkipsEmptyPayload()
+{
+  std::vector<std::string> lines;
+  deskflow::client::deliverRawHidReport([&lines](const std::string &line) { lines.push_back(line); }, 1, std::string{});
+  QVERIFY(lines.empty());
+}
+
+void HidConsumerTests::deliverRawHidReportForwardsNonEmptyPayload()
+{
+  std::vector<std::string> lines;
+  const std::string bytes = {'\x01', '\x02'};
+  deskflow::client::deliverRawHidReport([&lines](const std::string &line) { lines.push_back(line); }, 3, bytes);
+  QCOMPARE(lines.size(), static_cast<size_t>(1));
+  QCOMPARE(lines[0], deskflow::client::encodeHidReportAsMouserLine(3, bytes));
+}
+
+void HidConsumerTests::mouserHidDeliveryEnabledFromSettings()
+{
+  const QString settingsFile = QStringLiteral("tmp/hid-consumer-settings.conf");
+  Settings::setSettingsFile(settingsFile);
+
+  Settings::setValue(Settings::Client::MouserEnabled, false);
+  QVERIFY(!deskflow::client::mouserHidDeliveryEnabled());
+
+  Settings::setValue(Settings::Client::MouserEnabled, true);
+  QVERIFY(deskflow::client::mouserHidDeliveryEnabled());
+}
+
+void HidConsumerTests::deliverRawHidReportToMouserSkipsNullClient()
+{
+  const std::string bytes = {'\x01'};
+  deskflow::client::deliverRawHidReportToMouser(nullptr, 1, bytes);
+  QVERIFY(true); // no crash; delivery is a no-op
 }
 
 QTEST_MAIN(HidConsumerTests)

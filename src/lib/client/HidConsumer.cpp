@@ -7,45 +7,33 @@
 #include "client/HidConsumer.h"
 
 #include "client/MouserClient.h"
+#include "common/BytesHex.h"
 #include "common/Settings.h"
 
 namespace deskflow::client {
 
+bool mouserHidDeliveryEnabled()
+{
+  return Settings::value(Settings::Client::MouserEnabled).toBool();
+}
+
 std::string encodeHidReportAsMouserLine(uint16_t deviceId, std::string_view bytes)
 {
-  static const char *digits = "0123456789abcdef";
-  std::string hex;
-  hex.reserve(bytes.size() * 2);
-  for (const char c : bytes) {
-    const auto byte = static_cast<unsigned char>(c);
-    hex.push_back(digits[byte >> 4]);
-    hex.push_back(digits[byte & 0xF]);
-  }
-  return R"({"type": "report", "device_id": )" + std::to_string(deviceId) + R"(, "data": ")" + hex + R"("})";
+  return R"({"type": "report", "device_id": )" + std::to_string(deviceId) + R"(, "data": ")"
+         + deskflow::bytesToLowerHex(bytes) + R"("})";
 }
 
-HidConsumerMode hidConsumerModeFromSettings()
+bool shouldDeliverRawHidReport(size_t byteCount)
 {
-  const auto mode = Settings::value(Settings::Client::HidConsumer).toString();
-  if (mode == QStringLiteral("none")) {
-    return HidConsumerMode::None;
-  }
-  if (Settings::value(Settings::Client::MouserEnabled).toBool()) {
-    return HidConsumerMode::Mouser;
-  }
-  return HidConsumerMode::None;
+  return byteCount > 0 && byteCount <= kMaxHidReportPayloadBytes;
 }
 
-MouserHidConsumer::MouserHidConsumer(MouserClient *client) : m_client(client)
+void deliverRawHidReportToMouser(MouserClient *client, uint16_t deviceId, const std::string &bytes)
 {
-}
-
-void MouserHidConsumer::deliverRawReport(uint16_t deviceId, const std::string &bytes)
-{
-  if (m_client == nullptr || bytes.empty()) {
+  if (client == nullptr) {
     return;
   }
-  m_client->deliver(encodeHidReportAsMouserLine(deviceId, bytes));
+  deliverRawHidReport([client](const std::string &line) { client->deliver(line); }, deviceId, bytes);
 }
 
 } // namespace deskflow::client

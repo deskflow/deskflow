@@ -101,4 +101,17 @@ void SettingsTests::checkCleanScreenName_LongName()
   QCOMPARE(Settings::value(Settings::Core::ComputerName).toString(), expected);
 }
 
+void SettingsTests::hidPassthroughKeysSurviveCleanSettings()
+{
+  Settings::setSettingsFile(m_settingsFile);
+  Settings::setValue(Settings::Server::HidPassthroughEnabled, true);
+  Settings::setValue(Settings::Server::HidPassthroughDevices, QStringLiteral("046D:B042"));
+
+  // Reload from disk — cleanSettings() runs on load and must keep fork keys.
+  Settings::setSettingsFile(m_settingsFile);
+
+  QCOMPARE(Settings::value(Settings::Server::HidPassthroughEnabled).toBool(), true);
+  QCOMPARE(Settings::value(Settings::Server::HidPassthroughDevices).toString(), QStringLiteral("046D:B042"));
+}
+
 QTEST_MAIN(SettingsTests)

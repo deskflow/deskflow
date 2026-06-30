@@ -13,5 +13,9 @@ class HidConsumerTests : public QObject
   Q_OBJECT
 private Q_SLOTS:
   void encodesRawReportAsMouserLine();
-  void emptyBytesProduceNoDelivery();
+  void shouldDeliverRejectsEmptyAndOversizedPayloads();
+  void deliverRawHidReportSkipsEmptyPayload();
+  void deliverRawHidReportForwardsNonEmptyPayload();
+  void mouserHidDeliveryEnabledFromSettings();
+  void deliverRawHidReportToMouserSkipsNullClient();
 };

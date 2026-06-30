@@ -207,10 +207,13 @@ This **supersedes** the decoded-event `DMSR` path. Migration:
 
 When HID passthrough is enabled on the server, Deskflow automatically starts
 the loopback Mouser bridge (`Server::initMouserBridge`) even if legacy gesture
-sharing is off. The bridge receives `decode` messages from the host Mouser so
-`feat_idx` / `gesture_cid` can be merged into HID connect lines before vendor
-interface seize. The Sharing tab hides the legacy gesture-only toggle while HID
-passthrough is selected.
+sharing is off. The bridge receives `decode` messages from the host Mouser;
+`Server::applyHidDecodeAvailable` merges `feat_idx` / `gesture_cid` into HID
+connect lines and pushes `update_decode` to the focused client before vendor
+interface seize completes. Seize may defer up to 10 seconds while awaiting decode.
+The Sharing tab hides the legacy gesture-only toggle while HID passthrough is
+selected. Only one virtual host (gesture or HID) may be active at a time —
+attaching one detaches the other.
 
 ## Scope / non-goals
 
@@ -236,27 +239,25 @@ Implemented (Tier 1):
    consumer-protocol `connect`/`disconnect` JSON; raw frames travel as the
    new binary `HIDR` message (`kMsgDHidReport`). `Server` follows focus via
    `VirtualHostTracker` (`Server::updateHidVirtualHost`).
-3. **Client sink** — `ServerProxy::hidReport()` delivers raw bytes through
-   the pluggable `deskflow::client::HidConsumer` interface. The default
-   `MouserHidConsumer` adapter re-encodes frames as loopback JSON for Mouser;
-   set `client/hidConsumer=none` to drop reports locally.
+3. **Client sink** — `ServerProxy::hidReport()` delivers raw bytes when
+   `client/mouserEnabled` is true: frames are encoded as loopback JSON and
+   sent to the local Mouser instance (same path as `DMSR`). Disable delivery
+   by turning off Mouser on the client role.
 4. **Mouser raw-frame source** — Mouser's `core/remote_device.py` decodes
    `report` messages with a detached `HidGestureListener` seeded from
    `connect.decode` or `settings.remote_device.decode`
    (`feat_idx`/`gesture_cid`/`extra_diverts`).
 5. Settings: `server/hidPassthroughEnabled` + `server/hidPassthroughDevices`
-   (`VID:PID` list, `*` PID wildcard); unit-tested selector parsing.
+   (`VID:PID` list, `*` PID wildcard — **no default wildcard**; the Sharing tab
+   requires an explicit selector before enabling passthrough);
+   `server/mouserBridgeActive` reflects runtime bridge listener status.
+   Unit-tested selector parsing.
 
 Remaining:
 
-- **Decode-context handoff** — the host's consumer knows `feat_idx` /
-  `gesture_cid` (it armed the diverts before the seize); shipping that to
-  the focused client automatically (instead of the manual
-   `settings.remote_device.decode` override) needs a small host-consumer →
-   Deskflow message before the first seize.
 - **Linux host grab** (`EVIOCGRAB` / hidraw exclusive).
-- **Two-checkbox UX polish** — auto-generated loopback tokens, tray status
-  line, device picker UI (selectors are settings-only today).
+- **Two-checkbox UX polish** — auto-generated loopback tokens, tray status line showing
+  `server/mouserBridgeActive`, device picker UI (selectors are settings-only today).
 - **Tier 2** — virtual-HID re-injection on the client via DriverKit.
 </content>
 </invoke>

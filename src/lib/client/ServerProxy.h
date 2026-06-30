@@ -109,9 +109,8 @@ private:
 private:
   using MessageParser = ConnectionResult (ServerProxy::*)(const uint8_t *);
 
-  //! Lazily create the loopback consumer connection; null when disabled.
-  MouserClient *mouserClientOrNull();
-  deskflow::client::HidConsumer *hidConsumerOrNull();
+  //! Lazily create the loopback Mouser client; null when sharing/HID delivery is off.
+  MouserClient *mouserDeliveryOrNull();
 
   Client *m_client = nullptr;
   deskflow::IStream *m_stream = nullptr;
@@ -137,8 +136,6 @@ private:
   std::string m_serverLayout = "";
   bool m_isUserNotifiedAboutLayoutSyncError = false;
   deskflow::KeyboardLayoutManager m_layoutManager;
-  deskflow::client::HidConsumerMode m_hidConsumerMode = deskflow::client::HidConsumerMode::None;
   // Mouser integration (fork extension); created lazily on first DMSR/HIDR.
   std::unique_ptr<MouserClient> m_mouserClient;
-  std::unique_ptr<deskflow::client::MouserHidConsumer> m_mouserHidConsumer;
 };

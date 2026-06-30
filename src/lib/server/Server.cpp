@@ -155,6 +155,7 @@ Server::~Server()
 {
   if (m_mouserBridge) {
     m_mouserBridge->stop();
+    setMouserBridgeActive(false);
     m_events->removeHandler(EventTypes::ServerMouserBridgeLine, this);
   }
   if (m_hidPassthrough) {
@@ -518,21 +519,81 @@ void Server::initMouserBridge()
   const bool gestureRelay = Settings::value(Settings::Server::MouserBridgeEnabled).toBool();
   const bool hidDecodeSync = Settings::value(Settings::Server::HidPassthroughEnabled).toBool();
   if (!gestureRelay && !hidDecodeSync) {
+    setMouserBridgeActive(false);
     return;
   }
   if (hidDecodeSync && !gestureRelay) {
     LOG_INFO("mouser bridge: starting for HID passthrough decode sync");
   }
+  if (gestureRelay && hidDecodeSync) {
+    LOG_WARN("mouser bridge: gesture relay and HID passthrough both enabled — prefer HID passthrough only");
+  }
   const int port = Settings::value(Settings::Server::MouserBridgePort).toInt();
   const std::string token = Settings::value(Settings::Server::MouserBridgeToken).toString().toStdString();
   auto bridge = std::make_unique<MouserBridge>(m_events, this, port, token);
   if (!bridge->start()) {
+    setMouserBridgeActive(false);
     return;
   }
   m_mouserBridge = std::move(bridge);
+  setMouserBridgeActive(true);
   m_events->addHandler(EventTypes::ServerMouserBridgeLine, this, [this](const auto &e) { handleMouserBridgeLine(e); });
   // Seed the focus state so Mouser knows it starts local.
   m_mouserBridge->notifyFocus(getName(m_active), m_active == m_primaryClient);
+}
+
+void Server::sendMouserLine(BaseClientProxy *client, const std::string &line)
+{
+  if (client != nullptr) {
+    client->sendMouserData(line);
+  }
+}
+
+void Server::setMouserBridgeActive(bool active)
+{
+  Settings::setValue(Settings::Server::MouserBridgeActive, active);
+}
+
+void Server::detachOtherVirtualHosts(const VirtualHostTracker *keep)
+{
+  const auto detachIfOther = [this, keep](VirtualHostTracker &tracker) {
+    if (&tracker != keep && tracker.host() != nullptr) {
+      tracker.detach([this](BaseClientProxy *client, const std::string &payload) { sendMouserLine(client, payload); });
+      tracker.setConnectLine({});
+    }
+  };
+  detachIfOther(m_mouserVirtualHostTracker);
+  detachIfOther(m_hidVirtualHostTracker);
+}
+
+void Server::virtualHostAttachIfRemote(VirtualHostTracker &tracker, const std::string &connectPayload)
+{
+  detachOtherVirtualHosts(&tracker);
+  if (m_active != m_primaryClient) {
+    virtualHostOnFocusChange(tracker, m_active, connectPayload);
+  }
+}
+
+void Server::virtualHostDetach(
+    VirtualHostTracker &tracker, const std::string &disconnectLine, const bool clearCachedLine
+)
+{
+  if (clearCachedLine) {
+    tracker.setConnectLine({});
+  }
+  tracker.detach(
+      [this](BaseClientProxy *client, const std::string &payload) { sendMouserLine(client, payload); }, disconnectLine
+  );
+}
+
+void Server::virtualHostOnFocusChange(
+    VirtualHostTracker &tracker, BaseClientProxy *dst, const std::string &connectPayload
+)
+{
+  tracker.onFocusChange(
+      dst, m_primaryClient,
+      [this](BaseClientProxy *client, const std::string &payload) { sendMouserLine(client, payload); }, connectPayload
+  );
 }
 
 void Server::handleMouserBridgeLine(const Event &event)
@@ -551,24 +612,13 @@ void Server::handleMouserBridgeLine(const Event &event)
   const QString type = doc.object()[QStringLiteral("type")].toString();
 
   if (type == QStringLiteral("connect")) {
-    // Cache the device identity so it can be replayed to whichever client
-    // gains focus later, then connect it on the current remote host.
     m_mouserVirtualHostTracker.setConnectLine(line);
-    if (m_active != m_primaryClient) {
-      const auto sendMouser = [](BaseClientProxy *client, const std::string &payload) {
-        client->sendMouserData(payload);
-      };
-      m_mouserVirtualHostTracker.onFocusChange(m_active, m_primaryClient, sendMouser, line);
-    }
+    virtualHostAttachIfRemote(m_mouserVirtualHostTracker, line);
     return;
   }
 
   if (type == QStringLiteral("disconnect")) {
-    m_mouserVirtualHostTracker.clearConnectLine();
-    const auto sendMouser = [](BaseClientProxy *client, const std::string &payload) {
-      client->sendMouserData(payload);
-    };
-    m_mouserVirtualHostTracker.detach(sendMouser, line);
+    virtualHostDetach(m_mouserVirtualHostTracker, line);
     return;
   }
 
@@ -590,7 +640,7 @@ void Server::handleMouserBridgeLine(const Event &event)
   if (type == QStringLiteral("event") || type == QStringLiteral("report")) {
     // Decoded events and raw HID++ frames both follow focus: relay only to
     // the client that currently hosts the virtual device.
-    if (m_mouserVirtualHostTracker.relaysTo(m_active)) {
+    if (m_mouserVirtualHostTracker.hostsActiveClient(m_active)) {
       m_active->sendMouserData(line);
     }
     return;
@@ -604,10 +654,7 @@ void Server::updateMouserVirtualHost(BaseClientProxy *dst)
   if (!m_mouserBridge) {
     return;
   }
-  const auto sendMouser = [](BaseClientProxy *client, const std::string &payload) {
-    client->sendMouserData(payload);
-  };
-  m_mouserVirtualHostTracker.onFocusChange(dst, m_primaryClient, sendMouser);
+  virtualHostOnFocusChange(m_mouserVirtualHostTracker, dst);
   m_mouserBridge->notifyFocus(getName(dst), dst == m_primaryClient);
 }
 
@@ -638,33 +685,19 @@ void Server::handleHidPassthroughEvent(const Event &event)
 
   switch (data->kind()) {
   case Kind::Attach:
-    // Cache the device identity so it can be replayed to whichever client
-    // gains focus later, then connect it on the current remote host.
     m_hidVirtualHostTracker.setConnectLine(data->payload());
-    if (m_active != m_primaryClient) {
-      const auto sendMouser = [](BaseClientProxy *client, const std::string &payload) {
-        client->sendMouserData(payload);
-      };
-      m_hidVirtualHostTracker.onFocusChange(m_active, m_primaryClient, sendMouser, hidConnectLineForClient());
-    }
+    virtualHostAttachIfRemote(m_hidVirtualHostTracker, hidConnectLineForClient());
     break;
 
   case Kind::Detach:
-    m_hidVirtualHostTracker.clearConnectLine();
     m_hidDecodeCache = QJsonObject();
     m_hidSeizeDeferred = false;
-    {
-      const auto sendMouser = [](BaseClientProxy *client, const std::string &payload) {
-        client->sendMouserData(payload);
-      };
-      m_hidVirtualHostTracker.detach(sendMouser, data->payload());
-    }
+    virtualHostDetach(m_hidVirtualHostTracker, data->payload());
     break;
 
   case Kind::Frame:
     maybeCompleteDeferredHidSeize();
-    // Frames go only to the client currently hosting the device.
-    if (m_hidVirtualHostTracker.relaysTo(m_active)) {
+    if (m_hidVirtualHostTracker.hostsActiveClient(m_active)) {
       m_active->sendHidFrame(data->deviceId(), data->payload());
     }
     break;
@@ -677,12 +710,9 @@ void Server::updateHidVirtualHost(BaseClientProxy *dst)
     return;
   }
   const bool dstIsPrimary = (dst == m_primaryClient);
-  const auto sendMouser = [](BaseClientProxy *client, const std::string &payload) {
-    client->sendMouserData(payload);
-  };
   const std::string connectLine =
       (!dstIsPrimary && m_hidVirtualHostTracker.hasConnectLine()) ? hidConnectLineForClient() : std::string{};
-  m_hidVirtualHostTracker.onFocusChange(dst, m_primaryClient, sendMouser, connectLine);
+  virtualHostOnFocusChange(m_hidVirtualHostTracker, dst, connectLine);
 
   // Defer vendor-interface seize while awaiting decode from host Mouser so
   // feat_idx can be discovered before the device is pulled away.
@@ -714,7 +744,7 @@ void Server::applyHidDecodeAvailable()
     LOG_INFO("hid passthrough: decode received, seizing vendor interface");
   }
 
-  if (!m_hidVirtualHostTracker.relaysTo(m_active) || !m_hidVirtualHostTracker.hasConnectLine()) {
+  if (!m_hidVirtualHostTracker.hostsActiveClient(m_active) || !m_hidVirtualHostTracker.hasConnectLine()) {
     return;
   }
 
@@ -2290,6 +2320,9 @@ void Server::forceLeaveClient(const BaseClientProxy *client)
 
     // cut over
     m_active = m_primaryClient;
+
+    updateMouserVirtualHost(m_active);
+    updateHidVirtualHost(m_active);
 
     // enter new screen (unless we already have because of the
     // screen saver)

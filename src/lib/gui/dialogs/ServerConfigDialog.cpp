@@ -13,6 +13,7 @@
 #include "common/NetworkProtocol.h"
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
+#include "common/SharingConstants.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
@@ -95,17 +96,24 @@ void ServerConfigDialog::accept()
   const bool hidPassthrough = ui->groupHidPassthrough->isChecked();
   const bool gestureShare = ui->groupGestureSharing->isChecked();
   const auto sharingSecret = ui->lineGestureSecret->text();
-  auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
-  if (hidDevices.isEmpty()) {
-    hidDevices = QStringLiteral("046D:*");
+  const auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
+
+  if (hidPassthrough && hidDevices.isEmpty()) {
+    QMessageBox::warning(
+        this, tr("HID passthrough"),
+        tr("Enter at least one device selector (for example %1) before enabling HID passthrough.")
+            .arg(QString::fromUtf8(deskflow::sharing::kHidDevicesPlaceholder))
+    );
+    return;
   }
+
+  // Fork note: the server Sharing tab also writes client/* keys so single-machine
+  // server+client roles stay in sync. Split-role deployments should configure
+  // client settings separately on each machine.
   Settings::setValue(Settings::Server::HidPassthroughEnabled, hidPassthrough);
   Settings::setValue(Settings::Server::HidPassthroughDevices, hidDevices);
-  Settings::setValue(Settings::Server::MouserBridgeEnabled, gestureShare);
+  Settings::setValue(Settings::Server::MouserBridgeEnabled, gestureShare || hidPassthrough);
   Settings::setValue(Settings::Client::MouserEnabled, hidPassthrough || gestureShare);
-  if (hidPassthrough) {
-    Settings::setValue(Settings::Client::HidConsumer, QStringLiteral("mouser"));
-  }
   Settings::setValue(Settings::Server::MouserBridgeToken, sharingSecret);
   Settings::setValue(Settings::Client::MouserToken, sharingSecret);
 
@@ -484,9 +492,10 @@ void ServerConfigDialog::loadFromConfig()
   m_sharingSecret = Settings::value(Settings::Server::MouserBridgeToken).toString();
   ui->groupHidPassthrough->setChecked(m_hidPassthroughEnabled);
   ui->groupGestureSharing->setChecked(m_gestureShareEnabled && !m_hidPassthroughEnabled);
-  ui->lineHidPassthroughDevices->setText(
-      m_hidPassthroughDevices.isEmpty() ? QStringLiteral("046D:*") : m_hidPassthroughDevices
+  ui->lineHidPassthroughDevices->setPlaceholderText(
+      QString::fromUtf8(deskflow::sharing::kHidDevicesPlaceholder)
   );
+  ui->lineHidPassthroughDevices->setText(m_hidPassthroughDevices);
   ui->lineGestureSecret->setText(m_sharingSecret);
   updateSharingControls();
 }
@@ -525,13 +534,9 @@ void ServerConfigDialog::onGestureSharingToggled(bool enabled)
 
 bool ServerConfigDialog::isSharingModified() const
 {
-  auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
-  if (hidDevices.isEmpty()) {
-    hidDevices = QStringLiteral("046D:*");
-  }
-  const auto loadedDevices = m_hidPassthroughDevices.isEmpty() ? QStringLiteral("046D:*") : m_hidPassthroughDevices;
+  const auto hidDevices = ui->lineHidPassthroughDevices->text().trimmed();
   return ui->groupHidPassthrough->isChecked() != m_hidPassthroughEnabled ||
-         ui->groupGestureSharing->isChecked() != m_gestureShareEnabled || hidDevices != loadedDevices ||
+         ui->groupGestureSharing->isChecked() != m_gestureShareEnabled || hidDevices != m_hidPassthroughDevices ||
          ui->lineGestureSecret->text() != m_sharingSecret;
 }
 

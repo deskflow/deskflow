@@ -189,6 +189,34 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Utilizar un tiempo de reconexión dinámico basado en los intentos de conexión</translation>
     </message>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;haring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receive shared device controls (Mouser)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When enabled, Deskflow forwards gesture data from the server to the local Mouser app on this computer. Enable on every client that should run shared Logitech controls.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shared secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine&apos;s Mouser settings.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HID passthrough and the legacy Mouser bridge are configured on the server in Server Configuration → Sharing.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
