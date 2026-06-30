@@ -84,6 +84,8 @@ jobs:
     needs: lint-clang
     name: ${{ matrix.target.name }}
     runs-on: ${{ matrix.target.runs-on }}
+    permissions:
+      contents: write
     container: ${{ matrix.target.container }}
     timeout-minutes: ${{ matrix.target.timeout }}
     strategy:
@@ -315,10 +317,11 @@ jobs:
 
       - name: Update Development Documentation
         if: matrix.target.like == 'arch' && github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@v4.8.0
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages
-          folder: build/docs/dev/html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/docs/dev/html
+          force_orphan: true
 
       - name: Upload
         uses: actions/upload-artifact@v7
