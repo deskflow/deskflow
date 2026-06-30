@@ -14,9 +14,11 @@
 ClientConfigDialog::ClientConfigDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ClientConfigDialog)
 {
   ui->setupUi(this);
+  ui->tabWidget->setCurrentIndex(0);
   updateText();
   initConnections();
   load();
+  updateSharingControls();
   setButtonBoxEnabledButtons();
 }
 
@@ -60,6 +62,14 @@ void ClientConfigDialog::initConnections() const
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->cbXScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbXScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(ui->groupMouserClient, &QGroupBox::toggled, this, &ClientConfigDialog::onMouserClientToggled);
+  connect(ui->lineMouserToken, &QLineEdit::textChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+}
+
+bool ClientConfigDialog::isSharingModified() const
+{
+  return ui->groupMouserClient->isChecked() != m_mouserEnabled ||
+         ui->lineMouserToken->text() != m_mouserToken;
 }
 
 bool ClientConfigDialog::isModified() const
@@ -70,7 +80,8 @@ bool ClientConfigDialog::isModified() const
          (ui->cbYScrollInvert->isChecked() != Settings::value(Settings::Client::InvertYScroll).toBool()) ||
          (ui->sbYScrollScale->value() != Settings::value(Settings::Client::YScrollScale).toDouble()) ||
          (ui->cbXScrollInvert->isChecked() != Settings::value(Settings::Client::InvertXScroll).toBool()) ||
-         (ui->sbXScrollScale->value() != Settings::value(Settings::Client::XScrollScale).toDouble());
+         (ui->sbXScrollScale->value() != Settings::value(Settings::Client::XScrollScale).toDouble()) ||
+         isSharingModified();
 }
 
 bool ClientConfigDialog::isDefault() const
@@ -81,7 +92,8 @@ bool ClientConfigDialog::isDefault() const
          (ui->cbYScrollInvert->isChecked() == Settings::defaultValue(Settings::Client::InvertYScroll).toBool()) &&
          (ui->sbYScrollScale->value() == Settings::defaultValue(Settings::Client::YScrollScale).toDouble()) &&
          (ui->cbXScrollInvert->isChecked() == Settings::defaultValue(Settings::Client::InvertXScroll).toBool()) &&
-         (ui->sbXScrollScale->value() == Settings::defaultValue(Settings::Client::XScrollScale).toDouble());
+         (ui->sbXScrollScale->value() == Settings::defaultValue(Settings::Client::XScrollScale).toDouble()) &&
+         !ui->groupMouserClient->isChecked() && ui->lineMouserToken->text().isEmpty();
 }
 
 void ClientConfigDialog::setButtonBoxEnabledButtons() const
@@ -100,6 +112,12 @@ void ClientConfigDialog::load()
   ui->sbYScrollScale->setValue(Settings::value(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::value(Settings::Client::InvertXScroll).toBool());
   ui->sbXScrollScale->setValue(Settings::value(Settings::Client::XScrollScale).toDouble());
+
+  m_mouserEnabled = Settings::value(Settings::Client::MouserEnabled).toBool();
+  m_mouserToken = Settings::value(Settings::Client::MouserToken).toString();
+  ui->groupMouserClient->setChecked(m_mouserEnabled);
+  ui->lineMouserToken->setText(m_mouserToken);
+  updateSharingControls();
 }
 
 void ClientConfigDialog::resetToDefault()
@@ -110,6 +128,12 @@ void ClientConfigDialog::resetToDefault()
   ui->sbYScrollScale->setValue(Settings::defaultValue(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::defaultValue(Settings::Client::InvertXScroll).toBool());
   ui->sbXScrollScale->setValue(Settings::defaultValue(Settings::Client::XScrollScale).toDouble());
+
+  m_mouserEnabled = false;
+  m_mouserToken.clear();
+  ui->groupMouserClient->setChecked(false);
+  ui->lineMouserToken->clear();
+  updateSharingControls();
 }
 
 void ClientConfigDialog::save()
@@ -120,5 +144,21 @@ void ClientConfigDialog::save()
   Settings::setValue(Settings::Client::YScrollScale, ui->sbYScrollScale->value());
   Settings::setValue(Settings::Client::InvertXScroll, ui->cbXScrollInvert->isChecked());
   Settings::setValue(Settings::Client::XScrollScale, ui->sbXScrollScale->value());
+  Settings::setValue(Settings::Client::MouserEnabled, ui->groupMouserClient->isChecked());
+  Settings::setValue(Settings::Client::MouserToken, ui->lineMouserToken->text());
   QDialog::accept();
+}
+
+void ClientConfigDialog::updateSharingControls()
+{
+  const bool writable = Settings::isWritable();
+  const bool sharingEnabled = ui->groupMouserClient->isChecked();
+  ui->groupMouserClient->setEnabled(writable);
+  ui->lineMouserToken->setEnabled(writable && sharingEnabled);
+}
+
+void ClientConfigDialog::onMouserClientToggled(bool /*enabled*/)
+{
+  updateSharingControls();
+  setButtonBoxEnabledButtons();
 }

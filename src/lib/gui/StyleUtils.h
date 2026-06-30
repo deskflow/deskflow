@@ -56,6 +56,31 @@ inline void updateIconTheme()
   QIcon::setFallbackSearchPaths({iconRoot});
 }
 
+inline QIcon themedIcon(const QString &iconName)
+{
+  const auto theme = iconMode();
+  const auto base = QStringLiteral(":/icons/%1-%2").arg(kAppId, theme);
+  const QStringList paths = {
+      QStringLiteral("%1/devices/64/%2.svg").arg(base, iconName),
+      QStringLiteral("%1/places/64/%2.svg").arg(base, iconName),
+      QStringLiteral("%1/apps/64/%2.svg").arg(base, iconName),
+      QStringLiteral("%1/actions/32/%2.svg").arg(base, iconName),
+      QStringLiteral("%1/status/64/%2.svg").arg(base, iconName),
+  };
+  for (const auto &path : paths) {
+    const QIcon direct(path);
+    if (!direct.isNull()) {
+      return direct;
+    }
+  }
+  return QIcon::fromTheme(iconName);
+}
+
+inline QPixmap themedPixmap(const QString &iconName, int size)
+{
+  return themedIcon(iconName).pixmap(size, size);
+}
+
 #if defined(Q_OS_MACOS)
 /**
  * @brief Build a menu-bar tray icon from bundled SVG resources.

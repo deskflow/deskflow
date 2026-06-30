@@ -17,6 +17,8 @@
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
 
+#include "gui/StyleUtils.h"
+
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSignalBlocker>
@@ -38,10 +40,10 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   loadFromConfig();
 
-  ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
+  ui->lblRemoveScreen->setPixmap(deskflow::gui::themedPixmap(QStringLiteral("user-trash"), 64));
   ui->lblNewScreen->setEnabled(!model().isFull());
-  ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
-  ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->lblNewScreen->setPixmap(deskflow::gui::themedPixmap(QStringLiteral("video-display"), 64));
+  ui->btnBrowseConfigFile->setIcon(deskflow::gui::themedIcon(QStringLiteral("document-open")));
 
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
@@ -453,6 +455,12 @@ void ServerConfigDialog::loadFromConfig()
     ui->listHotkeys->addItem(hotkey.text());
 
   ui->screenSetupView->setModel(&m_screenSetupModel);
+
+  for (auto &screen : serverConfig().screens()) {
+    if (!screen.isNull()) {
+      screen.refreshPixmap();
+    }
+  }
 
   auto &screens = serverConfig().screens();
   auto server = std::ranges::find_if(screens, [this](const Screen &screen) {

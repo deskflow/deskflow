@@ -36,8 +36,10 @@ class Screen : public ScreenConfig
 
   friend QDataStream &operator>>(QDataStream &inStream, Screen &screen)
   {
-    return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >> screen.m_Aliases >> screen.m_Modifiers >>
-           screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer;
+    inStream >> screen.m_Name >> screen.m_SwitchCornerSize >> screen.m_Aliases >> screen.m_Modifiers >>
+        screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer;
+    screen.refreshPixmap();
+    return inStream;
   }
 
 public:
@@ -112,6 +114,8 @@ public:
     m_isServer = true;
   }
 
+  void refreshPixmap();
+
   bool operator==(const Screen &screen) const;
 
 protected:
@@ -157,7 +161,7 @@ protected:
   }
 
 private:
-  QPixmap m_Pixmap = QIcon::fromTheme("video-display").pixmap(QSize(96, 96));
+  QPixmap m_Pixmap;
   QString m_Name = {};
   QStringList m_Aliases = {};
   QList<int> m_Modifiers = {0, 1, 2, 3, 4, 5, 6};

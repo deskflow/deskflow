@@ -8,15 +8,25 @@
 
 #include "Screen.h"
 #include "config/ScreenConfig.h"
+#include "gui/StyleUtils.h"
+
 #include <common/Settings.h>
 
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
+using deskflow::gui::themedPixmap;
+
 Screen::Screen(const QString &name)
 {
+  refreshPixmap();
   setName(name);
+}
+
+void Screen::refreshPixmap()
+{
+  m_Pixmap = themedPixmap(QStringLiteral("video-display"), 96);
 }
 
 void Screen::loadSettings(QSettingsProxy &settings)
@@ -26,6 +36,8 @@ void Screen::loadSettings(QSettingsProxy &settings)
 
   if (name.isEmpty())
     return;
+
+  refreshPixmap();
 
   setSwitchCornerSize(settings.value("switchCornerSize").toInt());
 

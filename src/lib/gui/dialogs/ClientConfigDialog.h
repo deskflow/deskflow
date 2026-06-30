@@ -72,5 +72,11 @@ private:
    */
   void save();
 
+  void updateSharingControls();
+  void onMouserClientToggled(bool enabled);
+  bool isSharingModified() const;
+
   Ui::ClientConfigDialog *ui = nullptr;
+  bool m_mouserEnabled = false;
+  QString m_mouserToken;
 };

@@ -1207,6 +1207,46 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">启动时启用锁定到计算机</translation>
     </message>
+    <message>
+        <source>S&amp;haring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share Logitech controls (HID passthrough)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>When the cursor is on another screen, takes the Logitech vendor interface away from Logitech Options+ on this computer and forwards raw HID++ reports to the focused computer. Requires the Mouser app on each computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;Vendor:product selectors for the mice to pass through, comma-separated.&lt;br&gt;&lt;b&gt;046D:*&lt;/b&gt; matches all Logitech devices; &lt;b&gt;046D:B042&lt;/b&gt; pins one model.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>046D:*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Share device controls (legacy Mouser bridge)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alternative: Mouser on this computer reads gestures locally and relays them through Deskflow. Do not enable both sharing modes at once.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shared secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine&apos;s Mouser settings.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -1407,18 +1447,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished">使用高于 Info 级别的日志级别可能会影响性能。</translation>
     </message>
     <message>
-        <source>S&amp;haring</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shared secret</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine&apos;s Mouser settings.&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Login &amp;Window</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1460,34 +1488,6 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Could not update the login-window bridge: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Share Logitech controls (HID passthrough)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When the cursor is on another screen, takes the Logitech vendor interface away from Logitech Options+ on this computer and forwards raw HID++ reports to the focused computer. Requires the Mouser app on each computer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Devices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;Vendor:product selectors for the mice to pass through, comma-separated.&lt;br&gt;&lt;b&gt;046D:*&lt;/b&gt; matches all Logitech devices; &lt;b&gt;046D:B042&lt;/b&gt; pins one model.&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>046D:*</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Share device controls (legacy Mouser bridge)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alternative: Mouser on this computer reads gestures locally and relays them through Deskflow. Do not enable both sharing modes at once.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
