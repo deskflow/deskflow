@@ -1,10 +1,11 @@
 ---
 vgv_next:
-  skill: build
+  skill: done
   artifact: docs/plan/2026-06-30-feat-vscode-macos-deskflow-launcher-plan.md
 title: "feat: VS Code macOS launcher for Deskflow GUI and deskflow-core"
 type: feat
 date: 2026-06-30
+status: complete
 ---
 
 ## feat: VS Code macOS launcher for Deskflow GUI and deskflow-core — Standard

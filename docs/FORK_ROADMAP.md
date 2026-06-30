@@ -18,11 +18,15 @@ local `master` is current with upstream (merge `6afa46dca`).
 | Fleet install | `INSTALL.md`, `docs/building-signed.md` |
 | Local debug (VS Code / Cursor) | `docs/dev/MACOS_DEBUG.md` |
 | Consolidation plan | `docs/plan/2026-06-30-refactor-fork-consolidation-upstream-readiness-plan.md` |
+| Upstream RFC (coordination + HID) | `docs/rfc/2026-06-30-native-auto-switch-hid-passthrough-rfc.md` |
 
 ## Upstream PR stack
 
 Open an RFC **issue** on [deskflow/deskflow](https://github.com/deskflow/deskflow/issues)
 (Discussions are not enabled on the upstream repo) before large features.
+
+**RFC:** [deskflow#9913](https://github.com/deskflow/deskflow/issues/9913) — native auto-switch + HID passthrough  
+Local copy: `docs/rfc/2026-06-30-native-auto-switch-hid-passthrough-rfc.md`
 
 | PR | Branch | Scope | Status |
 |----|--------|-------|--------|
@@ -38,7 +42,7 @@ Open an RFC **issue** on [deskflow/deskflow](https://github.com/deskflow/deskflo
 | PR-7 | `feat/hid-passthrough-tier1` | HID seize + relay | Not started |
 | PR-8 | `feat/coordination-core` | Election + mesh + auto mode | Not started |
 | PR-9 | `feat/auto-mode-gui` | GUI auto-switch UI | Not started |
-| PR-10 | `feat/macos-onboarding` | Accessibility gate, SMAppService | Not started |
+| PR-10 | `feat/macos-onboarding` | Accessibility gate, SMAppService | **Open** — [deskflow#9912](https://github.com/deskflow/deskflow/pull/9912) |
 
 ### Fork-only (not targeted at upstream unless requested)
 
@@ -47,14 +51,14 @@ Open an RFC **issue** on [deskflow/deskflow](https://github.com/deskflow/deskflo
 - macOS Karabiner login bridge (`deskflow-vhid-bridge`)
 - Windows kernel vhid driver + UAC auto-elevate
 
-## Redundancy cleanup (planned)
+## Redundancy cleanup
 
-See consolidation plan Phase 3:
+Completed on fork `master` (2026-06-30):
 
-1. Extract `VirtualHostTracker` from `Server.cpp`
-2. Tier Mouser bridge as HID decode-sync helper only
-3. `HidConsumer` interface on client (decouple from Mouser JSON)
-4. Optional rename: macOS `deskflow-vhid-bridge` → `deskflow-login-bridge`
+1. ~~Extract `VirtualHostTracker` from `Server.cpp`~~ — done (`VirtualHostTracker.{h,cpp}`)
+2. ~~Tier Mouser bridge as HID decode-sync helper~~ — done (auto-start bridge when HID enabled)
+3. ~~`HidConsumer` interface on client~~ — done (`HidConsumer.{h,cpp}`, `MouserHidConsumer`)
+4. Optional rename: macOS `deskflow-vhid-bridge` → `deskflow-login-bridge` — **deferred** (fork-only, high churn)
 
 ## Superseded branches (safe to delete)
 

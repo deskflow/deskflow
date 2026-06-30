@@ -1955,7 +1955,7 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
   LOG_VERBOSE("mouse move on secondary: %+d,%+d", dx, dy);
 
-  // TODO: move this to client side and use a qt setting or cli arg instead of env var.
+  // Fork: env-var mouse multiplier; move to Settings when upstream accepts a setting.
   const static auto adjustEnv = "DESKFLOW_MOUSE_ADJUSTMENT";
   if (const char *envVal = std::getenv(adjustEnv); envVal) {
     try {

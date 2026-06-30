@@ -1,13 +1,19 @@
 ---
 vgv_next:
-  skill: build
+  skill: done
   artifact: docs/plan/2026-06-30-refactor-fork-consolidation-upstream-readiness-plan.md
 title: "refactor: fork consolidation and upstream readiness"
 type: refactor
 date: 2026-06-30
+status: complete
 ---
 
 ## refactor: fork consolidation and upstream readiness — Extensive
+
+> **Build status (2026-06-30):** Phases 0–3 complete on fork `master`. Phase 4 started:
+> upstream PRs [#9908–#9912](https://github.com/deskflow/deskflow/pulls/hughesyadaddy) open;
+> RFC [#9913](https://github.com/deskflow/deskflow/issues/9913). PR-6–9 blocked on maintainer
+> response. Phase 5 is ongoing weekly hygiene.
 
 ## Overview
 
