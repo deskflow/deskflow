@@ -233,7 +233,6 @@ void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std
 
 void Screen::keyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
 {
-  assert(!m_isPrimary);
   m_screen->fakeKeyRepeat(id, mask, count, button, lang);
 }
 

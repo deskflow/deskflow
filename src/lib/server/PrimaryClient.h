@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "coordination/CoordinationProtocol.h"
 #include "server/BaseClientProxy.h"
 
 namespace deskflow {
@@ -64,6 +65,12 @@ public:
   Undoes whatever \c fakeInputBegin() did.
   */
   void fakeInputEnd();
+
+  //! Inject a keyboard event relayed from a fleet peer onto the primary screen.
+  void injectForwardedKey(
+      deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
+      const std::string &lang
+  );
 
   //@}
   //! @name accessors

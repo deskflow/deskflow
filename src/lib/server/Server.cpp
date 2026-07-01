@@ -1715,6 +1715,10 @@ void Server::relayForwardedKey(
 )
 {
   using deskflow::coordination::Message;
+  if (m_active == m_primaryClient) {
+    m_primaryClient->injectForwardedKey(phase, id, mask, button, lang);
+    return;
+  }
   switch (phase) {
   case Message::KeyPhase::Up:
     onKeyUp(id, mask, button, nullptr);

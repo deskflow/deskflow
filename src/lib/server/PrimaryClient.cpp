@@ -141,13 +141,32 @@ void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 
 void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &)
 {
-  if (m_fakeInputCount > 0) {
-    // XXX -- don't forward keystrokes to primary screen for now
-    (void)key;
-    (void)mask;
-    (void)button;
-    //        m_screen->keyDown(key, mask, button);
+  // Local hardware keys already reach the OS via KeyState capture. This path
+  // is only hit when the server routes KeyStateKeyDown to m_active; do not
+  // re-synthesize or keys would double-type on the primary screen.
+  (void)key;
+  (void)mask;
+  (void)button;
+}
+
+void PrimaryClient::injectForwardedKey(
+    deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
+    const std::string &lang
+)
+{
+  fakeInputBegin();
+  switch (phase) {
+  case deskflow::coordination::Message::KeyPhase::Up:
+    m_screen->keyUp(id, mask, button);
+    break;
+  case deskflow::coordination::Message::KeyPhase::Repeat:
+    m_screen->keyRepeat(id, mask, 1, button, lang);
+    break;
+  default:
+    m_screen->keyDown(id, mask, button, lang);
+    break;
   }
+  fakeInputEnd();
 }
 
 void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const std::string &)
@@ -157,13 +176,9 @@ void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const 
 
 void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-  if (m_fakeInputCount > 0) {
-    // XXX -- don't forward keystrokes to primary screen for now
-    (void)key;
-    (void)mask;
-    (void)button;
-    //        m_screen->keyUp(key, mask, button);
-  }
+  (void)key;
+  (void)mask;
+  (void)button;
 }
 
 void PrimaryClient::mouseDown(ButtonID)
