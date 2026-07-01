@@ -46,14 +46,6 @@ void ClientProxy::sendMouserData(const std::string &line)
   ProtocolUtil::writef(getStream(), kMsgDMouserData, &line);
 }
 
-void ClientProxy::sendHidFrame(uint16_t deviceId, const std::string &bytes)
-{
-  LOG_VERBOSE(
-      "send hid frame to \"%s\" (device %u, %d bytes)", getName().c_str(), deviceId, static_cast<int>(bytes.size())
-  );
-  ProtocolUtil::writef(getStream(), kMsgDHidReport, deviceId, &bytes);
-}
-
 void *ClientProxy::getEventTarget() const
 {
   return static_cast<IScreen *>(const_cast<ClientProxy *>(this));

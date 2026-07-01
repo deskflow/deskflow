@@ -19,6 +19,7 @@ namespace deskflow::gui {
 namespace {
 
 const auto kAgentLabel = QStringLiteral("org.deskflow.vhid-bridge");
+const auto kBridgeLogPath = QStringLiteral("/var/log/deskflow-vhid-bridge.log");
 // Retired pre-native-mode login-window coordinator. Enabling the bridge
 // removes it so the two never both run at the login screen.
 const auto kLegacyAgentPlist = QStringLiteral("/Library/LaunchAgents/com.kvm.autoswitch.loginwindow.plist");
@@ -211,6 +212,34 @@ bool LoginBridgeManager::apply(bool enabled, double scale, QString *error)
                      "rm -f '%3'; pkill -f '.kvm-autoswitch/coordinator.py' || true")
           .arg(staged.fileName(), agentPlistPath(), kLegacyAgentPlist);
   return runPrivileged(command, error);
+}
+
+bool LoginBridgeManager::installedAgentMatchesCurrentSettings(double scale)
+{
+  if (!agentInstalled()) {
+    return false;
+  }
+  QFile onDisk(agentPlistPath());
+  if (!onDisk.open(QIODevice::ReadOnly)) {
+    return false;
+  }
+  return QString::fromUtf8(onDisk.readAll()).simplified() == plistContent(scale).simplified();
+}
+
+QString LoginBridgeManager::recentLogText(int maxLines)
+{
+  if (maxLines < 1) {
+    maxLines = 1;
+  }
+  QFile log(kBridgeLogPath);
+  if (!log.open(QIODevice::ReadOnly)) {
+    return QObject::tr("(no bridge log yet — enable the agent, then logout or restart to test)");
+  }
+  const auto lines = QString::fromUtf8(log.readAll()).split('\n', Qt::SkipEmptyParts);
+  if (lines.isEmpty()) {
+    return QObject::tr("(bridge log is empty)");
+  }
+  return lines.mid(qMax(0, lines.size() - maxLines)).join('\n');
 }
 
 } // namespace deskflow::gui

@@ -67,6 +67,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
 #ifdef Q_OS_MAC
   ui->lblBridgeStatus->setText(LoginBridgeManager::statusText());
   ui->btnGetKarabinerDriver->setVisible(!LoginBridgeManager::driverInstalled());
+  updateLoginBridgePanel();
 #else
   // The login-window bridge is a macOS-only concept (Karabiner DriverKit).
   ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabLoginBridge));
@@ -94,7 +95,14 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
 
   setButtonBoxEnabledButtons();
   initConnections();
-  connect(ui->tabWidget, &QTabWidget::currentChanged, this, [this](int) { updateDialogHeight(); });
+  connect(ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
+    updateDialogHeight();
+#ifdef Q_OS_MAC
+    if (ui->tabWidget->widget(index) == ui->tabLoginBridge) {
+      updateLoginBridgePanel();
+    }
+#endif
+  });
 }
 
 void SettingsDialog::changeEvent(QEvent *e)
@@ -158,6 +166,10 @@ void SettingsDialog::initConnections() const
   connect(ui->btnGetKarabinerDriver, &QPushButton::clicked, this, [] {
     QDesktopServices::openUrl(QUrl(deskflow::gui::LoginBridgeManager::driverDownloadUrl()));
   });
+  connect(ui->btnRefreshBridgeLog, &QPushButton::clicked, this, &SettingsDialog::updateLoginBridgePanel);
+  connect(ui->btnReapplyLoginBridge, &QPushButton::clicked, this, &SettingsDialog::reapplyLoginBridgeAgent);
+  connect(ui->groupLoginBridge, &QGroupBox::toggled, this, &SettingsDialog::updateLoginBridgePanel);
+  connect(ui->sbBridgeScale, &QDoubleSpinBox::valueChanged, this, &SettingsDialog::updateLoginBridgePanel);
 #endif
   connect(ui->lineLogFilename, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineTlsCertPath, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
@@ -281,7 +293,10 @@ void SettingsDialog::accept()
   const double bridgeScale = ui->sbBridgeScale->value();
   const bool bridgeScaleChanged =
       !qFuzzyCompare(bridgeScale, Settings::value(Settings::Coordination::LoginBridgeScale).toDouble());
-  if (bridgeWanted != LoginBridgeManager::agentInstalled() || (bridgeWanted && bridgeScaleChanged)) {
+  const bool bridgeConfigStale =
+      bridgeWanted && LoginBridgeManager::agentInstalled()
+      && !LoginBridgeManager::installedAgentMatchesCurrentSettings(bridgeScale);
+  if (bridgeWanted != LoginBridgeManager::agentInstalled() || (bridgeWanted && (bridgeScaleChanged || bridgeConfigStale))) {
     QString bridgeError;
     if (!LoginBridgeManager::apply(bridgeWanted, bridgeScale, &bridgeError)) {
       QMessageBox::warning(
@@ -324,6 +339,9 @@ void SettingsDialog::loadFromConfig()
 
   ui->groupLoginBridge->setChecked(Settings::value(Settings::Coordination::LoginBridgeEnabled).toBool());
   ui->sbBridgeScale->setValue(Settings::value(Settings::Coordination::LoginBridgeScale).toDouble());
+#ifdef Q_OS_MAC
+  updateLoginBridgePanel();
+#endif
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
@@ -431,6 +449,37 @@ void SettingsDialog::updateDialogHeight()
   ui->tabWidget->setCurrentIndex(current);
   setFixedHeight(maxHeight);
 }
+
+#ifdef Q_OS_MAC
+void SettingsDialog::updateLoginBridgePanel()
+{
+  using deskflow::gui::LoginBridgeManager;
+
+  ui->lblBridgeStatus->setText(LoginBridgeManager::statusText());
+  const bool enabled = ui->groupLoginBridge->isChecked();
+  const double scale = ui->sbBridgeScale->value();
+  const bool stale =
+      enabled && LoginBridgeManager::agentInstalled() && !LoginBridgeManager::installedAgentMatchesCurrentSettings(scale);
+  ui->lblBridgeStaleWarning->setVisible(stale);
+  ui->btnReapplyLoginBridge->setVisible(stale);
+  ui->plainBridgeLog->setPlainText(LoginBridgeManager::recentLogText());
+}
+
+void SettingsDialog::reapplyLoginBridgeAgent()
+{
+  using deskflow::gui::LoginBridgeManager;
+
+  QString bridgeError;
+  const double bridgeScale = ui->sbBridgeScale->value();
+  if (!LoginBridgeManager::apply(ui->groupLoginBridge->isChecked(), bridgeScale, &bridgeError)) {
+    QMessageBox::warning(
+        this, tr("Login Window Bridge"), tr("Could not update the login-window bridge: %1").arg(bridgeError)
+    );
+  }
+  ui->groupLoginBridge->setChecked(LoginBridgeManager::agentInstalled());
+  updateLoginBridgePanel();
+}
+#endif
 
 void SettingsDialog::updateControls()
 {

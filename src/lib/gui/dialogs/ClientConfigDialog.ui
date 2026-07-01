@@ -240,7 +240,7 @@
        <item>
         <widget class="QLabel" name="lblSharingServerNote">
          <property name="text">
-          <string>HID passthrough and the legacy Mouser bridge are configured on the server in Server Configuration → Sharing.</string>
+          <string>Device control sharing is configured on the server in Server Configuration → Sharing.</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

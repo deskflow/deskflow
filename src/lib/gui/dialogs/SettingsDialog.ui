@@ -973,6 +973,76 @@
         </layout>
        </item>
        <item>
+        <widget class="QLabel" name="lblBridgeStaleWarning">
+         <property name="text">
+          <string>The installed login agent is out of date (peers, port, or sensitivity changed). Click Re-apply agent, then logout or restart.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnReapplyLoginBridge">
+         <property name="text">
+          <string>Re-apply login agent</string>
+         </property>
+         <property name="toolTip">
+          <string>Reinstall the LaunchAgent with current peers, port, and sensitivity (admin prompt).</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayoutBridgeLog">
+         <item>
+          <widget class="QLabel" name="lblBridgeLogCaption">
+           <property name="text">
+            <string>Bridge log:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnRefreshBridgeLog">
+           <property name="text">
+            <string>Refresh</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerBridgeLog">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainBridgeLog">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="maximumBlockCount">
+          <number>50</number>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>120</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacerLoginBridge">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>

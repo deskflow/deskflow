@@ -214,7 +214,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>HID passthrough and the legacy Mouser bridge are configured on the server in Server Configuration → Sharing.</source>
+        <source>Device control sharing is configured on the server in Server Configuration → Sharing.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -902,6 +902,14 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>could not stage the agent plist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>(no bridge log yet — enable the agent, then logout or restart to test)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(bridge log is empty)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>
@@ -1223,14 +1231,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>設定ファイルのパス</translation>
     </message>
     <message>
-        <source>HID passthrough</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enter at least one device selector (for example %1) before enabling HID passthrough.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
         <translation>%1 設定 (*.conf);;すべてのファイル (*.*)</translation>
@@ -1248,31 +1248,7 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Share Logitech controls (HID passthrough)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>When the cursor is on another screen, takes the Logitech vendor interface away from Logitech Options+ on this computer and forwards raw HID++ reports to the focused computer. Requires the Mouser app on each computer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Devices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;Vendor:product selectors for the mice to pass through, comma-separated.&lt;br&gt;&lt;b&gt;046D:*&lt;/b&gt; matches all Logitech devices; &lt;b&gt;046D:B042&lt;/b&gt; pins one model.&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>046D:*</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Share device controls (legacy Mouser bridge)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alternative: Mouser on this computer reads gestures locally and relays them through Deskflow. Do not enable both sharing modes at once.</source>
+        <source>Share device controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1281,6 +1257,10 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>&lt;html&gt;A password shared between Deskflow and the Mouser app on this computer. Use the &lt;b&gt;same&lt;/b&gt; value on every computer and in each machine&apos;s Mouser settings.&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mouser on this computer reads gestures locally and relays them through Deskflow. Requires the Mouser app on each computer.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1524,6 +1504,26 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Could not update the login-window bridge: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The installed login agent is out of date (peers, port, or sensitivity changed). Click Re-apply agent, then logout or restart.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Re-apply login agent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reinstall the LaunchAgent with current peers, port, and sensitivity (admin prompt).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bridge log:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

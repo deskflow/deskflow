@@ -85,6 +85,11 @@ private:
   /// @brief Resize the dialog to fit the active tab (tabs differ in height).
   void updateDialogHeight();
 
+#ifdef Q_OS_MAC
+  void updateLoginBridgePanel();
+  void reapplyLoginBridgeAgent();
+#endif
+
   bool m_interfaceSetOnLoad = false;
   std::unique_ptr<Ui::SettingsDialog> ui;
   const ServerConfig &m_serverConfig;

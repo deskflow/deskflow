@@ -24,8 +24,6 @@
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
-#include "server/HidPassthrough.h"
-#include "server/HidppProbe.h"
 #include "server/MouserBridge.h"
 #include "server/PrimaryClient.h"
 #include "server/VirtualHostTracker.h"
@@ -129,7 +127,6 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   });
 
   initMouserBridge();
-  initHidPassthrough();
 
   // add connection
   addClient(m_primaryClient);
@@ -158,10 +155,6 @@ Server::~Server()
     m_mouserBridge->stop();
     setMouserBridgeActive(false);
     m_events->removeHandler(EventTypes::ServerMouserBridgeLine, this);
-  }
-  if (m_hidPassthrough) {
-    m_hidPassthrough->stop();
-    m_events->removeHandler(EventTypes::ServerHidPassthroughEvent, this);
   }
 
   // remove event handlers and timers
@@ -506,7 +499,6 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     }
 
     updateMouserVirtualHost(m_active);
-    updateHidVirtualHost(m_active);
 
     auto *info = new Server::SwitchToScreenInfo(m_active->getName());
     m_events->addEvent(Event(EventTypes::ServerScreenSwitched, this, info));
@@ -517,21 +509,9 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
 
 void Server::initMouserBridge()
 {
-  const bool gestureRelay = Settings::value(Settings::Server::MouserBridgeEnabled).toBool();
-  const bool hidDecodeSync = Settings::value(Settings::Server::HidPassthroughEnabled).toBool();
-  if (!gestureRelay && !hidDecodeSync) {
+  if (!Settings::value(Settings::Server::MouserBridgeEnabled).toBool()) {
     setMouserBridgeActive(false);
     return;
-  }
-  if (hidDecodeSync && !gestureRelay) {
-    if (deskflow::server::hidppProbeCapable()) {
-      LOG_INFO("mouser bridge: decode-sync fallback (host HID++ probe preferred)");
-    } else {
-      LOG_INFO("mouser bridge: starting for HID passthrough decode sync");
-    }
-  }
-  if (gestureRelay && hidDecodeSync) {
-    LOG_WARN("mouser bridge: gesture relay and HID passthrough both enabled — prefer HID passthrough only");
   }
   const int port = Settings::value(Settings::Server::MouserBridgePort).toInt();
   const std::string token = Settings::value(Settings::Server::MouserBridgeToken).toString().toStdString();
@@ -561,14 +541,12 @@ void Server::setMouserBridgeActive(bool active)
 
 void Server::detachOtherVirtualHosts(const VirtualHostTracker *keep)
 {
-  const auto detachIfOther = [this, keep](VirtualHostTracker &tracker) {
-    if (&tracker != keep && tracker.host() != nullptr) {
-      tracker.detach([this](BaseClientProxy *client, const std::string &payload) { sendMouserLine(client, payload); });
-      tracker.setConnectLine({});
-    }
-  };
-  detachIfOther(m_mouserVirtualHostTracker);
-  detachIfOther(m_hidVirtualHostTracker);
+  if (keep != &m_mouserVirtualHostTracker && m_mouserVirtualHostTracker.host() != nullptr) {
+    m_mouserVirtualHostTracker.detach(
+        [this](BaseClientProxy *client, const std::string &payload) { sendMouserLine(client, payload); }
+    );
+    m_mouserVirtualHostTracker.setConnectLine({});
+  }
 }
 
 void Server::virtualHostAttachIfRemote(VirtualHostTracker &tracker, const std::string &connectPayload)
@@ -627,21 +605,6 @@ void Server::handleMouserBridgeLine(const Event &event)
     return;
   }
 
-  if (type == QStringLiteral("decode")) {
-    // Host Mouser publishes the live REPROG_V4 decode map while focus is
-    // local; merge it into HID passthrough connect lines for the remote.
-    const QJsonObject decode = doc.object()[QStringLiteral("decode")].toObject();
-    const auto featIdx = decode[QStringLiteral("feat_idx")];
-    const bool featOk = featIdx.isDouble()
-        ? featIdx.toInt() > 0
-        : (featIdx.isString() && !featIdx.toString().isEmpty());
-    if (!decode.isEmpty() && featOk) {
-      m_hidDecodeCache = decode;
-      applyHidDecodeAvailable();
-    }
-    return;
-  }
-
   if (type == QStringLiteral("event") || type == QStringLiteral("report")) {
     // Decoded events and raw HID++ frames both follow focus: relay only to
     // the client that currently hosts the virtual device.
@@ -661,171 +624,6 @@ void Server::updateMouserVirtualHost(BaseClientProxy *dst)
   }
   virtualHostOnFocusChange(m_mouserVirtualHostTracker, dst);
   m_mouserBridge->notifyFocus(getName(dst), dst == m_primaryClient);
-}
-
-void Server::initHidPassthrough()
-{
-  if (!Settings::value(Settings::Server::HidPassthroughEnabled).toBool()) {
-    return;
-  }
-  auto passthrough = std::make_unique<deskflow::server::HidPassthrough>(m_events, this);
-  if (!passthrough->start()) {
-    return;
-  }
-  m_hidPassthrough = std::move(passthrough);
-  m_events->addHandler(EventTypes::ServerHidPassthroughEvent, this, [this](const auto &e) {
-    handleHidPassthroughEvent(e);
-  });
-  // Seed the seize state: at server start the focus is local.
-  m_hidPassthrough->setFocusRemote(m_active != m_primaryClient);
-}
-
-void Server::handleHidPassthroughEvent(const Event &event)
-{
-  using Kind = deskflow::server::HidPassthroughEventData::Kind;
-  const auto *data = static_cast<deskflow::server::HidPassthroughEventData *>(event.getDataObject());
-  if (data == nullptr) {
-    return;
-  }
-
-  switch (data->kind()) {
-  case Kind::Attach:
-    m_hidVirtualHostTracker.setConnectLine(data->payload());
-    tryProbeHidDecodeFromConnectLine(data->payload());
-    virtualHostAttachIfRemote(m_hidVirtualHostTracker, hidConnectLineForClient());
-    break;
-
-  case Kind::Detach:
-    m_hidDecodeCache = QJsonObject();
-    m_hidSeizeDeferred = false;
-    virtualHostDetach(m_hidVirtualHostTracker, data->payload());
-    break;
-
-  case Kind::Frame:
-    maybeCompleteDeferredHidSeize();
-    if (m_hidVirtualHostTracker.hostsActiveClient(m_active)) {
-      m_active->sendHidFrame(data->deviceId(), data->payload());
-    }
-    break;
-  }
-}
-
-void Server::updateHidVirtualHost(BaseClientProxy *dst)
-{
-  if (!m_hidPassthrough) {
-    return;
-  }
-  const bool dstIsPrimary = (dst == m_primaryClient);
-  const std::string connectLine =
-      (!dstIsPrimary && m_hidVirtualHostTracker.hasConnectLine()) ? hidConnectLineForClient() : std::string{};
-  virtualHostOnFocusChange(m_hidVirtualHostTracker, dst, connectLine);
-
-  // Defer vendor-interface seize while awaiting decode from host Mouser so
-  // feat_idx can be discovered before the device is pulled away.
-  const bool remoteFocus = !dstIsPrimary;
-  const bool awaitDecode = remoteFocus && m_mouserBridge && m_hidDecodeCache.isEmpty();
-  if (awaitDecode) {
-    m_hidSeizeDeferred = true;
-    m_hidSeizeDeferStart = std::chrono::steady_clock::now();
-    LOG_INFO("hid passthrough: deferring seize until decode context arrives");
-  } else {
-    m_hidSeizeDeferred = false;
-  }
-
-  // Focus drives the seize: remote focus takes the vendor interface away
-  // from the host's own consumer; local focus returns it.
-  m_hidPassthrough->setFocusRemote(remoteFocus && !awaitDecode);
-}
-
-void Server::tryProbeHidDecodeFromConnectLine(const std::string &connectLine)
-{
-  if (!m_hidDecodeCache.isEmpty()) {
-    return;
-  }
-
-  const auto doc = QJsonDocument::fromJson(
-      QByteArray(connectLine.data(), static_cast<int>(connectLine.size()))
-  );
-  if (!doc.isObject()) {
-    return;
-  }
-
-  const QJsonObject device = doc.object()[QStringLiteral("device")].toObject();
-  const auto parseHex = [](const QString &text) -> uint16_t {
-    bool ok = false;
-    const uint value = text.toUInt(&ok, 0);
-    return ok ? static_cast<uint16_t>(value) : uint16_t{0};
-  };
-
-  uint16_t vid = parseHex(device[QStringLiteral("vendor_id")].toString());
-  uint16_t pid = parseHex(device[QStringLiteral("product_id")].toString());
-  if (vid == 0) {
-    vid = 0x046D;
-  }
-  if (pid == 0) {
-    LOG_WARN("hid passthrough: connect line missing product_id; skipping HID++ probe");
-    return;
-  }
-
-  const auto context = deskflow::server::probeHidppDecode(vid, pid);
-  if (!context.valid()) {
-    return;
-  }
-
-  m_hidDecodeCache = deskflow::server::hidppDecodeToJson(context);
-  LOG_INFO("hid passthrough: host HID++ probe populated decode cache");
-  applyHidDecodeAvailable();
-}
-
-void Server::applyHidDecodeAvailable()
-{
-  if (m_hidDecodeCache.isEmpty() || !m_hidPassthrough) {
-    return;
-  }
-
-  const bool remoteFocus = m_active != m_primaryClient;
-  if (m_hidSeizeDeferred && remoteFocus) {
-    m_hidSeizeDeferred = false;
-    m_hidPassthrough->setFocusRemote(true);
-    LOG_INFO("hid passthrough: decode received, seizing vendor interface");
-  }
-
-  if (!m_hidVirtualHostTracker.hostsActiveClient(m_active) || !m_hidVirtualHostTracker.hasConnectLine()) {
-    return;
-  }
-
-  m_hidVirtualHostTracker.host()->sendMouserData(
-      deskflow::server::makeUpdateDecodeLine(m_hidDecodeCache)
-  );
-}
-
-void Server::maybeCompleteDeferredHidSeize()
-{
-  if (!m_hidSeizeDeferred || !m_hidPassthrough || m_active == m_primaryClient) {
-    if (m_active == m_primaryClient) {
-      m_hidSeizeDeferred = false;
-    }
-    return;
-  }
-
-  if (!m_hidDecodeCache.isEmpty()) {
-    applyHidDecodeAvailable();
-    return;
-  }
-
-  constexpr auto kDecodeWait = std::chrono::seconds(10);
-  if (std::chrono::steady_clock::now() - m_hidSeizeDeferStart < kDecodeWait) {
-    return;
-  }
-
-  m_hidSeizeDeferred = false;
-  m_hidPassthrough->setFocusRemote(true);
-  LOG_WARN("hid passthrough: seizing without decode context after timeout");
-}
-
-std::string Server::hidConnectLineForClient() const
-{
-  return deskflow::server::mergeDecodeIntoConnectLine(m_hidVirtualHostTracker.connectLine(), m_hidDecodeCache);
 }
 
 void Server::jumpToScreen(BaseClientProxy *newScreen)
@@ -1608,7 +1406,6 @@ void Server::handleClientDisconnected(BaseClientProxy *client)
 {
   // never leave a dangling virtual-device host pointer behind
   m_mouserVirtualHostTracker.clearHostIf(client);
-  m_hidVirtualHostTracker.clearHostIf(client);
 
   // client has disconnected.  it might be an old client or an
   // active client.  we don't care so just handle it both ways.
@@ -2368,7 +2165,6 @@ void Server::forceLeaveClient(const BaseClientProxy *client)
     m_active = m_primaryClient;
 
     updateMouserVirtualHost(m_active);
-    updateHidVirtualHost(m_active);
 
     // enter new screen (unless we already have because of the
     // screen saver)

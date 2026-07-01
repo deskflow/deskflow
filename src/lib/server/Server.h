@@ -18,9 +18,6 @@
 #include "server/Config.h"
 #include "server/VirtualHostTracker.h"
 
-#include <QJsonObject>
-
-#include <chrono>
 #include <climits>
 #include <map>
 #include <memory>
@@ -32,9 +29,6 @@ class MouserBridge;
 class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
-namespace deskflow::server {
-class HidPassthrough;
-}
 namespace deskflow {
 class Screen;
 }
@@ -330,22 +324,12 @@ private:
   void initMouserBridge();
   void handleMouserBridgeLine(const Event &event);
   void updateMouserVirtualHost(BaseClientProxy *dst);
-
-  // HID pass-through (fork extension)
-  void initHidPassthrough();
-  void handleHidPassthroughEvent(const Event &event);
-  void updateHidVirtualHost(BaseClientProxy *dst);
   void sendMouserLine(BaseClientProxy *client, const std::string &line);
   void setMouserBridgeActive(bool active);
   void detachOtherVirtualHosts(const VirtualHostTracker *keep);
   void virtualHostAttachIfRemote(VirtualHostTracker &tracker, const std::string &connectPayload);
   void virtualHostDetach(VirtualHostTracker &tracker, const std::string &disconnectLine, bool clearCachedLine = true);
   void virtualHostOnFocusChange(VirtualHostTracker &tracker, BaseClientProxy *dst, const std::string &connectPayload = {});
-  //! Merge cached decode context from the host Mouser into the passthrough connect line.
-  std::string hidConnectLineForClient() const;
-  void tryProbeHidDecodeFromConnectLine(const std::string &connectLine);
-  void applyHidDecodeAvailable();
-  void maybeCompleteDeferredHidSeize();
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToScreenEvent(const Event &event);
   void handleSwitchInDirectionEvent(const Event &event);
@@ -422,17 +406,6 @@ private:
   // currently hosts the virtual device.
   std::unique_ptr<MouserBridge> m_mouserBridge;
   VirtualHostTracker m_mouserVirtualHostTracker;
-
-  // HID pass-through (fork extension): grabber orchestrator, the cached
-  // device-connect line, and which remote client currently hosts the
-  // passed-through device.
-  std::unique_ptr<deskflow::server::HidPassthrough> m_hidPassthrough;
-  VirtualHostTracker m_hidVirtualHostTracker;
-  //! REPROG_V4 decode map from the host Mouser (feat_idx, gesture_cid, ...).
-  QJsonObject m_hidDecodeCache;
-  //! Remote focus is active but seize waits for decode (host Mouser still has the device).
-  bool m_hidSeizeDeferred = false;
-  std::chrono::steady_clock::time_point m_hidSeizeDeferStart{};
 
   BaseClientProxy *m_switchScreen = nullptr;
   double m_switchWaitDelay = 0.0;

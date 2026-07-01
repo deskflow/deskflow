@@ -9,7 +9,7 @@ This guide is for building and installing **this fork** of Deskflow
   external `coordinator.py` / `KvmSwitch.exe` supervisors. See `docs/coordination/`.
 - **HID passthrough:** relay raw vendor HID reports to the focused machine.
   See `docs/hid-passthrough.md`.
-- **Mouser bridge (legacy):** Logitech HID++ gesture relay via loopback JSON.
+- **Mouser bridge:** Logitech HID++ gesture relay via loopback JSON.
   See `docs/mouser-bridge.md`.
 - **macOS onboarding:** pressing **Start** checks Accessibility permission first
   (`MainWindow.cpp` → `ensureAccessibilityPermission`).
@@ -76,6 +76,18 @@ Then launch Deskflow and press **Start**. When prompted, grant **Accessibility**
 to **both** `Deskflow` and the `deskflow` process under
 System Settings → Privacy & Security → Accessibility. On macOS Sequoia, also allow
 **Local Network**.
+
+### macOS login bridge (optional, after install)
+
+Reinstalling Deskflow (`scripts/install-macos.sh`) updates the app bundle but **does
+not** install the login-window LaunchAgent. After every fresh install:
+
+1. Install [Karabiner DriverKit VirtualHIDDevice](https://github.com/pqrs-org/Karabiner-DriverKit-VirtualHIDDevice/releases) and approve the system extension.
+2. Configure `coordination/peers` on all cluster machines (use `name=ip` forms if hostnames fail at login).
+3. Deskflow → **Settings → Login Window** → enable **Control this computer at the login window** → approve admin prompt.
+4. **Log out or restart** (LoginWindow agents do not hot-load from a user session).
+5. Confirm status shows **Active**; use **Refresh** on the bridge log if troubleshooting (`/var/log/deskflow-vhid-bridge.log`).
+6. From the elected server Mac (with core running), test pointer and password at the login screen.
 
 ### Linux / BSD
 

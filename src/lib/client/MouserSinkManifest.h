@@ -11,7 +11,7 @@
 namespace deskflow::client {
 
 //! Write ``mouser-sink.json`` so Mouser can auto-detect the loopback sink.
-void writeMouserSinkManifest(int port, const QString &token, bool hidPassthroughActive);
+void writeMouserSinkManifest(int port, const QString &token);
 
 //! Remove the manifest when the client disconnects or HID delivery stops.
 void clearMouserSinkManifest();

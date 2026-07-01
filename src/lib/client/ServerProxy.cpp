@@ -232,10 +232,6 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     mouserData();
   }
 
-  else if (memcmp(code, kMsgDHidReport, 4) == 0) {
-    hidReport();
-  }
-
   else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
     mouseWheel();
   }
@@ -862,7 +858,7 @@ MouserClient *ServerProxy::mouserDeliveryOrNull()
     const auto port = Settings::value(Settings::Client::MouserPort).toInt();
     const auto token = Settings::value(Settings::Client::MouserToken).toString();
     m_mouserClient = std::make_unique<MouserClient>(port, token.toStdString());
-    deskflow::client::writeMouserSinkManifest(port, token, true);
+    deskflow::client::writeMouserSinkManifest(port, token);
   }
   return m_mouserClient.get();
 }
@@ -874,14 +870,6 @@ void ServerProxy::mouserData()
   if (auto *client = mouserDeliveryOrNull(); client != nullptr) {
     client->deliver(line);
   }
-}
-
-void ServerProxy::hidReport()
-{
-  uint16_t deviceId = 0;
-  std::string bytes;
-  ProtocolUtil::readf(m_stream, kMsgDHidReport + 4, &deviceId, &bytes);
-  deskflow::client::deliverRawHidReportToMouser(mouserDeliveryOrNull(), deviceId, bytes);
 }
 
 void ServerProxy::setActiveServerLanguage(const std::string_view &language)

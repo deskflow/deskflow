@@ -48,6 +48,12 @@ public:
    */
   static bool apply(bool enabled, double scale, QString *error);
 
+  /// True when the installed LaunchAgent plist matches current coordination/core settings.
+  static bool installedAgentMatchesCurrentSettings(double scale);
+
+  /// Last lines from `/var/log/deskflow-vhid-bridge.log` for operator diagnostics.
+  static QString recentLogText(int maxLines = 20);
+
 private:
   static QString bridgePath();
   static QString agentPlistPath();

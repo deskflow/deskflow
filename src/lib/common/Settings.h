@@ -155,10 +155,6 @@ public:
     inline static const auto MouserBridgeToken = QStringLiteral("server/mouserBridgeToken");
     //! Runtime status: loopback bridge listener is active (written by core, not the GUI).
     inline static const auto MouserBridgeActive = QStringLiteral("server/mouserBridgeActive");
-    // HID pass-through (fork extension): seize the selected devices'
-    // vendor interfaces while focus is remote and relay raw reports.
-    inline static const auto HidPassthroughEnabled = QStringLiteral("server/hidPassthroughEnabled");
-    inline static const auto HidPassthroughDevices = QStringLiteral("server/hidPassthroughDevices");
   };
 
   struct Screen
@@ -298,6 +294,9 @@ private:
     , Settings::Coordination::Port
     , Settings::Coordination::Peers
     , Settings::Coordination::Token
+    , Settings::Coordination::Enabled
+    , Settings::Coordination::LoginBridgeEnabled
+    , Settings::Coordination::LoginBridgeScale
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion
@@ -361,8 +360,6 @@ private:
     , Settings::Server::MouserBridgePort
     , Settings::Server::MouserBridgeToken
     , Settings::Server::MouserBridgeActive
-    , Settings::Server::HidPassthroughEnabled
-    , Settings::Server::HidPassthroughDevices
   };
 
   // When checking the default values this list contains the ones that default to false.
@@ -391,7 +388,6 @@ private:
     , Settings::Client::MouserEnabled
     , Settings::Server::MouserBridgeEnabled
     , Settings::Server::MouserBridgeActive
-    , Settings::Server::HidPassthroughEnabled
     , Settings::Coordination::Enabled
   };
 

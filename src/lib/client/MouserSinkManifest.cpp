@@ -30,7 +30,7 @@ QString manifestPath()
 
 } // namespace
 
-void writeMouserSinkManifest(int port, const QString &token, bool hidPassthroughActive)
+void writeMouserSinkManifest(int port, const QString &token)
 {
   const auto path = manifestPath();
   if (path.isEmpty() || token.isEmpty()) {
@@ -42,7 +42,6 @@ void writeMouserSinkManifest(int port, const QString &token, bool hidPassthrough
   root[QStringLiteral("port")] = port;
   root[QStringLiteral("token")] = token;
   root[QStringLiteral("protocol")] = QStringLiteral("dfhr+v1");
-  root[QStringLiteral("hid_passthrough")] = hidPassthroughActive;
 
   QDir().mkpath(QFileInfo(path).absolutePath());
   QFile file(path);
