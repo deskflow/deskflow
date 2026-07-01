@@ -11,7 +11,7 @@ namespace deskflow::coordination {
 class StubKeyboardRelayMonitor : public IKeyboardRelayMonitor
 {
 public:
-  bool start(const std::string &, CursorHostQuery, KeyForwardSend) override
+  bool start(CursorOnSelfQuery, KeyForwardSend) override
   {
     return true;
   }

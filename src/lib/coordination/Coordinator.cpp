@@ -183,19 +183,38 @@ void Coordinator::broadcastCursor(const std::string &host)
 void Coordinator::updateKeyboardRelayForRole(Role role)
 {
   if (!m_config.keyboardFollowCursor) {
+    {
+      std::scoped_lock lock{m_mutex};
+      m_loggedKeyForward = false;
+      m_loggedKeyForwardReceive = false;
+    }
     m_keyboardRelay->stop();
     return;
   }
   if (role == Role::Client) {
+    {
+      std::scoped_lock lock{m_mutex};
+      m_loggedKeyForward = false;
+      m_loggedKeyForwardReceive = false;
+    }
+    // Relay uses ElectionState::cursorHere(), fed by CoordinationScreenEntered/Left.
+    // becameClient() starts with cursorHere=false; until enter() fires there is a
+    // brief window where keys may forward while the cursor is already local.
     m_keyboardRelay->start(
-        m_config.selfName,
-        [this] { return fleetCursorHost(); },
+        [this] { return cursorOnSelf(); },
         [this](Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) {
           sendKeyForward(phase, id, mask, button, lang);
         }
     );
+    LOG_INFO("coordination: keyboard relay started (client epoch)");
     return;
   }
+  {
+    std::scoped_lock lock{m_mutex};
+    m_loggedKeyForward = false;
+    m_loggedKeyForwardReceive = false;
+  }
+  // Server epoch: keyboard uses Server::onKeyDown → m_active (not keyfwd relay).
   m_keyboardRelay->stop();
 }
 
@@ -271,6 +290,20 @@ void Coordinator::handleKeyForwardMessage(const Message &message)
     return;
   }
 
+  bool logFirst = false;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (!m_loggedKeyForwardReceive) {
+      m_loggedKeyForwardReceive = true;
+      logFirst = true;
+    }
+  }
+  if (logFirst) {
+    LOG_INFO("coordination: keyfwd from \"%s\" phase=%d", message.name.c_str(), static_cast<int>(message.keyPhase));
+  } else {
+    LOG_DEBUG("coordination: keyfwd from \"%s\" phase=%d", message.name.c_str(), static_cast<int>(message.keyPhase));
+  }
+
   auto *info = new CoordinationKeyForwardInfo(
       message.keyPhase, message.keyId, message.keyMask, message.keyButton, message.keyLang, message.name
   );
@@ -284,15 +317,25 @@ void Coordinator::sendKeyForward(
 )
 {
   std::string serverAddress;
+  bool logFirst = false;
   {
     std::scoped_lock lock{m_mutex};
     if (m_election.role() != Role::Client) {
       return;
     }
     serverAddress = m_election.serverAddress();
+    if (!m_loggedKeyForward) {
+      m_loggedKeyForward = true;
+      logFirst = true;
+    }
   }
   if (serverAddress.empty()) {
     return;
+  }
+  if (logFirst) {
+    LOG_INFO("coordination: forwarding keyboard to server at %s", serverAddress.c_str());
+  } else {
+    LOG_DEBUG("coordination: forwarding keyboard to server at %s", serverAddress.c_str());
   }
   const auto line = protocol::encodeKeyFwd(
       m_config.selfName, phase, static_cast<uint16_t>(id), static_cast<uint16_t>(mask), button, lang, m_config.token
@@ -308,6 +351,12 @@ bool Coordinator::isKnownPeer(const std::string &name) const
     }
   }
   return false;
+}
+
+bool Coordinator::cursorOnSelf()
+{
+  std::scoped_lock lock{m_mutex};
+  return m_election.cursorHere();
 }
 
 std::string Coordinator::fleetCursorHost()

@@ -26,4 +26,8 @@ private Q_SLOTS:
   void sameHostHeartbeatIsNoOp();
   void claimMergesSequenceNumbers();
   void transitionsResetBurstAndCursor();
+  void cursorHereTracksScreenPresenceForRelay();
+  void relayPassesKeyWhenCursorOnSelf();
+  void relayForwardsKeyWhenCursorElsewhere();
+  void relayPassesKeyWhenCursorQueryUnavailable();
 };

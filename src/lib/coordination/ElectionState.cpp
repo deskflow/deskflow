@@ -116,6 +116,8 @@ void ElectionState::becameClient(const std::string &serverAddress)
   m_role = Role::Client;
   m_serverAddress = serverAddress;
   m_lastSwitchAt = m_clock();
+  // Assumes cursor is remote until Client::enter() posts CoordinationScreenEntered.
+  // Keyboard relay forwards while false; server should send enter() promptly when local.
   m_cursorHere = false;
   m_inputBurst.clear();
 }

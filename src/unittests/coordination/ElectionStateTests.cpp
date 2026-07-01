@@ -7,12 +7,14 @@
 #include "ElectionStateTests.h"
 
 #include "coordination/ElectionState.h"
+#include "coordination/KeyboardRelayDecision.h"
 
 #include <QTest>
 
 using deskflow::coordination::ElectionState;
 using deskflow::coordination::ElectionTuning;
 using deskflow::coordination::Role;
+using deskflow::coordination::passKeyToLocalOs;
 using ClaimAction = ElectionState::ClaimAction;
 
 namespace {
@@ -188,6 +190,35 @@ void ElectionStateTests::transitionsResetBurstAndCursor()
   QCOMPARE(f.state.role(), Role::Client);
   QCOMPARE(f.state.serverAddress(), std::string("10.0.0.2"));
   QVERIFY(!f.state.cursorHere());
+}
+
+void ElectionStateTests::cursorHereTracksScreenPresenceForRelay()
+{
+  Fixture f;
+  f.state.becameClient("10.0.0.2");
+  QVERIFY(!f.state.cursorHere());
+
+  f.state.setCursorHere(true);
+  QVERIFY(f.state.cursorHere());
+
+  f.state.setCursorHere(false);
+  QVERIFY(!f.state.cursorHere());
+}
+
+void ElectionStateTests::relayPassesKeyWhenCursorOnSelf()
+{
+  QVERIFY(passKeyToLocalOs(true));
+}
+
+void ElectionStateTests::relayForwardsKeyWhenCursorElsewhere()
+{
+  QVERIFY(!passKeyToLocalOs(false));
+}
+
+void ElectionStateTests::relayPassesKeyWhenCursorQueryUnavailable()
+{
+  QVERIFY(passKeyToLocalOs(false, false));
+  QVERIFY(passKeyToLocalOs(true, false));
 }
 
 QTEST_MAIN(ElectionStateTests)

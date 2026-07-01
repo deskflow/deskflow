@@ -93,6 +93,8 @@ public:
   void setEventQueue(IEventQueue *events);
 
   //! Server epoch: publish which screen currently holds the fleet cursor.
+  //! Mesh \c cursor messages are a parallel fleet signal (heartbeat rebroadcast);
+  //! client keyboard relay uses ElectionState::cursorHere() instead.
   void broadcastCursor(const std::string &host);
 
   //! Start/stop the keyboard relay monitor for the current role epoch.
@@ -107,6 +109,8 @@ private:
       Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
   );
   bool isKnownPeer(const std::string &name) const;
+  bool cursorOnSelf();
+  //! Cached mesh cursor host; used for heartbeat rebroadcast, not relay gating.
   std::string fleetCursorHost();
   void promoteSelf(const char *reason);
   void followSender(const Message &claim);
@@ -138,6 +142,8 @@ private:
   bool m_broadcastPending = false;
   double m_startedAt = 0.0;
   int m_wedgeStrikes = 0;
+  bool m_loggedKeyForward = false;
+  bool m_loggedKeyForwardReceive = false;
 };
 
 } // namespace deskflow::coordination

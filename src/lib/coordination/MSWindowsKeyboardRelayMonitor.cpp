@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "coordination/KeyboardRelayDecision.h"
 #include "coordination/KeyboardRelayMonitor.h"
 
 #include "coordination/KeyboardRelayMap.h"
@@ -13,25 +14,11 @@
 #include <windows.h>
 
 #include <atomic>
-#include <cctype>
 #include <thread>
 
 namespace deskflow::coordination {
 
 namespace {
-
-bool hostsEqual(const std::string &a, const std::string &b)
-{
-  if (a.size() != b.size()) {
-    return false;
-  }
-  for (size_t i = 0; i < a.size(); ++i) {
-    if (std::tolower(static_cast<unsigned char>(a[i])) != std::tolower(static_cast<unsigned char>(b[i]))) {
-      return false;
-    }
-  }
-  return true;
-}
 
 class MSWindowsKeyboardRelayMonitor : public IKeyboardRelayMonitor
 {
@@ -41,13 +28,12 @@ public:
     stop();
   }
 
-  bool start(const std::string &selfName, CursorHostQuery cursorHost, KeyForwardSend send) override
+  bool start(CursorOnSelfQuery cursorOnSelf, KeyForwardSend send) override
   {
     if (m_thread.joinable()) {
       return true;
     }
-    m_selfHost = selfName;
-    m_cursorHost = std::move(cursorHost);
+    m_cursorOnSelf = std::move(cursorOnSelf);
     m_send = std::move(send);
     m_running = true;
     m_thread = std::thread([this] { runLoop(); });
@@ -81,8 +67,8 @@ private:
     const bool keyUp = wParam == WM_KEYUP || wParam == WM_SYSKEYUP;
     const bool isRepeat = !keyUp && (info->flags & LLKHF_UP) == 0 && (GetAsyncKeyState(info->vkCode) & 0x8000);
 
-    const std::string cursorHost = self->m_cursorHost ? self->m_cursorHost() : std::string();
-    if (cursorHost.empty() || hostsEqual(cursorHost, self->m_selfHost)) {
+    const bool cursorOnSelf = self->m_cursorOnSelf ? self->m_cursorOnSelf() : true;
+    if (passKeyToLocalOs(cursorOnSelf, self->m_cursorOnSelf != nullptr)) {
       return CallNextHookEx(nullptr, code, wParam, lParam);
     }
 
@@ -127,9 +113,8 @@ private:
     LOG_DEBUG("coordination: keyboard relay monitor stopped");
   }
 
-  CursorHostQuery m_cursorHost;
+  CursorOnSelfQuery m_cursorOnSelf;
   KeyForwardSend m_send;
-  std::string m_selfHost;
   std::thread m_thread;
   std::atomic<bool> m_running{false};
   DWORD m_threadId = 0;
