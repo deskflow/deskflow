@@ -109,7 +109,7 @@ private:
       Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
   );
   bool isKnownPeer(const std::string &name) const;
-  bool cursorOnSelf();
+  bool relayPassThroughLocal();
   //! Cached mesh cursor host; used for heartbeat rebroadcast, not relay gating.
   std::string fleetCursorHost();
   void promoteSelf(const char *reason);
@@ -144,6 +144,8 @@ private:
   int m_wedgeStrikes = 0;
   bool m_loggedKeyForward = false;
   bool m_loggedKeyForwardReceive = false;
+  bool m_loggedRelayUnknownForward = false;
+  double m_clientRelayStartedAt = 0.0;
 };
 
 } // namespace deskflow::coordination

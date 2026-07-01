@@ -102,16 +102,6 @@ void AutoModeRunner::epochLoop()
   }
   m_coordinator->setEventQueue(&m_events);
 
-  // While a client epoch runs, its enter/leave transitions feed the
-  // election's cursor-here state so forwarded-motion echoes face the
-  // stricter promotion burst (behavior-spec §3).
-  m_events.addHandler(EventTypes::CoordinationScreenEntered, m_events.getSystemTarget(), [this](const auto &) {
-    m_coordinator->notifyCursorHere(true);
-  });
-  m_events.addHandler(EventTypes::CoordinationScreenLeft, m_events.getSystemTarget(), [this](const auto &) {
-    m_coordinator->notifyCursorHere(false);
-  });
-
   while (true) {
     const RoleDecision decision = m_coordinator->awaitRoleDecision();
     if (decision.quit) {
@@ -129,8 +119,6 @@ void AutoModeRunner::epochLoop()
     m_coordinator->notifyEpochEnded();
   }
 
-  m_events.removeHandler(EventTypes::CoordinationScreenEntered, m_events.getSystemTarget());
-  m_events.removeHandler(EventTypes::CoordinationScreenLeft, m_events.getSystemTarget());
   m_coordinator->stop();
   LOG_INFO("auto mode stopped");
 }
@@ -143,6 +131,18 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
   }
 
   m_coordinator->updateKeyboardRelayForRole(role);
+
+  // Screen enter/leave handlers are scoped to this client epoch so stale
+  // events from a prior epoch cannot set cursorScreenKnown after reset.
+  const bool trackCursorHere = role == Role::Client;
+  if (trackCursorHere) {
+    m_events.addHandler(EventTypes::CoordinationScreenEntered, m_events.getSystemTarget(), [this](const auto &) {
+      m_coordinator->notifyCursorHere(true);
+    });
+    m_events.addHandler(EventTypes::CoordinationScreenLeft, m_events.getSystemTarget(), [this](const auto &) {
+      m_coordinator->notifyCursorHere(false);
+    });
+  }
 
   std::unique_ptr<App> app;
   if (role == Role::Server) {
@@ -182,6 +182,11 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
     LOG_CRIT("an unknown error occurred\n");
   }
   m_appRunning = false;
+
+  if (trackCursorHere) {
+    m_events.removeHandler(EventTypes::CoordinationScreenEntered, m_events.getSystemTarget());
+    m_events.removeHandler(EventTypes::CoordinationScreenLeft, m_events.getSystemTarget());
+  }
 
   m_coordinator->updateKeyboardRelayForRole(Role::Init);
 

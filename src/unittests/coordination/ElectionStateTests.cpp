@@ -189,6 +189,7 @@ void ElectionStateTests::transitionsResetBurstAndCursor()
   f.state.becameClient("10.0.0.2");
   QCOMPARE(f.state.role(), Role::Client);
   QCOMPARE(f.state.serverAddress(), std::string("10.0.0.2"));
+  f.state.resetCursorScreen();
   QVERIFY(!f.state.cursorHere());
 }
 
@@ -196,29 +197,81 @@ void ElectionStateTests::cursorHereTracksScreenPresenceForRelay()
 {
   Fixture f;
   f.state.becameClient("10.0.0.2");
+  f.state.resetCursorScreen();
+  QVERIFY(!f.state.cursorScreenKnown());
   QVERIFY(!f.state.cursorHere());
 
   f.state.setCursorHere(true);
+  QVERIFY(f.state.cursorScreenKnown());
   QVERIFY(f.state.cursorHere());
 
   f.state.setCursorHere(false);
+  QVERIFY(f.state.cursorScreenKnown());
   QVERIFY(!f.state.cursorHere());
 }
 
 void ElectionStateTests::relayPassesKeyWhenCursorOnSelf()
 {
-  QVERIFY(passKeyToLocalOs(true));
+  QVERIFY(passKeyToLocalOs(true, true, 1.0));
 }
 
 void ElectionStateTests::relayForwardsKeyWhenCursorElsewhere()
 {
-  QVERIFY(!passKeyToLocalOs(false));
+  QVERIFY(!passKeyToLocalOs(false, true, 1.0));
 }
 
-void ElectionStateTests::relayPassesKeyWhenCursorQueryUnavailable()
+void ElectionStateTests::relayBootGraceWhileScreenSyncUnknown()
 {
-  QVERIFY(passKeyToLocalOs(false, false));
-  QVERIFY(passKeyToLocalOs(true, false));
+  using deskflow::coordination::kCursorRelayBootGraceS;
+
+  // Unknown screen: pass locally during grace regardless of cursorOnSelf.
+  QVERIFY(passKeyToLocalOs(true, false, 0.0));
+  QVERIFY(passKeyToLocalOs(false, false, 0.1));
+  QVERIFY(passKeyToLocalOs(false, false, kCursorRelayBootGraceS - 0.001));
+  // After grace, assume cursor is elsewhere and forward.
+  QVERIFY(!passKeyToLocalOs(false, false, kCursorRelayBootGraceS));
+  QVERIFY(!passKeyToLocalOs(false, false, kCursorRelayBootGraceS + 0.2));
+}
+
+void ElectionStateTests::relayStartClearsStaleCursorScreenKnown()
+{
+  Fixture f;
+  f.state.setCursorHere(true);
+  f.state.becameClient("10.0.0.2");
+  QVERIFY(f.state.cursorScreenKnown());
+  f.state.resetCursorScreen();
+  QVERIFY(!f.state.cursorScreenKnown());
+  QVERIFY(!f.state.cursorHere());
+}
+
+void ElectionStateTests::becameServerClearsCursorScreenKnown()
+{
+  Fixture f;
+  f.state.setCursorHere(true);
+  f.state.becameServer();
+  QVERIFY(!f.state.cursorScreenKnown());
+  QVERIFY(!f.state.cursorHere());
+}
+
+void ElectionStateTests::resetCursorScreenClearsInputBurst()
+{
+  Fixture f;
+  f.state.becameClient("10.0.0.2");
+  f.now += 3.0;
+  f.feedInput(3, 0.01);
+  f.state.resetCursorScreen();
+  f.now += 3.0;
+  QVERIFY(!f.feedInput(3, 0.01));
+  QVERIFY(f.feedInput(4, 0.05));
+}
+
+void ElectionStateTests::resetCursorScreenClearsKnownState()
+{
+  Fixture f;
+  f.state.setCursorHere(true);
+  f.state.resetCursorScreen();
+  QVERIFY(!f.state.cursorScreenKnown());
+  QVERIFY(!f.state.cursorHere());
 }
 
 QTEST_MAIN(ElectionStateTests)

@@ -8,12 +8,12 @@
 #include "platform/OSXKeyState.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "platform/OSXMainQueue.h"
 #include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXUchrKeyResource.h"
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
-#include <dispatch/dispatch.h>
 #include <pthread.h>
 
 #pragma clang diagnostic push
@@ -485,6 +485,11 @@ void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 
 void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 {
+  deskflow::platform::osx::runOnMainQueue([&] { getKeyMapImpl(keyMap); });
+}
+
+void OSXKeyState::getKeyMapImpl(deskflow::KeyMap &keyMap)
+{
   // update keyboard groups
   int32_t numGroups{0};
   if (getGroups(m_groups)) {
@@ -884,26 +889,28 @@ void OSXKeyState::handleModifierKey(void *target, uint32_t virtualKey, KeyID id,
 
 bool OSXKeyState::getGroups(AutoCFArray &groups) const
 {
-  // get number of layouts
-  CFStringRef keys[] = {kTISPropertyInputSourceCategory};
-  CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(
-      CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr), CFRelease
-  );
-  AutoCFArray kbds(nullptr, CFRelease);
-  {
-    std::lock_guard<std::mutex> lock(g_tisMutex);
-    kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease);
-  }
+  return deskflow::platform::osx::runOnMainQueue([&]() -> bool {
+    // get number of layouts
+    CFStringRef keys[] = {kTISPropertyInputSourceCategory};
+    CFStringRef values[] = {kTISCategoryKeyboardInputSource};
+    AutoCFDictionary dict(
+        CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr), CFRelease
+    );
+    AutoCFArray kbds(nullptr, CFRelease);
+    {
+      std::lock_guard<std::mutex> lock(g_tisMutex);
+      kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease);
+    }
 
-  if (CFArrayGetCount(kbds.get()) > 0) {
-    groups = std::move(kbds);
-  } else {
-    LOG_VERBOSE("can't get keyboard layouts");
-    return false;
-  }
+    if (CFArrayGetCount(kbds.get()) > 0) {
+      groups = std::move(kbds);
+    } else {
+      LOG_VERBOSE("can't get keyboard layouts");
+      return false;
+    }
 
-  return true;
+    return true;
+  });
 }
 
 void OSXKeyState::setGroup(int32_t group)

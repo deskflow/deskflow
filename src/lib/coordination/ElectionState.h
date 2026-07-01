@@ -77,6 +77,9 @@ public:
   //! Track whether the shared cursor is currently on this screen.
   void setCursorHere(bool here);
 
+  //! Clear cursor screen sync state at the start of a client epoch (relay reset).
+  void resetCursorScreen();
+
   //! Evaluate an inbound claim; merges the sender's sequence number.
   ClaimAction onClaim(const std::string &senderName, const std::string &ip, const std::string &lan, int64_t seq);
 
@@ -111,6 +114,10 @@ public:
   {
     return m_cursorHere;
   }
+  bool cursorScreenKnown() const
+  {
+    return m_cursorScreenKnown;
+  }
 
   //! Increment and return the sequence number for an outbound claim.
   int64_t nextClaimSeq();
@@ -126,6 +133,7 @@ private:
   double m_lastSwitchAt = -1.0e9; // long ago: no cooldown at boot
   int64_t m_seq = 0;
   bool m_cursorHere = false;
+  bool m_cursorScreenKnown = false;
   std::deque<double> m_inputBurst;
 };
 

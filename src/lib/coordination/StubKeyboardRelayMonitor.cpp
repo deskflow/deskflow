@@ -11,7 +11,7 @@ namespace deskflow::coordination {
 class StubKeyboardRelayMonitor : public IKeyboardRelayMonitor
 {
 public:
-  bool start(CursorOnSelfQuery, KeyForwardSend) override
+  bool start(RelayPassThroughQuery, KeyForwardSend) override
   {
     return true;
   }

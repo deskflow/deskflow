@@ -59,11 +59,19 @@ bool ElectionState::onLocalInput()
 
 void ElectionState::setCursorHere(bool here)
 {
+  m_cursorScreenKnown = true;
   if (m_cursorHere != here) {
     m_cursorHere = here;
     // The thresholds changed; stale ticks must not bridge the two regimes.
     m_inputBurst.clear();
   }
+}
+
+void ElectionState::resetCursorScreen()
+{
+  m_cursorScreenKnown = false;
+  m_cursorHere = false;
+  m_inputBurst.clear();
 }
 
 ElectionState::ClaimAction
@@ -107,8 +115,7 @@ void ElectionState::becameServer()
   m_role = Role::Server;
   m_serverAddress.clear();
   m_lastSwitchAt = m_clock();
-  m_cursorHere = false;
-  m_inputBurst.clear();
+  resetCursorScreen();
 }
 
 void ElectionState::becameClient(const std::string &serverAddress)
@@ -116,10 +123,8 @@ void ElectionState::becameClient(const std::string &serverAddress)
   m_role = Role::Client;
   m_serverAddress = serverAddress;
   m_lastSwitchAt = m_clock();
-  // Assumes cursor is remote until Client::enter() posts CoordinationScreenEntered.
-  // Keyboard relay forwards while false; server should send enter() promptly when local.
-  m_cursorHere = false;
-  m_inputBurst.clear();
+  // Screen sync is reset when the client-epoch keyboard relay starts
+  // (Coordinator::updateKeyboardRelayForRole).
 }
 
 int64_t ElectionState::nextClaimSeq()

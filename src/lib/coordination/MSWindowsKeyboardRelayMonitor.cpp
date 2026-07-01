@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "coordination/KeyboardRelayDecision.h"
 #include "coordination/KeyboardRelayMonitor.h"
 
 #include "coordination/KeyboardRelayMap.h"
@@ -28,12 +27,12 @@ public:
     stop();
   }
 
-  bool start(CursorOnSelfQuery cursorOnSelf, KeyForwardSend send) override
+  bool start(RelayPassThroughQuery passThrough, KeyForwardSend send) override
   {
     if (m_thread.joinable()) {
       return true;
     }
-    m_cursorOnSelf = std::move(cursorOnSelf);
+    m_passThrough = std::move(passThrough);
     m_send = std::move(send);
     m_running = true;
     m_thread = std::thread([this] { runLoop(); });
@@ -67,8 +66,8 @@ private:
     const bool keyUp = wParam == WM_KEYUP || wParam == WM_SYSKEYUP;
     const bool isRepeat = !keyUp && (info->flags & LLKHF_UP) == 0 && (GetAsyncKeyState(info->vkCode) & 0x8000);
 
-    const bool cursorOnSelf = self->m_cursorOnSelf ? self->m_cursorOnSelf() : true;
-    if (passKeyToLocalOs(cursorOnSelf, self->m_cursorOnSelf != nullptr)) {
+    const bool passLocal = self->m_passThrough ? self->m_passThrough() : true;
+    if (passLocal) {
       return CallNextHookEx(nullptr, code, wParam, lParam);
     }
 
@@ -113,7 +112,7 @@ private:
     LOG_DEBUG("coordination: keyboard relay monitor stopped");
   }
 
-  CursorOnSelfQuery m_cursorOnSelf;
+  RelayPassThroughQuery m_passThrough;
   KeyForwardSend m_send;
   std::thread m_thread;
   std::atomic<bool> m_running{false};

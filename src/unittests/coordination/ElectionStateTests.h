@@ -29,5 +29,9 @@ private Q_SLOTS:
   void cursorHereTracksScreenPresenceForRelay();
   void relayPassesKeyWhenCursorOnSelf();
   void relayForwardsKeyWhenCursorElsewhere();
-  void relayPassesKeyWhenCursorQueryUnavailable();
+  void relayBootGraceWhileScreenSyncUnknown();
+  void relayStartClearsStaleCursorScreenKnown();
+  void becameServerClearsCursorScreenKnown();
+  void resetCursorScreenClearsInputBurst();
+  void resetCursorScreenClearsKnownState();
 };

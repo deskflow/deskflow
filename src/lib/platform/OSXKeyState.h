@@ -95,6 +95,8 @@ protected:
 private:
   class KeyResource;
 
+  void getKeyMapImpl(deskflow::KeyMap &keyMap);
+
   // Add hard coded special keys to a deskflow::KeyMap.
   void getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, int32_t group) const;
 

@@ -15,27 +15,14 @@
 #include <X11/XKBlib.h>
 #elif defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
-#include <dispatch/dispatch.h>
 #include <platform/OSXAutoTypes.h>
-#include <pthread.h>
+#include <platform/OSXMainQueue.h>
 #endif
 
 #include <filesystem>
 
 #if defined(Q_OS_MAC)
 namespace {
-
-template <typename Fn>
-auto runOnMainQueue(Fn &&fn)
-{
-  if (pthread_main_np() != 0) {
-    return fn();
-  }
-  using Result = decltype(fn());
-  __block Result result;
-  dispatch_sync(dispatch_get_main_queue(), ^{ result = fn(); });
-  return result;
-}
 
 std::vector<std::string> queryKeyboardLayoutList()
 {
@@ -142,7 +129,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 
 #elif defined(Q_OS_MAC)
   // Auto mode runs server/client epochs on a QThread; TIS asserts the main queue (macOS 14+).
-  layoutLangCodes = runOnMainQueue([] { return queryKeyboardLayoutList(); });
+  layoutLangCodes = deskflow::platform::osx::runOnMainQueue([] { return queryKeyboardLayoutList(); });
 #endif
 
   return layoutLangCodes;
@@ -204,7 +191,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   result = X11LayoutsParser::convertLayoutToISO(m_evdev, result);
 
 #elif defined(Q_OS_MAC)
-  result = runOnMainQueue([] { return queryCurrentLanguageCode(); });
+  result = deskflow::platform::osx::runOnMainQueue([] { return queryCurrentLanguageCode(); });
 #endif
   return result;
 }

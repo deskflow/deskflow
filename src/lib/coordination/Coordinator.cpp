@@ -10,6 +10,7 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "coordination/CoordinationEvents.h"
+#include "coordination/KeyboardRelayDecision.h"
 
 #include <chrono>
 #include <cctype>
@@ -196,12 +197,15 @@ void Coordinator::updateKeyboardRelayForRole(Role role)
       std::scoped_lock lock{m_mutex};
       m_loggedKeyForward = false;
       m_loggedKeyForwardReceive = false;
+      m_loggedRelayUnknownForward = false;
+      // Epoch restart does not call becameClient(); clear stale screen sync.
+      m_election.resetCursorScreen();
+      m_clientRelayStartedAt = monotonicSeconds();
     }
     // Relay uses ElectionState::cursorHere(), fed by CoordinationScreenEntered/Left.
-    // becameClient() starts with cursorHere=false; until enter() fires there is a
-    // brief window where keys may forward while the cursor is already local.
+    // Until the first enter/leave, a boot grace window passes keys locally.
     m_keyboardRelay->start(
-        [this] { return cursorOnSelf(); },
+        [this] { return relayPassThroughLocal(); },
         [this](Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) {
           sendKeyForward(phase, id, mask, button, lang);
         }
@@ -213,6 +217,7 @@ void Coordinator::updateKeyboardRelayForRole(Role role)
     std::scoped_lock lock{m_mutex};
     m_loggedKeyForward = false;
     m_loggedKeyForwardReceive = false;
+    m_loggedRelayUnknownForward = false;
   }
   // Server epoch: keyboard uses Server::onKeyDown → m_active (not keyfwd relay).
   m_keyboardRelay->stop();
@@ -353,10 +358,17 @@ bool Coordinator::isKnownPeer(const std::string &name) const
   return false;
 }
 
-bool Coordinator::cursorOnSelf()
+bool Coordinator::relayPassThroughLocal()
 {
   std::scoped_lock lock{m_mutex};
-  return m_election.cursorHere();
+  const double elapsed = monotonicSeconds() - m_clientRelayStartedAt;
+  const bool known = m_election.cursorScreenKnown();
+  const bool passLocal = passKeyToLocalOs(m_election.cursorHere(), known, elapsed);
+  if (!passLocal && !known && elapsed >= kCursorRelayBootGraceS && !m_loggedRelayUnknownForward) {
+    LOG_INFO("coordination: forwarding keyboard before screen enter/leave sync");
+    m_loggedRelayUnknownForward = true;
+  }
+  return passLocal;
 }
 
 std::string Coordinator::fleetCursorHost()
