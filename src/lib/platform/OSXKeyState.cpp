@@ -294,17 +294,26 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
     return mapVirtualKeyToKeyButton(vkCode);
   }
 
-  // get keyboard info
-  AutoTISInputSourceRef currentKeyboardLayout(nullptr, CFRelease);
-  CFDataRef ref = nullptr;
-  {
+  // TIS APIs assert the main dispatch queue on macOS 14+; mapKeyFromEvent runs
+  // on the CGEventTap thread, so fetch layout data via runOnMainQueue (same
+  // pattern as getKeyMap/getGroups; see pollActiveGroup for async cache variant).
+  CFDataRef layoutRef = deskflow::platform::osx::runOnMainQueue([]() -> CFDataRef {
     std::lock_guard<std::mutex> lock(g_tisMutex);
-    currentKeyboardLayout = AutoTISInputSourceRef(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
-    if (currentKeyboardLayout)
-      ref = (CFDataRef)TISGetInputSourceProperty(currentKeyboardLayout.get(), kTISPropertyUnicodeKeyLayoutData);
-  }
+    AutoTISInputSourceRef currentKeyboardLayout(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
+    if (!currentKeyboardLayout) {
+      return nullptr;
+    }
+    CFDataRef ref = (CFDataRef)TISGetInputSourceProperty(
+        currentKeyboardLayout.get(), kTISPropertyUnicodeKeyLayoutData
+    );
+    if (ref) {
+      CFRetain(ref);
+    }
+    return ref;
+  });
+  AutoCFData layoutData(layoutRef, CFRelease);
 
-  if (!currentKeyboardLayout) {
+  if (!layoutData) {
     return kKeyNone;
   }
 
@@ -334,7 +343,7 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   }
 
   // translate via uchr resource
-  const UCKeyboardLayout *layout = (const UCKeyboardLayout *)CFDataGetBytePtr(ref);
+  const UCKeyboardLayout *layout = (const UCKeyboardLayout *)CFDataGetBytePtr(layoutData.get());
   const bool layoutValid = (layout != nullptr);
 
   if (layoutValid) {

@@ -10,6 +10,12 @@
 
 #include "base/EventQueue.h"
 
+#include <atomic>
+#include <chrono>
+#include <thread>
+
+#include <CoreFoundation/CoreFoundation.h>
+
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R
 #define SHIFT_BUTTON 57
@@ -111,6 +117,41 @@ void OSXKeyStateTests::fakePollCharWithModifier()
   // we should really set focus to an invisible window.
   keyState.fakeKeyDown(kKeyBackSpace, 0, 2, "en");
   keyState.fakeKeyUp(2);
+}
+
+void OSXKeyStateTests::mapKeyFromEventOffMainThreadDoesNotCrash()
+{
+  deskflow::KeyMap keyMap;
+  EventQueue eventQueue;
+  OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
+  keyState.updateKeyMap();
+
+  CGEventRef event = CGEventCreateKeyboardEvent(nullptr, kVK_ANSI_A, true);
+  QVERIFY(event != nullptr);
+
+  std::atomic<bool> finished{false};
+  std::atomic<KeyButton> button{0};
+  std::thread worker([&]() {
+    OSXKeyState::KeyIDs ids;
+    KeyModifierMask mask = 0;
+    button.store(keyState.mapKeyFromEvent(ids, &mask, event), std::memory_order_relaxed);
+    finished.store(true, std::memory_order_relaxed);
+  });
+
+  const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+  while (!finished.load(std::memory_order_relaxed) && std::chrono::steady_clock::now() < deadline) {
+    // Pump the main CFRunLoop so dispatch_sync(main_queue) from the worker can run.
+    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.05, true);
+  }
+  if (!finished.load(std::memory_order_relaxed)) {
+    worker.detach();
+    QFAIL("mapKeyFromEvent did not complete within 5 seconds");
+  }
+  worker.join();
+  CFRelease(event);
+
+  QVERIFY(finished.load(std::memory_order_relaxed));
+  QVERIFY(button.load(std::memory_order_relaxed) != 0);
 }
 
 bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState, KeyButton button)
