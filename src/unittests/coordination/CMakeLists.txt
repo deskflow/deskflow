@@ -14,3 +14,12 @@ create_test(
   SOURCE CoordinationProtocolTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
 )
+
+if(APPLE)
+  create_test(
+    NAME KeyboardRelayMapTests
+    DEPENDS coordination
+    SOURCE KeyboardRelayMapTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
+  )
+endif()

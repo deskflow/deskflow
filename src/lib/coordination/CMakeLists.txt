@@ -21,7 +21,7 @@ if(APPLE)
     OSXKeyboardRelayMonitor.mm
     KeyboardRelayMap.mm
   )
-  target_link_libraries(coordination PUBLIC "-framework ApplicationServices")
+  target_link_libraries(coordination PUBLIC "-framework ApplicationServices" "-framework Carbon")
 elseif(WIN32)
   target_sources(coordination PRIVATE
     MSWindowsLocalInputMonitor.cpp
