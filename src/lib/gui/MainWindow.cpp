@@ -36,6 +36,7 @@
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QDesktopServices>
+#include <QHideEvent>
 #include <QFileDialog>
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -50,6 +51,7 @@
 #include <QScreen>
 #include <QScrollBar>
 #include <QSettings>
+#include <QShowEvent>
 
 #include <memory>
 
@@ -1126,13 +1128,25 @@ void MainWindow::updateLocalFingerprint()
 
 void MainWindow::hide()
 {
-#ifdef Q_OS_MACOS
-  macOSNativeHide();
-#else
   QMainWindow::hide();
-#endif
   m_actionRestore->setVisible(true);
   m_actionMinimize->setVisible(false);
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+  QMainWindow::showEvent(event);
+#ifdef Q_OS_MACOS
+  macOSSetDockVisible(true);
+#endif
+}
+
+void MainWindow::hideEvent(QHideEvent *event)
+{
+  QMainWindow::hideEvent(event);
+#ifdef Q_OS_MACOS
+  macOSNativeHide();
+#endif
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -1236,7 +1250,7 @@ void MainWindow::showAndActivate()
 {
   const auto wasVisible = isVisible();
 #ifdef Q_OS_MACOS
-  forceAppActive();
+  macOSSetDockVisible(true);
 #endif
   showNormal();
   raise();

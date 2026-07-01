@@ -98,16 +98,30 @@ bool isOSXInterfaceStyleDark()
   return (style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"]);
 }
 
+void macOSSetDockVisible(bool visible)
+{
+  const auto policy =
+      visible ? NSApplicationActivationPolicyRegular : NSApplicationActivationPolicyAccessory;
+  [[NSApplication sharedApplication] setActivationPolicy:policy];
+  if (visible) {
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+  }
+}
+
+bool macOSIsDockVisible()
+{
+  return [[NSApplication sharedApplication] activationPolicy] == NSApplicationActivationPolicyRegular;
+}
+
 void forceAppActive()
 {
-  [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-  [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyRegular];
+  macOSSetDockVisible(true);
 }
 
 void macOSNativeHide()
 {
+  macOSSetDockVisible(false);
   [NSApp hide:nil];
-  [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
 
 bool macSetStartAtLogin(bool enable)

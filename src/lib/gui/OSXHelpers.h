@@ -12,6 +12,11 @@ void requestOSXNotificationPermission();
 bool isOSXDevelopmentBuild();
 bool showOSXNotification(const QString &title, const QString &body);
 bool isOSXInterfaceStyleDark();
+//! When \p visible is false, remove the app from the Dock (Accessory policy).
+//! When true, show in the Dock and bring the app forward (Regular policy).
+void macOSSetDockVisible(bool visible);
+//! True when the app uses Regular activation policy (visible in the Dock).
+bool macOSIsDockVisible();
 void forceAppActive();
 void macOSNativeHide();
 

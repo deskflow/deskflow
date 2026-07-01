@@ -17,6 +17,10 @@
 #include "gui/Messages.h"
 #include "gui/StyleUtils.h"
 
+#if defined(Q_OS_MACOS)
+#include "gui/OSXHelpers.h"
+#endif
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QLocalSocket>
@@ -150,6 +154,11 @@ int main(int argc, char *argv[])
   if (parser.isSet(resetOption)) {
     diagnostic::clearSettings(false);
   }
+
+#if defined(Q_OS_MACOS)
+  // Start as a menu-bar/tray app; showEvent promotes to Regular when the window opens.
+  macOSSetDockVisible(false);
+#endif
 
   MainWindow mainWindow;
   mainWindow.open(parser.isSet(showOption));
