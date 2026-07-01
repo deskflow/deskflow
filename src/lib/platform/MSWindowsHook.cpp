@@ -292,6 +292,12 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     if (menu && (sc >= 0x47u && sc <= 0x52u && sc != 0x4au && sc != 0x4eu)) {
       return false;
     }
+
+    // We're on the server's own screen: we're only watching for the
+    // cursor to reach a jump zone, we are NOT relaying keystrokes to a
+    // client, so we have no need for the composed character here.
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, makeKeyMsg((UINT)wParam, 0, false), lParam);
+    return false;
   }
 
   // map the key event to a character.  we have to put the dead
