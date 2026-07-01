@@ -43,6 +43,10 @@ Message decode(const std::string &line)
     message.type = Message::Type::Promote;
   } else if (type == QStringLiteral("status")) {
     message.type = Message::Type::Status;
+  } else if (type == QStringLiteral("cursor")) {
+    message.type = Message::Type::Cursor;
+  } else if (type == QStringLiteral("keyfwd")) {
+    message.type = Message::Type::KeyFwd;
   } else {
     return message;
   }
@@ -50,10 +54,28 @@ Message decode(const std::string &line)
   message.name = object[QStringLiteral("name")].toString().toStdString();
   message.ip = object[QStringLiteral("ip")].toString().toStdString();
   message.lan = object[QStringLiteral("lan")].toString().toStdString();
+  message.host = object[QStringLiteral("host")].toString().toStdString();
   // Legacy senders emit seq as a JSON number; tolerate strings too.
   const auto seqValue = object[QStringLiteral("seq")];
   message.seq = seqValue.isString() ? seqValue.toString().toLongLong() : static_cast<int64_t>(seqValue.toDouble());
   message.token = object[QStringLiteral("token")].toString().toStdString();
+
+  if (message.type == Message::Type::KeyFwd) {
+    message.name = object[QStringLiteral("from")].toString().toStdString();
+    const QString phase = object[QStringLiteral("phase")].toString();
+    if (phase == QStringLiteral("up")) {
+      message.keyPhase = Message::KeyPhase::Up;
+    } else if (phase == QStringLiteral("repeat")) {
+      message.keyPhase = Message::KeyPhase::Repeat;
+    } else {
+      message.keyPhase = Message::KeyPhase::Down;
+    }
+    message.keyId = static_cast<uint16_t>(object[QStringLiteral("id")].toInt());
+    message.keyMask = static_cast<uint16_t>(object[QStringLiteral("mask")].toInt());
+    message.keyButton = static_cast<uint16_t>(object[QStringLiteral("button")].toInt());
+    message.keyLang = object[QStringLiteral("lang")].toString().toStdString();
+  }
+
   return message;
 }
 
@@ -83,6 +105,43 @@ std::string encodeStatus(const std::string &token)
 {
   QJsonObject object;
   object[QStringLiteral("t")] = QStringLiteral("status");
+  putToken(object, token);
+  return serialize(object);
+}
+
+std::string encodeCursor(const std::string &host, int64_t seq, const std::string &token)
+{
+  QJsonObject object;
+  object[QStringLiteral("t")] = QStringLiteral("cursor");
+  object[QStringLiteral("host")] = QString::fromStdString(host);
+  object[QStringLiteral("seq")] = static_cast<qint64>(seq);
+  putToken(object, token);
+  return serialize(object);
+}
+
+std::string encodeKeyFwd(
+    const std::string &from, Message::KeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &lang, const std::string &token
+)
+{
+  QJsonObject object;
+  object[QStringLiteral("t")] = QStringLiteral("keyfwd");
+  object[QStringLiteral("from")] = QString::fromStdString(from);
+  switch (phase) {
+  case Message::KeyPhase::Up:
+    object[QStringLiteral("phase")] = QStringLiteral("up");
+    break;
+  case Message::KeyPhase::Repeat:
+    object[QStringLiteral("phase")] = QStringLiteral("repeat");
+    break;
+  default:
+    object[QStringLiteral("phase")] = QStringLiteral("down");
+    break;
+  }
+  object[QStringLiteral("id")] = id;
+  object[QStringLiteral("mask")] = mask;
+  object[QStringLiteral("button")] = button;
+  object[QStringLiteral("lang")] = QString::fromStdString(lang);
   putToken(object, token);
   return serialize(object);
 }

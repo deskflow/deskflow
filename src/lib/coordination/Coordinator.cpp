@@ -6,9 +6,13 @@
 
 #include "coordination/Coordinator.h"
 
+#include "base/Event.h"
+#include "base/EventQueue.h"
 #include "base/Log.h"
+#include "coordination/CoordinationEvents.h"
 
 #include <chrono>
+#include <cctype>
 
 namespace deskflow::coordination {
 
@@ -41,6 +45,7 @@ Coordinator::Coordinator(CoordinatorConfig config)
       }
   );
   m_inputMonitor = createLocalInputMonitor();
+  m_keyboardRelay = createKeyboardRelayMonitor();
 }
 
 Coordinator::~Coordinator()
@@ -77,6 +82,7 @@ void Coordinator::stop()
     m_worker.join();
   }
   m_inputMonitor->stop();
+  m_keyboardRelay->stop();
   m_mesh->stop();
 }
 
@@ -140,6 +146,59 @@ bool Coordinator::hasPendingDecision()
   return m_hasDecision || m_quit;
 }
 
+void Coordinator::setEventQueue(IEventQueue *events)
+{
+  std::scoped_lock lock{m_mutex};
+  m_events = events;
+}
+
+void Coordinator::broadcastCursor(const std::string &host)
+{
+  if (host.empty()) {
+    return;
+  }
+  std::string line;
+  PeerList peers;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_election.role() != Role::Server) {
+      return;
+    }
+    m_fleetCursorHost = host;
+    const int64_t seq = ++m_cursorSeq;
+    line = protocol::encodeCursor(host, seq, m_config.token);
+    peers = m_config.peers;
+  }
+  for (const auto &peer : peers) {
+    if (peer.name == m_config.selfName) {
+      continue;
+    }
+    m_mesh->sendTo(peer.ip, line);
+    if (peer.lan != peer.ip) {
+      m_mesh->sendTo(peer.lan, line);
+    }
+  }
+}
+
+void Coordinator::updateKeyboardRelayForRole(Role role)
+{
+  if (!m_config.keyboardFollowCursor) {
+    m_keyboardRelay->stop();
+    return;
+  }
+  if (role == Role::Client) {
+    m_keyboardRelay->start(
+        m_config.selfName,
+        [this] { return fleetCursorHost(); },
+        [this](Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) {
+          sendKeyForward(phase, id, mask, button, lang);
+        }
+    );
+    return;
+  }
+  m_keyboardRelay->stop();
+}
+
 void Coordinator::onMessage(const Message &message, const std::function<void(const std::string &)> &reply)
 {
   switch (message.type) {
@@ -172,9 +231,89 @@ void Coordinator::onMessage(const Message &message, const std::function<void(con
     break;
   }
 
+  case Message::Type::Cursor:
+    handleCursorMessage(message);
+    break;
+
+  case Message::Type::KeyFwd:
+    handleKeyForwardMessage(message);
+    break;
+
   default:
     break;
   }
+}
+
+void Coordinator::handleCursorMessage(const Message &message)
+{
+  if (message.host.empty()) {
+    return;
+  }
+  std::scoped_lock lock{m_mutex};
+  m_fleetCursorHost = message.host;
+  m_cursorSeq = std::max(m_cursorSeq, message.seq);
+}
+
+void Coordinator::handleKeyForwardMessage(const Message &message)
+{
+  Role role;
+  IEventQueue *events = nullptr;
+  {
+    std::scoped_lock lock{m_mutex};
+    role = m_election.role();
+    events = m_events;
+  }
+  if (role != Role::Server || events == nullptr) {
+    return;
+  }
+  if (!isKnownPeer(message.name)) {
+    LOG_DEBUG("coordination: dropping keyfwd from unknown peer \"%s\"", message.name.c_str());
+    return;
+  }
+
+  auto *info = new CoordinationKeyForwardInfo(
+      message.keyPhase, message.keyId, message.keyMask, message.keyButton, message.keyLang, message.name
+  );
+  events->addEvent(
+      Event(EventTypes::CoordinationKeyForward, events->getSystemTarget(), info, Event::EventFlags::DeliverImmediately)
+  );
+}
+
+void Coordinator::sendKeyForward(
+    Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
+)
+{
+  std::string serverAddress;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_election.role() != Role::Client) {
+      return;
+    }
+    serverAddress = m_election.serverAddress();
+  }
+  if (serverAddress.empty()) {
+    return;
+  }
+  const auto line = protocol::encodeKeyFwd(
+      m_config.selfName, phase, static_cast<uint16_t>(id), static_cast<uint16_t>(mask), button, lang, m_config.token
+  );
+  m_mesh->sendTo(serverAddress, line);
+}
+
+bool Coordinator::isKnownPeer(const std::string &name) const
+{
+  for (const auto &peer : m_config.peers) {
+    if (peer.name == name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+std::string Coordinator::fleetCursorHost()
+{
+  std::scoped_lock lock{m_mutex};
+  return m_fleetCursorHost;
 }
 
 void Coordinator::onGenuineInput()
@@ -307,6 +446,33 @@ void Coordinator::workerLoop()
       if (now - lastHeartbeatAt >= kHeartbeatIntervalS) {
         lastHeartbeatAt = now;
         broadcastClaim();
+        std::string cursorHost;
+        PeerList peers;
+        std::string selfName;
+        std::string token;
+        int64_t seq = 0;
+        {
+          std::scoped_lock lock{m_mutex};
+          if (!m_fleetCursorHost.empty()) {
+            cursorHost = m_fleetCursorHost;
+            seq = ++m_cursorSeq;
+            peers = m_config.peers;
+            selfName = m_config.selfName;
+            token = m_config.token;
+          }
+        }
+        if (!cursorHost.empty()) {
+          const auto cursorLine = protocol::encodeCursor(cursorHost, seq, token);
+          for (const auto &peer : peers) {
+            if (peer.name == selfName) {
+              continue;
+            }
+            m_mesh->sendTo(peer.ip, cursorLine);
+            if (peer.lan != peer.ip) {
+              m_mesh->sendTo(peer.lan, cursorLine);
+            }
+          }
+        }
       }
       if (tick % kWedgeProbeEveryTicks == 0) {
         // Alive-but-not-accepting detection: the server process can wedge

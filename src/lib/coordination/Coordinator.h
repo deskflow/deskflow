@@ -8,14 +8,19 @@
 
 #include "coordination/CoordinationMesh.h"
 #include "coordination/ElectionState.h"
+#include "coordination/KeyboardRelayMonitor.h"
 #include "coordination/LocalInputMonitor.h"
 #include "coordination/Peer.h"
+#include "deskflow/KeyTypes.h"
 
 #include <condition_variable>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
+
+class IEventQueue;
 
 namespace deskflow::coordination {
 
@@ -28,6 +33,7 @@ struct CoordinatorConfig
   std::string token;
   PeerList peers;
   ElectionTuning tuning;
+  bool keyboardFollowCursor = true;
 };
 
 //! What the epoch loop should run next.
@@ -83,9 +89,25 @@ public:
   */
   bool hasPendingDecision();
 
+  //! Main-thread event queue for cross-thread coordination events.
+  void setEventQueue(IEventQueue *events);
+
+  //! Server epoch: publish which screen currently holds the fleet cursor.
+  void broadcastCursor(const std::string &host);
+
+  //! Start/stop the keyboard relay monitor for the current role epoch.
+  void updateKeyboardRelayForRole(Role role);
+
 private:
   void onMessage(const Message &message, const std::function<void(const std::string &)> &reply);
   void onGenuineInput();
+  void handleCursorMessage(const Message &message);
+  void handleKeyForwardMessage(const Message &message);
+  void sendKeyForward(
+      Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
+  );
+  bool isKnownPeer(const std::string &name) const;
+  std::string fleetCursorHost();
   void promoteSelf(const char *reason);
   void followSender(const Message &claim);
   void decide(Role role, const std::string &serverAddress);
@@ -96,6 +118,11 @@ private:
   CoordinatorConfig m_config;
   std::unique_ptr<CoordinationMesh> m_mesh;
   std::unique_ptr<ILocalInputMonitor> m_inputMonitor;
+  std::unique_ptr<IKeyboardRelayMonitor> m_keyboardRelay;
+
+  IEventQueue *m_events = nullptr;
+  std::string m_fleetCursorHost;
+  int64_t m_cursorSeq = 0;
 
   std::mutex m_mutex; // guards election state + decision + interrupt
   ElectionState m_election;

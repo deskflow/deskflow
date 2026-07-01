@@ -20,4 +20,7 @@ private Q_SLOTS:
   void malformedInputIsInvalid();
   void statusReplyMatchesLegacyShape();
   void peerListParsing();
+  void cursorRoundTrip();
+  void keyFwdRoundTrip();
+  void keyFwdPhasesDecode();
 };

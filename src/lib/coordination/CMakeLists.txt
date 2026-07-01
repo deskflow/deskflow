@@ -16,13 +16,24 @@ add_library(coordination STATIC
 )
 
 if(APPLE)
-  target_sources(coordination PRIVATE OSXLocalInputMonitor.mm)
+  target_sources(coordination PRIVATE
+    OSXLocalInputMonitor.mm
+    OSXKeyboardRelayMonitor.mm
+    KeyboardRelayMap.mm
+  )
   target_link_libraries(coordination PUBLIC "-framework ApplicationServices")
 elseif(WIN32)
-  target_sources(coordination PRIVATE MSWindowsLocalInputMonitor.cpp)
+  target_sources(coordination PRIVATE
+    MSWindowsLocalInputMonitor.cpp
+    MSWindowsKeyboardRelayMonitor.cpp
+    KeyboardRelayMap.cpp
+  )
   target_link_libraries(coordination PUBLIC ws2_32)
 else()
-  target_sources(coordination PRIVATE StubLocalInputMonitor.cpp)
+  target_sources(coordination PRIVATE
+    StubLocalInputMonitor.cpp
+    StubKeyboardRelayMonitor.cpp
+  )
 endif()
 
 target_link_libraries(coordination PUBLIC common base)

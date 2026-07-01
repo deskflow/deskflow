@@ -78,7 +78,7 @@ private:
   {
     const CGEventMask mask = CGEventMaskBit(kCGEventMouseMoved) | CGEventMaskBit(kCGEventLeftMouseDown) |
                              CGEventMaskBit(kCGEventRightMouseDown) | CGEventMaskBit(kCGEventOtherMouseDown) |
-                             CGEventMaskBit(kCGEventScrollWheel) | CGEventMaskBit(kCGEventKeyDown);
+                             CGEventMaskBit(kCGEventScrollWheel);
 
     m_tap = CGEventTapCreate(
         kCGSessionEventTap, kCGHeadInsertEventTap, kCGEventTapOptionListenOnly, mask, tapCallback, this

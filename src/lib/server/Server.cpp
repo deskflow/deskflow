@@ -1709,6 +1709,25 @@ void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButto
   m_active->keyRepeat(id, mask, count, button, lang);
 }
 
+void Server::relayForwardedKey(
+    deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
+    const std::string &lang
+)
+{
+  using deskflow::coordination::Message;
+  switch (phase) {
+  case Message::KeyPhase::Up:
+    onKeyUp(id, mask, button, nullptr);
+    break;
+  case Message::KeyPhase::Repeat:
+    onKeyRepeat(id, mask, 1, button, lang);
+    break;
+  default:
+    onKeyDown(id, mask, button, lang, nullptr);
+    break;
+  }
+}
+
 void Server::onMouseDown(ButtonID id)
 {
   LOG_VERBOSE("onMouseDown id=%d", id);

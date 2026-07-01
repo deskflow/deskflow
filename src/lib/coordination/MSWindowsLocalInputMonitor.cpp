@@ -104,16 +104,12 @@ private:
     }
     SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-    RAWINPUTDEVICE devices[2]{};
+    RAWINPUTDEVICE devices[1]{};
     devices[0].usUsagePage = 0x01; // generic desktop
     devices[0].usUsage = 0x02;     // mouse
     devices[0].dwFlags = RIDEV_INPUTSINK;
     devices[0].hwndTarget = hwnd;
-    devices[1].usUsagePage = 0x01;
-    devices[1].usUsage = 0x06; // keyboard
-    devices[1].dwFlags = RIDEV_INPUTSINK;
-    devices[1].hwndTarget = hwnd;
-    if (!RegisterRawInputDevices(devices, 2, sizeof(RAWINPUTDEVICE))) {
+    if (!RegisterRawInputDevices(devices, 1, sizeof(RAWINPUTDEVICE))) {
       LOG_WARN("coordination: raw input registration failed");
       DestroyWindow(hwnd);
       return;

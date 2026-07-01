@@ -26,7 +26,16 @@ struct Message
     Invalid,
     Claim,
     Promote,
-    Status
+    Status,
+    Cursor,
+    KeyFwd
+  };
+
+  enum class KeyPhase
+  {
+    Down,
+    Up,
+    Repeat
   };
 
   Type type = Type::Invalid;
@@ -35,6 +44,14 @@ struct Message
   std::string lan;
   int64_t seq = 0;
   std::string token;
+  // cursor: host screen under the fleet cursor (server → peers)
+  std::string host;
+  // keyfwd: keyboard relay (peer → server)
+  KeyPhase keyPhase = KeyPhase::Down;
+  uint16_t keyId = 0;
+  uint16_t keyMask = 0;
+  uint16_t keyButton = 0;
+  std::string keyLang;
 };
 
 namespace protocol {
@@ -47,6 +64,13 @@ std::string encodeClaim(
 );
 std::string encodePromote(const std::string &token);
 std::string encodeStatus(const std::string &token);
+
+std::string encodeCursor(const std::string &host, int64_t seq, const std::string &token);
+
+std::string encodeKeyFwd(
+    const std::string &from, Message::KeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &lang, const std::string &token
+);
 
 //! Status reply (legacy shape: role/server_ip/seq/last_switch/name).
 std::string encodeStatusReply(

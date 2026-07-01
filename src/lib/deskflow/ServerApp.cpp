@@ -374,6 +374,9 @@ bool ServerApp::startServer()
     LOG_DEBUG("started server, waiting for clients");
     ipcSendConnectionState(deskflow::core::ConnectionState::Listening);
     m_serverState = Started;
+    if (m_cursorBroadcastCallback && !m_name.empty()) {
+      m_cursorBroadcastCallback(m_name);
+    }
     return true;
   } catch (SocketAddressInUseException &e) {
     LOG_CRIT("cannot listen for clients: %s", e.what());
@@ -463,7 +466,16 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
 {
   auto *server = new Server(config, primaryClient, m_serverScreen, getEvents());
   try {
-    getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
+    getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &event) {
+      handleScreenSwitched(event);
+    });
+    getEvents()->addHandler(EventTypes::CoordinationKeyForward, getEvents()->getSystemTarget(), [server](const auto &event) {
+      const auto *info = static_cast<const CoordinationKeyForwardInfo *>(event.getData());
+      if (info == nullptr) {
+        return;
+      }
+      server->relayForwardedKey(info->phase, info->id, info->mask, info->button, info->lang);
+    });
 
   } catch (std::bad_alloc &ba) {
     delete server;
@@ -473,9 +485,16 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
   return server;
 }
 
-void ServerApp::handleScreenSwitched() const
+void ServerApp::handleScreenSwitched(const Event &event)
 {
-  // do nothing
+  if (!m_cursorBroadcastCallback) {
+    return;
+  }
+  const auto *info = static_cast<const Server::SwitchToScreenInfo *>(event.getData());
+  if (info == nullptr || info->m_screen.empty()) {
+    return;
+  }
+  m_cursorBroadcastCallback(info->m_screen);
 }
 
 std::unique_ptr<ISocketFactory> ServerApp::getSocketFactory() const

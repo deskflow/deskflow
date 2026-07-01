@@ -10,10 +10,12 @@
 
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
+#include "coordination/CoordinationEvents.h"
 #include "deskflow/App.h"
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
 
+#include <functional>
 #include <memory>
 
 enum class ServerState
@@ -91,6 +93,11 @@ public:
     return m_server;
   }
 
+  void setCursorBroadcastCallback(std::function<void(const std::string &host)> callback)
+  {
+    m_cursorBroadcastCallback = std::move(callback);
+  }
+
   //
   // Static functions
   //
@@ -102,7 +109,7 @@ public:
   }
 
 private:
-  void handleScreenSwitched() const;
+  void handleScreenSwitched(const Event &event);
   std::unique_ptr<ISocketFactory> getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 
@@ -116,4 +123,5 @@ private:
   NetworkAddress *m_deskflowAddress = nullptr;
   std::string m_name;
   std::shared_ptr<deskflow::server::Config> m_config;
+  std::function<void(const std::string &host)> m_cursorBroadcastCallback;
 };

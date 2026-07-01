@@ -44,7 +44,7 @@ add_library(server STATIC
   Server.h
 )
 
-target_link_libraries(server PUBLIC common)
+target_link_libraries(server PUBLIC common coordination)
 
 if(WIN32)
   target_link_libraries(server PUBLIC ws2_32)

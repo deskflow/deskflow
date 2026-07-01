@@ -66,6 +66,9 @@ public:
     // CGEventPost is blocked. Managed from the GUI settings dialog.
     inline static const auto LoginBridgeEnabled = QStringLiteral("coordination/loginBridgeEnabled");
     inline static const auto LoginBridgeScale = QStringLiteral("coordination/loginBridgeScale");
+    // Fleet keyboard follow-cursor: forward local keys to the machine under
+    // the fleet cursor when auto mode is enabled (see docs/coordination/design.md).
+    inline static const auto KeyboardFollowCursor = QStringLiteral("coordination/keyboardFollowCursor");
   };
   struct Core
   {
@@ -297,6 +300,7 @@ private:
     , Settings::Coordination::Enabled
     , Settings::Coordination::LoginBridgeEnabled
     , Settings::Coordination::LoginBridgeScale
+    , Settings::Coordination::KeyboardFollowCursor
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion

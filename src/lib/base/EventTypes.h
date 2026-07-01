@@ -250,5 +250,8 @@ enum class EventTypes : uint32_t
 
   /// Counterpart of CoordinationScreenEntered (kMsgCLeave).
   CoordinationScreenLeft,
+
+  /// Fleet keyboard relay: a peer forwarded a key event to the server epoch.
+  CoordinationKeyForward,
 };
 } // namespace deskflow

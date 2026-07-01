@@ -106,11 +106,13 @@ void SettingsTests::loginBridgeKeysSurviveCleanSettings()
   Settings::setSettingsFile(m_settingsFile);
   Settings::setValue(Settings::Coordination::LoginBridgeEnabled, true);
   Settings::setValue(Settings::Coordination::LoginBridgeScale, 6.5);
+  Settings::setValue(Settings::Coordination::KeyboardFollowCursor, true);
 
   Settings::setSettingsFile(m_settingsFile);
 
   QCOMPARE(Settings::value(Settings::Coordination::LoginBridgeEnabled).toBool(), true);
   QCOMPARE(Settings::value(Settings::Coordination::LoginBridgeScale).toDouble(), 6.5);
+  QCOMPARE(Settings::value(Settings::Coordination::KeyboardFollowCursor).toBool(), true);
 }
 
 QTEST_MAIN(SettingsTests)

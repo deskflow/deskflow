@@ -11,6 +11,7 @@
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "common/NetworkProtocol.h"
+#include "coordination/CoordinationProtocol.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
@@ -201,6 +202,12 @@ public:
   */
   void getClients(std::vector<std::string> &list) const;
   void sendConnectedClientsIpc() const;
+
+  //! Inject a fleet-relayed key event into the active screen (auto mode).
+  void relayForwardedKey(
+      deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
+      const std::string &lang
+  );
 
   //@}
 

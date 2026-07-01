@@ -40,6 +40,8 @@ CoordinatorConfig configFromSettings()
   config.peers = deskflow::coordination::parsePeerList(
       Settings::value(Settings::Coordination::Peers).toStringList().join(QLatin1Char(',')).toStdString()
   );
+  const auto followCursor = Settings::value(Settings::Coordination::KeyboardFollowCursor);
+  config.keyboardFollowCursor = followCursor.isValid() ? followCursor.toBool() : true;
   return config;
 }
 
@@ -98,6 +100,7 @@ void AutoModeRunner::epochLoop()
     m_exitCode = s_exitFailed;
     return;
   }
+  m_coordinator->setEventQueue(&m_events);
 
   // While a client epoch runs, its enter/leave transitions feed the
   // election's cursor-here state so forwarded-motion echoes face the
@@ -139,9 +142,15 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
     Settings::setValue(Settings::Client::RemoteHost, QString::fromStdString(serverAddress));
   }
 
+  m_coordinator->updateKeyboardRelayForRole(role);
+
   std::unique_ptr<App> app;
   if (role == Role::Server) {
-    app = std::make_unique<ServerApp>(&m_events, m_processName);
+    auto serverApp = std::make_unique<ServerApp>(&m_events, m_processName);
+    serverApp->setCursorBroadcastCallback([this](const std::string &host) {
+      m_coordinator->broadcastCursor(host);
+    });
+    app = std::move(serverApp);
   } else {
     app = std::make_unique<ClientApp>(&m_events, m_processName);
   }
@@ -173,6 +182,8 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
     LOG_CRIT("an unknown error occurred\n");
   }
   m_appRunning = false;
+
+  m_coordinator->updateKeyboardRelayForRole(Role::Init);
 
   m_exitCode = result;
   return result;
