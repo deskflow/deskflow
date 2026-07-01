@@ -95,18 +95,19 @@ static const KeyEntry s_controlKeys[] = {
     // to map to.  also the enter key with numlock on is a modifier but i
     // don't know which.
 
-    // modifier keys.  OS X doesn't seem to support right handed versions
-    // of modifier keys so we map them to the left handed versions.
+    // modifier keys.  map the left and right variants to their respective
+    // macOS virtual keys so the modifier side is preserved on the client.
     {kKeyShift_L, s_shiftVK},
-    {kKeyShift_R, s_shiftVK}, // 60
+    {kKeyShift_R, kVK_RightShift},
     {kKeyControl_L, s_controlVK},
-    {kKeyControl_R, s_controlVK}, // 62
+    {kKeyControl_R, kVK_RightControl},
     {kKeyAlt_L, s_altVK},
-    {kKeyAlt_R, s_altVK},
+    {kKeyAlt_R, kVK_RightOption},
+    {kKeyAltGr, kVK_RightOption}, // macOS has no AltGr; treat it as right Option
     {kKeySuper_L, s_superVK},
-    {kKeySuper_R, s_superVK}, // 61
+    {kKeySuper_R, kVK_RightCommand},
     {kKeyMeta_L, s_superVK},
-    {kKeyMeta_R, s_superVK}, // 61
+    {kKeyMeta_R, kVK_RightCommand},
 
     // toggle modifiers
     {kKeyNumLock, s_numLockVK},
@@ -168,7 +169,8 @@ io_connect_t getEventDriver()
 
 bool isModifier(uint8_t virtualKey)
 {
-  static std::set<uint8_t> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK};
+  static std::set<uint8_t> modifiers{s_shiftVK,      s_superVK,        s_altVK,         s_controlVK,     s_capsLockVK,
+                                     kVK_RightShift, kVK_RightControl, kVK_RightOption, kVK_RightCommand};
 
   return (modifiers.find(virtualKey) != modifiers.end());
 }
@@ -523,19 +525,19 @@ CGEventFlags OSXKeyState::getDeviceDependedFlags() const
   CGEventFlags modifiers = 0;
 
   if (m_shiftPressed) {
-    modifiers |= NX_DEVICELSHIFTKEYMASK;
+    modifiers |= m_shiftRightPressed ? NX_DEVICERSHIFTKEYMASK : NX_DEVICELSHIFTKEYMASK;
   }
 
   if (m_controlPressed) {
-    modifiers |= NX_DEVICELCTLKEYMASK;
+    modifiers |= m_controlRightPressed ? NX_DEVICERCTLKEYMASK : NX_DEVICELCTLKEYMASK;
   }
 
   if (m_altPressed) {
-    modifiers |= NX_DEVICELALTKEYMASK;
+    modifiers |= m_altRightPressed ? NX_DEVICERALTKEYMASK : NX_DEVICELALTKEYMASK;
   }
 
   if (m_superPressed) {
-    modifiers |= NX_DEVICELCMDKEYMASK;
+    modifiers |= m_superRightPressed ? NX_DEVICERCMDKEYMASK : NX_DEVICELCMDKEYMASK;
   }
 
   return modifiers;
@@ -559,15 +561,39 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
   switch (virtualKey) {
   case s_shiftVK:
     m_shiftPressed = keyDown;
+    if (keyDown)
+      m_shiftRightPressed = false;
+    break;
+  case kVK_RightShift:
+    m_shiftPressed = keyDown;
+    m_shiftRightPressed = keyDown;
     break;
   case s_controlVK:
     m_controlPressed = keyDown;
+    if (keyDown)
+      m_controlRightPressed = false;
+    break;
+  case kVK_RightControl:
+    m_controlPressed = keyDown;
+    m_controlRightPressed = keyDown;
     break;
   case s_altVK:
     m_altPressed = keyDown;
+    if (keyDown)
+      m_altRightPressed = false;
+    break;
+  case kVK_RightOption:
+    m_altPressed = keyDown;
+    m_altRightPressed = keyDown;
     break;
   case s_superVK:
     m_superPressed = keyDown;
+    if (keyDown)
+      m_superRightPressed = false;
+    break;
+  case kVK_RightCommand:
+    m_superPressed = keyDown;
+    m_superRightPressed = keyDown;
     break;
   case s_capsLockVK:
     m_capsPressed = keyDown;
@@ -790,6 +816,18 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
       for (std::set<uint32_t>::iterator k = required.begin(); k != required.end(); ++k) {
         item.m_required = mapModifiersFromOSX(*k << 16);
         keyMap.addKeyEntry(item);
+
+        // macOS has no AltGr modifier; characters on the Option (Alt) layer are
+        // reachable via the right Option key, which a remote AltGr maps to.
+        // Register an AltGr-required variant of every Alt(Option) entry so an
+        // incoming AltGr both matches these characters and is synthesized via
+        // the right Option key, keeping left Alt and AltGr distinct.
+        if ((item.m_required & KeyModifierAlt) != 0) {
+          auto altGrItem = item;
+          altGrItem.m_required = (item.m_required & ~KeyModifierAlt) | KeyModifierAltGr;
+          altGrItem.m_sensitive = item.m_sensitive | KeyModifierAltGr;
+          keyMap.addKeyEntry(altGrItem);
+        }
       }
     }
   }
@@ -846,6 +884,9 @@ void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyM
   }
   if ((changed & KeyModifierAlt) != 0) {
     handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
+  }
+  if ((changed & KeyModifierAltGr) != 0) {
+    handleModifierKey(target, kVK_RightOption, kKeyAltGr, (newMask & KeyModifierAltGr) != 0, newMask);
   }
   if ((changed & KeyModifierSuper) != 0) {
     handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
