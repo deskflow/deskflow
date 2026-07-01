@@ -131,6 +131,14 @@ install_bundle() {
   else
     echo "== Installed unsigned (codesign verify skipped or failed) =="
   fi
+
+  # libqsvgicon.dylib needs QtSvg.framework; without it tray/menu SVG icons are blank
+  # in Release installs while Debug (Homebrew Qt) still works.
+  if [[ -f "$INSTALL_APP/Contents/PlugIns/iconengines/libqsvgicon.dylib" ]] &&
+     [[ ! -d "$INSTALL_APP/Contents/Frameworks/QtSvg.framework" ]]; then
+    echo "error: libqsvgicon.dylib is present but QtSvg.framework is missing — rebuild with Qt6::Svg linked" >&2
+    exit 1
+  fi
 }
 
 quit_deskflow

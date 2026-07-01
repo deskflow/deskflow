@@ -41,13 +41,17 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   deskflow-gui.cpp
 )
 
+set(deskflow_gui_qt_libs Qt6::Core Qt6::Widgets Qt6::Network)
+if(APPLE)
+  list(APPEND deskflow_gui_qt_libs Qt6::Svg)
+endif()
+
 target_link_libraries(
   ${target}
   gui
   common
-  Qt6::Core
-  Qt6::Widgets
-  Qt6::Network)
+  ${deskflow_gui_qt_libs}
+)
 
 install(
   TARGETS ${target}

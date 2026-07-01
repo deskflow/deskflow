@@ -20,8 +20,12 @@ macro(configure_libs)
   endif()
 
   find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
-  if(UNIX AND NOT APPLE)
-      find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus Xml)
+  if(APPLE)
+    # Bundled SVG icons (qrc + libqsvgicon) need QtSvg in the .app Frameworks;
+    # debug builds load it from Homebrew, but macdeployqt only ships it when linked.
+    find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Svg)
+  elseif(UNIX)
+    find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus Xml)
   endif()
 
   # Define the location of Qt deployment tool

@@ -792,6 +792,11 @@ void MainWindow::createMenuBar()
 
 void MainWindow::setupTrayIcon()
 {
+  if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+    qWarning("system tray is not available on this platform");
+    return;
+  }
+
   auto trayMenu = new QMenu(this);
   trayMenu->addActions(
       {m_actionStartCore, m_actionRestartCore, m_actionStopCore, m_actionMinimize, m_actionRestore, m_actionTrayQuit}
@@ -850,38 +855,35 @@ void MainWindow::setTrayIcon()
   static const auto fallbackPath = QStringLiteral(":/icons/%1-%2/apps/64/%3");
 
   QString themeIcon = kRevFqdnName;
-  const auto trayMode = [&]() -> QString {
-    if (deskflow::platform::isWindows()) {
-      QSettings settings(
-          QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
-          QSettings::NativeFormat
+  if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
+    if (deskflow::platform::isMac()) {
+      const auto icon = QIcon::fromTheme(
+          themeIcon, QIcon(fallbackPath.arg(kAppId, iconMode(), themeIcon))
       );
-      return settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
-                                                                               : QStringLiteral("dark");
+      m_trayIcon->setIcon(icon);
+      if (icon.pixmap(22, 22).isNull()) {
+        qWarning("tray icon is empty after loading %s (colorful mode)", qPrintable(themeIcon));
+      }
+    } else {
+      m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
     }
-    return iconMode();
-  }();
-
-  const bool symbolic = Settings::value(Settings::Gui::SymbolicTrayIcon).toBool();
-  if (!symbolic) {
-    themeIcon = kRevFqdnName;
-  } else {
-    themeIcon.append(QStringLiteral("-symbolic"));
-  }
-
-  const QString resource = fallbackPath.arg(kAppId, trayMode, themeIcon);
-
-#if defined(Q_OS_MACOS)
-  m_trayIcon->setIcon(macMenuBarTrayIcon(resource, symbolic));
-  return;
-#endif
-
-  if (!symbolic) {
-    m_trayIcon->setIcon(QIcon::fromTheme(kRevFqdnName, QIcon(resource)));
     return;
   }
 
-  auto icon = QIcon::fromTheme(themeIcon, QIcon(resource));
+  themeIcon.append(QStringLiteral("-symbolic"));
+
+  if (deskflow::platform::isWindows()) {
+    QSettings settings(
+        QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+        QSettings::NativeFormat
+    );
+    const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
+                                                                                             : QStringLiteral("dark");
+    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
+    return;
+  }
+
+  auto icon = QIcon::fromTheme(themeIcon, QIcon(fallbackPath.arg(kAppId, iconMode(), themeIcon)));
   icon.setIsMask(true);
   m_trayIcon->setIcon(icon);
 }
