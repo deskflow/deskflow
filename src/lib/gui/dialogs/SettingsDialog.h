@@ -15,9 +15,13 @@ namespace Ui {
 class SettingsDialog;
 }
 
+class SettingsDialogTabTests;
+
 class SettingsDialog : public QDialog
 {
   Q_OBJECT
+
+  friend class SettingsDialogTabTests;
 
 public:
   void extracted();

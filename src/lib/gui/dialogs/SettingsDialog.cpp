@@ -96,7 +96,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
   setButtonBoxEnabledButtons();
   initConnections();
   connect(ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
-    updateDialogHeight();
+    // Do not call updateDialogHeight() here: it iterates every tab index to
+    // measure height and visibly cycles the tab bar when updates are painted.
 #ifdef Q_OS_MAC
     if (ui->tabWidget->widget(index) == ui->tabLoginBridge) {
       updateLoginBridgePanel();
@@ -437,17 +438,19 @@ void SettingsDialog::updateDialogHeight()
 {
   QSignalBlocker tabBlocker(ui->tabWidget);
   const int current = ui->tabWidget->currentIndex();
+  const bool updatesWereEnabled = QWidget::updatesEnabled();
+  setUpdatesEnabled(false);
   int maxHeight = 0;
   for (int i = 0; i < ui->tabWidget->count(); ++i) {
     ui->tabWidget->setCurrentIndex(i);
     setMaximumHeight(QWIDGETSIZE_MAX);
     setMinimumHeight(0);
     adjustSize();
-    QApplication::processEvents();
     maxHeight = std::max(maxHeight, height());
   }
   ui->tabWidget->setCurrentIndex(current);
   setFixedHeight(maxHeight);
+  setUpdatesEnabled(updatesWereEnabled);
 }
 
 #ifdef Q_OS_MAC
