@@ -200,19 +200,19 @@ void SettingsDialog::showReadOnlyMessage()
 
 void SettingsDialog::updateText()
 {
-  const auto logLevelNames = LogLevel::logLevelNames();
+  const auto logLevels = LogLevel::logLevelNames().count();
   const QStringList toolTips = {tr("Required messages"),        tr("Non-fatal errors"), tr("General warnings"),
                                 tr("General events [Default]"), tr("Debug entries"),    tr("Verbose debug output")};
   if (ui->comboLogLevel->count() == 0) {
     const auto logLevelOptions = LogLevel::logLevelOptions();
-    for (int i = 0; i < logLevelNames.count(); i++) {
-      ui->comboLogLevel->addItem(logLevelNames.at(i));
+    for (int i = 0; i < logLevels; i++) {
+      ui->comboLogLevel->addItem(LogLevel::toString(i));
       ui->comboLogLevel->setItemData(i, logLevelOptions.at(i), Qt::UserRole);
       ui->comboLogLevel->setItemData(i, toolTips.at(i), Qt::ToolTipRole);
     }
   } else {
-    for (int i = 0; i < logLevelNames.count(); i++) {
-      ui->comboLogLevel->setItemData(i, logLevelNames.at(i), Qt::DisplayRole);
+    for (int i = 0; i < logLevels; i++) {
+      ui->comboLogLevel->setItemData(i, LogLevel::toString(i), Qt::DisplayRole);
       ui->comboLogLevel->setItemData(i, toolTips.at(i), Qt::ToolTipRole);
     }
   }
