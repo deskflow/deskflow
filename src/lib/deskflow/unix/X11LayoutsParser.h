@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -11,15 +12,11 @@
 #include <string>
 #include <vector>
 
-class QDomNode;
-
 class X11LayoutsParser
 {
 public:
-  static std::vector<std::string> getX11LanguageList(const std::string &pathToEvdevFile);
-  static std::string convertLayoutToISO(
-      const std::string &pathToEvdevFile, const std::string &layoutLangCode, bool needToReloadFiles = false
-  );
+  static std::vector<std::string> getX11LanguageList();
+  static std::string convertLayoutToISO(const std::string &layoutLangCode);
 
 private:
   struct Lang
@@ -29,15 +26,13 @@ private:
     std::vector<Lang> variants;
   };
 
-  static bool readXMLConfigItemElem(const QDomNode &node, std::vector<Lang> &langList);
-
-  static std::vector<Lang> getAllLanguageData(const std::string &pathToEvdevFile);
+  static std::vector<Lang> getAllLanguageData();
 
   static void appendVectorUniq(const std::vector<std::string> &source, std::vector<std::string> &dst);
 
   static void convertLayoutToISO639_2(
-      const std::string &pathToEvdevFile, bool needToReloadEvdev, const std::vector<std::string> &layoutNames,
-      const std::vector<std::string> &layoutVariantNames, std::vector<std::string> &iso639_2Codes
+      const std::vector<std::string> &layoutNames, const std::vector<std::string> &layoutVariantNames,
+      std::vector<std::string> &iso639_2Codes
   );
 
   static std::vector<std::string> convertISO639_2ToISO639_1(const std::vector<std::string> &iso639_2Codes);
