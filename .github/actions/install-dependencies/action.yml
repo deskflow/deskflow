@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
@@ -35,8 +36,8 @@ runs:
             if [ ${{inputs.like}} == "debian" ]; then
               apt update -qqq > /dev/null
               apt install -qqq cmake build-essential ninja-build \
-                xorg-dev libx11-dev libxtst-dev libssl-dev \
-                libxkbfile-dev qt6-base-dev qt6-tools-dev libxkbcommon-dev \
+                xorg-dev libx11-dev libxtst-dev libssl-dev libxkbfile-dev \
+                qt6-base-dev qt6-tools-dev libxkbregistry-dev libxkbcommon-dev \
                 libei-dev libportal-dev help2man -y >/dev/null
             elif [ ${{inputs.like}} == "fedora" ]; then
               dnf install -y cmake make ninja-build gcc-c++ rpm-build openssl-devel \
@@ -47,7 +48,7 @@ runs:
               zypper install -y --force-resolution \
                 cmake make ninja gcc-c++ rpm-build libopenssl-devel \
                 libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel \
-                qt6-linguist-devel libxkbcommon-devel libxkbcommon-x11-devel \
+                qt6-linguist-devel libxkbcommon-devel libxkbcommon-x11-devel libxkbregistry-devel \
                 libei-devel libportal-devel help2man libXinerama-devel libXrandr-devel
             elif [ ${{ inputs.like }} == "arch" ]; then
               pacman -Syu --noconfirm base-devel cmake ninja \
