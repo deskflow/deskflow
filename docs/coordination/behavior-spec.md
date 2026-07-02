@@ -178,10 +178,10 @@ the login window uses the normal server transport.
    the in-process role controller configures them directly instead of
    regenerating conf files).
 
-## 11. Mesh v2 extensions (dev flag: `coordination/meshVersion=2`)
+## 11. Mesh v2 extensions (`coordination/meshVersion=2`)
 
-Additive messages on the same TCP port (24851). Production default remains
-mesh v1 (`meshVersion=1`); v2 handlers are ignored until the setting is 2.
+Production default is mesh v2 (`meshVersion=2`). Set `coordination/meshVersion=1`
+only for emergency rollback while upgrading a mixed fleet.
 
 ### `hello` — capability handshake
 
@@ -189,8 +189,9 @@ mesh v1 (`meshVersion=1`); v2 handlers are ignored until the setting is 2.
 {"t": "hello", "v": 2, "name": "<sender>", "token": "<optional>"}
 ```
 
-Receiver replies with its own `hello` when `meshVersion=2`. Used to detect
-v2 peers during development; production cutover (P6) may reject v1 peers.
+Receiver replies with its own `hello` when `meshVersion=2`. v2 nodes reject
+peers that advertise `v` < 2. The GUI status poll surfaces mismatches via
+`version_mismatch` in the localhost status reply.
 
 ### `fleet` — server-authoritative state fragment
 
@@ -213,5 +214,5 @@ The elected server is authoritative: each newer fragment replaces
 coordinator emits `CoordinationFleetStateChanged`; the first non-empty
 `links[]` also emits `CoordinationTopologyReady`.
 
-Legacy `cursor` and `keyfwd` messages remain active during the mixed-mode
-window; they are removed in the production cutover phase.
+Legacy `cursor` and `keyfwd` messages are rejected on mesh v2 nodes. Roll back
+to `coordination/meshVersion=1` on every machine if a straggler cannot upgrade.

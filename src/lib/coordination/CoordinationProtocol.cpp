@@ -332,7 +332,7 @@ FleetFragment fleetFragmentFromMessage(const Message &message)
 
 std::string encodeStatusReply(
     Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name,
-    const FleetState *fleet
+    const FleetState *fleet, int meshVersion, const std::vector<std::string> &versionMismatchPeers
 )
 {
   QJsonObject object;
@@ -345,6 +345,16 @@ std::string encodeStatusReply(
   object[QStringLiteral("seq")] = static_cast<qint64>(seq);
   object[QStringLiteral("last_switch")] = lastSwitchAt;
   object[QStringLiteral("name")] = QString::fromStdString(name);
+  if (meshVersion > 0) {
+    object[QStringLiteral("mesh_version")] = meshVersion;
+  }
+  if (!versionMismatchPeers.empty()) {
+    QJsonArray mismatches;
+    for (const auto &peer : versionMismatchPeers) {
+      mismatches.append(QString::fromStdString(peer));
+    }
+    object[QStringLiteral("version_mismatch")] = mismatches;
+  }
   if (fleet != nullptr) {
     QJsonObject fleetObject;
     fleetObject[QStringLiteral("seq")] = static_cast<qint64>(fleet->seq);
@@ -398,6 +408,16 @@ StatusReply decodeStatusReply(const std::string &line)
   reply.valid = true;
   reply.serverAddress = object[QStringLiteral("server_ip")].toString().toStdString();
   reply.name = object[QStringLiteral("name")].toString().toStdString();
+  reply.meshVersion = object[QStringLiteral("mesh_version")].toInt();
+  if (const auto mismatches = object[QStringLiteral("version_mismatch")]; mismatches.isArray()) {
+    const QJsonArray array = mismatches.toArray();
+    reply.versionMismatchPeers.reserve(array.size());
+    for (const auto &value : array) {
+      if (value.isString()) {
+        reply.versionMismatchPeers.push_back(value.toString().toStdString());
+      }
+    }
+  }
   return reply;
 }
 

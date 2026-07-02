@@ -167,4 +167,24 @@ void CoordinatorFleetPublishTests::clientMergesInboundFleetMessage()
   coordinator.stop();
 }
 
+void CoordinatorFleetPublishTests::hello_rejectsV1Peer()
+{
+  EventQueue events;
+  Coordinator coordinator(testConfig());
+  coordinator.setEventQueue(&events);
+  QVERIFY(coordinator.start());
+
+  Message inbound;
+  inbound.type = Message::Type::Hello;
+  inbound.meshVersion = 1;
+  inbound.name = "legacy";
+
+  std::string reply;
+  coordinator.handleHelloMessage(inbound, [&](const std::string &line) { reply = line; });
+
+  QVERIFY(reply.empty());
+
+  coordinator.stop();
+}
+
 QTEST_MAIN(CoordinatorFleetPublishTests)

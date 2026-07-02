@@ -20,6 +20,7 @@ private Q_SLOTS:
   void malformedInputIsInvalid();
   void statusReplyMatchesLegacyShape();
   void statusReplyIncludesFleetSnapshot();
+  void statusReplyIncludesMeshVersion();
   void peerListParsing();
   void cursorRoundTrip();
   void keyFwdRoundTrip();

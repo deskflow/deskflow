@@ -14,4 +14,5 @@ private Q_SLOTS:
   void formatFleetGraph_screensAndEdges();
   void poll_emitsOnlineWithFleetGraph();
   void poll_emitsOfflineWhenNoCoordinator();
+  void formatStatusAnnotation_versionMismatch();
 };

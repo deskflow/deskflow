@@ -81,8 +81,9 @@ token after the last machine is cut over.
 ## 3. Operator tooling
 
 `kvmctl status` and `kvmctl primary <name>` work unchanged against native
-nodes (same `status` / `promote` messages). If a mesh token is set, add
-`"token":"<secret>"` to the JSON those scripts send.
+nodes (same `status` / `promote` messages). On mesh v2, `status` replies also
+include `mesh_version`, `fleet`, and optional `version_mismatch` (see §5).
+If a mesh token is set, add `"token":"<secret>"` to the JSON those scripts send.
 
 ## 4. What stays external
 
@@ -91,7 +92,32 @@ nodes (same `status` / `promote` messages). If a mesh token is set, add
   sessions. (Hook point documented in design.md.)
 - **Wake-on-LAN** helper scripts: unchanged.
 
-## 5. Known follow-ups
+## 5. Mesh v2 fleet upgrade
+
+Mesh v2 is the production default (`coordination/meshVersion=2`). Upgrade every
+machine in the fleet before relying on fleet topology, keyboard routing, and
+capability consumers (login bridge, Mouser, UAC).
+
+1. Install the mesh v2 build on **all** machines (hackintosh, macbookpro,
+   tiny11, …).
+2. Confirm each node's localhost status includes `"mesh_version":2` and a
+   non-empty `fleet` object once the elected server publishes topology:
+   `echo '{"t":"status"}' | nc 127.0.0.1 24851`
+3. The GUI status bar shows the fleet graph (`screens · edges`). If a peer is
+   still on mesh v1, you'll see `mesh version mismatch: <peer>`.
+4. Only after the full fleet is on v2 should you remove rollback settings.
+
+`kvmctl status` uses the same `status` message. On mesh v2 the reply includes:
+
+- `mesh_version` — local coordination protocol version
+- `fleet` — read-only snapshot (`server`, `cursor_host`, `peers`, `links`,
+  `screens`) matching the GUI fleet graph
+- `version_mismatch` — peer names still answering with mesh v1 (when present)
+
+Emergency rollback: set `coordination/meshVersion=1` on **every** machine and
+restart `deskflow-core auto`.
+
+## 6. Known follow-ups
 
 - Windows session/desktop switching (Winlogon vs Default) remains the
   deskflow daemon's domain, as before.

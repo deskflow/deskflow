@@ -31,6 +31,7 @@ const int kLanProbeTimeoutMs = 700;
 const int kWedgeProbeTimeoutMs = 1000;
 const int kWedgeProbeEveryTicks = 9;
 const int kWedgeStrikesToRestart = 2;
+const int kVersionProbeEveryTicks = 15;
 
 double monotonicSeconds()
 {
@@ -99,7 +100,7 @@ Coordinator::Coordinator(CoordinatorConfig config)
   }
 
   m_mesh = std::make_unique<CoordinationMesh>(
-      m_config.meshPort, m_config.token,
+      m_config.meshPort, m_config.token, m_config.meshVersion,
       [this](const Message &message, const std::function<void(const std::string &)> &reply) {
         onMessage(message, reply);
       }
@@ -292,6 +293,20 @@ void Coordinator::handleHelloMessage(const Message &message, const std::function
   if (m_config.meshVersion < 2) {
     return;
   }
+  const std::string peerName = message.name.empty() ? "unknown" : message.name;
+  if (message.meshVersion < m_config.meshVersion) {
+    LOG_WARN(
+        "coordination: rejecting mesh v%d peer \"%s\" (local v%d)", message.meshVersion, peerName.c_str(),
+        m_config.meshVersion
+    );
+    if (!message.name.empty()) {
+      noteVersionMismatch(message.name);
+    }
+    return;
+  }
+  if (!message.name.empty()) {
+    clearVersionMismatch(message.name);
+  }
   LOG_DEBUG(
       "coordination: mesh v2 hello from \"%s\" (v=%d)", message.name.c_str(), message.meshVersion
   );
@@ -479,9 +494,13 @@ void Coordinator::onMessage(const Message &message, const std::function<void(con
     {
       std::scoped_lock lock{m_mutex};
       const FleetState *fleet = m_config.meshVersion >= 2 ? &m_fleetState : nullptr;
+      std::vector<std::string> mismatches;
+      if (m_config.meshVersion >= 2) {
+        mismatches.assign(m_versionMismatchPeers.begin(), m_versionMismatchPeers.end());
+      }
       snapshot = protocol::encodeStatusReply(
           m_election.role(), m_election.serverAddress(), m_election.seq(), m_election.lastSwitchAt(),
-          m_config.selfName, fleet
+          m_config.selfName, fleet, m_config.meshVersion, mismatches
       );
     }
     reply(snapshot);
@@ -529,8 +548,13 @@ void Coordinator::handleKeyForwardMessage(const Message &message)
   if (message.type == Message::Type::Key && m_config.meshVersion < 2) {
     return;
   }
-  if (message.type == Message::Type::KeyFwd && m_config.meshVersion >= 2) {
-    return;
+  if (message.type == Message::Type::KeyFwd) {
+    if (m_config.meshVersion >= 2) {
+      if (!message.name.empty()) {
+        noteVersionMismatch(message.name);
+      }
+      return;
+    }
   }
 
   Role role;
@@ -815,30 +839,32 @@ void Coordinator::workerLoop()
       if (now - lastHeartbeatAt >= kHeartbeatIntervalS) {
         lastHeartbeatAt = now;
         broadcastClaim();
-        std::string cursorHost;
-        PeerList peers;
-        std::string selfName;
-        std::string token;
-        int64_t seq = 0;
-        {
-          std::scoped_lock lock{m_mutex};
-          if (!m_fleetCursorHost.empty()) {
-            cursorHost = m_fleetCursorHost;
-            seq = ++m_cursorSeq;
-            peers = m_config.peers;
-            selfName = m_config.selfName;
-            token = m_config.token;
-          }
-        }
-        if (!cursorHost.empty()) {
-          const auto cursorLine = protocol::encodeCursor(cursorHost, seq, token);
-          for (const auto &peer : peers) {
-            if (peer.name == selfName) {
-              continue;
+        if (m_config.meshVersion < 2) {
+          std::string cursorHost;
+          PeerList peers;
+          std::string selfName;
+          std::string token;
+          int64_t seq = 0;
+          {
+            std::scoped_lock lock{m_mutex};
+            if (!m_fleetCursorHost.empty()) {
+              cursorHost = m_fleetCursorHost;
+              seq = ++m_cursorSeq;
+              peers = m_config.peers;
+              selfName = m_config.selfName;
+              token = m_config.token;
             }
-            m_mesh->sendTo(peer.ip, cursorLine);
-            if (peer.lan != peer.ip) {
-              m_mesh->sendTo(peer.lan, cursorLine);
+          }
+          if (!cursorHost.empty()) {
+            const auto cursorLine = protocol::encodeCursor(cursorHost, seq, token);
+            for (const auto &peer : peers) {
+              if (peer.name == selfName) {
+                continue;
+              }
+              m_mesh->sendTo(peer.ip, cursorLine);
+              if (peer.lan != peer.ip) {
+                m_mesh->sendTo(peer.lan, cursorLine);
+              }
             }
           }
         }
@@ -858,7 +884,60 @@ void Coordinator::workerLoop()
     } else if (role == Role::Init && now - m_startedAt <= kDiscoveryWindowS) {
       discoverOnce();
     }
+
+    int meshVersion = 0;
+    {
+      std::scoped_lock lock{m_mutex};
+      meshVersion = m_config.meshVersion;
+    }
+    if (meshVersion >= 2 && tick % kVersionProbeEveryTicks == 0) {
+      probePeerMeshVersions();
+    }
   }
+}
+
+void Coordinator::probePeerMeshVersions()
+{
+  const std::string hello = protocol::encodeHello(m_config.meshVersion, m_config.selfName, m_config.token);
+  PeerList peers;
+  {
+    std::scoped_lock lock{m_mutex};
+    peers = m_config.peers;
+  }
+  for (const auto &peer : peers) {
+    if (peer.name == m_config.selfName) {
+      continue;
+    }
+    const std::string host = peer.lan.empty() ? peer.ip : peer.lan;
+    const auto replyLine = m_mesh->query(host, hello);
+    if (replyLine.empty()) {
+      continue;
+    }
+    const Message reply = protocol::decode(replyLine);
+    if (reply.type != Message::Type::Hello || reply.meshVersion < m_config.meshVersion) {
+      noteVersionMismatch(peer.name);
+    } else {
+      clearVersionMismatch(peer.name);
+    }
+  }
+}
+
+void Coordinator::noteVersionMismatch(const std::string &peerName)
+{
+  if (peerName.empty()) {
+    return;
+  }
+  std::scoped_lock lock{m_mutex};
+  m_versionMismatchPeers.insert(peerName);
+}
+
+void Coordinator::clearVersionMismatch(const std::string &peerName)
+{
+  if (peerName.empty()) {
+    return;
+  }
+  std::scoped_lock lock{m_mutex};
+  m_versionMismatchPeers.erase(peerName);
 }
 
 void Coordinator::discoverOnce()

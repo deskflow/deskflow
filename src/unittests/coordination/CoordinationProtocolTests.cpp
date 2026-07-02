@@ -125,6 +125,23 @@ void CoordinationProtocolTests::statusReplyIncludesFleetSnapshot()
   QCOMPARE(fleetObject[QStringLiteral("peers")].toArray().size(), 1);
 }
 
+void CoordinationProtocolTests::statusReplyIncludesMeshVersion()
+{
+  const auto reply =
+      protocol::encodeStatusReply(Role::Client, "10.0.0.1", 9, 0.0, "gamma", nullptr, 2, {"legacy"});
+  const auto object = QJsonDocument::fromJson(QByteArray::fromStdString(reply)).object();
+
+  QCOMPARE(object[QStringLiteral("mesh_version")].toInt(), 2);
+  const auto mismatches = object[QStringLiteral("version_mismatch")].toArray();
+  QCOMPARE(mismatches.size(), 1);
+  QCOMPARE(mismatches.at(0).toString(), QStringLiteral("legacy"));
+
+  const auto decoded = protocol::decodeStatusReply(reply);
+  QCOMPARE(decoded.meshVersion, 2);
+  QCOMPARE(decoded.versionMismatchPeers.size(), static_cast<size_t>(1));
+  QCOMPARE(decoded.versionMismatchPeers.front(), std::string("legacy"));
+}
+
 void CoordinationProtocolTests::peerListParsing()
 {
   const auto peers = parsePeerList(" desktop=192.0.2.10|desktop.local, laptop=192.0.2.11 ,=x,name= ");

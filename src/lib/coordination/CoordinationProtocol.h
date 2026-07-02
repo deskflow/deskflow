@@ -12,6 +12,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 namespace deskflow::coordination {
 
@@ -97,7 +98,8 @@ FleetFragment fleetFragmentFromMessage(const Message &message);
 //! When \p fleet is set, a read-only \c fleet object is included for mesh v2 UIs.
 std::string encodeStatusReply(
     Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name,
-    const FleetState *fleet = nullptr
+    const FleetState *fleet = nullptr, int meshVersion = 0,
+    const std::vector<std::string> &versionMismatchPeers = {}
 );
 
 //! A decoded status reply.
@@ -107,6 +109,8 @@ struct StatusReply
   Role role = Role::Init;
   std::string serverAddress;
   std::string name;
+  int meshVersion = 0;
+  std::vector<std::string> versionMismatchPeers;
 };
 
 StatusReply decodeStatusReply(const std::string &line);

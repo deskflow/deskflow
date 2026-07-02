@@ -136,9 +136,10 @@ bool sendAll(int fd, const std::string &payload)
 
 } // namespace
 
-CoordinationMesh::CoordinationMesh(int port, std::string token, Receiver receiver)
+CoordinationMesh::CoordinationMesh(int port, std::string token, int meshVersion, Receiver receiver)
     : m_port(port),
       m_token(std::move(token)),
+      m_meshVersion(meshVersion),
       m_receiver(std::move(receiver))
 {
   // do nothing
@@ -345,6 +346,11 @@ void CoordinationMesh::handleClient(int clientFd)
       if (!tokenOk(message)) {
         LOG_DEBUG("coordination: dropping message with bad token");
         continue;
+      }
+      if (m_meshVersion >= 2 &&
+          (message.type == Message::Type::Cursor || message.type == Message::Type::KeyFwd)) {
+        LOG_DEBUG("coordination: dropping legacy mesh v1 message");
+        return;
       }
       m_receiver(message, [clientFd](const std::string &reply) {
         std::string payload = reply;

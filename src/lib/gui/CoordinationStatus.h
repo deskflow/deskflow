@@ -17,6 +17,9 @@ namespace deskflow::gui {
 //! Formats the mesh v2 \c fleet object from a status reply for display.
 QString formatFleetGraph(const QJsonObject &fleet);
 
+//! Extra status-bar note for mesh version mismatch or missing topology.
+QString formatStatusAnnotation(const QJsonObject &status);
+
 //! Polls the local coordination mesh for the fleet's live role state.
 /*!
 In auto (coordinated) mode a \c deskflow-core process answers a

@@ -24,6 +24,7 @@ private Q_SLOTS:
   void publishFleetTopology_updatesLinksAndScreens();
   void serverIgnoresInboundFleetMessage();
   void clientMergesInboundFleetMessage();
+  void hello_rejectsV1Peer();
 
 private:
   static void armAsServer(deskflow::coordination::Coordinator &coordinator, const std::string &selfName);

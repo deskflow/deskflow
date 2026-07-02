@@ -19,6 +19,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <string>
 #include <thread>
 
@@ -38,7 +39,7 @@ struct CoordinatorConfig
   PeerList peers;
   ElectionTuning tuning;
   bool keyboardFollowCursor = true;
-  int meshVersion = 1;
+  int meshVersion = 2;
 };
 
 //! What the epoch loop should run next.
@@ -141,6 +142,9 @@ private:
   void broadcastClaim();
   void workerLoop();
   void discoverOnce();
+  void probePeerMeshVersions();
+  void noteVersionMismatch(const std::string &peerName);
+  void clearVersionMismatch(const std::string &peerName);
 
   CoordinatorConfig m_config;
   std::unique_ptr<CoordinationMesh> m_mesh;
@@ -172,6 +176,7 @@ private:
   bool m_loggedKeyForwardReceive = false;
   bool m_loggedRelayUnknownForward = false;
   double m_clientRelayStartedAt = 0.0;
+  std::set<std::string> m_versionMismatchPeers;
 };
 
 } // namespace deskflow::coordination

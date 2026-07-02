@@ -211,7 +211,7 @@ QVariant Settings::defaultValue(const QString &key)
     return 24851;
 
   if (key == Coordination::MeshVersion)
-    return 1;
+    return 2;
 
   // Login-window bridge sensitivity: counts-per-point multiplier. 4.0 is the
   // calibrated full-reach 1:1 on a 2x Retina panel.

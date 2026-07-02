@@ -18,6 +18,7 @@
 
 using deskflow::gui::CoordinationStatus;
 using deskflow::gui::formatFleetGraph;
+using deskflow::gui::formatStatusAnnotation;
 
 void CoordinationStatusTests::formatFleetGraph_emptyFleet()
 {
@@ -102,6 +103,18 @@ void CoordinationStatusTests::poll_emitsOfflineWhenNoCoordinator()
 
   status.stop();
   QCOMPARE(offlineSpy.count(), 1);
+}
+
+void CoordinationStatusTests::formatStatusAnnotation_versionMismatch()
+{
+  QJsonObject status;
+  status[QStringLiteral("mesh_version")] = 2;
+  QJsonArray mismatches;
+  mismatches.append(QStringLiteral("tiny11"));
+  status[QStringLiteral("version_mismatch")] = mismatches;
+
+  const auto note = formatStatusAnnotation(status);
+  QVERIFY(note.contains(QStringLiteral("tiny11")));
 }
 
 QTEST_MAIN(CoordinationStatusTests)
