@@ -30,19 +30,19 @@ public:
   };
   Q_ENUM(Level)
 
-  static QString toOption(const LogLevel::Level &level)
+  static const QString toOption(const LogLevel::Level &level)
   {
     return toOption(static_cast<int>(level));
   }
 
-  static QString toOption(const int &level)
+  static const QString toOption(const int &level)
   {
     if (level < 0 || level > m_levelOptions.size())
       return "";
     return m_levelOptions.at(level);
   }
 
-  static LogLevel::Level fromOption(const QString &level)
+  static const LogLevel::Level fromOption(const QString &level)
   {
     const auto index = m_levelOptions.indexOf(level, 0, Qt::CaseInsensitive);
     if (index < 0 || index >= m_levelOptions.count())
@@ -50,24 +50,24 @@ public:
     return LogLevel::Level(index);
   }
 
-  static QString toString(const LogLevel::Level &level)
+  static const QString toString(const LogLevel::Level &level)
   {
     return toString(static_cast<int>(level));
   }
 
-  static QString toString(const int &level)
+  static const QString toString(const int &level)
   {
     if (level < 0 || level > m_levelNames.size())
       return "";
     return tr(m_levelNames.at(level).toUtf8());
   }
 
-  static QStringList logLevelOptions()
+  static const QStringList logLevelOptions()
   {
     return m_levelOptions;
   }
 
-  static QStringList logLevelNames()
+  static const QStringList logLevelNames()
   {
     return m_levelNames;
   }

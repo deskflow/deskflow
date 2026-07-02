@@ -19,7 +19,7 @@ enum class NetworkProtocol
 };
 Q_DECLARE_METATYPE(NetworkProtocol);
 
-static QString networkProtocolToOption(const NetworkProtocol proto)
+static const QString networkProtocolToOption(const NetworkProtocol proto)
 {
   switch (proto) {
   case NetworkProtocol::Synergy:
@@ -31,7 +31,7 @@ static QString networkProtocolToOption(const NetworkProtocol proto)
   }
 }
 
-static QString networkProtocolToName(const NetworkProtocol proto)
+static const QString networkProtocolToName(const NetworkProtocol proto)
 {
   switch (proto) {
   case NetworkProtocol::Synergy:
@@ -43,7 +43,7 @@ static QString networkProtocolToName(const NetworkProtocol proto)
   }
 }
 
-static NetworkProtocol networkProtocolFromString(const QString &proto)
+static const NetworkProtocol networkProtocolFromString(const QString &proto)
 {
   using enum NetworkProtocol;
   if (proto.compare(kBarrierProtocolOption, Qt::CaseInsensitive) == 0)
