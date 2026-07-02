@@ -35,6 +35,7 @@
 
 #include <AppKit/NSEvent.h>
 #include <AvailabilityMacros.h>
+#include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <dispatch/dispatch.h>
 #include <libproc.h>
@@ -804,6 +805,61 @@ void OSXScreen::leave()
 
   // now off screen
   m_isOnScreen = false;
+}
+
+void OSXScreen::switchToAsciiInputSource()
+{
+  // Remember the current keyboard input source so it can be restored when we
+  // return to this screen.
+  m_savedInputSourceId.clear();
+  if (TISInputSourceRef current = TISCopyCurrentKeyboardInputSource()) {
+    if (void *property = TISGetInputSourceProperty(current, kTISPropertyInputSourceID)) {
+      auto sourceId = static_cast<CFStringRef>(property);
+      char buffer[256];
+      if (CFStringGetCString(sourceId, buffer, sizeof(buffer), kCFStringEncodingUTF8)) {
+        m_savedInputSourceId = buffer;
+      }
+    }
+    CFRelease(current);
+  }
+
+  // Switch to an ASCII-capable layout (e.g. ABC / U.S.) so that an active input
+  // method on this server (e.g. Korean, Japanese, Chinese) does not consume
+  // keystrokes that are meant for a client.
+  if (TISInputSourceRef ascii = TISCopyCurrentASCIICapableKeyboardInputSource()) {
+    LOG_DEBUG("switching to ascii input source on leave (was: %s)", m_savedInputSourceId.c_str());
+    TISSelectInputSource(ascii);
+    CFRelease(ascii);
+  }
+}
+
+void OSXScreen::restoreInputSource()
+{
+  if (m_savedInputSourceId.empty()) {
+    return;
+  }
+
+  CFStringRef sourceId =
+      CFStringCreateWithCString(kCFAllocatorDefault, m_savedInputSourceId.c_str(), kCFStringEncodingUTF8);
+  if (sourceId != nullptr) {
+    const void *keys[] = {kTISPropertyInputSourceID};
+    const void *values[] = {sourceId};
+    if (CFDictionaryRef filter = CFDictionaryCreate(
+            kCFAllocatorDefault, keys, values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks
+        )) {
+      if (CFArrayRef list = TISCreateInputSourceList(filter, false)) {
+        if (CFArrayGetCount(list) > 0) {
+          LOG_DEBUG("restoring input source on enter: %s", m_savedInputSourceId.c_str());
+          TISSelectInputSource((TISInputSourceRef)CFArrayGetValueAtIndex(list, 0));
+        }
+        CFRelease(list);
+      }
+      CFRelease(filter);
+    }
+    CFRelease(sourceId);
+  }
+
+  m_savedInputSourceId.clear();
 }
 
 bool OSXScreen::setClipboard(ClipboardID, const IClipboard *src)
