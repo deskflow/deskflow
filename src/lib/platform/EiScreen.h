@@ -22,6 +22,8 @@ struct ei_event;
 struct ei_seat;
 struct ei_device;
 
+class EventQueueTimer;
+
 namespace deskflow {
 
 class EiKeyState;
@@ -122,6 +124,8 @@ private:
 
   void handleConnectedToEisEvent(const Event &event);
   void handlePortalSessionClosed();
+  void ensureEmulating() const;
+  void stopEmulating() const;
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
@@ -151,7 +155,14 @@ private:
   ei_device *m_eiKeyboard = nullptr;
   ei_device *m_eiAbs = nullptr;
 
-  std::uint32_t m_sequenceNumber = 0;
+  mutable std::uint32_t m_sequenceNumber = 0;
+
+  // Lazily-started EIS emulation: only grab while relayed input is actually
+  // flowing, and release after a short idle so the compositor can DPMS-sleep
+  // this screen even while the deskflow cursor logically sits on it.
+  mutable bool m_isEmulating = false;
+  mutable EventQueueTimer *m_idleEmulationTimer = nullptr;
+  static constexpr double s_idleEmulationTimeout = 4.0;
 
   std::uint32_t m_activeSides = 0;
   std::uint32_t m_x = 0;
