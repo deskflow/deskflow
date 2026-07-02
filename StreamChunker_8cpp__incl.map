@@ -1,0 +1,52 @@
+<map id="src/lib/deskflow/StreamChunker.cpp" name="src/lib/deskflow/StreamChunker.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="641,5,872,30"/>
+<area shape="rect" id="Node000002" href="$StreamChunker_8h.html" title=" " alt="" coords="540,78,719,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="738,29,665,72,663,68,733,32"/>
+<area shape="rect" id="Node000006" href="$Event_8h.html" title=" " alt="" coords="708,223,804,248"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="758,29,759,209,754,207,754,32"/>
+<area shape="rect" id="Node000011" href="$IEventQueue_8h.html" title=" " alt="" coords="793,78,933,103"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="774,28,835,69,830,69,774,33"/>
+<area shape="rect" id="Node000013" href="$Log_8h.html" title=" " alt="" coords="1079,78,1164,103"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="817,28,1066,77,1061,78,817,33"/>
+<area shape="rect" id="Node000019" href="$ClipboardChunk_8h.html" title=" " alt="" coords="287,78,468,103"/>
+<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="691,32,456,77,455,72,696,29"/>
+<area shape="rect" id="Node000003" href="$ClipboardTypes_8h.html" title=" " alt="" coords="428,151,607,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="614,102,550,144,548,140,609,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="631,151,719,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="638,101,662,138,657,137,636,106"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="106,223,166,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="453,178,182,229,181,223,455,173"/>
+<area shape="rect" id="Node000007" href="$EventTypes_8h.html" title=" " alt="" coords="598,296,698,321"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="741,248,680,290,678,285,736,249"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="722,296,790,321"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="758,247,758,282,754,279,755,251"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="815,296,874,321"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="772,246,821,287,816,286,770,251"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="617,369,680,393"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="650,319,650,355,646,351,646,323"/>
+<area shape="poly" id="edge11_Node000011_Node000006" title=" " alt="" coords="857,102,776,213,772,208,852,104"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="844,151,922,175"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="868,101,878,137,873,135,865,106"/>
+<area shape="rect" id="Node000014" href="$LogLevel_8h.html" title=" " alt="" coords="946,151,1084,175"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1107,102,1047,144,1044,139,1102,104"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="1081,223,1146,248"/>
+<area shape="poly" id="edge19_Node000013_Node000016" title=" " alt="" coords="1123,101,1117,209,1113,206,1119,105"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="1158,151,1197,175"/>
+<area shape="poly" id="edge17_Node000013_Node000017" title=" " alt="" coords="1132,101,1162,139,1157,138,1130,106"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="1221,151,1278,175"/>
+<area shape="poly" id="edge18_Node000013_Node000018" title=" " alt="" coords="1143,101,1218,143,1212,143,1142,106"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="980,223,1050,248"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="1017,174,1017,209,1013,206,1013,178"/>
+<area shape="poly" id="edge16_Node000014_Node000016" title=" " alt="" coords="1032,173,1088,214,1082,214,1031,178"/>
+<area shape="poly" id="edge24_Node000019_Node000003" title=" " alt="" coords="401,101,484,143,478,144,401,106"/>
+<area shape="rect" id="Node000020" href="$Chunk_8h.html" title=" " alt="" coords="201,151,328,175"/>
+<area shape="poly" id="edge21_Node000019_Node000020" title=" " alt="" coords="357,105,298,144,295,140,361,102"/>
+<area shape="rect" id="Node000022" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="5,151,177,175"/>
+<area shape="poly" id="edge25_Node000019_Node000022" title=" " alt="" coords="329,105,154,149,152,144,332,101"/>
+<area shape="rect" id="Node000023" title=" " alt="" coords="351,151,404,175"/>
+<area shape="poly" id="edge27_Node000019_Node000023" title=" " alt="" coords="379,101,380,136,375,134,376,106"/>
+<area shape="poly" id="edge22_Node000020_Node000006" title=" " alt="" coords="327,171,339,173,695,224,691,227,339,178,328,176"/>
+<area shape="rect" id="Node000021" title=" " alt="" coords="234,223,294,248"/>
+<area shape="poly" id="edge23_Node000020_Node000021" title=" " alt="" coords="266,174,267,209,262,207,263,178"/>
+<area shape="poly" id="edge26_Node000022_Node000004" title=" " alt="" coords="99,173,123,210,118,211,98,179"/>
+</map>

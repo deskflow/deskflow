@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="5,104,86,129"/>
+<area shape="rect" id="Node000001" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="171,5,247,30"/>
+<area shape="poly" id="edge42_Node000000_Node000001" title=" " alt="" coords="67,91,97,65,132,41,172,26,168,29,135,45,100,69,71,95"/>
+<area shape="rect" id="Node000002" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="134,55,284,79"/>
+<area shape="poly" id="edge43_Node000000_Node000002" title=" " alt="" coords="99,98,167,78,163,82,101,102"/>
+<area shape="rect" id="Node000003" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="157,104,260,129"/>
+<area shape="poly" id="edge44_Node000000_Node000003" title=" " alt="" coords="101,114,159,115,155,118,102,119"/>
+<area shape="rect" id="Node000004" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="139,153,278,178"/>
+<area shape="poly" id="edge45_Node000000_Node000004" title=" " alt="" coords="100,130,168,151,163,154,100,135"/>
+<area shape="rect" id="Node000005" href="$classdeskflow_1_1EiClipboard.html" title="EI/Portal clipboard implementation." alt="" coords="135,203,282,227"/>
+<area shape="poly" id="edge46_Node000000_Node000005" title=" " alt="" coords="70,137,100,163,135,187,164,202,158,202,132,192,97,168,69,142"/>
+</map>

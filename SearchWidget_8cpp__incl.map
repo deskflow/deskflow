@@ -1,0 +1,15 @@
+<map id="src/lib/gui/widgets/SearchWidget.cpp" name="src/lib/gui/widgets/SearchWidget.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="218,5,349,44"/>
+<area shape="rect" id="Node000002" href="$SearchWidget_8h.html" title=" " alt="" coords="5,92,119,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,47,111,89,108,84,231,42"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="143,92,208,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="259,43,205,85,202,81,255,46"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="232,92,334,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="285,43,286,77,281,75,282,47"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="359,92,437,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="312,42,371,83,366,83,311,47"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="462,92,561,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="339,42,465,86,460,87,338,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="26,165,98,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,115,65,150,59,148,60,119"/>
+</map>

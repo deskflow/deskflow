@@ -1,0 +1,9 @@
+<map id="src/lib/gui/core/NetworkMonitor.h" name="src/lib/gui/core/NetworkMonitor.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="83,5,243,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,113,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,44,88,85,85,80,135,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="137,92,189,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,43,165,77,161,75,161,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="214,92,283,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="185,42,227,81,222,81,183,47"/>
+</map>
