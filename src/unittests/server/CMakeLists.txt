@@ -16,7 +16,7 @@ create_test(
 create_test(
   NAME ServerTests
   DEPENDS server
-  LIBS base arch ${extra_libs}
+  LIBS base arch app ${extra_libs}
   SOURCE ServerTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/server"
 )

@@ -9,6 +9,7 @@
 #include "server/Config.h"
 
 #include "base/IEventQueue.h"
+#include "common/Settings.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -456,11 +457,14 @@ void Config::readSectionOptions(ConfigReadContext &s)
     addOption("", kOptionHeartbeat, Settings::value(Settings::Server::Heartbeat).toInt());
   }
 
-  if (Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
+  // Coordinated fleet: edge handoff should succeed on first cross; skip
+  // switch delay and double-tap even when users enabled them globally.
+  const bool fleetAutoMode = Settings::value(Settings::Coordination::Enabled).toBool();
+  if (!fleetAutoMode && Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
     addOption("", kOptionScreenSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
   }
 
-  if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool()) {
+  if (!fleetAutoMode && Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool()) {
     addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
   }
 

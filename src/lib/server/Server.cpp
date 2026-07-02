@@ -276,6 +276,10 @@ void Server::adoptClient(BaseClientProxy *client)
   // send notification
   auto *info = new Server::ScreenConnectedInfo(getName(client));
   m_events->addEvent(Event(EventTypes::ServerConnected, m_primaryClient->getEventTarget(), info));
+
+  // cursor already on this screen (e.g. reconnect): resync enter without a mouse move
+  resyncEnterIfActiveClient(client);
+  tryExecuteQueuedSwitch(client);
 }
 
 void Server::disconnect()
@@ -697,6 +701,68 @@ bool Server::hasAnyNeighbor(const BaseClientProxy *client, Direction dir) const
   return m_config->hasNeighbor(getName(client), dir);
 }
 
+std::string Server::peekConfiguredNeighbor(const BaseClientProxy *src, Direction dir, int32_t x, int32_t y) const
+{
+  assert(src != nullptr);
+
+  const std::string srcName = getName(src);
+  if (srcName.empty()) {
+    return {};
+  }
+
+  const float t = mapToFraction(src, dir, x, y);
+  return m_config->getNeighbor(srcName, dir, t, nullptr);
+}
+
+void Server::queueSwitchForScreen(const std::string &screenName, Direction dir, int32_t x, int32_t y)
+{
+  if (screenName.empty() || screenName == getName(m_active)) {
+    return;
+  }
+
+  m_queuedSwitchScreen = screenName;
+  m_queuedSwitchDir = dir;
+  m_queuedSwitchX = x;
+  m_queuedSwitchY = y;
+  LOG_VERBOSE("queued switch to \"%s\" when it connects", screenName.c_str());
+}
+
+void Server::clearQueuedSwitch()
+{
+  m_queuedSwitchScreen.clear();
+  m_queuedSwitchDir = Direction::NoDirection;
+}
+
+void Server::resyncEnterIfActiveClient(BaseClientProxy *client)
+{
+  if (client == nullptr || getName(client) != getName(m_active)) {
+    return;
+  }
+
+  m_active->enter(m_x, m_y, m_seqNum, m_primaryClient->getToggleMask(), false);
+}
+
+void Server::tryExecuteQueuedSwitch(BaseClientProxy *connected)
+{
+  if (m_queuedSwitchScreen.empty() || getName(connected) != m_queuedSwitchScreen) {
+    return;
+  }
+
+  const Direction dir = m_queuedSwitchDir;
+  int32_t x = m_queuedSwitchX;
+  int32_t y = m_queuedSwitchY;
+
+  BaseClientProxy *dst = mapToNeighbor(m_active, dir, x, y);
+  if (dst == nullptr) {
+    return;
+  }
+
+  if (isSwitchOkay(dst, dir, x, y, m_x, m_y)) {
+    clearQueuedSwitch();
+    switchScreen(dst, x, y, false);
+  }
+}
+
 BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, Direction dir, int32_t &x, int32_t &y) const
 {
   // note -- must be locked on entry
@@ -983,6 +1049,7 @@ void Server::noSwitch(int32_t x, int32_t y)
 {
   armSwitchTwoTap(x, y);
   stopSwitchWait();
+  clearQueuedSwitch();
 }
 
 void Server::stopSwitch()
@@ -1835,6 +1902,12 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
     y = ys.at(i);
     // get jump destination
     BaseClientProxy *newScreen = mapToNeighbor(m_active, dir, x, y);
+    if (newScreen == nullptr) {
+      const std::string pending = peekConfiguredNeighbor(m_active, dir, x, y);
+      if (!pending.empty()) {
+        queueSwitchForScreen(pending, dir, x, y);
+      }
+    }
 
     // should we switch or not?
     if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {

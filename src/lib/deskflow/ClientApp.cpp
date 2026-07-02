@@ -295,6 +295,15 @@ bool ClientApp::startClient()
 {
   deskflow::Screen *clientScreen = nullptr;
   try {
+    // Warm DNS for every configured server address before the first connect.
+    for (NetworkAddress &address : m_serverAddresses) {
+      try {
+        address.resolve();
+      } catch (SocketAddressException &) {
+        // connect() retries resolution per address
+      }
+    }
+
     if (m_clientScreen == nullptr) {
       clientScreen = openClientScreen();
       m_client = openClient(

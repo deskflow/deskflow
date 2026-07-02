@@ -41,9 +41,13 @@ class ClientListener;
 /*!
 This class implements the top-level server algorithms for deskflow.
 */
+class ServerTests;
+
 class Server
 {
   using ServerConfig = deskflow::server::Config;
+
+  friend class ServerTests;
 
 public:
   //! Lock cursor to screen data
@@ -251,6 +255,14 @@ private:
   // lookup neighboring screen, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
   BaseClientProxy *getNeighbor(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
+
+  // first configured neighbor in \p dir (may be disconnected)
+  std::string peekConfiguredNeighbor(const BaseClientProxy *src, Direction dir, int32_t x, int32_t y) const;
+
+  void queueSwitchForScreen(const std::string &screenName, Direction dir, int32_t x, int32_t y);
+  void tryExecuteQueuedSwitch(BaseClientProxy *client);
+  void clearQueuedSwitch();
+  void resyncEnterIfActiveClient(BaseClientProxy *client);
 
   // lookup neighboring screen.  given a position relative to the
   // source screen, find the screen we should move onto and where.
@@ -477,6 +489,12 @@ private:
   // common state for screen switch tests.  all tests are always
   // trying to reach the same screen in the same direction.
   Direction m_switchDir = Direction::NoDirection;
+
+  // queued handoff when a configured neighbor is offline at the edge
+  std::string m_queuedSwitchScreen;
+  int32_t m_queuedSwitchX = 0;
+  int32_t m_queuedSwitchY = 0;
+  Direction m_queuedSwitchDir = Direction::NoDirection;
 
   bool m_switchTwoTapEngaged = false;
   bool m_switchTwoTapArmed = false;

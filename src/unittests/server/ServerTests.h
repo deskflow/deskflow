@@ -10,6 +10,10 @@ class ServerTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
+  void initTestCase();
+  void cleanupTestCase();
   void SwitchToScreenInfo_alloc_screen();
   void KeyboardBroadcastInfo_alloc_stateAndSceens();
+  void adoptClient_resyncsEnterWhenActiveMatches();
+  void peekConfiguredNeighbor_returnsLinkedScreen();
 };

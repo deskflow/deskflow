@@ -11,6 +11,7 @@
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "coordination/Coordinator.h"
+#include "coordination/Peer.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/DisplayInvalidException.h"
@@ -126,8 +127,33 @@ void AutoModeRunner::epochLoop()
 int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
 {
   if (role == Role::Client) {
-    // ClientApp resolves its server from settings at startup.
-    Settings::setValue(Settings::Client::RemoteHost, QString::fromStdString(serverAddress));
+    // Pre-connect: elected server first, then every coordination peer address
+    // so the client epoch can open TCP without waiting for an edge cross.
+    QStringList hosts;
+    if (!serverAddress.empty()) {
+      const auto primary = QString::fromStdString(serverAddress);
+      if (!hosts.contains(primary)) {
+        hosts << primary;
+      }
+    }
+    const auto peers = deskflow::coordination::parsePeerList(
+        Settings::value(Settings::Coordination::Peers).toStringList().join(QLatin1Char(',')).toStdString()
+    );
+    for (const auto &peer : peers) {
+      if (!peer.lan.empty()) {
+        const auto lan = QString::fromStdString(peer.lan);
+        if (!hosts.contains(lan)) {
+          hosts << lan;
+        }
+      }
+      if (!peer.ip.empty()) {
+        const auto ip = QString::fromStdString(peer.ip);
+        if (!hosts.contains(ip)) {
+          hosts << ip;
+        }
+      }
+    }
+    Settings::setValue(Settings::Client::RemoteHost, hosts.join(QLatin1Char(',')));
   }
 
   m_coordinator->updateKeyboardRelayForRole(role);

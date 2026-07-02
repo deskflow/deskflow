@@ -244,6 +244,10 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::SwitchDelay || key == Server::SwitchDoubleTap)
     return 250;
 
+  // Fleet/auto mode: switch delay and double-tap default off (see
+  // Settings::m_defaultFalseValues for EnableSwitchDelay/DoubleTap).
+  // Jump-zone friction is layout-specific; keep defaults unchanged here.
+
   if (key == Server::ClipboardSize)
     return 3; // 3 MiB
 
