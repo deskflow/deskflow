@@ -162,4 +162,11 @@ private:
   bool m_altPressed;
   bool m_superPressed;
   bool m_capsPressed;
+  // track whether the right-hand variant of a modifier is held so the
+  // device-dependent event flags report the correct side (e.g. Right Shift
+  // for CJK input methods).
+  bool m_shiftRightPressed = false;
+  bool m_controlRightPressed = false;
+  bool m_altRightPressed = false;
+  bool m_superRightPressed = false;
 };
