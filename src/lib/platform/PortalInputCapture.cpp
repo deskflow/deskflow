@@ -254,6 +254,27 @@ void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *se
 #endif
 }
 
+void PortalInputCapture::claimClipboard() const
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (!m_session) {
+    m_clipboardClaimPending = true;
+    LOG_DEBUG("portal input capture clipboard claim pending, no session yet");
+    return;
+  }
+
+  XdpSession *session = xdp_input_capture_session_get_session(m_session);
+  if (!xdp_session_is_clipboard_enabled(session)) {
+    m_clipboardClaimPending = true;
+    LOG_WARN("portal input capture clipboard not enabled on session, cannot claim");
+    return;
+  }
+
+  claimClipboardOwnership(session);
+  m_clipboardClaimPending = false;
+#endif
+}
+
 void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
@@ -331,6 +352,10 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   m_signals.at(SelectionTransfer) =
       g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
+  if (m_clipboardClaimPending && xdp_session_is_clipboard_enabled(parentSession)) {
+    claimClipboardOwnership(parentSession);
+    m_clipboardClaimPending = false;
+  }
 #endif
 }
 
