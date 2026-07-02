@@ -301,6 +301,11 @@ void Client::resetOptions()
 
 void Client::setOptions(const OptionsList &options)
 {
+  if (options.size() % 2 != 0) {
+    LOG_ERR("options are the incorrect size, can not process them");
+    return;
+  }
+
   for (auto index = options.begin(); index != options.end(); ++index) {
     const OptionID id = *index;
     if (id == kOptionClipboardSharing) {

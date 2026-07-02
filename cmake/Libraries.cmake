@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 praharshaAdhikari <praharsha101@gmail.com>
 # SPDX-FileCopyrightText: (C) 2024 - 2025 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 Symless Ltd
 # SPDX-License-Identifier: MIT
@@ -150,11 +151,12 @@ macro(configure_unix_libs)
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
       pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+      pkg_check_modules(LIBXKBREGISTRY REQUIRED xkbregistry)
       pkg_check_modules(GLIB2 REQUIRED glib-2.0)
       find_library(LIBM m)
       include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
                           ${LIBM_INCLUDE_DIRS})
-      
+
       message(STATUS "xkbcommon version: ${LIBXKBCOMMON_VERSION}")
     else()
       message(WARNING "pkg-config not found, skipping wayland libraries")
