@@ -51,6 +51,11 @@ public:
   void setProcessConfig(const std::string_view &command, bool elevate);
 
   /**
+   * @brief Local identity and coordination port for cursor-host-aware elevation.
+   */
+  void setElevationContext(const std::string &selfName, uint16_t coordPort);
+
+  /**
    * @brief Stop the main loop and output loop threads.
    */
   void stop();
@@ -108,6 +113,14 @@ private:
   bool secureDesktopActive();
 
   /**
+   * @brief True when the core should run elevated on the secure/login desktop.
+   *
+   * When coordination is available, elevation is limited to epochs where the
+   * fleet cursor is on this machine so UAC/login injection targets the right host.
+   */
+  bool wantsElevatedCore();
+
+  /**
    * @brief Controls whether the process should restart immediately or delay start.
    */
   ProcessState handleStartError(const std::string_view &message = "");
@@ -147,6 +160,8 @@ private:
   HANDLE m_outputWritePipe = nullptr;
   HANDLE m_outputReadPipe = nullptr;
   bool m_elevateProcess = false;
+  std::string m_selfName;
+  uint16_t m_coordPort = 0;
   bool m_lastElevated = false; // integrity the running core was launched at (for auto-elevate transitions)
   std::optional<bool> m_pendingElevated; // debounced secure-desktop target integrity
   std::optional<double> m_pendingElevatedSince; // Arch::time() when pending transition began

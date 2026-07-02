@@ -6,6 +6,8 @@ add_library(coordination STATIC
   CoordinationMesh.h
   CoordinationProtocol.cpp
   CoordinationProtocol.h
+  CoordinationProtocol.cpp
+  CoordinationProtocol.h
   Coordinator.cpp
   Coordinator.h
   ElectionState.cpp
@@ -13,9 +15,12 @@ add_library(coordination STATIC
   FleetState.h
   FleetStateMerge.cpp
   FleetStateMerge.h
+  KeyboardRouter.cpp
+  KeyboardRouter.h
   LocalInputMonitor.h
   Peer.cpp
   Peer.h
+  RelayKeyEvent.h
 )
 
 if(APPLE)

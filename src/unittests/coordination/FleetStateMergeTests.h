@@ -15,6 +15,8 @@ private Q_SLOTS:
   void emptyFragmentIsNoop();
   void serverFragmentReplacesTopology();
   void staleFragmentIsIgnored();
+  void equalSeqReplacesStaleLinks();
   void cursorUpdatePreservesOrdering();
   void topologyBecameReadyFlag();
+  void topologyBecameReady_notSetWhenAlreadyReady();
 };

@@ -630,6 +630,18 @@ void Server::updateMouserVirtualHost(BaseClientProxy *dst)
   m_mouserBridge->notifyFocus(getName(dst), dst == m_primaryClient);
 }
 
+void Server::syncMouserVirtualHostForFleetCursor(const std::string &cursorScreen)
+{
+  if (!m_mouserBridge || cursorScreen.empty()) {
+    return;
+  }
+  const auto index = m_clients.find(cursorScreen);
+  if (index == m_clients.end()) {
+    return;
+  }
+  updateMouserVirtualHost(index->second);
+}
+
 void Server::jumpToScreen(BaseClientProxy *newScreen)
 {
   assert(newScreen != nullptr);
@@ -698,7 +710,35 @@ bool Server::hasAnyNeighbor(const BaseClientProxy *client, Direction dir) const
 {
   assert(client != nullptr);
 
+  if (m_useFleetTopology) {
+    return !peekFleetNeighbor(getName(client), dir).empty();
+  }
+
   return m_config->hasNeighbor(getName(client), dir);
+}
+
+std::string Server::peekFleetNeighbor(const std::string &fromScreen, Direction dir) const
+{
+  if (fromScreen.empty() || dir == Direction::NoDirection) {
+    return {};
+  }
+
+  for (const auto &link : m_fleetLinks) {
+    if (link.fromScreen == fromScreen && link.direction == dir) {
+      return link.toScreen;
+    }
+  }
+  return {};
+}
+
+void Server::setFleetTopologySource(bool enabled)
+{
+  m_useFleetTopology = enabled;
+}
+
+void Server::setFleetTopologyLinks(std::vector<deskflow::server::TopologyLink> links)
+{
+  m_fleetLinks = std::move(links);
 }
 
 std::string Server::peekConfiguredNeighbor(const BaseClientProxy *src, Direction dir, int32_t x, int32_t y) const
@@ -708,6 +748,10 @@ std::string Server::peekConfiguredNeighbor(const BaseClientProxy *src, Direction
   const std::string srcName = getName(src);
   if (srcName.empty()) {
     return {};
+  }
+
+  if (m_useFleetTopology) {
+    return peekFleetNeighbor(srcName, dir);
   }
 
   const float t = mapToFraction(src, dir, x, y);
@@ -776,6 +820,25 @@ BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, Direction dir, 
 
   // convert position to fraction
   float t = mapToFraction(src, dir, x, y);
+
+  if (m_useFleetTopology) {
+    std::string walkSrc = srcName;
+    const size_t maxHops = m_fleetLinks.size() + 1;
+    for (size_t hop = 0; hop < maxHops; ++hop) {
+      const std::string dstName = peekFleetNeighbor(walkSrc, dir);
+      if (dstName.empty()) {
+        LOG_VERBOSE("no fleet neighbor on %s of \"%s\"", Config::dirName(dir), srcName.c_str());
+        return nullptr;
+      }
+      if (ClientList::const_iterator index = m_clients.find(dstName); index != m_clients.end()) {
+        mapToPixel(index->second, dir, t, x, y);
+        return index->second;
+      }
+      LOG_VERBOSE("ignored \"%s\" on %s of \"%s\"", dstName.c_str(), Config::dirName(dir), walkSrc.c_str());
+      walkSrc = dstName;
+    }
+    return nullptr;
+  }
 
   // search for the closest neighbor that exists in direction dir
   float tTmp;
@@ -1776,25 +1839,22 @@ void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButto
   m_active->keyRepeat(id, mask, count, button, lang);
 }
 
-void Server::relayForwardedKey(
-    deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
-    const std::string &lang
-)
+void Server::relayForwardedKey(const deskflow::coordination::RelayKeyEvent &event)
 {
-  using deskflow::coordination::Message;
+  using deskflow::coordination::RelayKeyPhase;
   if (m_active == m_primaryClient) {
-    m_primaryClient->injectForwardedKey(phase, id, mask, button, lang);
+    m_primaryClient->injectForwardedKey(event);
     return;
   }
-  switch (phase) {
-  case Message::KeyPhase::Up:
-    onKeyUp(id, mask, button, nullptr);
+  switch (event.phase) {
+  case RelayKeyPhase::Up:
+    onKeyUp(event.id, event.mask, event.button, nullptr);
     break;
-  case Message::KeyPhase::Repeat:
-    onKeyRepeat(id, mask, 1, button, lang);
+  case RelayKeyPhase::Repeat:
+    onKeyRepeat(event.id, event.mask, 1, event.button, event.lang);
     break;
   default:
-    onKeyDown(id, mask, button, lang, nullptr);
+    onKeyDown(event.id, event.mask, event.button, event.lang, nullptr);
     break;
   }
 }

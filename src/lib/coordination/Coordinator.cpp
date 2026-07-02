@@ -13,6 +13,8 @@
 #include "coordination/CoordinationProtocol.h"
 #include "coordination/FleetStateMerge.h"
 #include "coordination/KeyboardRelayDecision.h"
+#include "coordination/KeyboardRouter.h"
+#include "coordination/RelayKeyEvent.h"
 #include "base/EventTypes.h"
 
 #include <chrono>
@@ -34,6 +36,55 @@ double monotonicSeconds()
 {
   using namespace std::chrono;
   return duration<double>(steady_clock::now().time_since_epoch()).count();
+}
+
+RelayKeyPhase relayPhaseFromMessage(Message::KeyPhase phase)
+{
+  switch (phase) {
+  case Message::KeyPhase::Up:
+    return RelayKeyPhase::Up;
+  case Message::KeyPhase::Repeat:
+    return RelayKeyPhase::Repeat;
+  default:
+    return RelayKeyPhase::Down;
+  }
+}
+
+RelayKeyEvent relayEventFromMessage(const Message &message)
+{
+  RelayKeyEvent event;
+  event.phase = relayPhaseFromMessage(message.keyPhase);
+  event.id = message.keyId;
+  event.mask = message.keyMask;
+  event.button = message.keyButton;
+  event.lang = message.keyLang;
+  event.from = message.name;
+  return event;
+}
+
+std::string peerMeshAddress(const std::string &hostName, const FleetState &fleet, const PeerList &peers)
+{
+  auto matchConfigured = [&](const std::string &name) -> std::string {
+    for (const auto &peer : fleet.peers) {
+      if (peer.name == name) {
+        return peer.lan.empty() ? peer.ip : peer.lan;
+      }
+    }
+    for (const auto &peer : peers) {
+      if (peer.name == name) {
+        return peer.lan.empty() ? peer.ip : peer.lan;
+      }
+    }
+    return {};
+  };
+
+  if (const auto direct = matchConfigured(hostName); !direct.empty()) {
+    return direct;
+  }
+  if (!fleet.server.empty() && (hostName == fleet.server || hostName == fleet.cursorScreen || hostName == fleet.cursorHost)) {
+    return matchConfigured(fleet.server);
+  }
+  return {};
 }
 
 } // namespace
@@ -178,6 +229,64 @@ void Coordinator::postFleetStateEvents(IEventQueue *events, const FleetMergeResu
   }
 }
 
+std::vector<FleetPeer> Coordinator::buildFleetPeersLocked()
+{
+  if (!m_fleetState.peers.empty()) {
+    return m_fleetState.peers;
+  }
+  std::vector<FleetPeer> peers;
+  peers.reserve(m_config.peers.size());
+  for (const auto &peer : m_config.peers) {
+    peers.push_back(FleetPeer{peer.name, peer.ip, peer.lan});
+  }
+  return peers;
+}
+
+void Coordinator::sendFleetLineToPeers(const std::string &line, const PeerList &peers)
+{
+  for (const auto &peer : peers) {
+    if (peer.name == m_config.selfName) {
+      continue;
+    }
+    m_mesh->sendTo(peer.ip, line);
+    if (peer.lan != peer.ip) {
+      m_mesh->sendTo(peer.lan, line);
+    }
+  }
+}
+
+bool Coordinator::mergeAndBroadcastFleetFragment(const FleetFragment &fragment, bool sendEvenIfUnchanged)
+{
+  std::string line;
+  PeerList peers;
+  IEventQueue *events = nullptr;
+  FleetMergeResult merge;
+  bool sendMesh = false;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_config.meshVersion < 2 || m_election.role() != Role::Server) {
+      return false;
+    }
+    if (!fragment.cursorHost.empty()) {
+      m_fleetCursorHost = fragment.cursorHost;
+    }
+    events = m_events;
+    merge = applyServerFragment(m_fleetState, fragment);
+    sendMesh = sendEvenIfUnchanged || merge.changed;
+    if (sendMesh) {
+      line = protocol::encodeFleet(fragment, m_config.token);
+      peers = m_config.peers;
+    }
+  }
+
+  postFleetStateEvents(events, merge);
+
+  if (sendMesh) {
+    sendFleetLineToPeers(line, peers);
+  }
+  return merge.changed;
+}
+
 void Coordinator::handleHelloMessage(const Message &message, const std::function<void(const std::string &)> &reply)
 {
   if (m_config.meshVersion < 2) {
@@ -205,7 +314,7 @@ void Coordinator::handleFleetMessage(const Message &message)
       return;
     }
     events = m_events;
-    merge = applyServerFragment(m_fleetState, fleetFragmentFromMessage(message));
+    merge = applyServerFragment(m_fleetState, protocol::fleetFragmentFromMessage(message));
     seq = m_fleetState.seq;
     linkCount = m_fleetState.links.size();
   }
@@ -240,6 +349,66 @@ void Coordinator::broadcastCursor(const std::string &host)
     if (peer.lan != peer.ip) {
       m_mesh->sendTo(peer.lan, line);
     }
+  }
+}
+
+void Coordinator::updateCursorHost(const std::string &screenName)
+{
+  if (screenName.empty()) {
+    return;
+  }
+  if (m_config.meshVersion < 2) {
+    broadcastCursor(screenName);
+    return;
+  }
+
+  FleetFragment fragment;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_election.role() != Role::Server) {
+      return;
+    }
+    fragment.server = m_fleetState.server.empty() ? m_config.selfName : m_fleetState.server;
+    fragment.seq = ++m_fleetSeq;
+    fragment.cursorHost = screenName;
+    fragment.cursorScreen = screenName;
+    fragment.links = m_fleetState.links;
+    fragment.screens = m_fleetState.screens;
+    fragment.peers = buildFleetPeersLocked();
+  }
+
+  mergeAndBroadcastFleetFragment(fragment, true);
+}
+
+void Coordinator::publishFleetTopology(std::vector<FleetLink> links, std::vector<FleetScreen> screens)
+{
+  if (screens.empty()) {
+    return;
+  }
+
+  FleetFragment fragment;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_config.meshVersion < 2 || m_election.role() != Role::Server) {
+      return;
+    }
+
+    fragment.server = m_config.selfName;
+    fragment.seq = ++m_fleetSeq;
+    fragment.cursorHost = m_fleetCursorHost.empty() ? m_config.selfName : m_fleetCursorHost;
+    fragment.cursorScreen = fragment.cursorHost;
+    fragment.links = std::move(links);
+    fragment.screens = std::move(screens);
+    fragment.peers = buildFleetPeersLocked();
+  }
+
+  const bool changed = mergeAndBroadcastFleetFragment(fragment, false);
+  if (changed) {
+    const auto snapshot = fleetSnapshot();
+    LOG_DEBUG(
+        "coordination: published fleet topology (seq=%lld links=%zu)", static_cast<long long>(snapshot.seq),
+        snapshot.links.size()
+    );
   }
 }
 
@@ -309,8 +478,10 @@ void Coordinator::onMessage(const Message &message, const std::function<void(con
     std::string snapshot;
     {
       std::scoped_lock lock{m_mutex};
+      const FleetState *fleet = m_config.meshVersion >= 2 ? &m_fleetState : nullptr;
       snapshot = protocol::encodeStatusReply(
-          m_election.role(), m_election.serverAddress(), m_election.seq(), m_election.lastSwitchAt(), m_config.selfName
+          m_election.role(), m_election.serverAddress(), m_election.seq(), m_election.lastSwitchAt(),
+          m_config.selfName, fleet
       );
     }
     reply(snapshot);
@@ -322,6 +493,7 @@ void Coordinator::onMessage(const Message &message, const std::function<void(con
     break;
 
   case Message::Type::KeyFwd:
+  case Message::Type::Key:
     handleKeyForwardMessage(message);
     break;
 
@@ -343,6 +515,10 @@ void Coordinator::handleCursorMessage(const Message &message)
   if (message.host.empty()) {
     return;
   }
+  if (m_config.meshVersion >= 2) {
+    // Mesh v2 carries cursor in fleet fragments; legacy cursor heartbeats are v1-only.
+    return;
+  }
   std::scoped_lock lock{m_mutex};
   m_fleetCursorHost = message.host;
   m_cursorSeq = std::max(m_cursorSeq, message.seq);
@@ -350,18 +526,39 @@ void Coordinator::handleCursorMessage(const Message &message)
 
 void Coordinator::handleKeyForwardMessage(const Message &message)
 {
+  if (message.type == Message::Type::Key && m_config.meshVersion < 2) {
+    return;
+  }
+  if (message.type == Message::Type::KeyFwd && m_config.meshVersion >= 2) {
+    return;
+  }
+
   Role role;
   IEventQueue *events = nullptr;
+  std::string selfName;
+  std::string cursorHost;
   {
     std::scoped_lock lock{m_mutex};
     role = m_election.role();
     events = m_events;
+    selfName = m_config.selfName;
+    cursorHost = m_fleetState.cursorHost;
   }
-  if (role != Role::Server || events == nullptr) {
+
+  const bool serverEpoch = role == Role::Server;
+  const bool clientCursorHost =
+      role == Role::Client && m_config.meshVersion >= 2 && cursorHostIsLocal(selfName, cursorHost);
+  if (!serverEpoch && !clientCursorHost) {
     return;
   }
-  if (!isKnownPeer(message.name)) {
-    LOG_DEBUG("coordination: dropping keyfwd from unknown peer \"%s\"", message.name.c_str());
+  if (serverEpoch && events == nullptr) {
+    return;
+  }
+  if (clientCursorHost && events == nullptr) {
+    return;
+  }
+  if (serverEpoch && !isKnownPeer(message.name)) {
+    LOG_DEBUG("coordination: dropping relay key from unknown peer \"%s\"", message.name.c_str());
     return;
   }
 
@@ -373,15 +570,14 @@ void Coordinator::handleKeyForwardMessage(const Message &message)
       logFirst = true;
     }
   }
+  const char *label = message.type == Message::Type::Key ? "key" : "keyfwd";
   if (logFirst) {
-    LOG_INFO("coordination: keyfwd from \"%s\" phase=%d", message.name.c_str(), static_cast<int>(message.keyPhase));
+    LOG_INFO("coordination: %s from \"%s\" phase=%d", label, message.name.c_str(), static_cast<int>(message.keyPhase));
   } else {
-    LOG_DEBUG("coordination: keyfwd from \"%s\" phase=%d", message.name.c_str(), static_cast<int>(message.keyPhase));
+    LOG_DEBUG("coordination: %s from \"%s\" phase=%d", label, message.name.c_str(), static_cast<int>(message.keyPhase));
   }
 
-  auto *info = new CoordinationKeyForwardInfo(
-      message.keyPhase, message.keyId, message.keyMask, message.keyButton, message.keyLang, message.name
-  );
+  auto *info = new CoordinationKeyForwardInfo(relayEventFromMessage(message));
   events->addEvent(
       Event(EventTypes::CoordinationKeyForward, events->getSystemTarget(), info, Event::EventFlags::DeliverImmediately)
   );
@@ -391,31 +587,58 @@ void Coordinator::sendKeyForward(
     Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
 )
 {
-  std::string serverAddress;
+  const auto relayPhase = relayPhaseFromMessage(phase);
+  std::string destination;
+  std::string line;
   bool logFirst = false;
   {
     std::scoped_lock lock{m_mutex};
     if (m_election.role() != Role::Client) {
       return;
     }
-    serverAddress = m_election.serverAddress();
+
+    if (m_config.meshVersion < 2) {
+      destination = m_election.serverAddress();
+      line = protocol::encodeKeyFwd(
+          m_config.selfName, relayPhase, static_cast<uint16_t>(id), static_cast<uint16_t>(mask), button, lang,
+          m_config.token
+      );
+    } else {
+      KeyboardRouteInput input;
+      input.selfName = m_config.selfName;
+      input.cursorHost = m_fleetState.cursorHost;
+      input.cursorHostKnown = !m_fleetState.cursorHost.empty();
+      input.secondsSinceRelayStart = monotonicSeconds() - m_clientRelayStartedAt;
+
+      const auto decision = routeKeyboard(input);
+      if (decision.route == KeyboardRoute::Local) {
+        return;
+      }
+
+      destination = peerMeshAddress(decision.forwardHost, m_fleetState, m_config.peers);
+      line = protocol::encodeKey(
+          m_config.selfName, relayPhase, static_cast<uint16_t>(id), static_cast<uint16_t>(mask), button, lang,
+          m_config.token
+      );
+      if (destination.empty()) {
+        destination = m_election.serverAddress();
+      }
+    }
+
     if (!m_loggedKeyForward) {
       m_loggedKeyForward = true;
       logFirst = true;
     }
   }
-  if (serverAddress.empty()) {
+  if (destination.empty()) {
     return;
   }
   if (logFirst) {
-    LOG_INFO("coordination: forwarding keyboard to server at %s", serverAddress.c_str());
+    LOG_INFO("coordination: forwarding keyboard to %s", destination.c_str());
   } else {
-    LOG_DEBUG("coordination: forwarding keyboard to server at %s", serverAddress.c_str());
+    LOG_DEBUG("coordination: forwarding keyboard to %s", destination.c_str());
   }
-  const auto line = protocol::encodeKeyFwd(
-      m_config.selfName, phase, static_cast<uint16_t>(id), static_cast<uint16_t>(mask), button, lang, m_config.token
-  );
-  m_mesh->sendTo(serverAddress, line);
+  m_mesh->sendTo(destination, line);
 }
 
 bool Coordinator::isKnownPeer(const std::string &name) const
@@ -432,13 +655,28 @@ bool Coordinator::relayPassThroughLocal()
 {
   std::scoped_lock lock{m_mutex};
   const double elapsed = monotonicSeconds() - m_clientRelayStartedAt;
-  const bool known = m_election.cursorScreenKnown();
-  const bool passLocal = passKeyToLocalOs(m_election.cursorHere(), known, elapsed);
-  if (!passLocal && !known && elapsed >= kCursorRelayBootGraceS && !m_loggedRelayUnknownForward) {
-    LOG_INFO("coordination: forwarding keyboard before screen enter/leave sync");
+  if (m_config.meshVersion < 2) {
+    const bool known = m_election.cursorScreenKnown();
+    const bool passLocal = passKeyToLocalOs(m_election.cursorHere(), known, elapsed);
+    if (!passLocal && !known && elapsed >= kCursorRelayBootGraceS && !m_loggedRelayUnknownForward) {
+      LOG_INFO("coordination: forwarding keyboard before screen enter/leave sync");
+      m_loggedRelayUnknownForward = true;
+    }
+    return passLocal;
+  }
+
+  KeyboardRouteInput input;
+  input.selfName = m_config.selfName;
+  input.cursorHost = m_fleetState.cursorHost;
+  input.cursorHostKnown = !m_fleetState.cursorHost.empty();
+  input.secondsSinceRelayStart = elapsed;
+  const auto decision = routeKeyboard(input);
+  if (decision.route == KeyboardRoute::Forward && !input.cursorHostKnown &&
+      elapsed >= kCursorRelayBootGraceS && !m_loggedRelayUnknownForward) {
+    LOG_INFO("coordination: forwarding keyboard before fleet cursor sync");
     m_loggedRelayUnknownForward = true;
   }
-  return passLocal;
+  return decision.route == KeyboardRoute::Local;
 }
 
 std::string Coordinator::fleetCursorHost()

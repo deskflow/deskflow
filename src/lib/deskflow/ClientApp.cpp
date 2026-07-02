@@ -9,6 +9,7 @@
 #include "deskflow/ClientApp.h"
 
 #include "base/Event.h"
+#include "coordination/CoordinationEvents.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "client/Client.h"
@@ -314,6 +315,8 @@ bool ClientApp::startClient()
       LOG_INFO("started client");
     }
 
+    registerKeyForwardHandler();
+
     m_client->setServerAddress(getCurrentServerAddress());
     m_client->connect(m_lastServerAddressIndex);
 
@@ -342,11 +345,128 @@ void ClientApp::stopClient()
   // Cancel any pending reconnect first: its handler is bound to this app,
   // and in auto mode the EventQueue is reused by the next role epoch.
   cancelClientRestart();
+  unregisterKeyForwardHandler();
   closeClient(m_client);
   closeClientScreen(m_clientScreen);
   m_client = nullptr;
   m_clientScreen = nullptr;
   m_retryCount = 0;
+}
+
+void ClientApp::registerKeyForwardHandler()
+{
+  if (m_keyForwardHandlerRegistered) {
+    return;
+  }
+  getEvents()->addHandler(EventTypes::CoordinationKeyForward, this, [this](const Event &event) {
+    handleCoordinationKeyForward(event);
+  });
+  m_keyForwardHandlerRegistered = true;
+}
+
+void ClientApp::unregisterKeyForwardHandler()
+{
+  if (!m_keyForwardHandlerRegistered) {
+    return;
+  }
+  getEvents()->removeHandler(EventTypes::CoordinationKeyForward, this);
+  m_keyForwardHandlerRegistered = false;
+}
+
+void ClientApp::handleCoordinationKeyForward(const Event &event)
+{
+  const auto *info = static_cast<const CoordinationKeyForwardInfo *>(event.getData());
+  if (info == nullptr) {
+    return;
+  }
+  injectRelayedKey(info->event);
+}
+
+void ClientApp::injectRelayedKey(const deskflow::coordination::RelayKeyEvent &event)
+{
+  if (m_clientScreen == nullptr) {
+    return;
+  }
+
+  using deskflow::coordination::RelayKeyPhase;
+  switch (event.phase) {
+  case RelayKeyPhase::Up:
+    m_clientScreen->keyUp(event.id, event.mask, event.button);
+    break;
+  case RelayKeyPhase::Repeat:
+    m_clientScreen->keyRepeat(event.id, event.mask, 1, event.button, event.lang);
+    break;
+  default:
+    m_clientScreen->keyDown(event.id, event.mask, event.button, event.lang);
+    break;
+  }
+}
+
+void ClientApp::appendPreConnectHosts(const QStringList &hosts)
+{
+  if (hosts.isEmpty()) {
+    return;
+  }
+
+  const int port = Settings::value(Settings::Core::Port).toInt();
+  bool added = false;
+  for (const QString &host : hosts) {
+    const QString trimmed = host.trimmed();
+    if (trimmed.isEmpty()) {
+      continue;
+    }
+    const std::string hostStd = trimmed.toStdString();
+    bool exists = false;
+    for (const NetworkAddress &existing : m_serverAddresses) {
+      if (existing.getHostname() == hostStd) {
+        exists = true;
+        break;
+      }
+    }
+    if (exists) {
+      continue;
+    }
+
+    try {
+      NetworkAddress netAddr(hostStd, port);
+      netAddr.resolve();
+      m_serverAddresses.append(netAddr);
+      added = true;
+      LOG_DEBUG("added fleet pre-connect address: %s", hostStd.c_str());
+    } catch (SocketAddressException &e) {
+      if (e.getError() == SocketAddressException::SocketError::BadPort) {
+        LOG_WARN("skipping fleet pre-connect address with bad port: %s", hostStd.c_str());
+        continue;
+      }
+      NetworkAddress netAddr(hostStd, port);
+      m_serverAddresses.append(netAddr);
+      added = true;
+      LOG_DEBUG("added fleet pre-connect address (unresolved): %s", hostStd.c_str());
+    }
+  }
+
+  if (!added) {
+    return;
+  }
+
+  for (NetworkAddress &address : m_serverAddresses) {
+    try {
+      address.resolve();
+    } catch (SocketAddressException &) {
+      // connect() retries resolution per address
+    }
+  }
+
+  QStringList allHosts;
+  allHosts.reserve(m_serverAddresses.size());
+  for (const NetworkAddress &address : m_serverAddresses) {
+    allHosts << QString::fromStdString(address.getHostname());
+  }
+  Settings::setValue(Settings::Client::RemoteHost, allHosts.join(QLatin1Char(',')));
+
+  if (m_client != nullptr && !m_suspended) {
+    scheduleClientRestart(0.0);
+  }
 }
 
 int ClientApp::mainLoop()

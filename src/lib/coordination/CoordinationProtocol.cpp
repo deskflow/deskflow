@@ -26,6 +26,68 @@ void putToken(QJsonObject &object, const std::string &token)
   }
 }
 
+QString phaseToString(RelayKeyPhase phase)
+{
+  switch (phase) {
+  case RelayKeyPhase::Up:
+    return QStringLiteral("up");
+  case RelayKeyPhase::Repeat:
+    return QStringLiteral("repeat");
+  default:
+    return QStringLiteral("down");
+  }
+}
+
+RelayKeyPhase phaseFromString(const QString &phase)
+{
+  if (phase == QStringLiteral("up")) {
+    return RelayKeyPhase::Up;
+  }
+  if (phase == QStringLiteral("repeat")) {
+    return RelayKeyPhase::Repeat;
+  }
+  return RelayKeyPhase::Down;
+}
+
+Message::KeyPhase toMessageKeyPhase(RelayKeyPhase phase)
+{
+  switch (phase) {
+  case RelayKeyPhase::Up:
+    return Message::KeyPhase::Up;
+  case RelayKeyPhase::Repeat:
+    return Message::KeyPhase::Repeat;
+  default:
+    return Message::KeyPhase::Down;
+  }
+}
+
+void decodeKeyBody(const QJsonObject &object, Message &message)
+{
+  message.name = object[QStringLiteral("from")].toString().toStdString();
+  message.keyPhase = toMessageKeyPhase(phaseFromString(object[QStringLiteral("phase")].toString()));
+  message.keyId = static_cast<uint16_t>(object[QStringLiteral("id")].toInt());
+  message.keyMask = static_cast<uint16_t>(object[QStringLiteral("mask")].toInt());
+  message.keyButton = static_cast<uint16_t>(object[QStringLiteral("button")].toInt());
+  message.keyLang = object[QStringLiteral("lang")].toString().toStdString();
+}
+
+std::string encodeKeyMessage(
+    const char *type, const std::string &from, RelayKeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &lang, const std::string &token
+)
+{
+  QJsonObject object;
+  object[QStringLiteral("t")] = QString::fromUtf8(type);
+  object[QStringLiteral("from")] = QString::fromStdString(from);
+  object[QStringLiteral("phase")] = phaseToString(phase);
+  object[QStringLiteral("id")] = id;
+  object[QStringLiteral("mask")] = mask;
+  object[QStringLiteral("button")] = button;
+  object[QStringLiteral("lang")] = QString::fromStdString(lang);
+  putToken(object, token);
+  return serialize(object);
+}
+
 FleetPeer decodeFleetPeer(const QJsonObject &object)
 {
   FleetPeer peer;
@@ -129,6 +191,8 @@ Message decode(const std::string &line)
     message.type = Message::Type::Cursor;
   } else if (type == QStringLiteral("keyfwd")) {
     message.type = Message::Type::KeyFwd;
+  } else if (type == QStringLiteral("key")) {
+    message.type = Message::Type::Key;
   } else if (type == QStringLiteral("hello")) {
     message.type = Message::Type::Hello;
   } else if (type == QStringLiteral("fleet")) {
@@ -146,20 +210,8 @@ Message decode(const std::string &line)
   message.seq = seqValue.isString() ? seqValue.toString().toLongLong() : static_cast<int64_t>(seqValue.toDouble());
   message.token = object[QStringLiteral("token")].toString().toStdString();
 
-  if (message.type == Message::Type::KeyFwd) {
-    message.name = object[QStringLiteral("from")].toString().toStdString();
-    const QString phase = object[QStringLiteral("phase")].toString();
-    if (phase == QStringLiteral("up")) {
-      message.keyPhase = Message::KeyPhase::Up;
-    } else if (phase == QStringLiteral("repeat")) {
-      message.keyPhase = Message::KeyPhase::Repeat;
-    } else {
-      message.keyPhase = Message::KeyPhase::Down;
-    }
-    message.keyId = static_cast<uint16_t>(object[QStringLiteral("id")].toInt());
-    message.keyMask = static_cast<uint16_t>(object[QStringLiteral("mask")].toInt());
-    message.keyButton = static_cast<uint16_t>(object[QStringLiteral("button")].toInt());
-    message.keyLang = object[QStringLiteral("lang")].toString().toStdString();
+  if (message.type == Message::Type::KeyFwd || message.type == Message::Type::Key) {
+    decodeKeyBody(object, message);
   }
 
   if (message.type == Message::Type::Hello) {
@@ -214,30 +266,19 @@ std::string encodeCursor(const std::string &host, int64_t seq, const std::string
 }
 
 std::string encodeKeyFwd(
-    const std::string &from, Message::KeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &from, RelayKeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
     const std::string &lang, const std::string &token
 )
 {
-  QJsonObject object;
-  object[QStringLiteral("t")] = QStringLiteral("keyfwd");
-  object[QStringLiteral("from")] = QString::fromStdString(from);
-  switch (phase) {
-  case Message::KeyPhase::Up:
-    object[QStringLiteral("phase")] = QStringLiteral("up");
-    break;
-  case Message::KeyPhase::Repeat:
-    object[QStringLiteral("phase")] = QStringLiteral("repeat");
-    break;
-  default:
-    object[QStringLiteral("phase")] = QStringLiteral("down");
-    break;
-  }
-  object[QStringLiteral("id")] = id;
-  object[QStringLiteral("mask")] = mask;
-  object[QStringLiteral("button")] = button;
-  object[QStringLiteral("lang")] = QString::fromStdString(lang);
-  putToken(object, token);
-  return serialize(object);
+  return encodeKeyMessage("keyfwd", from, phase, id, mask, button, lang, token);
+}
+
+std::string encodeKey(
+    const std::string &from, RelayKeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &lang, const std::string &token
+)
+{
+  return encodeKeyMessage("key", from, phase, id, mask, button, lang, token);
 }
 
 std::string encodeHello(int meshVersion, const std::string &name, const std::string &token)
@@ -290,7 +331,8 @@ FleetFragment fleetFragmentFromMessage(const Message &message)
 }
 
 std::string encodeStatusReply(
-    Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name
+    Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name,
+    const FleetState *fleet
 )
 {
   QJsonObject object;
@@ -303,6 +345,35 @@ std::string encodeStatusReply(
   object[QStringLiteral("seq")] = static_cast<qint64>(seq);
   object[QStringLiteral("last_switch")] = lastSwitchAt;
   object[QStringLiteral("name")] = QString::fromStdString(name);
+  if (fleet != nullptr) {
+    QJsonObject fleetObject;
+    fleetObject[QStringLiteral("seq")] = static_cast<qint64>(fleet->seq);
+    if (!fleet->server.empty()) {
+      fleetObject[QStringLiteral("server")] = QString::fromStdString(fleet->server);
+    }
+    if (!fleet->cursorHost.empty()) {
+      fleetObject[QStringLiteral("cursor_host")] = QString::fromStdString(fleet->cursorHost);
+    }
+    if (!fleet->cursorScreen.empty()) {
+      fleetObject[QStringLiteral("cursor_screen")] = QString::fromStdString(fleet->cursorScreen);
+    }
+    QJsonArray peers;
+    for (const auto &peer : fleet->peers) {
+      peers.append(encodeFleetPeer(peer));
+    }
+    fleetObject[QStringLiteral("peers")] = peers;
+    QJsonArray screens;
+    for (const auto &screen : fleet->screens) {
+      screens.append(QString::fromStdString(screen.name));
+    }
+    fleetObject[QStringLiteral("screens")] = screens;
+    QJsonArray links;
+    for (const auto &link : fleet->links) {
+      links.append(encodeFleetLink(link));
+    }
+    fleetObject[QStringLiteral("links")] = links;
+    object[QStringLiteral("fleet")] = fleetObject;
+  }
   return serialize(object);
 }
 

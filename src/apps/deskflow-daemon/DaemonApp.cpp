@@ -100,6 +100,10 @@ void DaemonApp::applyWatchdogCommand() const
   const auto command = QStringLiteral("\"%1\" %2 --settings \"%3\"").arg(corePath, modeArg, m_configFile).toStdString();
 
   LOG_DEBUG("applying watchdog command (elevate: %s)", elevate ? "yes" : "no");
+  m_pWatchdog->setElevationContext(
+      config.value(Settings::Core::ComputerName).toString().toStdString(),
+      static_cast<uint16_t>(config.value(Settings::Coordination::Port).toUInt())
+  );
   m_pWatchdog->setProcessConfig(command, elevate);
 #else
   LOG_ERR("applying watchdog command not implemented on this platform");

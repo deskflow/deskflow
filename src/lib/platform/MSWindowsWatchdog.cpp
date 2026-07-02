@@ -13,6 +13,8 @@
 #include "base/TMethodJob.h"
 #include "common/Constants.h"
 #include "common/LogLevel.h"
+#include "common/CoordinationLocalStatus.h"
+#include "common/FleetCursor.h"
 #include "deskflow/App.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsHandle.h"
@@ -193,7 +195,7 @@ void MSWindowsWatchdog::mainLoop(const void *)
         m_pendingElevated.reset();
         m_pendingElevatedSince.reset();
       } else if (m_elevateProcess) {
-        const bool secureNow = secureDesktopActive();
+        const bool secureNow = wantsElevatedCore();
         if (secureNow == m_lastElevated) {
           m_pendingElevated.reset();
           m_pendingElevatedSince.reset();
@@ -311,7 +313,7 @@ void MSWindowsWatchdog::startProcess()
   // Auto-elevate: when elevation is enabled, only run the core SYSTEM while the
   // secure/login desktop is active; otherwise run at the user's (medium)
   // integrity so user-level hook tools (PowerToys, Mouser) can see its input.
-  const bool elevate = m_elevateProcess && secureDesktopActive();
+  const bool elevate = m_elevateProcess && wantsElevatedCore();
   m_lastElevated = elevate;
 
   LOG_INFO("running command (%s): %ls", elevate ? "elevated" : "not elevated", m_command.c_str());
@@ -392,6 +394,24 @@ bool MSWindowsWatchdog::secureDesktopActive()
   return false;
 }
 
+bool MSWindowsWatchdog::wantsElevatedCore()
+{
+  if (!secureDesktopActive()) {
+    return false;
+  }
+  if (m_coordPort == 0 || m_selfName.empty()) {
+    return true;
+  }
+  const auto fleet = deskflow::common::pollLocalFleetStatus(m_coordPort, 500);
+  if (!fleet.has_value()) {
+    return true;
+  }
+  if (fleet->cursorHost.isEmpty()) {
+    return true;
+  }
+  return deskflow::common::cursorHostIsLocal(m_selfName, fleet->cursorHost.toStdString());
+}
+
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
   LOG_VERBOSE("locking process state mutex for watchdog config change");
@@ -409,6 +429,13 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
     m_processState = ProcessState::StartPending;
     m_nextStartTime.reset();
   }
+}
+
+void MSWindowsWatchdog::setElevationContext(const std::string &selfName, uint16_t coordPort)
+{
+  std::scoped_lock lock{m_processStateMutex};
+  m_selfName = selfName;
+  m_coordPort = coordPort;
 }
 
 void MSWindowsWatchdog::outputLoop(const void *)

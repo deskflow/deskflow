@@ -9,12 +9,20 @@
 #include "coordination/CoordinationProtocol.h"
 #include "coordination/FleetState.h"
 #include "coordination/Peer.h"
+#include "coordination/RelayKeyEvent.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTest>
 
+using deskflow::coordination::FleetFragment;
+using deskflow::coordination::FleetLink;
+using deskflow::coordination::FleetPeer;
+using deskflow::coordination::FleetScreen;
+using deskflow::coordination::FleetState;
 using deskflow::coordination::Message;
+using deskflow::coordination::RelayKeyPhase;
 using deskflow::coordination::parsePeerList;
 using deskflow::coordination::Role;
 namespace protocol = deskflow::coordination::protocol;
@@ -92,6 +100,31 @@ void CoordinationProtocolTests::statusReplyMatchesLegacyShape()
   QCOMPARE(clientObject["server_ip"].toString(), QStringLiteral("10.0.0.9"));
 }
 
+void CoordinationProtocolTests::statusReplyIncludesFleetSnapshot()
+{
+  FleetState fleet;
+  fleet.seq = 3;
+  fleet.server = "alpha";
+  fleet.cursorHost = "alpha";
+  fleet.cursorScreen = "alpha";
+  fleet.peers = {FleetPeer{"beta", "10.0.0.2", "beta.local"}};
+  fleet.screens = {FleetScreen{"alpha"}, FleetScreen{"beta"}};
+  fleet.links = {FleetLink{"alpha", "beta", "right"}};
+
+  const auto reply = protocol::encodeStatusReply(Role::Client, "10.0.0.1", 9, 0.0, "gamma", &fleet);
+  const auto object = QJsonDocument::fromJson(QByteArray::fromStdString(reply)).object();
+
+  QVERIFY(object.contains(QStringLiteral("fleet")));
+  const auto fleetObject = object[QStringLiteral("fleet")].toObject();
+  QCOMPARE(fleetObject[QStringLiteral("seq")].toInt(), 3);
+  QCOMPARE(fleetObject[QStringLiteral("server")].toString(), QStringLiteral("alpha"));
+  QCOMPARE(fleetObject[QStringLiteral("cursor_host")].toString(), QStringLiteral("alpha"));
+  QCOMPARE(fleetObject[QStringLiteral("cursor_screen")].toString(), QStringLiteral("alpha"));
+  QCOMPARE(fleetObject[QStringLiteral("screens")].toArray().size(), 2);
+  QCOMPARE(fleetObject[QStringLiteral("links")].toArray().size(), 1);
+  QCOMPARE(fleetObject[QStringLiteral("peers")].toArray().size(), 1);
+}
+
 void CoordinationProtocolTests::peerListParsing()
 {
   const auto peers = parsePeerList(" desktop=192.0.2.10|desktop.local, laptop=192.0.2.11 ,=x,name= ");
@@ -132,7 +165,7 @@ void CoordinationProtocolTests::cursorRoundTrip()
 void CoordinationProtocolTests::keyFwdRoundTrip()
 {
   const auto line = protocol::encodeKeyFwd(
-      "windows-pc", Message::KeyPhase::Down, 65543, 8, 0, "en", "secret"
+      "windows-pc", RelayKeyPhase::Down, 65543, 8, 0, "en", "secret"
   );
   const auto message = protocol::decode(line);
 
@@ -144,6 +177,21 @@ void CoordinationProtocolTests::keyFwdRoundTrip()
   QCOMPARE(message.keyButton, static_cast<uint16_t>(0));
   QCOMPARE(message.keyLang, std::string("en"));
   QCOMPARE(message.token, std::string("secret"));
+}
+
+void CoordinationProtocolTests::keyRoundTrip()
+{
+  const auto line = protocol::encodeKey("tiny11", RelayKeyPhase::Repeat, 42, 4, 7, "en-US", "tok");
+  const auto message = protocol::decode(line);
+
+  QCOMPARE(message.type, Message::Type::Key);
+  QCOMPARE(message.name, std::string("tiny11"));
+  QCOMPARE(message.keyPhase, Message::KeyPhase::Repeat);
+  QCOMPARE(message.keyId, static_cast<uint16_t>(42));
+  QCOMPARE(message.keyMask, static_cast<uint16_t>(4));
+  QCOMPARE(message.keyButton, static_cast<uint16_t>(7));
+  QCOMPARE(message.keyLang, std::string("en-US"));
+  QCOMPARE(message.token, std::string("tok"));
 }
 
 void CoordinationProtocolTests::keyFwdPhasesDecode()

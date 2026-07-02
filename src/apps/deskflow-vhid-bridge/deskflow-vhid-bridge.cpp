@@ -4,7 +4,11 @@
 //
 // Usage: deskflow-vhid-bridge <server_hosts> <client_screen_name>
 //          [port [width height [scale_factor]]]
-//          [--size=WxH] [--scale=S]
+//          [--size=WxH] [--scale=S] [--coord-port=N]
+//
+// When --coord-port is set, the bridge polls the local coordination mesh on
+// 127.0.0.1:N before each reconnect pass and refreshes server candidates from
+// the live fleet snapshot (GUI plist generation uses the same snapshot).
 //
 // <server_hosts> is a comma-separated candidate list. In auto-switch mode any
 // peer can be the elected server, and only the elected server listens on the
@@ -324,6 +328,104 @@ int connect_tcp(const std::string &host, uint16_t port) {
   }
   ::freeaddrinfo(result);
   return fd;
+}
+
+std::optional<std::string> json_quoted_value(const std::string &json, const std::string &key, size_t from = 0) {
+  const std::string needle = "\"" + key + "\":\"";
+  const size_t pos = json.find(needle, from);
+  if (pos == std::string::npos) {
+    return std::nullopt;
+  }
+  const size_t start = pos + needle.size();
+  const size_t end = json.find('"', start);
+  if (end == std::string::npos) {
+    return std::nullopt;
+  }
+  return json.substr(start, end - start);
+}
+
+void merge_unique_host(std::vector<std::string> &hosts, const std::string &host) {
+  if (host.empty()) {
+    return;
+  }
+  if (std::ranges::find(hosts, host) == hosts.end()) {
+    hosts.push_back(host);
+  }
+}
+
+bool refresh_hosts_from_coord_snapshot(uint16_t coord_port, const std::string &self_name,
+                                       std::vector<std::string> &hosts) {
+  int fd = connect_tcp("127.0.0.1", coord_port);
+  if (fd < 0) {
+    return false;
+  }
+  static constexpr char kStatusRequest[] = "{\"t\":\"status\"}\n";
+  if (::send(fd, kStatusRequest, std::strlen(kStatusRequest), 0) < 0) {
+    ::close(fd);
+    return false;
+  }
+
+  std::string line;
+  char buffer[512];
+  while (line.find('\n') == std::string::npos) {
+    const ssize_t received = ::recv(fd, buffer, sizeof(buffer) - 1, 0);
+    if (received <= 0) {
+      ::close(fd);
+      return false;
+    }
+    buffer[received] = '\0';
+    line.append(buffer, static_cast<size_t>(received));
+    if (line.size() > 65536) {
+      ::close(fd);
+      return false;
+    }
+  }
+  ::close(fd);
+  const size_t newline = line.find('\n');
+  if (newline != std::string::npos) {
+    line.resize(newline);
+  }
+
+  std::vector<std::string> fresh;
+  if (const auto server_ip = json_quoted_value(line, "server_ip")) {
+    merge_unique_host(fresh, *server_ip);
+  }
+
+  size_t search_from = 0;
+  while (true) {
+    const size_t name_pos = line.find("\"name\":\"", search_from);
+    if (name_pos == std::string::npos) {
+      break;
+    }
+    const size_t name_start = name_pos + 8;
+    const size_t name_end = line.find('"', name_start);
+    if (name_end == std::string::npos) {
+      break;
+    }
+    const std::string name = line.substr(name_start, name_end - name_start);
+    search_from = name_end + 1;
+    if (name == self_name) {
+      continue;
+    }
+    const size_t object_end = line.find('}', name_end);
+    if (object_end == std::string::npos) {
+      break;
+    }
+    const std::string peer_object = line.substr(name_pos, object_end - name_pos);
+    if (const auto ip = json_quoted_value(peer_object, "ip")) {
+      merge_unique_host(fresh, *ip);
+    }
+    if (const auto lan = json_quoted_value(peer_object, "lan")) {
+      merge_unique_host(fresh, *lan);
+    }
+    merge_unique_host(fresh, name);
+  }
+
+  if (fresh.empty()) {
+    return false;
+  }
+  hosts = std::move(fresh);
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -834,6 +936,7 @@ int main(int argc, char **argv) {
   std::vector<std::string> positional;
   std::optional<int16_t> flag_w, flag_h;
   std::optional<double> flag_scale;
+  std::optional<uint16_t> flag_coord_port;
   for (int i = 1; i < argc; ++i) {
     const std::string arg = argv[i];
     if (arg.rfind("--size=", 0) == 0) {
@@ -853,6 +956,13 @@ int main(int argc, char **argv) {
         log_line("invalid --scale: " + arg);
         return 2;
       }
+    } else if (arg.rfind("--coord-port=", 0) == 0) {
+      const long parsed = std::strtol(arg.c_str() + 13, nullptr, 10);
+      if (parsed <= 0 || parsed > 65535) {
+        log_line("invalid --coord-port: " + arg);
+        return 2;
+      }
+      flag_coord_port = static_cast<uint16_t>(parsed);
     } else {
       positional.push_back(arg);
     }
@@ -860,7 +970,7 @@ int main(int argc, char **argv) {
 
   if (positional.size() < 2) {
     log_line("usage: deskflow-vhid-bridge <server_hosts> <client_screen_name> "
-             "[port [width height [scale_factor]]] [--size=WxH] [--scale=S]");
+             "[port [width height [scale_factor]]] [--size=WxH] [--scale=S] [--coord-port=N]");
     return 2;
   }
 
@@ -948,11 +1058,19 @@ int main(int argc, char **argv) {
   }
 
   Bridge bridge(sink, client_name, fallback_w, fallback_h, scale_factor);
+  const uint16_t coord_port = flag_coord_port.value_or(0);
   // Cycle the candidate list; back off only after a full pass with no server
   // accepting, so a role flip to any peer is picked up within one pass.
   int backoff_ms = 500;
   size_t host_idx = 0;
   while (!Bridge::g_stop.load()) {
+    if (coord_port != 0) {
+      std::vector<std::string> refreshed = server_hosts;
+      if (refresh_hosts_from_coord_snapshot(coord_port, client_name, refreshed)) {
+        server_hosts = std::move(refreshed);
+        host_idx = 0;
+      }
+    }
     const std::string &host = server_hosts[host_idx];
     int fd = connect_tcp(host, port);
     if (fd < 0) {

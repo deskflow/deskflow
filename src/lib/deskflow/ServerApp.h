@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "coordination/CoordinationEvents.h"
+#include "coordination/FleetState.h"
 #include "deskflow/App.h"
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
@@ -98,6 +99,19 @@ public:
     m_cursorBroadcastCallback = std::move(callback);
   }
 
+  void setFleetTopologyPublishCallback(
+      std::function<void(std::vector<deskflow::coordination::FleetLink>, std::vector<deskflow::coordination::FleetScreen>)>
+          callback
+  )
+  {
+    m_fleetTopologyPublishCallback = std::move(callback);
+  }
+
+  void setFleetSnapshotCallback(std::function<deskflow::coordination::FleetState()> callback)
+  {
+    m_fleetSnapshotCallback = std::move(callback);
+  }
+
   //
   // Static functions
   //
@@ -110,6 +124,13 @@ public:
 
 private:
   void handleScreenSwitched(const Event &event);
+  void publishFleetTopologyFromConfig();
+  void applyFleetTopologyFromSnapshot();
+  void registerFleetTopologyHandlers();
+  void unregisterFleetTopologyHandlers();
+  void registerKeyForwardHandler();
+  void unregisterKeyForwardHandler();
+  void handleCoordinationKeyForward(const Event &event);
   std::unique_ptr<ISocketFactory> getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 
@@ -124,4 +145,9 @@ private:
   std::string m_name;
   std::shared_ptr<deskflow::server::Config> m_config;
   std::function<void(const std::string &host)> m_cursorBroadcastCallback;
+  std::function<void(std::vector<deskflow::coordination::FleetLink>, std::vector<deskflow::coordination::FleetScreen>)>
+      m_fleetTopologyPublishCallback;
+  std::function<deskflow::coordination::FleetState()> m_fleetSnapshotCallback;
+  bool m_fleetTopologyHandlersRegistered = false;
+  bool m_keyForwardHandlerRegistered = false;
 };

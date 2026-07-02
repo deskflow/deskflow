@@ -7,6 +7,7 @@
 #include "CoordinationStatus.h"
 
 #include <QHostAddress>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTcpSocket>
@@ -17,13 +18,56 @@
 namespace deskflow::gui {
 
 namespace {
+
 //! "macbookpro.tail.ts.net" / "macbookpro.lan" -> "macbookpro".
 QString shortName(const QString &address)
 {
   const auto dot = address.indexOf(QLatin1Char('.'));
   return dot < 0 ? address : address.left(dot);
 }
+
 } // namespace
+
+QString formatFleetGraph(const QJsonObject &fleet)
+{
+  if (fleet.isEmpty()) {
+    return {};
+  }
+
+  QStringList screenNames;
+  const QJsonArray screens = fleet[QStringLiteral("screens")].toArray();
+  screenNames.reserve(screens.size());
+  for (const auto &screen : screens) {
+    screenNames << screen.toString();
+  }
+  if (screenNames.isEmpty()) {
+    return {};
+  }
+
+  QStringList edges;
+  const QJsonArray links = fleet[QStringLiteral("links")].toArray();
+  edges.reserve(links.size());
+  for (const auto &linkValue : links) {
+    const QJsonObject link = linkValue.toObject();
+    const QString from = link[QStringLiteral("from")].toString();
+    const QString to = link[QStringLiteral("to")].toString();
+    if (from.isEmpty() || to.isEmpty()) {
+      continue;
+    }
+    const QString dir = link[QStringLiteral("dir")].toString();
+    if (dir.isEmpty()) {
+      edges << QStringLiteral("%1→%2").arg(from, to);
+    } else {
+      edges << QStringLiteral("%1→%2 (%3)").arg(from, to, dir);
+    }
+  }
+
+  QString graph = screenNames.join(QStringLiteral(" · "));
+  if (!edges.isEmpty()) {
+    graph += QStringLiteral(" — ") + edges.join(QStringLiteral(", "));
+  }
+  return graph;
+}
 
 CoordinationStatus::CoordinationStatus(QObject *parent) : QObject(parent), m_timer(new QTimer(this))
 {
@@ -50,7 +94,10 @@ void CoordinationStatus::poll()
   // One-shot query: connect, send status, read one JSON line, done. Guarded
   // so readyRead and the timeout can't both resolve it; the socket cleans
   // itself up on any terminal outcome.
-  const auto finish = [this, socket, done](bool ok, const QString &role = {}, const QString &serverName = {}) {
+  const auto finish = [this, socket, done](
+                          bool ok, const QString &role = {}, const QString &serverName = {},
+                          const QString &fleetGraph = {}
+                      ) {
     if (*done)
       return;
     *done = true;
@@ -58,7 +105,7 @@ void CoordinationStatus::poll()
     socket->abort();
     socket->deleteLater();
     if (ok)
-      Q_EMIT online(role, serverName);
+      Q_EMIT online(role, serverName, fleetGraph);
     else
       Q_EMIT offline();
   };
@@ -67,7 +114,7 @@ void CoordinationStatus::poll()
     socket->write("{\"t\":\"status\"}\n");
   });
 
-  connect(socket, &QTcpSocket::readyRead, this, [this, socket, finish] {
+  connect(socket, &QTcpSocket::readyRead, this, [socket, finish] {
     const auto doc = QJsonDocument::fromJson(socket->readLine());
     if (!doc.isObject()) {
       finish(false);
@@ -76,7 +123,7 @@ void CoordinationStatus::poll()
     const QJsonObject obj = doc.object();
     const QString role = obj[QStringLiteral("role")].toString();
     const QString server = shortName(obj[QStringLiteral("server_ip")].toString());
-    finish(!role.isEmpty(), role, server);
+    finish(!role.isEmpty(), role, server, formatFleetGraph(obj[QStringLiteral("fleet")].toObject()));
   });
 
   connect(socket, &QTcpSocket::errorOccurred, this, [finish] { finish(false); });

@@ -15,8 +15,11 @@
 #include "OSXHelpers.h"
 #endif
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
 #include <signal.h>
+#endif
+
+#ifdef Q_OS_LINUX
 #include <sys/prctl.h>
 #endif
 
@@ -485,6 +488,36 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
   }
 
   setConnectionState(ConnectionState::Disconnected);
+}
+
+void CoreProcess::reloadServerConfig()
+{
+  if (!isStarted()) {
+    return;
+  }
+
+  const auto mode = m_mode;
+  if (mode != Settings::CoreMode::Server && mode != Settings::CoreMode::Auto) {
+    restart();
+    return;
+  }
+
+  const auto [hasNeededPermissions, configFilename] = persistServerConfig();
+  if (!hasNeededPermissions || configFilename.isEmpty()) {
+    qWarning("reloadServerConfig: could not persist server layout");
+    restart();
+    return;
+  }
+
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
+  if (m_process != nullptr && m_process->state() == QProcess::Running) {
+    qDebug("signaling deskflow-core to reload configuration (SIGHUP)");
+    ::kill(static_cast<pid_t>(m_process->processId()), SIGHUP);
+    return;
+  }
+#endif
+
+  restart();
 }
 
 void CoreProcess::restart()

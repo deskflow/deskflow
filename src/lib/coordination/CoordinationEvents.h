@@ -7,34 +7,15 @@
 #pragma once
 
 #include "base/Event.h"
-#include "coordination/CoordinationProtocol.h"
-#include "deskflow/KeyTypes.h"
+#include "coordination/RelayKeyEvent.h"
 
-#include <string>
-
-//! Event data for CoordinationKeyForward (server injects into m_active).
+//! Event data for CoordinationKeyForward (cursor host injects relayed keys).
 class CoordinationKeyForwardInfo : public EventData
 {
 public:
-  deskflow::coordination::Message::KeyPhase phase = deskflow::coordination::Message::KeyPhase::Down;
-  KeyID id = 0;
-  KeyModifierMask mask = 0;
-  KeyButton button = 0;
-  std::string lang;
-  std::string from;
+  deskflow::coordination::RelayKeyEvent event;
 
-  CoordinationKeyForwardInfo(
-      deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
-      std::string lang, std::string from
-  )
-      : phase(phase),
-        id(id),
-        mask(mask),
-        button(button),
-        lang(std::move(lang)),
-        from(std::move(from))
-  {
-  }
+  explicit CoordinationKeyForwardInfo(deskflow::coordination::RelayKeyEvent event) : event(std::move(event)) {}
 
   ~CoordinationKeyForwardInfo() override = default;
 };

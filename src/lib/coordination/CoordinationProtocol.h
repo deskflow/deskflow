@@ -8,6 +8,7 @@
 
 #include "coordination/ElectionState.h"
 #include "coordination/FleetState.h"
+#include "coordination/RelayKeyEvent.h"
 
 #include <cstdint>
 #include <string>
@@ -30,6 +31,7 @@ struct Message
     Status,
     Cursor,
     KeyFwd,
+    Key,
     Hello,
     Fleet
   };
@@ -75,7 +77,13 @@ std::string encodeStatus(const std::string &token);
 std::string encodeCursor(const std::string &host, int64_t seq, const std::string &token);
 
 std::string encodeKeyFwd(
-    const std::string &from, Message::KeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &from, RelayKeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
+    const std::string &lang, const std::string &token
+);
+
+//! Mesh v2 keyboard relay (peer → cursor host).
+std::string encodeKey(
+    const std::string &from, RelayKeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
     const std::string &lang, const std::string &token
 );
 
@@ -86,8 +94,10 @@ std::string encodeFleet(const FleetFragment &fragment, const std::string &token)
 FleetFragment fleetFragmentFromMessage(const Message &message);
 
 //! Status reply (legacy shape: role/server_ip/seq/last_switch/name).
+//! When \p fleet is set, a read-only \c fleet object is included for mesh v2 UIs.
 std::string encodeStatusReply(
-    Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name
+    Role role, const std::string &serverAddress, int64_t seq, double lastSwitchAt, const std::string &name,
+    const FleetState *fleet = nullptr
 );
 
 //! A decoded status reply.

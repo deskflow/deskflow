@@ -11,6 +11,8 @@ configure_file(VersionInfo.h.in VersionInfo.h @ONLY)
 
 add_library(common STATIC
   Coordinate.h
+  CoordinationLocalStatus.cpp
+  CoordinationLocalStatus.h
   Enums.h
   ExitCodes.h
   I18N.h
@@ -27,7 +29,7 @@ add_library(common STATIC
   ${CMAKE_CURRENT_BINARY_DIR}/VersionInfo.h
 )
 
-target_link_libraries(common PUBLIC Qt6::Core)
+target_link_libraries(common PUBLIC Qt6::Core Qt6::Network)
 
 target_include_directories(common
   PUBLIC

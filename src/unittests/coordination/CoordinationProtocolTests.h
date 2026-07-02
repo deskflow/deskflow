@@ -19,9 +19,11 @@ private Q_SLOTS:
   void toleratesStringSequenceNumbers();
   void malformedInputIsInvalid();
   void statusReplyMatchesLegacyShape();
+  void statusReplyIncludesFleetSnapshot();
   void peerListParsing();
   void cursorRoundTrip();
   void keyFwdRoundTrip();
+  void keyRoundTrip();
   void keyFwdPhasesDecode();
   void helloRoundTrip();
   void fleetRoundTrip();

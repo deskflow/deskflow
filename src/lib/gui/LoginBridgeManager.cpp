@@ -7,6 +7,7 @@
 #include "LoginBridgeManager.h"
 
 #include "common/Settings.h"
+#include "common/CoordinationLocalStatus.h"
 
 #include <QCoreApplication>
 #include <QFile>
@@ -114,6 +115,18 @@ QString LoginBridgeManager::agentPlistPath()
 QStringList LoginBridgeManager::serverCandidates()
 {
   const auto selfName = Settings::value(Settings::Core::ComputerName).toString().trimmed();
+
+  if (Settings::value(Settings::Coordination::Enabled).toBool()) {
+    const auto port = static_cast<quint16>(Settings::value(Settings::Coordination::Port).toUInt());
+    if (port > 0) {
+      if (const auto snapshot = deskflow::common::pollLocalFleetStatus(port)) {
+        if (!snapshot->peerHosts.isEmpty()) {
+          return snapshot->peerHosts;
+        }
+      }
+    }
+  }
+
   const auto peersValue = Settings::value(Settings::Coordination::Peers).toStringList().join(',');
 
   QStringList hosts;
@@ -145,6 +158,15 @@ QString LoginBridgeManager::plistContent(double scale)
   const auto hosts = serverCandidates();
   const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
   const auto port = Settings::value(Settings::Core::Port).toInt();
+  const auto coordEnabled = Settings::value(Settings::Coordination::Enabled).toBool();
+  const auto coordPort = Settings::value(Settings::Coordination::Port).toInt();
+
+  QString coordArg;
+  if (coordEnabled && coordPort > 0) {
+    coordArg = QStringLiteral(R"(    <string>--coord-port=%1</string>
+)")
+                   .arg(coordPort);
+  }
 
   // LimitLoadToSessionType=LoginWindow scopes the agent to login-window
   // sessions only: launchd starts it at the login screen and tears it down
@@ -161,7 +183,7 @@ QString LoginBridgeManager::plistContent(double scale)
     <string>%4</string>
     <string>%5</string>
     <string>--scale=%6</string>
-  </array>
+%7  </array>
   <key>LimitLoadToSessionType</key><string>LoginWindow</string>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
@@ -170,7 +192,7 @@ QString LoginBridgeManager::plistContent(double scale)
 </dict>
 </plist>
 )")
-      .arg(kAgentLabel, bridgePath(), hosts.join(','), screenName, QString::number(port), QString::number(scale));
+      .arg(kAgentLabel, bridgePath(), hosts.join(','), screenName, QString::number(port), QString::number(scale), coordArg);
 }
 
 bool LoginBridgeManager::apply(bool enabled, double scale, QString *error)

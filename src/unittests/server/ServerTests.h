@@ -16,4 +16,6 @@ private Q_SLOTS:
   void KeyboardBroadcastInfo_alloc_stateAndSceens();
   void adoptClient_resyncsEnterWhenActiveMatches();
   void peekConfiguredNeighbor_returnsLinkedScreen();
+  void peekConfiguredNeighbor_usesFleetTopology();
+  void queuedSwitch_executesWhenNeighborConnects();
 };

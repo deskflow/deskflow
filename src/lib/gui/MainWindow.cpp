@@ -282,7 +282,7 @@ void MainWindow::connectSlots()
   // real fleet role, whether the core was started here or by a background
   // agent. Falls back to the normal process status when nothing answers.
   m_coordStatus = new deskflow::gui::CoordinationStatus(this);
-  connect(m_coordStatus, &deskflow::gui::CoordinationStatus::online, this, [this](const QString &role, const QString &server) {
+  connect(m_coordStatus, &deskflow::gui::CoordinationStatus::online, this, [this](const QString &role, const QString &server, const QString &fleetGraph) {
     QString text;
     if (role == QLatin1String("server"))
       text = tr("Auto switch: this computer is in control");
@@ -290,6 +290,9 @@ void MainWindow::connectSlots()
       text = tr("Auto switch: following %1").arg(server.isEmpty() ? tr("the active computer") : server);
     else
       text = tr("Auto switch: finding the active computer…");
+    if (!fleetGraph.isEmpty()) {
+      text += QStringLiteral(" · %1").arg(fleetGraph);
+    }
     m_statusBar->setMessage(text);
     if (m_trayIcon)
       m_trayIcon->setToolTip(QStringLiteral("%1 — %2").arg(kAppName, text));
@@ -1220,7 +1223,12 @@ void MainWindow::showConfigureServer(const QString &message)
   ServerConfigDialog dialog(this, serverConfig());
   dialog.message(message);
   if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
-    m_coreProcess.restart();
+    const auto mode = selectedMode();
+    if (mode == Settings::CoreMode::Server || mode == Settings::CoreMode::Auto) {
+      m_coreProcess.reloadServerConfig();
+    } else {
+      m_coreProcess.restart();
+    }
   }
 }
 

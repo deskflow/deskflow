@@ -22,6 +22,28 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
 )
 
+create_test(
+  NAME CoordinatorFleetPublishTests
+  DEPENDS coordination
+  SOURCE CoordinatorFleetPublishTests.cpp
+  LIBS base arch mt
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
+)
+
+create_test(
+  NAME KeyboardRouterTests
+  DEPENDS coordination
+  SOURCE KeyboardRouterTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
+)
+
+create_test(
+  NAME CoordinationLocalStatusTests
+  DEPENDS common coordination
+  SOURCE CoordinationLocalStatusTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
+)
+
 if(APPLE)
   create_test(
     NAME KeyboardRelayMapTests

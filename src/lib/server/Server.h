@@ -11,12 +11,13 @@
 #include "base/Event.h"
 #include "base/Stopwatch.h"
 #include "common/NetworkProtocol.h"
-#include "coordination/CoordinationProtocol.h"
+#include "coordination/RelayKeyEvent.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "server/Config.h"
+#include "server/TopologyLink.h"
 #include "server/VirtualHostTracker.h"
 
 #include <climits>
@@ -162,6 +163,12 @@ public:
   */
   bool setConfig(const ServerConfig &);
 
+  //! Mesh v2: use injected fleet links instead of \c Config adjacency.
+  void setFleetTopologySource(bool enabled);
+  void setFleetTopologyLinks(std::vector<deskflow::server::TopologyLink> links);
+  //! Re-attach the Mouser virtual host when fleet cursor moves without a screen switch.
+  void syncMouserVirtualHostForFleetCursor(const std::string &cursorScreen);
+
   //! Add a client
   /*!
   Adds \p client to the server.  The client is adopted and will be
@@ -208,10 +215,7 @@ public:
   void sendConnectedClientsIpc() const;
 
   //! Inject a fleet-relayed key event into the active screen (auto mode).
-  void relayForwardedKey(
-      deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
-      const std::string &lang
-  );
+  void relayForwardedKey(const deskflow::coordination::RelayKeyEvent &event);
 
   //@}
 
@@ -258,6 +262,7 @@ private:
 
   // first configured neighbor in \p dir (may be disconnected)
   std::string peekConfiguredNeighbor(const BaseClientProxy *src, Direction dir, int32_t x, int32_t y) const;
+  std::string peekFleetNeighbor(const std::string &fromScreen, Direction dir) const;
 
   void queueSwitchForScreen(const std::string &screenName, Direction dir, int32_t x, int32_t y);
   void tryExecuteQueuedSwitch(BaseClientProxy *client);
@@ -495,6 +500,9 @@ private:
   int32_t m_queuedSwitchX = 0;
   int32_t m_queuedSwitchY = 0;
   Direction m_queuedSwitchDir = Direction::NoDirection;
+
+  bool m_useFleetTopology = false;
+  std::vector<deskflow::server::TopologyLink> m_fleetLinks;
 
   bool m_switchTwoTapEngaged = false;
   bool m_switchTwoTapArmed = false;

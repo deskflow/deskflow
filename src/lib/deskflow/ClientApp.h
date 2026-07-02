@@ -9,9 +9,10 @@
 #pragma once
 
 #include "deskflow/App.h"
+#include "coordination/RelayKeyEvent.h"
 #include "net/NetworkAddress.h"
 
-#include <QList>
+#include <QStringList>
 
 namespace deskflow {
 class Screen;
@@ -65,6 +66,13 @@ public:
   void closeClient(Client *client);
   bool startClient();
   void stopClient();
+  //! Mesh v2: add server addresses for fleet pre-connect (deduped).
+  void appendPreConnectHosts(const QStringList &hosts);
+  //! Inject a fleet-relayed key onto the local client screen (mesh v2 cursor host).
+  void injectRelayedKey(const deskflow::coordination::RelayKeyEvent &event);
+  void registerKeyForwardHandler();
+  void unregisterKeyForwardHandler();
+  void handleCoordinationKeyForward(const Event &event);
   Client *getClientPtr()
   {
     return m_client;
@@ -102,4 +110,5 @@ private:
   size_t m_currentServerIndex = 0;
   size_t m_lastServerAddressIndex = 0;
   uint m_retryCount = 0;
+  bool m_keyForwardHandlerRegistered = false;
 };

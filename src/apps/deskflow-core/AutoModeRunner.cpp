@@ -11,6 +11,7 @@
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "coordination/Coordinator.h"
+#include "coordination/FleetState.h"
 #include "coordination/Peer.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/DeskflowException.h"
@@ -20,14 +21,66 @@
 #include <QThread>
 
 #include <chrono>
+#include <functional>
 #include <thread>
 
 using deskflow::coordination::Coordinator;
 using deskflow::coordination::CoordinatorConfig;
+using deskflow::coordination::FleetState;
 using deskflow::coordination::Role;
 using deskflow::coordination::RoleDecision;
 
 namespace {
+
+QStringList preConnectHostsFromFleet(const FleetState &fleet, const std::string &serverAddress)
+{
+  QStringList hosts;
+  const auto addHost = [&hosts](const std::string &address) {
+    if (address.empty()) {
+      return;
+    }
+    const auto host = QString::fromStdString(address);
+    if (!hosts.contains(host)) {
+      hosts << host;
+    }
+  };
+
+  addHost(serverAddress);
+  for (const auto &peer : fleet.peers) {
+    addHost(peer.lan);
+    addHost(peer.ip);
+  }
+  return hosts;
+}
+
+QStringList defaultPreConnectHosts(const std::string &serverAddress)
+{
+  QStringList hosts;
+  if (!serverAddress.empty()) {
+    const auto primary = QString::fromStdString(serverAddress);
+    if (!hosts.contains(primary)) {
+      hosts << primary;
+    }
+  }
+  const auto peers = deskflow::coordination::parsePeerList(
+      Settings::value(Settings::Coordination::Peers).toStringList().join(QLatin1Char(',')).toStdString()
+  );
+  for (const auto &peer : peers) {
+    if (!peer.lan.empty()) {
+      const auto lan = QString::fromStdString(peer.lan);
+      if (!hosts.contains(lan)) {
+        hosts << lan;
+      }
+    }
+    if (!peer.ip.empty()) {
+      const auto ip = QString::fromStdString(peer.ip);
+      if (!hosts.contains(ip)) {
+        hosts << ip;
+      }
+    }
+  }
+  return hosts;
+}
 
 CoordinatorConfig configFromSettings()
 {
@@ -127,31 +180,15 @@ void AutoModeRunner::epochLoop()
 
 int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
 {
+  const auto meshVersion = Settings::value(Settings::Coordination::MeshVersion).toInt();
+  const bool meshV2 = meshVersion >= 2;
+
   if (role == Role::Client) {
-    // Pre-connect: elected server first, then every coordination peer address
-    // so the client epoch can open TCP without waiting for an edge cross.
-    QStringList hosts;
-    if (!serverAddress.empty()) {
-      const auto primary = QString::fromStdString(serverAddress);
-      if (!hosts.contains(primary)) {
-        hosts << primary;
-      }
-    }
-    const auto peers = deskflow::coordination::parsePeerList(
-        Settings::value(Settings::Coordination::Peers).toStringList().join(QLatin1Char(',')).toStdString()
-    );
-    for (const auto &peer : peers) {
-      if (!peer.lan.empty()) {
-        const auto lan = QString::fromStdString(peer.lan);
-        if (!hosts.contains(lan)) {
-          hosts << lan;
-        }
-      }
-      if (!peer.ip.empty()) {
-        const auto ip = QString::fromStdString(peer.ip);
-        if (!hosts.contains(ip)) {
-          hosts << ip;
-        }
+    QStringList hosts = defaultPreConnectHosts(serverAddress);
+    if (meshV2) {
+      const auto fleet = m_coordinator->fleetSnapshot();
+      if (!fleet.links.empty()) {
+        hosts = preConnectHostsFromFleet(fleet, serverAddress);
       }
     }
     Settings::setValue(Settings::Client::RemoteHost, hosts.join(QLatin1Char(',')));
@@ -171,15 +208,38 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
     });
   }
 
+  bool trackTopologyReady = false;
+  ClientApp *clientAppPtr = nullptr;
+  std::function<void(const Event &)> topologyReadyHandler;
+
   std::unique_ptr<App> app;
   if (role == Role::Server) {
     auto serverApp = std::make_unique<ServerApp>(&m_events, m_processName);
-    serverApp->setCursorBroadcastCallback([this](const std::string &host) {
-      m_coordinator->broadcastCursor(host);
+    serverApp->setCursorBroadcastCallback([this](const std::string &screenName) {
+      m_coordinator->updateCursorHost(screenName);
     });
+    serverApp->setFleetTopologyPublishCallback([this](auto links, auto screens) {
+      m_coordinator->publishFleetTopology(std::move(links), std::move(screens));
+    });
+    serverApp->setFleetSnapshotCallback([this] { return m_coordinator->fleetSnapshot(); });
     app = std::move(serverApp);
   } else {
-    app = std::make_unique<ClientApp>(&m_events, m_processName);
+    auto clientApp = std::make_unique<ClientApp>(&m_events, m_processName);
+    clientAppPtr = clientApp.get();
+    if (meshV2) {
+      topologyReadyHandler = [this, clientAppPtr, serverAddress](const Event &) {
+        const auto fleet = m_coordinator->fleetSnapshot();
+        if (fleet.links.empty()) {
+          return;
+        }
+        clientAppPtr->appendPreConnectHosts(preConnectHostsFromFleet(fleet, serverAddress));
+      };
+      m_events.addHandler(
+          EventTypes::CoordinationTopologyReady, m_events.getSystemTarget(), topologyReadyHandler
+      );
+      trackTopologyReady = true;
+    }
+    app = std::move(clientApp);
   }
   LOG_INFO(
       "coordination: starting %s epoch%s%s", roleName(role), serverAddress.empty() ? "" : " towards ",
@@ -213,6 +273,9 @@ int AutoModeRunner::runEpoch(Role role, const std::string &serverAddress)
   if (trackCursorHere) {
     m_events.removeHandler(EventTypes::CoordinationScreenEntered, m_events.getSystemTarget());
     m_events.removeHandler(EventTypes::CoordinationScreenLeft, m_events.getSystemTarget());
+  }
+  if (trackTopologyReady) {
+    m_events.removeHandler(EventTypes::CoordinationTopologyReady, m_events.getSystemTarget());
   }
 
   m_coordinator->updateKeyboardRelayForRole(Role::Init);

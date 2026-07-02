@@ -43,6 +43,8 @@ public:
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
   void restart();
+  //! Persist server layout and signal deskflow-core to reload (SIGHUP on Unix).
+  void reloadServerConfig();
   void cleanup();
   void applyLogLevel();
   void clearSettings();

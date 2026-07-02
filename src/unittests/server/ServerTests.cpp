@@ -10,13 +10,18 @@
 #include "../deskflow/MockKeyState.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
+#include "base/Log.h"
 #include "common/Settings.h"
 #include "deskflow/PlatformScreen.h"
 #include "deskflow/Screen.h"
+#include "deskflow/ipc/CoreIpcServer.h"
+#include "io/IStream.h"
 #include "server/Config.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
+#include "server/TopologyLink.h"
 
+#include <QCoreApplication>
 #include <QTest>
 
 #include <memory>
@@ -24,6 +29,42 @@
 #include <vector>
 
 namespace {
+
+class NullTestStream : public deskflow::IStream
+{
+public:
+  void close() override
+  {
+  }
+  uint32_t read(void *, uint32_t) override
+  {
+    return 0;
+  }
+  void write(const void *, uint32_t) override
+  {
+  }
+  void flush() override
+  {
+  }
+  void shutdownInput() override
+  {
+  }
+  void shutdownOutput() override
+  {
+  }
+  void *getEventTarget() const override
+  {
+    return nullptr;
+  }
+  bool isReady() const override
+  {
+    return false;
+  }
+  uint32_t getSize() const override
+  {
+    return 0;
+  }
+};
 
 class TestPlatformScreen : public PlatformScreen
 {
@@ -317,7 +358,7 @@ public:
 
   deskflow::IStream *getStream() const override
   {
-    return nullptr;
+    return const_cast<NullTestStream *>(&m_stream);
   }
 
   void clearEnterLog()
@@ -336,22 +377,52 @@ public:
   }
 
 private:
+  NullTestStream m_stream;
   std::vector<std::pair<int32_t, int32_t>> m_enterCalls;
+};
+
+struct LeakedServerFixture
+{
+  EventQueue events;
+  deskflow::server::Config config;
+  TestPlatformScreen *platform = nullptr;
+  deskflow::Screen *screen = nullptr;
+  PrimaryClient *primary = nullptr;
+
+  explicit LeakedServerFixture() : config(&events) {}
+
+  void init(const char *primaryName)
+  {
+    platform = new TestPlatformScreen(&events);
+    screen = new deskflow::Screen(platform, &events);
+    primary = new PrimaryClient(primaryName, screen);
+  }
 };
 
 } // namespace
 
 std::unique_ptr<Arch> g_arch;
+Log g_log;
+std::unique_ptr<QCoreApplication> g_app;
+std::unique_ptr<deskflow::core::ipc::CoreIpcServer> g_ipc;
 
 void ServerTests::initTestCase()
 {
+  static int argc = 1;
+  static char arg0[] = "ServerTests";
+  static char *argv[] = {arg0, nullptr};
+  g_app = std::make_unique<QCoreApplication>(argc, argv);
+  g_ipc = std::make_unique<deskflow::core::ipc::CoreIpcServer>(g_app.get());
   g_arch = std::make_unique<Arch>();
+  g_log.setFilter(LogLevel::Level::Error);
   Settings::setValue(Settings::Server::MouserBridgeEnabled, false);
   Settings::setValue(Settings::Core::ComputerName, QStringLiteral("server"));
 }
 
 void ServerTests::cleanupTestCase()
 {
+  g_ipc.reset();
+  g_app.reset();
   g_arch.reset();
 }
 
@@ -372,46 +443,87 @@ void ServerTests::KeyboardBroadcastInfo_alloc_stateAndSceens()
 
 void ServerTests::adoptClient_resyncsEnterWhenActiveMatches()
 {
-  EventQueue events;
-  deskflow::server::Config config(&events);
-  QVERIFY(config.addScreen("server"));
-  QVERIFY(config.addScreen("remote"));
-  QVERIFY(config.connect("server", Direction::Right, 0.0f, 1.0f, "remote", 0.0f, 1.0f));
-  QVERIFY(config.connect("remote", Direction::Left, 0.0f, 1.0f, "server", 0.0f, 1.0f));
-
-  TestPlatformScreen platform(&events);
-  deskflow::Screen screen(&platform, &events);
-  PrimaryClient primary("server", &screen);
+  LeakedServerFixture fixture;
+  QVERIFY(fixture.config.addScreen("server"));
+  QVERIFY(fixture.config.addScreen("remote"));
+  QVERIFY(fixture.config.connect("server", Direction::Right, 0.0f, 1.0f, "remote", 0.0f, 1.0f));
+  QVERIFY(fixture.config.connect("remote", Direction::Left, 0.0f, 1.0f, "server", 0.0f, 1.0f));
+  fixture.init("server");
   TestClientProxy remote("remote");
 
-  Server server(config, &primary, &screen, &events);
-  server.adoptClient(&remote);
-  server.switchScreen(&remote, 50, 60, false);
-  remote.clearEnterLog();
+  {
+    Server server(fixture.config, fixture.primary, fixture.screen, &fixture.events);
+    QVERIFY(server.m_clients.emplace("remote", &remote).second);
+    server.switchScreen(&remote, 50, 60, false);
+    remote.clearEnterLog();
 
-  server.resyncEnterIfActiveClient(&remote);
+    server.resyncEnterIfActiveClient(&remote);
 
-  QCOMPARE(remote.enterCallCount(), 1);
-  QCOMPARE(remote.lastEnterPos().first, 50);
-  QCOMPARE(remote.lastEnterPos().second, 60);
+    QCOMPARE(remote.enterCallCount(), 1);
+    QCOMPARE(remote.lastEnterPos().first, 50);
+    QCOMPARE(remote.lastEnterPos().second, 60);
+    server.m_clients.erase("remote");
+  }
 }
 
 void ServerTests::peekConfiguredNeighbor_returnsLinkedScreen()
 {
-  EventQueue events;
-  deskflow::server::Config config(&events);
-  QVERIFY(config.addScreen("server"));
-  QVERIFY(config.addScreen("remote"));
-  QVERIFY(config.connect("server", Direction::Right, 0.0f, 1.0f, "remote", 0.0f, 1.0f));
+  LeakedServerFixture fixture;
+  QVERIFY(fixture.config.addScreen("server"));
+  QVERIFY(fixture.config.addScreen("remote"));
+  QVERIFY(fixture.config.connect("server", Direction::Right, 0.0f, 1.0f, "remote", 0.0f, 1.0f));
+  fixture.init("server");
 
-  TestPlatformScreen platform(&events);
-  deskflow::Screen screen(&platform, &events);
-  PrimaryClient primary("server", &screen);
+  {
+    Server server(fixture.config, fixture.primary, fixture.screen, &fixture.events);
+    int32_t x = 1023;
+    int32_t y = 384;
+    QCOMPARE(server.peekConfiguredNeighbor(fixture.primary, Direction::Right, x, y), "remote");
+  }
+}
 
-  Server server(config, &primary, &screen, &events);
-  int32_t x = 1023;
-  int32_t y = 384;
-  QCOMPARE(server.peekConfiguredNeighbor(&primary, Direction::Right, x, y), "remote");
+void ServerTests::peekConfiguredNeighbor_usesFleetTopology()
+{
+  LeakedServerFixture fixture;
+  QVERIFY(fixture.config.addScreen("server"));
+  QVERIFY(fixture.config.addScreen("remote"));
+  fixture.init("server");
+
+  {
+    Server server(fixture.config, fixture.primary, fixture.screen, &fixture.events);
+    server.setFleetTopologySource(true);
+    server.setFleetTopologyLinks(
+        {deskflow::server::TopologyLink{"server", "remote", Direction::Right}}
+    );
+
+    int32_t x = 1023;
+    int32_t y = 384;
+    QCOMPARE(server.peekConfiguredNeighbor(fixture.primary, Direction::Right, x, y), "remote");
+    QCOMPARE(server.peekConfiguredNeighbor(fixture.primary, Direction::Left, x, y), std::string());
+  }
+}
+
+void ServerTests::queuedSwitch_executesWhenNeighborConnects()
+{
+  LeakedServerFixture fixture;
+  QVERIFY(fixture.config.addScreen("server"));
+  QVERIFY(fixture.config.addScreen("remote"));
+  QVERIFY(fixture.config.connect("server", Direction::Right, 0.0f, 1.0f, "remote", 0.0f, 1.0f));
+  fixture.init("server");
+  TestClientProxy remote("remote");
+
+  {
+    Server server(fixture.config, fixture.primary, fixture.screen, &fixture.events);
+    server.switchScreen(fixture.primary, 512, 384, false);
+    server.queueSwitchForScreen("remote", Direction::Right, 1020, 384);
+    QVERIFY(server.m_clients.emplace("remote", &remote).second);
+    QCOMPARE(server.m_active, fixture.primary);
+
+    server.tryExecuteQueuedSwitch(&remote);
+
+    QCOMPARE(server.m_active, &remote);
+    server.m_clients.erase("remote");
+  }
 }
 
 QTEST_MAIN(ServerTests)

@@ -67,6 +67,27 @@ void FleetStateMergeTests::staleFragmentIsIgnored()
   QCOMPARE(state.seq, static_cast<int64_t>(10));
 }
 
+void FleetStateMergeTests::equalSeqReplacesStaleLinks()
+{
+  FleetState state;
+  state.server = "server";
+  state.seq = 4;
+  state.links = {FleetLink{"server", "remote", "right"}};
+  state.screens = {FleetScreen{"server"}, FleetScreen{"remote"}};
+
+  FleetFragment updated;
+  updated.server = "server";
+  updated.seq = 4;
+  updated.links = {FleetLink{"server", "laptop", "left"}};
+  updated.screens = {FleetScreen{"server"}, FleetScreen{"laptop"}};
+
+  const auto result = applyServerFragment(state, updated);
+
+  QVERIFY(result.changed);
+  QCOMPARE(state.links.front().toScreen, std::string("laptop"));
+  QCOMPARE(state.seq, static_cast<int64_t>(4));
+}
+
 void FleetStateMergeTests::cursorUpdatePreservesOrdering()
 {
   FleetState state;
@@ -104,6 +125,25 @@ void FleetStateMergeTests::topologyBecameReadyFlag()
   const auto result = applyServerFragment(state, fragment);
 
   QVERIFY(result.topologyBecameReady);
+}
+
+void FleetStateMergeTests::topologyBecameReady_notSetWhenAlreadyReady()
+{
+  FleetState state;
+  state.server = "server";
+  state.seq = 2;
+  state.links = {FleetLink{"server", "remote", "right"}};
+
+  FleetFragment fragment;
+  fragment.server = "server";
+  fragment.seq = 3;
+  fragment.cursorHost = "remote";
+  fragment.links = state.links;
+
+  const auto result = applyServerFragment(state, fragment);
+
+  QVERIFY(result.changed);
+  QVERIFY(!result.topologyBecameReady);
 }
 
 QTEST_MAIN(FleetStateMergeTests)

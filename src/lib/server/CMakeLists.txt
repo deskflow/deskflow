@@ -32,6 +32,7 @@ add_library(server STATIC
   ClientProxyUnknown.h
   Config.cpp
   Config.h
+  TopologyLink.h
   InputFilter.cpp
   InputFilter.h
   MouserBridge.cpp
@@ -44,7 +45,7 @@ add_library(server STATIC
   Server.h
 )
 
-target_link_libraries(server PUBLIC common coordination)
+target_link_libraries(server PRIVATE common coordination)
 
 if(WIN32)
   target_link_libraries(server PUBLIC ws2_32)

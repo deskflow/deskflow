@@ -149,21 +149,19 @@ void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, c
   (void)button;
 }
 
-void PrimaryClient::injectForwardedKey(
-    deskflow::coordination::Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button,
-    const std::string &lang
-)
+void PrimaryClient::injectForwardedKey(const deskflow::coordination::RelayKeyEvent &event)
 {
+  using deskflow::coordination::RelayKeyPhase;
   fakeInputBegin();
-  switch (phase) {
-  case deskflow::coordination::Message::KeyPhase::Up:
-    m_screen->keyUp(id, mask, button);
+  switch (event.phase) {
+  case RelayKeyPhase::Up:
+    m_screen->keyUp(event.id, event.mask, event.button);
     break;
-  case deskflow::coordination::Message::KeyPhase::Repeat:
-    m_screen->keyRepeat(id, mask, 1, button, lang);
+  case RelayKeyPhase::Repeat:
+    m_screen->keyRepeat(event.id, event.mask, 1, event.button, event.lang);
     break;
   default:
-    m_screen->keyDown(id, mask, button, lang);
+    m_screen->keyDown(event.id, event.mask, event.button, event.lang);
     break;
   }
   fakeInputEnd();

@@ -9,6 +9,7 @@
 #include "coordination/CoordinationMesh.h"
 #include "coordination/ElectionState.h"
 #include "coordination/FleetState.h"
+#include "coordination/FleetStateMerge.h"
 #include "coordination/KeyboardRelayMonitor.h"
 #include "coordination/LocalInputMonitor.h"
 #include "coordination/Peer.h"
@@ -22,6 +23,8 @@
 #include <thread>
 
 class IEventQueue;
+
+class CoordinatorFleetPublishTests;
 
 namespace deskflow::coordination {
 
@@ -55,6 +58,8 @@ interrupts the currently running app via the registered callback.
 */
 class Coordinator
 {
+  friend class ::CoordinatorFleetPublishTests;
+
 public:
   explicit Coordinator(CoordinatorConfig config);
   Coordinator(const Coordinator &) = delete;
@@ -99,6 +104,13 @@ public:
   //! client keyboard relay uses ElectionState::cursorHere() instead.
   void broadcastCursor(const std::string &host);
 
+  //! Server epoch: update cursor host/screen in fleet state (mesh v2 fleet message; v1 cursor).
+  //! \p screenName is the active screen name (deskflow screen names identify cursor host).
+  void updateCursorHost(const std::string &screenName);
+
+  //! Server epoch (mesh v2): publish screen topology to fleet peers.
+  void publishFleetTopology(std::vector<FleetLink> links, std::vector<FleetScreen> screens);
+
   //! Start/stop the keyboard relay monitor for the current role epoch.
   void updateKeyboardRelayForRole(Role role);
 
@@ -112,6 +124,9 @@ private:
   void handleHelloMessage(const Message &message, const std::function<void(const std::string &)> &reply);
   void handleFleetMessage(const Message &message);
   void postFleetStateEvents(IEventQueue *events, const FleetMergeResult &merge);
+  std::vector<FleetPeer> buildFleetPeersLocked();
+  void sendFleetLineToPeers(const std::string &line, const PeerList &peers);
+  bool mergeAndBroadcastFleetFragment(const FleetFragment &fragment, bool sendEvenIfUnchanged);
   void handleKeyForwardMessage(const Message &message);
   void sendKeyForward(
       Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
@@ -135,9 +150,11 @@ private:
   IEventQueue *m_events = nullptr;
   std::string m_fleetCursorHost;
   int64_t m_cursorSeq = 0;
+  //! Monotonic fleet fragment sequence (authoritative on mesh v2).
+  int64_t m_fleetSeq = 0;
   FleetState m_fleetState;
 
-  std::mutex m_mutex; // guards election state + decision + interrupt
+  mutable std::mutex m_mutex; // guards election state + decision + interrupt + fleet
   ElectionState m_election;
   std::function<void()> m_interrupt;
   RoleDecision m_decision;

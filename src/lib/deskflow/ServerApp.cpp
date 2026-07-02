@@ -9,6 +9,7 @@
 #include "deskflow/ServerApp.h"
 
 #include "arch/Arch.h"
+#include "base/DirectionTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "common/ExitCodes.h"
@@ -27,6 +28,9 @@
 #include "server/Config.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
+
+#include <coordination/FleetState.h>
+#include "server/TopologyLink.h"
 
 // must be before screen header includes
 #include <QFileInfo>
@@ -48,8 +52,72 @@
 #endif
 
 #include <fstream>
+#include <iterator>
+#include <set>
+#include <tuple>
 
 using namespace deskflow::server;
+using deskflow::coordination::FleetLink;
+using deskflow::coordination::FleetScreen;
+
+namespace {
+
+Direction directionFromFleetName(const std::string &name)
+{
+  if (name == "left") {
+    return Direction::Left;
+  }
+  if (name == "right") {
+    return Direction::Right;
+  }
+  if (name == "top") {
+    return Direction::Top;
+  }
+  if (name == "bottom") {
+    return Direction::Bottom;
+  }
+  return Direction::NoDirection;
+}
+
+std::vector<FleetScreen> screensFromConfig(const Config &config)
+{
+  std::vector<FleetScreen> screens;
+  screens.reserve(static_cast<size_t>(std::distance(config.begin(), config.end())));
+  for (auto it = config.begin(); it != config.end(); ++it) {
+    screens.push_back(FleetScreen{*it});
+  }
+  return screens;
+}
+
+std::vector<FleetLink> linksFromConfig(const Config &config)
+{
+  std::vector<FleetLink> links;
+  using LinkKey = std::tuple<std::string, std::string, std::string>;
+  std::set<LinkKey> seen;
+
+  for (auto it = config.begin(); it != config.end(); ++it) {
+    const std::string &from = *it;
+    for (auto dir = Direction::FirstDirection; dir <= Direction::LastDirection;
+         dir = static_cast<Direction>(static_cast<uint8_t>(dir) + 1)) {
+      constexpr float kSamples[] = {0.0f, 0.25f, 0.5f, 0.75f, 1.0f};
+      for (const float sample : kSamples) {
+        float positionOut = 0.0f;
+        const std::string to = config.getNeighbor(from, dir, sample, &positionOut);
+        if (to.empty() || from == to) {
+          continue;
+        }
+        const LinkKey key{from, to, Config::dirName(dir)};
+        if (!seen.insert(key).second) {
+          continue;
+        }
+        links.push_back(FleetLink{from, to, Config::dirName(dir)});
+      }
+    }
+  }
+  return links;
+}
+
+} // namespace
 
 //
 // ServerApp
@@ -90,6 +158,8 @@ void ServerApp::reloadConfig()
     if (m_server != nullptr) {
       m_server->setConfig(*m_config);
     }
+    publishFleetTopologyFromConfig();
+    applyFleetTopologyFromSnapshot();
     LOG_INFO("reloaded configuration");
   }
 }
@@ -377,6 +447,9 @@ bool ServerApp::startServer()
     if (m_cursorBroadcastCallback && !m_name.empty()) {
       m_cursorBroadcastCallback(m_name);
     }
+    registerFleetTopologyHandlers();
+    publishFleetTopologyFromConfig();
+    applyFleetTopologyFromSnapshot();
     return true;
   } catch (SocketAddressInUseException &e) {
     LOG_CRIT("cannot listen for clients: %s", e.what());
@@ -469,13 +542,6 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
     getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &event) {
       handleScreenSwitched(event);
     });
-    getEvents()->addHandler(EventTypes::CoordinationKeyForward, getEvents()->getSystemTarget(), [server](const auto &event) {
-      const auto *info = static_cast<const CoordinationKeyForwardInfo *>(event.getData());
-      if (info == nullptr) {
-        return;
-      }
-      server->relayForwardedKey(info->phase, info->id, info->mask, info->button, info->lang);
-    });
 
   } catch (std::bad_alloc &ba) {
     delete server;
@@ -555,6 +621,8 @@ int ServerApp::mainLoop()
     resetServer();
   });
 
+  registerKeyForwardHandler();
+
   // run event loop.  if startServer() failed we're supposed to retry
   // later.  the timer installed by startServer() will take care of
   // that.
@@ -562,6 +630,8 @@ int ServerApp::mainLoop()
 
   // close down
   LOG_DEBUG("stopping server");
+  unregisterKeyForwardHandler();
+  unregisterFleetTopologyHandlers();
   getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
   getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
   cleanupServer();
@@ -612,4 +682,111 @@ void ServerApp::startNode()
   if (!startServer()) {
     bye(s_exitFailed);
   }
+}
+
+void ServerApp::publishFleetTopologyFromConfig()
+{
+  if (!m_fleetTopologyPublishCallback || m_config == nullptr) {
+    return;
+  }
+  const auto screens = screensFromConfig(*m_config);
+  const auto links = linksFromConfig(*m_config);
+  if (screens.empty()) {
+    return;
+  }
+  m_fleetTopologyPublishCallback(links, screens);
+}
+
+void ServerApp::registerFleetTopologyHandlers()
+{
+  if (m_fleetTopologyHandlersRegistered || m_fleetSnapshotCallback == nullptr) {
+    return;
+  }
+
+  const auto handler = [this](const Event &) { applyFleetTopologyFromSnapshot(); };
+  getEvents()->addHandler(EventTypes::CoordinationFleetStateChanged, getEvents()->getSystemTarget(), handler);
+  getEvents()->addHandler(EventTypes::CoordinationTopologyReady, getEvents()->getSystemTarget(), handler);
+  m_fleetTopologyHandlersRegistered = true;
+}
+
+void ServerApp::unregisterFleetTopologyHandlers()
+{
+  if (!m_fleetTopologyHandlersRegistered) {
+    return;
+  }
+  getEvents()->removeHandler(EventTypes::CoordinationFleetStateChanged, getEvents()->getSystemTarget());
+  getEvents()->removeHandler(EventTypes::CoordinationTopologyReady, getEvents()->getSystemTarget());
+  m_fleetTopologyHandlersRegistered = false;
+}
+
+void ServerApp::applyFleetTopologyFromSnapshot()
+{
+  if (m_server == nullptr || m_fleetSnapshotCallback == nullptr) {
+    return;
+  }
+  if (Settings::value(Settings::Coordination::MeshVersion).toInt() < 2) {
+    m_server->setFleetTopologySource(false);
+    return;
+  }
+
+  const auto fleet = m_fleetSnapshotCallback();
+  if (fleet.links.empty()) {
+    m_server->setFleetTopologySource(false);
+    return;
+  }
+
+  std::vector<deskflow::server::TopologyLink> links;
+  links.reserve(fleet.links.size());
+  for (const auto &link : fleet.links) {
+    const auto direction = directionFromFleetName(link.direction);
+    if (direction == Direction::NoDirection) {
+      continue;
+    }
+    links.push_back(deskflow::server::TopologyLink{link.fromScreen, link.toScreen, direction});
+  }
+  if (links.empty()) {
+    LOG_WARN("coordination: fleet snapshot had no usable links; falling back to config topology");
+    m_server->setFleetTopologySource(false);
+    return;
+  }
+
+  m_server->setFleetTopologySource(true);
+  m_server->setFleetTopologyLinks(std::move(links));
+
+  const auto cursorScreen = !fleet.cursorScreen.empty() ? fleet.cursorScreen : fleet.cursorHost;
+  if (!cursorScreen.empty()) {
+    m_server->syncMouserVirtualHostForFleetCursor(cursorScreen);
+  }
+}
+
+void ServerApp::registerKeyForwardHandler()
+{
+  if (m_keyForwardHandlerRegistered) {
+    return;
+  }
+  getEvents()->addHandler(EventTypes::CoordinationKeyForward, this, [this](const Event &event) {
+    handleCoordinationKeyForward(event);
+  });
+  m_keyForwardHandlerRegistered = true;
+}
+
+void ServerApp::unregisterKeyForwardHandler()
+{
+  if (!m_keyForwardHandlerRegistered) {
+    return;
+  }
+  getEvents()->removeHandler(EventTypes::CoordinationKeyForward, this);
+  m_keyForwardHandlerRegistered = false;
+}
+
+void ServerApp::handleCoordinationKeyForward(const Event &event)
+{
+  if (m_server == nullptr) {
+    return;
+  }
+  const auto *info = static_cast<const CoordinationKeyForwardInfo *>(event.getData());
+  if (info == nullptr) {
+    return;
+  }
+  m_server->relayForwardedKey(info->event);
 }
