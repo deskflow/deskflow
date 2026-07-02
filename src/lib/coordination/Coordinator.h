@@ -8,6 +8,7 @@
 
 #include "coordination/CoordinationMesh.h"
 #include "coordination/ElectionState.h"
+#include "coordination/FleetState.h"
 #include "coordination/KeyboardRelayMonitor.h"
 #include "coordination/LocalInputMonitor.h"
 #include "coordination/Peer.h"
@@ -34,6 +35,7 @@ struct CoordinatorConfig
   PeerList peers;
   ElectionTuning tuning;
   bool keyboardFollowCursor = true;
+  int meshVersion = 1;
 };
 
 //! What the epoch loop should run next.
@@ -100,10 +102,16 @@ public:
   //! Start/stop the keyboard relay monitor for the current role epoch.
   void updateKeyboardRelayForRole(Role role);
 
+  //! Mutex-guarded copy of the merged fleet snapshot (mesh v2).
+  FleetState fleetSnapshot() const;
+
 private:
   void onMessage(const Message &message, const std::function<void(const std::string &)> &reply);
   void onGenuineInput();
   void handleCursorMessage(const Message &message);
+  void handleHelloMessage(const Message &message, const std::function<void(const std::string &)> &reply);
+  void handleFleetMessage(const Message &message);
+  void postFleetStateEvents(IEventQueue *events, const FleetMergeResult &merge);
   void handleKeyForwardMessage(const Message &message);
   void sendKeyForward(
       Message::KeyPhase phase, KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang
@@ -127,6 +135,7 @@ private:
   IEventQueue *m_events = nullptr;
   std::string m_fleetCursorHost;
   int64_t m_cursorSeq = 0;
+  FleetState m_fleetState;
 
   std::mutex m_mutex; // guards election state + decision + interrupt
   ElectionState m_election;

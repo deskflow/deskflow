@@ -15,6 +15,13 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
 )
 
+create_test(
+  NAME FleetStateMergeTests
+  DEPENDS coordination
+  SOURCE FleetStateMergeTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/coordination"
+)
+
 if(APPLE)
   create_test(
     NAME KeyboardRelayMapTests

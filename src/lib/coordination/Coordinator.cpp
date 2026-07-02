@@ -10,7 +10,10 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "coordination/CoordinationEvents.h"
+#include "coordination/CoordinationProtocol.h"
+#include "coordination/FleetStateMerge.h"
 #include "coordination/KeyboardRelayDecision.h"
+#include "base/EventTypes.h"
 
 #include <chrono>
 #include <cctype>
@@ -39,6 +42,11 @@ Coordinator::Coordinator(CoordinatorConfig config)
     : m_config(std::move(config)),
       m_election(m_config.selfName, m_config.tuning, monotonicSeconds)
 {
+  m_fleetState.peers.reserve(m_config.peers.size());
+  for (const auto &peer : m_config.peers) {
+    m_fleetState.peers.push_back(FleetPeer{peer.name, peer.ip, peer.lan});
+  }
+
   m_mesh = std::make_unique<CoordinationMesh>(
       m_config.meshPort, m_config.token,
       [this](const Message &message, const std::function<void(const std::string &)> &reply) {
@@ -153,6 +161,60 @@ void Coordinator::setEventQueue(IEventQueue *events)
   m_events = events;
 }
 
+FleetState Coordinator::fleetSnapshot() const
+{
+  std::scoped_lock lock{m_mutex};
+  return m_fleetState;
+}
+
+void Coordinator::postFleetStateEvents(IEventQueue *events, const FleetMergeResult &merge)
+{
+  if (events == nullptr || !merge.changed) {
+    return;
+  }
+  events->addEvent(Event(EventTypes::CoordinationFleetStateChanged));
+  if (merge.topologyBecameReady) {
+    events->addEvent(Event(EventTypes::CoordinationTopologyReady));
+  }
+}
+
+void Coordinator::handleHelloMessage(const Message &message, const std::function<void(const std::string &)> &reply)
+{
+  if (m_config.meshVersion < 2) {
+    return;
+  }
+  LOG_DEBUG(
+      "coordination: mesh v2 hello from \"%s\" (v=%d)", message.name.c_str(), message.meshVersion
+  );
+  reply(protocol::encodeHello(m_config.meshVersion, m_config.selfName, m_config.token));
+}
+
+void Coordinator::handleFleetMessage(const Message &message)
+{
+  if (m_config.meshVersion < 2) {
+    return;
+  }
+
+  IEventQueue *events = nullptr;
+  FleetMergeResult merge;
+  int64_t seq = 0;
+  size_t linkCount = 0;
+  {
+    std::scoped_lock lock{m_mutex};
+    if (m_election.role() == Role::Server) {
+      return;
+    }
+    events = m_events;
+    merge = applyServerFragment(m_fleetState, fleetFragmentFromMessage(message));
+    seq = m_fleetState.seq;
+    linkCount = m_fleetState.links.size();
+  }
+  if (merge.changed) {
+    LOG_DEBUG("coordination: fleet snapshot updated (seq=%lld links=%zu)", static_cast<long long>(seq), linkCount);
+  }
+  postFleetStateEvents(events, merge);
+}
+
 void Coordinator::broadcastCursor(const std::string &host)
 {
   if (host.empty()) {
@@ -261,6 +323,14 @@ void Coordinator::onMessage(const Message &message, const std::function<void(con
 
   case Message::Type::KeyFwd:
     handleKeyForwardMessage(message);
+    break;
+
+  case Message::Type::Hello:
+    handleHelloMessage(message, reply);
+    break;
+
+  case Message::Type::Fleet:
+    handleFleetMessage(message);
     break;
 
   default:

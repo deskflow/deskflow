@@ -6,6 +6,7 @@
 
 #include "coordination/CoordinationProtocol.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -22,6 +23,87 @@ void putToken(QJsonObject &object, const std::string &token)
 {
   if (!token.empty()) {
     object[QStringLiteral("token")] = QString::fromStdString(token);
+  }
+}
+
+FleetPeer decodeFleetPeer(const QJsonObject &object)
+{
+  FleetPeer peer;
+  peer.name = object[QStringLiteral("name")].toString().toStdString();
+  peer.ip = object[QStringLiteral("ip")].toString().toStdString();
+  peer.lan = object[QStringLiteral("lan")].toString().toStdString();
+  return peer;
+}
+
+QJsonObject encodeFleetPeer(const FleetPeer &peer)
+{
+  QJsonObject object;
+  object[QStringLiteral("name")] = QString::fromStdString(peer.name);
+  object[QStringLiteral("ip")] = QString::fromStdString(peer.ip);
+  object[QStringLiteral("lan")] = QString::fromStdString(peer.lan);
+  return object;
+}
+
+FleetLink decodeFleetLink(const QJsonObject &object)
+{
+  FleetLink link;
+  link.fromScreen = object[QStringLiteral("from")].toString().toStdString();
+  link.toScreen = object[QStringLiteral("to")].toString().toStdString();
+  link.direction = object[QStringLiteral("dir")].toString().toStdString();
+  return link;
+}
+
+QJsonObject encodeFleetLink(const FleetLink &link)
+{
+  QJsonObject object;
+  object[QStringLiteral("from")] = QString::fromStdString(link.fromScreen);
+  object[QStringLiteral("to")] = QString::fromStdString(link.toScreen);
+  object[QStringLiteral("dir")] = QString::fromStdString(link.direction);
+  return object;
+}
+
+void decodeFleetBody(const QJsonObject &object, FleetFragment &fragment)
+{
+  fragment.server = object[QStringLiteral("server")].toString().toStdString();
+  const auto seqValue = object[QStringLiteral("seq")];
+  fragment.seq = seqValue.isString() ? seqValue.toString().toLongLong() : static_cast<int64_t>(seqValue.toDouble());
+
+  if (const auto cursor = object[QStringLiteral("cursor")]; cursor.isObject()) {
+    const QJsonObject cursorObject = cursor.toObject();
+    fragment.cursorHost = cursorObject[QStringLiteral("host")].toString().toStdString();
+    fragment.cursorScreen = cursorObject[QStringLiteral("screen")].toString().toStdString();
+  }
+
+  if (const auto peers = object[QStringLiteral("peers")]; peers.isArray()) {
+    const QJsonArray peersArray = peers.toArray();
+    fragment.peers.reserve(peersArray.size());
+    for (const auto &value : peersArray) {
+      if (value.isObject()) {
+        fragment.peers.push_back(decodeFleetPeer(value.toObject()));
+      }
+    }
+  }
+
+  if (const auto links = object[QStringLiteral("links")]; links.isArray()) {
+    const QJsonArray linksArray = links.toArray();
+    fragment.links.reserve(linksArray.size());
+    for (const auto &value : linksArray) {
+      if (value.isObject()) {
+        fragment.links.push_back(decodeFleetLink(value.toObject()));
+      }
+    }
+  }
+
+  if (const auto screens = object[QStringLiteral("screens")]; screens.isArray()) {
+    const QJsonArray screensArray = screens.toArray();
+    fragment.screens.reserve(screensArray.size());
+    for (const auto &value : screensArray) {
+      if (value.isString()) {
+        fragment.screens.push_back({value.toString().toStdString()});
+      } else if (value.isObject()) {
+        fragment.screens.push_back({value.toObject()[QStringLiteral("name")].toString().toStdString()});
+      }
+    }
   }
 }
 
@@ -47,6 +129,10 @@ Message decode(const std::string &line)
     message.type = Message::Type::Cursor;
   } else if (type == QStringLiteral("keyfwd")) {
     message.type = Message::Type::KeyFwd;
+  } else if (type == QStringLiteral("hello")) {
+    message.type = Message::Type::Hello;
+  } else if (type == QStringLiteral("fleet")) {
+    message.type = Message::Type::Fleet;
   } else {
     return message;
   }
@@ -74,6 +160,14 @@ Message decode(const std::string &line)
     message.keyMask = static_cast<uint16_t>(object[QStringLiteral("mask")].toInt());
     message.keyButton = static_cast<uint16_t>(object[QStringLiteral("button")].toInt());
     message.keyLang = object[QStringLiteral("lang")].toString().toStdString();
+  }
+
+  if (message.type == Message::Type::Hello) {
+    message.meshVersion = object[QStringLiteral("v")].toInt();
+  }
+
+  if (message.type == Message::Type::Fleet) {
+    decodeFleetBody(object, message.fleet);
   }
 
   return message;
@@ -144,6 +238,55 @@ std::string encodeKeyFwd(
   object[QStringLiteral("lang")] = QString::fromStdString(lang);
   putToken(object, token);
   return serialize(object);
+}
+
+std::string encodeHello(int meshVersion, const std::string &name, const std::string &token)
+{
+  QJsonObject object;
+  object[QStringLiteral("t")] = QStringLiteral("hello");
+  object[QStringLiteral("v")] = meshVersion;
+  object[QStringLiteral("name")] = QString::fromStdString(name);
+  putToken(object, token);
+  return serialize(object);
+}
+
+std::string encodeFleet(const FleetFragment &fragment, const std::string &token)
+{
+  QJsonObject object;
+  object[QStringLiteral("t")] = QStringLiteral("fleet");
+  object[QStringLiteral("seq")] = static_cast<qint64>(fragment.seq);
+  object[QStringLiteral("server")] = QString::fromStdString(fragment.server);
+
+  QJsonObject cursor;
+  cursor[QStringLiteral("host")] = QString::fromStdString(fragment.cursorHost);
+  cursor[QStringLiteral("screen")] = QString::fromStdString(fragment.cursorScreen);
+  object[QStringLiteral("cursor")] = cursor;
+
+  QJsonArray peers;
+  for (const auto &peer : fragment.peers) {
+    peers.append(encodeFleetPeer(peer));
+  }
+  object[QStringLiteral("peers")] = peers;
+
+  QJsonArray links;
+  for (const auto &link : fragment.links) {
+    links.append(encodeFleetLink(link));
+  }
+  object[QStringLiteral("links")] = links;
+
+  QJsonArray screens;
+  for (const auto &screen : fragment.screens) {
+    screens.append(QString::fromStdString(screen.name));
+  }
+  object[QStringLiteral("screens")] = screens;
+
+  putToken(object, token);
+  return serialize(object);
+}
+
+FleetFragment fleetFragmentFromMessage(const Message &message)
+{
+  return message.fleet;
 }
 
 std::string encodeStatusReply(

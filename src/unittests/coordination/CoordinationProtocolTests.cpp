@@ -7,6 +7,7 @@
 #include "CoordinationProtocolTests.h"
 
 #include "coordination/CoordinationProtocol.h"
+#include "coordination/FleetState.h"
 #include "coordination/Peer.h"
 
 #include <QJsonDocument>
@@ -155,6 +156,39 @@ void CoordinationProtocolTests::keyFwdPhasesDecode()
 
   const auto down = protocol::decode(R"({"t":"keyfwd","from":"a","phase":"down","id":1,"mask":0,"button":0})");
   QCOMPARE(down.keyPhase, Message::KeyPhase::Down);
+}
+
+void CoordinationProtocolTests::helloRoundTrip()
+{
+  const auto line = protocol::encodeHello(2, "alpha", "secret");
+  const auto message = protocol::decode(line);
+
+  QCOMPARE(message.type, Message::Type::Hello);
+  QCOMPARE(message.meshVersion, 2);
+  QCOMPARE(message.name, std::string("alpha"));
+  QCOMPARE(message.token, std::string("secret"));
+}
+
+void CoordinationProtocolTests::fleetRoundTrip()
+{
+  FleetFragment fragment;
+  fragment.server = "server";
+  fragment.seq = 4;
+  fragment.cursorHost = "remote";
+  fragment.cursorScreen = "remote";
+  fragment.peers = {FleetPeer{"server", "10.0.0.1", "server.local"}};
+  fragment.links = {FleetLink{"server", "remote", "right"}};
+  fragment.screens = {FleetScreen{"server"}, FleetScreen{"remote"}};
+
+  const auto message = protocol::decode(protocol::encodeFleet(fragment, "tok"));
+
+  QCOMPARE(message.type, Message::Type::Fleet);
+  QCOMPARE(message.token, std::string("tok"));
+  QCOMPARE(message.fleet.server, std::string("server"));
+  QCOMPARE(message.fleet.seq, static_cast<int64_t>(4));
+  QCOMPARE(message.fleet.cursorHost, std::string("remote"));
+  QCOMPARE(message.fleet.links.size(), static_cast<size_t>(1));
+  QCOMPARE(message.fleet.screens.size(), static_cast<size_t>(2));
 }
 
 QTEST_MAIN(CoordinationProtocolTests)

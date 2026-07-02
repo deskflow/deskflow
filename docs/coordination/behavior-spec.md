@@ -177,3 +177,41 @@ the login window uses the normal server transport.
 7. Mouser bridge/client settings follow the active role (now native:
    the in-process role controller configures them directly instead of
    regenerating conf files).
+
+## 11. Mesh v2 extensions (dev flag: `coordination/meshVersion=2`)
+
+Additive messages on the same TCP port (24851). Production default remains
+mesh v1 (`meshVersion=1`); v2 handlers are ignored until the setting is 2.
+
+### `hello` — capability handshake
+
+```json
+{"t": "hello", "v": 2, "name": "<sender>", "token": "<optional>"}
+```
+
+Receiver replies with its own `hello` when `meshVersion=2`. Used to detect
+v2 peers during development; production cutover (P6) may reject v1 peers.
+
+### `fleet` — server-authoritative state fragment
+
+```json
+{
+  "t": "fleet",
+  "seq": 12,
+  "token": "<optional>",
+  "server": "<elected-server-name>",
+  "cursor": {"host": "<cursor-host>", "screen": "<screen-name>"},
+  "peers": [{"name": "a", "ip": "10.0.0.1", "lan": "a.local"}],
+  "links": [{"from": "a", "to": "b", "dir": "right"}],
+  "screens": ["a", "b"]
+}
+```
+
+Clients merge fragments with monotonic `seq` ordering (`FleetStateMerge`).
+The elected server is authoritative: each newer fragment replaces
+`peers[]`, `links[]`, `screens[]`, and cursor fields. Post-merge, the
+coordinator emits `CoordinationFleetStateChanged`; the first non-empty
+`links[]` also emits `CoordinationTopologyReady`.
+
+Legacy `cursor` and `keyfwd` messages remain active during the mixed-mode
+window; they are removed in the production cutover phase.

@@ -69,6 +69,7 @@ public:
     // Fleet keyboard follow-cursor: forward local keys to the machine under
     // the fleet cursor when auto mode is enabled (see docs/coordination/design.md).
     inline static const auto KeyboardFollowCursor = QStringLiteral("coordination/keyboardFollowCursor");
+    inline static const auto MeshVersion = QStringLiteral("coordination/meshVersion");
   };
   struct Core
   {
@@ -301,6 +302,7 @@ private:
     , Settings::Coordination::LoginBridgeEnabled
     , Settings::Coordination::LoginBridgeScale
     , Settings::Coordination::KeyboardFollowCursor
+    , Settings::Coordination::MeshVersion
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion

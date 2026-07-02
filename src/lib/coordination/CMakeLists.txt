@@ -10,6 +10,9 @@ add_library(coordination STATIC
   Coordinator.h
   ElectionState.cpp
   ElectionState.h
+  FleetState.h
+  FleetStateMerge.cpp
+  FleetStateMerge.h
   LocalInputMonitor.h
   Peer.cpp
   Peer.h

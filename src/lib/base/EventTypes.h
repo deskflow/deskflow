@@ -253,5 +253,11 @@ enum class EventTypes : uint32_t
 
   /// Fleet keyboard relay: a peer forwarded a key event to the server epoch.
   CoordinationKeyForward,
+
+  /// Mesh v2: merged FleetState snapshot changed (no event data).
+  CoordinationFleetStateChanged,
+
+  /// Mesh v2: fleet topology links became available for the first time.
+  CoordinationTopologyReady,
 };
 } // namespace deskflow

@@ -23,4 +23,6 @@ private Q_SLOTS:
   void cursorRoundTrip();
   void keyFwdRoundTrip();
   void keyFwdPhasesDecode();
+  void helloRoundTrip();
+  void fleetRoundTrip();
 };

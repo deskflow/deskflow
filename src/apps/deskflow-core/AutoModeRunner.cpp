@@ -43,6 +43,7 @@ CoordinatorConfig configFromSettings()
   );
   const auto followCursor = Settings::value(Settings::Coordination::KeyboardFollowCursor);
   config.keyboardFollowCursor = followCursor.isValid() ? followCursor.toBool() : true;
+  config.meshVersion = Settings::value(Settings::Coordination::MeshVersion).toInt();
   return config;
 }
 

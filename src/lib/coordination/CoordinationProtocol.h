@@ -7,6 +7,7 @@
 #pragma once
 
 #include "coordination/ElectionState.h"
+#include "coordination/FleetState.h"
 
 #include <cstdint>
 #include <string>
@@ -28,7 +29,9 @@ struct Message
     Promote,
     Status,
     Cursor,
-    KeyFwd
+    KeyFwd,
+    Hello,
+    Fleet
   };
 
   enum class KeyPhase
@@ -52,6 +55,10 @@ struct Message
   uint16_t keyMask = 0;
   uint16_t keyButton = 0;
   std::string keyLang;
+  // mesh v2 hello
+  int meshVersion = 0;
+  // mesh v2 fleet fragment (decoded from `fleet` messages)
+  FleetFragment fleet;
 };
 
 namespace protocol {
@@ -71,6 +78,12 @@ std::string encodeKeyFwd(
     const std::string &from, Message::KeyPhase phase, uint16_t id, uint16_t mask, uint16_t button,
     const std::string &lang, const std::string &token
 );
+
+std::string encodeHello(int meshVersion, const std::string &name, const std::string &token);
+std::string encodeFleet(const FleetFragment &fragment, const std::string &token);
+
+//! Build a FleetFragment from a decoded fleet message.
+FleetFragment fleetFragmentFromMessage(const Message &message);
 
 //! Status reply (legacy shape: role/server_ip/seq/last_switch/name).
 std::string encodeStatusReply(
