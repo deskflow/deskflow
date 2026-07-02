@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 praharshaAdhikari <praharsha101@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -18,7 +19,6 @@
 #include <platform/OSXAutoTypes.h>
 #endif
 
-#include <filesystem>
 
 AppUtilUnix::AppUtilUnix(const IEventQueue *)
 {
@@ -45,17 +45,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
   std::vector<std::string> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-  // Check /usr/local first used on bsd and some systems
-  std::vector<std::string> evdev_candidate = {
-      "/usr/share/X11/xkb/rules/evdev.xml",       // Linux
-      "/usr/local/share/X11/xkb/rules/evdev.xml", // FreeBSD, DragonFlyBSD
-      "/usr/X11R7/lib/X11/xkb/rules/evdev.xml",   // NetBSD
-      "/usr/X11R6/share/X11/xkb/rules/evdev.xml", // OpenBSD
-  };
-
-  for (auto it = evdev_candidate.begin(); it != evdev_candidate.end() && !std::filesystem::exists(m_evdev = *it); it++)
-    ;
-  layoutLangCodes = X11LayoutsParser::getX11LanguageList(m_evdev);
+  layoutLangCodes = X11LayoutsParser::getX11LanguageList();
 
 #elif defined(Q_OS_MAC)
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
@@ -151,7 +141,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   XFree(kbdDescr);
   XCloseDisplay(display);
 
-  result = X11LayoutsParser::convertLayoutToISO(m_evdev, result);
+  result = X11LayoutsParser::convertLayoutToISO(result);
 
 #elif defined(Q_OS_MAC)
   AutoTISInputSourceRef source(nullptr, CFRelease);
