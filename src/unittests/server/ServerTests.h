@@ -6,10 +6,21 @@
 
 #include <QTest>
 
+#include "arch/Arch.h"
+#include "base/Log.h"
+
 class ServerTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
+  void initTestCase();
   void SwitchToScreenInfo_alloc_screen();
   void KeyboardBroadcastInfo_alloc_stateAndSceens();
+  void onKeyDown_altGrRemap_usesBaseKey();
+  void onKeyDown_withoutAltGrRemap_preservesTranslatedKey();
+  void onKeyRepeat_altGrRemap_usesBaseKey();
+
+private:
+  Arch m_arch;
+  Log m_log;
 };

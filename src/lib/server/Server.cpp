@@ -1059,6 +1059,41 @@ void Server::sendOptions(BaseClientProxy *client) const
   client->setOptions(optionsList);
 }
 
+KeyModifierID Server::getModifierMapping(const BaseClientProxy *client, OptionID option, KeyModifierID fallback) const
+{
+  OptionValue mapping = fallback;
+
+  const auto applyOption = [&](const Config::ScreenOptions *options) {
+    if (options == nullptr) {
+      return;
+    }
+
+    if (const auto it = options->find(option); it != options->end()) {
+      mapping = it->second;
+    }
+  };
+
+  applyOption(m_config->getOptions(getName(client)));
+
+  return static_cast<KeyModifierID>(mapping);
+}
+
+KeyID Server::translateKeyForClient(
+    const BaseClientProxy *client, KeyID id, KeyModifierMask mask, KeyButton button
+) const
+{
+  if (client == nullptr || client->isPrimary() || (mask & KeyModifierAltGr) == 0) {
+    return id;
+  }
+
+  if (getModifierMapping(client, kOptionModifierMapForAltGr, kKeyModifierIDAltGr) == kKeyModifierIDAltGr) {
+    return id;
+  }
+
+  KeyID baseKey = m_screen->getPlatformScreen()->getKeyIDForButton(button);
+  return (baseKey != kKeyNone) ? baseKey : id;
+}
+
 void Server::processOptions()
 {
   const Config::ScreenOptions *options = m_config->getOptions("");
@@ -1520,7 +1555,7 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
 
   // relay
   if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(screens)) {
-    m_active->keyDown(id, mask, button, lang);
+    m_active->keyDown(translateKeyForClient(m_active, id, mask, button), mask, button, lang);
   } else {
     if (!screens && m_keyboardBroadcasting) {
       screens = m_keyboardBroadcastingScreens.c_str();
@@ -1530,7 +1565,7 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
     }
     for (ClientList::const_iterator index = m_clients.begin(); index != m_clients.end(); ++index) {
       if (IKeyState::KeyInfo::contains(screens, index->first)) {
-        index->second->keyDown(id, mask, button, lang);
+        index->second->keyDown(translateKeyForClient(index->second, id, mask, button), mask, button, lang);
       }
     }
   }
@@ -1568,7 +1603,7 @@ void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButto
   assert(m_active != nullptr);
 
   // relay
-  m_active->keyRepeat(id, mask, count, button, lang);
+  m_active->keyRepeat(translateKeyForClient(m_active, id, mask, button), mask, count, button, lang);
 }
 
 void Server::onMouseDown(ButtonID id)
