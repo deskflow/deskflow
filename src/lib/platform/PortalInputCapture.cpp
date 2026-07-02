@@ -254,6 +254,24 @@ void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *se
 #endif
 }
 
+void PortalInputCapture::claimClipboard() const
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (!m_session) {
+    LOG_DEBUG("portal input capture clipboard claim deferred, no session yet");
+    return;
+  }
+
+  XdpSession *session = xdp_input_capture_session_get_session(m_session);
+  if (!xdp_session_is_clipboard_enabled(session)) {
+    LOG_WARN("portal input capture clipboard not enabled on session, cannot claim");
+    return;
+  }
+
+  claimClipboardOwnership(session);
+#endif
+}
+
 void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
