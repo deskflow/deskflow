@@ -66,7 +66,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
   AutoCFArray kbds(nullptr, CFRelease);
   {
     std::lock_guard<std::mutex> lock(g_tisMutex);
-    kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease);
+    runOnMainTISQueue([&] { kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease); });
   }
 
   for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
@@ -74,7 +74,9 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
     CFArrayRef layoutLanguages = nullptr;
     {
       std::lock_guard<std::mutex> lock(g_tisMutex);
-      layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
+      runOnMainTISQueue([&] {
+        layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
+      });
     }
     char temporaryCString[128] = {0};
     for (CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {
@@ -158,9 +160,11 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   CFArrayRef layoutLanguages = nullptr;
   {
     std::lock_guard<std::mutex> lock(g_tisMutex);
-    source = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
-    if (source)
-      layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(source.get(), kTISPropertyInputSourceLanguages);
+    runOnMainTISQueue([&] {
+      source = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
+      if (source)
+        layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(source.get(), kTISPropertyInputSourceLanguages);
+    });
   }
   char temporaryCString[128] = {0};
   for (CFIndex index = 0; index < CFArrayGetCount(layoutLanguages) && layoutLanguages; index++) {

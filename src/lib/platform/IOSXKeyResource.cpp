@@ -106,9 +106,11 @@ KeyID IOSXKeyResource::getKeyID(uint8_t c)
     CFArrayRef langs = nullptr;
     {
       std::lock_guard<std::mutex> lock(g_tisMutex);
-      isref = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
-      if (isref)
-        langs = (CFArrayRef)TISGetInputSourceProperty(isref.get(), kTISPropertyInputSourceLanguages);
+      runOnMainTISQueue([&] {
+        isref = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
+        if (isref)
+          langs = (CFArrayRef)TISGetInputSourceProperty(isref.get(), kTISPropertyInputSourceLanguages);
+      });
     }
     CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
     // convert to unicode
