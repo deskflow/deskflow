@@ -350,6 +350,11 @@ void ClientProxy1_0::resetOptions()
 void ClientProxy1_0::setOptions(const OptionsList &options)
 {
   LOG_VERBOSE("send set options to \"%s\" size=%d", getName().c_str(), options.size());
+  if (options.size() % 2 != 0) {
+    LOG_ERR("options are the incorrect size, not sending");
+    return;
+  }
+
   ProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
 
   // check options

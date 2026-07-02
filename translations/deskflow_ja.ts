@@ -183,11 +183,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;接続試行が失敗している場合、クライアントがサーバーへの再接続を試みる頻度を徐々に落とせるようにします。接続試行の間隔は当初1秒から開始され、最大で5分まで延長されます。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;接続試行が失敗し続けている場合に、クライアントがサーバーへ再接続を試みる頻度を徐々に下げます。接続試行の間隔は当初1秒から開始され、最大で5分まで延長されます。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Use dynamic reconnection time based on connection attempts</source>
-        <translation type="unfinished">接続試行回数に基づき、再接続時間を動的に調整する</translation>
+        <translation>接続試行回数に基づき、再接続時間を動的に調整する</translation>
     </message>
 </context>
 <context>
@@ -304,27 +304,27 @@ Do you want to connect to the server?
     <name>LogLevel</name>
     <message>
         <source>Fatal</source>
-        <translation type="unfinished">重大</translation>
+        <translation>重大</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">エラー</translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">警告</translation>
+        <translation>警告</translation>
     </message>
     <message>
         <source>Info</source>
-        <translation type="unfinished">情報</translation>
+        <translation>情報</translation>
     </message>
     <message>
         <source>Debug</source>
-        <translation type="unfinished">デバッグ</translation>
+        <translation>デバッグ</translation>
     </message>
     <message>
         <source>Verbose</source>
-        <translation type="unfinished">冗長</translation>
+        <translation>冗長</translation>
     </message>
 </context>
 <context>
@@ -564,35 +564,35 @@ Valid names:
     </message>
     <message>
         <source>read</source>
-        <translation type="unfinished">読み取り</translation>
+        <translation>読み取り</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation type="unfinished">読み書き</translation>
+        <translation>書き込み</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
 Please check if you have sufficient permissions to run %1.</source>
-        <translation type="unfinished">Coreの実行ファイルを起動できませんでした。
+        <translation>Coreの実行ファイルを起動できませんでした。
 %1を実行するための十分な権限があるか確認してください。</translation>
     </message>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation type="unfinished">
-また、サーバー設定ファイルを%1できることを確認してください: %2</translation>
+        <translation>
+また、サーバー設定ファイルへの%1権限があることを確認してください: %2</translation>
     </message>
     <message>
         <source>Don&apos;t show this again</source>
-        <translation type="unfinished"></translation>
+        <translation>再表示しない</translation>
     </message>
     <message>
         <source>Missing Keyboard Layouts</source>
-        <translation type="unfinished"></translation>
+        <translation>キーボードレイアウトの不足</translation>
     </message>
     <message>
         <source>&lt;p&gt;Keyboard layout support requires matching layouts on all computers. The following layouts from the other computer are not installed on this computer:&lt;/p&gt;&lt;p&gt;&lt;b&gt;%1&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please install them to enable support for these layouts.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;キーボードレイアウトのサポートには対応するレイアウトが全てのコンピューターに必要です。別のコンピューターで使用されている以下のレイアウトがこのコンピューターにインストールされていません:&lt;/p&gt;&lt;p&gt;&lt;b&gt;%1&lt;/b&gt;&lt;/p&gt;&lt;p&gt;サポートを有効にするには、これらのレイアウトをインストールしてください。&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -899,11 +899,11 @@ Additionally, check you are able to %1 the server config file: %2</source>
     </message>
     <message>
         <source>Alt Gr</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt Gr</translation>
     </message>
     <message>
         <source>Alt &amp;Gr</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt &amp;Gr</translation>
     </message>
 </context>
 <context>
@@ -1260,39 +1260,39 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>&amp;Window</source>
-        <translation type="unfinished">ウィンドウ(&amp;W)</translation>
+        <translation>ウィンドウ(&amp;W)</translation>
     </message>
     <message>
         <source>When the main window is closed</source>
-        <translation type="unfinished">メインウィンドウが閉じられているとき</translation>
+        <translation>メインウィンドウを閉じたとき</translation>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished">終了</translation>
+        <translation>アプリケーションを終了する</translation>
     </message>
     <message>
         <source>Send to background</source>
-        <translation type="unfinished">バックグラウンドに送信</translation>
+        <translation>バックグラウンドで実行する</translation>
     </message>
     <message>
         <source>When the application starts</source>
-        <translation type="unfinished">アプリケーションが起動すると</translation>
+        <translation>アプリケーション起動時</translation>
     </message>
     <message>
         <source>Show the main window</source>
-        <translation type="unfinished">メインウィンドウを表示する</translation>
+        <translation>メインウィンドウを表示する</translation>
     </message>
     <message>
         <source>Run command on enter</source>
-        <translation type="unfinished">Enterキーでコマンドを実行</translation>
+        <translation>画面に入る時にコマンドを実行</translation>
     </message>
     <message>
         <source>Run command on exit</source>
-        <translation type="unfinished">終了時にコマンドを実行</translation>
+        <translation>画面から出る時にコマンドを実行</translation>
     </message>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
-        <translation type="unfinished">Infoよりも高いログレベルを使用すると、パフォーマンスに影響を及ぼす可能性があります。</translation>
+        <translation>Infoよりも高いログレベルを使用すると、パフォーマンスに影響を及ぼす可能性があります。</translation>
     </message>
 </context>
 <context>
@@ -1356,7 +1356,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>%1 is waiting %2 seconds before the next retry</source>
-        <translation type="unfinished">%1 は次の再試行まで %2 秒待機しています</translation>
+        <translation>%1 は次の再試行まであと %2 秒待機します</translation>
     </message>
     <message>
         <source>%1 Encryption Enabled</source>
