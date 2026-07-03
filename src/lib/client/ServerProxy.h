@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "deskflow/ClipboardChunk.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/KeyboardLayoutManager.h"
@@ -124,6 +125,8 @@ private:
   MessageParser m_parser = &ServerProxy::parseHandshakeMessage;
   IEventQueue *m_events = nullptr;
   std::string m_serverLayout = "";
+  std::string m_clipboardDataCached;
+  ClipboardChunkAssemblyState m_clipboardChunkState;
   bool m_isUserNotifiedAboutLayoutSyncError = false;
   deskflow::KeyboardLayoutManager m_layoutManager;
 };

@@ -175,6 +175,11 @@ NetworkAddress Client::getServerAddress() const
   return m_serverAddress;
 }
 
+size_t Client::getMaximumClipboardSizeBytes() const
+{
+  return m_maximumClipboardSize * 1024;
+}
+
 void *Client::getEventTarget() const
 {
   return m_screen->getEventTarget();

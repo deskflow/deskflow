@@ -183,6 +183,11 @@ Server::~Server()
   removeClient(m_primaryClient);
 }
 
+size_t Server::getMaximumClipboardSizeBytes() const
+{
+  return m_maximumClipboardSize * 1024;
+}
+
 bool Server::setConfig(const ServerConfig &config)
 {
   // refuse configuration if it doesn't include the primary screen

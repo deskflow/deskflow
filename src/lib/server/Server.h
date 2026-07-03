@@ -198,6 +198,7 @@ public:
   */
   void getClients(std::vector<std::string> &list) const;
   void sendConnectedClientsIpc() const;
+  size_t getMaximumClipboardSizeBytes() const;
 
   //@}
 

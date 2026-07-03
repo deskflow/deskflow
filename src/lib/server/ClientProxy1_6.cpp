@@ -51,27 +51,34 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
 bool ClientProxy1_6::recvClipboard()
 {
   // parse message
-  static std::string dataCached;
   ClipboardID id;
   uint32_t seq;
 
-  if (auto r = ClipboardChunk::assemble(getStream(), dataCached, id, seq); r == TransferState::Started) {
-    size_t size = ClipboardChunk::getExpectedSize();
-    LOG_DEBUG("receiving clipboard %d size=%d", id, size);
+  auto r = ClipboardChunk::assemble(
+      getStream(), m_clipboardDataCached, id, seq, m_clipboardChunkState, m_server->getMaximumClipboardSizeBytes()
+  );
+
+  if (r == TransferState::Started) {
+    size_t size = ClipboardChunk::getExpectedSize(m_clipboardChunkState);
+    LOG_DEBUG("receiving clipboard %d size=%zu", id, size);
   } else if (r == TransferState::Finished) {
     LOG(
-        (CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seq,
-         dataCached.size())
+        (CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%zu", getName().c_str(), id, seq,
+         m_clipboardDataCached.size())
     );
     // save clipboard
-    m_clipboard[id].m_clipboard.unmarshall(dataCached, 0);
+    m_clipboard[id].m_clipboard.unmarshall(m_clipboardDataCached, 0);
     m_clipboard[id].m_sequenceNumber = seq;
+    m_clipboardDataCached.clear();
+    m_clipboardDataCached.shrink_to_fit();
 
     // notify
     auto *info = new ClipboardInfo;
     info->m_id = id;
     info->m_sequenceNumber = seq;
     m_events->addEvent(Event(EventTypes::ClipboardChanged, getEventTarget(), info));
+  } else if (r == TransferState::Error) {
+    return false;
   }
 
   return true;

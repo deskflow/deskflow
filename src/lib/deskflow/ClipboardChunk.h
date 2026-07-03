@@ -10,6 +10,7 @@
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/ProtocolTypes.h"
 
+#include <cstddef>
 #include <string>
 
 constexpr static auto s_clipboardChunkMetaSize = 7;
@@ -17,6 +18,12 @@ constexpr static auto s_clipboardChunkMetaSize = 7;
 namespace deskflow {
 class IStream;
 }
+
+struct ClipboardChunkAssemblyState
+{
+  size_t expectedSize = 0;
+  bool active = false;
+};
 
 class ClipboardChunk : public Chunk
 {
@@ -27,16 +34,15 @@ public:
   static ClipboardChunk *data(ClipboardID id, uint32_t sequence, const std::string &data);
   static ClipboardChunk *end(ClipboardID id, uint32_t sequence);
 
-  static TransferState
-  assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence);
+  static TransferState assemble(
+      deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence,
+      ClipboardChunkAssemblyState &state, size_t maxDataSize
+  );
 
   static void send(deskflow::IStream *stream, void *data);
 
-  static size_t getExpectedSize()
+  static size_t getExpectedSize(const ClipboardChunkAssemblyState &state)
   {
-    return s_expectedSize;
+    return state.expectedSize;
   }
-
-private:
-  static size_t s_expectedSize;
 };
