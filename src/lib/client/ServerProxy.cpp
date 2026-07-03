@@ -534,7 +534,7 @@ void ServerProxy::setClipboard()
   uint32_t seq;
 
   auto r = ClipboardChunk::assemble(
-      m_stream, m_clipboardDataCached, id, seq, m_clipboardChunkState, m_client->getMaximumClipboardSizeBytes()
+      m_stream, m_clipboardDataCached, id, seq, m_clipboardChunkState, m_client->getMaximumClipboardReceiveSizeBytes()
   );
 
   if (r == TransferState::Started) {
