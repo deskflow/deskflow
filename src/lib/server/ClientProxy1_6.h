@@ -6,7 +6,10 @@
 
 #pragma once
 
+#include "deskflow/ClipboardChunk.h"
 #include "server/ClientProxy1_5.h"
+
+#include <string>
 
 class Server;
 class IEventQueue;
@@ -23,4 +26,6 @@ public:
 
 private:
   IEventQueue *m_events;
+  std::string m_clipboardDataCached;
+  ClipboardChunkAssemblyState m_clipboardChunkState;
 };

@@ -126,6 +126,7 @@ public:
   {
     return m_resolvedAddressesCount;
   }
+  size_t getMaximumClipboardSizeBytes() const;
 
   //@}
 
