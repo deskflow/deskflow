@@ -505,6 +505,118 @@ KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask, const K
   return newMask;
 }
 
+KeyModifierID ServerProxy::modifierIDForKey(KeyID id)
+{
+  switch (id) {
+  case kKeyShift_L:
+  case kKeyShift_R:
+    return kKeyModifierIDShift;
+
+  case kKeyControl_L:
+  case kKeyControl_R:
+    return kKeyModifierIDControl;
+
+  case kKeyAlt_L:
+  case kKeyAlt_R:
+    return kKeyModifierIDAlt;
+
+  case kKeyMeta_L:
+  case kKeyMeta_R:
+    return kKeyModifierIDMeta;
+
+  case kKeySuper_L:
+  case kKeySuper_R:
+    return kKeyModifierIDSuper;
+
+  case kKeyAltGr:
+    return kKeyModifierIDAltGr;
+
+  default:
+    return kKeyModifierIDNull;
+  }
+}
+
+KeyModifierMask ServerProxy::modifierMaskForID(KeyModifierID id)
+{
+  switch (id) {
+  case kKeyModifierIDShift:
+    return KeyModifierShift;
+  case kKeyModifierIDControl:
+    return KeyModifierControl;
+  case kKeyModifierIDAlt:
+    return KeyModifierAlt;
+  case kKeyModifierIDMeta:
+    return KeyModifierMeta;
+  case kKeyModifierIDSuper:
+    return KeyModifierSuper;
+  case kKeyModifierIDAltGr:
+    return KeyModifierAltGr;
+  default:
+    return 0;
+  }
+}
+
+KeyModifierMask ServerProxy::activeModifierMask(KeyButton ignoredButton, bool ignoreButton) const
+{
+  int counts[kKeyModifierIDLast];
+  for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
+    counts[id] = m_activeModifierKeyCounts[id];
+  }
+
+  if (ignoreButton) {
+    auto buttonIt = m_activeModifierButtons.find(ignoredButton);
+    if (buttonIt != m_activeModifierButtons.end() && counts[buttonIt->second] > 0) {
+      --counts[buttonIt->second];
+    }
+  }
+
+  KeyModifierMask mask = 0;
+  for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
+    if (counts[id] > 0) {
+      mask |= modifierMaskForID(id);
+    }
+  }
+  return mask;
+}
+
+KeyModifierMask ServerProxy::mergeActiveModifiers(KeyModifierMask mask, KeyButton button) const
+{
+  return mask | activeModifierMask(button, true);
+}
+
+void ServerProxy::updateActiveModifier(KeyID id, KeyButton button, bool pressed)
+{
+  KeyModifierID modifierID = modifierIDForKey(id);
+  if (modifierID == kKeyModifierIDNull) {
+    return;
+  }
+
+  if (pressed) {
+    if (m_activeModifierButtons.try_emplace(button, modifierID).second) {
+      ++m_activeModifierKeyCounts[modifierID];
+    }
+  } else {
+    auto buttonIt = m_activeModifierButtons.find(button);
+    if (buttonIt == m_activeModifierButtons.end()) {
+      return;
+    }
+
+    KeyModifierID activeModifierID = buttonIt->second;
+    if (m_activeModifierKeyCounts[activeModifierID] > 0) {
+      --m_activeModifierKeyCounts[activeModifierID];
+    }
+    m_activeModifierButtons.erase(buttonIt);
+  }
+}
+
+void ServerProxy::clearActiveModifiers()
+{
+  for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
+    m_activeModifierKeyCounts[id] = 0;
+  }
+  m_activeModifierButtons.clear();
+}
+
 void ServerProxy::enter()
 {
   // parse
@@ -523,6 +635,7 @@ void ServerProxy::enter()
   m_seqNum = seqNum;
   m_serverLayout = "";
   m_isUserNotifiedAboutLayoutSyncError = false;
+  clearActiveModifiers();
 
   // forward
   m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
@@ -535,6 +648,7 @@ void ServerProxy::leave()
 
   // send last mouse motion
   flushCompressedMouse();
+  clearActiveModifiers();
 
   // forward
   m_client->leave();
@@ -595,11 +709,13 @@ void ServerProxy::keyDown(uint16_t id, uint16_t mask, uint16_t button, const std
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  mask2 = mergeActiveModifiers(mask2, button);
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key down translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
   // forward
   m_client->keyDown(id2, mask2, button, lang);
+  updateActiveModifier(id2, button, true);
 }
 
 void ServerProxy::keyRepeat()
@@ -623,6 +739,7 @@ void ServerProxy::keyRepeat()
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  mask2 = mergeActiveModifiers(mask2, button);
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
@@ -650,6 +767,7 @@ void ServerProxy::keyUp()
 
   // forward
   m_client->keyUp(id2, mask2, button);
+  updateActiveModifier(id2, button, false);
 }
 
 void ServerProxy::mouseDown()
@@ -784,6 +902,7 @@ void ServerProxy::resetOptions()
   for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
     m_modifierTranslationTable[id] = id;
   }
+  clearActiveModifiers();
 }
 
 void ServerProxy::setOptions()
