@@ -29,6 +29,8 @@ to the server and messages from the server to calls on the client.
 */
 class ServerProxy
 {
+  friend class ServerProxyTests;
+
 public:
   /*!
   Process messages from the server on \p stream and forward to
@@ -73,6 +75,8 @@ private:
   // modifier key translation
   KeyID translateKey(KeyID) const;
   KeyModifierMask translateModifierMask(KeyModifierMask) const;
+  static KeyID translateKey(KeyID, const KeyModifierID *);
+  static KeyModifierMask translateModifierMask(KeyModifierMask, const KeyModifierID *);
 
   // event handlers
   void handleData();

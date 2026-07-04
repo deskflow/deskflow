@@ -387,6 +387,11 @@ void ServerProxy::sendInfo(const ClientInfo &info)
 
 KeyID ServerProxy::translateKey(KeyID id) const
 {
+  return translateKey(id, m_modifierTranslationTable);
+}
+
+KeyID ServerProxy::translateKey(KeyID id, const KeyModifierID *modifierTranslationTable)
+{
   static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
       {kKeyNone, kKeyNone},     {kKeyShift_L, kKeyShift_R}, {kKeyControl_L, kKeyControl_R}, {kKeyAlt_L, kKeyAlt_R},
       {kKeyMeta_L, kKeyMeta_R}, {kKeySuper_L, kKeySuper_R}, {kKeyAltGr, kKeyAltGr}
@@ -455,41 +460,49 @@ KeyID ServerProxy::translateKey(KeyID id) const
   }
 
   if (id2 != kKeyModifierIDNull) {
-    return std::clamp<KeyModifierMask>(
-        s_translationTable[m_modifierTranslationTable[id2]][side], 0, kKeyModifierIDLast - 1
-    );
+    const auto mappedID = std::clamp<KeyModifierID>(modifierTranslationTable[id2], 0, kKeyModifierIDLast - 1);
+    return s_translationTable[mappedID][side];
   } else {
-    return std::clamp<KeyModifierMask>(id, 0, kKeyModifierIDLast - 1);
+    return id;
   }
 }
 
 KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
 {
+  return translateModifierMask(mask, m_modifierTranslationTable);
+}
+
+KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask, const KeyModifierID *modifierTranslationTable)
+{
   static const KeyModifierMask s_masks[kKeyModifierIDLast] = {0x0000,          KeyModifierShift, KeyModifierControl,
                                                               KeyModifierAlt,  KeyModifierMeta,  KeyModifierSuper,
                                                               KeyModifierAltGr};
+  const auto translatedMask = [modifierTranslationTable](KeyModifierID id) {
+    const auto mappedID = std::clamp<KeyModifierID>(modifierTranslationTable[id], 0, kKeyModifierIDLast - 1);
+    return s_masks[mappedID];
+  };
 
   KeyModifierMask newMask = mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierMeta |
                                      KeyModifierSuper | KeyModifierAltGr);
   if ((mask & KeyModifierShift) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
+    newMask |= translatedMask(kKeyModifierIDShift);
   }
   if ((mask & KeyModifierControl) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDControl]];
+    newMask |= translatedMask(kKeyModifierIDControl);
   }
   if ((mask & KeyModifierAlt) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAlt]];
+    newMask |= translatedMask(kKeyModifierIDAlt);
   }
   if ((mask & KeyModifierAltGr) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAltGr]];
+    newMask |= translatedMask(kKeyModifierIDAltGr);
   }
   if ((mask & KeyModifierMeta) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDMeta]];
+    newMask |= translatedMask(kKeyModifierIDMeta);
   }
   if ((mask & KeyModifierSuper) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDSuper]];
+    newMask |= translatedMask(kKeyModifierIDSuper);
   }
-  return std::clamp<KeyModifierMask>(newMask, 0, kKeyModifierIDLast - 1);
+  return newMask;
 }
 
 void ServerProxy::enter()
