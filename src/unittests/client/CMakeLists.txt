@@ -8,7 +8,7 @@ endif()
 create_test(
   NAME ServerProxyTests
   DEPENDS client
-  LIBS arch base app io ${extra_libs}
+  LIBS arch base app io net ${extra_libs}
   SOURCE ServerProxyTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/client"
 )
