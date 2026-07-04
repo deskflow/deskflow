@@ -533,8 +533,11 @@ void setCursorVisibility(bool visible)
 
 void MSWindowsDesks::deskEnter(Desk *desk)
 {
+  // restore the cursor shape while this thread still has the mouse capture
+  SetCursor(LoadCursor(nullptr, IDC_ARROW));
+  ReleaseCapture();
+
   if (!m_isPrimary) {
-    ReleaseCapture();
     if (m_relativeMouseMoves) {
       restoreRelativeCursorPosition(desk);
     }
@@ -622,6 +625,14 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
         AttachThreadInput(thatThread, thisThread, FALSE);
       }
     }
+
+    // capture the mouse so this window owns the parked cursor; the
+    // WS_EX_TRANSPARENT desk window never wins hit-testing without it
+    SetCapture(desk->m_window);
+
+    // WM_SETCURSOR is not sent while the mouse is captured, so display
+    // the blank cursor explicitly
+    SetCursor(m_cursor);
   } else {
     // move hider window under the cursor center, raise, and show it
     SetWindowPos(desk->m_window, HWND_TOP, m_xCenter, m_yCenter, 1, 1, SWP_NOACTIVATE | SWP_SHOWWINDOW);
