@@ -31,6 +31,7 @@
 #include <Shlobj.h>
 #include <algorithm>
 #include <comutil.h>
+#include <cstdlib>
 #include <string.h>
 
 // suppress warning about GetVersionEx, which is used indirectly in this
@@ -290,6 +291,7 @@ void MSWindowsScreen::leave()
   if (m_isPrimary) {
     LOG_VERBOSE("centering cursor on leave: %+d, %+d", m_xCenter, m_yCenter);
     warpCursor(m_xCenter, m_yCenter);
+    m_leaveTime = std::chrono::steady_clock::now();
 
     // disable special key sequences on win95 family
     enableSpecialKeys(false);
@@ -1254,6 +1256,10 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
         -y + bogusZoneSize > m_yCenter - m_y || y + bogusZoneSize > m_y + m_h - m_yCenter) {
 
       LOG_DEBUG("dropped bogus delta motion: %+d,%+d", x, y);
+      saveMousePosition(m_xCenter, m_yCenter);
+    } else if (isStaleMotionAfterLeave(mx, my)) {
+      LOG_DEBUG("dropped stale motion after leave: %+d,%+d at %+d,%+d", x, y, mx, my);
+      saveMousePosition(m_xCenter, m_yCenter);
     } else {
       // send motion
       sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(x, y));
@@ -1416,6 +1422,24 @@ void MSWindowsScreen::nextMark()
 bool MSWindowsScreen::ignore() const
 {
   return (m_mark != m_markReceived);
+}
+
+bool MSWindowsScreen::isStaleMotionAfterLeave(int32_t mx, int32_t my) const
+{
+  using namespace std::chrono_literals;
+
+  // Long enough for delayed hook events to drain while keeping suppression brief.
+  constexpr auto kStaleMotionGracePeriod = 500ms;
+  constexpr int32_t kStaleZoneNumerator = 2;
+  constexpr int32_t kStaleZoneDenominator = 3;
+
+  if (std::chrono::steady_clock::now() - m_leaveTime > kStaleMotionGracePeriod) {
+    return false;
+  }
+
+  const int32_t xStaleZone = m_xCenter * kStaleZoneNumerator / kStaleZoneDenominator;
+  const int32_t yStaleZone = m_yCenter * kStaleZoneNumerator / kStaleZoneDenominator;
+  return std::abs(mx - m_xCenter) > xStaleZone || std::abs(my - m_yCenter) > yStaleZone;
 }
 
 void MSWindowsScreen::updateScreenShape()
