@@ -12,6 +12,7 @@
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 
+#include <chrono>
 #include <map>
 #include <string>
 
@@ -184,6 +185,11 @@ private: // HACK
   // test if event should be ignored
   bool ignore() const;
 
+  // test if a motion event received while off screen reports a position
+  // that can only come from an event generated before leave() warped the
+  // cursor to the center
+  bool isStaleMotionAfterLeave(int32_t mx, int32_t my) const;
+
   // update screen size cache
   void updateScreenShape();
 
@@ -276,6 +282,9 @@ private:
   // last mouse position
   int32_t m_xCursor = 0;
   int32_t m_yCursor = 0;
+
+  // when leave() last warped the cursor to the center
+  std::chrono::steady_clock::time_point m_leaveTime;
 
   // last clipboard
   uint32_t m_sequenceNumber = 0;
