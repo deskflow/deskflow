@@ -13,6 +13,8 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/KeyboardLayoutManager.h"
 
+#include <map>
+
 class Client;
 class ClientInfo;
 class EventQueueTimer;
@@ -77,6 +79,12 @@ private:
   KeyModifierMask translateModifierMask(KeyModifierMask) const;
   static KeyID translateKey(KeyID, const KeyModifierID *);
   static KeyModifierMask translateModifierMask(KeyModifierMask, const KeyModifierID *);
+  static KeyModifierID modifierIDForKey(KeyID);
+  static KeyModifierMask modifierMaskForID(KeyModifierID);
+  KeyModifierMask activeModifierMask(KeyButton ignoredButton, bool ignoreButton) const;
+  KeyModifierMask mergeActiveModifiers(KeyModifierMask, KeyButton) const;
+  void updateActiveModifier(KeyID, KeyButton, bool pressed);
+  void clearActiveModifiers();
 
   // event handlers
   void handleData();
@@ -122,6 +130,8 @@ private:
   bool m_ignoreMouse = false;
 
   KeyModifierID m_modifierTranslationTable[kKeyModifierIDLast];
+  int m_activeModifierKeyCounts[kKeyModifierIDLast] = {};
+  std::map<KeyButton, KeyModifierID> m_activeModifierButtons;
 
   double m_keepAliveAlarm = 0.0;
   EventQueueTimer *m_keepAliveAlarmTimer = nullptr;
