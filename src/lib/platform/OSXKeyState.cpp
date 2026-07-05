@@ -97,12 +97,16 @@ static const KeyEntry s_controlKeys[] = {
 
     // modifier keys.  OS X doesn't seem to support right handed versions
     // of modifier keys so we map them to the left handed versions.
+    // For the client output path, AltGr is mapped to the right Option key
+    // so it can be synthesized without colliding with left-Option shortcuts
+    // (e.g. Meta word-nav).
     {kKeyShift_L, s_shiftVK},
     {kKeyShift_R, s_shiftVK}, // 60
     {kKeyControl_L, s_controlVK},
     {kKeyControl_R, s_controlVK}, // 62
     {kKeyAlt_L, s_altVK},
-    {kKeyAlt_R, s_altVK},
+    {kKeyAlt_R, kVK_RightOption},
+    {kKeyAltGr, kVK_RightOption}, // macOS has no AltGr; treat it as right Option
     {kKeySuper_L, s_superVK},
     {kKeySuper_R, s_superVK}, // 61
     {kKeyMeta_L, s_superVK},
@@ -168,7 +172,9 @@ io_connect_t getEventDriver()
 
 bool isModifier(uint8_t virtualKey)
 {
-  static std::set<uint8_t> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK};
+  // kVK_RightOption is included because a remote AltGr is synthesized via
+  // the right Option key (see s_controlKeys).
+  static std::set<uint8_t> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK, kVK_RightOption};
 
   return (modifiers.find(virtualKey) != modifiers.end());
 }
@@ -199,6 +205,7 @@ void OSXKeyState::init()
   m_shiftPressed = false;
   m_controlPressed = false;
   m_altPressed = false;
+  m_altRightPressed = false;
   m_superPressed = false;
   m_capsPressed = false;
 
@@ -531,7 +538,7 @@ CGEventFlags OSXKeyState::getDeviceDependedFlags() const
   }
 
   if (m_altPressed) {
-    modifiers |= NX_DEVICELALTKEYMASK;
+    modifiers |= m_altRightPressed ? NX_DEVICERALTKEYMASK : NX_DEVICELALTKEYMASK;
   }
 
   if (m_superPressed) {
@@ -565,6 +572,13 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
     break;
   case s_altVK:
     m_altPressed = keyDown;
+    if (keyDown)
+      m_altRightPressed = false; // left Option takes precedence for the Alt flag
+    break;
+  case kVK_RightOption:
+    // right Option carries the AltGr state
+    m_altPressed = keyDown;
+    m_altRightPressed = keyDown;
     break;
   case s_superVK:
     m_superPressed = keyDown;
@@ -790,6 +804,16 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
       for (std::set<uint32_t>::iterator k = required.begin(); k != required.end(); ++k) {
         item.m_required = mapModifiersFromOSX(*k << 16);
         keyMap.addKeyEntry(item);
+
+        // register an AltGr variant of each Alt entry so a remote AltGr
+        // matches the Option-layer characters and is synthesized via the
+        // right Option key.
+        if ((item.m_required & KeyModifierAlt) != 0) {
+          auto altGrItem = item;
+          altGrItem.m_required = (item.m_required & ~KeyModifierAlt) | KeyModifierAltGr;
+          altGrItem.m_sensitive = item.m_sensitive | KeyModifierAltGr;
+          keyMap.addKeyEntry(altGrItem);
+        }
       }
     }
   }
@@ -846,6 +870,9 @@ void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyM
   }
   if ((changed & KeyModifierAlt) != 0) {
     handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
+  }
+  if ((changed & KeyModifierAltGr) != 0) {
+    handleModifierKey(target, kVK_RightOption, kKeyAltGr, (newMask & KeyModifierAltGr) != 0, newMask);
   }
   if ((changed & KeyModifierSuper) != 0) {
     handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
