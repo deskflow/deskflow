@@ -159,6 +159,8 @@ elseif(UNIX)
         PortalInputCapture.h
         PortalRemoteDesktop.cpp
         PortalRemoteDesktop.h
+        PortalGlobalShortcuts.cpp
+        PortalGlobalShortcuts.h
       )
       if(HAVE_LP_CLIPBOARD)
         list(APPEND PLATFORM_SOURCES
