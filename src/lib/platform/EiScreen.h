@@ -9,6 +9,9 @@
 
 #include "deskflow/IScreen.h"
 #include "deskflow/PlatformScreen.h"
+#ifdef HAVE_LIBPORTAL_SHORTCUTS
+#include "platform/PortalGlobalShortcuts.h"
+#endif
 #include "platform/XDGPowerManager.h"
 
 #include <bitset>
@@ -30,6 +33,7 @@ namespace deskflow {
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class PortalGlobalShortcuts;
 class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
@@ -128,6 +132,7 @@ private:
   void ensureEmulating() const;
   void stopEmulating() const;
   void cancelIdleEmulationTimer() const;
+  void updatePortalGlobalShortcuts();
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
@@ -192,6 +197,9 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+  PortalGlobalShortcuts *m_portalGlobalShortcuts = nullptr;
+
+  bool m_activated = false;
 
   struct HotKeyItem
   {
@@ -218,6 +226,13 @@ private:
     bool removeById(std::uint32_t id);
     void addItem(HotKeyItem item);
     std::uint32_t findByMask(std::uint32_t mask) const;
+    bool empty() const
+    {
+      return m_set.empty();
+    }
+#ifdef HAVE_LIBPORTAL_SHORTCUTS
+    const std::vector<PortalGlobalShortcuts::HotKey> getPortalHotKeys() const;
+#endif
 
   private:
     KeyID m_id = 0;
