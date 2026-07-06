@@ -58,8 +58,11 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
-      m_portalInputCapture = new PortalInputCapture(this, m_events);
       // Portal input capture manages its own clipboard
+      m_portalInputCapture = new PortalInputCapture(this, m_events);
+#ifdef HAVE_LIBPORTAL_SHORTCUTS
+      m_portalGlobalShortcuts = new PortalGlobalShortcuts(this, m_events);
+#endif
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
@@ -96,8 +99,11 @@ EiScreen::~EiScreen()
   delete m_keyState;
   delete m_clipboard;
 
-  delete m_portalRemoteDesktop;
+#ifdef HAVE_LIBPORTAL_SHORTCUTS
+  delete m_portalGlobalShortcuts;
+#endif
   delete m_portalInputCapture;
+  delete m_portalRemoteDesktop;
 }
 
 void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
@@ -233,17 +239,45 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   }
   set->second.addItem(HotKeyItem(mask, id));
 
+  updatePortalGlobalShortcuts();
+
   return id;
 }
 
 void EiScreen::unregisterHotKey(uint32_t id)
 {
-  for (auto &[key, set] : m_hotkeys) {
-    (void)key;
-    if (set.removeById(id)) {
+  for (auto it = m_hotkeys.begin(); it != m_hotkeys.end(); ++it) {
+    if (it->second.removeById(id)) {
+      if (it->second.empty())
+        m_hotkeys.erase(it);
+      updatePortalGlobalShortcuts();
       break;
     }
   }
+}
+
+void EiScreen::updatePortalGlobalShortcuts()
+{
+#ifdef HAVE_LIBPORTAL_SHORTCUTS
+  if (!m_portalGlobalShortcuts) {
+    return;
+  }
+
+  if (!m_activated) {
+    return;
+  }
+
+  std::vector<PortalGlobalShortcuts::HotKey> hotkeys;
+
+  for (const auto &[key, set] : m_hotkeys) {
+    (void)key;
+
+    const auto setHotKeys = set.getPortalHotKeys();
+    hotkeys.insert(hotkeys.end(), setHotKeys.begin(), setHotKeys.end());
+  }
+
+  m_portalGlobalShortcuts->setHotKeys(std::move(hotkeys));
+#endif
 }
 
 void EiScreen::fakeInputBegin()
@@ -354,16 +388,13 @@ void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 
 void EiScreen::enable()
 {
-  // Nothing really to be done here
-  // Portal-based clipboard gets notifications via events
-  // Socket-based clipboard is passive (no monitoring needed)
+  m_activated = true;
+  updatePortalGlobalShortcuts();
 }
 
 void EiScreen::disable()
 {
-  // Nothing to do here
-  // Portal-based clipboard gets notifications via events
-  // Socket-based clipboard is passive (no monitoring needed)
+  m_activated = false;
 }
 
 void EiScreen::cancelIdleEmulationTimer() const
@@ -694,6 +725,10 @@ ButtonID EiScreen::mapButtonFromEvdev(ei_event *event) const
 
 bool EiScreen::onHotkey(KeyID keyid, bool isPressed, KeyModifierMask mask)
 {
+  // Check if the keyid is registered as a hotkey
+  // This is the implementation if InputCapture is active. If InputCapture is not active,
+  // the hotkey is handled by the portal and we don't get here.
+
   auto it = m_hotkeys.find(keyid);
 
   if (it == m_hotkeys.end()) {
@@ -708,7 +743,6 @@ bool EiScreen::onHotkey(KeyID keyid, bool isPressed, KeyModifierMask mask)
     sendEvent(type, HotKeyInfo::alloc(id));
     return true;
   }
-
   return false;
 }
 
@@ -1074,5 +1108,22 @@ std::uint32_t EiScreen::HotKeySet::findByMask(std::uint32_t mask) const
   }
   return 0;
 }
+
+#ifdef HAVE_LIBPORTAL_SHORTCUTS
+const std::vector<PortalGlobalShortcuts::HotKey> EiScreen::HotKeySet::getPortalHotKeys() const
+{
+  std::vector<PortalGlobalShortcuts::HotKey> portalHotKeys;
+  portalHotKeys.reserve(m_set.size());
+
+  for (const auto &item : m_set) {
+    portalHotKeys.push_back({
+        .id = item.id,
+        .key = m_id,
+        .mask = item.mask,
+    });
+  }
+  return portalHotKeys;
+}
+#endif
 
 } // namespace deskflow
