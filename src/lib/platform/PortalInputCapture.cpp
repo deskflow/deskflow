@@ -205,12 +205,15 @@ PortalInputCapture::~PortalInputCapture()
   if (m_session) {
     using enum Signal;
     XdpSession *parentSession = xdp_input_capture_session_get_session(m_session);
-    g_signal_handler_disconnect(G_OBJECT(parentSession), m_signals.at(SessionClosed));
+    if (m_signals.at(SessionClosed) != 0)
+      g_signal_handler_disconnect(parentSession, m_signals.at(SessionClosed));
     g_signal_handler_disconnect(m_session, m_signals.at(Disabled));
     g_signal_handler_disconnect(m_session, m_signals.at(Activated));
     g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
     g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
-    g_signal_handler_disconnect(m_session, m_signals.at(SelectionTransfer));
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+    g_signal_handler_disconnect(parentSession, m_signals.at(SelectionTransfer));
+#endif
     g_object_unref(m_session);
   }
 
