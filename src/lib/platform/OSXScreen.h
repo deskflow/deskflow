@@ -111,8 +111,16 @@ private:
   void sendEvent(EventTypes type, void * = nullptr) const;
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
+  // returns true if the given point lies on one of the displays
+  bool isPointOnDisplay(double x, double y) const;
+
+  // moves a point that lies inside the bounding box of all displays but
+  // on no display (a "dead zone" of a non-rectangular arrangement) onto
+  // the nearest display
+  void clampToDisplays(int32_t &x, int32_t &y) const;
+
   // message handlers
-  bool onMouseMove();
+  bool onMouseMove(double deltaX, double deltaY);
   // mouse button handler.  pressed is true if this is a mousedown
   // event, false if it is a mouseup event.  macButton is the index
   // of the button pressed using the mac button mapping.
@@ -231,6 +239,7 @@ private:
   int32_t m_x, m_y;
   int32_t m_w, m_h;
   int32_t m_xCenter, m_yCenter;
+  std::vector<CGRect> m_displayRects;
 
   // mouse state
   mutable int32_t m_xCursor, m_yCursor;

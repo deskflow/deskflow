@@ -35,6 +35,7 @@
 
 #include <AppKit/NSEvent.h>
 #include <AvailabilityMacros.h>
+#include <algorithm>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <dispatch/dispatch.h>
 #include <libproc.h>
@@ -270,6 +271,11 @@ void OSXScreen::warpCursor(int32_t x, int32_t y)
     return;
   }
 
+  // the server computes screen-entry positions on the bounding box of all
+  // displays; with a non-rectangular arrangement that point may lie on no
+  // display.  move it onto the nearest display before warping.
+  clampToDisplays(x, y);
+
   // move cursor without generating events
   CGPoint pos;
   pos.x = x;
@@ -280,6 +286,75 @@ void OSXScreen::warpCursor(int32_t x, int32_t y)
   m_xCursor = x;
   m_yCursor = y;
   m_cursorPosValid = true;
+}
+
+bool OSXScreen::isPointOnDisplay(double x, double y) const
+{
+  const CGPoint point = CGPointMake(x, y);
+  for (const CGRect &rect : m_displayRects) {
+    if (CGRectContainsPoint(rect, point)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void OSXScreen::clampToDisplays(int32_t &x, int32_t &y) const
+{
+  if (m_displayRects.empty() || isPointOnDisplay(x, y)) {
+    return;
+  }
+
+  // entry positions sit next to the bounding box edge on the axis that was
+  // crossed while the other axis carries the mapped position, so preserve
+  // the axis that is farther from the bounding box edge.
+  const int32_t xEdgeDist = std::min(x - m_x, (m_x + m_w - 1) - x);
+  const int32_t yEdgeDist = std::min(y - m_y, (m_y + m_h - 1) - y);
+  const bool preserveY = (xEdgeDist <= yEdgeDist);
+
+  const int32_t xOrig = x;
+  const int32_t yOrig = y;
+  double bestDist = -1;
+  auto consider = [&](double cx, double cy) {
+    const double dx = cx - xOrig;
+    const double dy = cy - yOrig;
+    const double dist = dx * dx + dy * dy;
+    if (bestDist < 0 || dist < bestDist) {
+      bestDist = dist;
+      x = (int32_t)cx;
+      y = (int32_t)cy;
+    }
+  };
+
+  for (const CGRect &rect : m_displayRects) {
+    const double minX = CGRectGetMinX(rect);
+    const double maxX = CGRectGetMaxX(rect) - 1;
+    const double minY = CGRectGetMinY(rect);
+    const double maxY = CGRectGetMaxY(rect) - 1;
+    const double cx = std::min(std::max((double)xOrig, minX), maxX);
+    const double cy = std::min(std::max((double)yOrig, minY), maxY);
+    if (preserveY) {
+      if (yOrig >= minY && yOrig <= maxY) {
+        consider(cx, yOrig);
+      }
+    } else {
+      if (xOrig >= minX && xOrig <= maxX) {
+        consider(xOrig, cy);
+      }
+    }
+  }
+
+  if (bestDist < 0) {
+    // no display spans the preserved coordinate; fall back to the nearest
+    // point on any display.
+    for (const CGRect &rect : m_displayRects) {
+      const double cx = std::min(std::max((double)xOrig, CGRectGetMinX(rect)), CGRectGetMaxX(rect) - 1);
+      const double cy = std::min(std::max((double)yOrig, CGRectGetMinY(rect)), CGRectGetMaxY(rect) - 1);
+      consider(cx, cy);
+    }
+  }
+
+  LOG_DEBUG("warp target %d,%d is on no display; clamped to %d,%d", xOrig, yOrig, x, y);
 }
 
 void OSXScreen::fakeInputBegin()
@@ -958,7 +1033,7 @@ void OSXScreen::handleSystemEvent(const Event &event)
   }
 }
 
-bool OSXScreen::onMouseMove()
+bool OSXScreen::onMouseMove(double deltaX, double deltaY)
 {
   // when we receive a mouse-move event, it is possible it was queued for a period
   // and that the mouse has already moved again since then.  to handle this, we need
@@ -974,7 +1049,29 @@ bool OSXScreen::onMouseMove()
   CGFloat x = mx - m_xCursor;
   CGFloat y = my - m_yCursor;
 
-  if ((x == 0 && y == 0) || (mx == m_xCenter && mx == m_yCenter)) {
+  // with a non-rectangular display arrangement the OS pins the cursor at
+  // display edges that lie inside the bounding box of all displays.  the
+  // server only switches screens when the cursor reaches the bounding box
+  // edge, which the cursor can never do from such an edge.  if the cursor
+  // is pushed against one of those edges, report a position at the
+  // bounding box edge instead so the server can consider a switch.
+  int32_t xReport = (int32_t)mx;
+  int32_t yReport = (int32_t)my;
+  if (m_isOnScreen) {
+    if (deltaX > 0 && !isPointOnDisplay(mx + 1, my)) {
+      xReport = m_x + m_w - 1;
+    } else if (deltaX < 0 && !isPointOnDisplay(mx - 1, my)) {
+      xReport = m_x;
+    }
+    if (deltaY > 0 && !isPointOnDisplay(mx, my + 1)) {
+      yReport = m_y + m_h - 1;
+    } else if (deltaY < 0 && !isPointOnDisplay(mx, my - 1)) {
+      yReport = m_y;
+    }
+  }
+  const bool pinnedAtInnerEdge = (xReport != (int32_t)mx || yReport != (int32_t)my);
+
+  if ((x == 0 && y == 0 && !pinnedAtInnerEdge) || (mx == m_xCenter && mx == m_yCenter)) {
     return true;
   }
 
@@ -984,7 +1081,7 @@ bool OSXScreen::onMouseMove()
 
   if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(xReport, yReport));
   } else {
     // motion on secondary screen.  warp mouse back to
     // center.
@@ -1330,10 +1427,14 @@ bool OSXScreen::updateScreenShape()
 
   // get smallest rect enclosing all display rects
   CGRect totalBounds = CGRectZero;
+  std::vector<CGRect> displayRects;
+  displayRects.reserve(displayCount);
   for (CGDisplayCount i = 0; i < displayCount; ++i) {
     CGRect bounds = CGDisplayBounds(displays[i]);
+    displayRects.push_back(bounds);
     totalBounds = CGRectUnion(totalBounds, bounds);
   }
+  m_displayRects = std::move(displayRects);
 
   // get shape of default screen
   m_x = (int32_t)totalBounds.origin.x;
@@ -1691,8 +1792,13 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
   case kCGEventOtherMouseDragged:
   case kCGEventMouseMoved:
     // we intentionally ignore the position in the event here as the events are
-    // queued and will no longer be accurate when we process them.
-    screen->onMouseMove();
+    // queued and will no longer be accurate when we process them.  the deltas
+    // are still useful: they tell us the direction the mouse is being pushed
+    // even when the cursor is pinned against a display edge.
+    screen->onMouseMove(
+        CGEventGetDoubleValueField(event, kCGMouseEventDeltaX),
+        CGEventGetDoubleValueField(event, kCGMouseEventDeltaY)
+    );
 
     // The system ignores our cursor-centering calls if
     // we don't return the event. This should be harmless,
