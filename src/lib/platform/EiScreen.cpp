@@ -94,6 +94,7 @@ EiScreen::~EiScreen()
   delete m_clipboard;
 
   delete m_portalRemoteDesktop;
+  delete m_portalInputCapture;
 }
 
 void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
