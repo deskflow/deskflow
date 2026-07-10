@@ -124,7 +124,7 @@ private:
   void secureSocket(bool secureSocket);
   void connectSlots();
   void handleLogLine(const QString &line);
-  void updateLocalFingerprint();
+  void updateFingerprintButton();
   void updateScreenName();
   void saveSettings() const;
   void showConfigureServer(const QString &message);
