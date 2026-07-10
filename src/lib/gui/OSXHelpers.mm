@@ -16,6 +16,8 @@
 
 #import <QtGlobal>
 
+#import <objc/runtime.h>
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -106,4 +108,48 @@ void macOSNativeHide()
 {
   [NSApp hide:nil];
   [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
+}
+
+static bool isMouseEventType(NSEventType type)
+{
+  switch (type) {
+  case NSEventTypeLeftMouseDown:
+  case NSEventTypeLeftMouseUp:
+  case NSEventTypeRightMouseDown:
+  case NSEventTypeRightMouseUp:
+  case NSEventTypeOtherMouseDown:
+  case NSEventTypeOtherMouseUp:
+  case NSEventTypeLeftMouseDragged:
+  case NSEventTypeRightMouseDragged:
+  case NSEventTypeOtherMouseDragged:
+    return true;
+  default:
+    return false;
+  }
+}
+
+static void guardNSEventMouseAccessor(SEL selector)
+{
+  Method method = class_getInstanceMethod([NSEvent class], selector);
+  if (method == nil)
+    return;
+  const auto original = reinterpret_cast<NSInteger (*)(id, SEL)>(method_getImplementation(method));
+  IMP guarded = imp_implementationWithBlock(^NSInteger(NSEvent *event) {
+    return isMouseEventType(event.type) ? original(event, selector) : 0;
+  });
+  method_setImplementation(method, guarded);
+}
+
+void installMacOSTrayCrashWorkaround()
+{
+  // On macOS 26+ status items are scene-based, so when the tray menu opens,
+  // NSApp.currentEvent is not a mouse event. Qt's
+  // QCocoaSystemTrayIcon::emitActivated() still calls -[NSEvent clickCount]
+  // on it, which raises NSInternalInconsistencyException and aborts the app
+  // (unfixed in Qt as of 6.11). Make the mouse-only NSEvent accessors Qt uses
+  // return 0 for non-mouse events instead of throwing.
+  if (![NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:{26, 0, 0}])
+    return;
+  guardNSEventMouseAccessor(@selector(clickCount));
+  guardNSEventMouseAccessor(@selector(buttonNumber));
 }

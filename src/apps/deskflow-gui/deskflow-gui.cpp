@@ -24,6 +24,7 @@
 #include <QSharedMemory>
 
 #if defined(Q_OS_MACOS)
+#include "gui/OSXHelpers.h"
 #include <Carbon/Carbon.h>
 #include <cstdlib>
 #endif
@@ -129,6 +130,8 @@ int main(int argc, char *argv[])
   qInfo("%s v%s", kAppName, kDisplayVersion);
 
 #if defined(Q_OS_MACOS)
+
+  installMacOSTrayCrashWorkaround();
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QString msgBody = QStringLiteral(
