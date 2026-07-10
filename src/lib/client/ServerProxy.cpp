@@ -86,7 +86,7 @@ void ServerProxy::handleData()
     // verify we got an entire code
     if (n != 4) {
       LOG_ERR("incomplete message from server: %d bytes", n);
-      m_client->disconnect("incomplete message from server");
+      requestDisconnect("incomplete message from server");
       return;
     }
 
@@ -112,7 +112,7 @@ void ServerProxy::handleData()
     } catch (const BadClientException &e) {
       LOG_ERR("protocol error from server: %s", e.what());
       ProtocolUtil::writef(m_stream, kMsgEBad);
-      m_client->disconnect("invalid message from server");
+      requestDisconnect("invalid message from server");
       return;
     }
 
@@ -167,7 +167,7 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
   else if (memcmp(code, kMsgCClose, 4) == 0) {
     // server wants us to hangup
     LOG_VERBOSE("recv close");
-    m_client->disconnect(nullptr);
+    requestDisconnect(nullptr);
     return Disconnect;
   }
 
@@ -176,25 +176,25 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
     int32_t minor;
     ProtocolUtil::readf(m_stream, kMsgEIncompatible + 4, &major, &minor);
     LOG_ERR("server has incompatible version %d.%d", major, minor);
-    m_client->refuseConnection(IncompatibleVersion, "server has incompatible version");
+    requestRefuseConnection(IncompatibleVersion, "server has incompatible version");
     return Disconnect;
   }
 
   else if (memcmp(code, kMsgEBusy, 4) == 0) {
     LOG_ERR("server already has a connected client with name \"%s\"", m_client->getName().c_str());
-    m_client->refuseConnection(AlreadyConnected, "server already has a connected client with our name");
+    requestRefuseConnection(AlreadyConnected, "server already has a connected client with our name");
     return Disconnect;
   }
 
   else if (memcmp(code, kMsgEUnknown, 4) == 0) {
     LOG_ERR("server refused client with name \"%s\"", m_client->getName().c_str());
-    m_client->refuseConnection(UnknownClient, "server refused client with our name");
+    requestRefuseConnection(UnknownClient, "server refused client with our name");
     return Disconnect;
   }
 
   else if (memcmp(code, kMsgEBad, 4) == 0) {
     LOG_ERR("server disconnected due to a protocol error");
-    m_client->refuseConnection(ProtocolError, "server reported a protocol error");
+    requestRefuseConnection(ProtocolError, "server reported a protocol error");
     return Disconnect;
   } else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
     setServerLanguages();
@@ -312,11 +312,11 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
   else if (memcmp(code, kMsgCClose, 4) == 0) {
     // server wants us to hangup
     LOG_VERBOSE("recv close");
-    m_client->disconnect(nullptr);
+    requestDisconnect(nullptr);
     return Disconnect;
   } else if (memcmp(code, kMsgEBad, 4) == 0) {
     LOG_ERR("server disconnected due to a protocol error");
-    m_client->disconnect("server reported a protocol error");
+    requestDisconnect("server reported a protocol error");
     return Disconnect;
   } else {
     return Unknown;
@@ -337,7 +337,22 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
 void ServerProxy::handleKeepAliveAlarm()
 {
   LOG_INFO("server is dead");
-  m_client->disconnect("server is not responding");
+  requestDisconnect("server is not responding");
+}
+
+void ServerProxy::requestDisconnect(const char *message)
+{
+  m_events->addEvent(Event(
+      EventTypes::ClientDisconnectRequested, m_stream->getEventTarget(),
+      new Client::DisconnectRequest(Client::DisconnectRequest::Kind::Disconnect, message)
+  ));
+}
+
+void ServerProxy::requestRefuseConnection(deskflow::core::ConnectionRefusal reason, const char *message)
+{
+  m_events->addEvent(Event(
+      EventTypes::ClientDisconnectRequested, m_stream->getEventTarget(), new Client::DisconnectRequest(reason, message)
+  ));
 }
 
 void ServerProxy::onInfoChanged()
@@ -550,7 +565,7 @@ void ServerProxy::setClipboard()
 
     LOG_INFO("clipboard was updated");
   } else if (r == TransferState::Error) {
-    m_client->disconnect("invalid clipboard data from server");
+    requestDisconnect("invalid clipboard data from server");
   }
 }
 

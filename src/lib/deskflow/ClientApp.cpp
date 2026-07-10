@@ -262,10 +262,11 @@ void ClientApp::closeClient(Client *client)
     return;
   }
   using enum EventTypes;
-  getEvents()->removeHandler(ClientConnected, client);
-  getEvents()->removeHandler(ClientConnectionFailed, client);
-  getEvents()->removeHandler(ClientConnectionRefused, client);
-  getEvents()->removeHandler(ClientDisconnected, client);
+  auto *target = client->getEventTarget();
+  getEvents()->removeHandler(ClientConnected, target);
+  getEvents()->removeHandler(ClientConnectionFailed, target);
+  getEvents()->removeHandler(ClientConnectionRefused, target);
+  getEvents()->removeHandler(ClientDisconnected, target);
   delete client;
 }
 
