@@ -706,7 +706,7 @@ void MainWindow::applyConfig()
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
     ui->lineHostname->setText(host);
 
-  updateLocalFingerprint();
+  updateFingerprintButton();
   setTrayIcon();
 
   if (const auto ip = Settings::value(Settings::Core::Interface).toString(); !ip.isEmpty()) {
@@ -991,7 +991,7 @@ void MainWindow::coreConnectionStateChanged(ConnectionState state)
   }
 }
 
-void MainWindow::updateLocalFingerprint()
+void MainWindow::updateFingerprintButton()
 {
   m_statusBar->setBtnFingerprintVisible(TlsUtility::isEnabled() && !m_fingerprint.data.isEmpty());
 }
@@ -1189,7 +1189,7 @@ bool MainWindow::generateCertificate()
 
   m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
 
-  updateLocalFingerprint();
+  updateFingerprintButton();
   return true;
 }
 
