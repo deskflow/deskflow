@@ -352,9 +352,13 @@ void MainWindow::settingsChanged(const QString &key)
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
-    if (TlsUtility::isEnabled() && !TlsUtility::isCertValid()) {
-      qWarning() << tr("invalid certificate, generating a new one");
-      TlsUtility::generateCertificate();
+    if (TlsUtility::isEnabled()) {
+      if (!TlsUtility::isCertValid()) {
+        qWarning() << tr("invalid certificate, generating a new one");
+        TlsUtility::generateCertificate();
+      }
+      m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
+      updateFingerprintButton();
     }
     updateSecurityIcon(m_statusBar->securityIconVisible());
     return;
@@ -1188,7 +1192,6 @@ bool MainWindow::generateCertificate()
   }
 
   m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
-
   updateFingerprintButton();
   return true;
 }
