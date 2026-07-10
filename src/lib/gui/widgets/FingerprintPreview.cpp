@@ -7,6 +7,7 @@
 #include "FingerprintPreview.h"
 #include "common/PlatformInfo.h"
 
+#include <QDebug>
 #include <QFont>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -23,10 +24,21 @@ FingerprintPreview::FingerprintPreview(
   setFrameStyle(QFrame::Sunken);
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  setLayout(
-      fingerprint.type == QCryptographicHash::Sha256 ? sha256Layout(fingerprint, titleText, hashMode) : emptyLayout()
-  );
+  if (fingerprint.type == QCryptographicHash::Sha256) {
+    setLayout(sha256Layout(fingerprint, titleText, hashMode));
+  } else {
+    qWarning() << "cannot render fingerprint, unsupported type:" << Fingerprint::typeToString(fingerprint.type);
+    setLayout(emptyLayout());
+  }
+
   adjustSize();
+
+  if (!m_lblArt) {
+    qDebug() << "sizing preview without art padding, no art label";
+    setFixedSize(size());
+    return;
+  }
+
   int artPadding = 48;
   if (deskflow::platform::isMac())
     artPadding = 32;
