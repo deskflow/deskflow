@@ -419,22 +419,6 @@ private:
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction = false;
   IEventQueue *m_events;
-  inline static const QStringList m_oldNames = {
-      QStringLiteral("clipboardSharing"),
-      QStringLiteral("clipboardSharingSize"),
-      QStringLiteral("switchCornerSize"),
-      QStringLiteral("switchCorners"),
-      QStringLiteral("switchNeeds"),
-      QStringLiteral("protocol"),
-      QStringLiteral("heartbeat"),
-      QStringLiteral("switchDelay"),
-      QStringLiteral("switchDoubleTap"),
-      QStringLiteral("relativeMouseMoves"),
-      QStringLiteral("win32KeepForeground"),
-      QStringLiteral("disableLockToScreen"),
-      QStringLiteral("defaultLockToScreenState"),
-      QStringLiteral("address")
-  };
 };
 
 //! Configuration read context
