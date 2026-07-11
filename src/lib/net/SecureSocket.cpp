@@ -31,8 +31,6 @@
 //
 static const std::size_t s_maxInputBufferSize = 1024 * 1024;
 
-static const float s_retryDelay = 0.01f;
-
 struct Ssl
 {
   SSL_CTX *m_context = nullptr;
@@ -117,8 +115,8 @@ void SecureSocket::secureAccept()
 TCPSocket::JobResult SecureSocket::doRead()
 {
   using enum JobResult;
-  static uint8_t buffer[4096];
-  static const auto bufferSize = std::size(buffer);
+  uint8_t buffer[4096];
+  const auto bufferSize = std::size(buffer);
   memset(buffer, 0, bufferSize);
   int bytesRead = 0;
   int status = 0;
@@ -174,26 +172,23 @@ TCPSocket::JobResult SecureSocket::doRead()
 TCPSocket::JobResult SecureSocket::doWrite()
 {
   using enum JobResult;
-  static bool s_retry = false;
-  static int s_retrySize = 0;
-  static int s_staticBufferSize = 0;
-  static void *s_staticBuffer = nullptr;
 
   // write data
   int bufferSize = 0;
   int bytesWrote = 0;
   int status = 0;
 
-  if (s_retry) {
-    bufferSize = s_retrySize;
+  if (m_writePending) {
+    // Resend exactly what the previous SSL_write() left pending; those bytes are
+    // still held in this connection's m_writeScratch.
+    bufferSize = m_writePendingSize;
   } else {
     bufferSize = m_outputBuffer.getSize();
     if (bufferSize != 0) {
-      if (bufferSize > s_staticBufferSize) {
-        s_staticBuffer = realloc(s_staticBuffer, bufferSize);
-        s_staticBufferSize = bufferSize;
+      if (static_cast<int>(m_writeScratch.size()) < bufferSize) {
+        m_writeScratch.resize(bufferSize);
       }
-      memcpy(s_staticBuffer, m_outputBuffer.peek(bufferSize), bufferSize);
+      memcpy(m_writeScratch.data(), m_outputBuffer.peek(bufferSize), bufferSize);
     }
   }
 
@@ -202,14 +197,14 @@ TCPSocket::JobResult SecureSocket::doWrite()
   }
 
   if (isSecureReady()) {
-    status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
+    status = secureWrite(m_writeScratch.data(), bufferSize, bytesWrote);
     if (status > 0) {
-      s_retry = false;
+      m_writePending = false;
     } else if (status < 0) {
       return Break;
     } else if (status == 0) {
-      s_retry = true;
-      s_retrySize = bufferSize;
+      m_writePending = true;
+      m_writePendingSize = bufferSize;
       return New;
     }
   } else {
@@ -232,7 +227,8 @@ int SecureSocket::secureRead(void *buffer, int size, int &read)
     LOG_VERBOSE("reading secure socket");
     read = SSL_read(m_ssl->m_ssl, buffer, size);
 
-    static int retry;
+    // per-connection retry counter (previously a shared function static)
+    int &retry = m_readSslRetry;
 
     // Check result will cleanup the connection in the case of a fatal
     checkResult(read, retry);
@@ -260,7 +256,8 @@ int SecureSocket::secureWrite(const void *buffer, int size, int &wrote)
 
     wrote = SSL_write(m_ssl->m_ssl, buffer, size);
 
-    static int retry;
+    // per-connection retry counter (previously a shared function static)
+    int &retry = m_writeSslRetry;
 
     // Check result will cleanup the connection in the case of a fatal
     checkResult(wrote, retry);
@@ -418,7 +415,8 @@ int SecureSocket::secureAccept(int socket)
   LOG_VERBOSE("accepting secure socket");
   int r = SSL_accept(m_ssl->m_ssl);
 
-  static int retry;
+  // per-connection retry counter (previously a shared function static)
+  int &retry = m_acceptSslRetry;
 
   checkResult(r, retry);
 
@@ -476,7 +474,8 @@ int SecureSocket::secureConnect(int socket)
 
   int r = SSL_connect(m_ssl->m_ssl);
 
-  static int retry;
+  // per-connection retry counter (previously a shared function static)
+  int &retry = m_connectSslRetry;
 
   checkResult(r, retry);
 

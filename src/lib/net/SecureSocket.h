@@ -10,8 +10,10 @@
 #include "net/SecurityLevel.h"
 #include "net/TCPSocket.h"
 
+#include <cstdint>
 #include <memory>
 #include <mutex>
+#include <vector>
 
 class Event;
 class IEventQueue;
@@ -96,4 +98,20 @@ private:
   bool m_secureReady = false;
   bool m_fatal = false;
   SecurityLevel m_securityLevel = SecurityLevel::Encrypted;
+
+  // Per-connection I/O state. These were previously function-local `static`
+  // variables in doWrite()/secureRead()/secureWrite()/secureAccept()/
+  // secureConnect(), so every SecureSocket instance shared one write scratch
+  // buffer and one set of SSL retry counters. With more than one connection (a
+  // server with multiple clients), or across a disconnect/reconnect, one
+  // socket's partial-write or handshake-retry state could bleed into another.
+  // Making them members isolates state per connection and frees the write
+  // buffer with the socket instead of leaking it for the process lifetime.
+  std::vector<uint8_t> m_writeScratch;
+  bool m_writePending = false;
+  int m_writePendingSize = 0;
+  int m_readSslRetry = 0;
+  int m_writeSslRetry = 0;
+  int m_acceptSslRetry = 0;
+  int m_connectSslRetry = 0;
 };
