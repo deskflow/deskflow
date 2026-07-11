@@ -37,6 +37,16 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
+# ResumePolicy is a header-only, dependency-free policy (client/ResumePolicy.h),
+# so this test only needs the base test harness.
+create_test(
+  NAME ResumePolicyTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE ResumePolicyTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
 create_test(
   NAME KeyStateTests
   DEPENDS app

@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "client/ResumePolicy.h"
 #include "client/ServerProxy.h"
 #include "common/NetworkProtocol.h"
 #include "common/Settings.h"
@@ -682,13 +683,34 @@ void Client::handleSuspend()
 
 void Client::handleResume()
 {
-  if (m_suspended) {
-    LOG_INFO("resume");
-    m_suspended = false;
-    if (m_connectOnResume) {
-      m_connectOnResume = false;
-      connect();
-    }
+  using enum deskflow::ResumeAction;
+
+  const bool wasSuspended = m_suspended;
+  m_suspended = false;
+
+  // The decision is a pure policy (see ResumePolicy.h) so it can be unit-tested
+  // without the Qt event machinery. It is robust to platforms (Windows 10/11)
+  // that deliver a resume signal with no preceding suspend.
+  switch (deskflow::decideResumeAction(wasSuspended, m_connectOnResume, isConnected())) {
+  case Reconnect:
+    LOG_INFO("resume: reconnecting");
+    m_connectOnResume = false;
+    connect();
+    break;
+
+  case DropStaleConnection:
+    // A resume arrived with no recorded suspend: the pre-sleep connection is
+    // stale (still appears live). Drop it so the client's auto-reconnect
+    // re-establishes it in ~1s instead of waiting for keep-alive death
+    // detection (~9s).
+    LOG_INFO("resume: dropping stale connection to force reconnect");
+    m_connectOnResume = false;
+    disconnect(nullptr);
+    break;
+
+  case None:
+    LOG_DEBUG("resume: no action needed");
+    break;
   }
 }
 
