@@ -484,9 +484,11 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
   std::string line;
   while (s.readLine(line)) {
-    // check for end of section
     if (line == "end") {
       return;
+    } else if (const auto l = QString::fromStdString(line).simplified();
+               !l.startsWith(QStringLiteral("keystroke")) && !l.startsWith(QStringLiteral("mousepress"))) {
+      continue;
     }
 
     // parse argument:  `nameAndArgs = [values][;[values]]'
@@ -501,9 +503,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
     s.parseNameWithArgs("name", line, "=", i, name, nameArgs);
     ++i;
     s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
-
-    if (m_oldNames.contains(name))
-      continue;
 
     // make filter rule
     InputFilter::Rule rule(parseCondition(s, name, nameArgs));
