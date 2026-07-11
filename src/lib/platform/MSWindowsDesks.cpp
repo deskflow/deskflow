@@ -641,7 +641,19 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
     // this is largely a balance and out of our control, since windows can be unpredictable...
     // maybe another approach would be to repeatedly check the cursor visibility until it is hidden.
     LOG_VERBOSE("centering cursor on leave: %+d,%+d", m_xCenter, m_yCenter);
-    ARCH->sleep(0.03);
+
+    // Wait until Windows has actually hidden the cursor before centering, to
+    // avoid a flicker at screen center. Poll (up to the ~30 ms we used to always
+    // wait) and stop as soon as the cursor is hidden, so the transition is as
+    // snappy as the OS allows instead of paying a fixed delay on every switch.
+    for (int waitedMs = 0; waitedMs < 30; waitedMs += 5) {
+      CURSORINFO ci = {sizeof(CURSORINFO)};
+      if (GetCursorInfo(&ci) && (ci.flags & CURSOR_SHOWING) == 0) {
+        break;
+      }
+      ARCH->sleep(0.005);
+    }
+
     deskMouseMove(m_xCenter, m_yCenter);
   }
 }
