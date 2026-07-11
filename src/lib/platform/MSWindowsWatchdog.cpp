@@ -343,6 +343,14 @@ void MSWindowsWatchdog::outputLoop(const void *)
 {
   static constexpr DWORD kBufSize = 4096;
 
+  // Adaptive idle backoff for the non-blocking pipe read: start short so trailing
+  // output is relayed quickly, then grow while the child is silent to avoid a
+  // needless steady ~10 Hz wakeup. Bounded so a stopping service (m_running ->
+  // false) is still noticed promptly.
+  static constexpr double kMinIdleSleep = 0.02;
+  static constexpr double kMaxIdleSleep = 0.2;
+  double idleSleep = kMinIdleSleep;
+
   BYTE raw[kBufSize];
   DWORD bytesRead = 0;
 
@@ -360,10 +368,17 @@ void MSWindowsWatchdog::outputLoop(const void *)
         LOG_WARN("could not read from output pipe, error: %s", windowsErrorToString(err).c_str());
       }
 
-      // Retry immediately when nothing to read or we get a transient error like ERROR_NO_DATA (pipe is non-blocking).
-      Arch::sleep(0.1);
+      // Nothing to read yet (the pipe is non-blocking). Sleep with an adaptive
+      // backoff so an idle child no longer costs a steady ~10 Hz wakeup.
+      Arch::sleep(idleSleep);
+      idleSleep *= 2.0;
+      if (idleSleep > kMaxIdleSleep)
+        idleSleep = kMaxIdleSleep;
       continue;
     }
+
+    // Got data: reset the backoff so subsequent output is picked up promptly.
+    idleSleep = kMinIdleSleep;
 
     const QString decoded =
         decoder.decode(QByteArray::fromRawData(reinterpret_cast<const char *>(raw), int(bytesRead)));
