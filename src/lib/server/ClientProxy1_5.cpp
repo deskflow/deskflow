@@ -48,10 +48,21 @@ bool ClientProxy1_5::parseMessage(const uint8_t *code)
 
 void ClientProxy1_5::fileChunkReceived() const
 {
-  // do nothing
+  // File drag-and-drop is deprecated and no longer implemented, but a foreign or
+  // older client (e.g. Synergy/Barrier) may still send these messages. Read and
+  // discard the body ("%1i%s": a 1-byte mark and a length-prefixed chunk) so the
+  // message stream stays framed. Leaving it unread would misparse the body as
+  // the next message code and drop a burst of buffered input.
+  uint8_t mark = 0;
+  std::string content;
+  ProtocolUtil::readf(getStream(), kMsgDFileTransfer + 4, &mark, &content);
 }
 
 void ClientProxy1_5::dragInfoReceived() const
 {
-  // do nothing
+  // As above: consume the deprecated drag-info body ("%2i%s": a 2-byte file
+  // count and a length-prefixed path list) to keep the stream framed.
+  uint16_t fileCount = 0;
+  std::string content;
+  ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileCount, &content);
 }
