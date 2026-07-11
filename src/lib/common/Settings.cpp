@@ -378,3 +378,15 @@ QVariant Settings::screenDefaults(const QString &key)
 {
   return QVariant();
 }
+
+QStringList Settings::knownScreens()
+{
+  const QStringList knownGroups = instance()->m_settings->childGroups();
+  QStringList screens;
+  for (const auto &group : knownGroups) {
+    if (group.startsWith("screen_")) {
+      screens.append(Settings::value(QStringLiteral("%1/name").arg(group)).toString());
+    }
+  }
+  return screens;
+}
