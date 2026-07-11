@@ -471,6 +471,17 @@ void Config::readSectionOptions(ConfigReadContext &s)
   addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());
   addOption("", kOptionClipboardSharingSize, Settings::value(Settings::Server::ClipboardSize).toUInt() * 1024);
 
+  if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
+    m_deskflowAddress = NetworkAddress(address.toStdString(), Settings::value(Settings::Core::Port).toInt());
+  } else {
+    m_deskflowAddress = NetworkAddress(Settings::value(Settings::Core::Port).toInt());
+  }
+  try {
+    m_deskflowAddress.resolve();
+  } catch (SocketAddressException &e) {
+    throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
+  }
+
   std::string line;
   while (s.readLine(line)) {
     // check for end of section
@@ -491,66 +502,45 @@ void Config::readSectionOptions(ConfigReadContext &s)
     ++i;
     s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
 
-    bool handled = true;
-
     if (m_oldNames.contains(name))
       continue;
 
-    if (name == "address") {
-      try {
-        m_deskflowAddress = NetworkAddress(value, kDefaultPort);
-        m_deskflowAddress.resolve();
-      } catch (SocketAddressException &e) {
-        throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
-      }
-    } else {
-      handled = false;
+    // make filter rule
+    InputFilter::Rule rule(parseCondition(s, name, nameArgs));
+
+    // save first action (if any)
+    if (!value.empty() || line[i] != ';') {
+      parseAction(s, value, valueArgs, rule, true);
     }
 
-    if (handled) {
-      // make sure handled options aren't followed by more values
-      if (i < line.size() && (line[i] == ',' || line[i] == ';')) {
-        throw ServerConfigReadException(s, std::string("too many arguments for: ").append(name));
-      }
-    } else {
-      // make filter rule
-      InputFilter::Rule rule(parseCondition(s, name, nameArgs));
+    // get remaining activate actions
+    while (i < line.length() && line[i] != ';') {
+      ++i;
+      s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
+      parseAction(s, value, valueArgs, rule, true);
+    }
 
-      // save first action (if any)
-      if (!value.empty() || line[i] != ';') {
-        parseAction(s, value, valueArgs, rule, true);
+    // get deactivate actions
+    if (i < line.length() && line[i] == ';') {
+      // allow trailing ';'
+      i = line.find_first_not_of(" \t", i + 1);
+      if (i == std::string::npos) {
+        i = line.length();
+      } else {
+        --i;
       }
 
-      // get remaining activate actions
-      while (i < line.length() && line[i] != ';') {
+      // get actions
+      while (i < line.length()) {
         ++i;
-        s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
-        parseAction(s, value, valueArgs, rule, true);
+        s.parseNameWithArgs("value", line, ",\n", i, value, valueArgs);
+        parseAction(s, value, valueArgs, rule, false);
       }
-
-      // get deactivate actions
-      if (i < line.length() && line[i] == ';') {
-        // allow trailing ';'
-        i = line.find_first_not_of(" \t", i + 1);
-        if (i == std::string::npos) {
-          i = line.length();
-        } else {
-          --i;
-        }
-
-        // get actions
-        while (i < line.length()) {
-          ++i;
-          s.parseNameWithArgs("value", line, ",\n", i, value, valueArgs);
-          parseAction(s, value, valueArgs, rule, false);
-        }
-      }
-
-      // add rule
-      m_inputFilter.addFilterRule(rule);
     }
-  }
 
+    // add rule
+    m_inputFilter.addFilterRule(rule);
+  }
   throw ServerConfigReadException(s, "unexpected end of options section");
 }
 

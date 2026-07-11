@@ -432,7 +432,8 @@ private:
       QStringLiteral("relativeMouseMoves"),
       QStringLiteral("win32KeepForeground"),
       QStringLiteral("disableLockToScreen"),
-      QStringLiteral("defaultLockToScreenState")
+      QStringLiteral("defaultLockToScreenState"),
+      QStringLiteral("address")
   };
 };
 
