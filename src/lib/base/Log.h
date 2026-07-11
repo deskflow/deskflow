@@ -10,6 +10,7 @@
 
 #include "common/LogLevel.h"
 
+#include <atomic>
 #include <list>
 #include <mutex>
 
@@ -106,6 +107,13 @@ public:
   //! Get the minimum priority level.
   LogLevel::Level getFilter() const;
 
+  //! Test whether a message at \p level would pass the current filter.
+  /*!
+  Cheap, lock-free check used by the LOG_* macros to skip evaluating log
+  arguments for messages that would be discarded.
+  */
+  bool willPrint(LogLevel::Level level) const;
+
   //! Get the singleton instance of the log
   static Log *getInstance();
 
@@ -129,7 +137,7 @@ private:
   mutable std::mutex m_mutex;
   OutputterList m_outputters;
   OutputterList m_alwaysOutputters;
-  LogLevel::Level m_maxPriority;
+  std::atomic<LogLevel::Level> m_maxPriority;
 };
 
 /*!
@@ -212,10 +220,21 @@ otherwise it expands to a call that doesn't.
 #define CLOG_DEBUG CLOG_TRACE CLOG_TAG_DEBUG
 #define CLOG_VERBOSE CLOG_TRACE CLOG_TAG_VERBOSE
 
+// Level-gated log macros: the priority is checked (cheap, lock-free via
+// Log::willPrint) BEFORE the variadic arguments are evaluated, so a filtered-out
+// message never pays to build its arguments (e.g. per-input-event string
+// construction). The ternary keeps each macro a single expression, so it stays
+// safe as the unbraced body of an if/else. LOG_PRINT is intentionally unfiltered.
+#if defined(NOLOGGING)
+#define LOG_GATED(_level, _a1) ((void)0)
+#else
+#define LOG_GATED(_level, _a1) ((void)(CLOG->willPrint(_level) ? (CLOG->print _a1, 0) : 0))
+#endif
+
 #define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))
-#define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))
-#define LOG_ERR(...) LOG((CLOG_ERR __VA_ARGS__))
-#define LOG_WARN(...) LOG((CLOG_WARN __VA_ARGS__))
-#define LOG_INFO(...) LOG((CLOG_INFO __VA_ARGS__))
-#define LOG_DEBUG(...) LOG((CLOG_DEBUG __VA_ARGS__))
-#define LOG_VERBOSE(...) LOG((CLOG_VERBOSE __VA_ARGS__))
+#define LOG_CRIT(...) LOG_GATED(LogLevel::Level::Fatal, (CLOG_CRIT __VA_ARGS__))
+#define LOG_ERR(...) LOG_GATED(LogLevel::Level::Error, (CLOG_ERR __VA_ARGS__))
+#define LOG_WARN(...) LOG_GATED(LogLevel::Level::Warning, (CLOG_WARN __VA_ARGS__))
+#define LOG_INFO(...) LOG_GATED(LogLevel::Level::Info, (CLOG_INFO __VA_ARGS__))
+#define LOG_DEBUG(...) LOG_GATED(LogLevel::Level::Debug, (CLOG_DEBUG __VA_ARGS__))
+#define LOG_VERBOSE(...) LOG_GATED(LogLevel::Level::Verbose, (CLOG_VERBOSE __VA_ARGS__))

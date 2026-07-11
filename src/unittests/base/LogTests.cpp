@@ -22,6 +22,18 @@ QString sanitizeBuffer(const std::stringstream &in)
   return rtn;
 }
 
+namespace {
+// Side-effecting log argument used to observe whether the LOG_* macros evaluate
+// their arguments. If the macro is properly level-gated, a filtered-out message
+// must not call this at all.
+int s_probeCalls = 0;
+const char *probeArg()
+{
+  ++s_probeCalls;
+  return "x";
+}
+} // namespace
+
 void LogTests::initTestCase()
 {
   std::setlocale(LC_NUMERIC, "C");
@@ -92,6 +104,27 @@ void LogTests::printLevelToHigh()
   std::cout.rdbuf(old);
 
   QCOMPARE(string, QString{});
+}
+
+void LogTests::verboseArgsNotEvaluatedWhenFiltered()
+{
+  std::stringstream buffer;
+  std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
+
+  // Filter is Debug (from initTestCase), so a Verbose message is discarded and
+  // the LOG_VERBOSE macro must NOT evaluate its argument.
+  s_probeCalls = 0;
+  LOG_VERBOSE("%s", probeArg());
+  QCOMPARE(s_probeCalls, 0);
+
+  // Once the filter admits Verbose, the argument is evaluated exactly once.
+  m_log.setFilter(LogLevel::Level::Verbose);
+  LOG_VERBOSE("%s", probeArg());
+  QCOMPARE(s_probeCalls, 1);
+
+  // Restore the filter for subsequent ordered tests.
+  m_log.setFilter(LogLevel::Level::Debug);
+  std::cout.rdbuf(old);
 }
 
 void LogTests::printInfoWithFileAndLine()

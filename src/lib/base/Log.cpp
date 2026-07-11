@@ -219,14 +219,17 @@ bool Log::setFilter(const QString &maxPriority)
 
 void Log::setFilter(LogLevel::Level maxPriority)
 {
-  std::scoped_lock lock{m_mutex};
-  m_maxPriority = maxPriority;
+  m_maxPriority.store(maxPriority, std::memory_order_relaxed);
 }
 
 LogLevel::Level Log::getFilter() const
 {
-  std::scoped_lock lock{m_mutex};
-  return m_maxPriority;
+  return m_maxPriority.load(std::memory_order_relaxed);
+}
+
+bool Log::willPrint(LogLevel::Level level) const
+{
+  return level <= getFilter();
 }
 
 void Log::output(LogLevel::Level priority, const char *msg)
