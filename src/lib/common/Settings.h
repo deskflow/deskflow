@@ -130,6 +130,7 @@ public:
   {
     inline static const auto Aliases = QStringLiteral("screen_%1/aliases");
     inline static const auto Name = QStringLiteral("screen_%1/name");
+    inline static const auto HalfDuplexCapsLock = QStringLiteral("screen_%1/halfDuplexCapsLock");
   };
 
   // Track Removed keys to make upgrading config easier

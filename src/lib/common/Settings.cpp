@@ -402,6 +402,8 @@ void Settings::removeUnknownScreens(const QStringList &knownScreens)
 
 QVariant Settings::screenDefaults(const QString &key)
 {
+  if (key.contains(QStringLiteral("halfDuplex")))
+    return false;
   return QVariant();
 }
 

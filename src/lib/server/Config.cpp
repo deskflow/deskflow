@@ -546,6 +546,14 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
 void Config::readSectionScreens(ConfigReadContext &s)
 {
+  const auto screens = Settings::knownScreens();
+  for (const auto &screen : screens) {
+    addOption(
+        screen.toStdString(), kOptionHalfDuplexCapsLock,
+        Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
+    );
+  }
+
   std::string line;
   std::string screen;
   while (s.readLine(line)) {
@@ -592,7 +600,7 @@ void Config::readSectionScreens(ConfigReadContext &s)
 
       // handle argument
       if (name == "halfDuplexCapsLock") {
-        addOption(screen, kOptionHalfDuplexCapsLock, s.parseBoolean(value));
+        continue;
       } else if (name == "halfDuplexNumLock") {
         addOption(screen, kOptionHalfDuplexNumLock, s.parseBoolean(value));
       } else if (name == "halfDuplexScrollLock") {
@@ -978,9 +986,6 @@ void Config::parseScreens(const ConfigReadContext &c, const std::string_view &s,
 
 const char *Config::getOptionName(OptionID id)
 {
-  if (id == kOptionHalfDuplexCapsLock) {
-    return "halfDuplexCapsLock";
-  }
   if (id == kOptionHalfDuplexNumLock) {
     return "halfDuplexNumLock";
   }
@@ -1022,8 +1027,8 @@ const char *Config::getOptionName(OptionID id)
 
 std::string Config::getOptionValue(OptionID id, OptionValue value)
 {
-  if (id == kOptionHalfDuplexCapsLock || id == kOptionHalfDuplexNumLock || id == kOptionHalfDuplexScrollLock ||
-      id == kOptionXTestXineramaUnaware || id == kOptionScreenPreserveFocus) {
+  if (id == kOptionHalfDuplexNumLock || id == kOptionHalfDuplexScrollLock || id == kOptionXTestXineramaUnaware ||
+      id == kOptionScreenPreserveFocus) {
     return (value != 0) ? "true" : "false";
   }
   if (id == kOptionModifierMapForShift || id == kOptionModifierMapForControl || id == kOptionModifierMapForAlt ||
