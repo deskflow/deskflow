@@ -547,6 +547,14 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
 void Config::readSectionScreens(ConfigReadContext &s)
 {
+  const auto screens = Settings::knownScreens();
+  for (const auto &screen : screens) {
+    addOption(
+        screen.toStdString(), kOptionHalfDuplexCapsLock,
+        Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
+    );
+  }
+
   std::string line;
   std::string screen;
   while (s.readLine(line)) {
@@ -593,7 +601,7 @@ void Config::readSectionScreens(ConfigReadContext &s)
 
       // handle argument
       if (name == "halfDuplexCapsLock") {
-        addOption(screen, kOptionHalfDuplexCapsLock, s.parseBoolean(value));
+        continue;
       } else if (name == "halfDuplexNumLock") {
         addOption(screen, kOptionHalfDuplexNumLock, s.parseBoolean(value));
       } else if (name == "halfDuplexScrollLock") {
