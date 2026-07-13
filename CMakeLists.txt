@@ -119,18 +119,20 @@ else()
 endif()
 
 if (MSVC)
-  # On Windows, require that the same MSVC runtime is used as on the host.
-  # Mitigates things like access violations caused by accidental ABI-compatibility breakage.
+  # Require the same MSVC runtime that built the binary. Mitigates access violations
+  # from accidental ABI-compatibility breakage across runtime minor versions.
+  #
+  # Derive the minor from the compiler toolset (cl major 19 maps to CRT major 14 and
+  # the minor matches, e.g. 19.44 -> 14.44) rather than the host's installed redist
+  # from the registry. The toolset version tracks the runtime it actually produces,
+  # including the debug CRT (vcruntime140d.dll); the registry redist can be newer than
+  # the loaded DLL and make the runtime guard reject a valid local build.
   set(REQUIRED_MSVC_RUNTIME_MAJOR 14)
-  cmake_host_system_information(
-    RESULT REQUIRED_MSVC_RUNTIME_MINOR
-    QUERY WINDOWS_REGISTRY
-    "HKLM/SOFTWARE/Microsoft/VisualStudio/${REQUIRED_MSVC_RUNTIME_MAJOR}.0/VC/Runtimes/${BUILD_ARCHITECTURE}"
-    VALUE "Minor")
-  if (REQUIRED_MSVC_RUNTIME_MINOR)
+  if (CMAKE_CXX_COMPILER_VERSION MATCHES "^[0-9]+\\.([0-9]+)")
+    set(REQUIRED_MSVC_RUNTIME_MINOR "${CMAKE_MATCH_1}")
     message(STATUS "MSVC runtime: ${REQUIRED_MSVC_RUNTIME_MAJOR}.${REQUIRED_MSVC_RUNTIME_MINOR}")
   else()
-    message(FATAL_ERROR "MSVC runtime registry entry not found")
+    message(FATAL_ERROR "Failed to parse MSVC compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
   endif()
 endif()
 
