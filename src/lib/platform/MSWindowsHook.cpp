@@ -401,7 +401,7 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   // character-less key-up so the client can release it.  this mirrors the
   // n == 0 case above.  the dead key's own release is handled earlier and
   // never reaches this point.
-  if (charAndVirtKey == 0 && (lParam & 0x80000000u) != 0) {
+  if (charAndVirtKey == 0 && kf_up) {
     charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
   }
 
