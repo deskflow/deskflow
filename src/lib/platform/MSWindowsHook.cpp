@@ -394,6 +394,17 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     g_deadLParam = 0;
   }
 
+  // safety net: a physical key release must always reach the client, otherwise
+  // the key stays stuck "down" there.  if the translation above produced no
+  // key message for a release event (e.g. a key that maps to a dead key on
+  // release, or a key released while a dead key was pending), relay a
+  // character-less key-up so the client can release it.  this mirrors the
+  // n == 0 case above.  the dead key's own release is handled earlier and
+  // never reaches this point.
+  if (charAndVirtKey == 0 && (lParam & 0x80000000u) != 0) {
+    charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+  }
+
   // forward message to our window.  do this whether or not we're
   // forwarding events to clients because this'll keep our thread's
   // key state table up to date.  that's important for querying
