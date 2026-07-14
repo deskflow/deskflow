@@ -494,12 +494,9 @@ void setCursorVisibility(bool visible)
 
 void MSWindowsDesks::deskEnter(Desk *desk)
 {
-  // restore a normal cursor shape while we still hold the mouse capture
-  // taken by deskLeave(); SetCursor() only takes effect for the thread
-  // that has the capture (or owns the window under the cursor), so this
-  // must happen before ReleaseCapture().
-  SetCursor(LoadCursor(nullptr, IDC_ARROW));
-  ReleaseCapture();
+  if (!m_isPrimary) {
+    ReleaseCapture();
+  }
 
   setCursorVisibility(true);
 
@@ -579,21 +576,6 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
         AttachThreadInput(thatThread, thisThread, FALSE);
       }
     }
-
-    // capture the mouse so this window owns the cursor while it is parked
-    // at the center.  the desk window is created with WS_EX_TRANSPARENT, so
-    // without capture it never wins hit-testing and the cursor keeps the
-    // shape of whatever application window happens to be underneath instead
-    // of this window's blank cursor, leaving a visible arrow parked in the
-    // middle of the screen.  the secondary screen path below has always
-    // captured the mouse for the same reason.
-    SetCapture(desk->m_window);
-
-    // while the mouse is captured the system does not update the cursor
-    // shape on its own (WM_SETCURSOR is not sent), so the cursor would keep
-    // the shape it had before the capture.  explicitly display the blank
-    // cursor; SetCursor() takes effect because this thread has the capture.
-    SetCursor(m_cursor);
   } else {
     // move hider window under the cursor center, raise, and show it
     SetWindowPos(desk->m_window, HWND_TOP, m_xCenter, m_yCenter, 1, 1, SWP_NOACTIVATE | SWP_SHOWWINDOW);
