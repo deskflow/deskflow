@@ -481,26 +481,49 @@ bool EiScreen::isPrimary() const
 
 void EiScreen::updateShape()
 {
-  m_w = 1;
-  m_h = 1;
-  m_x = std::numeric_limits<uint32_t>::max();
-  m_y = std::numeric_limits<uint32_t>::max();
+  std::uint32_t newW = 1;
+  std::uint32_t newH = 1;
+  std::uint32_t newX = std::numeric_limits<uint32_t>::max();
+  std::uint32_t newY = std::numeric_limits<uint32_t>::max();
+  bool foundRegion = false;
   for (auto it = m_eiDevices.begin(); it != m_eiDevices.end(); it++) {
     auto idx = 0;
     struct ei_region *r;
     while ((r = ei_device_get_region(*it, idx++)) != nullptr) {
-      m_x = std::min(ei_region_get_x(r), m_x);
-      m_y = std::min(ei_region_get_y(r), m_y);
-      m_w = std::max(ei_region_get_x(r) + ei_region_get_width(r), m_w);
-      m_h = std::max(ei_region_get_y(r) + ei_region_get_height(r), m_h);
+      foundRegion = true;
+      newX = std::min(ei_region_get_x(r), newX);
+      newY = std::min(ei_region_get_y(r), newY);
+      newW = std::max(ei_region_get_x(r) + ei_region_get_width(r), newW);
+      newH = std::max(ei_region_get_y(r) + ei_region_get_height(r), newH);
     }
   }
 
-  LOG_DEBUG("logical output size: %dx%d@%d.%d", m_w, m_h, m_x, m_y);
-  m_cursorX = m_x + m_w / 2;
-  m_cursorY = m_y + m_h / 2;
+  if (!foundRegion) {
+    LOG_DEBUG("logical output size: unchanged (no region-reporting device present)");
+    return;
+  }
 
-  sendEvent(EventTypes::ScreenShapeChanged, nullptr);
+  LOG_DEBUG("logical output size: %dx%d@%d.%d", newW, newH, newX, newY);
+
+  const bool changed = newX != m_x || newY != m_y || newW != m_w || newH != m_h;
+
+  if (!m_isShapeInitialized) {
+    m_cursorX = newX + newW / 2;
+    m_cursorY = newY + newH / 2;
+    m_isShapeInitialized = true;
+  } else if (changed) {
+    m_cursorX = std::clamp(m_cursorX, static_cast<int32_t>(newX), static_cast<int32_t>(newX + newW - 1));
+    m_cursorY = std::clamp(m_cursorY, static_cast<int32_t>(newY), static_cast<int32_t>(newY + newH - 1));
+  }
+
+  m_x = newX;
+  m_y = newY;
+  m_w = newW;
+  m_h = newH;
+
+  if (changed) {
+    sendEvent(EventTypes::ScreenShapeChanged, nullptr);
+  }
 }
 
 void EiScreen::addDevice(struct ei_device *device)

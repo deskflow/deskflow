@@ -158,6 +158,7 @@ private:
   std::uint32_t m_y = 0;
   std::uint32_t m_w = 0;
   std::uint32_t m_h = 0;
+  bool m_isShapeInitialized = false;
 
   // true if mouse has entered the screen
   bool m_isOnScreen;
