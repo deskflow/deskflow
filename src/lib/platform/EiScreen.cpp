@@ -57,8 +57,9 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
-      m_portalInputCapture = new PortalInputCapture(this, m_events);
       // Portal input capture manages its own clipboard
+      m_portalInputCapture = new PortalInputCapture(this, m_events);
+      m_portalGlobalShortcuts = new PortalGlobalShortcuts(this, m_events);
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
@@ -93,6 +94,8 @@ EiScreen::~EiScreen()
   delete m_keyState;
   delete m_clipboard;
 
+  delete m_portalGlobalShortcuts;
+  delete m_portalInputCapture;
   delete m_portalRemoteDesktop;
   delete m_portalInputCapture;
 }
@@ -222,7 +225,10 @@ void EiScreen::warpCursor(int32_t x, int32_t y)
 std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
   static std::uint32_t next_id;
-  std::uint32_t id = std::min(++next_id, 1u);
+  std::uint32_t id = ++next_id;
+  if (id == 0) {
+    id = ++next_id;
+  }
 
   // Bug: id rollover means duplicate hotkey ids. Oh well.
 
@@ -233,6 +239,8 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   }
   set->second.addItem(HotKeyItem(mask, id));
 
+  updatePortalGlobalShortcuts();
+
   return id;
 }
 
@@ -241,9 +249,28 @@ void EiScreen::unregisterHotKey(uint32_t id)
   for (auto &[key, set] : m_hotkeys) {
     (void)key;
     if (set.removeById(id)) {
+      updatePortalGlobalShortcuts();
       break;
     }
   }
+}
+
+void EiScreen::updatePortalGlobalShortcuts()
+{
+  if (!m_portalGlobalShortcuts) {
+    return;
+  }
+
+  std::vector<PortalGlobalShortcuts::HotKey> hotkeys;
+
+  for (const auto &[key, set] : m_hotkeys) {
+    (void)key;
+
+    const auto setHotKeys = set.getPortalHotKeys();
+    hotkeys.insert(hotkeys.end(), setHotKeys.begin(), setHotKeys.end());
+  }
+
+  m_portalGlobalShortcuts->setHotKeys(std::move(hotkeys));
 }
 
 void EiScreen::fakeInputBegin()
@@ -639,6 +666,7 @@ ButtonID EiScreen::mapButtonFromEvdev(ei_event *event) const
   return kButtonNone;
 }
 
+#ifndef HAVE_LIBPORTAL_GLOBAL_SHORTCUTS
 bool EiScreen::onHotkey(KeyID keyid, bool isPressed, KeyModifierMask mask)
 {
   auto it = m_hotkeys.find(keyid);
@@ -658,6 +686,7 @@ bool EiScreen::onHotkey(KeyID keyid, bool isPressed, KeyModifierMask mask)
 
   return false;
 }
+#endif
 
 void EiScreen::onKeyEvent(ei_event *event)
 {
@@ -998,6 +1027,21 @@ std::uint32_t EiScreen::HotKeySet::findByMask(std::uint32_t mask) const
     }
   }
   return 0;
+}
+
+const std::vector<PortalGlobalShortcuts::HotKey> EiScreen::HotKeySet::getPortalHotKeys() const
+{
+  std::vector<PortalGlobalShortcuts::HotKey> portalHotKeys;
+  portalHotKeys.reserve(m_set.size());
+
+  for (const auto &item : m_set) {
+    portalHotKeys.push_back({
+        .id = item.id,
+        .key = m_id,
+        .mask = item.mask,
+    });
+  }
+  return portalHotKeys;
 }
 
 } // namespace deskflow
