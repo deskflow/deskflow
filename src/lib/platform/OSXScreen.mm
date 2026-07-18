@@ -547,6 +547,22 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
   CGEventRef event = CGEventCreateMouseEvent(nullptr, type, pos, static_cast<CGMouseButton>(index));
 
+  if (NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27) {
+    // Apps that use Carbon APIs on macOS 27 requires an incrementing event number for each synthetic click
+    if (press) {
+      if (m_mouseEventNumber == 0) {
+        // For some unknown reason, the first click event number must be unique and greater (but in the same ballpark)
+        // than the last event number used by the system.
+        m_mouseEventNumber =
+            CGEventSourceCounterForEventType(kCGEventSourceStateHIDSystemState, kCGEventLeftMouseDown) +
+            CGEventSourceCounterForEventType(kCGEventSourceStateHIDSystemState, kCGEventRightMouseDown) +
+            CGEventSourceCounterForEventType(kCGEventSourceStateHIDSystemState, kCGEventOtherMouseDown);
+      }
+      ++m_mouseEventNumber;
+    }
+    CGEventSetIntegerValueField(event, kCGMouseEventNumber, m_mouseEventNumber);
+  }
+
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
   // Fix for sticky keys
