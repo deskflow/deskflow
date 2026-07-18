@@ -236,6 +236,9 @@ private:
   mutable int32_t m_xCursor, m_yCursor;
   mutable bool m_cursorPosValid;
 
+  // mouse event number (needed for macOS 27)
+  uint32_t m_mouseEventNumber = 0;
+
   /* FIXME: this data structure is explicitly marked mutable due
      to a need to track the state of buttons since the remote
      side only lets us know of change events, and because the
