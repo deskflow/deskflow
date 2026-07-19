@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -555,6 +556,12 @@ size_t ArchNetworkWinsock::writeSocket(ArchSocket s, const void *buf, size_t len
     throwError(err);
   }
   return static_cast<size_t>(n);
+}
+
+void ArchNetworkWinsock::resetPollWriteOnSocket(ArchSocket s)
+{
+  assert(s != nullptr);
+  s->m_pollWrite = true;
 }
 
 void ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s)
