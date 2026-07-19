@@ -36,21 +36,22 @@ runs:
               apt update -qqq > /dev/null
               apt install -qqq cmake build-essential ninja-build \
                 xorg-dev libx11-dev libxtst-dev libssl-dev \
-                libglib2.0-dev libxkbfile-dev qt6-base-dev qt6-tools-dev \
+                libxkbfile-dev qt6-base-dev qt6-tools-dev \
                 libgtk-3-dev libei-dev libportal-dev help2man doxygen -y >/dev/null
             elif [ ${{inputs.like}} == "fedora" ]; then
               dnf install -y cmake make ninja-build gcc-c++ rpm-build openssl-devel \
-                glib2-devel libXtst-devel libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
+                libXtst-devel libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
                 gtk3-devel libei-devel libportal-devel help2man doxygen
             elif [ ${{inputs.like}} == "suse" ]; then
               zypper refresh
               zypper install -y --force-resolution \
                 cmake make ninja gcc-c++ rpm-build libopenssl-devel \
-                glib2-devel libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel \
-                qt6-linguist-devel gtk3-devel doxygen libei-devel libportal-devel help2man
+                libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel \
+                qt6-linguist-devel gtk3-devel doxygen \
+                libei-devel libportal-devel help2man
             elif [ ${{ inputs.like }} == "arch" ]; then
               pacman -Syu --noconfirm base-devel cmake ninja \
-                gcc openssl glib2 libxtst libxkbfile libei libportal \
+                gcc openssl libxtst libxkbfile gtest libei libportal \
                 qt6-base qt6-tools qt6-svg qt6-translations qt6-declarative gtk3 help2man doxygen graphviz rsync
             else
               echo "Unknown like"
