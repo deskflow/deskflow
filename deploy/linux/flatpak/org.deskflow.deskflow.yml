@@ -67,18 +67,6 @@ modules:
         url: https://github.com/flatpak/libportal.git
         tag: 0.10.0
         commit: c23024018c8eb076549a1517fcb2d7f80d3e2ed5
-  - name: gtest
-    buildsystem: cmake-ninja
-    sources:
-      - type: git
-        url: https://github.com/google/googletest.git
-        tag: v1.17.0
-        commit: 52eb8108c5bdec04579160ae17225d66034bd723
-        x-checker-data:
-          type: git
-          tag-pattern: ^([\\d.]+)$
-    cleanup:
-      - '*'
   - name: deskflow
     buildsystem: cmake-ninja
     config-opts:
