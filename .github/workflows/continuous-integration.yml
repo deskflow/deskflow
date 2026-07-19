@@ -359,9 +359,9 @@ jobs:
           release: "14.4"
 
           run: |
-            pkg install -y cmake ninja gmake gcc12 openssl glib \
-            libX11 libXtst libxkbfile qt6-base qt6-tools gtk3 \
-            googletest pkgconf libei libportal doxygen
+            pkg install -y cmake ninja gmake gcc12 openssl \
+            glib libX11 libXtst libxkbfile qt6-base qt6-tools \
+            gtk3 pkgconf libei libportal doxygen
             ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
   flatpak:
