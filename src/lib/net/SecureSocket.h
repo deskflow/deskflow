@@ -96,4 +96,9 @@ private:
   bool m_secureReady = false;
   bool m_fatal = false;
   SecurityLevel m_securityLevel = SecurityLevel::Encrypted;
+
+  bool m_writeRetry = false;
+  int m_writeRetrySize = 0;
+  int m_writeStaticBufferSize = 0;
+  void *m_writeStaticBuffer = nullptr;
 };
