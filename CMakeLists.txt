@@ -16,6 +16,18 @@ if(POLICY CMP0156)
   cmake_policy(SET CMP0156 NEW)
 endif()
 
+#Project level options
+option(BUILD_INSTALLER "Build installer" ON)
+if(UNIX)
+  if(APPLE)
+    option(BUILD_OSX_BUNDLE "Build mac os bundle" ON)
+  else()
+    option(BUILD_X11_SUPPORT "Build with x11 support" ON)
+  endif()
+elseif(WIN32)
+  option (VCPKG_QT "Use Qt from VCPKG" OFF)
+endif()
+
 # Set CXX Requirements
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -65,7 +77,6 @@ endif()
 
 #generate vcpkg file if needed
 if(WIN32)
-    option (VCPKG_QT "Use Qt from VCPKG" OFF)
     if(VCPKG_QT)
         set(QT_LIBS ", \"qttranslations\", \"qtsvg\"")
     endif()
@@ -153,13 +164,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 # prevents issues when used with glib for libportal
 add_definitions(-DQT_NO_KEYWORDS)
 
-#Options for Linux platform support
-if(UNIX AND NOT APPLE)
-  option(BUILD_X11_SUPPORT "Build with x11 support" ON)
-elseif (APPLE)
-  option(BUILD_OSX_BUNDLE "Build mac os bundle" ON)
-endif()
-
 #Find and setup Qt
 find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
 if(UNIX AND NOT APPLE)
@@ -221,7 +225,6 @@ add_subdirectory(translations)
 
 add_subdirectory(src)
 
-option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
 endif()
