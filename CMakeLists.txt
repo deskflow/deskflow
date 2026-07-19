@@ -16,6 +16,11 @@ if(POLICY CMP0156)
   cmake_policy(SET CMP0156 NEW)
 endif()
 
+# Use native paths to collect dependents on windows
+if(POLICY CMP0207)
+  cmake_policy(SET CMP0207 NEW)
+endif()
+
 #Project level options
 option(BUILD_INSTALLER "Build installer" ON)
 option(ENABLE_COVERAGE "Enable test coverage" OFF)
