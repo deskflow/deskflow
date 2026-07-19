@@ -556,8 +556,8 @@ void SecureSocket::checkResult(int status, int &retry)
     break;
 
   case SSL_ERROR_WANT_WRITE:
-    // Need to make sure the socket is known to be writable so the impending
-    // poll action actually triggers on a write.
+    // SSL_write() bypasses writeSocket(), so reset the poll hint ourselves.
+    ARCH->resetPollWriteOnSocket(getSocket());
     setWritable(true);
     retry++;
     LOG_VERBOSE("want to write, error=%d, attempt=%d", errorCode, retry);
