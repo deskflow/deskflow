@@ -160,6 +160,37 @@ elseif (APPLE)
   option(BUILD_OSX_BUNDLE "Build mac os bundle" ON)
 endif()
 
+#Find and setup Qt
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
+if(UNIX AND NOT APPLE)
+    find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus Xml)
+endif()
+
+# Define the location of Qt deployment tool
+if(WIN32)
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND VCPKG_QT)
+    set(DEPLOY_TOOL windeployqt.debug.bat)
+  else()
+    set(DEPLOY_TOOL windeployqt)
+  endif()
+elseif(APPLE)
+    set(DEPLOY_TOOL macdeployqt)
+endif()
+
+if (WIN32 OR APPLE)
+  find_program(DEPLOYQT ${DEPLOY_TOOL})
+  if(DEPLOYQT STREQUAL "DEPLOYQT-NOTFOUND")
+    message(FATAL_ERROR "Unable to locate the Qt Deploy Tool: \"${DEPLOY_TOOL}\"")
+  endif()
+  unset(DEPLOY_TOOL)
+endif()
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+message(STATUS "Qt version: ${Qt6_VERSION}")
+
 include(cmake/Libraries.cmake)
 configure_libs()
 
