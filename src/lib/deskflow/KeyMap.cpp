@@ -640,29 +640,41 @@ const KeyMap::KeyItem *KeyMap::mapModifierKey(
 int32_t KeyMap::findBestKey(const KeyEntryList &entryList, KeyModifierMask desiredState) const
 {
   // check for an item that can accommodate the desiredState exactly
+  // prefer highest button (keycode) to match physical Right Alt (keycode 108) on standard keyboards
+  int32_t bestExactIndex = -1;
+  KeyButton bestExactButton = 0;
   for (int32_t i = 0; i < (int32_t)entryList.size(); ++i) {
     const KeyItem &item = entryList[i].back();
     if ((item.m_required & desiredState) == item.m_required &&
         (item.m_required & desiredState) == (item.m_sensitive & desiredState)) {
-      LOG_VERBOSE("best key index %d of %d (exact)", i + 1, entryList.size());
-      return i;
+      if (item.m_button > bestExactButton) {
+        bestExactButton = item.m_button;
+        bestExactIndex = i;
+      }
     }
+  }
+  if (bestExactIndex != -1) {
+    LOG_VERBOSE("best key index %d of %d (exact, button %d)", bestExactIndex + 1, entryList.size(), bestExactButton);
+    return bestExactIndex;
   }
 
   // choose the item that requires the fewest modifier changes
+  // on tie, prefer highest button (keycode) to match physical Right Alt position
   int32_t bestCount = 32;
   int32_t bestIndex = -1;
+  KeyButton bestButton = 0;
   for (int32_t i = 0; i < (int32_t)entryList.size(); ++i) {
     const KeyItem &item = entryList[i].back();
     KeyModifierMask change = ((item.m_required ^ desiredState) & item.m_sensitive);
     int32_t n = getNumModifiers(change);
     if (n < bestCount) {
       bestCount = n;
+      bestButton = item.m_button;
       bestIndex = i;
     }
   }
   if (bestIndex != -1) {
-    LOG_VERBOSE("best key index %d of %d (%d modifiers)", bestIndex + 1, entryList.size(), bestCount);
+    LOG_VERBOSE("best key index %d of %d (%d modifiers, button %d)", bestIndex + 1, entryList.size(), bestCount, bestButton);
   }
 
   return bestIndex;
