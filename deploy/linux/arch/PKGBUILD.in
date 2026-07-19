@@ -14,7 +14,6 @@ conflicts=('synergy-git' 'synergy-1.6' 'synergy1-bin' 'synergy2-bin' 'synergy3-b
 provides=("$_basename")
 depends=(
   gcc-libs
-  glib2
   glibc
   hicolor-icon-theme
   libei
