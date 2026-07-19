@@ -18,6 +18,7 @@ endif()
 
 #Project level options
 option(BUILD_INSTALLER "Build installer" ON)
+option(ENABLE_COVERAGE "Enable test coverage" OFF)
 if(UNIX)
   if(APPLE)
     option(BUILD_OSX_BUNDLE "Build mac os bundle" ON)
@@ -197,6 +198,16 @@ message(STATUS "Qt version: ${Qt6_VERSION}")
 
 include(cmake/Libraries.cmake)
 configure_libs()
+
+if(ENABLE_COVERAGE)
+  message(STATUS "Enabling code coverage")
+  include(cmake/CodeCoverage.cmake)
+  append_coverage_compiler_flags()
+  # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
+  # > Got negative hit value in gcov line 'branch  2 taken -1' caused by a bug in gcov tool
+  # Bug report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68080
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
+endif()
 
 if(BUILD_OSX_BUNDLE AND APPLE_CODESIGN_DEV)
   include(cmake/MacCodesign.cmake)

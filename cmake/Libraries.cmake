@@ -32,28 +32,6 @@ macro(configure_libs)
   if(HAVE_FORMAT)
     add_definitions(-DHAVE_FORMAT)
   endif()
-
-  option(ENABLE_COVERAGE "Enable test coverage" OFF)
-  if(ENABLE_COVERAGE)
-    message(STATUS "Enabling code coverage")
-    include(cmake/CodeCoverage.cmake)
-    append_coverage_compiler_flags()
-    set(test_exclude subprojects/* build/* src/unittests/*)
-    set(test_src ${PROJECT_SOURCE_DIR}/src)
-
-    # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
-    # > Got negative hit value in gcov line 'branch  2 taken -1' caused by a bug in gcov tool
-    # Bug report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68080
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
-
-    setup_target_for_coverage_gcovr_xml(
-      NAME coverage-legacytests
-      EXECUTABLE legacytests
-      BASE_DIRECTORY ${test_src}
-      EXCLUDE ${test_exclude}
-    )
-  endif()
-
 endmacro()
 
 #
@@ -79,7 +57,6 @@ macro(configure_unix_libs)
   if (NOT HAVE_SYS_SOCKET_H)
     message(FATAL_ERROR "Missing header: sys/socket.h")
   endif()
-
 
   check_include_files(unistd.h HAVE_UNISTD_H)
   if (NOT HAVE_UNISTD_H)
