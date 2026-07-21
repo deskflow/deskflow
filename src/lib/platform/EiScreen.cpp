@@ -28,7 +28,8 @@
 #include <unistd.h>
 #include <vector>
 
-// Values are in fractional wheel-click units (1.0 == one full 120-unit click)
+// Values are in fractional wheel-click units (1.0 == one full 120-unit click) for trackpad
+// and pixels in scroll wheel events.
 struct ScrollRemainder
 {
   double x;
@@ -813,8 +814,7 @@ void EiScreen::onPointerScrollEvent(ei_event *event)
 void EiScreen::onPointerScrollDiscreteEvent(ei_event *event)
 {
   // both libei and deskflow use multiples of 120 to represent
-  // one scroll wheel click event so we can just forward things
-  // as-is.
+  // one scroll wheel click event
 
   assert(m_isPrimary);
 
@@ -823,10 +823,26 @@ void EiScreen::onPointerScrollDiscreteEvent(ei_event *event)
 
   LOG_VERBOSE("event: scroll discrete (%d, %d)", dx, dy);
 
+  // accumulate fractional ticks, then emit 120 units at a time
+  struct ei_device *device = ei_event_get_device(event);
+  auto *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
+  if (!remainder) {
+    remainder = new ScrollRemainder();
+    ei_device_set_user_data(device, remainder);
+  }
+
+  double ax = remainder->x + dx;
+  double ay = remainder->y + dy;
+  auto cx = static_cast<int32_t>(ax / s_scrollDelta) * s_scrollDelta;
+  auto cy = static_cast<int32_t>(ay / s_scrollDelta) * s_scrollDelta;
+  remainder->x = ax - cx;
+  remainder->y = ay - cy;
+
   // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
-  sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(-dx, -dy));
+  if (cx != 0 || cy != 0)
+    sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(-cx, -cy));
 }
 
 void EiScreen::onMotionEvent(ei_event *event)
