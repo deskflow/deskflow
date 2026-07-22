@@ -32,6 +32,7 @@ class Screen;
 class IEventQueue;
 class Thread;
 class ClientListener;
+class ServerTestsAccess;
 
 //! Deskflow server
 /*!
@@ -40,6 +41,8 @@ This class implements the top-level server algorithms for deskflow.
 class Server
 {
   using ServerConfig = deskflow::server::Config;
+
+  friend class ServerTestsAccess;
 
 public:
   //! Lock cursor to screen data
@@ -299,6 +302,9 @@ private:
 
   // send screen options to \c client
   void sendOptions(BaseClientProxy *client) const;
+
+  KeyModifierID getModifierMapping(const BaseClientProxy *client, OptionID option, KeyModifierID fallback) const;
+  KeyID translateKeyForClient(const BaseClientProxy *client, KeyID id, KeyModifierMask mask, KeyButton button) const;
 
   // process options from configuration
   void processOptions();

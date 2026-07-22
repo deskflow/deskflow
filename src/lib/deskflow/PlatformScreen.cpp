@@ -83,6 +83,11 @@ void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
   getKeyState()->pollPressedKeys(pressedKeys);
 }
 
+KeyID PlatformScreen::getKeyIDForButton(KeyButton button) const
+{
+  return getKeyState()->getKeyIDForButton(button);
+}
+
 void PlatformScreen::clearStaleModifiers()
 {
   getKeyState()->clearStaleModifiers();

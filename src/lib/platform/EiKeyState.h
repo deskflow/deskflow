@@ -33,6 +33,7 @@ public:
   KeyModifierMask pollActiveModifiers() const override;
   std::int32_t pollActiveGroup() const override;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
+  KeyID getKeyIDForButton(KeyButton button) const override;
   KeyID mapKeyFromKeyval(std::uint32_t keyval) const;
   void updateXkbState(std::uint32_t keyval, bool isPressed);
   void clearStaleModifiers() override;
@@ -43,6 +44,7 @@ protected:
   void fakeKey(const Keystroke &keystroke) override;
 
 private:
+  KeyID mapKeyFromLevel(std::uint32_t keyval, xkb_layout_index_t layout, xkb_level_index_t level) const;
   std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
