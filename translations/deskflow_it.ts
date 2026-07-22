@@ -1090,6 +1090,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Cerca un file di configurazione</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestito dalla tua organizzazione</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Abilita il blocco al computer all&apos;avvio</translation>
     </message>
@@ -1207,6 +1211,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Reset to default values</source>
         <translation type="unfinished">Ripristina i valori predefiniti</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestito dalla tua organizzazione</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>

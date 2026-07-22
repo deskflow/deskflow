@@ -283,6 +283,32 @@ screens\size=15
 ```
 
 
+## Administrator managed settings
+
+On macOS an administrator can enforce settings with a configuration profile delivered
+through MDM, such as Jamf Pro, Mosyle, Kandji or Intune. Deskflow reads managed
+preferences for its own bundle identifier, `org.deskflow.deskflow`. Platforms without a
+policy backend never report a setting as managed.
+
+Any key documented above can be enforced. The preference key is the settings key exactly
+as written, for example `security/tlsEnabled`, `core/port` or `server/enableClipboard`.
+
+A managed setting always reports the enforced value, writes to it are rejected, and the
+control that edits it is disabled in the GUI with a note explaining why. Removing the
+policy restores the value the user had before.
+
+To try this without enrolling a device, write the file directly:
+
+```bash
+sudo mkdir -p "/Library/Managed Preferences"
+sudo /usr/libexec/PlistBuddy \
+  -c "Add :security/tlsEnabled bool false" \
+  -c "Add :core/port integer 12345" \
+  "/Library/Managed Preferences/org.deskflow.deskflow.plist"
+```
+
+Delete that file to return to normal behaviour.
+
 # Server Config
 
 The `deskflow-server` command accepts the `-c` or `--config` option, which takes one argument,
