@@ -72,5 +72,7 @@ private:
    */
   void save();
 
+  void clearServerHistory();
+
   Ui::ClientConfigDialog *ui = nullptr;
 };
