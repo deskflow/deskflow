@@ -15,6 +15,7 @@ class CoreProcessTests : public QObject
 private Q_SLOTS:
   void initTestCase();
   void stop_terminatesDesktopChild();
+  void stop_killsDesktopChildIgnoringTerminate();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/CoreProcessTests");

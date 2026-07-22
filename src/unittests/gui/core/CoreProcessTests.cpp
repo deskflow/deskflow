@@ -17,6 +17,42 @@
 
 using namespace deskflow::gui;
 
+namespace {
+
+constexpr auto kIgnoreTerminateEnvironment = "DESKFLOW_CORE_PROCESS_TEST_IGNORE_TERMINATE";
+
+class ScopedEnvironmentVariable
+{
+public:
+  explicit ScopedEnvironmentVariable(const char *name)
+      : m_name(name),
+        m_wasSet(qEnvironmentVariableIsSet(name)),
+        m_oldValue(qgetenv(name))
+  {
+  }
+
+  bool set(const char *value)
+  {
+    return qputenv(m_name, value);
+  }
+
+  ~ScopedEnvironmentVariable()
+  {
+    if (m_wasSet) {
+      qputenv(m_name, m_oldValue);
+    } else {
+      qunsetenv(m_name);
+    }
+  }
+
+private:
+  const char *m_name;
+  bool m_wasSet;
+  QByteArray m_oldValue;
+};
+
+} // namespace
+
 void CoreProcessTests::initTestCase()
 {
   QDir dir;
@@ -50,6 +86,39 @@ void CoreProcessTests::stop_terminatesDesktopChild()
 
   coreProcess.stop(Settings::ProcessMode::Desktop);
   QTRY_COMPARE(coreProcess.processState(), deskflow::core::ProcessState::Stopped);
+}
+
+void CoreProcessTests::stop_killsDesktopChildIgnoringTerminate()
+{
+#ifdef Q_OS_WIN
+  QSKIP("QProcess::terminate() does not use SIGTERM on Windows");
+#else
+  ScopedEnvironmentVariable ignoreTerminate(kIgnoreTerminateEnvironment);
+  QVERIFY(ignoreTerminate.set("1"));
+
+  const auto childPath =
+      QDir(QCoreApplication::applicationDirPath()).filePath(
+          QStringLiteral("CoreProcessTestChild") + QStringLiteral(CORE_PROCESS_TEST_EXECUTABLE_SUFFIX));
+  QVERIFY(QFile::exists(childPath));
+
+  ServerConfig config;
+  CoreProcess coreProcess(config, childPath);
+  coreProcess.setMode(Settings::CoreMode::Client);
+
+  QSignalSpy logLineSpy(&coreProcess, &CoreProcess::logLine);
+  QVERIFY(logLineSpy.isValid());
+
+  coreProcess.start(Settings::ProcessMode::Desktop);
+  QCOMPARE(coreProcess.processState(), deskflow::core::ProcessState::Started);
+  if (!logLineSpy.wait(2000)) {
+    coreProcess.stop(Settings::ProcessMode::Desktop);
+    QFAIL("test child did not report readiness");
+  }
+  QCOMPARE(logLineSpy.first().first().toString(), QStringLiteral("ready"));
+
+  coreProcess.stop(Settings::ProcessMode::Desktop);
+  QTRY_COMPARE(coreProcess.processState(), deskflow::core::ProcessState::Stopped);
+#endif
 }
 
 QTEST_MAIN(CoreProcessTests)

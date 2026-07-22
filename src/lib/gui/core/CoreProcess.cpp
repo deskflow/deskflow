@@ -372,8 +372,15 @@ void CoreProcess::handleLogLines(const QString &text)
 
 void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
+  QMutexLocker locker(&m_processMutex);
+
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
+    return;
+  }
+
+  if (m_processState == ProcessState::Stopping) {
+    qCritical("core process is stopping; refusing start until it exits");
     return;
   }
 
@@ -381,8 +388,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     qFatal("set core mode before starting");
     return;
   }
-
-  QMutexLocker locker(&m_processMutex);
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
   const auto processMode = processModeOption.value_or(currentMode);
