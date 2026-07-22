@@ -907,8 +907,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;더블 클릭하여 설정 편집&lt;br&gt;휴지통으로 드래그하여 삭제</translation>
+        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it&lt;br&gt;Drag the right or bottom edge to span more cells</source>
+        <translation>&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;더블 클릭하여 설정 편집&lt;br&gt;휴지통으로 드래그하여 삭제&lt;br&gt;오른쪽 또는 아래쪽 가장자리를 드래그하여 여러 셀에 걸치기</translation>
     </message>
 </context>
 <context>

@@ -907,8 +907,8 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;Schermo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Fai doppio clic per modificare le impostazioni&lt;br&gt;Trascina lo schermo nel cestino per rimuoverlo</translation>
+        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it&lt;br&gt;Drag the right or bottom edge to span more cells</source>
+        <translation>&lt;center&gt;Schermo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Fai doppio clic per modificare le impostazioni&lt;br&gt;Trascina lo schermo nel cestino per rimuoverlo&lt;br&gt;Trascina il bordo destro o inferiore per estendersi su più celle</translation>
     </message>
 </context>
 <context>

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2021 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -33,6 +34,12 @@ public:
    * @param newScreen
    */
   void addScreenToFirstEmpty(const Screen &newScreen);
+
+  /**
+   * @brief screenIndexAt returns the index of the screen covering the given
+   * cell, either anchored there or spanning over it, -1 if none
+   */
+  int screenIndexAt(int column, int row) const;
 
   /**
    * @brief Returns true if screens are equal
