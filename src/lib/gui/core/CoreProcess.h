@@ -15,6 +15,7 @@
 #include <QMutex>
 #include <QObject>
 #include <QProcess>
+#include <QString>
 #include <QTimer>
 
 namespace deskflow::gui {
@@ -38,7 +39,7 @@ public:
     StartFailed
   };
 
-  explicit CoreProcess(const ServerConfig &serverConfig);
+  explicit CoreProcess(const ServerConfig &serverConfig, QString appPath = {});
 
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
