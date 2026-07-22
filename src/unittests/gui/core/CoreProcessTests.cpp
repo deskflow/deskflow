@@ -33,7 +33,9 @@ void CoreProcessTests::initTestCase()
 
 void CoreProcessTests::stop_terminatesDesktopChild()
 {
-  const auto childPath = QDir(QCoreApplication::applicationDirPath()).filePath("CoreProcessTestChild");
+  const auto childPath =
+    QDir(QCoreApplication::applicationDirPath()).filePath(
+      QStringLiteral("CoreProcessTestChild") + QLatin1String(QT_EXECUTABLE_SUFFIX));
   QVERIFY(QFile::exists(childPath));
 
   ServerConfig config;
