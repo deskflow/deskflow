@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 add_executable(CoreProcessTestChild CoreProcessTestChild.cpp)
-target_link_libraries(CoreProcessTestChild PRIVATE Qt6::Core)
+target_link_libraries(CoreProcessTestChild PRIVATE app base)
 set_target_properties(CoreProcessTestChild PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 
 create_test(

@@ -15,7 +15,8 @@ namespace deskflow::core::ipc {
 
 static CoreIpcServer *s_instance = nullptr;
 
-CoreIpcServer::CoreIpcServer(QObject *parent) : IpcServer(parent, kCoreIpcName, QStringLiteral("core"))
+CoreIpcServer::CoreIpcServer(QObject *parent, QString socketName)
+    : IpcServer(parent, socketName.isEmpty() ? kCoreIpcName : socketName, QStringLiteral("core"))
 {
   assert(s_instance == nullptr);
   s_instance = this;

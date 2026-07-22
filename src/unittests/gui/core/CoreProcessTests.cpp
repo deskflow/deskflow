@@ -14,12 +14,15 @@
 #include <QDir>
 #include <QFile>
 #include <QSignalSpy>
+#include <QUuid>
 
 using namespace deskflow::gui;
 
 namespace {
 
 constexpr auto kIgnoreTerminateEnvironment = "DESKFLOW_CORE_PROCESS_TEST_IGNORE_TERMINATE";
+constexpr auto kIpcNameEnvironment = "DESKFLOW_CORE_PROCESS_TEST_IPC_NAME";
+constexpr auto kGracefulStopResultEnvironment = "DESKFLOW_CORE_PROCESS_TEST_GRACEFUL_STOP_RESULT";
 
 class ScopedEnvironmentVariable
 {
@@ -31,7 +34,7 @@ public:
   {
   }
 
-  bool set(const char *value)
+  bool set(const QByteArray &value)
   {
     return qputenv(m_name, value);
   }
@@ -86,6 +89,44 @@ void CoreProcessTests::stop_terminatesDesktopChild()
 
   coreProcess.stop(Settings::ProcessMode::Desktop);
   QTRY_COMPARE(coreProcess.processState(), deskflow::core::ProcessState::Stopped);
+}
+
+void CoreProcessTests::stop_sendsGracefulIpcStop()
+{
+  const auto childPath =
+      QDir(QCoreApplication::applicationDirPath()).filePath(
+          QStringLiteral("CoreProcessTestChild") + QStringLiteral(CORE_PROCESS_TEST_EXECUTABLE_SUFFIX));
+  QVERIFY(QFile::exists(childPath));
+
+  const auto resultPath = QDir(m_settingsPath).filePath(QStringLiteral("graceful-stop-result"));
+  QFile::remove(resultPath);
+  QVERIFY(!QFile::exists(resultPath));
+
+  ScopedEnvironmentVariable gracefulStopResult(kGracefulStopResultEnvironment);
+  QVERIFY(gracefulStopResult.set(QFile::encodeName(resultPath)));
+  const auto ipcName = QStringLiteral("core-process-test-%1").arg(QUuid::createUuid().toString(QUuid::Id128));
+  ScopedEnvironmentVariable testIpcName(kIpcNameEnvironment);
+  QVERIFY(testIpcName.set(ipcName.toUtf8()));
+
+  ServerConfig config;
+  CoreProcess coreProcess(config, childPath, ipcName);
+  coreProcess.setMode(Settings::CoreMode::Client);
+
+  QSignalSpy connectionStateChangedSpy(&coreProcess, &CoreProcess::connectionStateChanged);
+  QVERIFY(connectionStateChangedSpy.isValid());
+
+  coreProcess.start(Settings::ProcessMode::Desktop);
+  QCOMPARE(coreProcess.processState(), deskflow::core::ProcessState::Started);
+  QTRY_COMPARE(coreProcess.connectionState(), deskflow::core::ConnectionState::Connected);
+  QVERIFY(!connectionStateChangedSpy.isEmpty());
+
+  coreProcess.stop(Settings::ProcessMode::Desktop);
+  QTRY_VERIFY(QFile::exists(resultPath));
+  QTRY_COMPARE(coreProcess.processState(), deskflow::core::ProcessState::Stopped);
+
+  QFile resultFile(resultPath);
+  QVERIFY(resultFile.open(QIODevice::ReadOnly));
+  QCOMPARE(resultFile.readAll(), QByteArray("graceful-stop"));
 }
 
 void CoreProcessTests::stop_killsDesktopChildIgnoringTerminate()

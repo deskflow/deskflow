@@ -214,4 +214,11 @@ void IpcClient::sendMessage(const QString &message)
   qDebug().noquote() << QStringLiteral("%1 ipc client sent message: %2").arg(m_typeName, message);
 }
 
+void IpcClient::flushSocket()
+{
+  if (m_state == State::Connected) {
+    m_socket->flush();
+  }
+}
+
 } // namespace deskflow::gui::ipc

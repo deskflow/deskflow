@@ -101,11 +101,12 @@ QString CoreProcess::wrapIpv6(const QString &address)
 // CoreProcess
 //
 
-CoreProcess::CoreProcess(const ServerConfig &serverConfig, QString appPath)
+CoreProcess::CoreProcess(const ServerConfig &serverConfig, QString appPath, QString coreIpcName)
     : m_serverConfig(serverConfig),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
       m_appPath{
-          appPath.isEmpty() ? QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName) : appPath}
+          appPath.isEmpty() ? QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName) : appPath},
+      m_coreIpcName(std::move(coreIpcName))
 {
   if (!QFile::exists(m_appPath)) {
     qFatal("core server binary does not exist");
@@ -151,7 +152,7 @@ void CoreProcess::checkExistingProcess()
 {
   qInfo("checking existing core");
 
-  auto *client = new ipc::CoreIpcClient(this);
+  auto *client = new ipc::CoreIpcClient(this, m_coreIpcName);
   connect(client, &ipc::CoreIpcClient::connected, this, [client] {
     qInfo("existing core has matching version, leaving it running");
     client->deleteLater();
@@ -455,7 +456,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
             return;
           }
 
-          m_coreIpcClient = new ipc::CoreIpcClient(this);
+          m_coreIpcClient = new ipc::CoreIpcClient(this, m_coreIpcName);
           connect(m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived);
           connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [] {
             qDebug("connected to core ipc server");

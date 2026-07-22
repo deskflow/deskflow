@@ -39,7 +39,7 @@ public:
     StartFailed
   };
 
-  explicit CoreProcess(const ServerConfig &serverConfig, QString appPath = {});
+  explicit CoreProcess(const ServerConfig &serverConfig, QString appPath = {}, QString coreIpcName = {});
 
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
@@ -135,6 +135,7 @@ private:
   FileTail *m_daemonFileTail = nullptr;
   QProcess *m_process = nullptr;
   QString m_appPath;
+  QString m_coreIpcName;
 };
 
 } // namespace deskflow::gui

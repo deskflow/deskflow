@@ -20,7 +20,7 @@ class CoreIpcServer : public IpcServer
   Q_OBJECT
 
 public:
-  explicit CoreIpcServer(QObject *parent);
+  explicit CoreIpcServer(QObject *parent, QString socketName = {});
 
   static CoreIpcServer &instance();
 

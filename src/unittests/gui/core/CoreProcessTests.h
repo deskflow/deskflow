@@ -15,6 +15,7 @@ class CoreProcessTests : public QObject
 private Q_SLOTS:
   void initTestCase();
   void stop_terminatesDesktopChild();
+  void stop_sendsGracefulIpcStop();
   void stop_killsDesktopChildIgnoringTerminate();
 
 private:

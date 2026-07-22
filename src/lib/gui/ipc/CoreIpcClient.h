@@ -17,7 +17,7 @@ class CoreIpcClient : public IpcClient
   Q_OBJECT
 
 public:
-  explicit CoreIpcClient(QObject *parent = nullptr);
+  explicit CoreIpcClient(QObject *parent = nullptr, QString socketName = {});
 
   void sendStop();
 

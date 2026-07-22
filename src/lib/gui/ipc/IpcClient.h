@@ -54,6 +54,7 @@ protected:
   }
 
   void sendMessage(const QString &message);
+  void flushSocket();
 
 private:
   void attemptConnection();
