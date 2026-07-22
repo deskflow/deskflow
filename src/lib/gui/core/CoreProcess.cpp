@@ -380,7 +380,8 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     return;
   }
 
-  if (m_processState == ProcessState::Stopping) {
+  if (m_processState == ProcessState::Stopping && m_process &&
+      m_process->state() != QProcess::ProcessState::NotRunning) {
     qCritical("core process is stopping; refusing start until it exits");
     return;
   }

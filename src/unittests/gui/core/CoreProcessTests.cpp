@@ -77,8 +77,9 @@ void CoreProcessTests::stop_terminatesDesktopChild()
       QStringLiteral("CoreProcessTestChild") + QStringLiteral(CORE_PROCESS_TEST_EXECUTABLE_SUFFIX));
   QVERIFY(QFile::exists(childPath));
 
+  const auto ipcName = QStringLiteral("core-process-test-%1").arg(QUuid::createUuid().toString(QUuid::Id128));
   ServerConfig config;
-  CoreProcess coreProcess(config, childPath);
+  CoreProcess coreProcess(config, childPath, ipcName);
   coreProcess.setMode(Settings::CoreMode::Client);
 
   QSignalSpy processStateChangedSpy(&coreProcess, &CoreProcess::processStateChanged);
@@ -142,8 +143,9 @@ void CoreProcessTests::stop_killsDesktopChildIgnoringTerminate()
           QStringLiteral("CoreProcessTestChild") + QStringLiteral(CORE_PROCESS_TEST_EXECUTABLE_SUFFIX));
   QVERIFY(QFile::exists(childPath));
 
+  const auto ipcName = QStringLiteral("core-process-test-%1").arg(QUuid::createUuid().toString(QUuid::Id128));
   ServerConfig config;
-  CoreProcess coreProcess(config, childPath);
+  CoreProcess coreProcess(config, childPath, ipcName);
   coreProcess.setMode(Settings::CoreMode::Client);
 
   QSignalSpy logLineSpy(&coreProcess, &CoreProcess::logLine);
