@@ -11,6 +11,10 @@ create_test(
   SOURCE CoreProcessTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
 )
+target_compile_definitions(
+  CoreProcessTests
+  PRIVATE CORE_PROCESS_TEST_EXECUTABLE_SUFFIX=\"${CMAKE_EXECUTABLE_SUFFIX}\"
+)
 add_dependencies(CoreProcessTests CoreProcessTestChild)
 
 create_test(
