@@ -812,8 +812,7 @@ void EiScreen::onPointerScrollEvent(ei_event *event)
 void EiScreen::onPointerScrollDiscreteEvent(ei_event *event)
 {
   // both libei and deskflow use multiples of 120 to represent
-  // one scroll wheel click event so we can just forward things
-  // as-is.
+  // one scroll wheel click event
 
   assert(m_isPrimary);
 
@@ -822,10 +821,28 @@ void EiScreen::onPointerScrollDiscreteEvent(ei_event *event)
 
   LOG_VERBOSE("event: scroll discrete (%d, %d)", dx, dy);
 
+  // accumulate fractional ticks, then emit 120 units at a time
+  struct ei_device *device = ei_event_get_device(event);
+  auto *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
+  if (!remainder) {
+    remainder = new ScrollRemainder();
+    ei_device_set_user_data(device, remainder);
+  }
+
+  double accX = remainder->x + dx;
+  double accY = remainder->y + dy;
+
+  // trunc toward zero, not floor: floor(-0.3) == -1 would emit a spurious click
+  auto sendX = static_cast<int32_t>(std::trunc(accX / s_scrollDelta)) * s_scrollDelta;
+  auto sendY = static_cast<int32_t>(std::trunc(accY / s_scrollDelta)) * s_scrollDelta;
+  remainder->x = accX - sendX;
+  remainder->y = accY - sendY;
+
   // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
-  sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(-dx, -dy));
+  if (sendX != 0 || sendY != 0)
+    sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(-sendX, -sendY));
 }
 
 void EiScreen::onMotionEvent(ei_event *event)
