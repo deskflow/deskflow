@@ -9,6 +9,12 @@ endif()
 configure_file(Constants.h.in Constants.h @ONLY)
 configure_file(VersionInfo.h.in VersionInfo.h @ONLY)
 
+if(APPLE)
+  set(managed_sources ManagedSettings.mm)
+else()
+  set(managed_sources ManagedSettings.cpp)
+endif()
+
 add_library(common STATIC
   Coordinate.h
   Enums.h
@@ -16,6 +22,7 @@ add_library(common STATIC
   I18N.h
   I18N.cpp
   LogLevel.h
+  ${managed_sources}
   NetworkProtocol.h
   PlatformInfo.h
   Settings.h
@@ -34,3 +41,7 @@ target_include_directories(common
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/lib>
     $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src/lib>
 )
+
+if(APPLE)
+  target_link_libraries(common PRIVATE "-framework Foundation")
+endif()

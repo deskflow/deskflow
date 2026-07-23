@@ -174,7 +174,7 @@ public:
   static Settings *instance();
   static void setSettingsFile(const QString &settingsFile = QString());
   static void setStateFile(const QString &stateFile = QString());
-  static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
+  static bool setValue(const QString &key = QString(), const QVariant &value = QVariant());
   static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
@@ -192,6 +192,14 @@ public:
   static NetworkProtocol networkProtocol();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+
+  /**
+   * @brief Checks if a setting is enforced by an administrator policy.
+   * Defined per platform; only platforms with a policy backend can return true.
+   * @param key The settings key to check.
+   * @return true if the setting is enforced and may not be changed.
+   */
+  static bool isManaged(const QString &key);
   static QStringList validGroups();
   static QString portableSettingsFile();
   static void removeUnknownScreens(const QStringList &knownScreens);
@@ -226,6 +234,14 @@ private:
    * @return a valid computerName
    */
   static QString cleanComputerName(const QString &name);
+
+  /**
+   * @brief Gets the value an administrator policy enforces for a setting.
+   * Defined per platform alongside isManaged().
+   * @param key The settings key to look up.
+   * @return The enforced value, or an invalid QVariant if there is none.
+   */
+  static QVariant managedValue(const QString &key);
 
   QSettings *m_settings = nullptr;
   QSettings *m_stateSettings = nullptr;

@@ -8,6 +8,7 @@
 #include "ui_ClientConfigDialog.h"
 
 #include "common/Settings.h"
+#include "gui/StyleUtils.h"
 
 #include <QPushButton>
 
@@ -100,6 +101,9 @@ void ClientConfigDialog::load()
   ui->sbYScrollScale->setValue(Settings::value(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::value(Settings::Client::InvertXScroll).toBool());
   ui->sbXScrollScale->setValue(Settings::value(Settings::Client::XScrollScale).toDouble());
+
+  // Runs last so a managed control cannot be re-enabled by the code above
+  applyManagedLocks();
 }
 
 void ClientConfigDialog::resetToDefault()
@@ -110,6 +114,19 @@ void ClientConfigDialog::resetToDefault()
   ui->sbYScrollScale->setValue(Settings::defaultValue(Settings::Client::YScrollScale).toDouble());
   ui->cbXScrollInvert->setChecked(Settings::defaultValue(Settings::Client::InvertXScroll).toBool());
   ui->sbXScrollScale->setValue(Settings::defaultValue(Settings::Client::XScrollScale).toDouble());
+}
+
+void ClientConfigDialog::applyManagedLocks()
+{
+  // Each control records the setting it edits so the lock check stays generic.
+  ui->cbDynamicConnectTime->setProperty("managedSetting", Settings::Client::DynamicConnectionRetry);
+  ui->cbLanguageSync->setProperty("managedSetting", Settings::Client::LanguageSync);
+  ui->cbYScrollInvert->setProperty("managedSetting", Settings::Client::InvertYScroll);
+  ui->sbYScrollScale->setProperty("managedSetting", Settings::Client::YScrollScale);
+  ui->cbXScrollInvert->setProperty("managedSetting", Settings::Client::InvertXScroll);
+  ui->sbXScrollScale->setProperty("managedSetting", Settings::Client::XScrollScale);
+
+  deskflow::gui::applyManagedLocks(this, tr("Managed by your organization"));
 }
 
 void ClientConfigDialog::save()

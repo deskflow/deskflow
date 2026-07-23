@@ -1090,6 +1090,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Busque un archivo de configuración</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestionado por su organización</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Activar el bloqueo del ordenador al iniciar</translation>
     </message>
@@ -1207,6 +1211,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Reset to default values</source>
         <translation type="unfinished">Restablecer valores predeterminados</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestionado por su organización</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>

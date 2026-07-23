@@ -1092,6 +1092,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>浏览配置文件</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">由您的组织管理</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">启动时启用锁定到计算机</translation>
     </message>
@@ -1233,6 +1237,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Reset to default values</source>
         <translation type="unfinished">重置为默认值</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">由您的组织管理</translation>
     </message>
     <message>
         <source>Automatic</source>
