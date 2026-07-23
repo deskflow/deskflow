@@ -1,0 +1,8 @@
+<map id="Protocol Message Definitions" name="Protocol Message Definitions">
+<area shape="rect" id="Node000003" href="$group__protocol__commands.html" title="Control messages for screen management and connection maintenance." alt="" coords="248,5,394,30"/>
+<area shape="rect" id="Node000004" href="$group__protocol__data.html" title="Input events, clipboard data, and file transfer messages." alt="" coords="265,55,377,79"/>
+<area shape="rect" id="Node000006" href="$group__protocol__errors.html" title="Protocol error and failure notifications." alt="" coords="264,104,378,129"/>
+<area shape="rect" id="Node000002" href="$group__protocol__handshake.html" title="Connection establishment and version negotiation." alt="" coords="246,153,396,178"/>
+<area shape="rect" id="Node000001" title="All protocol message types and their format specifications." alt="" coords="5,104,198,129"/>
+<area shape="rect" id="Node000005" href="$group__protocol__queries.html" title="Information request messages." alt="" coords="260,203,382,227"/>
+</map>

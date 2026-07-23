@@ -1,0 +1,21 @@
+<map id="src/lib/common/QSettingsProxy.cpp" name="src/lib/common/QSettingsProxy.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="61,5,233,44"/>
+<area shape="rect" id="Node000002" href="$QSettingsProxy_8h.html" title=" " alt="" coords="5,165,129,189"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,43,83,152,78,149,135,46"/>
+<area shape="rect" id="Node000004" href="$Settings_8h.html" title=" " alt="" coords="145,92,280,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,42,195,80,190,80,162,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="77,237,156,262"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="76,188,102,224,97,225,74,192"/>
+<area shape="poly" id="edge10_Node000004_Node000002" title=" " alt="" coords="187,119,106,160,103,155,190,115"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="207,117,135,226,131,222,202,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="203,165,251,189"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="216,115,224,150,219,149,213,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="275,165,422,189"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="235,115,315,157,310,158,234,120"/>
+<area shape="rect" id="Node000007" href="$NetworkProtocol_8h.html" title=" " alt="" coords="446,165,629,189"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="267,115,471,159,466,162,266,120"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="456,237,526,262"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="532,189,508,227,505,222,528,191"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="550,237,616,262"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="546,188,570,225,565,223,544,192"/>
+</map>

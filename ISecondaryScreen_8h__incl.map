@@ -1,0 +1,28 @@
+<map id="src/lib/deskflow/ISecondaryScreen.h" name="src/lib/deskflow/ISecondaryScreen.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="168,5,352,44"/>
+<area shape="rect" id="Node000002" href="$Coordinate_8h.html" title=" " alt="" coords="5,92,155,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,47,122,88,120,83,218,43"/>
+<area shape="rect" id="Node000005" href="$Settings_8h.html" title=" " alt="" coords="381,92,515,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="306,42,408,85,403,86,305,47"/>
+<area shape="rect" id="Node000012" href="$MouseTypes_8h.html" title=" " alt="" coords="179,92,341,117"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="261,42,262,77,258,75,259,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="149,237,219,262"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,114,61,152,60,170,65,188,79,204,96,217,137,237,132,238,93,222,75,208,60,191,54,171,56,150,72,119"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="75,165,136,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="85,115,99,150,93,150,83,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="650,237,729,262"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="515,108,576,114,640,125,695,141,716,151,730,163,737,179,734,196,714,228,711,224,729,195,731,180,726,166,713,156,693,146,639,130,576,120,515,113"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="790,165,839,189"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="515,114,636,135,773,162,778,166,773,165,771,167,635,140,515,119"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="160,165,306,189"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="410,118,284,162,282,157,415,116"/>
+<area shape="rect" id="Node000009" href="$NetworkProtocol_8h.html" title=" " alt="" coords="331,165,514,189"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="446,115,434,152,430,148,442,119"/>
+<area shape="rect" id="Node000011" href="$QSettingsProxy_8h.html" title=" " alt="" coords="538,165,715,189"/>
+<area shape="poly" id="edge11_Node000005_Node000011" title=" " alt="" coords="478,115,586,158,580,159,477,120"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="386,190,234,236,233,231,381,190"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="390,237,455,262"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="425,188,425,223,421,220,421,192"/>
+<area shape="poly" id="edge12_Node000011_Node000006" title=" " alt="" coords="638,187,672,226,666,225,636,192"/>
+<area shape="poly" id="edge14_Node000012_Node000004" title=" " alt="" coords="232,119,146,160,144,155,237,116"/>
+</map>
