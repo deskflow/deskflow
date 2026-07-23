@@ -61,6 +61,12 @@ enum
 
 static const double kCarbonLoopWaitTimeout = 10.0;
 
+// Synthetic mouse button and drag events require event numbers on macOS 27 and later.
+static inline bool needsEventNumber()
+{
+  return NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27;
+}
+
 int getSecureInputEventPID();
 std::string getProcessName(int pid);
 
@@ -463,6 +469,10 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
 
   CGEventRef event = CGEventCreateMouseEvent(nullptr, type, pos, static_cast<CGMouseButton>(button));
 
+  if (button != -1 && needsEventNumber()) {
+    CGEventSetIntegerValueField(event, kCGMouseEventNumber, m_mouseEventNumber);
+  }
+
   // Dragging events also need the click state
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
@@ -547,8 +557,7 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
   CGEventRef event = CGEventCreateMouseEvent(nullptr, type, pos, static_cast<CGMouseButton>(index));
 
-  if (NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27) {
-    // Apps that use Carbon APIs on macOS 27 requires an incrementing event number for each synthetic click
+  if (needsEventNumber()) {
     if (press) {
       if (m_mouseEventNumber == 0) {
         // For some unknown reason, the first click event number must be unique and greater (but in the same ballpark)
