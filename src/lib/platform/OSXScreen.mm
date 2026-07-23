@@ -334,6 +334,7 @@ uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   // if this hot key has modifiers only then we'll handle it specially
   EventHotKeyRef ref = nullptr;
   bool okay;
+  OSStatus status = noErr;
   if (key == kKeyNone) {
     if (m_modifierHotKeys.count(mask) > 0) {
       // already registered
@@ -344,7 +345,7 @@ uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     }
   } else {
     EventHotKeyID hkid = {'SNRG', (uint32_t)id};
-    OSStatus status = RegisterEventHotKey(macKey, macMask, hkid, GetApplicationEventTarget(), 0, &ref);
+    status = RegisterEventHotKey(macKey, macMask, hkid, GetApplicationEventTarget(), 0, &ref);
     okay = (status == noErr);
     m_hotKeyToIDMap[HotKeyItem(macKey, macMask)] = id;
   }
@@ -353,7 +354,8 @@ uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     m_oldHotKeyIDs.push_back(id);
     m_hotKeyToIDMap.erase(HotKeyItem(macKey, macMask));
     LOG_WARN(
-        "failed to register hotkey %s (id=%04x mask=%04x)", deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask
+        "failed to register hotkey %s (id=%04x mask=%04x), os status: %d",
+        deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, (int)status
     );
     return 0;
   }
@@ -361,7 +363,8 @@ uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   m_hotKeys.try_emplace(id, HotKeyItem(ref, macKey, macMask));
 
   LOG_DEBUG(
-      "registered hotkey %s (id=%04x mask=%04x) as id=%d", deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, id
+      "registered hotkey %s (id=%04x mask=%04x) as id=%d, mac key: 0x%08x, mac mask: 0x%08x",
+      deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask, id, macKey, macMask
   );
   return id;
 }
@@ -1207,9 +1210,12 @@ bool OSXScreen::onHotKey(EventRef event) const
   uint32_t eventKind = GetEventKind(event);
   if (eventKind == kEventHotKeyPressed) {
     type = EventTypes::PrimaryScreenHotkeyDown;
+    LOG_DEBUG("hotkey pressed, id: %u", id);
   } else if (eventKind == kEventHotKeyReleased) {
     type = EventTypes::PrimaryScreenHotkeyUp;
+    LOG_DEBUG("hotkey released, id: %u", id);
   } else {
+    LOG_DEBUG("ignoring hotkey event of unexpected kind: %u", eventKind);
     return false;
   }
 
