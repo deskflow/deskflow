@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -71,6 +72,7 @@ public:
   void unblockPollSocket(ArchThread thread) override;
   size_t readSocket(ArchSocket s, void *buf, size_t len) override;
   size_t writeSocket(ArchSocket s, const void *buf, size_t len) override;
+  void resetPollWriteOnSocket(ArchSocket s) override;
   void throwErrorOnSocket(ArchSocket) override;
   bool setNoDelayOnSocket(ArchSocket, bool noDelay) override;
   void setKeepAliveOnSocket(ArchSocket, bool keepAlive) override;

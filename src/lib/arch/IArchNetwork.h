@@ -211,6 +211,16 @@ public:
   */
   virtual size_t writeSocket(ArchSocket s, const void *buf, size_t len) = 0;
 
+  //! Reset the writable poll hint for a socket
+  /*!
+  Tells pollSocket() to wait for a fresh writable notification instead of
+  assuming the socket is still writable. Needed by callers that write to a
+  socket without going through writeSocket(), e.g. OpenSSL's SSL_write().
+  */
+  virtual void resetPollWriteOnSocket(ArchSocket)
+  {
+  }
+
   //! Check error on socket
   /*!
   If the socket \c s is in an error state then throws an appropriate
