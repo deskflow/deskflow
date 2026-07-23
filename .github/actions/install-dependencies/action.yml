@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
@@ -36,7 +37,7 @@ runs:
               apt update -qqq > /dev/null
               apt install -qqq cmake build-essential ninja-build \
                 xorg-dev libx11-dev libxtst-dev libssl-dev \
-                libglib2.0-dev libxkbfile-dev qt6-base-dev qt6-tools-dev \
+                libglib2.0-dev libxkbfile-dev qt6-base-dev qt6-tools-dev libxkbregistry-dev \
                 libgtk-3-dev libei-dev libportal-dev help2man doxygen -y >/dev/null
             elif [ ${{inputs.like}} == "fedora" ]; then
               dnf install -y cmake make ninja-build gcc-c++ rpm-build openssl-devel \
@@ -45,7 +46,7 @@ runs:
             elif [ ${{inputs.like}} == "suse" ]; then
               zypper refresh
               zypper install -y --force-resolution \
-                cmake make ninja gcc-c++ rpm-build libopenssl-devel \
+                cmake make ninja gcc-c++ rpm-build libopenssl-devel libxkbregistry-devel \
                 glib2-devel libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel \
                 qt6-linguist-devel gtk3-devel doxygen libei-devel libportal-devel help2man
             elif [ ${{ inputs.like }} == "arch" ]; then
