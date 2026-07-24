@@ -445,17 +445,26 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  if (!clipboard) {
-    return false;
-  }
-
   // If using portal input capture, set clipboard there
   if (m_portalInputCapture) {
     IClipboard *targetClipboard = m_portalInputCapture->getClipboard(id);
     if (!targetClipboard) {
       return false;
     }
-    return IClipboard::copy(targetClipboard, clipboard);
+
+    bool ok = false;
+    if (clipboard) {
+      ok = IClipboard::copy(targetClipboard, clipboard);
+    } else if (targetClipboard->open(0)) {
+      ok = targetClipboard->empty();
+      targetClipboard->close();
+    }
+
+    if (ok && id == kClipboardClipboard) {
+      m_portalInputCapture->claimClipboard();
+    }
+
+    return ok;
   }
 
   // Otherwise use our own clipboard
@@ -463,7 +472,13 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
     return false;
   }
 
-  bool ok = IClipboard::copy(m_clipboard, clipboard);
+  bool ok = false;
+  if (clipboard) {
+    ok = IClipboard::copy(m_clipboard, clipboard);
+  } else if (m_clipboard->open(0)) {
+    ok = m_clipboard->empty();
+    m_clipboard->close();
+  }
 
   if (ok && m_portalRemoteDesktop && id == kClipboardClipboard) {
     m_portalRemoteDesktop->claimClipboard();
