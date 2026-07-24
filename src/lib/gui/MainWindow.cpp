@@ -258,6 +258,12 @@ void MainWindow::connectSlots()
 
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
+
+  // On macOS an OS-initiated quit ([NSApp terminate:]) calls exit() without
+  // unwinding the C++ stack, so the MainWindow destructor (and its
+  // CoreProcess::cleanup) never runs and the core is orphaned. aboutToQuit
+  // fires on every quit path before the process exits, so stop the core there.
+  connect(qApp, &QCoreApplication::aboutToQuit, this, [this] { m_coreProcess.cleanup(); });
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
   connect(m_actionStartCore, &QAction::triggered, this, &MainWindow::startCore);
@@ -913,6 +919,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
   // any connected dock view acitons will be triggered
   // disconnect them before accepting the event
   disconnect(m_logDock->toggleViewAction(), &QAction::toggled, nullptr, nullptr);
+
+  // Stop the core synchronously here: on macOS an OS-initiated quit terminates
+  // the process (exit()) as soon as this returns NSTerminateNow, so neither the
+  // MainWindow destructor nor aboutToQuit is guaranteed to run. Cleaning up now
+  // ensures the desktop core is stopped instead of being orphaned.
+  m_coreProcess.cleanup();
 
   event->accept();
   QApplication::quit();

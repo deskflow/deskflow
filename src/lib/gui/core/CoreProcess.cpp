@@ -546,8 +546,29 @@ void CoreProcess::cleanup()
 
   const auto isDesktop = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Desktop;
   const auto isRunning = m_processState == ProcessState::Started;
-  if (isDesktop && isRunning) {
+  // A desktop-mode child can still be alive even when the tracked state is not
+  // exactly Started (e.g. Stopping/RetryPending, or an inconsistent Stopped).
+  // Stop it regardless, otherwise the QProcess destructor below would block the
+  // GUI forever on quit and/or leave an orphaned core behind.
+  const auto hasLiveChild = m_process && m_process->state() != QProcess::ProcessState::NotRunning;
+  if (isDesktop && (isRunning || hasLiveChild)) {
     stop();
+  }
+
+  // Final guarantee: never let ~QProcess perform an unbounded waitForFinished()
+  // during CoreProcess destruction. If the child somehow survived the staged
+  // stop, force-kill it with a bounded wait and, only if it still refuses to
+  // die, detach it so its destructor cannot block application quit.
+  if (m_process && m_process->state() != QProcess::ProcessState::NotRunning) {
+    qWarning("core process still running after cleanup; force killing");
+    m_process->kill();
+    m_process->waitForFinished(kProcessStopTimeout);
+  }
+  if (m_process && m_process->state() != QProcess::ProcessState::NotRunning) {
+    qCritical("core process still running after kill; detaching to avoid blocking quit");
+    m_process->disconnect();
+    m_process->setParent(nullptr);
+    m_process = nullptr;
   }
 }
 
