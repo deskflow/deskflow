@@ -43,6 +43,7 @@ public:
     inline static const auto XScrollScale = QStringLiteral("client/xScrollScale");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
+    inline static const auto XdpClipboardRetried = QStringLiteral("client/xdpClipboardRetried");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
   };
   struct Core
@@ -121,6 +122,7 @@ public:
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
+    inline static const auto XdpClipboardRetried = QStringLiteral("server/xdpClipboardRetried");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
 
@@ -334,6 +336,7 @@ private:
     , Client::DynamicConnectionRetry
     , Client::InvertYScroll
     , Client::InvertXScroll
+    , Client::XdpClipboardRetried
     , Log::ToFile
     , Log::GuiDebug
     , Server::DefaultLockToComputerState
@@ -343,6 +346,7 @@ private:
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig
     , Server::RelativeMouseMoves
+    , Server::XdpClipboardRetried
   };
 
   // When checking the default values this list contains the ones that default to true.
@@ -362,7 +366,9 @@ private:
   // Settings saved in our State file
   inline static const QStringList m_stateKeys = {
       Gui::WindowGeometry
+    , Client::XdpClipboardRetried
     , Client::XdpRestoreToken
+    , Server::XdpClipboardRetried
     , Server::XdpRestoreToken
    };
 

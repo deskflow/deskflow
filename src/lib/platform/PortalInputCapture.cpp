@@ -11,15 +11,12 @@
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "common/Settings.h"
 #include "deskflow/ClipboardTypes.h"
 #include "platform/EiClipboard.h"
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
 #include "platform/PortalClipboard.h"
-#endif
-
-#ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
-#include "common/Settings.h"
 #endif
 
 #include <algorithm>
@@ -298,17 +295,20 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (!xdp_session_is_clipboard_enabled(parentSession) && m_portalVersion > 1) {
-    // Restored sessions can pre-date clipboard support, leaving the channel
-    // disabled even though we requested it. Drop the saved token and recreate
-    // the session from scratch so the user gets a fresh permission dialog.
-    LOG_WARN("clipboard not enabled on session, discarding restore token to force a fresh session");
+    if (Settings::value(Settings::Server::XdpClipboardRetried).toBool()) {
+      // some backends never report clipboard enabled even when granted; don't loop forever
+      LOG_DEBUG("clipboard still not enabled on session after one retry, continuing without it");
+    } else {
+      LOG_WARN("clipboard not enabled on session, discarding restore token to force a fresh session");
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
-    Settings::setValue(Settings::Server::XdpRestoreToken, QString());
+      Settings::setValue(Settings::Server::XdpRestoreToken, QString());
 #endif
-    g_object_unref(m_session);
-    m_session = nullptr;
-    g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
-    return;
+      Settings::setValue(Settings::Server::XdpClipboardRetried, true);
+      g_object_unref(m_session);
+      m_session = nullptr;
+      g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
+      return;
+    }
   }
 #endif
 
