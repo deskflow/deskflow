@@ -1295,13 +1295,16 @@ void MainWindow::updateTimeoutDelay(int newDelay)
 void MainWindow::setHelpFilePath()
 {
   const QString appPath = QCoreApplication::applicationDirPath();
-  const auto buildPath = QDir::cleanPath(QString("%1/../docs/user/html/index.html").arg(appPath));
-  auto installPath = QString("%1/../share/doc/deskflow/html/index.html").arg(appPath);
-  if (deskflow::platform::isMac())
-    installPath = QString("%1/Contents/Resources/docs/html/index.html").arg(appPath);
-  else if (deskflow::platform::isWindows())
-    installPath = QString("%1/docs/html/index.html").arg(appPath);
+  auto buildPath = QString("%1/../docs/HelpMain.md").arg(appPath);
+  auto installPath = QString("%1/../share/doc/%2/HelpMain.md").arg(appPath, kAppId);
+  if (deskflow::platform::isMac()) {
+    installPath = QString("%1/../Resources/docs/HelpMain.md").arg(appPath);
+    buildPath = QString("%1/../../../../docs/HelpMain.md").arg(appPath);
+  } else if (deskflow::platform::isWindows()) {
+    installPath = QString("%1/docs/HelpMain.md").arg(appPath);
+  }
 
+  buildPath = QDir::cleanPath(buildPath);
   installPath = QDir::cleanPath(installPath);
 
   if (QFile::exists(installPath))

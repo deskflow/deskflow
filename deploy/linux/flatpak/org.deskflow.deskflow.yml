@@ -18,7 +18,6 @@ cleanup:
   - /lib/pkgconfig
   - /share/pkgconfig
   - /share/cmake
-  - /share/doc
   - /share/gir-1.0
   - /lib/girepository-1.0
 modules:
