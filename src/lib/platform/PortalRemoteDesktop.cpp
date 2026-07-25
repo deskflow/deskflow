@@ -100,28 +100,35 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (!xdp_session_is_clipboard_enabled(session)) {
-    LOG_WARN("clipboard not enabled on remote desktop session, discarding restore token to force a fresh session");
-    Settings::setValue(Settings::Client::XdpRestoreToken, QString());
-    free(m_sessionRestoreToken);
-    m_sessionRestoreToken = nullptr;
-    if (m_selectionTransferSignalId) {
-      g_signal_handler_disconnect(session, m_selectionTransferSignalId);
-      m_selectionTransferSignalId = 0;
+    if (Settings::value(Settings::Client::XdpClipboardRetried).toBool()) {
+      // some backends never report clipboard enabled even when granted; don't loop forever
+      LOG_DEBUG("clipboard still not enabled on remote desktop session after one retry, continuing without it");
+    } else {
+      LOG_WARN("clipboard not enabled on remote desktop session, discarding restore token to force a fresh session");
+      Settings::setValue(Settings::Client::XdpRestoreToken, QString());
+      Settings::setValue(Settings::Client::XdpClipboardRetried, true);
+      free(m_sessionRestoreToken);
+      m_sessionRestoreToken = nullptr;
+      if (m_selectionTransferSignalId) {
+        g_signal_handler_disconnect(session, m_selectionTransferSignalId);
+        m_selectionTransferSignalId = 0;
+      }
+      if (m_selectionOwnerChangedSignalId) {
+        g_signal_handler_disconnect(session, m_selectionOwnerChangedSignalId);
+        m_selectionOwnerChangedSignalId = 0;
+      }
+      if (m_sessionSignalId) {
+        g_signal_handler_disconnect(session, m_sessionSignalId);
+        m_sessionSignalId = 0;
+      }
+      g_clear_object(&m_session);
+      reconnect(0);
+      return;
     }
-    if (m_selectionOwnerChangedSignalId) {
-      g_signal_handler_disconnect(session, m_selectionOwnerChangedSignalId);
-      m_selectionOwnerChangedSignalId = 0;
-    }
-    if (m_sessionSignalId) {
-      g_signal_handler_disconnect(session, m_sessionSignalId);
-      m_sessionSignalId = 0;
-    }
-    g_clear_object(&m_session);
-    reconnect(0);
-    return;
   }
 #endif
 
+  free(m_sessionRestoreToken);
   m_sessionRestoreToken = xdp_session_get_restore_token(session);
   if (m_sessionRestoreToken) {
     Settings::setValue(Settings::Client::XdpRestoreToken, QString(m_sessionRestoreToken));
@@ -227,7 +234,7 @@ void PortalRemoteDesktop::claimClipboard() const
     return;
   }
   if (!xdp_session_is_clipboard_enabled(m_session)) {
-    LOG_WARN("portal remote desktop clipboard not enabled on session, cannot claim");
+    LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
     return;
   }
   PortalClipboard::claimOwnership(m_screen->getClipboardCache(), m_session);
