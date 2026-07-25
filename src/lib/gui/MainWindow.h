@@ -13,6 +13,7 @@
 #include <QProcess>
 #include <QRegularExpression>
 #include <QSystemTrayIcon>
+#include <QUrl>
 
 #include "VersionChecker.h"
 #include "config/ServerConfig.h"
@@ -141,6 +142,8 @@ private:
   void remoteHostChanged(const QString &newRemoteHost);
   void updateIpLabel(const QStringList &addresses);
   void updateTimeoutDelay(int newDelay);
+  void setHelpFilePath();
+  void showHelpViewer() const;
 
   bool canRunCore() const;
 
@@ -200,6 +203,7 @@ private:
   QAction *m_actionStartCore = nullptr;
   QAction *m_actionRestartCore = nullptr;
   QAction *m_actionStopCore = nullptr;
+  QAction *m_actionShowHelp = nullptr;
 
   // Network monitoring
   NetworkMonitor *m_networkMonitor = nullptr;
@@ -208,4 +212,5 @@ private:
   // Server IP strategy optimization
   QStringList m_serverStartIPs;
   QString m_serverStartSuggestedIP;
+  QUrl m_helpPath;
 };
