@@ -30,6 +30,7 @@
         <file>icons/deskflow-dark/actions/22/network-connect.svg</file>
         <file>icons/deskflow-dark/actions/22/network-disconnect.svg</file>
         <file>icons/deskflow-dark/actions/22/process-stop.svg</file>
+        <file>icons/deskflow-dark/actions/22/question.svg</file>
         <file>icons/deskflow-dark/actions/22/system-run.svg</file>
         <file>icons/deskflow-dark/actions/22/system-search.svg</file>
         <file>icons/deskflow-dark/actions/22/tools-report-bug.svg</file>
@@ -50,6 +51,7 @@
         <file>icons/deskflow-dark/actions/24/network-connect.svg</file>
         <file>icons/deskflow-dark/actions/24/network-disconnect.svg</file>
         <file>icons/deskflow-dark/actions/24/process-stop.svg</file>
+        <file>icons/deskflow-dark/actions/24/question.svg</file>
         <file>icons/deskflow-dark/actions/24/system-run.svg</file>
         <file>icons/deskflow-dark/actions/24/system-search.svg</file>
         <file>icons/deskflow-dark/actions/24/tools-report-bug.svg</file>
@@ -115,6 +117,7 @@
         <file>icons/deskflow-light/actions/22/network-disconnect.svg</file>
         <file>icons/deskflow-light/actions/22/help-about.svg</file>
         <file>icons/deskflow-light/actions/22/process-stop.svg</file>
+        <file>icons/deskflow-light/actions/22/question.svg</file>
         <file>icons/deskflow-light/actions/22/system-run.svg</file>
         <file>icons/deskflow-light/actions/22/system-search.svg</file>
         <file>icons/deskflow-light/actions/22/tools-report-bug.svg</file>
@@ -135,6 +138,7 @@
         <file>icons/deskflow-light/actions/24/network-connect.svg</file>
         <file>icons/deskflow-light/actions/24/network-disconnect.svg</file>
         <file>icons/deskflow-light/actions/24/process-stop.svg</file>
+        <file>icons/deskflow-light/actions/24/question.svg</file>
         <file>icons/deskflow-light/actions/24/system-run.svg</file>
         <file>icons/deskflow-light/actions/24/system-search.svg</file>
         <file>icons/deskflow-light/actions/24/tools-report-bug.svg</file>

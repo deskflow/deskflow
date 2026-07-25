@@ -271,6 +271,17 @@ Vuoi connetterti al server?
     </message>
 </context>
 <context>
+    <name>HelpDialog</name>
+    <message>
+        <source>%1 Help</source>
+        <translation type="unfinished">%1 Aiuto</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Vicino</translation>
+    </message>
+</context>
+<context>
     <name>HotkeyDialog</name>
     <message>
         <source>Hotkey</source>
@@ -394,6 +405,10 @@ Vuoi connetterti al server?
         <source>About %1...</source>
         <extracomment>%1 will be the replaced with the appname</extracomment>
         <translation>Informazioni su %1...</translation>
+    </message>
+    <message>
+        <source>View &amp;Help</source>
+        <translation type="unfinished">Visualizza la &amp;guida</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
