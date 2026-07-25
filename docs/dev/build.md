@@ -21,7 +21,6 @@ Deskflow supports the following CMake options:
 
 |         Option           |            Description                  |   Default Value    | Additional requirements |
 :-------------------------:|:---------------------------------------:|:------------------:|:-----------------------:|
-| BUILD_USER_DOCS          | Build user documentation                | DOXYGEN_FOUND      | `Doxygen` |
 | BUILD_DEV_DOCS           | Build development documentation         | OFF                | `Doxygen` |
 | BUILD_INSTALLER          | Build installers/packages               | ON                 | |
 | BUILD_TESTS              | Build unit tests and legacy tests       | ON                 | |

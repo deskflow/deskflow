@@ -2,7 +2,6 @@
 
  Deskflow will automatically figure out where to save settings and other files.
 
-
 ## Search paths
 
 Deskflow will look for settings in several places depending on your operating system.

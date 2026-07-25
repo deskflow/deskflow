@@ -257,11 +257,6 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      - name: Update Windows Paths
-        if: (runner.os == 'Windows')
-        shell: pwsh
-        run: echo "C:\Program Files\doxygen\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
       - name: Configure
         run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
 
@@ -360,8 +355,7 @@ jobs:
 
           run: |
             pkg install -y cmake ninja gmake gcc12 openssl libXrandr libXinerama \
-            libX11 libXtst libxkbfile qt6-base qt6-tools libxkbcommon pkgconf libei \
-            libportal doxygen
+            libX11 libXtst libxkbfile qt6-base qt6-tools libxkbcommon pkgconf libei libportal
             ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
   flatpak:
