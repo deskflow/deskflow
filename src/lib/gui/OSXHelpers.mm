@@ -13,11 +13,18 @@
 #import <UserNotifications/UNNotificationContent.h>
 #import <UserNotifications/UNNotificationTrigger.h>
 #import <UserNotifications/UNUserNotificationCenter.h>
+#import <objc/runtime.h>
 
 #import <QtGlobal>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+namespace {
+std::function<bool()> s_shouldQuit;
+IMP s_originalShouldTerminate = nullptr;
+BOOL s_isSystemShuttingDown = NO;
+} // namespace
 
 void requestOSXNotificationPermission()
 {
@@ -106,4 +113,45 @@ void macOSNativeHide()
 {
   [NSApp hide:nil];
   [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
+}
+
+static NSApplicationTerminateReply deskflow_applicationShouldTerminate(id self, SEL _cmd, NSApplication *sender)
+{
+  // Don't intercept a system shutdown (or logoff/restart)
+  if (!s_isSystemShuttingDown && s_shouldQuit && !s_shouldQuit()) {
+    return NSTerminateCancel;
+  }
+
+  // Execute Qt's applicationShouldTerminate
+  if (s_originalShouldTerminate) {
+    using ShouldTerminateFn = NSApplicationTerminateReply (*)(id, SEL, NSApplication *);
+    return reinterpret_cast<ShouldTerminateFn>(s_originalShouldTerminate)(self, _cmd, sender);
+  }
+
+  return NSTerminateNow;
+}
+
+void installQuitHandler(std::function<bool()> shouldQuit)
+{
+  s_shouldQuit = std::move(shouldQuit);
+
+  Class cls = [[NSApp delegate] class];
+  SEL selector = @selector(applicationShouldTerminate:);
+
+  Method method = class_getInstanceMethod(cls, selector);
+  if (method) {
+    s_originalShouldTerminate = method_getImplementation(method);
+    method_setImplementation(method, (IMP)deskflow_applicationShouldTerminate);
+  } else {
+    class_addMethod(cls, selector, (IMP)deskflow_applicationShouldTerminate, "l@:@");
+  }
+
+  // shutdown is also triggered for logout/restart
+  [[[NSWorkspace sharedWorkspace] notificationCenter] addObserverForName:NSWorkspaceWillPowerOffNotification
+                                                                  object:nil
+                                                                   queue:[NSOperationQueue mainQueue]
+                                                              usingBlock:^(NSNotification *note) {
+                                                                Q_UNUSED(note)
+                                                                s_isSystemShuttingDown = YES;
+                                                              }];
 }

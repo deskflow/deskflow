@@ -163,6 +163,11 @@ MainWindow::MainWindow()
   applyConfig();
   m_statusBar->setSecurityIcon(TlsUtility::isEnabled());
   restoreWindow();
+
+#ifdef Q_OS_MACOS
+  // Route native quits (Cmd+Q / Apple menu Quit / Dock "Quit") to the usual close-to-tray decision instead.
+  installQuitHandler([this] { return !maybeHideToTray(); });
+#endif
 }
 MainWindow::~MainWindow()
 {
@@ -898,16 +903,25 @@ void MainWindow::handlePeerFingerprint(const QString &fingerprint)
   }
 }
 
+bool MainWindow::maybeHideToTray()
+{
+  if (!Settings::value(Settings::Gui::CloseToTray).toBool()) {
+    return false;
+  }
+
+  if (Settings::value(Settings::Gui::CloseReminder).toBool()) {
+    messages::showCloseReminder(this);
+    Settings::setValue(Settings::Gui::CloseReminder, false);
+  }
+  Settings::setValue(Settings::Gui::WindowGeometry, geometry());
+  qDebug() << "hiding to tray";
+  hide();
+  return true;
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (Settings::value(Settings::Gui::CloseToTray).toBool() && event->spontaneous()) {
-    if (Settings::value(Settings::Gui::CloseReminder).toBool()) {
-      messages::showCloseReminder(this);
-      Settings::setValue(Settings::Gui::CloseReminder, false);
-    }
-    Settings::setValue(Settings::Gui::WindowGeometry, geometry());
-    qDebug() << "hiding to tray";
-    hide();
+  if (event->spontaneous() && maybeHideToTray()) {
     event->ignore();
     return;
   }
