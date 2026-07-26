@@ -122,6 +122,7 @@ private:
   void handlePeerFingerprint(const QString &fingerprint);
   void handleMissingKeyboardLayouts(const QString &layouts);
   void closeEvent(QCloseEvent *event) override;
+  bool maybeHideToTray();
   void secureSocket(bool secureSocket);
   void connectSlots();
   void handleLogLine(const QString &line);

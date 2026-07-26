@@ -8,9 +8,12 @@
 
 #include <QString>
 
+#include <functional>
+
 void requestOSXNotificationPermission();
 bool isOSXDevelopmentBuild();
 bool showOSXNotification(const QString &title, const QString &body);
 bool isOSXInterfaceStyleDark();
 void forceAppActive();
 void macOSNativeHide();
+void installQuitHandler(std::function<bool()> shouldQuit);
