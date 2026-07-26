@@ -112,7 +112,7 @@ private:
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
   // message handlers
-  bool onMouseMove();
+  bool onMouseMove(CGEventRef event);
   // mouse button handler.  pressed is true if this is a mousedown
   // event, false if it is a mouseup event.  macButton is the index
   // of the button pressed using the mac button mapping.
@@ -235,6 +235,9 @@ private:
   // mouse state
   mutable int32_t m_xCursor, m_yCursor;
   mutable bool m_cursorPosValid;
+
+  // mouse event number (needed for macOS 27)
+  uint32_t m_mouseEventNumber = 0;
 
   /* FIXME: this data structure is explicitly marked mutable due
      to a need to track the state of buttons since the remote

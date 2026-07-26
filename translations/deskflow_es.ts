@@ -388,7 +388,7 @@ Do you want to connect to the server?
     <message>
         <source>&amp;Open %1</source>
         <extracomment>%1 will be the replaced with the appname</extracomment>
-        <translation type="unfinished">Abiert&amp;o %1</translation>
+        <translation>Abr&amp;ir %1</translation>
     </message>
     <message>
         <source>&amp;Preferences</source>

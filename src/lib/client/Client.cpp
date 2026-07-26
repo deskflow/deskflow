@@ -37,6 +37,19 @@
 // Client
 //
 
+Client::DisconnectRequest::DisconnectRequest(Kind kind, const char *message)
+    : m_kind(kind),
+      m_message(message != nullptr ? message : "")
+{
+}
+
+Client::DisconnectRequest::DisconnectRequest(deskflow::core::ConnectionRefusal reason, const char *message)
+    : m_kind(Kind::Refuse),
+      m_refusalReason(reason),
+      m_message(message != nullptr ? message : "")
+{
+}
+
 Client::Client(
     IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
     deskflow::Screen *screen
@@ -432,6 +445,9 @@ void Client::setupConnection()
 {
   assert(m_stream != nullptr);
 
+  m_events->addHandler(EventTypes::ClientDisconnectRequested, m_stream->getEventTarget(), [this](const auto &e) {
+    handleDisconnectRequested(e);
+  });
   m_events->addHandler(EventTypes::SocketDisconnected, m_stream->getEventTarget(), [this](const auto &) {
     handleDisconnected();
   });
@@ -483,6 +499,7 @@ void Client::cleanupConnecting()
 {
   if (m_stream != nullptr) {
     m_events->removeHandler(EventTypes::DataSocketConnected, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::DataSocketSecureConnected, m_stream->getEventTarget());
     m_events->removeHandler(EventTypes::DataSocketConnectionFailed, m_stream->getEventTarget());
   }
 }
@@ -496,6 +513,7 @@ void Client::cleanupConnection()
     m_events->removeHandler(StreamInputShutdown, m_stream->getEventTarget());
     m_events->removeHandler(StreamOutputShutdown, m_stream->getEventTarget());
     m_events->removeHandler(SocketDisconnected, m_stream->getEventTarget());
+    m_events->removeHandler(ClientDisconnectRequested, m_stream->getEventTarget());
     cleanupStream();
   }
 }
@@ -581,6 +599,21 @@ void Client::handleDisconnected()
   cleanupConnection();
   LOG_VERBOSE("disconnected");
   sendEvent(EventTypes::ClientDisconnected);
+}
+
+void Client::handleDisconnectRequested(const Event &event)
+{
+  const auto *request = static_cast<const DisconnectRequest *>(event.getDataObject());
+  if (request == nullptr) {
+    disconnect(nullptr);
+    return;
+  }
+
+  if (request->kind() == DisconnectRequest::Kind::Refuse) {
+    refuseConnection(request->refusalReason(), request->message());
+  } else {
+    disconnect(request->message());
+  }
 }
 
 void Client::handleShapeChanged()

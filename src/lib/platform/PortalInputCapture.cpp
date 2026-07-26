@@ -777,8 +777,43 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   const auto activeSides = m_screen->activeSides();
   using enum DirectionMask;
 
-  // May not correctly handle different sized screens
   auto zones = xdp_input_capture_session_get_zones(session);
+
+  // First pass: compute the bounding box (union) of all input-capture zones.
+  // A pointer barrier must lie on the outer boundary of the combined desktop and
+  // be adjacent to a single monitor edge. A barrier placed on an internal edge
+  // between two adjacent monitors is rejected by the portal ("adjacent to
+  // multiple monitor edges"), and a single rejected barrier fails the whole
+  // barrier set - so on a multi-monitor server input capture never engages.
+  gint unionLeft = 0;
+  gint unionTop = 0;
+  gint unionRight = 0;
+  gint unionBottom = 0;
+  bool boundsInit = false;
+  for (auto z = zones; z != nullptr; z = z->next) {
+    guint w;
+    guint h;
+    gint x;
+    gint y;
+    g_object_get(z->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr);
+    const gint right = x + static_cast<gint>(w);
+    const gint bottom = y + static_cast<gint>(h);
+    if (!boundsInit) {
+      unionLeft = x;
+      unionTop = y;
+      unionRight = right;
+      unionBottom = bottom;
+      boundsInit = true;
+    } else {
+      unionLeft = std::min(unionLeft, x);
+      unionTop = std::min(unionTop, y);
+      unionRight = std::max(unionRight, right);
+      unionBottom = std::max(unionBottom, bottom);
+    }
+  }
+
+  // Second pass: only add a barrier for a zone edge that is part of the outer
+  // boundary of the union (i.e. not an internal seam between two monitors).
   guint id = 0;
   while (zones != nullptr) {
     guint w;
@@ -789,19 +824,19 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
 
     LOG_DEBUG("input capture zone, %dx%d@%d,%d", w, h, x, y);
 
-    if (activeSides & static_cast<int>(LeftMask)) {
+    if ((activeSides & static_cast<int>(LeftMask)) && x == unionLeft) {
       addBarrier(++id, BarrierSide::Left, x, y, w, h);
     }
 
-    if (activeSides & static_cast<int>(RightMask)) {
+    if ((activeSides & static_cast<int>(RightMask)) && (x + static_cast<gint>(w)) == unionRight) {
       addBarrier(++id, BarrierSide::Right, x, y, w, h);
     }
 
-    if (activeSides & static_cast<int>(TopMask)) {
+    if ((activeSides & static_cast<int>(TopMask)) && y == unionTop) {
       addBarrier(++id, BarrierSide::Top, x, y, w, h);
     }
 
-    if (activeSides & static_cast<int>(BottomMask)) {
+    if ((activeSides & static_cast<int>(BottomMask)) && (y + static_cast<gint>(h)) == unionBottom) {
       addBarrier(++id, BarrierSide::Bottom, x, y, w, h);
     }
     zones = zones->next;

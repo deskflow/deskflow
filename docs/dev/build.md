@@ -6,7 +6,6 @@ To build Deskflow you will a minimum of:
     - [openssl] 3.0+
     - [libportal] 0.9.1+ (linux, bsd)
     - [libei] 1.3+ (linux, bsd)
-    - [google_test] ^
 
 > ^ Will be fetched if not found on the host system.
 
@@ -25,7 +24,7 @@ Deskflow supports the following CMake options:
 | BUILD_USER_DOCS          | Build user documentation                | DOXYGEN_FOUND      | `Doxygen` |
 | BUILD_DEV_DOCS           | Build development documentation         | OFF                | `Doxygen` |
 | BUILD_INSTALLER          | Build installers/packages               | ON                 | |
-| BUILD_TESTS              | Build unit tests and legacy tests       | ON                 | `gtest`|
+| BUILD_TESTS              | Build unit tests and legacy tests       | ON                 | |
 | BUILD_X11_SUPPORT        | Build X11 backend (Linux and BSD only)  | ON                 | `x11 libs`|
 | BUILD_OSX_BUNDLE         | Build an app bundle (macOS only)        | ON                 | |
 | ENABLE_COVERAGE          | Enable test coverage                    | OFF                | `gcov` |
@@ -105,6 +104,5 @@ After configuring you should be able to run make to build all targets.
 [doxygen]:http://www.stack.nl/~dimitri/doxygen/
 [cmake]:https://cmake.org/
 [openssl]:https://www.openssl.org/
-[google_test]:https://github.com/google/googletest
 [libei]:https://gitlab.freedesktop.org/libinput/libei
 [libportal]:https://github.com/flatpak/libportal

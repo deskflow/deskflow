@@ -41,6 +41,10 @@ enum class EventTypes : uint32_t
   */
   ClientDisconnected,
 
+  /** Internal client event used to defer disconnect cleanup until the current callback has returned.
+   */
+  ClientDisconnectRequested,
+
   /// A stream sends this event when \c read() will return with data.
   StreamInputReady,
 

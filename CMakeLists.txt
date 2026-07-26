@@ -16,6 +16,24 @@ if(POLICY CMP0156)
   cmake_policy(SET CMP0156 NEW)
 endif()
 
+# Use native paths to collect dependents on windows
+if(POLICY CMP0207)
+  cmake_policy(SET CMP0207 NEW)
+endif()
+
+#Project level options
+option(BUILD_INSTALLER "Build installer" ON)
+option(ENABLE_COVERAGE "Enable test coverage" OFF)
+if(UNIX)
+  if(APPLE)
+    option(BUILD_OSX_BUNDLE "Build mac os bundle" ON)
+  else()
+    option(BUILD_X11_SUPPORT "Build with x11 support" ON)
+  endif()
+elseif(WIN32)
+  option (VCPKG_QT "Use Qt from VCPKG" OFF)
+endif()
+
 # Set CXX Requirements
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -65,7 +83,6 @@ endif()
 
 #generate vcpkg file if needed
 if(WIN32)
-    option (VCPKG_QT "Use Qt from VCPKG" OFF)
     if(VCPKG_QT)
         set(QT_LIBS ", \"qttranslations\", \"qtsvg\"")
     endif()
@@ -153,15 +170,49 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 # prevents issues when used with glib for libportal
 add_definitions(-DQT_NO_KEYWORDS)
 
-#Options for Linux platform support
+#Find and setup Qt
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
 if(UNIX AND NOT APPLE)
-  option(BUILD_X11_SUPPORT "Build with x11 support" ON)
-elseif (APPLE)
-  option(BUILD_OSX_BUNDLE "Build mac os bundle" ON)
+    find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus Xml)
 endif()
+
+# Define the location of Qt deployment tool
+if(WIN32)
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND VCPKG_QT)
+    set(DEPLOY_TOOL windeployqt.debug.bat)
+  else()
+    set(DEPLOY_TOOL windeployqt)
+  endif()
+elseif(APPLE)
+    set(DEPLOY_TOOL macdeployqt)
+endif()
+
+if (WIN32 OR APPLE)
+  find_program(DEPLOYQT ${DEPLOY_TOOL})
+  if(DEPLOYQT STREQUAL "DEPLOYQT-NOTFOUND")
+    message(FATAL_ERROR "Unable to locate the Qt Deploy Tool: \"${DEPLOY_TOOL}\"")
+  endif()
+  unset(DEPLOY_TOOL)
+endif()
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+message(STATUS "Qt version: ${Qt6_VERSION}")
 
 include(cmake/Libraries.cmake)
 configure_libs()
+
+if(ENABLE_COVERAGE)
+  message(STATUS "Enabling code coverage")
+  include(cmake/CodeCoverage.cmake)
+  append_coverage_compiler_flags()
+  # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
+  # > Got negative hit value in gcov line 'branch  2 taken -1' caused by a bug in gcov tool
+  # Bug report: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68080
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
+endif()
 
 if(BUILD_OSX_BUNDLE AND APPLE_CODESIGN_DEV)
   include(cmake/MacCodesign.cmake)
@@ -190,7 +241,6 @@ add_subdirectory(translations)
 
 add_subdirectory(src)
 
-option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
 endif()

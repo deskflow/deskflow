@@ -29,31 +29,14 @@ runs:
       shell: bash
       continue-on-error: true
 
-    - name: Legacy Tests
-      id: legacy-tests
-      env:
-        QT_QPA_PLATFORM: offscreen
-      run: |
-        ./${{ inputs.bin-dir }}/legacytests
-        result=$?
-
-        if [ $result -ne 0 ]; then
-          echo "Legacy tests failed with code: $result" >> $GITHUB_STEP_SUMMARY
-        fi
-      shell: bash
-      continue-on-error: true
-
     - name: Get test results
       id: results
       run: |
         pass="✅ Pass"
         fail="❌ Fail"
         unit_tests_outcome="${{ steps.unit-tests.outcome }}"
-        legacy_tests_outcome="${{ steps.legacy-tests.outcome }}"
         unit_tests=$( [ "$unit_tests_outcome" = "success" ] && echo $pass || echo $fail )
-        legacy_tests=$( [ "$legacy_tests_outcome" = "success" ] && echo $pass || echo $fail )
         echo "unit-tests=$unit_tests" >> $GITHUB_OUTPUT
-        echo "legacy-tests=$legacy_tests" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Summary row
@@ -64,7 +47,6 @@ runs:
         row=""
         row+="| ${{ inputs.job }} "
         row+="| ${{ steps.results.outputs.unit-tests }} "
-        row+="| ${{ steps.results.outputs.legacy-tests }} "
         echo "$row" > $file
 
         echo "file=$file" > $GITHUB_OUTPUT
@@ -77,7 +59,7 @@ runs:
         path: ${{ steps.row.outputs.file }}
 
     - name: Check test outcome
-      if: (steps.unit-tests.outcome != 'success' || steps.legacy-tests.outcome != 'success')
+      if: (steps.unit-tests.outcome != 'success')
       run: |
         echo "Tests failed"
         exit 1

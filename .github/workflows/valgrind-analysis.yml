@@ -31,10 +31,10 @@ jobs:
         run: cmake --build build -j8
 
       - name: Valgrind unit tests
-        id: legacytests
+        id: unittests
         uses: ./.github/actions/run-valgrind
         with:
-          executable: ./build/bin/legacytests
+          executable: ctest --test-dir  "build/src/unittests"
 
       - name: Set job summary
         run: |
@@ -42,9 +42,9 @@ jobs:
           message=$(cat <<EOF
           ## Valgrind summary
 
-          ### legacytests Unit tests
+          ### Unit tests
           $backticks
-          ${{ steps.legacytests.outputs.summary }}
+          ${{ steps.unittests.outputs.summary }}
           $backticks
           EOF
           )
