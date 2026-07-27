@@ -78,7 +78,7 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, uint32_t sequence)
 
 TransferState ClipboardChunk::assemble(
     deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence,
-    ClipboardChunkAssemblyState &state, size_t maxDataSize
+    ClipboardChunkAssemblyState &state, size_t maxDataSize, bool discardOversized
 )
 {
   using enum TransferState;
@@ -111,15 +111,18 @@ TransferState ClipboardChunk::assemble(
 
     clearCachedData(dataCached);
     state.expectedSize = static_cast<size_t>(expected);
+    state.receivedSize = 0;
     state.active = true;
+    state.discarding = state.expectedSize > maxDataSize;
 
-    if (state.expectedSize > maxDataSize) {
+    if (state.discarding && !discardOversized) {
       LOG_ERR("clipboard size exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
       reset();
       return Error;
     }
 
-    LOG_DEBUG("start receiving clipboard data, expected size=%zu", state.expectedSize);
+    if (!state.discarding)
+      LOG_DEBUG("start receiving clipboard data, expected size=%zu", state.expectedSize);
     return Started;
   } else if (mark == ChunkType::DataChunk) {
     if (!state.active) {
@@ -128,16 +131,18 @@ TransferState ClipboardChunk::assemble(
       return Error;
     }
 
-    if (wouldExceed(dataCached.size(), data.size(), state.expectedSize)) {
+    if (wouldExceed(state.receivedSize, data.size(), state.expectedSize)) {
       LOG_ERR(
-          "clipboard size exceeds declared, size: %zu, declared: %zu", dataCached.size() + data.size(),
+          "clipboard size exceeds declared, size: %zu, declared: %zu", state.receivedSize + data.size(),
           state.expectedSize
       );
       reset();
       return Error;
     }
 
-    dataCached.append(data);
+    state.receivedSize += data.size();
+    if (!state.discarding)
+      dataCached.append(data);
     return TransferState::InProgress;
   } else if (mark == ChunkType::DataEnd) {
     if (!state.active) {
@@ -148,10 +153,15 @@ TransferState ClipboardChunk::assemble(
 
     state.active = false;
 
-    if (state.expectedSize != dataCached.size()) {
-      LOG_ERR("corrupted clipboard data, expected size=%zu actual size=%zu", state.expectedSize, dataCached.size());
+    if (state.expectedSize != state.receivedSize) {
+      LOG_ERR("corrupted clipboard data, expected size=%zu actual size=%zu", state.expectedSize, state.receivedSize);
       reset();
       return Error;
+    }
+
+    if (state.discarding) {
+      reset();
+      return Skipped;
     }
     return Finished;
   }

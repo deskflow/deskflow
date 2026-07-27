@@ -175,6 +175,7 @@ enum class TransferState : uint8_t
   Started,    ///< Reception started
   InProgress, ///< Reception in progress
   Finished,   ///< Reception completed successfully
+  Skipped,    ///< Reception completed without retaining the data
   Error       ///< Reception failed with error
 };
 

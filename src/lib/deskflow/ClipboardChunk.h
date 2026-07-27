@@ -22,7 +22,9 @@ class IStream;
 struct ClipboardChunkAssemblyState
 {
   size_t expectedSize = 0;
+  size_t receivedSize = 0;
   bool active = false;
+  bool discarding = false;
 };
 
 class ClipboardChunk : public Chunk
@@ -36,7 +38,7 @@ public:
 
   static TransferState assemble(
       deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence,
-      ClipboardChunkAssemblyState &state, size_t maxDataSize
+      ClipboardChunkAssemblyState &state, size_t maxDataSize, bool discardOversized = false
   );
 
   static void send(deskflow::IStream *stream, void *data);
@@ -44,5 +46,10 @@ public:
   static size_t getExpectedSize(const ClipboardChunkAssemblyState &state)
   {
     return state.expectedSize;
+  }
+
+  static bool isDiscarding(const ClipboardChunkAssemblyState &state)
+  {
+    return state.discarding;
   }
 };

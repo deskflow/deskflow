@@ -545,14 +545,17 @@ void ServerProxy::setClipboard()
   // parse
   ClipboardID id;
   uint32_t seq;
+  const auto maximumSize = m_client->getMaximumClipboardReceiveSizeBytes();
 
-  auto r = ClipboardChunk::assemble(
-      m_stream, m_clipboardDataCached, id, seq, m_clipboardChunkState, m_client->getMaximumClipboardReceiveSizeBytes()
-  );
+  auto r = ClipboardChunk::assemble(m_stream, m_clipboardDataCached, id, seq, m_clipboardChunkState, maximumSize, true);
 
   if (r == TransferState::Started) {
     size_t size = ClipboardChunk::getExpectedSize(m_clipboardChunkState);
-    LOG_DEBUG("receiving clipboard %d size=%zu", id, size);
+    if (ClipboardChunk::isDiscarding(m_clipboardChunkState)) {
+      LOG_WARN("dropping oversize clipboard from server (size %zu > limit %zu), staying connected", size, maximumSize);
+    } else {
+      LOG_DEBUG("receiving clipboard %d size=%zu", id, size);
+    }
   } else if (r == TransferState::Finished) {
     LOG_DEBUG("received clipboard %d size=%zu", id, m_clipboardDataCached.size());
 
