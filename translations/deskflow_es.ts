@@ -182,6 +182,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Restablecer valores predeterminados</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestionado por su organización</translation>
+    </message>
+    <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Permite que el cliente reduzca la frecuencia con la que intenta reconectarse al servidor cuando los intentos de conexión fallan. El intervalo entre intentos de conexión comenzará en 1 segundo y podrá alcanzar un máximo de 5 minutos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
@@ -1090,6 +1094,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Busque un archivo de configuración</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestionado por su organización</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Activar el bloqueo del ordenador al iniciar</translation>
     </message>
@@ -1207,6 +1215,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Reset to default values</source>
         <translation type="unfinished">Restablecer valores predeterminados</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestionado por su organización</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>

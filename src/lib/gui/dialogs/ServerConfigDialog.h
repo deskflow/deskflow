@@ -91,6 +91,7 @@ protected:
 
 private:
   void loadFromConfig();
+  void applyManagedLocks();
   void initConnections() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";

@@ -16,6 +16,7 @@
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
+#include "gui/StyleUtils.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -433,6 +434,9 @@ void ServerConfigDialog::loadFromConfig()
   m_clipboardSize = Settings::value(Settings::Server::ClipboardSize).toUInt();
   ui->sbClipboardSizeLimit->setValue(m_clipboardSize);
 
+  // Runs last so a managed control cannot be re-enabled by the code above
+  applyManagedLocks();
+
   ui->listHotkeys->clear();
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->listHotkeys->addItem(hotkey.text());
@@ -451,6 +455,29 @@ void ServerConfigDialog::loadFromConfig()
   } else {
     server->markAsServer();
   }
+}
+
+void ServerConfigDialog::applyManagedLocks()
+{
+  // Each control records the setting it edits so the lock check stays generic.
+  ui->rbProtocolSynergy->setProperty("managedSetting", Settings::Server::Protocol);
+  ui->rbProtocolBarrier->setProperty("managedSetting", Settings::Server::Protocol);
+  ui->cbHeartbeat->setProperty("managedSetting", Settings::Server::EnableHeatbeat);
+  ui->sbHeartbeat->setProperty("managedSetting", Settings::Server::Heartbeat);
+  ui->cbRelativeMouseMoves->setProperty("managedSetting", Settings::Server::RelativeMouseMoves);
+  ui->cbWin32KeepForeground->setProperty("managedSetting", Settings::Server::Win32KeepForeground);
+  ui->cbSwitchDelay->setProperty("managedSetting", Settings::Server::EnableSwitchDelay);
+  ui->sbSwitchDelay->setProperty("managedSetting", Settings::Server::SwitchDelay);
+  ui->cbSwitchDoubleTap->setProperty("managedSetting", Settings::Server::EnableSwitchDoubleTap);
+  ui->sbSwitchDoubleTap->setProperty("managedSetting", Settings::Server::SwitchDoubleTap);
+  ui->groupExternalConfig->setProperty("managedSetting", Settings::Server::ExternalConfig);
+  ui->lineConfigFile->setProperty("managedSetting", Settings::Server::ExternalConfigFile);
+  ui->cbDefaultLockToComputerState->setProperty("managedSetting", Settings::Server::DefaultLockToComputerState);
+  ui->cbDisableLockToComputer->setProperty("managedSetting", Settings::Server::DisableLockToComputer);
+  ui->cbEnableClipboard->setProperty("managedSetting", Settings::Server::EnableClipboard);
+  ui->sbClipboardSizeLimit->setProperty("managedSetting", Settings::Server::ClipboardSize);
+
+  deskflow::gui::applyManagedLocks(this, tr("Managed by your organization"));
 }
 
 void ServerConfigDialog::initConnections() const

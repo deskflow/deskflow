@@ -14,6 +14,7 @@
 #include "common/I18N.h"
 #include "common/Settings.h"
 #include "gui/Messages.h"
+#include "gui/StyleUtils.h"
 #include "gui/TlsUtility.h"
 #include "gui/core/NetworkMonitor.h"
 
@@ -402,6 +403,41 @@ void SettingsDialog::updateControls()
   ui->widgetLogFilename->setEnabled(writable && logToFile);
 
   updateTlsControls();
+
+  // Runs last so a managed control cannot be re-enabled by the code above
+  applyManagedLocks();
+}
+void SettingsDialog::applyManagedLocks()
+{
+  // Each control records the setting it edits so the lock check stays generic.
+  // Paired radio buttons share a key so both halves lock together.
+  ui->sbPort->setProperty("managedSetting", Settings::Core::Port);
+  ui->comboInterface->setProperty("managedSetting", Settings::Core::Interface);
+  ui->comboLogLevel->setProperty("managedSetting", Settings::Log::Level);
+  ui->groupLogToFile->setProperty("managedSetting", Settings::Log::ToFile);
+  ui->lineLogFilename->setProperty("managedSetting", Settings::Log::File);
+  ui->cbGuiDebug->setProperty("managedSetting", Settings::Log::GuiDebug);
+  ui->cbElevateDaemon->setProperty("managedSetting", Settings::Daemon::Elevate);
+  ui->rbAutoHide->setProperty("managedSetting", Settings::Gui::Autohide);
+  ui->rbShowOnStart->setProperty("managedSetting", Settings::Gui::Autohide);
+  ui->rbCloseToTray->setProperty("managedSetting", Settings::Gui::CloseToTray);
+  ui->rbExitOnClose->setProperty("managedSetting", Settings::Gui::CloseToTray);
+  ui->rbIconMono->setProperty("managedSetting", Settings::Gui::SymbolicTrayIcon);
+  ui->rbIconColorful->setProperty("managedSetting", Settings::Gui::SymbolicTrayIcon);
+  ui->cbAutoUpdate->setProperty("managedSetting", Settings::Gui::AutoUpdateCheck);
+  ui->cbShowVersion->setProperty("managedSetting", Settings::Gui::ShowVersionInTitle);
+  ui->cbPreventSleep->setProperty("managedSetting", Settings::Core::PreventSleep);
+  ui->comboLanguage->setProperty("managedSetting", Settings::Core::Language);
+  ui->cbRunEnterCommand->setProperty("managedSetting", Settings::Core::EnableEnterCommand);
+  ui->cbRunExitCommand->setProperty("managedSetting", Settings::Core::EnableExitCommand);
+  ui->lineCommandEnter->setProperty("managedSetting", Settings::Core::ScreenEnterCommand);
+  ui->lineCommandExit->setProperty("managedSetting", Settings::Core::ScreenExitCommand);
+  ui->groupSecurity->setProperty("managedSetting", Settings::Security::TlsEnabled);
+  ui->lineTlsCertPath->setProperty("managedSetting", Settings::Security::Certificate);
+  ui->comboTlsKeyLength->setProperty("managedSetting", Settings::Security::KeySize);
+  ui->cbRequireClientCert->setProperty("managedSetting", Settings::Security::CheckPeers);
+
+  deskflow::gui::applyManagedLocks(this, tr("Managed by your organization"));
 }
 
 void SettingsDialog::updateRequestedKeySize() const

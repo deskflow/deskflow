@@ -62,6 +62,8 @@ private:
    */
   void load();
 
+  void applyManagedLocks();
+
   /**
    * @brief Set the gui values to the defalut values for all client settings
    */
