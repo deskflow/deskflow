@@ -29,6 +29,7 @@ namespace deskflow {
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class PortalServerClipboard;
 class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
@@ -84,7 +85,13 @@ public:
   // Send clipboard event (needed by PortalInputCapture)
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
-  // Local clipboard cache (used by PortalRemoteDesktop to land selection reads)
+  //! The screen's one clipboard cache
+  /*!
+  Owned by the screen rather than by any portal session: sessions are torn down
+  and recreated while the screen lives on (see EI_EVENT_DISCONNECT), and the
+  cached selection has to survive that. Portal sessions read and write it
+  through PortalClipboard.
+  */
   EiClipboard *getClipboardCache() const
   {
     return m_clipboard;
@@ -124,6 +131,12 @@ private:
 
   void handleConnectedToEisEvent(const Event &event);
   void handlePortalSessionClosed();
+  void handlePortalClipboardUnavailable();
+
+  /// True only once the optional server-side clipboard portal session is live.
+  /// While this is false the server simply does not share its clipboard, and
+  /// input capture is unaffected either way.
+  bool serverClipboardPortalReady() const;
   void ensureEmulating() const;
   void stopEmulating() const;
   void cancelIdleEmulationTimer() const;
@@ -188,6 +201,12 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+
+  // Server only, and only once the input capture session has reported that it
+  // carries no clipboard: a clipboard-only remote desktop session that fills
+  // m_clipboard while m_portalInputCapture keeps doing the input. It owns no
+  // part of the input path.
+  PortalServerClipboard *m_portalServerClipboard = nullptr;
 
   struct HotKeyItem
   {

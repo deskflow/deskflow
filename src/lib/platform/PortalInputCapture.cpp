@@ -12,7 +12,6 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "deskflow/ClipboardTypes.h"
-#include "platform/EiClipboard.h"
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
 #include "platform/PortalClipboard.h"
@@ -175,9 +174,8 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
       m_portalVersion(0),
       m_portal{xdp_portal_new()}
 {
-  // Create clipboard for primary clipboard ID
-  m_clipboard = new EiClipboard(kClipboardClipboard);
-
+  // No clipboard cache of our own. EiScreen owns the one cache, so it survives
+  // this object being destroyed and recreated on an EIS disconnect.
   m_glibMainLoop = g_main_loop_new(nullptr, true);
 
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
@@ -222,17 +220,15 @@ PortalInputCapture::~PortalInputCapture()
   }
   m_barriers.clear();
   g_object_unref(m_portal);
-
-  delete m_clipboard;
 }
 
-EiClipboard *PortalInputCapture::getClipboard(ClipboardID id) const
+bool PortalInputCapture::isClipboardEnabled() const
 {
-  // Currently only supporting primary clipboard
-  if (id == kClipboardClipboard) {
-    return m_clipboard;
-  }
-  return nullptr;
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  return m_session != nullptr && xdp_session_is_clipboard_enabled(xdp_input_capture_session_get_session(m_session));
+#else
+  return false;
+#endif
 }
 
 gboolean PortalInputCapture::timeoutHandler() const
@@ -253,7 +249,7 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
 void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  PortalClipboard::claimOwnership(m_clipboard, session);
+  PortalClipboard::claimOwnership(m_screen->getClipboardCache(), session);
 #endif
 }
 
@@ -269,7 +265,7 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
     return;
   }
 
-  if (PortalClipboard::readSelectionIntoCache(m_clipboard, session, mimeTypes, maxBytes))
+  if (PortalClipboard::readSelectionIntoCache(m_screen->getClipboardCache(), session, mimeTypes, maxBytes))
     m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 #else
   (void)session;
@@ -283,7 +279,7 @@ void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char
     LOG_DEBUG("skipping clipboard selection transfer, clipboard is active");
     return;
   }
-  PortalClipboard::serveSelectionTransfer(m_clipboard, session, mimeType, serial);
+  PortalClipboard::serveSelectionTransfer(m_screen->getClipboardCache(), session, mimeType, serial);
 #else
   (void)session;
   (void)mimeType;
@@ -297,18 +293,30 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   XdpSession *parentSession = xdp_input_capture_session_get_session(session);
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (!xdp_session_is_clipboard_enabled(parentSession) && m_portalVersion > 1) {
-    // Restored sessions can pre-date clipboard support, leaving the channel
-    // disabled even though we requested it. Drop the saved token and recreate
-    // the session from scratch so the user gets a fresh permission dialog.
-    LOG_WARN("clipboard not enabled on session, discarding restore token to force a fresh session");
+  if (!xdp_session_is_clipboard_enabled(parentSession)) {
+    if (m_portalVersion > 1 && !m_discardedClipboardToken) {
+      // Restored sessions can pre-date clipboard support, leaving the channel
+      // disabled even though we requested it. Drop the saved token and recreate
+      // the session from scratch so the user gets a fresh permission dialog.
+      // Worth doing exactly once: a portal that simply never grants a clipboard
+      // would otherwise have us rebuilding the session forever, popping a
+      // consent dialog every time round.
+      LOG_WARN("clipboard not enabled on session, discarding restore token to force a fresh session");
+      m_discardedClipboardToken = true;
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
-    Settings::setValue(Settings::Server::XdpRestoreToken, QString());
+      Settings::setValue(Settings::Server::XdpRestoreToken, QString());
 #endif
-    g_object_unref(m_session);
-    m_session = nullptr;
-    g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
-    return;
+      g_object_unref(m_session);
+      m_session = nullptr;
+      g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
+      return;
+    }
+
+    // The clipboard cannot ride on this session. Say so, so the screen can open
+    // a session that does carry one. Input capture continues either way; this
+    // is a notification, not a failure.
+    LOG_DEBUG("input capture portal version %d provides no clipboard on this session", m_portalVersion);
+    m_events->addEvent(Event(EventTypes::PortalClipboardUnavailable, m_screen->getEventTarget()));
   }
 #endif
 
@@ -736,9 +744,23 @@ void PortalInputCapture::handleActivated(
   m_isActive = true;
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (m_session) {
+  // Only touch the clipboard here if the portal actually put one on THIS
+  // session. Two reasons, both load-bearing.
+  //
+  // 1. The unconditional ClipboardGrabbed that used to sit on the next line
+  //    fired on every barrier crossing, before anything had been read. On a
+  //    session with no clipboard the cache is always empty, so the server
+  //    marshalled a 4-byte zero-format clipboard and broadcast it to every
+  //    client, wiping them. That is the bug this patch exists to fix.
+  // 2. The reads below are synchronous D-Bus calls. Screen switching is the hot
+  //    path of the whole application and must not block on them.
+  //
+  // When this session has no clipboard, PortalServerClipboard holds a separate
+  // remote desktop session that keeps the screen's cache up to date from the
+  // portal's own signals, and posts ClipboardGrabbed itself when there is
+  // something real to send.
+  if (isClipboardEnabled()) {
     LOG_DEBUG("reading clipboard selection on activation");
-    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 
     XdpSession *session = xdp_input_capture_session_get_session(m_session);
     const char **mimeTypes = xdp_session_get_selection_mime_types(session);
@@ -753,8 +775,6 @@ void PortalInputCapture::handleActivated(
 
     claimClipboardOwnership(session);
     LOG_DEBUG("activation clipboard handling complete");
-  } else {
-    LOG_WARN("input capture activated without a session, skipping clipboard read");
   }
 #endif
 }

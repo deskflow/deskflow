@@ -238,5 +238,10 @@ enum class EventTypes : uint32_t
 
   /// Stop libei
   EISessionClosed,
+
+  /// The portal session that carries input cannot also carry the clipboard, so
+  /// the screen has to open a session that can. Posted by PortalInputCapture on
+  /// its glib thread, handled by EiScreen on the event queue thread.
+  PortalClipboardUnavailable,
 };
 } // namespace deskflow

@@ -24,16 +24,21 @@
 
 namespace deskflow {
 
-class EiClipboard;
-
 class PortalInputCapture
 {
 public:
   PortalInputCapture(EiScreen *screen, IEventQueue *events);
   ~PortalInputCapture();
 
-  // Get the clipboard for the specified ID
-  EiClipboard *getClipboard(ClipboardID id) const;
+  //! Whether the portal actually put a clipboard channel on this session
+  /*!
+  The input capture portal only offers one from version 2 onwards, and only if
+  the compositor implements it. xdg-desktop-portal-gnome does not: it accepts
+  RequestClipboard on remote desktop sessions only. When this returns false this
+  class does no clipboard work at all, and EiScreen opens a separate
+  clipboard-only remote desktop session instead.
+  */
+  bool isClipboardEnabled() const;
   void enable();
   void disable();
   void release();
@@ -167,11 +172,12 @@ private:
   bool m_enabled = false;
   bool m_isActive = false;
   std::uint32_t m_activationId = 0;
+  /// Guards against looping forever on a portal that keeps handing us a session
+  /// with no clipboard: the restore token is discarded at most once.
+  bool m_discardedClipboardToken = false;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
   std::vector<BarrierInfo> m_barrierInfo;
-
-  EiClipboard *m_clipboard = nullptr;
 };
 
 } // namespace deskflow

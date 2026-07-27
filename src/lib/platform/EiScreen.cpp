@@ -20,6 +20,9 @@
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include "platform/PortalServerClipboard.h"
+#endif
 
 #include <algorithm>
 #include <cmath>
@@ -47,6 +50,12 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
 {
   initEi();
   m_keyState = new EiKeyState(this, events);
+
+  // One clipboard cache per screen, for every backend. The portal sessions that
+  // fill it get torn down and recreated while the screen lives on, so the cache
+  // cannot belong to any of them.
+  m_clipboard = new EiClipboard(kClipboardClipboard);
+
   // install event handlers
   m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
     handleSystemEvent(e);
@@ -57,15 +66,22 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
+      // A primary screen relays input over an input capture session. That
+      // session can only carry the clipboard from input capture version 2
+      // onwards, and xdg-desktop-portal-gnome does not offer one on it at all.
+      // So wait for the session to report what it got, and only then open a
+      // clipboard-only remote desktop session alongside it. Doing it lazily
+      // rather than unconditionally means a future portal that does grant an
+      // input capture clipboard gets no second session and no second dialog.
+      m_events->addHandler(EventTypes::PortalClipboardUnavailable, getEventTarget(), [this](const auto &) {
+        handlePortalClipboardUnavailable();
+      });
       m_portalInputCapture = new PortalInputCapture(this, m_events);
-      // Portal input capture manages its own clipboard
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
       });
       m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
-      // Create clipboard for remote desktop (secondary screen)
-      m_clipboard = new EiClipboard(kClipboardClipboard);
     }
   } else {
     // Note: socket backend does not support reconnections
@@ -73,8 +89,6 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       LOG_ERR("ei init error: %s", strerror(-rc));
       throw std::runtime_error("failed to init ei context");
     }
-    // Create clipboard for socket backend
-    m_clipboard = new EiClipboard(kClipboardClipboard);
   }
 
   // disable sleep if the flag is set
@@ -87,16 +101,56 @@ EiScreen::~EiScreen()
 {
   m_events->adoptBuffer(nullptr);
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
+  // Deregister before anything below is torn down: a PortalClipboardUnavailable
+  // still sitting in the queue must not re-enter a half-destroyed screen and
+  // build a fresh portal session on the way out. Safe to call when it was never
+  // registered.
+  m_events->removeHandler(EventTypes::PortalClipboardUnavailable, getEventTarget());
 
   cancelIdleEmulationTimer();
 
   cleanupEi();
 
   delete m_keyState;
-  delete m_clipboard;
 
+  // Every portal object runs a glib thread that reads and writes m_clipboard,
+  // and every one of their destructors joins that thread. They all have to be
+  // gone before the cache they use is freed.
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  delete m_portalServerClipboard;
+  m_portalServerClipboard = nullptr;
+#endif
   delete m_portalRemoteDesktop;
   delete m_portalInputCapture;
+
+  delete m_clipboard;
+}
+
+bool EiScreen::serverClipboardPortalReady() const
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  return m_portalServerClipboard != nullptr && m_portalServerClipboard->isReady();
+#else
+  return false;
+#endif
+}
+
+void EiScreen::handlePortalClipboardUnavailable()
+{
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  // Runs on the event queue thread, which is the same thread ~EiScreen runs on,
+  // so m_portalServerClipboard is only ever touched from one thread.
+  if (m_portalServerClipboard) {
+    return;
+  }
+
+  if (!PortalServerClipboard::isEnabled()) {
+    return;
+  }
+
+  LOG_DEBUG("input capture session carries no clipboard, opening a clipboard-only remote desktop session");
+  m_portalServerClipboard = new PortalServerClipboard(this);
+#endif
 }
 
 void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
@@ -172,17 +226,11 @@ void *EiScreen::getEventTarget() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  // If using portal input capture, get clipboard from there
-  if (m_portalInputCapture) {
-    const auto sourceClipboard = m_portalInputCapture->getClipboard(id);
-    if (!sourceClipboard) {
-      return false;
-    }
-    return IClipboard::copy(clipboard, sourceClipboard);
-  }
-
-  // Otherwise use our own clipboard
-  if (!m_clipboard) {
+  // Wayland has no equivalent of the X11 primary selection, so the portal only
+  // ever hands us the system clipboard. Serving any other id out of this one
+  // cache lets a peer that does have a primary selection - a macOS or Windows
+  // client - round-trip its id 1 through it and clobber it.
+  if (!clipboard || !m_clipboard || id != m_clipboard->getID()) {
     return false;
   }
 
@@ -445,31 +493,32 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  if (!clipboard) {
+  // See getClipboard(): only the system clipboard exists on this backend.
+  if (!clipboard || !m_clipboard || id != m_clipboard->getID()) {
     return false;
   }
 
-  // If using portal input capture, set clipboard there
-  if (m_portalInputCapture) {
-    IClipboard *targetClipboard = m_portalInputCapture->getClipboard(id);
-    if (!targetClipboard) {
-      return false;
-    }
-    return IClipboard::copy(targetClipboard, clipboard);
-  }
-
-  // Otherwise use our own clipboard
-  if (!m_clipboard) {
+  if (!IClipboard::copy(m_clipboard, clipboard)) {
     return false;
   }
 
-  bool ok = IClipboard::copy(m_clipboard, clipboard);
+  // Tell the compositor we now own the local selection, so that a local paste
+  // can reach the bytes a remote peer just sent us. Only a remote desktop
+  // portal session can do that. On a secondary screen that is the session we
+  // already relay input over. On a primary screen it is the clipboard-only
+  // sidecar, and while that is not ready this is simply a no-op.
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  if (serverClipboardPortalReady()) {
+    m_portalServerClipboard->claimClipboard();
+    return true;
+  }
+#endif
 
-  if (ok && m_portalRemoteDesktop && id == kClipboardClipboard) {
+  if (m_portalRemoteDesktop) {
     m_portalRemoteDesktop->claimClipboard();
   }
 
-  return ok;
+  return true;
 }
 
 void EiScreen::checkClipboards()

@@ -121,6 +121,11 @@ public:
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
+    // Restore token for the server's clipboard-only remote desktop session.
+    // Deliberately distinct from XdpRestoreToken (the input capture session on
+    // the same machine) and from Client::XdpRestoreToken (the client's remote
+    // desktop session), because one machine can be configured as both.
+    inline static const auto XdpClipboardRestoreToken = QStringLiteral("server/xdpClipboardRestoreToken");
   };
 
   struct Screen
@@ -310,6 +315,7 @@ private:
     , Settings::Server::SwitchDoubleTap
     , Settings::Server::Win32KeepForeground
     , Settings::Server::XdpRestoreToken
+    , Settings::Server::XdpClipboardRestoreToken
   };
 
   // When checking the default values this list contains the ones that default to false.
