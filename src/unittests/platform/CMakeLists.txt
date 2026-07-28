@@ -25,6 +25,16 @@ elseif(APPLE)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(UNIX)
+  if(LIBEI_FOUND)
+    create_test(
+      NAME EiKeyStateTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE EiKeyStateTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
+  endif()
+
   if (BUILD_X11_SUPPORT)
     create_test(
       NAME XWindowsClipboardTests

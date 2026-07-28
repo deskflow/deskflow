@@ -43,7 +43,7 @@ protected:
   void fakeKey(const Keystroke &keystroke) override;
 
 private:
-  std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn) const;
+  std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn, bool mapMod2ToNumLock = false) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
   EiScreen *m_screen = nullptr;
