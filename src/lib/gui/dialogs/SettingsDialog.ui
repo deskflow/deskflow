@@ -841,6 +841,16 @@
          <item row="1" column="1">
           <widget class="QLineEdit" name="lineCommandExit"/>
          </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QCheckBox" name="cbSwitchToAsciiOnLeave">
+           <property name="toolTip">
+            <string>When this computer is the server, switch its keyboard to a plain ASCII layout (e.g. ABC) when control moves to another computer, and restore the previous input source when control returns. Helps when an input method (Korean, Japanese, Chinese) would otherwise swallow keystrokes meant for the client.</string>
+           </property>
+           <property name="text">
+            <string>Switch away from input method (IME) when leaving (restore on return)</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>

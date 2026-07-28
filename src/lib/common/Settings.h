@@ -119,6 +119,7 @@ public:
     inline static const auto RelativeMouseMoves = QStringLiteral("server/relativeMouseMoves");
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
+    inline static const auto SwitchToAsciiOnLeave = QStringLiteral("server/switchToAsciiOnLeave");
     inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
@@ -308,6 +309,7 @@ private:
     , Settings::Server::RelativeMouseMoves
     , Settings::Server::SwitchDelay
     , Settings::Server::SwitchDoubleTap
+    , Settings::Server::SwitchToAsciiOnLeave
     , Settings::Server::Win32KeepForeground
     , Settings::Server::XdpRestoreToken
   };
@@ -335,6 +337,7 @@ private:
     , Settings::Server::EnableSwitchDoubleTap
     , Settings::Server::ExternalConfig
     , Settings::Server::RelativeMouseMoves
+    , Settings::Server::SwitchToAsciiOnLeave
   };
 
   // When checking the default values this list contains the ones that default to true.
