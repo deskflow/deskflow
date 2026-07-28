@@ -165,6 +165,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QPushButton" name="btnClearServerHistory">
+     <property name="text">
+      <string>Clear Server History</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Orientation::Horizontal</enum>
