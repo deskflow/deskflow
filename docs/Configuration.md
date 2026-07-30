@@ -103,7 +103,6 @@ This section contains options used by the GUI it will begin with `[gui]`
 | closeToTray                    | `true` or `false` | When `true` the gui will run in the systemTray when its closed [default: true] |
 | logExpanded                    | `true` or `false` | Should the log section of the GUI be opened [default: false] |
 | symbolicTrayIcon               | `true` or `false` | When true use the monocolor (symbolic) icon false uses a colorful icon for the tray [default: true] |
-| windowGeometry                 | QRect             | Geometry of the window used to restore the window geometry after exiting the app |
 | showGenericClientFailureDialog | `true` or `false` | When `true` client connection errors will not show popup error messages [default: true] |
 | shownFirstConnectedMessage     | `true` or `false` | When `true` GUI has shown the user the message for connecting the first time [default: false] |
 | shownServerFirstStartMessage   | `true` or `false` | When `true` GUI has shown the user the Deskflow server is now running message [default: false] |
