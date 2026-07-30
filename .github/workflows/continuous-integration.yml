@@ -151,30 +151,30 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "fedora-43-x86_64"
+          - name: "fedora-stable-x86_64"
             runs-on: ubuntu-latest
-            container: fedora:43
+            container: fedora:latest
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "fedora-43-arm64"
+          - name: "fedora-stable-arm64"
             runs-on: ubuntu-24.04-arm
-            container: fedora:43
+            container: fedora:latest
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "fedora-44-x86_64"
+          - name: "fedora-rawhide-x86_64"
             runs-on: ubuntu-latest
-            container: fedora:44
+            container: fedora:rawhide
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "fedora-44-arm64"
+          - name: "fedora-rawhide-arm64"
             runs-on: ubuntu-24.04-arm
-            container: fedora:44
+            container: fedora:rawhide
             like: "fedora"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
