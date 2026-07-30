@@ -244,116 +244,114 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Settings::Client::DynamicConnectionRetry
-    , Settings::Client::InvertYScroll
-    , Settings::Client::InvertXScroll
-    , Settings::Client::LanguageSync
-    , Settings::Client::RemoteHost
-    , Settings::Client::YScrollScale
-    , Settings::Client::XScrollScale
-    , Settings::Client::XdpRestoreToken
-    , Settings::Core::CoreMode
-    , Settings::Core::Interface
-    , Settings::Core::LastVersion
-    , Settings::Core::Port
-    , Settings::Core::PreventSleep
-    , Settings::Core::ProcessMode
-    , Settings::Core::EnableEnterCommand
-    , Settings::Core::EnableExitCommand
-    , Settings::Core::ScreenEnterCommand
-    , Settings::Core::ScreenExitCommand
-    , Settings::Core::ScreenName
-    , Settings::Core::ComputerName
-    , Settings::Core::Display
-    , Settings::Core::UseHooks
-    , Settings::Core::Language
-    , Settings::Daemon::ConfigFile
-    , Settings::Daemon::Elevate
-    , Settings::Daemon::LogFile
-    , Settings::Daemon::LogLevel
-    , Settings::Log::File
-    , Settings::Log::Level
-    , Settings::Log::ToFile
-    , Settings::Log::GuiDebug
-    , Settings::Gui::Autohide
-    , Settings::Gui::AutoStartCore
-    , Settings::Gui::AutoUpdateCheck
-    , Settings::Gui::UpdateCheckUrl
-    , Settings::Gui::CloseReminder
-    , Settings::Gui::CloseToTray
-    , Settings::Gui::LogExpanded
-    , Settings::Gui::SymbolicTrayIcon
-    , Settings::Gui::WindowGeometry
-    , Settings::Gui::ShownFirstConnectedMessage
-    , Settings::Gui::ShownServerFirstStartMessage
-    , Settings::Gui::ShowVersionInTitle
-    , Settings::Gui::IgnoreMissingKeyboardLayouts
-    , Settings::Security::Certificate
-    , Settings::Security::CheckPeers
-    , Settings::Security::KeySize
-    , Settings::Security::TlsEnabled
-    , Settings::Server::ClipboardSize
-    , Settings::Server::DefaultLockToComputerState
-    , Settings::Server::DisableLockToComputer
-    , Settings::Server::EnableClipboard
-    , Settings::Server::EnableHeatbeat
-    , Settings::Server::EnableSwitchDelay
-    , Settings::Server::EnableSwitchDoubleTap
-    , Settings::Server::ExternalConfig
-    , Settings::Server::ExternalConfigFile
-    , Settings::Server::GridHeight
-    , Settings::Server::GridWidth
-    , Settings::Server::Heartbeat
-    , Settings::Server::Protocol
-    , Settings::Server::RelativeMouseMoves
-    , Settings::Server::SwitchDelay
-    , Settings::Server::SwitchDoubleTap
-    , Settings::Server::Win32KeepForeground
-    , Settings::Server::XdpRestoreToken
+      Client::DynamicConnectionRetry
+    , Client::InvertYScroll
+    , Client::InvertXScroll
+    , Client::LanguageSync
+    , Client::RemoteHost
+    , Client::YScrollScale
+    , Client::XScrollScale
+    , Core::CoreMode
+    , Core::Interface
+    , Core::LastVersion
+    , Core::Port
+    , Core::PreventSleep
+    , Core::ProcessMode
+    , Core::EnableEnterCommand
+    , Core::EnableExitCommand
+    , Core::ScreenEnterCommand
+    , Core::ScreenExitCommand
+    , Core::ScreenName
+    , Core::ComputerName
+    , Core::Display
+    , Core::UseHooks
+    , Core::Language
+    , Daemon::ConfigFile
+    , Daemon::Elevate
+    , Daemon::LogFile
+    , Daemon::LogLevel
+    , Log::File
+    , Log::Level
+    , Log::ToFile
+    , Log::GuiDebug
+    , Gui::Autohide
+    , Gui::AutoStartCore
+    , Gui::AutoUpdateCheck
+    , Gui::UpdateCheckUrl
+    , Gui::CloseReminder
+    , Gui::CloseToTray
+    , Gui::LogExpanded
+    , Gui::SymbolicTrayIcon
+    , Gui::ShownFirstConnectedMessage
+    , Gui::ShownServerFirstStartMessage
+    , Gui::ShowVersionInTitle
+    , Gui::IgnoreMissingKeyboardLayouts
+    , Gui::WindowGeometry
+    , Security::Certificate
+    , Security::CheckPeers
+    , Security::KeySize
+    , Security::TlsEnabled
+    , Server::ClipboardSize
+    , Server::DefaultLockToComputerState
+    , Server::DisableLockToComputer
+    , Server::EnableClipboard
+    , Server::EnableHeatbeat
+    , Server::EnableSwitchDelay
+    , Server::EnableSwitchDoubleTap
+    , Server::ExternalConfig
+    , Server::ExternalConfigFile
+    , Server::GridHeight
+    , Server::GridWidth
+    , Server::Heartbeat
+    , Server::Protocol
+    , Server::RelativeMouseMoves
+    , Server::SwitchDelay
+    , Server::SwitchDoubleTap
+    , Server::Win32KeepForeground
   };
 
   // When checking the default values this list contains the ones that default to false.
   inline static const QStringList m_defaultFalseValues = {
-      Settings::Gui::Autohide
-    , Settings::Gui::AutoStartCore
-    , Settings::Gui::ShownFirstConnectedMessage
-    , Settings::Gui::ShownServerFirstStartMessage
-    , Settings::Gui::ShowVersionInTitle
-    , Settings::Gui::IgnoreMissingKeyboardLayouts
-    , Settings::Core::PreventSleep
-    , Settings::Core::EnableEnterCommand
-    , Settings::Core::EnableExitCommand
-    , Settings::Client::DynamicConnectionRetry
-    , Settings::Client::InvertYScroll
-    , Settings::Client::InvertXScroll
-    , Settings::Log::ToFile
-    , Settings::Log::GuiDebug
-    , Settings::Server::DefaultLockToComputerState
-    , Settings::Server::DisableLockToComputer
-    , Settings::Server::EnableHeatbeat
-    , Settings::Server::EnableSwitchDelay
-    , Settings::Server::EnableSwitchDoubleTap
-    , Settings::Server::ExternalConfig
-    , Settings::Server::RelativeMouseMoves
+      Gui::Autohide
+    , Gui::AutoStartCore
+    , Gui::ShownFirstConnectedMessage
+    , Gui::ShownServerFirstStartMessage
+    , Gui::ShowVersionInTitle
+    , Gui::IgnoreMissingKeyboardLayouts
+    , Core::PreventSleep
+    , Core::EnableEnterCommand
+    , Core::EnableExitCommand
+    , Client::DynamicConnectionRetry
+    , Client::InvertYScroll
+    , Client::InvertXScroll
+    , Log::ToFile
+    , Log::GuiDebug
+    , Server::DefaultLockToComputerState
+    , Server::DisableLockToComputer
+    , Server::EnableHeatbeat
+    , Server::EnableSwitchDelay
+    , Server::EnableSwitchDoubleTap
+    , Server::ExternalConfig
+    , Server::RelativeMouseMoves
   };
 
   // When checking the default values this list contains the ones that default to true.
   inline static const QStringList m_defaultTrueValues = {
-      Settings::Core::UseHooks
-    , Settings::Client::LanguageSync
-    , Settings::Gui::CloseToTray
-    , Settings::Gui::CloseReminder
-    , Settings::Gui::LogExpanded
-    , Settings::Gui::SymbolicTrayIcon
-    , Settings::Security::TlsEnabled
-    , Settings::Security::CheckPeers
-    , Settings::Server::EnableClipboard
-    , Settings::Server::Win32KeepForeground
+      Core::UseHooks
+    , Client::LanguageSync
+    , Gui::CloseToTray
+    , Gui::CloseReminder
+    , Gui::LogExpanded
+    , Gui::SymbolicTrayIcon
+    , Security::TlsEnabled
+    , Security::CheckPeers
+    , Server::EnableClipboard
+    , Server::Win32KeepForeground
   };
 
   // Settings saved in our State file
   inline static const QStringList m_stateKeys = {
-      Settings::Gui::WindowGeometry
+      Gui::WindowGeometry
     , Client::XdpRestoreToken
     , Server::XdpRestoreToken
    };
