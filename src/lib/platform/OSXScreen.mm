@@ -802,13 +802,11 @@ void OSXScreen::enter()
     // reset buttons
     m_buttonState.reset();
 
-    // wakes the client screen
-    io_registry_entry_t entry =
-        IORegistryEntryFromPath(kIOMasterPortDefault, "IOService:/IOResources/IODisplayWrangler");
-
-    if (entry != MACH_PORT_NULL) {
-      IORegistryEntrySetCFProperty(entry, CFSTR("IORequestIdle"), kCFBooleanFalse);
-      IOObjectRelease(entry);
+    const auto result = IOPMAssertionDeclareUserActivity(
+        CFSTR("Deskflow remote client entry"), kIOPMUserActiveRemote, &m_userActivityAssertionID
+    );
+    if (result != kIOReturnSuccess) {
+      LOG_WARN("failed to declare remote user activity: %d", result);
     }
 
     avoidSupression();
