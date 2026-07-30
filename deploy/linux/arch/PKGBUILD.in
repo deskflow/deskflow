@@ -13,14 +13,15 @@ license=(LicenseRef-GPL-2.0-only-WITH-OpenSSL-Exception)
 conflicts=('synergy-git' 'synergy-1.6' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin' 'synergy3-beta-bin' 'synergy3-stable-bin' 'barrier' 'barrier-git' 'barrier-headless' 'barrier-headless-git' 'input-leap' 'input-leap-git' 'input-leap-headless-git' 'input-leap-headless' 'waynergy' 'waynergy-git' 'qsynergy' 'slim-synergy' 'quicksynergy' 'deskflow')
 provides=("$_basename")
 depends=(
-  gcc-libs
   glibc
   hicolor-icon-theme
   libei
+  libgcc
   libglvnd
   libice
   libportal
   libsm
+  libstdc++
   libx11
   libxext
   libxi
