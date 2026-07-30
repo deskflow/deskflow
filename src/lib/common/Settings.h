@@ -286,7 +286,6 @@ private:
     , Gui::ShownServerFirstStartMessage
     , Gui::ShowVersionInTitle
     , Gui::IgnoreMissingKeyboardLayouts
-    , Gui::WindowGeometry
     , Security::Certificate
     , Security::CheckPeers
     , Security::KeySize
