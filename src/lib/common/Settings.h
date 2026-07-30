@@ -352,7 +352,11 @@ private:
   };
 
   // Settings saved in our State file
-  inline static const QStringList m_stateKeys = { Settings::Gui::WindowGeometry };
+  inline static const QStringList m_stateKeys = {
+      Settings::Gui::WindowGeometry
+    , Client::XdpRestoreToken
+    , Server::XdpRestoreToken
+   };
 
   // Contains settings keys to be upgraded.
   inline static const QMap<QString, QString> m_upgradedMap = {
