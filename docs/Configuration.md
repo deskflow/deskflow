@@ -58,7 +58,6 @@ It will begin with `[client]`
 | xScrollScale              | Double 0.1 - 10.0  | Horizontal mouse scrolling will be scaled by this amount on the client [default: 1.0] |
 | invertYScroll             | `true` or `false`  | Invert vertical scroll on this client [default: false] |
 | invertXScroll             | `true` or `false`  | Invert horizontal scroll on this client [default: false] |
-| xdpRestoreToken           | UUID               | Restore token provided by XDG portals |
 
 ### Core
 
@@ -157,7 +156,6 @@ This section contains options used when in server mode it will begin with `[serv
 | switchDelay        | int               | Deskflow won't switch computers when the mouse reaches edge of a computer unless it stays on the edge for `N` milliseconds. This helps prevent unintentional switching when working near an edge. (default: 250)|
 | switchDoubleTap    | int               | Deskflow won't switch computers when the mouse reaches the edge of a computer unless it's moved away from the edge and then back to the edge within `N` milliseconds. With the option you have to quickly tap the edge twice to switch. This helps prevent unintentional switching when working near the edge.|
 |win32KeepForeground | `true` or `false` | If set to ''true'' (the default), Deskflow will grab the foreground focus on a Windows server (thereby putting all other windows in the background) upon switching to a client. If set to ''false'', it will leave the currently foreground window in the foreground. Deskflow grabs the focus to avoid issues with other apps interfering with Deskflow's ability to read the hardware inputs. |
-| xdpRestoreToken   | UUID               | Restore token provided by XDG portals |
 
  - You can use both the ''switchDelay'' and ''switchDoubleTap'' options at the same time. Deskflow will switch when either requirement is satisfied.
 
