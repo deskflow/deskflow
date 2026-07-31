@@ -19,8 +19,8 @@ elseif(UNIX)
     unix/DeskflowXkbKeyboard.cpp
     unix/DeskflowXkbKeyboard.h
     unix/ISO639Table.h
-    unix/X11LayoutsParser.cpp
-    unix/X11LayoutsParser.h
+    unix/XkbLayoutsParser.cpp
+    unix/XkbLayoutsParser.h
   )
 endif()
 
