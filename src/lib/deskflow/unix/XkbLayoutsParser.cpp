@@ -14,7 +14,7 @@
 
 #include "DeskflowXkbKeyboard.h"
 #include "ISO639Table.h"
-#include "X11LayoutsParser.h"
+#include "XkbLayoutsParser.h"
 
 #include <xkbcommon/xkbregistry.h>
 
@@ -32,7 +32,7 @@ void splitLine(std::vector<std::string> &parts, const std::string &line, char de
 
 } // namespace
 
-std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData()
+std::vector<XkbLayoutsParser::Lang> XkbLayoutsParser::getAllLanguageData()
 {
   std::vector<Lang> allCodes;
 
@@ -81,7 +81,7 @@ std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData()
   return allCodes;
 }
 
-void X11LayoutsParser::appendVectorUniq(const std::vector<std::string> &source, std::vector<std::string> &dst)
+void XkbLayoutsParser::appendVectorUniq(const std::vector<std::string> &source, std::vector<std::string> &dst)
 {
   for (const auto &elem : source) {
     if (std::ranges::find_if(dst, [&elem](const std::string_view &s) { return s == elem; }) == dst.end()) {
@@ -90,12 +90,12 @@ void X11LayoutsParser::appendVectorUniq(const std::vector<std::string> &source, 
   }
 }
 
-void X11LayoutsParser::convertLayoutToISO639_2(
+void XkbLayoutsParser::convertLayoutToISO639_2(
     const std::vector<std::string> &layoutNames, const std::vector<std::string> &layoutVariantNames,
     std::vector<std::string> &iso639_2Codes
 )
 {
-  static std::vector<X11LayoutsParser::Lang> allLang;
+  static std::vector<XkbLayoutsParser::Lang> allLang;
   if (allLang.empty()) {
     allLang = getAllLanguageData();
   }
@@ -144,7 +144,7 @@ void X11LayoutsParser::convertLayoutToISO639_2(
   }
 }
 
-std::vector<std::string> X11LayoutsParser::getX11LanguageList()
+std::vector<std::string> XkbLayoutsParser::getXkbLanguageList()
 {
   std::vector<std::string> layoutNames;
   std::vector<std::string> layoutVariantNames;
@@ -159,7 +159,7 @@ std::vector<std::string> X11LayoutsParser::getX11LanguageList()
   return convertISO639_2ToISO639_1(iso639_2Codes);
 }
 
-std::string X11LayoutsParser::convertLayoutToISO(const std::string &layoutLangCode)
+std::string XkbLayoutsParser::convertLayoutToISO(const std::string &layoutLangCode)
 {
   if (layoutLangCode.empty()) {
     LOG_VERBOSE("skip converting empty layout lang code");
@@ -182,7 +182,7 @@ std::string X11LayoutsParser::convertLayoutToISO(const std::string &layoutLangCo
   return *iso639_1Codes.begin();
 }
 
-std::vector<std::string> X11LayoutsParser::convertISO639_2ToISO639_1(const std::vector<std::string> &iso639_2Codes)
+std::vector<std::string> XkbLayoutsParser::convertISO639_2ToISO639_1(const std::vector<std::string> &iso639_2Codes)
 {
   std::vector<std::string> result;
   for (const auto &isoCode : iso639_2Codes) {

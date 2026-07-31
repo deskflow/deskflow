@@ -9,7 +9,7 @@
 
 #include <QTest>
 
-class X11LayoutParserTests : public QObject
+class XkbLayoutParserTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
