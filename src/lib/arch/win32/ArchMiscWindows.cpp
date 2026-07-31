@@ -15,6 +15,7 @@
 
 #include <Psapi.h>
 
+#include <algorithm>
 #include <array>
 #include <filesystem>
 #include <stdexcept>
@@ -409,15 +410,16 @@ HMODULE ArchMiscWindows::findLoadedModule(std::array<const char *, 2> moduleName
     abort();
   }
 
-  std::string loadedModuleName;
-  for (size_t i = 0; i < (cbNeeded / sizeof(HMODULE)); ++i) {
-    if (!GetModuleBaseNameA(hProcess, hModules[i], loadedModuleName.data(), sizeof(loadedModuleName))) {
+  const auto moduleCount = std::min<size_t>(cbNeeded / sizeof(HMODULE), hModules.size());
+  std::array<char, MAX_PATH> loadedModuleName;
+  for (size_t i = 0; i < moduleCount; ++i) {
+    if (!GetModuleBaseNameA(hProcess, hModules[i], loadedModuleName.data(), MAX_PATH)) {
       LOG_WARN("could not get base name of loaded module %d", i);
       continue;
     }
 
     for (const auto &moduleName : moduleNames) {
-      if (_stricmp((loadedModuleName.data()), moduleName) == 0) {
+      if (_stricmp(loadedModuleName.data(), moduleName) == 0) {
         return hModules[i];
       }
     }
