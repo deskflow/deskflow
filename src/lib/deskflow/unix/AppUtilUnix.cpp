@@ -12,8 +12,8 @@
 #include "common/PlatformInfo.h"
 
 #if WINAPI_XWINDOWS
-#include "deskflow/unix/X11LayoutsParser.h"
 #include <X11/XKBlib.h>
+#include <deskflow/unix/XkbLayoutsParser.h>
 #elif defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
 #include <platform/OSXAutoTypes.h>
@@ -44,7 +44,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
   std::vector<std::string> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-  layoutLangCodes = X11LayoutsParser::getX11LanguageList();
+  layoutLangCodes = XkbLayoutsParser::getXkbLanguageList();
 
 #elif defined(Q_OS_MAC)
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
@@ -140,7 +140,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   XFree(kbdDescr);
   XCloseDisplay(display);
 
-  result = X11LayoutsParser::convertLayoutToISO(result);
+  result = XkbLayoutsParser::convertLayoutToISO(result);
 
 #elif defined(Q_OS_MAC)
   AutoTISInputSourceRef source(nullptr, CFRelease);

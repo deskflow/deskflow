@@ -12,10 +12,10 @@
 #include <string>
 #include <vector>
 
-class X11LayoutsParser
+class XkbLayoutsParser
 {
 public:
-  static std::vector<std::string> getX11LanguageList();
+  static std::vector<std::string> getXkbLanguageList();
   static std::string convertLayoutToISO(const std::string &layoutLangCode);
 
 private:
