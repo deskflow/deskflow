@@ -487,10 +487,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>設定を消去</translation>
     </message>
     <message>
-        <source>Report a Bug</source>
-        <translation>バグレポート</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>トレイに最小化(&amp;M)</translation>
     </message>

@@ -385,10 +385,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Borrar configuración</translation>
     </message>
     <message>
-        <source>Report a Bug</source>
-        <translation type="unfinished">Informar un error</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation type="unfinished">&amp;Minimizar a la bandeja</translation>
     </message>
