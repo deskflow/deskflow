@@ -13,7 +13,6 @@
         <file>icons/deskflow-dark/actions/16/process-stop.svg</file>
         <file>icons/deskflow-dark/actions/16/system-run.svg</file>
         <file>icons/deskflow-dark/actions/16/system-search.svg</file>
-        <file>icons/deskflow-dark/actions/16/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/16/view-close.svg</file>
         <file>icons/deskflow-dark/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/16/window-minimize-pip.svg</file>
@@ -33,7 +32,6 @@
         <file>icons/deskflow-dark/actions/22/question.svg</file>
         <file>icons/deskflow-dark/actions/22/system-run.svg</file>
         <file>icons/deskflow-dark/actions/22/system-search.svg</file>
-        <file>icons/deskflow-dark/actions/22/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/22/view-close.svg</file>
         <file>icons/deskflow-dark/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/22/window-minimize-pip.svg</file>
@@ -54,7 +52,6 @@
         <file>icons/deskflow-dark/actions/24/question.svg</file>
         <file>icons/deskflow-dark/actions/24/system-run.svg</file>
         <file>icons/deskflow-dark/actions/24/system-search.svg</file>
-        <file>icons/deskflow-dark/actions/24/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/24/view-close.svg</file>
         <file>icons/deskflow-dark/actions/24/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/24/window-minimize-pip.svg</file>
@@ -99,7 +96,6 @@
         <file>icons/deskflow-light/actions/16/process-stop.svg</file>
         <file>icons/deskflow-light/actions/16/system-run.svg</file>
         <file>icons/deskflow-light/actions/16/system-search.svg</file>
-        <file>icons/deskflow-light/actions/16/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/16/view-close.svg</file>
         <file>icons/deskflow-light/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/16/window-minimize-pip.svg</file>
@@ -120,7 +116,6 @@
         <file>icons/deskflow-light/actions/22/question.svg</file>
         <file>icons/deskflow-light/actions/22/system-run.svg</file>
         <file>icons/deskflow-light/actions/22/system-search.svg</file>
-        <file>icons/deskflow-light/actions/22/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/22/view-close.svg</file>
         <file>icons/deskflow-light/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/22/window-minimize-pip.svg</file>
@@ -141,7 +136,6 @@
         <file>icons/deskflow-light/actions/24/question.svg</file>
         <file>icons/deskflow-light/actions/24/system-run.svg</file>
         <file>icons/deskflow-light/actions/24/system-search.svg</file>
-        <file>icons/deskflow-light/actions/24/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/24/view-close.svg</file>
         <file>icons/deskflow-light/actions/24/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/24/window-minimize-pip.svg</file>

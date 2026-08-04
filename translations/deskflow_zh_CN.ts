@@ -487,10 +487,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>清除设置</translation>
     </message>
     <message>
-        <source>Report a Bug</source>
-        <translation>报告 Bug</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>最小化到托盘(&amp;M)</translation>
     </message>

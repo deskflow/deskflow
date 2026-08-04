@@ -487,10 +487,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>설정 초기화</translation>
     </message>
     <message>
-        <source>Report a Bug</source>
-        <translation>버그 신고</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>트레이로 최소화(&amp;M)</translation>
     </message>

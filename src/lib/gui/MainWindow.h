@@ -96,7 +96,6 @@ private:
 
   void clearSettings();
   void openAboutDialog();
-  void openHelpUrl() const;
   void openGetNewVersionUrl() const;
   void openSettings();
   void startCore();
@@ -195,7 +194,6 @@ private:
   // Window Actions
   QAction *m_actionAbout = nullptr;
   QAction *m_actionClearSettings = nullptr;
-  QAction *m_actionReportBug = nullptr;
   QAction *m_actionMinimize = nullptr;
   QAction *m_actionQuit = nullptr;
   QAction *m_actionTrayQuit = nullptr;

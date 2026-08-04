@@ -373,10 +373,6 @@ Vuoi connetterti al server?
         <translation>Cancella impostazioni</translation>
     </message>
     <message>
-        <source>Report a Bug</source>
-        <translation>Segnala un Bug</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>&amp;Minimizza a icona</translation>
     </message>

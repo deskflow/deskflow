@@ -71,7 +71,6 @@ MainWindow::MainWindow()
       m_menuHelp{new QMenu(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(this)},
-      m_actionReportBug{new QAction(this)},
       m_actionMinimize{new QAction(this)},
       m_actionQuit{new QAction(this)},
       m_actionTrayQuit{new QAction(this)},
@@ -122,9 +121,6 @@ MainWindow::MainWindow()
 
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
   m_actionStopCore->setMenuRole(QAction::NoRole);
-
-  m_actionReportBug->setIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug")));
-  m_actionReportBug->setMenuRole(QAction::NoRole);
 
   m_actionShowHelp->setIcon(QIcon::fromTheme(QStringLiteral("question")));
   m_actionShowHelp->setMenuRole(QAction::NoRole);
@@ -264,7 +260,6 @@ void MainWindow::connectSlots()
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
-  connect(m_actionReportBug, &QAction::triggered, this, &MainWindow::openHelpUrl);
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
@@ -470,11 +465,6 @@ void MainWindow::openAboutDialog()
 {
   AboutDialog about(this);
   about.exec();
-}
-
-void MainWindow::openHelpUrl() const
-{
-  QDesktopServices::openUrl(QUrl(kUrlHelp));
 }
 
 void MainWindow::openGetNewVersionUrl() const
@@ -685,7 +675,6 @@ void MainWindow::createMenuBar()
 
   m_menuHelp->addAction(m_actionAbout);
   m_menuHelp->addAction(m_actionShowHelp);
-  m_menuHelp->addAction(m_actionReportBug);
   m_menuHelp->addSeparator();
   m_menuHelp->addAction(m_actionClearSettings);
 
@@ -1072,7 +1061,6 @@ void MainWindow::updateText()
   m_menuHelp->setTitle(tr("&Help"));
 
   m_actionClearSettings->setText(tr("Clear settings"));
-  m_actionReportBug->setText(tr("Report a Bug"));
   m_actionMinimize->setText(tr("&Minimize to tray"));
   m_actionQuit->setText(tr("&Quit"));
   m_actionTrayQuit->setText(tr("&Quit"));
