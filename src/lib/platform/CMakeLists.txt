@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
@@ -173,20 +173,14 @@ endif()
 # wayland.h is included to check for wayland support
 add_library(platform STATIC ${PLATFORM_SOURCES})
 
-target_link_libraries(platform client ${libs})
+target_link_libraries(platform PUBLIC client ${libs})
 
 if(UNIX)
-  target_link_libraries(
-    platform
-    io
-    net
-    app
-    client
-    ${libs})
+  target_link_libraries(platform PRIVATE net app)
 
   if(APPLE)
     find_library(COCOA_LIBRARY Cocoa)
-    target_link_libraries(platform ${COCOA_LIBRARY})
+    target_link_libraries(platform PUBLIC ${COCOA_LIBRARY})
   else()
     if(${LIBXKBCOMMON_VERSION} VERSION_GREATER_EQUAL "1.10")
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
@@ -199,11 +193,12 @@ if(UNIX)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_CLIPBOARD)
     endif()
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
-    target_link_libraries(
-      platform
-      Qt6::DBus
-      Qt6::Gui
-      ${LIBXKBCOMMON_LINK_LIBRARIES}
-      ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
+    target_link_libraries(platform
+      PUBLIC
+        Qt6::DBus
+      PRIVATE
+        Qt6::Gui
+        ${LIBXKBCOMMON_LINK_LIBRARIES}
+        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
   endif()
 endif()
