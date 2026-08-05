@@ -419,8 +419,6 @@ Actions are two lists of individual actions separated by commas. The two lists a
 ##### Keynames
 Valid key names are:
 
-<details><summary>Valid Key Names</summary>
-
 * AppMail
 * AppMedia
 * AppUser1
@@ -578,8 +576,6 @@ Valid key names are:
 * Bar
 * BraceR
 * Tilde
-
-</details>
 
 Additionally, a name of the form `\uXXXX` where ''XXXX'' is a hexadecimal number is interpreted as a unicode character code. Key and modifier names are case-insensitive. Keys that don't exist on the keyboard or in the default keyboard layout will not work.
 
