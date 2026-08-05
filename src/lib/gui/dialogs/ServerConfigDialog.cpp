@@ -42,9 +42,10 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
-  // force the first tab, since qt creator sets the active tab as the last one
-  // the developer was looking at, and it's easy to accidentally save that.
-  ui->tabWidget->setCurrentIndex(0);
+  if (ui->groupExternalConfig->isChecked())
+    ui->tabWidget->setCurrentIndex(3);
+  else
+    ui->tabWidget->setCurrentIndex(0);
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
