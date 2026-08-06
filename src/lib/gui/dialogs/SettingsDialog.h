@@ -26,6 +26,7 @@ public:
 
 Q_SIGNALS:
   void shown();
+  void requestRemoveAllSettings();
 
 protected:
   void changeEvent(QEvent *e) override;

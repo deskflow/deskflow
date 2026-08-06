@@ -483,10 +483,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>ヘルプ(&amp;H)</translation>
     </message>
     <message>
-        <source>Clear settings</source>
-        <translation>設定を消去</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>トレイに最小化(&amp;M)</translation>
     </message>
@@ -1296,6 +1292,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
         <translation>Infoよりも高いログレベルを使用すると、パフォーマンスに影響を及ぼす可能性があります。</translation>
+    </message>
+    <message>
+        <source>Remove all settings</source>
+        <translation type="unfinished">すべての設定を削除する</translation>
     </message>
 </context>
 <context>

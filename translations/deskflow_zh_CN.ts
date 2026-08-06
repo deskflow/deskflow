@@ -483,10 +483,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>帮助(&amp;H)</translation>
     </message>
     <message>
-        <source>Clear settings</source>
-        <translation>清除设置</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>最小化到托盘(&amp;M)</translation>
     </message>
@@ -1296,6 +1292,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
         <translation type="unfinished">使用高于 Info 级别的日志级别可能会影响性能。</translation>
+    </message>
+    <message>
+        <source>Remove all settings</source>
+        <translation type="unfinished">移除所有设置</translation>
     </message>
 </context>
 <context>

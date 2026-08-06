@@ -70,7 +70,6 @@ MainWindow::MainWindow()
       m_menuView{new QMenu(this)},
       m_menuHelp{new QMenu(this)},
       m_actionAbout{new QAction(this)},
-      m_actionClearSettings{new QAction(this)},
       m_actionMinimize{new QAction(this)},
       m_actionQuit{new QAction(this)},
       m_actionTrayQuit{new QAction(this)},
@@ -105,9 +104,6 @@ MainWindow::MainWindow()
 
   m_actionTrayQuit->setIcon(QIcon::fromTheme("application-exit"));
   m_actionTrayQuit->setMenuRole(QAction::NoRole);
-
-  m_actionClearSettings->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
-  m_actionClearSettings->setMenuRole(QAction::NoRole);
 
   m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
@@ -259,7 +255,6 @@ void MainWindow::connectSlots()
   connect(&m_coreProcess, &CoreProcess::securityLevelChanged, m_statusBar, &StatusBar::setSecurityLevel);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
-  connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
@@ -476,8 +471,10 @@ void MainWindow::openSettings()
 {
   auto dialog = SettingsDialog(this, m_serverConfig);
 
+  connect(&dialog, &SettingsDialog::requestRemoveAllSettings, this, &MainWindow::clearSettings, Qt::UniqueConnection);
   if (dialog.exec() == QDialog::Accepted) {
     Settings::save();
+    disconnect(&dialog, &SettingsDialog::requestRemoveAllSettings, nullptr, nullptr);
 
     applyConfig();
 
@@ -675,8 +672,6 @@ void MainWindow::createMenuBar()
 
   m_menuHelp->addAction(m_actionAbout);
   m_menuHelp->addAction(m_actionShowHelp);
-  m_menuHelp->addSeparator();
-  m_menuHelp->addAction(m_actionClearSettings);
 
   auto menuBar = new QMenuBar(this);
   menuBar->addMenu(m_menuFile);
@@ -1060,7 +1055,6 @@ void MainWindow::updateText()
   m_menuView->setTitle(tr("&View"));
   m_menuHelp->setTitle(tr("&Help"));
 
-  m_actionClearSettings->setText(tr("Clear settings"));
   m_actionMinimize->setText(tr("&Minimize to tray"));
   m_actionQuit->setText(tr("&Quit"));
   m_actionTrayQuit->setText(tr("&Quit"));
