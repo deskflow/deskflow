@@ -25,9 +25,6 @@
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>2</number>
-     </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
        <string>&amp;General</string>
@@ -40,13 +37,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <item>
         <spacer name="verticalSpacer_6">
@@ -147,13 +144,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <item>
         <spacer name="verticalSpacer_7">
@@ -266,13 +263,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <item>
         <spacer name="verticalSpacer_8">
@@ -451,13 +448,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <item>
         <spacer name="verticalSpacer_9">
@@ -758,13 +755,13 @@
         <number>12</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>12</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <item>
         <spacer name="verticalSpacer_10">
