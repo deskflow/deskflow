@@ -81,6 +81,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
 
   setButtonBoxEnabledButtons();
   initConnections();
+  showReadOnlyMessage();
 }
 
 void SettingsDialog::changeEvent(QEvent *e)
@@ -94,8 +95,6 @@ void SettingsDialog::changeEvent(QEvent *e)
 
 void SettingsDialog::initConnections() const
 {
-  connect(this, &SettingsDialog::shown, this, &SettingsDialog::showReadOnlyMessage, Qt::QueuedConnection);
-
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
   connect(ui->buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, this, &SettingsDialog::loadFromConfig);
@@ -187,12 +186,6 @@ void SettingsDialog::browseLogPath()
 void SettingsDialog::setLogToFile(bool logToFile)
 {
   ui->widgetLogFilename->setEnabled(logToFile);
-}
-
-void SettingsDialog::showEvent(QShowEvent *event)
-{
-  QDialog::showEvent(event);
-  Q_EMIT shown();
 }
 
 void SettingsDialog::showReadOnlyMessage()
