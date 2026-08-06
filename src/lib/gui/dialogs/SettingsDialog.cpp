@@ -109,7 +109,7 @@ void SettingsDialog::initConnections() const
 
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
   connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::updateControls);
-  connect(ui->btnClearAllSettings, &QPushButton::clicked, this, &SettingsDialog::requestRemoveAllSettings);
+  connect(ui->btnClearAllSettings, &QPushButton::clicked, this, &SettingsDialog::resetAllSettings);
   connect(ui->btnTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
   connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::updateRequestedKeySize);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
@@ -200,6 +200,17 @@ void SettingsDialog::showReadOnlyMessage()
   if (Settings::isWritable())
     return;
   messages::showReadOnlySettings(this, Settings::settingsFile());
+}
+
+void SettingsDialog::resetAllSettings()
+{
+  auto result = QMessageBox::question(
+      this, tr("%1 Clear Settings").arg(kAppName),
+      tr("<p>Are you sure you want to clear all settings and restart %1?</p> <p>This action cannot be undone.</p>")
+          .arg(kAppName)
+  );
+  if (result == QMessageBox::Yes)
+    Q_EMIT requestRemoveAllSettings();
 }
 
 void SettingsDialog::updateText()

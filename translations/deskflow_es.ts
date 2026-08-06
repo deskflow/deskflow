@@ -701,14 +701,6 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">Un nuevo cliente llamado &apos;%1&apos; quiere conectarse</translation>
     </message>
     <message>
-        <source>%1 Clear Settings</source>
-        <translation type="unfinished">%1 Borrar configuración</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;¿Está seguro de que desea borrar todas las configuraciones y reiniciar %1?&lt;/p&gt;&lt;p&gt;Esta acción no se puede deshacer.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Read-only settings</source>
         <translation type="unfinished">%1 Configuración de solo lectura</translation>
     </message>
@@ -1166,6 +1158,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Always run as system (work at login screen and UAC)</source>
         <translation type="unfinished">Ejecutar siempre como sistema (funcionar en la pantalla de inicio de sesión y UAC)</translation>
+    </message>
+    <message>
+        <source>%1 Clear Settings</source>
+        <translation type="unfinished">%1 Borrar configuración</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Required messages</source>

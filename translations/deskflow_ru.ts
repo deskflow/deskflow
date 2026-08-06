@@ -701,14 +701,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>Новый клиент &apos;%1&apos; хочет подключиться</translation>
     </message>
     <message>
-        <source>%1 Clear Settings</source>
-        <translation>%1 Сброс настроек</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Вы уверены, что хотите сбросить все настройки и перезапустить %1?&lt;/p&gt;&lt;p&gt;Это действие нельзя отменить.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Read-only settings</source>
         <translation>%1 Настройки только для чтения</translation>
     </message>
@@ -1188,6 +1180,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Save log file to...</source>
         <translation>Сохранить файл журнала в...</translation>
+    </message>
+    <message>
+        <source>%1 Clear Settings</source>
+        <translation type="unfinished">%1 Сброс настроек</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Required messages</source>
