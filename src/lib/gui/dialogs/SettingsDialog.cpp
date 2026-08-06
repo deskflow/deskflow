@@ -31,6 +31,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
 {
 
   ui->setupUi(this);
+  ui->tabWidget->setCurrentIndex(0);
 
   // these are enabled by the control next to them
   ui->lineCommandEnter->setEnabled(false);

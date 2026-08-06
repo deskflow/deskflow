@@ -34,6 +34,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows)
 {
   ui->setupUi(this);
+  ui->tabWidget->setCurrentIndex(0);
 
   loadFromConfig();
 
