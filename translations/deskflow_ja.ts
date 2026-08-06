@@ -1070,14 +1070,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>指定時間内に画面端ダブルタップで移動(&amp;T)</translation>
     </message>
     <message>
-        <source>Config file</source>
-        <translation>設定ファイル</translation>
-    </message>
-    <message>
-        <source>Core server config file</source>
-        <translation>Coreサーバー設定ファイル</translation>
-    </message>
-    <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>

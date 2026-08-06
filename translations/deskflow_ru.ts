@@ -1068,14 +1068,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>Переключать по двойному &amp;касанию за</translation>
     </message>
     <message>
-        <source>Config file</source>
-        <translation>Файл конфигурации</translation>
-    </message>
-    <message>
-        <source>Core server config file</source>
-        <translation>Файл конфигурации ядра сервера</translation>
-    </message>
-    <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
