@@ -381,10 +381,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Reanudar</translation>
     </message>
     <message>
-        <source>Clear settings</source>
-        <translation type="unfinished">Borrar configuración</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation type="unfinished">&amp;Minimizar a la bandeja</translation>
     </message>
@@ -1294,6 +1290,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
         <translation type="unfinished">Utilizar un nivel de registro superior a Info puede afectar el rendimiento.</translation>
+    </message>
+    <message>
+        <source>Remove all settings</source>
+        <translation type="unfinished">Eliminar todas las configuraciones</translation>
     </message>
 </context>
 <context>

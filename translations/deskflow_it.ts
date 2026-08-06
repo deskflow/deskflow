@@ -369,10 +369,6 @@ Vuoi connetterti al server?
         <translation>Riavvia</translation>
     </message>
     <message>
-        <source>Clear settings</source>
-        <translation>Cancella impostazioni</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>&amp;Minimizza a icona</translation>
     </message>
@@ -1294,6 +1290,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
         <translation type="unfinished">L&apos;utilizzo di un livello di log superiore a Info potrebbe influire sulle prestazioni.</translation>
+    </message>
+    <message>
+        <source>Remove all settings</source>
+        <translation type="unfinished">Rimuovi tutte le impostazioni</translation>
     </message>
 </context>
 <context>

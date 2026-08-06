@@ -853,6 +853,13 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QPushButton" name="btnClearAllSettings">
+         <property name="text">
+          <string>Remove all settings</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>

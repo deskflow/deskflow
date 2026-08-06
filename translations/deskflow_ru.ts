@@ -483,10 +483,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <translation>&amp;Справка</translation>
     </message>
     <message>
-        <source>Clear settings</source>
-        <translation>Сбросить настройки</translation>
-    </message>
-    <message>
         <source>&amp;Minimize to tray</source>
         <translation>&amp;Свернуть в трей</translation>
     </message>
@@ -1292,6 +1288,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Using a log level higher than Info may affect performance.</source>
         <translation type="unfinished">Использование уровня логирования выше Info может повлиять на производительность.</translation>
+    </message>
+    <message>
+        <source>Remove all settings</source>
+        <translation type="unfinished">Удалить все настройки</translation>
     </message>
 </context>
 <context>
