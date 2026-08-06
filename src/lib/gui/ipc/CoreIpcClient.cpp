@@ -8,9 +8,6 @@
 
 #include "common/Constants.h"
 
-#include <QDebug>
-#include <QLocalSocket>
-#include <QObject>
 #include <QString>
 
 namespace deskflow::gui::ipc {

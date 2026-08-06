@@ -8,8 +8,6 @@
 
 #include "common/Constants.h"
 
-#include <QDebug>
-
 namespace deskflow::gui::ipc {
 
 DaemonIpcClient::DaemonIpcClient(QObject *parent) : IpcClient(parent, kDaemonIpcName, QStringLiteral("daemon"))
