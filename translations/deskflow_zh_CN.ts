@@ -703,14 +703,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>名为“%1”的新客户端请求连接</translation>
     </message>
     <message>
-        <source>%1 Clear Settings</source>
-        <translation>%1 清除设置</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;您确定要清除所有设置并重启 %1 吗？&lt;/p&gt;&lt;p&gt;此操作无法撤销。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Read-only settings</source>
         <translation>%1 只读设置</translation>
     </message>
@@ -1192,6 +1184,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Save log file to...</source>
         <translation>保存日志文件到...</translation>
+    </message>
+    <message>
+        <source>%1 Clear Settings</source>
+        <translation type="unfinished">%1 清除设置</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Required messages</source>

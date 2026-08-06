@@ -701,14 +701,6 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>Un nuovo client chiamato &quot;%1&quot; vuole connettersi</translation>
     </message>
     <message>
-        <source>%1 Clear Settings</source>
-        <translation>%1 Azzera Impostazioni</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Sei sicuro di voler azzerare tutte le impostazioni e riavviare %1?&lt;/p&gt;&lt;p&gt;Questa azione non può essere annullata.&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Read-only settings</source>
         <translation>%1 Impostazioni di sola lettura</translation>
     </message>
@@ -1166,6 +1158,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Always run as system (work at login screen and UAC)</source>
         <translation>Esegui sempre come sistema (funziona nella schermata di accesso e UAC)</translation>
+    </message>
+    <message>
+        <source>%1 Clear Settings</source>
+        <translation type="unfinished">%1 Azzera Impostazioni</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Required messages</source>

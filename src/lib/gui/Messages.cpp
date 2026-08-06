@@ -205,17 +205,6 @@ bool showNewClientPrompt(QWidget *parent, const QString &clientName)
   return message.buttonRole(message.clickedButton()) == QMessageBox::AcceptRole;
 }
 
-bool showClearSettings(QWidget *parent)
-{
-  const auto title = QObject::tr("%1 Clear Settings").arg(kAppName);
-  const auto message = QObject::tr(
-                           "<p>Are you sure you want to clear all settings and restart %1?</p>"
-                           "<p>This action cannot be undone.</p>"
-  )
-                           .arg(kAppName);
-  return QMessageBox::question(parent, title, message) == QMessageBox::Yes;
-}
-
 void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath)
 {
   const auto title = QObject::tr("%1 Read-only settings").arg(kAppName);

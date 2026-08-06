@@ -703,14 +703,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>新しいクライアント &apos;%1&apos; が接続を求めています</translation>
     </message>
     <message>
-        <source>%1 Clear Settings</source>
-        <translation>%1 設定消去</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt;&lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;全ての設定を消去して %1 を再起動しますか？&lt;/p&gt;&lt;p&gt;この操作は取り消せません。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>%1 Read-only settings</source>
         <translation>%1 読み取り専用設定</translation>
     </message>
@@ -1192,6 +1184,14 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Save log file to...</source>
         <translation>ログをファイルに保存…</translation>
+    </message>
+    <message>
+        <source>%1 Clear Settings</source>
+        <translation type="unfinished">%1 設定消去</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Required messages</source>

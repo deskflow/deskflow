@@ -424,10 +424,7 @@ void MainWindow::stopCore()
 
 void MainWindow::clearSettings()
 {
-  if (!messages::showClearSettings(this)) {
-    qDebug() << "clear settings cancelled";
-    return;
-  }
+  qDebug() << "clearing settings";
 
   m_networkMonitor->stopMonitoring();
 
