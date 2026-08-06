@@ -1068,14 +1068,6 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">Activar doble &amp;toque dentro</translation>
     </message>
     <message>
-        <source>Config file</source>
-        <translation type="unfinished">Archivo de configuración</translation>
-    </message>
-    <message>
-        <source>Core server config file</source>
-        <translation type="unfinished">Archivo de configuración del servidor principal</translation>
-    </message>
-    <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>

@@ -1068,14 +1068,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>지정 시간 내 더블 탭으로 전환(&amp;T)</translation>
     </message>
     <message>
-        <source>Config file</source>
-        <translation>설정 파일</translation>
-    </message>
-    <message>
-        <source>Core server config file</source>
-        <translation>코어 서버 설정 파일</translation>
-    </message>
-    <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>

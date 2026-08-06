@@ -1068,14 +1068,6 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>Passa al doppio &amp;tap entro</translation>
     </message>
     <message>
-        <source>Config file</source>
-        <translation>File di configurazione</translation>
-    </message>
-    <message>
-        <source>Core server config file</source>
-        <translation>File di configurazione principale del server</translation>
-    </message>
-    <message>
         <source>Use a server config file</source>
         <translation>Utilizza un file di configurazione del server</translation>
     </message>

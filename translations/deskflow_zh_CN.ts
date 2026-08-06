@@ -1070,14 +1070,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>在指定时间内双击切换(&amp;T)</translation>
     </message>
     <message>
-        <source>Config file</source>
-        <translation>配置文件</translation>
-    </message>
-    <message>
-        <source>Core server config file</source>
-        <translation>核心服务器配置文件</translation>
-    </message>
-    <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
