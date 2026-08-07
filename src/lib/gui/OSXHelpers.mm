@@ -115,6 +115,28 @@ void macOSNativeHide()
   [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
 
+static void ignoreStatusItemMenuActivation(id, SEL, NSNotification *)
+{
+}
+
+void installMacOS27TrayWorkaround()
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 2)
+  // QTBUG-147449: macOS 27 drives status items with gesture recognizers,
+  // so NSApp.currentEvent can be a non-mouse event when a tray menu opens.
+  // Qt <= 6.11.1 unconditionally reads clickCount and aborts the process.
+  // Deskflow does not consume tray activation signals on macOS, so suppress
+  // only Qt's private menu-tracking callback until the upstream fix ships.
+  if (![NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:{27, 0, 0}])
+    return;
+
+  const auto delegateClass = objc_getClass("QStatusItemDelegate");
+  const auto selector = @selector(statusItemMenuBeganTracking:);
+  if (const auto method = class_getInstanceMethod(delegateClass, selector); method != nullptr)
+    method_setImplementation(method, reinterpret_cast<IMP>(ignoreStatusItemMenuActivation));
+#endif
+}
+
 static NSApplicationTerminateReply deskflow_applicationShouldTerminate(id self, SEL _cmd, NSApplication *sender)
 {
   // Don't intercept a system shutdown (or logoff/restart)

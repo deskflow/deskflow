@@ -687,6 +687,9 @@ void MainWindow::setupTrayIcon()
   );
   trayMenu->insertSeparator(m_actionMinimize);
   trayMenu->insertSeparator(m_actionTrayQuit);
+#ifdef Q_OS_MACOS
+  installMacOS27TrayWorkaround();
+#endif
   m_trayIcon->setContextMenu(trayMenu);
 
   setTrayIcon();
