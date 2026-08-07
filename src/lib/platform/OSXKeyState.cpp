@@ -297,7 +297,26 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   CFDataRef ref = nullptr;
   {
     std::lock_guard<std::mutex> lock(g_tisMutex);
-    currentKeyboardLayout = AutoTISInputSourceRef(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
+    // When an input method is active (Chinese, Japanese, Korean, ...) the
+    // current keyboard layout is the input method's companion layout, which
+    // maps the physical keys to marks such as Bopomofo rather than to Latin
+    // characters. Translating with it produces key IDs the client cannot type,
+    // so the keystroke is silently lost. The input method belongs to this
+    // computer only -- the client runs its own -- so translate with the
+    // ASCII-capable layout, which is what the physical keys are engraved with.
+    // Plain non-Latin layouts (Cyrillic, Greek, ...) are reported as keyboard
+    // layouts, not input modes, and keep their existing behaviour.
+    bool inputMethodActive = false;
+    if (AutoTISInputSourceRef currentInputSource(TISCopyCurrentKeyboardInputSource(), CFRelease); currentInputSource) {
+      auto type = (CFStringRef)TISGetInputSourceProperty(currentInputSource.get(), kTISPropertyInputSourceType);
+      inputMethodActive = (type != nullptr) && !CFEqual(type, kTISTypeKeyboardLayout);
+    }
+
+    currentKeyboardLayout = AutoTISInputSourceRef(
+        inputMethodActive ? TISCopyCurrentASCIICapableKeyboardLayoutInputSource()
+                          : TISCopyCurrentKeyboardLayoutInputSource(),
+        CFRelease
+    );
     if (currentKeyboardLayout)
       ref = (CFDataRef)TISGetInputSourceProperty(currentKeyboardLayout.get(), kTISPropertyUnicodeKeyLayoutData);
   }
@@ -332,7 +351,7 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   }
 
   // translate via uchr resource
-  const UCKeyboardLayout *layout = (const UCKeyboardLayout *)CFDataGetBytePtr(ref);
+  const UCKeyboardLayout *layout = ref ? (const UCKeyboardLayout *)CFDataGetBytePtr(ref) : nullptr;
   const bool layoutValid = (layout != nullptr);
 
   if (layoutValid) {
