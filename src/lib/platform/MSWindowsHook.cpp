@@ -378,8 +378,13 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   }
   }
 
-  // put back the dead key, if any, for the application to use
-  if (g_deadVirtKey != 0) {
+  // put back the dead key, if any, for the application to use.
+  // only do this when a local app will actually consume the event, i.e. when
+  // we're NOT relaying to a client.  in relay mode the event is eaten below,
+  // so re-injecting the dead key here helps no local app; it only re-arms the
+  // layout's pending dead key, which then composes again with the next relayed
+  // key (e.g. "não" would be typed as "nãõ" on the client).
+  if (g_mode != kHOOK_RELAY_EVENTS && g_deadVirtKey != 0) {
     ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState, wc, 2, flags);
   }
 
@@ -387,6 +392,17 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   if (clearDeadKey) {
     g_deadVirtKey = 0;
     g_deadLParam = 0;
+  }
+
+  // safety net: a physical key release must always reach the client, otherwise
+  // the key stays stuck "down" there.  if the translation above produced no
+  // key message for a release event (e.g. a key that maps to a dead key on
+  // release, or a key released while a dead key was pending), relay a
+  // character-less key-up so the client can release it.  this mirrors the
+  // n == 0 case above.  the dead key's own release is handled earlier and
+  // never reaches this point.
+  if (charAndVirtKey == 0 && kf_up) {
+    charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
   }
 
   // forward message to our window.  do this whether or not we're
