@@ -1,0 +1,9 @@
+<map id="deskflow::gui::ipc::IpcClient" name="deskflow::gui::ipc::IpcClient">
+<area shape="rect" id="Node000001" title=" " alt="" coords="80,78,202,117"/>
+<area shape="rect" id="Node000003" href="$classdeskflow_1_1gui_1_1ipc_1_1CoreIpcClient.html" title=" " alt="" coords="5,165,128,203"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="117,127,85,166,81,162,112,130"/>
+<area shape="rect" id="Node000004" href="$classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html" title=" " alt="" coords="151,165,280,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,126,202,164,197,164,167,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="106,5,176,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,43,144,78,139,77,140,48"/>
+</map>
