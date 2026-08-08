@@ -1119,7 +1119,13 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     // process key
     KeyModifierMask mask;
     KeyID key = m_keyState->mapKeyFromEvent(wParam, lParam, &mask);
-    button = static_cast<KeyButton>((lParam & 0x01ff0000u) >> 16);
+    const KeyButton mappedButton = static_cast<KeyButton>((lParam & 0x01ff0000u) >> 16);
+    if (mappedButton != 0) {
+      // Ctrl+Alt+Del emulation deliberately substitutes its button in lParam.
+      // Otherwise retain the virtual-key fallback above for malformed input
+      // that has no scan code, so its key-up matches the key-down on clients.
+      button = mappedButton;
+    }
     if (key != kKeyNone) {
       // do it
       m_keyState->sendKeyEvent(
