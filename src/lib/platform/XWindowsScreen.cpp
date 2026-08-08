@@ -1902,6 +1902,11 @@ void XWindowsScreen::refreshKeyboard(XEvent *event)
       return;
     }
   }
+  // release all keys before refresh to prevent key stuck in down state
+  // a later key up after the refresh doesn't properly release them
+  if (!m_isPrimary) {
+    m_keyState->fakeAllKeysUp();
+  }
 
   // keyboard mapping changed
 #if HAVE_XKB_EXTENSION
