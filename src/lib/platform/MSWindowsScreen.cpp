@@ -1087,7 +1087,9 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
   }
 
   // stop sending modifier keys over and over again
-  if (isModifierRepeat(oldState, state, wParam)) {
+  // but allow up to be sent if the previous state was down
+  // to prevent stuck modifier keys on the client
+  if (down && wasDown && isModifierRepeat(oldState, state, wParam)) {
     return true;
   }
 
