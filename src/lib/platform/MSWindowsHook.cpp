@@ -10,6 +10,9 @@
 #include "base/Log.h"
 #include "deskflow/ScreenException.h"
 
+#include <cstring>
+#include <mutex>
+
 #ifndef WM_MOUSEHWHEEL
 #define WM_MOUSEHWHEEL 0x020E
 #endif
@@ -34,6 +37,8 @@ static WPARAM g_deadRelease = 0;
 static LPARAM g_deadLParam = 0;
 static BYTE g_deadKeyState[256] = {0};
 static BYTE g_keyState[256] = {0};
+static bool g_keyStateValid = false;
+static std::mutex g_keyStateMutex;
 static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
 static BOOL g_isPrimary = TRUE;
@@ -142,6 +147,15 @@ void MSWindowsHook::setMode(EHookMode mode)
   g_mode = mode;
 }
 
+bool MSWindowsHook::getPhysicalKeyState(BYTE keys[256])
+{
+  std::lock_guard<std::mutex> lock(g_keyStateMutex);
+  if (g_keyStateValid) {
+    std::memcpy(keys, g_keyState, sizeof(g_keyState));
+  }
+  return g_keyStateValid;
+}
+
 static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 {
   // we have to use GetAsyncKeyState() rather than GetKeyState() because
@@ -151,6 +165,8 @@ static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
   if (vkCode < 0 || vkCode >= 256) {
     return;
   }
+
+  std::lock_guard<std::mutex> lock(g_keyStateMutex);
 
   // Keep track of key state on our own in case GetAsyncKeyState() fails
   g_keyState[vkCode] = kf_up ? 0 : 0x80;
@@ -179,6 +195,7 @@ static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
 
   key = GetKeyState(VK_CAPITAL);
   keys[VK_CAPITAL] = (BYTE)(((key < 0) ? 0x80 : 0) | (key & 1));
+  g_keyStateValid = true;
 }
 
 static WPARAM makeKeyMsg(UINT virtKey, WCHAR wc, bool noAltGr)
@@ -240,16 +257,16 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   // tell server about event
   PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam, lParam);
 
-  // ignore dead key release
+  // we need the keyboard state for ToAscii()
+  BYTE keys[256];
+  keyboardGetState(keys, vkCode, kf_up);
+
+  // Update the physical state before ignoring a dead key release so it cannot remain down in the resync snapshot.
   if ((g_deadVirtKey == wParam || g_deadRelease == wParam) && (lParam & 0x80000000u) != 0) {
     g_deadRelease = 0;
     PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
     return false;
   }
-
-  // we need the keyboard state for ToAscii()
-  BYTE keys[256];
-  keyboardGetState(keys, vkCode, kf_up);
 
   // ToAscii() maps ctrl+letter to the corresponding control code
   // and ctrl+backspace to delete.  we don't want those translations
@@ -670,6 +687,10 @@ int MSWindowsHook::uninstall()
     UnhookWindowsHookEx(g_getMessage);
     g_getMessage = nullptr;
   }
+
+  std::lock_guard<std::mutex> lock(g_keyStateMutex);
+  std::memset(g_keyState, 0, sizeof(g_keyState));
+  g_keyStateValid = false;
 
   return 1;
 }
