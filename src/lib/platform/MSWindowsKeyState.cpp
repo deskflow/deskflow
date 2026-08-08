@@ -13,6 +13,7 @@
 #include "common/Constants.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsHandle.h"
+#include "platform/MSWindowsHook.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)
@@ -844,7 +845,8 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
 void MSWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   BYTE keyState[256];
-  if (!GetKeyboardState(keyState)) {
+  // The caller's GetKeyboardState queue can lag the low-level hook during a screen switch.
+  if (!MSWindowsHook::getPhysicalKeyState(keyState) && !GetKeyboardState(keyState)) {
     LOG_WARN("keyboard state is unexpected");
     LOG_DEBUG("function 'GetKeyboardState' returned false on 'pollPressedKeys'");
     return;
