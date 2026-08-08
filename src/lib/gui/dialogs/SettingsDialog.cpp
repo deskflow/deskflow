@@ -13,7 +13,6 @@
 
 #include "common/I18N.h"
 #include "common/Settings.h"
-#include "gui/Messages.h"
 #include "gui/TlsUtility.h"
 #include "gui/core/NetworkMonitor.h"
 
@@ -81,6 +80,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
 
   setButtonBoxEnabledButtons();
   initConnections();
+  showReadOnlyMessage();
 }
 
 void SettingsDialog::changeEvent(QEvent *e)
@@ -94,8 +94,6 @@ void SettingsDialog::changeEvent(QEvent *e)
 
 void SettingsDialog::initConnections() const
 {
-  connect(this, &SettingsDialog::shown, this, &SettingsDialog::showReadOnlyMessage, Qt::QueuedConnection);
-
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
   connect(ui->buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, this, &SettingsDialog::loadFromConfig);
@@ -189,17 +187,15 @@ void SettingsDialog::setLogToFile(bool logToFile)
   ui->widgetLogFilename->setEnabled(logToFile);
 }
 
-void SettingsDialog::showEvent(QShowEvent *event)
-{
-  QDialog::showEvent(event);
-  Q_EMIT shown();
-}
-
 void SettingsDialog::showReadOnlyMessage()
 {
   if (Settings::isWritable())
     return;
-  messages::showReadOnlySettings(this, Settings::settingsFile());
+  QMessageBox::information(
+      this, tr("%1 Read-only settings").arg(kAppName),
+      tr("<p>Settings are read-only because you only have read access to the file:</p><p>%1</p>")
+          .arg(QDir::toNativeSeparators(Settings::settingsFile()))
+  );
 }
 
 void SettingsDialog::resetAllSettings()
