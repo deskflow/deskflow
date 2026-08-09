@@ -1903,6 +1903,11 @@ void XWindowsScreen::refreshKeyboard(XEvent *event)
     }
   }
 
+  // a later key up after the refresh doesn't properly release modifiers
+  if (!m_isPrimary) {
+    m_keyState->fakeAllKeysUp();
+  }
+
   // keyboard mapping changed
 #if HAVE_XKB_EXTENSION
   if (m_xkb && event->type == m_xkbEventBase) {
