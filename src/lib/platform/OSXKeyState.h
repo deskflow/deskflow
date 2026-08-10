@@ -162,4 +162,5 @@ private:
   bool m_altPressed;
   bool m_superPressed;
   bool m_capsPressed;
+  bool m_altRightPressed;
 };
