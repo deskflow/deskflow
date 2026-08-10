@@ -8,8 +8,8 @@
 #include "platform/OSXKeyState.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "platform/OSXKeyLayoutResource.h"
 #include "platform/OSXMediaKeySupport.h"
-#include "platform/OSXUchrKeyResource.h"
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
@@ -527,8 +527,7 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
     const void *resource;
     bool layoutValid = false;
 
-    // add regular keys
-    // try uchr resource first
+    // add regular keys from the layout's key data
     TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), g);
     CFDataRef resourceRef = nullptr;
     {
@@ -541,10 +540,10 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
       resource = CFDataGetBytePtr(resourceRef);
 
     if (layoutValid) {
-      OSXUchrKeyResource uchr(resource, keyboardType);
-      if (uchr.isValid()) {
-        LOG_VERBOSE("using uchr resource for group %d", g);
-        getKeyMap(keyMap, g, uchr);
+      OSXKeyLayoutResource keyResource(resource, keyboardType);
+      if (keyResource.isValid()) {
+        LOG_VERBOSE("using key layout for group %d", g);
+        getKeyMap(keyMap, g, keyResource);
         continue;
       }
     }

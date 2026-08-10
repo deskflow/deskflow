@@ -84,6 +84,8 @@ elseif(APPLE)
     OSXCocoaApp.m
     OSXEventQueueBuffer.cpp
     OSXEventQueueBuffer.h
+    OSXKeyLayoutResource.cpp
+    OSXKeyLayoutResource.h
     OSXKeyState.cpp
     OSXKeyState.h
     OSXMediaKeySupport.h
@@ -99,8 +101,6 @@ elseif(APPLE)
     OSXScreenSaverControl.h
     OSXScreenSaverUtil.h
     OSXScreenSaverUtil.m
-    OSXUchrKeyResource.cpp
-    OSXUchrKeyResource.h
   )
 elseif(UNIX)
   set(PLATFORM_SOURCES
