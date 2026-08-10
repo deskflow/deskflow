@@ -52,7 +52,8 @@ int main(int argc, char *argv[])
 #endif
 
 #if !defined(Q_OS_MAC) && !defined(Q_OS_WIN)
-  deskflow::platform::setAppId();
+  if (QT_VERSION < QT_VERSION_CHECK(6, 10, 0))
+    deskflow::platform::setAppId();
 #endif
 
   QCoreApplication::setApplicationName(kAppName);
