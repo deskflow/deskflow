@@ -510,10 +510,13 @@ void ServerConfigDialog::showEvent(QShowEvent *event)
 
 void ServerConfigDialog::showReadOnlyMessage()
 {
-  const QFile file = QFile(Settings::serverConfigFile());
-  if (!file.isWritable())
+
+  if (const auto file = QFile(Settings::serverConfigFile()); file.isWritable() && Settings::isWritable())
     return;
-  deskflow::gui::messages::showReadOnlySettings(this, Settings::serverConfigFile());
+
+  deskflow::gui::messages::showReadOnlySettings(
+      this, QStringLiteral("%1 and %2").arg(Settings::serverConfigFile(), Settings::settingsFile())
+  );
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
