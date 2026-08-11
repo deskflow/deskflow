@@ -51,57 +51,29 @@ protected:
   ~ScreenConfig() = default;
 
   template <typename T1, typename T2>
-  void readSettings(QSettingsProxy &settings, T1 &array, const QString &arrayName, const T2 &defaultValue)
-  {
-    int entries = settings.beginReadArray(arrayName + "Array");
-    array.clear();
-    for (int i = 0; i < entries; i++) {
-      settings.setArrayIndex(i);
-      QVariant v = settings.value(arrayName, defaultValue);
-      array.append(v.value<T2>());
-    }
-    settings.endArray();
-  }
-
-  template <typename T1, typename T2>
-  void readSettings(QSettingsProxy &settings, T1 &array, const QString &arrayName, const T2 &defaultValue, int entries)
+  void readSettings(
+      QSettingsProxy &settings, T1 &array, const QString &arrayName, const QString &valueName, const T2 &defaultValue,
+      int entries
+  )
   {
     Q_ASSERT(array.size() >= entries);
-    settings.beginReadArray(arrayName + "Array");
+    settings.beginReadArray(arrayName);
     for (int i = 0; i < entries; i++) {
       settings.setArrayIndex(i);
-      QVariant v = settings.value(arrayName, defaultValue);
+      QVariant v = settings.value(valueName, defaultValue);
       array[i] = v.value<T2>();
     }
     settings.endArray();
   }
 
-  template <typename T> void writeSettings(QSettingsProxy &settings, const T &array, const QString &arrayName) const
+  template <typename T>
+  void writeSettings(QSettingsProxy &settings, const T &array, const QString &arrayName, const QString &valueName) const
   {
-    settings.beginWriteArray(arrayName + "Array");
+    settings.beginWriteArray(arrayName);
     for (int i = 0; i < array.size(); i++) {
       settings.setArrayIndex(i);
-      settings.setValue(arrayName, array[i]);
+      settings.setValue(valueName, array[i]);
     }
     settings.endArray();
   }
-
-public:
-  static const char *modifierName(int idx)
-  {
-    return m_ModifierNames[idx];
-  }
-  static const char *fixName(int idx)
-  {
-    return m_FixNames[idx];
-  }
-  static const char *switchCornerName(int idx)
-  {
-    return m_SwitchCornerNames[idx];
-  }
-
-private:
-  static const char *m_ModifierNames[];
-  static const char *m_FixNames[];
-  static const char *m_SwitchCornerNames[];
 };

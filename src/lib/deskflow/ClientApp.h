@@ -39,10 +39,6 @@ public:
   {
     // do nothing
   }
-  bool loadConfig(const QString &) override
-  {
-    return false;
-  }
   int start() override;
   int runInner(StartupFunc startup) override;
   deskflow::Screen *createScreen() override;

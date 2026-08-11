@@ -10,7 +10,6 @@
 #include "common/Enums.h"
 #include "common/Settings.h"
 #include "gui/FileTail.h"
-#include "gui/config/ServerConfig.h"
 
 #include <QMutex>
 #include <QObject>
@@ -38,7 +37,7 @@ public:
     StartFailed
   };
 
-  explicit CoreProcess(const ServerConfig &serverConfig);
+  CoreProcess();
 
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
@@ -107,7 +106,6 @@ private:
   void startProcessFromDaemon();
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
-  QPair<bool, QString> persistServerConfig() const;
   void setConnectionState(ConnectionState state);
   void setProcessState(ProcessState state);
   bool checkSecureSocket(const QString &line);
@@ -120,7 +118,6 @@ private:
   static QString processStateToString(const CoreProcess::ProcessState state);
   static QString wrapIpv6(const QString &address);
 
-  const ServerConfig &m_serverConfig;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;

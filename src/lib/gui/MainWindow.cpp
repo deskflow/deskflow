@@ -59,7 +59,6 @@ using namespace deskflow::gui;
 
 MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
-      m_coreProcess(m_serverConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
@@ -222,9 +221,6 @@ void MainWindow::setupControls()
   if (deskflow::platform::isMac()) {
     ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, false);
-    ui->btnSaveServerConfig->setFixedWidth(ui->btnSaveServerConfig->height());
-  } else {
-    ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
   }
   setStatusBar(m_statusBar);
 }
@@ -288,7 +284,6 @@ void MainWindow::connectSlots()
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
   connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
 
-  connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->btnConfigureClient, &QPushButton::clicked, this, [this] { showConfigureClient(); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
@@ -387,16 +382,9 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
     );
   } else if (error == CoreProcess::Error::StartFailed) {
     show();
-    auto message = tr("The Core executable could not be started.\n"
-                      "Please check if you have sufficient permissions to run %1.")
-                       .arg(kCoreBinName);
-
-    if (Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server) {
-      const auto mode =
-          Settings::value(Settings::Server::ExternalConfigFile).toBool() ? tr("read") : tr("read and write");
-      message.append(tr("\nAdditionally, check you are able to %1 the server config file: %2")
-                         .arg(mode, Settings::serverConfigFile()));
-    }
+    const auto message = tr("The Core executable could not be started.\n"
+                            "Please check if you have sufficient permissions to run %1.")
+                             .arg(kCoreBinName);
     QMessageBox::warning(this, kAppName, message);
   }
 }
@@ -439,18 +427,6 @@ void MainWindow::clearSettings()
 
   m_saveOnExit = false;
   diagnostic::clearSettings(true);
-}
-
-bool MainWindow::saveServerConfig()
-{
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Save server configuration as..."));
-
-  if (!fileName.isEmpty() && !m_serverConfig.save(fileName)) {
-    QMessageBox::warning(this, tr("Save failed"), tr("Could not save server configuration to file."));
-    return true;
-  }
-
-  return false;
 }
 
 void MainWindow::openAboutDialog()
@@ -771,9 +747,6 @@ void MainWindow::handleUnrecognisedClient(const QString &clientName)
   }
 
   if (m_newClientPromptShowing || m_serverConfigDialogVisible)
-    return;
-
-  if (Settings::value(Settings::Server::ExternalConfig).toBool())
     return;
 
   if (m_serverConfig.isFull() || m_serverConfig.screenExists(clientName))

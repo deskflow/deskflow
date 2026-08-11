@@ -55,7 +55,6 @@ public:
   void parseArgs() override;
   const char *daemonName() const override;
   void loadConfig() override;
-  bool loadConfig(const QString &filename) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
   int runInner(StartupFunc startup) override;
@@ -102,6 +101,7 @@ public:
   }
 
 private:
+  bool loadConfigFromSettings();
   void handleScreenSwitched() const;
   std::unique_ptr<ISocketFactory> getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;

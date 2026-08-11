@@ -370,7 +370,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation>서버 설정 내보내기</translation>
+        <translation type="vanished">서버 설정 내보내기</translation>
     </message>
     <message>
         <source>You must select a mode</source>
@@ -402,15 +402,15 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation>서버 설정을 다른 이름으로 저장...</translation>
+        <translation type="vanished">서버 설정을 다른 이름으로 저장...</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation>저장 실패</translation>
+        <translation type="vanished">저장 실패</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation>서버 설정을 파일로 저장할 수 없습니다.</translation>
+        <translation type="vanished">서버 설정을 파일로 저장할 수 없습니다.</translation>
     </message>
     <message>
         <source>Start</source>
@@ -571,11 +571,11 @@ Valid names:
     </message>
     <message>
         <source>read</source>
-        <translation type="unfinished">읽기</translation>
+        <translation type="obsolete">읽기</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation type="unfinished">읽기 및 쓰기</translation>
+        <translation type="obsolete">읽기 및 쓰기</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
@@ -586,7 +586,7 @@ Please check if you have sufficient permissions to run %1.</source>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
 또한 서버 구성 파일을 %1할 수 있는지 확인하세요: %2</translation>
     </message>
     <message>
@@ -1051,26 +1051,26 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>격자 기반 레이아웃 편집기로는 만들 수 없는 복잡한 컴퓨터 배치를 구성하려면 서버 설정 파일을 사용하세요.
+        <translation type="vanished">격자 기반 레이아웃 편집기로는 만들 수 없는 복잡한 컴퓨터 배치를 구성하려면 서버 설정 파일을 사용하세요.
 
 이 설정을 활성화하면 서버 설정 GUI가 비활성화됩니다.</translation>
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation>서버 설정 파일 사용</translation>
+        <translation type="vanished">서버 설정 파일 사용</translation>
     </message>
     <message>
         <source>Config file path</source>
-        <translation>설정 파일 경로</translation>
+        <translation type="vanished">설정 파일 경로</translation>
     </message>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation>%1 설정 (*.conf);;모든 파일 (*.*)</translation>
+        <translation type="vanished">%1 설정 (*.conf);;모든 파일 (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation>설정 파일 찾아보기</translation>
+        <translation type="vanished">설정 파일 찾아보기</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>

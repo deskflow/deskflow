@@ -100,7 +100,6 @@ private:
   void openSettings();
   void startCore();
   void stopCore();
-  bool saveServerConfig();
   void resetCore();
 
   void showMyFingerprint();

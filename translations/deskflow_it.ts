@@ -354,7 +354,7 @@ Vuoi connetterti al server?
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation>Esporta configurazione server</translation>
+        <translation type="vanished">Esporta configurazione server</translation>
     </message>
     <message>
         <source>You must select a mode</source>
@@ -430,15 +430,15 @@ Vuoi connetterti al server?
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation>Salva configurazione server come...</translation>
+        <translation type="vanished">Salva configurazione server come...</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation>Salvataggio fallito</translation>
+        <translation type="vanished">Salvataggio fallito</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation>Impossibile salvare la configurazione del server nel file.</translation>
+        <translation type="vanished">Impossibile salvare la configurazione del server nel file.</translation>
     </message>
     <message>
         <source>Start</source>
@@ -571,11 +571,11 @@ Nomi validi:
     </message>
     <message>
         <source>read</source>
-        <translation type="unfinished">leggere</translation>
+        <translation type="obsolete">leggere</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation type="unfinished">leggere e scrivere</translation>
+        <translation type="obsolete">leggere e scrivere</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
@@ -586,7 +586,7 @@ Verifica di avere i permessi sufficienti per eseguire %1.</translation>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
 Inoltre, verifica di poter %1 il file di configurazione del server: %2</translation>
     </message>
     <message>
@@ -1049,28 +1049,28 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation>Utilizza un file di configurazione del server</translation>
+        <translation type="vanished">Utilizza un file di configurazione del server</translation>
     </message>
     <message>
         <source>Config file path</source>
-        <translation>Percorso del file di configurazione</translation>
+        <translation type="vanished">Percorso del file di configurazione</translation>
     </message>
     <message>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>Utilizza un file di configurazione del server per creare layout di computer complessi che non sono possibili con il semplice editor di layout del computer basato su griglia.
+        <translation type="vanished">Utilizza un file di configurazione del server per creare layout di computer complessi che non sono possibili con il semplice editor di layout del computer basato su griglia.
 
 L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia grafica di configurazione del server.</translation>
     </message>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation>%1 Configurazioni (*.conf);;Tutti i file (*.*)</translation>
+        <translation type="vanished">%1 Configurazioni (*.conf);;Tutti i file (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation>Cerca un file di configurazione</translation>
+        <translation type="vanished">Cerca un file di configurazione</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>

@@ -370,7 +370,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation>导出服务器配置</translation>
+        <translation type="vanished">导出服务器配置</translation>
     </message>
     <message>
         <source>You must select a mode</source>
@@ -402,15 +402,15 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation>另存服务器配置为...</translation>
+        <translation type="vanished">另存服务器配置为...</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation>保存失败</translation>
+        <translation type="vanished">保存失败</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation>无法将服务器配置保存到文件。</translation>
+        <translation type="vanished">无法将服务器配置保存到文件。</translation>
     </message>
     <message>
         <source>Start</source>
@@ -571,11 +571,11 @@ Valid names:
     </message>
     <message>
         <source>read</source>
-        <translation type="unfinished">读取</translation>
+        <translation type="obsolete">读取</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation type="unfinished">读取和写入</translation>
+        <translation type="obsolete">读取和写入</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
@@ -586,7 +586,7 @@ Please check if you have sufficient permissions to run %1.</source>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
 另外，请检查您是否能够%1服务器配置文件：%2</translation>
     </message>
     <message>
@@ -1053,26 +1053,26 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>使用服务器配置文件来创建简单的网格布局编辑器无法实现的复杂计算机布局。
+        <translation type="vanished">使用服务器配置文件来创建简单的网格布局编辑器无法实现的复杂计算机布局。
 
 启用此设置将禁用服务器配置 GUI。</translation>
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation>使用服务器配置文件</translation>
+        <translation type="vanished">使用服务器配置文件</translation>
     </message>
     <message>
         <source>Config file path</source>
-        <translation>配置文件路径</translation>
+        <translation type="vanished">配置文件路径</translation>
     </message>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation>%1 配置 (*.conf);;所有文件 (*.*)</translation>
+        <translation type="vanished">%1 配置 (*.conf);;所有文件 (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation>浏览配置文件</translation>
+        <translation type="vanished">浏览配置文件</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>

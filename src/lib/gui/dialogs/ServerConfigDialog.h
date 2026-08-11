@@ -73,9 +73,6 @@ protected:
   void toggleRelativeMouseMoves(bool enabled);
   void toggleProtocol();
 
-  void toggleExternalConfig(bool enable = false);
-  bool browseConfigFile();
-
   ServerConfig &serverConfig()
   {
     return m_serverConfig;
@@ -107,11 +104,9 @@ private:
   bool m_relativeMouseMoves;
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
-  bool m_originalServerConfigIsExternal;
   bool m_win32keepForeground;
   bool m_disableLockToComputer;
   bool m_defaultLockToComputerState;
-  QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;
 

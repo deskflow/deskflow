@@ -12,8 +12,8 @@
 #include <QString>
 #include <QTextStream>
 
-#include "Action.h"
-#include "KeySequence.h"
+#include "common/Action.h"
+#include "common/KeySequence.h"
 
 class HotkeyDialog;
 class ServerConfigDialog;

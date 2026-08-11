@@ -19,6 +19,8 @@
 #include <map>
 #include <set>
 
+#include <QStringList>
+
 namespace deskflow::server {
 class Config;
 class ConfigReadContext;
@@ -361,44 +363,26 @@ public:
   //! Compare configurations
   bool operator==(const Config &) const;
 
-  //! Read configuration
+  //! Load configuration
   /*!
-  Reads a configuration from a context.  Throws ServerConfigReadException on error
-  and context is unchanged.
+  Loads the configuration from the app settings.  Throws
+  ServerConfigReadException on error.
   */
-  void read(ConfigReadContext &context);
-
-  //! Read configuration
-  /*!
-  Reads a configuration from a stream.  Throws ServerConfigReadException on error.
-  */
-  friend std::istream &operator>>(std::istream &, Config &);
-
-  //! Write configuration
-  /*!
-  Writes a configuration to a stream.
-  */
-  friend std::ostream &operator<<(std::ostream &, const Config &);
+  void loadFromSettings();
 
   //! Get direction name
   /*!
   Returns the name of a direction (for debugging).
   */
   static const char *dirName(Direction);
-
-  //! Get interval as string
-  /*!
-  Returns an interval as a parseable string.
-  */
-  static std::string formatInterval(const Interval &);
   //@}
 
 private:
-  void readSection(ConfigReadContext &);
-  void readSectionOptions(ConfigReadContext &);
-  void readSectionScreens(ConfigReadContext &);
-  void readSectionLinks(ConfigReadContext &);
-  void readSectionAliases(ConfigReadContext &);
+  QStringList addScreensFromSettings();
+  void addLinksFromSettings(const QStringList &cells);
+  void addOptionsFromSettings();
+  void addHotkeysFromSettings();
+  void parseHotkeyLine(ConfigReadContext &, const std::string &line);
 
   InputFilter::Condition *
   parseCondition(const ConfigReadContext &, const std::string &condition, const std::vector<std::string> &args);
@@ -408,8 +392,6 @@ private:
   );
 
   void parseScreens(const ConfigReadContext &, const std::string_view &, std::set<std::string> &screens) const;
-  static const char *getOptionName(OptionID);
-  static std::string getOptionValue(OptionID, OptionValue);
 
 private:
   CellMap m_map;
@@ -423,7 +405,7 @@ private:
 
 //! Configuration read context
 /*!
-Maintains a context when reading a configuration from a stream.
+Maintains a context when parsing hotkey lines generated from the app settings.
 */
 class ConfigReadContext
 {
@@ -436,15 +418,6 @@ public:
   bool readLine(std::string &);
   uint32_t getLineNumber() const;
 
-  bool operator!() const;
-
-  OptionValue parseBoolean(const std::string &) const;
-  OptionValue parseInt(const std::string &) const;
-  OptionValue parseModifierKey(const std::string &) const;
-  OptionValue parseCorner(const std::string &) const;
-  OptionValue parseCorners(const std::string &) const;
-  OptionValue parseProtocol(const std::string &) const;
-  Config::Interval parseInterval(const ArgList &args) const;
   void parseNameWithArgs(
       const std::string &type, const std::string &line, const std::string &delim, std::string::size_type &index,
       std::string &name, ArgList &args
@@ -452,17 +425,10 @@ public:
   IPlatformScreen::KeyInfo *parseKeystroke(const std::string &keystroke) const;
   IPlatformScreen::KeyInfo *parseKeystroke(const std::string &keystroke, const std::set<std::string> &screens) const;
   IPlatformScreen::ButtonInfo parseMouse(const std::string &mouse) const;
-  KeyModifierMask parseModifier(const std::string &modifiers) const;
-  std::istream &getStream() const
-  {
-    return m_stream;
-  };
 
 private:
   // not implemented
   ConfigReadContext &operator=(const ConfigReadContext &);
-
-  static std::string concatArgs(const ArgList &args);
 
 private:
   std::istream &m_stream;
@@ -476,6 +442,7 @@ Thrown when a configuration stream cannot be parsed.
 class ServerConfigReadException : public BaseException
 {
 public:
+  explicit ServerConfigReadException(const std::string &);
   ServerConfigReadException(const ConfigReadContext &context, const std::string &);
   ServerConfigReadException(const ConfigReadContext &context, const char *errorFmt, const std::string &arg);
   ~ServerConfigReadException() throw() override = default;

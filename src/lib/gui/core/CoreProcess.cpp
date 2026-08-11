@@ -99,9 +99,7 @@ QString CoreProcess::wrapIpv6(const QString &address)
 // CoreProcess
 //
 
-CoreProcess::CoreProcess(const ServerConfig &serverConfig)
-    : m_serverConfig(serverConfig),
-      m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
+CoreProcess::CoreProcess() : m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
   m_appPath = QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName);
   if (!QFile::exists(m_appPath)) {
@@ -392,24 +390,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   QStringList args = {coreMode};
 
-  if (m_mode == Settings::CoreMode::Server) {
-    const auto [hasNeededPermissions, configFilename] = persistServerConfig();
-    if (configFilename.isEmpty()) {
-      qCritical("not starting core process, no server config file");
-      setProcessState(ProcessState::Stopped);
-      setConnectionState(ConnectionState::Disconnected);
-      Q_EMIT error(Error::StartFailed);
-      return;
-    }
-    if (!hasNeededPermissions) {
-      setProcessState(ProcessState::Stopped);
-      setConnectionState(ConnectionState::Disconnected);
-      Q_EMIT error(Error::StartFailed);
-      return;
-    }
-    qInfo("core config file: %s", qPrintable(configFilename));
-  }
-
   qDebug().noquote() << "log level:" << Settings::logLevelText();
 
   if (Settings::value(Settings::Log::ToFile).toBool()) {
@@ -524,24 +504,6 @@ void CoreProcess::cleanup()
   if (isDesktop && isRunning) {
     stop();
   }
-}
-
-QPair<bool, QString> CoreProcess::persistServerConfig() const
-{
-  if (Settings::value(Settings::Server::ExternalConfig).toBool()) {
-    return {Settings::isServerConfigFileReadable(), Settings::value(Settings::Server::ExternalConfigFile).toString()};
-  }
-
-  const auto configFilePath = Settings::defaultValue(Settings::Server::ExternalConfigFile).toString();
-  QFile configFile(configFilePath);
-  if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    qWarning() << "failed to open core config file for write:" << configFilePath;
-    return {false, configFile.fileName()};
-  }
-
-  m_serverConfig.save(configFile);
-  configFile.close();
-  return {Settings::isServerConfigFileReadable(), configFile.fileName()};
 }
 
 void CoreProcess::setConnectionState(ConnectionState state)

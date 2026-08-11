@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "Action.h"
+#include "common/Action.h"
 
 #include <QSettings>
 #include <QTextStream>
