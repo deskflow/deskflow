@@ -354,7 +354,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation>サーバー設定をエクスポート</translation>
+        <translation type="vanished">サーバー設定をエクスポート</translation>
     </message>
     <message>
         <source>You must select a mode</source>
@@ -386,15 +386,15 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation>サーバー設定を保存…</translation>
+        <translation type="vanished">サーバー設定を保存…</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation>保存に失敗</translation>
+        <translation type="vanished">保存に失敗</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation>サーバー設定をファイルに保存できませんでした。</translation>
+        <translation type="vanished">サーバー設定をファイルに保存できませんでした。</translation>
     </message>
     <message>
         <source>Start</source>
@@ -555,11 +555,11 @@ Valid names:
     </message>
     <message>
         <source>read</source>
-        <translation>読み取り</translation>
+        <translation type="vanished">読み取り</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation>書き込み</translation>
+        <translation type="vanished">書き込み</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
@@ -570,7 +570,7 @@ Please check if you have sufficient permissions to run %1.</source>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation>
+        <translation type="vanished">
 また、サーバー設定ファイルへの%1権限があることを確認してください: %2</translation>
     </message>
     <message>
@@ -1037,26 +1037,26 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>GUIでの単純な配置ではできないような複雑なコンピューター配置を設定したい場合は、サーバー設定ファイルを使用してください。
+        <translation type="vanished">GUIでの単純な配置ではできないような複雑なコンピューター配置を設定したい場合は、サーバー設定ファイルを使用してください。
 
 この設定を有効にすると、サーバー設定用GUIは無効になります。</translation>
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation>サーバー設定ファイルを利用する</translation>
+        <translation type="vanished">サーバー設定ファイルを利用する</translation>
     </message>
     <message>
         <source>Config file path</source>
-        <translation>設定ファイルのパス</translation>
+        <translation type="vanished">設定ファイルのパス</translation>
     </message>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation>%1 設定 (*.conf);;すべてのファイル (*.*)</translation>
+        <translation type="vanished">%1 設定 (*.conf);;すべてのファイル (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation>設定ファイルを選択</translation>
+        <translation type="vanished">設定ファイルを選択</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>

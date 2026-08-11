@@ -6,6 +6,7 @@
  */
 
 #include "KeySequence.h"
+
 #include <QSettings>
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)

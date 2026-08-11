@@ -91,8 +91,6 @@ public:
 
   void loadSettings(QSettingsProxy &settings);
   void saveSettings(QSettingsProxy &settings) const;
-  [[nodiscard]] QString screensSection() const;
-  [[nodiscard]] QString aliasesSection() const;
 
   [[nodiscard]] bool swapped() const
   {

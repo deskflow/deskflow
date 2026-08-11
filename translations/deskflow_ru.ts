@@ -354,7 +354,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation>Экспортировать конфигурацию сервера</translation>
+        <translation type="vanished">Экспортировать конфигурацию сервера</translation>
     </message>
     <message>
         <source>You must select a mode</source>
@@ -386,15 +386,15 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation>Сохранить конфигурацию сервера как...</translation>
+        <translation type="vanished">Сохранить конфигурацию сервера как...</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation>Ошибка сохранения</translation>
+        <translation type="vanished">Ошибка сохранения</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation>Не удалось сохранить файл конфигурации сервера.</translation>
+        <translation type="vanished">Не удалось сохранить файл конфигурации сервера.</translation>
     </message>
     <message>
         <source>Start</source>
@@ -555,11 +555,11 @@ Valid names:
     </message>
     <message>
         <source>read</source>
-        <translation type="unfinished">прочитать</translation>
+        <translation type="obsolete">прочитать</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation type="unfinished">читать и записывать</translation>
+        <translation type="obsolete">читать и записывать</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
@@ -570,7 +570,7 @@ Please check if you have sufficient permissions to run %1.</source>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
 Также убедитесь, что вы можете %1 файл конфигурации сервера: %2</translation>
     </message>
     <message>
@@ -1035,24 +1035,24 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>Используйте файл конфигурации для сложных макетов. Включение этой опции отключит графический редактор.</translation>
+        <translation type="vanished">Используйте файл конфигурации для сложных макетов. Включение этой опции отключит графический редактор.</translation>
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation>Использовать файл конфигурации сервера</translation>
+        <translation type="vanished">Использовать файл конфигурации сервера</translation>
     </message>
     <message>
         <source>Config file path</source>
-        <translation>Путь к файлу конфигурации</translation>
+        <translation type="vanished">Путь к файлу конфигурации</translation>
     </message>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation>Конфигурации %1 (*.conf);;Все файлы (*.*)</translation>
+        <translation type="vanished">Конфигурации %1 (*.conf);;Все файлы (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation>Выбор файла конфигурации</translation>
+        <translation type="vanished">Выбор файла конфигурации</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>
