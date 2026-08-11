@@ -7,6 +7,7 @@
 #include "ClientConfigDialog.h"
 #include "ui_ClientConfigDialog.h"
 
+#include "Messages.h"
 #include "common/Settings.h"
 
 #include <QPushButton>
@@ -32,6 +33,12 @@ void ClientConfigDialog::changeEvent(QEvent *e)
     ui->retranslateUi(this);
     updateText();
   }
+}
+
+void ClientConfigDialog::showEvent(QShowEvent *event)
+{
+  QDialog::showEvent(event);
+  Q_EMIT shown();
 }
 
 void ClientConfigDialog::updateText() const
@@ -60,6 +67,7 @@ void ClientConfigDialog::initConnections() const
   connect(ui->sbYScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->cbXScrollInvert, &QCheckBox::checkStateChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
   connect(ui->sbXScrollScale, &QDoubleSpinBox::valueChanged, this, &ClientConfigDialog::setButtonBoxEnabledButtons);
+  connect(this, &ClientConfigDialog::shown, this, &ClientConfigDialog::showReadOnlyMessage, Qt::QueuedConnection);
 }
 
 bool ClientConfigDialog::isModified() const
@@ -121,4 +129,11 @@ void ClientConfigDialog::save()
   Settings::setValue(Settings::Client::InvertXScroll, ui->cbXScrollInvert->isChecked());
   Settings::setValue(Settings::Client::XScrollScale, ui->sbXScrollScale->value());
   QDialog::accept();
+}
+
+void ClientConfigDialog::showReadOnlyMessage()
+{
+  if (Settings::isWritable())
+    return;
+  deskflow::gui::messages::showReadOnlySettings(this, Settings::settingsFile());
 }

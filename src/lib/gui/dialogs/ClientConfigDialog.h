@@ -27,7 +27,12 @@ public:
 protected:
   void changeEvent(QEvent *e) override;
 
+Q_SIGNALS:
+  void shown();
+
 private:
+  void showEvent(QShowEvent *event) override;
+
   /**
    * @brief updateText update widget text
    */
@@ -71,6 +76,8 @@ private:
    * @brief save to settings and then calls QDialog::accept
    */
   void save();
+
+  void showReadOnlyMessage();
 
   Ui::ClientConfigDialog *ui = nullptr;
 };
