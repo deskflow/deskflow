@@ -27,6 +27,8 @@ void showCloseReminder(QWidget *parent);
 
 bool showNewClientPrompt(QWidget *parent, const QString &clientName);
 
+void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
+
 bool showUpdateCheckOption(QWidget *parent);
 
 bool showDaemonOffline(QWidget *parent);

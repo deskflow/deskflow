@@ -13,6 +13,7 @@
 
 #include "common/I18N.h"
 #include "common/Settings.h"
+#include "gui/Messages.h"
 #include "gui/TlsUtility.h"
 #include "gui/core/NetworkMonitor.h"
 
@@ -198,11 +199,7 @@ void SettingsDialog::showReadOnlyMessage()
 {
   if (Settings::isWritable())
     return;
-  QMessageBox::information(
-      this, tr("%1 Read-only settings").arg(kAppName),
-      tr("<p>Settings are read-only because you only have read access to the file:</p><p>%1</p>")
-          .arg(QDir::toNativeSeparators(Settings::settingsFile()))
-  );
+  messages::showReadOnlySettings(this, Settings::settingsFile());
 }
 
 void SettingsDialog::resetAllSettings()
