@@ -7,6 +7,7 @@
  */
 
 #include "ServerConfigDialog.h"
+#include "Messages.h"
 #include "ui_ServerConfigDialog.h"
 
 #include "common/Constants.h"
@@ -498,6 +499,21 @@ void ServerConfigDialog::initConnections() const
   );
   connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
   connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+  connect(this, &ServerConfigDialog::shown, this, &ServerConfigDialog::showReadOnlyMessage, Qt::QueuedConnection);
+}
+
+void ServerConfigDialog::showEvent(QShowEvent *event)
+{
+  QDialog::showEvent(event);
+  Q_EMIT shown();
+}
+
+void ServerConfigDialog::showReadOnlyMessage()
+{
+  const QFile file = QFile(Settings::serverConfigFile());
+  if (!file.isWritable())
+    return;
+  deskflow::gui::messages::showReadOnlySettings(this, Settings::serverConfigFile());
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)

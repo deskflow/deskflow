@@ -29,6 +29,9 @@ public:
   ~ServerConfigDialog() override;
   bool addClient(const QString &clientName);
 
+Q_SIGNALS:
+  void shown();
+
 public Q_SLOTS:
   void accept() override;
   void reject() override;
@@ -92,6 +95,8 @@ protected:
 private:
   void loadFromConfig();
   void initConnections() const;
+  void showEvent(QShowEvent *event) override;
+  void showReadOnlyMessage();
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
   int m_columns;
