@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -12,6 +13,7 @@ class ServerConfigTests : public QObject
 private Q_SLOTS:
   void equalityCheck();
   void equalityCheck_diff_options();
+  void streamOutput_macNavigationGesturesEnabled_serializesTrue();
   void equalityCheck_diff_alias();
   void equalityCheck_diff_filters();
   //  void equalityCheck_diff_address();

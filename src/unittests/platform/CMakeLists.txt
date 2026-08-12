@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
@@ -22,6 +22,13 @@ elseif(APPLE)
     DEPENDS platform
     LIBS base arch
     SOURCE OSXKeyStateTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  create_test(
+    NAME OSXScreenTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE OSXScreenTests.cpp
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(UNIX)

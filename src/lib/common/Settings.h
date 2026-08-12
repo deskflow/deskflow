@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2016 - 2025 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -109,6 +110,7 @@ public:
     inline static const auto DisableLockToComputer = QStringLiteral("server/disableLockToComputer");
     inline static const auto EnableClipboard = QStringLiteral("server/enableClipboard");
     inline static const auto EnableHeatbeat = QStringLiteral("server/enableHeatbeat");
+    inline static const auto MacNavigationGesturesEnabled = QStringLiteral("server/macNavigationGesturesEnabled");
     inline static const auto EnableSwitchDelay = QStringLiteral("server/enableSwitchDelay");
     inline static const auto EnableSwitchDoubleTap = QStringLiteral("server/enableSwitchDoubleTap");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
@@ -305,6 +307,7 @@ private:
     , Server::DisableLockToComputer
     , Server::EnableClipboard
     , Server::EnableHeatbeat
+    , Server::MacNavigationGesturesEnabled
     , Server::EnableSwitchDelay
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig
@@ -338,6 +341,7 @@ private:
     , Server::DefaultLockToComputerState
     , Server::DisableLockToComputer
     , Server::EnableHeatbeat
+    , Server::MacNavigationGesturesEnabled
     , Server::EnableSwitchDelay
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig

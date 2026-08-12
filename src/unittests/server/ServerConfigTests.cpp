@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2014 - 2016 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,6 +9,8 @@
 #include "ServerConfigTests.h"
 
 #include "server/Config.h"
+
+#include <sstream>
 
 class OnlySystemFilter : public InputFilter::Condition
 {
@@ -78,6 +81,17 @@ void ServerConfigTests::equalityCheck_diff_options()
   QVERIFY(a.addOption("screenA", kOptionClipboardSharing, 0));
   QVERIFY(b.addOption("screenA", kOptionClipboardSharing, 1));
   QVERIFY(a != b);
+}
+
+void ServerConfigTests::streamOutput_macNavigationGesturesEnabled_serializesTrue()
+{
+  Config config(nullptr);
+  QVERIFY(config.addOption("", kOptionMacNavigationGestures, 1));
+
+  std::ostringstream stream;
+  stream << config;
+
+  QVERIFY(QString::fromStdString(stream.str()).contains(QStringLiteral("macNavigationGestures = true")));
 }
 
 void ServerConfigTests::equalityCheck_diff_alias()
