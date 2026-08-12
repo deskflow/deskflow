@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -51,6 +52,11 @@ bool isOSXDevelopmentBuild()
 {
   std::string bundleURL = [[[NSBundle mainBundle] bundleURL].absoluteString UTF8String];
   return (bundleURL.find("Applications/Deskflow.app") == std::string::npos);
+}
+
+bool isLogiOptionsPlusInstalled()
+{
+  return [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.logi.optionsplus"] != nil;
 }
 
 bool showOSXNotification(const QString &title, const QString &body)
