@@ -31,7 +31,7 @@ public:
 
 public Q_SLOTS:
   void accept() override;
-  void reject() override;
+
   void message(const QString &message)
   {
     m_message = message;
@@ -90,6 +90,7 @@ protected:
   }
 
 private:
+  void cancel();
   void loadFromConfig();
   void initConnections() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
