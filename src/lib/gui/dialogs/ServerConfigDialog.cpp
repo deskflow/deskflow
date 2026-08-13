@@ -56,7 +56,7 @@ bool ServerConfigDialog::addClient(const QString &clientName)
   return addComputer(clientName, true);
 }
 
-void ServerConfigDialog::accept()
+void ServerConfigDialog::save()
 {
   if (ui->groupExternalConfig->isChecked() && !QFile::exists(ui->lineConfigFile->text())) {
 
@@ -452,7 +452,7 @@ void ServerConfigDialog::loadFromConfig()
 
 void ServerConfigDialog::initConnections() const
 {
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::save);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::cancel);
   connect(ui->lblRemoveScreen, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
   connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);

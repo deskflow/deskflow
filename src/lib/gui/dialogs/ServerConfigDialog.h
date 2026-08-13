@@ -30,8 +30,6 @@ public:
   bool addClient(const QString &clientName);
 
 public Q_SLOTS:
-  void accept() override;
-
   void message(const QString &message)
   {
     m_message = message;
@@ -90,6 +88,7 @@ protected:
   }
 
 private:
+  void save();
   void cancel();
   void loadFromConfig();
   void initConnections() const;
