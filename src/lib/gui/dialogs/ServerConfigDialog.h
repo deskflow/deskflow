@@ -14,6 +14,7 @@
 
 #include <QDialog>
 
+class SettingsDialogButtonBox;
 class QItemSelection;
 
 namespace Ui {
@@ -88,6 +89,7 @@ private:
   void cancel();
   void loadFromConfig();
   void initConnections() const;
+  void updateControls() const;
   void onChange();
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
@@ -111,4 +113,5 @@ private:
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;
+  SettingsDialogButtonBox *m_buttonBox = nullptr;
 };
