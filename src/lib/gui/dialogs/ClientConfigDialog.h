@@ -8,6 +8,8 @@
 
 #include <QDialog>
 
+class SettingsDialogButtonBox;
+
 namespace Ui {
 class ClientConfigDialog;
 }
@@ -29,9 +31,9 @@ protected:
 
 private:
   /**
-   * @brief updateText update widget text
+   * @brief updateControls update widget enable state
    */
-  void updateText() const;
+  void updateControls() const;
 
   /**
    * @brief initConnections
@@ -73,4 +75,5 @@ private:
   void save();
 
   Ui::ClientConfigDialog *ui = nullptr;
+  SettingsDialogButtonBox *m_buttonBox = nullptr;
 };
