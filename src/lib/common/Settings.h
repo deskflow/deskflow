@@ -15,6 +15,7 @@
 #include "common/NetworkProtocol.h"
 #include "common/QSettingsProxy.h"
 
+class QFileSystemWatcher;
 class Settings : public QObject
 {
   Q_OBJECT
@@ -198,6 +199,7 @@ public:
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
+  void settingsWritableChanged(bool writable);
   void serverSettingsChanged();
 
 private:
@@ -227,8 +229,16 @@ private:
    */
   static QString cleanComputerName(const QString &name);
 
+  /**
+   * @brief checkIfSettingsWritableChange
+   * Checks if the changed settings is now read only
+   */
+  void checkIfSettingsWritableChange() const;
+
   QSettings *m_settings = nullptr;
   QSettings *m_stateSettings = nullptr;
+  bool m_settingsWritable;
+  QFileSystemWatcher *m_settingsWatcher = nullptr;
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
