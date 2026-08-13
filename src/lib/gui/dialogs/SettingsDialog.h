@@ -27,7 +27,6 @@ public:
   ~SettingsDialog() override;
 
 Q_SIGNALS:
-  void shown();
   void requestRemoveAllSettings();
 
 protected:
@@ -40,7 +39,6 @@ private:
   void browseLogPath();
   void setLogToFile(bool logToFile);
   void accept() override;
-  void showEvent(QShowEvent *event) override;
   bool isClientMode() const;
   void updateTlsControls();
   void updateTlsControlsEnabled();
