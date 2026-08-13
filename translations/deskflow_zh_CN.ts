@@ -1167,7 +1167,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;p&gt;您确定要清除所有设置并重新启动 %1 吗？&lt;/p&gt; &lt;p&gt;此操作无法撤销。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Required messages</source>

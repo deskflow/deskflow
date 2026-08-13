@@ -1141,7 +1141,7 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;p&gt;¿Está seguro de que desea borrar toda la configuración y reiniciar %1?&lt;/p&gt; &lt;p&gt;Esta acción no se puede deshacer.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Required messages</source>

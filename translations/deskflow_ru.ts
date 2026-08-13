@@ -1163,7 +1163,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;p&gt;Вы уверены, что хотите сбросить все настройки и перезапустить %1?&lt;/p&gt; &lt;p&gt;Это действие нельзя отменить.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Required messages</source>

@@ -1167,7 +1167,7 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;p&gt;すべての設定を消去して %1 を再起動してもよろしいですか？&lt;/p&gt; &lt;p&gt;この操作は元に戻せません。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Required messages</source>
