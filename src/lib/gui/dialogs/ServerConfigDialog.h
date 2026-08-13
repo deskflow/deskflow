@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -28,17 +28,13 @@ public:
   ServerConfigDialog(QWidget *parent, ServerConfig &config);
   ~ServerConfigDialog() override;
   bool addClient(const QString &clientName);
-
-public Q_SLOTS:
   void message(const QString &message)
   {
     m_message = message;
   }
 
-protected Q_SLOTS:
-  void onScreenRemoved();
-
 protected:
+  void onScreenRemoved();
   void addClient();
   bool addComputer(const QString &clientName, bool doSilent);
 
@@ -92,6 +88,7 @@ private:
   void cancel();
   void loadFromConfig();
   void initConnections() const;
+  void onChange();
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
   int m_columns;
@@ -114,7 +111,4 @@ private:
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
   ScreenSetupModel m_screenSetupModel;
-
-private Q_SLOTS:
-  void onChange();
 };
