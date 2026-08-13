@@ -174,11 +174,15 @@ QString Settings::cleanComputerName(const QString &name)
   return cleanName;
 }
 
-void Settings::checkIfSettingsWritableChange() const
+void Settings::checkIfSettingsWritableChange()
 {
-  bool writable = m_settings->isWritable();
+  if (!instance()->m_settingsWatcher->files().contains(Settings::settingsFile()))
+    m_settingsWatcher->addPath(Settings::settingsFile());
+
+  bool writable = Settings::isWritable();
   if (writable == m_settingsWritable)
     return;
+  qDebug() << QString("Setting are now %1").arg(writable ? "writable" : "readonly");
   instance()->m_settingsWritable = writable;
   Q_EMIT instance()->settingsWritableChanged(writable);
 }

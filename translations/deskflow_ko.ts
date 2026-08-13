@@ -1184,14 +1184,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 Read-only settings</source>
-        <translation type="unfinished">%1 읽기 전용 설정</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;다음 파일에 대한 쓰기 권한이 없어 설정이 읽기 전용입니다:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Required messages</source>
         <translation>필수 메시지</translation>
     </message>
@@ -1214,22 +1206,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>상세 디버그 출력</translation>
-    </message>
-    <message>
-        <source>Close and save changes</source>
-        <translation>변경 사항 저장 후 닫기</translation>
-    </message>
-    <message>
-        <source>Close and forget changes</source>
-        <translation>저장하지 않고 닫기</translation>
-    </message>
-    <message>
-        <source>Reset to stored values</source>
-        <translation type="unfinished">저장된 값으로 재설정</translation>
-    </message>
-    <message>
-        <source>Reset to default values</source>
-        <translation type="unfinished">기본값으로 재설정</translation>
     </message>
     <message>
         <source>Automatic</source>
@@ -1294,6 +1270,33 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Remove all settings</source>
         <translation type="unfinished">모든 설정 제거</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsDialogButtonBox</name>
+    <message>
+        <source>Settings are read only</source>
+        <translation type="unfinished">설정은 읽기 전용입니다</translation>
+    </message>
+    <message>
+        <source>%1 is not writable</source>
+        <translation type="unfinished">%1은(는) 쓰기 가능하지 않습니다</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">변경 사항 저장 후 닫기</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">저장하지 않고 닫기</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">저장된 값으로 재설정</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">기본값으로 재설정</translation>
     </message>
 </context>
 <context>
