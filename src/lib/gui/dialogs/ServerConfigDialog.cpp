@@ -99,7 +99,7 @@ void ServerConfigDialog::accept()
   QDialog::accept();
 }
 
-void ServerConfigDialog::reject()
+void ServerConfigDialog::cancel()
 {
   serverConfig().setUseExternalConfig(m_originalServerConfigIsExternal);
   serverConfig().setConfigFile(m_originalServerConfigUsesExternalFile);
@@ -453,7 +453,7 @@ void ServerConfigDialog::loadFromConfig()
 void ServerConfigDialog::initConnections() const
 {
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
-  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::reject);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::cancel);
   connect(ui->lblRemoveScreen, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
   connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);
   connect(ui->btnEditHotkey, &QPushButton::clicked, this, &ServerConfigDialog::editHotkey);
