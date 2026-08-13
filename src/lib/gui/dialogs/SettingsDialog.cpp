@@ -187,12 +187,6 @@ void SettingsDialog::setLogToFile(bool logToFile)
   ui->widgetLogFilename->setEnabled(logToFile);
 }
 
-void SettingsDialog::showEvent(QShowEvent *event)
-{
-  QDialog::showEvent(event);
-  Q_EMIT shown();
-}
-
 void SettingsDialog::resetAllSettings()
 {
   auto result = QMessageBox::question(
@@ -378,8 +372,14 @@ void SettingsDialog::updateControls()
   ui->comboInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
   ui->groupLogToFile->setEnabled(writable);
+  ui->comboLanguage->setEnabled(writable);
+  ui->cbShowVersion->setEnabled(writable);
+  ui->cbGuiDebug->setEnabled(writable);
+  ui->rbIconColorful->setEnabled(writable);
+  ui->rbIconMono->setEnabled(writable);
   ui->rbAutoHide->setEnabled(writable);
   ui->rbShowOnStart->setEnabled(writable);
+  ui->btnClearAllSettings->setEnabled(writable);
   ui->cbAutoUpdate->setEnabled(writable);
   ui->cbPreventSleep->setEnabled(writable);
   ui->lineTlsCertPath->setEnabled(writable);
