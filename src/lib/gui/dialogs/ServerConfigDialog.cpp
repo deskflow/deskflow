@@ -16,6 +16,7 @@
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
+#include "gui/widgets/SettingsDialogButtonBox.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -31,10 +32,15 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_originalServerConfigIsExternal(config.useExternalConfig()),
       m_originalServerConfigUsesExternalFile(config.configFile()),
       m_serverConfig(config),
-      m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows)
+      m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows),
+      m_buttonBox{new SettingsDialogButtonBox(this)}
 {
   ui->setupUi(this);
   ui->tabWidget->setCurrentIndex(0);
+  layout()->addWidget(m_buttonBox);
+
+  m_buttonBox->enableReset(false);
+  m_buttonBox->enableRestoreDefaults(false);
 
   loadFromConfig();
 
@@ -448,12 +454,13 @@ void ServerConfigDialog::loadFromConfig()
   } else {
     server->markAsServer();
   }
+  updateControls();
 }
 
 void ServerConfigDialog::initConnections() const
 {
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::save);
-  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::cancel);
+  connect(m_buttonBox, &SettingsDialogButtonBox::accepted, this, &ServerConfigDialog::save);
+  connect(m_buttonBox, &SettingsDialogButtonBox::rejected, this, &ServerConfigDialog::cancel);
   connect(ui->lblRemoveScreen, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
   connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);
   connect(ui->btnEditHotkey, &QPushButton::clicked, this, &ServerConfigDialog::editHotkey);
@@ -498,6 +505,26 @@ void ServerConfigDialog::initConnections() const
   );
   connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
   connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+  connect(Settings::instance(), &Settings::settingsWritableChanged, this, &ServerConfigDialog::updateControls);
+}
+
+void ServerConfigDialog::updateControls() const
+{
+  const bool writable = Settings::isWritable();
+  ui->cbDefaultLockToComputerState->setEnabled(writable);
+  ui->cbDisableLockToComputer->setEnabled(writable);
+  ui->cbEnableClipboard->setEnabled(writable);
+  ui->sbClipboardSizeLimit->setEnabled(writable);
+  ui->rbProtocolBarrier->setEnabled(writable);
+  ui->rbProtocolSynergy->setEnabled(writable);
+  ui->cbHeartbeat->setEnabled(writable);
+  ui->cbRelativeMouseMoves->setEnabled(writable);
+  ui->cbSwitchDelay->setEnabled(writable);
+  ui->cbWin32KeepForeground->setEnabled(writable);
+  ui->cbSwitchDoubleTap->setEnabled(writable);
+  ui->sbSwitchDoubleTap->setEnabled(writable && ui->cbSwitchDoubleTap->isChecked());
+  ui->sbSwitchDelay->setEnabled(writable && ui->cbSwitchDelay->isChecked());
+  ui->groupExternalConfig->setEnabled(writable);
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
@@ -532,6 +559,5 @@ void ServerConfigDialog::onChange()
       m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool() &&
       m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool() &&
       m_defaultLockToComputerState == Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
-  ui->buttonBox->button(QDialogButtonBox::Ok)
-      ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
+  m_buttonBox->enableSave(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }
