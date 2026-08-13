@@ -1186,14 +1186,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 Read-only settings</source>
-        <translation type="unfinished">%1 只读设置</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;设置是只读的，因为您对该文件只有读取权限：&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Required messages</source>
         <translation>必要消息</translation>
     </message>
@@ -1216,22 +1208,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>详细调试输出</translation>
-    </message>
-    <message>
-        <source>Close and save changes</source>
-        <translation type="unfinished">关闭并保存更改</translation>
-    </message>
-    <message>
-        <source>Close and forget changes</source>
-        <translation>关闭并放弃修改</translation>
-    </message>
-    <message>
-        <source>Reset to stored values</source>
-        <translation type="unfinished">重置为存储值</translation>
-    </message>
-    <message>
-        <source>Reset to default values</source>
-        <translation type="unfinished">重置为默认值</translation>
     </message>
     <message>
         <source>Automatic</source>
@@ -1296,6 +1272,33 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Remove all settings</source>
         <translation type="unfinished">移除所有设置</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsDialogButtonBox</name>
+    <message>
+        <source>Settings are read only</source>
+        <translation type="unfinished">设置仅为只读</translation>
+    </message>
+    <message>
+        <source>%1 is not writable</source>
+        <translation type="unfinished">%1 不可写入</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">关闭并保存更改</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">关闭并放弃修改</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">重置为存储值</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">重置为默认值</translation>
     </message>
 </context>
 <context>

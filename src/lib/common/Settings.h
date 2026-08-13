@@ -233,7 +233,7 @@ private:
    * @brief checkIfSettingsWritableChange
    * Checks if the changed settings is now read only
    */
-  void checkIfSettingsWritableChange() const;
+  void checkIfSettingsWritableChange();
 
   QSettings *m_settings = nullptr;
   QSettings *m_stateSettings = nullptr;

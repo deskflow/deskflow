@@ -120,6 +120,8 @@ add_library(${target} STATIC
   widgets/StatusBar.h
   widgets/TrashScreenWidget.cpp
   widgets/TrashScreenWidget.h
+  widgets/SettingsDialogButtonBox.cpp
+  widgets/SettingsDialogButtonBox.h
 )
 
 target_link_libraries(${target}

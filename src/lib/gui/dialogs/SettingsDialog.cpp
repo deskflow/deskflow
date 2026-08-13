@@ -15,6 +15,7 @@
 #include "common/Settings.h"
 #include "gui/TlsUtility.h"
 #include "gui/core/NetworkMonitor.h"
+#include "gui/widgets/SettingsDialogButtonBox.h"
 
 #include <QComboBox>
 #include <QDir>
@@ -26,10 +27,12 @@ using namespace deskflow::gui;
 SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig)
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
-      m_serverConfig(serverConfig)
+      m_serverConfig(serverConfig),
+      m_buttonBox{new SettingsDialogButtonBox(this)}
 {
 
   ui->setupUi(this);
+  layout()->addWidget(m_buttonBox);
   ui->tabWidget->setCurrentIndex(0);
 
   // these are enabled by the control next to them
@@ -93,15 +96,10 @@ void SettingsDialog::changeEvent(QEvent *e)
 
 void SettingsDialog::initConnections() const
 {
-  connect(this, &SettingsDialog::shown, this, &SettingsDialog::showReadOnlyMessage, Qt::QueuedConnection);
-
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
-  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-  connect(ui->buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, this, &SettingsDialog::loadFromConfig);
-  connect(
-      ui->buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, this,
-      &SettingsDialog::resetToDefault
-  );
+  connect(m_buttonBox, &SettingsDialogButtonBox::accepted, this, &SettingsDialog::accept);
+  connect(m_buttonBox, &SettingsDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(m_buttonBox, &SettingsDialogButtonBox::reset, this, &SettingsDialog::loadFromConfig);
+  connect(m_buttonBox, &SettingsDialogButtonBox::restoreDefault, this, &SettingsDialog::resetToDefault);
 
   connect(ui->cbRunEnterCommand, &QCheckBox::toggled, ui->lineCommandEnter, &QLineEdit::setEnabled);
   connect(ui->cbRunExitCommand, &QCheckBox::toggled, ui->lineCommandExit, &QLineEdit::setEnabled);
@@ -144,6 +142,7 @@ void SettingsDialog::initConnections() const
   connect(ui->cbRunExitCommand, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineCommandEnter, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->lineCommandExit, &QLineEdit::textChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(Settings::instance(), &Settings::settingsWritableChanged, this, &SettingsDialog::updateControls);
 }
 
 void SettingsDialog::regenCertificates()
@@ -194,17 +193,6 @@ void SettingsDialog::showEvent(QShowEvent *event)
   Q_EMIT shown();
 }
 
-void SettingsDialog::showReadOnlyMessage()
-{
-  if (Settings::isWritable())
-    return;
-  QMessageBox::information(
-      this, tr("%1 Read-only settings").arg(kAppName),
-      tr("<p>Settings are read-only because you only have read access to the file:</p><p>%1</p>")
-          .arg(QDir::toNativeSeparators(Settings::settingsFile()))
-  );
-}
-
 void SettingsDialog::resetAllSettings()
 {
   auto result = QMessageBox::question(
@@ -234,10 +222,6 @@ void SettingsDialog::updateText()
       ui->comboLogLevel->setItemData(i, toolTips.at(i), Qt::ToolTipRole);
     }
   }
-  ui->buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
-  ui->buttonBox->button(QDialogButtonBox::Cancel)->setToolTip(tr("Close and forget changes"));
-  ui->buttonBox->button(QDialogButtonBox::Reset)->setToolTip(tr("Reset to stored values"));
-  ui->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setToolTip(tr("Reset to default values"));
 }
 
 void SettingsDialog::accept()
@@ -389,8 +373,6 @@ void SettingsDialog::updateControls()
   const bool writable = Settings::isWritable();
   const bool serviceChecked = ui->groupService->isChecked();
   const bool logToFile = ui->groupLogToFile->isChecked();
-
-  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(writable);
 
   ui->sbPort->setEnabled(writable);
   ui->comboInterface->setEnabled(writable);
@@ -551,9 +533,9 @@ void SettingsDialog::resetToDefault()
 void SettingsDialog::setButtonBoxEnabledButtons() const
 {
   const bool modified = isModified();
-  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(modified);
-  ui->buttonBox->button(QDialogButtonBox::Reset)->setEnabled(modified);
-  ui->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(!isDefault());
+  m_buttonBox->enableSave(modified);
+  m_buttonBox->enableReset(modified);
+  m_buttonBox->enableRestoreDefaults(!isDefault());
 }
 
 SettingsDialog::~SettingsDialog() = default;

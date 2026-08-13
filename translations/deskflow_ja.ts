@@ -1186,14 +1186,6 @@ Enabling this setting will disable the server config GUI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 Read-only settings</source>
-        <translation type="unfinished">%1 読み取り専用設定</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;以下のファイルへの書き込み権限がないため、設定は読み取り専用です:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Required messages</source>
         <translation>必須のメッセージ</translation>
     </message>
@@ -1216,22 +1208,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>詳細なデバッグ出力</translation>
-    </message>
-    <message>
-        <source>Close and save changes</source>
-        <translation>変更を保存して閉じる</translation>
-    </message>
-    <message>
-        <source>Close and forget changes</source>
-        <translation>変更を破棄して閉じる</translation>
-    </message>
-    <message>
-        <source>Reset to stored values</source>
-        <translation>変更前の値にリセットする</translation>
-    </message>
-    <message>
-        <source>Reset to default values</source>
-        <translation>デフォルト値にリセットする</translation>
     </message>
     <message>
         <source>Automatic</source>
@@ -1296,6 +1272,33 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Remove all settings</source>
         <translation type="unfinished">すべての設定を削除する</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsDialogButtonBox</name>
+    <message>
+        <source>Settings are read only</source>
+        <translation type="unfinished">設定は読み取り専用です</translation>
+    </message>
+    <message>
+        <source>%1 is not writable</source>
+        <translation type="unfinished">%1 は書き込み可能ではありません</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">変更を保存して閉じる</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">変更を破棄して閉じる</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">変更前の値にリセットする</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">デフォルト値にリセットする</translation>
     </message>
 </context>
 <context>

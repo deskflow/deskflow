@@ -1160,14 +1160,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 Read-only settings</source>
-        <translation type="unfinished">%1 Impostazioni di sola lettura</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Settings are read-only because you only have read access to the file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Le impostazioni sono di sola lettura perché hai solo accesso in lettura al file:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Required messages</source>
         <translation>Messaggi richiesti</translation>
     </message>
@@ -1190,22 +1182,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Verbose debug output</source>
         <translation>Output di debug dettagliato</translation>
-    </message>
-    <message>
-        <source>Close and save changes</source>
-        <translation type="unfinished">Chiudi e salva le modifiche</translation>
-    </message>
-    <message>
-        <source>Close and forget changes</source>
-        <translation type="unfinished">Chiudi e dimentica le modifiche</translation>
-    </message>
-    <message>
-        <source>Reset to stored values</source>
-        <translation type="unfinished">Ripristina i valori memorizzati</translation>
-    </message>
-    <message>
-        <source>Reset to default values</source>
-        <translation type="unfinished">Ripristina i valori predefiniti</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>
@@ -1294,6 +1270,33 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Remove all settings</source>
         <translation type="unfinished">Rimuovi tutte le impostazioni</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsDialogButtonBox</name>
+    <message>
+        <source>Settings are read only</source>
+        <translation type="unfinished">Le impostazioni sono di sola lettura</translation>
+    </message>
+    <message>
+        <source>%1 is not writable</source>
+        <translation type="unfinished">%1 non è scrivibile</translation>
+    </message>
+    <message>
+        <source>Close and save changes</source>
+        <translation type="unfinished">Chiudi e salva le modifiche</translation>
+    </message>
+    <message>
+        <source>Close and forget changes</source>
+        <translation type="unfinished">Chiudi e dimentica le modifiche</translation>
+    </message>
+    <message>
+        <source>Reset to stored values</source>
+        <translation type="unfinished">Ripristina i valori memorizzati</translation>
+    </message>
+    <message>
+        <source>Reset to default values</source>
+        <translation type="unfinished">Ripristina i valori predefiniti</translation>
     </message>
 </context>
 <context>
