@@ -266,6 +266,8 @@ NetworkProtocol Settings::networkProtocol()
 
 void Settings::save(bool emitSaving)
 {
+  if (!Settings::isWritable())
+    qWarning().noquote() << "settings not saved, file is read-only:" << Settings::settingsFile();
   if (emitSaving)
     Q_EMIT instance()->serverSettingsChanged();
   instance()->m_settings->sync();
