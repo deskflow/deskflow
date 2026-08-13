@@ -166,22 +166,6 @@ p, li { white-space: pre-wrap; }
         <translation>倍率</translation>
     </message>
     <message>
-        <source>Close and save changes</source>
-        <translation>変更を保存して閉じる</translation>
-    </message>
-    <message>
-        <source>Close and forget changes</source>
-        <translation>変更を破棄して閉じる</translation>
-    </message>
-    <message>
-        <source>Reset to stored values</source>
-        <translation>変更前の値にリセットする</translation>
-    </message>
-    <message>
-        <source>Reset to default values</source>
-        <translation>デフォルト値にリセットする</translation>
-    </message>
-    <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;接続試行が失敗し続けている場合に、クライアントがサーバーへ再接続を試みる頻度を徐々に下げます。接続試行の間隔は当初1秒から開始され、最大で5分まで延長されます。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>

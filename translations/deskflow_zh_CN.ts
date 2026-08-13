@@ -166,22 +166,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">规模</translation>
     </message>
     <message>
-        <source>Close and save changes</source>
-        <translation type="unfinished">关闭并保存更改</translation>
-    </message>
-    <message>
-        <source>Close and forget changes</source>
-        <translation>关闭并放弃修改</translation>
-    </message>
-    <message>
-        <source>Reset to stored values</source>
-        <translation type="unfinished">重置为存储值</translation>
-    </message>
-    <message>
-        <source>Reset to default values</source>
-        <translation type="unfinished">重置为默认值</translation>
-    </message>
-    <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allow the client to slow the rate it attempts to reconnect to the server when connections attempts are failing. The delay between connection attempts will  start at 1 second intervals and can be a maxium of 5 minutes between connection attempts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;允许客户端在连接尝试失败时，降低其重连服务器的频率。连接尝试之间的间隔将从 1 秒开始，最长可达 5 分钟。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
