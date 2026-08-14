@@ -10,6 +10,7 @@ class ServerConfigTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
+  void loadFromSettings();
   void equalityCheck();
   void equalityCheck_diff_options();
   void equalityCheck_diff_alias();

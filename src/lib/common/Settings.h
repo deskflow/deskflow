@@ -111,8 +111,6 @@ public:
     inline static const auto EnableHeatbeat = QStringLiteral("server/enableHeatbeat");
     inline static const auto EnableSwitchDelay = QStringLiteral("server/enableSwitchDelay");
     inline static const auto EnableSwitchDoubleTap = QStringLiteral("server/enableSwitchDoubleTap");
-    inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
-    inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
     inline static const auto GridHeight = QStringLiteral("server/gridHeight");
     inline static const auto GridWidth = QStringLiteral("server/gridWidth");
     inline static const auto Heartbeat = QStringLiteral("server/heartbeat");
@@ -127,6 +125,22 @@ public:
   struct Screen
   {
     inline static const auto Aliases = QStringLiteral("screen_%1/aliases");
+  };
+
+  // Server screen layout and hotkeys, written by the GUI and read by the core server.
+  struct Layout
+  {
+    inline static const auto Group = QStringLiteral("internalConfig");
+    inline static const auto ScreensArray = QStringLiteral("screens");
+    inline static const auto HotkeysArray = QStringLiteral("hotkeys");
+    inline static const auto ScreenName = QStringLiteral("name");
+    inline static const auto ScreenSwitchCornerSize = QStringLiteral("switchCornerSize");
+    inline static const auto ScreenModifierArray = QStringLiteral("modifierArray");
+    inline static const auto ScreenModifier = QStringLiteral("modifier");
+    inline static const auto ScreenSwitchCornerArray = QStringLiteral("switchCornerArray");
+    inline static const auto ScreenSwitchCorner = QStringLiteral("switchCorner");
+    inline static const auto ScreenFixArray = QStringLiteral("fixArray");
+    inline static const auto ScreenFix = QStringLiteral("fix");
   };
 
   // Track Removed keys to make upgrading config easier
@@ -179,12 +193,10 @@ public:
   static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
-  static bool isServerConfigFileReadable();
   static bool isWritable();
   static bool isPortableMode();
   static QString settingsFile();
   static QString settingsPath();
-  static QString serverConfigFile();
   static QString tlsDir();
   static QString tlsTrustedServersDb();
   static QString tlsTrustedClientsDb();
@@ -192,6 +204,7 @@ public:
   static QSettingsProxy &proxy();
   static NetworkProtocol networkProtocol();
   static void save(bool emitSaving = true);
+  static void sync();
   static QStringList validKeys();
   static QStringList validGroups();
   static QString portableSettingsFile();
@@ -307,8 +320,6 @@ private:
     , Server::EnableHeatbeat
     , Server::EnableSwitchDelay
     , Server::EnableSwitchDoubleTap
-    , Server::ExternalConfig
-    , Server::ExternalConfigFile
     , Server::GridHeight
     , Server::GridWidth
     , Server::Heartbeat
@@ -340,7 +351,6 @@ private:
     , Server::EnableHeatbeat
     , Server::EnableSwitchDelay
     , Server::EnableSwitchDoubleTap
-    , Server::ExternalConfig
     , Server::RelativeMouseMoves
   };
 

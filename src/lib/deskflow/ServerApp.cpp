@@ -86,7 +86,8 @@ void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
 void ServerApp::reloadConfig()
 {
   LOG_DEBUG("reload configuration");
-  if (loadConfig(Settings::serverConfigFile())) {
+  Settings::sync();
+  if (loadConfigFromSettings()) {
     if (m_server != nullptr) {
       m_server->setConfig(*m_config);
     }
@@ -96,39 +97,20 @@ void ServerApp::reloadConfig()
 
 void ServerApp::loadConfig()
 {
-  const auto path = Settings::serverConfigFile();
-  if (path.isEmpty()) {
-    LOG_CRIT("no configuration path provided");
-    bye(s_exitConfig);
-  }
-
-  if (!loadConfig(path)) {
-    LOG_CRIT("%s: failed to load config: %s", qPrintable(processName()), path.toStdString().c_str());
+  if (!loadConfigFromSettings()) {
+    LOG_CRIT("%s: failed to load config from settings", qPrintable(processName()));
     bye(s_exitConfig);
   }
 }
 
-bool ServerApp::loadConfig(const QString &filename)
+bool ServerApp::loadConfigFromSettings()
 {
-  const auto path = filename.toStdString();
   try {
-    // load configuration
-    LOG_DEBUG("opening configuration \"%s\"", path.c_str());
-#if defined(Q_OS_WIN)
-    std::ifstream configStream(filename.toStdWString());
-#else
-    std::ifstream configStream(path);
-#endif
-    if (!configStream.is_open()) {
-      LOG_ERR("cannot open configuration \"%s\"", path.c_str());
-      return false;
-    }
-    configStream >> *m_config;
+    m_config->loadFromSettings();
     LOG_DEBUG("configuration read successfully");
     return true;
   } catch (ServerConfigReadException &e) {
-    // report error in configuration file
-    LOG_ERR("cannot read configuration \"%s\": %s", path.c_str(), e.what());
+    LOG_ERR("cannot read configuration from settings: %s", e.what());
   }
   return false;
 }

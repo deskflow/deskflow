@@ -8,7 +8,7 @@
 
 #include "ServerConfig.h"
 
-#include "Hotkey.h"
+#include "common/Hotkey.h"
 #include "common/Settings.h"
 
 #include <QAbstractButton>
@@ -18,19 +18,6 @@ using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
-static const struct
-{
-  int x;
-  int y;
-  const char *name;
-} neighbourDirs[] = {
-    {1, 0, "right"},
-    {-1, 0, "left"},
-    {0, -1, "up"},
-    {0, 1, "down"},
-
-};
-
 const int serverDefaultIndex = 7;
 
 ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_columns(columns), m_rows(rows)
@@ -38,28 +25,10 @@ ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_column
   recall();
 }
 
-bool ServerConfig::save(const QString &fileName) const
-{
-  QFile file(fileName);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    return false;
-
-  save(file);
-  file.close();
-
-  return true;
-}
-
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
   return m_Screens == sc.m_Screens && //
          m_Hotkeys == sc.m_Hotkeys;   //
-}
-
-void ServerConfig::save(QFile &file) const
-{
-  QTextStream outStream(&file);
-  outStream << *this;
 }
 
 void ServerConfig::setupScreens()
@@ -77,10 +46,10 @@ void ServerConfig::commit()
 {
   qDebug("committing server config");
 
-  settings().beginGroup("internalConfig");
+  settings().beginGroup(Settings::Layout::Group);
   settings().remove("");
 
-  settings().beginWriteArray("screens");
+  settings().beginWriteArray(Settings::Layout::ScreensArray);
   for (int i = 0; i < screens().size(); i++) {
     settings().setArrayIndex(i);
     const auto &screen = screens()[i];
@@ -92,7 +61,7 @@ void ServerConfig::commit()
   }
   settings().endArray();
 
-  settings().beginWriteArray("hotkeys");
+  settings().beginWriteArray(Settings::Layout::HotkeysArray);
   for (int i = 0; i < hotkeys().size(); i++) {
     settings().setArrayIndex(i);
     hotkeys()[i].saveSettings(settings().get());
@@ -106,7 +75,7 @@ void ServerConfig::recall()
 {
   qDebug("recalling server config");
 
-  settings().beginGroup("internalConfig");
+  settings().beginGroup(Settings::Layout::Group);
 
   m_columns = Settings::value(Settings::Server::GridWidth).toInt();
   m_rows = Settings::value(Settings::Server::GridHeight).toInt();
@@ -115,7 +84,7 @@ void ServerConfig::recall()
   // ourselves
   setupScreens();
 
-  int numScreens = settings().beginReadArray("screens");
+  int numScreens = settings().beginReadArray(Settings::Layout::ScreensArray);
   Q_ASSERT(numScreens <= screens().size());
   for (int i = 0; i < numScreens; i++) {
     settings().setArrayIndex(i);
@@ -126,7 +95,7 @@ void ServerConfig::recall()
   }
   settings().endArray();
 
-  int numHotkeys = settings().beginReadArray("hotkeys");
+  int numHotkeys = settings().beginReadArray(Settings::Layout::HotkeysArray);
   for (int i = 0; i < numHotkeys; i++) {
     settings().setArrayIndex(i);
     Hotkey h;
@@ -136,61 +105,6 @@ void ServerConfig::recall()
   settings().endArray();
 
   settings().endGroup();
-}
-
-int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const
-{
-  if (screens()[idx].isNull())
-    return -1;
-
-  // if we're at the left or right end of the table, don't find results going
-  // further left or right
-  if ((deltaColumn > 0 && (idx + 1) % m_columns == 0) || (deltaColumn < 0 && idx % m_columns == 0))
-    return -1;
-
-  int arrayPos = idx + deltaColumn + deltaRow * m_columns;
-
-  if (arrayPos >= screens().size() || arrayPos < 0)
-    return -1;
-
-  return arrayPos;
-}
-
-QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
-{
-  outStream << "section: screens" << Qt::endl;
-
-  for (const Screen &s : config.screens()) {
-    if (!s.isNull())
-      outStream << s.screensSection();
-  }
-
-  outStream << "end" << Qt::endl << Qt::endl;
-
-  outStream << "section: links" << Qt::endl;
-
-  for (int i = 0; const auto &screen : config.screens()) {
-    if (!screen.isNull()) {
-      outStream << "\t" << screen.name() << ":\n";
-      for (const auto &neighbour : std::as_const(neighbourDirs)) {
-        int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
-        if (idx != -1 && !config.screens()[idx].isNull())
-          outStream << "\t\t" << neighbour.name << " = " << config.screens()[idx].name() << Qt::endl;
-      }
-    }
-    i++;
-  }
-
-  outStream << "end" << Qt::endl << Qt::endl;
-
-  outStream << "section: options" << Qt::endl;
-
-  for (const Hotkey &hotkey : config.hotkeys())
-    outStream << hotkey;
-
-  outStream << "end" << Qt::endl << Qt::endl;
-
-  return outStream;
 }
 
 int ServerConfig::numScreens() const
@@ -218,16 +132,6 @@ void ServerConfig::updateServerName()
       break;
     }
   }
-}
-
-QString ServerConfig::configFile() const
-{
-  return Settings::value(Settings::Server::ExternalConfigFile).toString();
-}
-
-bool ServerConfig::useExternalConfig() const
-{
-  return Settings::value(Settings::Server::ExternalConfig).toBool();
 }
 
 bool ServerConfig::isFull() const
@@ -270,16 +174,6 @@ void ServerConfig::addClient(const QString &clientName)
   }
 
   m_Screens.addScreenByPriority(Screen(clientName));
-}
-
-void ServerConfig::setConfigFile(const QString &configFile) const
-{
-  Settings::setValue(Settings::Server::ExternalConfigFile, configFile);
-}
-
-void ServerConfig::setUseExternalConfig(bool useExternalConfig) const
-{
-  Settings::setValue(Settings::Server::ExternalConfig, useExternalConfig);
 }
 
 bool ServerConfig::findScreenName(const QString &name, int &index)

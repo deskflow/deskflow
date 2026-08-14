@@ -7,7 +7,11 @@
 
 #include "ServerConfigTests.h"
 
+#include "arch/Arch.h"
+#include "common/Settings.h"
 #include "server/Config.h"
+
+#include <QFile>
 
 class OnlySystemFilter : public InputFilter::Condition
 {
@@ -29,6 +33,81 @@ public:
 };
 
 using namespace deskflow::server;
+
+void ServerConfigTests::loadFromSettings()
+{
+  static Arch arch;
+  arch.init();
+
+  const auto settingsFile = QStringLiteral("ServerConfigTests.ini");
+  QFile file(settingsFile);
+  QVERIFY(file.open(QIODevice::WriteOnly | QIODevice::Truncate));
+  file.write(
+      "[core]\n"
+      "computerName=alpha\n"
+      "port=24899\n"
+      "\n"
+      "[server]\n"
+      "enableClipboard=true\n"
+      "clipboardSize=3\n"
+      "gridWidth=5\n"
+      "gridHeight=3\n"
+      "\n"
+      "[internalConfig]\n"
+      "screens\\4\\name=gamma\n"
+      "screens\\8\\name=alpha\n"
+      "screens\\9\\name=beta\n"
+      "screens\\9\\modifierArray\\1\\modifier=6\n"
+      "screens\\9\\modifierArray\\size=7\n"
+      "screens\\9\\switchCornerArray\\1\\switchCorner=true\n"
+      "screens\\9\\switchCornerArray\\size=4\n"
+      "screens\\9\\switchCornerSize=25\n"
+      "screens\\size=15\n"
+      "hotkeys\\1\\keys\\1\\key=16777264\n"
+      "hotkeys\\1\\keys\\size=1\n"
+      "hotkeys\\1\\actions\\1\\type=3\n"
+      "hotkeys\\1\\actions\\1\\switchScreenName=beta\n"
+      "hotkeys\\1\\actions\\size=1\n"
+      "hotkeys\\size=1\n"
+      "\n"
+      "[screen_beta]\n"
+      "aliases=beta.lan\n"
+  );
+  file.close();
+  Settings::setSettingsFile(settingsFile);
+
+  Config config(nullptr);
+  config.loadFromSettings();
+
+  QVERIFY(config.isScreen("alpha"));
+  QVERIFY(config.isScreen("beta"));
+  QVERIFY(config.isScreen("gamma"));
+  QVERIFY(config.isScreen("beta.lan"));
+  QCOMPARE(config.getCanonicalName("beta.lan"), "beta");
+
+  QCOMPARE(config.getNeighbor("alpha", Direction::Right, 0.5f, nullptr), "beta");
+  QCOMPARE(config.getNeighbor("beta", Direction::Left, 0.5f, nullptr), "alpha");
+  QCOMPARE(config.getNeighbor("beta", Direction::Top, 0.5f, nullptr), "gamma");
+  QCOMPARE(config.getNeighbor("gamma", Direction::Bottom, 0.5f, nullptr), "beta");
+  QVERIFY(!config.hasNeighbor("alpha", Direction::Left));
+  QVERIFY(!config.hasNeighbor("alpha", Direction::Top));
+
+  const auto *globalOptions = config.getOptions("");
+  QVERIFY(globalOptions != nullptr);
+  QCOMPARE(globalOptions->at(kOptionClipboardSharing), 1);
+  QCOMPARE(globalOptions->at(kOptionClipboardSharingSize), 3 * 1024);
+
+  const auto *betaOptions = config.getOptions("beta");
+  QVERIFY(betaOptions != nullptr);
+  QCOMPARE(betaOptions->at(kOptionModifierMapForShift), kKeyModifierIDNull);
+  QCOMPARE(betaOptions->at(kOptionScreenSwitchCorners), s_topLeftCornerMask);
+  QCOMPARE(betaOptions->at(kOptionScreenSwitchCornerSize), 25);
+  QVERIFY(!betaOptions->contains(kOptionModifierMapForControl));
+
+  QCOMPARE(config.getInputFilter()->getNumRules(), 1u);
+  const auto rules = config.getInputFilter()->format("");
+  QVERIFY(rules.find("switchToScreen(beta)") != std::string::npos);
+}
 
 void ServerConfigTests::equalityCheck()
 {

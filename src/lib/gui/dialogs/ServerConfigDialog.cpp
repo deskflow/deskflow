@@ -9,7 +9,6 @@
 #include "ServerConfigDialog.h"
 #include "ui_ServerConfigDialog.h"
 
-#include "common/Constants.h"
 #include "common/NetworkProtocol.h"
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
@@ -17,9 +16,6 @@
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
 #include "gui/widgets/SettingsDialogButtonBox.h"
-
-#include <QFileDialog>
-#include <QMessageBox>
 
 using enum ScreenConfig::SwitchCorner;
 
@@ -29,8 +25,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_columns{Settings::value(Settings::Server::GridWidth).toInt()},
       m_rows{Settings::value(Settings::Server::GridHeight).toInt()},
       m_originalServerConfig(config),
-      m_originalServerConfigIsExternal(config.useExternalConfig()),
-      m_originalServerConfigUsesExternalFile(config.configFile()),
       m_serverConfig(config),
       m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows),
       m_buttonBox{new SettingsDialogButtonBox(this)}
@@ -47,7 +41,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
   ui->lblNewScreen->setEnabled(!model().isFull());
   ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
-  ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
@@ -64,17 +57,6 @@ bool ServerConfigDialog::addClient(const QString &clientName)
 
 void ServerConfigDialog::save()
 {
-  if (ui->groupExternalConfig->isChecked() && !QFile::exists(ui->lineConfigFile->text())) {
-
-    auto selectedButton = QMessageBox::warning(
-        this, "Filename invalid", "Please select a valid configuration file.", QMessageBox::Ok | QMessageBox::Ignore
-    );
-
-    if (selectedButton != QMessageBox::Ok || !browseConfigFile()) {
-      return;
-    }
-  }
-
   // now that the dialog has been accepted, copy the new server config to the
   // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
@@ -107,9 +89,6 @@ void ServerConfigDialog::save()
 
 void ServerConfigDialog::cancel()
 {
-  serverConfig().setUseExternalConfig(m_originalServerConfigIsExternal);
-  serverConfig().setConfigFile(m_originalServerConfigUsesExternalFile);
-
   QDialog::reject();
 }
 
@@ -355,41 +334,11 @@ void ServerConfigDialog::onScreenRemoved()
   onChange();
 }
 
-void ServerConfigDialog::toggleExternalConfig(bool checked)
-{
-  ui->widgetExternalConfigControls->setEnabled(checked);
-  ui->tabWidget->setTabEnabled(0, !checked);
-  ui->tabWidget->setTabEnabled(1, !checked);
-  serverConfig().setUseExternalConfig(checked);
-  onChange();
-}
-
-bool ServerConfigDialog::browseConfigFile()
-{
-  //: %1 is replaced with the application names
-  //: (*.conf) and (*.*) should not be translated
-  const auto deskflowConfigFilter = tr("%1 Configurations (*.conf);;All files (*.*)");
-
-  QString fileName =
-      QFileDialog::getOpenFileName(this, tr("Browse for a config file"), "", deskflowConfigFilter.arg(kAppName));
-
-  if (!fileName.isEmpty()) {
-    ui->lineConfigFile->setText(fileName);
-    serverConfig().setConfigFile(ui->lineConfigFile->text());
-    onChange();
-    return true;
-  }
-
-  return false;
-}
-
 void ServerConfigDialog::loadFromConfig()
 {
   m_protocol = Settings::networkProtocol();
   ui->rbProtocolSynergy->setChecked(m_protocol == NetworkProtocol::Synergy);
   ui->rbProtocolBarrier->setChecked(m_protocol == NetworkProtocol::Barrier);
-
-  ui->lineConfigFile->setText(serverConfig().configFile());
 
   m_enableHeartbeat = Settings::value(Settings::Server::EnableHeatbeat).toBool();
   ui->cbHeartbeat->setChecked(m_enableHeartbeat);
@@ -417,11 +366,6 @@ void ServerConfigDialog::loadFromConfig()
 
   m_switchDoubleTap = Settings::value(Settings::Server::SwitchDoubleTap).toInt();
   ui->sbSwitchDoubleTap->setValue(m_switchDoubleTap);
-
-  ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
-
-  ui->widgetExternalConfigControls->setEnabled(ui->groupExternalConfig->isChecked());
-  toggleExternalConfig(ui->groupExternalConfig->isChecked());
 
   m_defaultLockToComputerState = Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
   ui->cbDefaultLockToComputerState->setChecked(m_defaultLockToComputerState);
@@ -493,8 +437,6 @@ void ServerConfigDialog::initConnections() const
 
   connect(ui->cbRelativeMouseMoves, &QCheckBox::toggled, this, &ServerConfigDialog::toggleRelativeMouseMoves);
   connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
-  connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
-  connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
 
   connect(
       ui->sbClipboardSizeLimit, QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -544,8 +486,6 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 void ServerConfigDialog::onChange()
 {
   bool isAppConfigDataEqual =
-      m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
-      m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
       m_protocol == Settings::networkProtocol() &&
       m_enableClipboard == Settings::value(Settings::Server::EnableClipboard).toBool() &&
       m_clipboardSize == Settings::value(Settings::Server::ClipboardSize).toUInt() &&

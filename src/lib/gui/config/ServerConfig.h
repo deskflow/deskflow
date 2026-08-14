@@ -9,22 +9,19 @@
 #pragma once
 
 #include "common/Constants.h"
-#include "gui/Hotkey.h"
+#include "common/Hotkey.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"
 
 #include <QList>
 
-class QTextStream;
 class QSettings;
 class QString;
-class QFile;
 class ServerConfigDialog;
 
 class ServerConfig : public ScreenConfig
 {
   friend class ServerConfigDialog;
-  friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
   explicit ServerConfig(int columns = kServerGridWidth, int rows = kServerGridHeight);
@@ -45,16 +42,12 @@ public:
     return m_Hotkeys;
   }
 
-  bool save(const QString &fileName) const;
   bool screenExists(const QString &screenName) const;
-  void save(QFile &file) const;
   bool isFull() const;
   void commit();
   int numScreens() const;
   QString getServerName() const;
   void updateServerName();
-  QString configFile() const;
-  bool useExternalConfig() const;
   void addClient(const QString &clientName);
 
 private:
@@ -73,13 +66,10 @@ private:
   {
     m_Screens.append(screen);
   }
-  void setConfigFile(const QString &configFile) const;
-  void setUseExternalConfig(bool useExternalConfig) const;
   HotkeyList &hotkeys()
   {
     return m_Hotkeys;
   }
-  int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
   bool findScreenName(const QString &name, int &index);
   bool fixNoServer(const QString &name, int &index);
 
@@ -90,5 +80,3 @@ private:
   int m_columns;
   int m_rows;
 };
-
-QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);

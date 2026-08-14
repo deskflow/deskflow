@@ -213,9 +213,6 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Gui::UpdateCheckUrl)
     return kUrlUpdateCheck;
 
-  if (key == Server::ExternalConfigFile)
-    return QStringLiteral("%1/%2-server.conf").arg(Settings::settingsPath(), kAppId);
-
   if (key == Core::Port)
     return 24800;
 
@@ -274,21 +271,15 @@ void Settings::save(bool emitSaving)
   instance()->m_stateSettings->sync();
 }
 
+void Settings::sync()
+{
+  instance()->m_settings->sync();
+  instance()->m_settingsProxy->sync();
+}
+
 QStringList Settings::validKeys()
 {
   return Settings::m_validKeys;
-}
-
-QString Settings::serverConfigFile()
-{
-  bool useExt = value(Server::ExternalConfig).toBool();
-  return useExt ? value(Server::ExternalConfigFile).toString() : defaultValue(Server::ExternalConfigFile).toString();
-}
-
-bool Settings::isServerConfigFileReadable()
-{
-  auto file = QFile(serverConfigFile());
-  return file.open(QFile::ReadOnly);
 }
 
 bool Settings::isWritable()

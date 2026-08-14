@@ -5,7 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "KeySequence.h"
+#include "common/KeySequence.h"
+
 #include <QSettings>
 
 // this table originally comes from Qt sources (gui/kernel/qkeysequence.cpp)
