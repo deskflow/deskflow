@@ -89,10 +89,13 @@ private:
   void cancel();
   void loadFromConfig();
   void resetFromSettings();
+  void refreshControls();
   void initConnections() const;
   void updateControls() const;
+  void restoreFromDefaults();
   void setServerConfig();
   bool isGeneralConfigModified() const;
+  bool isGeneralConfigDefault() const;
   void setButtonBoxEnabledButtons() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
