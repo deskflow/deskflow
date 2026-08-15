@@ -39,9 +39,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->tabWidget->setCurrentIndex(0);
   layout()->addWidget(m_buttonBox);
 
-  m_buttonBox->enableReset(false);
   m_buttonBox->enableRestoreDefaults(false);
 
+  setOriginalServerConfig(serverConfig());
   loadFromConfig();
 
   ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
@@ -457,10 +457,23 @@ void ServerConfigDialog::loadFromConfig()
   updateControls();
 }
 
+void ServerConfigDialog::resetFromSettings()
+{
+  m_serverConfig = m_originalServerConfig;
+  m_serverConfig.setConfigFile(m_originalServerConfigUsesExternalFile);
+  m_serverConfig.setUseExternalConfig(m_originalServerConfigIsExternal);
+  loadFromConfig();
+  if (ui->tabWidget->currentWidget() == ui->tabComputers) {
+    ui->screenSetupView->reset();
+    ui->screenSetupView->update();
+  }
+}
+
 void ServerConfigDialog::initConnections() const
 {
   connect(m_buttonBox, &SettingsDialogButtonBox::accepted, this, &ServerConfigDialog::save);
   connect(m_buttonBox, &SettingsDialogButtonBox::rejected, this, &ServerConfigDialog::cancel);
+  connect(m_buttonBox, &SettingsDialogButtonBox::reset, this, &ServerConfigDialog::resetFromSettings);
   connect(ui->lblRemoveScreen, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
   connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);
   connect(ui->btnEditHotkey, &QPushButton::clicked, this, &ServerConfigDialog::editHotkey);
@@ -527,6 +540,7 @@ void ServerConfigDialog::updateControls() const
   ui->sbSwitchDoubleTap->setEnabled(writable && ui->cbSwitchDoubleTap->isChecked());
   ui->sbSwitchDelay->setEnabled(writable && ui->cbSwitchDelay->isChecked());
   ui->groupExternalConfig->setEnabled(writable);
+  setButtonBoxEnabledButtons();
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
@@ -566,4 +580,5 @@ void ServerConfigDialog::setButtonBoxEnabledButtons() const
 {
   const bool writable = Settings::isWritable();
   m_buttonBox->enableSave(writable && (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig)));
+  m_buttonBox->enableReset(writable && (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig)));
 }

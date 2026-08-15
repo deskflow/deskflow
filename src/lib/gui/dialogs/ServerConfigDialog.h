@@ -88,6 +88,7 @@ private:
   void save();
   void cancel();
   void loadFromConfig();
+  void resetFromSettings();
   void initConnections() const;
   void updateControls() const;
   bool isGeneralConfigModified() const;
