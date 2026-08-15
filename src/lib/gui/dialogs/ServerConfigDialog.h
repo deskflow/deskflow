@@ -90,6 +90,7 @@ private:
   void loadFromConfig();
   void initConnections() const;
   void updateControls() const;
+  bool isGeneralConfigModified() const;
   void onChange();
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
