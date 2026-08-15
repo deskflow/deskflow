@@ -41,7 +41,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   m_buttonBox->enableRestoreDefaults(false);
 
-  setOriginalServerConfig(serverConfig());
   loadFromConfig();
 
   ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
@@ -52,7 +51,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
   initConnections();
-  setButtonBoxEnabledButtons();
+  updateControls();
 }
 
 ServerConfigDialog::~ServerConfigDialog() = default;
@@ -74,7 +73,6 @@ void ServerConfigDialog::save()
       return;
     }
   }
-
   // now that the dialog has been accepted, copy the new server config to the
   // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
@@ -91,6 +89,8 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
   Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
+  Settings::setValue(Settings::Server::ExternalConfig, ui->groupExternalConfig->isChecked());
+  Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
 
   QStringList screenNames;
   const auto screenList = m_screenSetupModel.m_Screens;
@@ -109,7 +109,6 @@ void ServerConfigDialog::cancel()
 {
   serverConfig().setUseExternalConfig(m_originalServerConfigIsExternal);
   serverConfig().setConfigFile(m_originalServerConfigUsesExternalFile);
-
   QDialog::reject();
 }
 
@@ -375,8 +374,7 @@ bool ServerConfigDialog::browseConfigFile()
 
   if (!fileName.isEmpty()) {
     ui->lineConfigFile->setText(fileName);
-    serverConfig().setConfigFile(ui->lineConfigFile->text());
-    setButtonBoxEnabledButtons();
+    setServerConfig();
     return true;
   }
 
@@ -508,6 +506,7 @@ void ServerConfigDialog::initConnections() const
   connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
   connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
   connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
+  connect(ui->lineConfigFile, &QLineEdit::textChanged, this, &ServerConfigDialog::setServerConfig);
 
   connect(
       ui->sbClipboardSizeLimit, QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -540,6 +539,17 @@ void ServerConfigDialog::updateControls() const
   ui->sbSwitchDoubleTap->setEnabled(writable && ui->cbSwitchDoubleTap->isChecked());
   ui->sbSwitchDelay->setEnabled(writable && ui->cbSwitchDelay->isChecked());
   ui->groupExternalConfig->setEnabled(writable);
+  setButtonBoxEnabledButtons();
+}
+
+void ServerConfigDialog::setServerConfig()
+{
+  const auto configFile = ui->lineConfigFile->text();
+  if (!QFile::exists(configFile)) {
+    m_buttonBox->enableSave(false);
+    return;
+  }
+  serverConfig().setConfigFile(configFile);
   setButtonBoxEnabledButtons();
 }
 

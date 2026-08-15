@@ -91,6 +91,7 @@ private:
   void resetFromSettings();
   void initConnections() const;
   void updateControls() const;
+  void setServerConfig();
   bool isGeneralConfigModified() const;
   void setButtonBoxEnabledButtons() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
