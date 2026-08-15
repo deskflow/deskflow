@@ -91,7 +91,7 @@ private:
   void initConnections() const;
   void updateControls() const;
   bool isGeneralConfigModified() const;
-  void onChange();
+  void setButtonBoxEnabledButtons() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
   int m_columns;
