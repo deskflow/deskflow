@@ -54,11 +54,6 @@ bool isOSXDevelopmentBuild()
   return (bundleURL.find("Applications/Deskflow.app") == std::string::npos);
 }
 
-bool isLogiOptionsPlusInstalled()
-{
-  return [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:@"com.logi.optionsplus"] != nil;
-}
-
 bool showOSXNotification(const QString &title, const QString &body)
 {
 #if OSX_DEPLOYMENT_TARGET >= 1014

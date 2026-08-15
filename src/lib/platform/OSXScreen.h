@@ -176,7 +176,7 @@ private:
 
 private:
   static bool navigationGesturesEnabledFromOptions(const OptionsList &options, bool currentValue);
-  static ButtonID classifyNavigationGestureButton(CGEventType type, bool isOnScreen, bool enabled, int64_t direction);
+  static ButtonID classifyNavigationGestureButton(CGEventType type, bool isOnScreen, bool enabled, double deltaX);
 
   struct HotKeyItem
   {

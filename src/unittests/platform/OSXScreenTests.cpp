@@ -45,32 +45,32 @@ void OSXScreenTests::navigationGesturesEnabledFromOptions_malformedOptions_prese
 
 void OSXScreenTests::classifyNavigationGestureButton_swipeLeft_returnsExtra0()
 {
-  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, true, 4), kButtonExtra0);
+  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, true, 1.0), kButtonExtra0);
 }
 
 void OSXScreenTests::classifyNavigationGestureButton_swipeRight_returnsExtra1()
 {
-  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, true, 8), kButtonExtra1);
+  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, true, -1.0), kButtonExtra1);
 }
 
 void OSXScreenTests::classifyNavigationGestureButton_disabled_returnsNone()
 {
-  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, false, 4), kButtonNone);
+  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, false, 1.0), kButtonNone);
 }
 
 void OSXScreenTests::classifyNavigationGestureButton_localScreen_returnsNone()
 {
-  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, true, true, 4), kButtonNone);
+  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, true, true, 1.0), kButtonNone);
 }
 
 void OSXScreenTests::classifyNavigationGestureButton_nonGestureEvent_returnsNone()
 {
-  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kCGEventScrollWheel, false, true, 4), kButtonNone);
+  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kCGEventScrollWheel, false, true, 1.0), kButtonNone);
 }
 
-void OSXScreenTests::classifyNavigationGestureButton_unknownDirection_returnsNone()
+void OSXScreenTests::classifyNavigationGestureButton_zeroDelta_returnsNone()
 {
-  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, true, 12), kButtonNone);
+  QCOMPARE(OSXScreen::classifyNavigationGestureButton(kGestureType, false, true, 0.0), kButtonNone);
 }
 
 QTEST_MAIN(OSXScreenTests)

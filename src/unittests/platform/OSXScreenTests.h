@@ -22,5 +22,5 @@ private Q_SLOTS:
   void classifyNavigationGestureButton_disabled_returnsNone();
   void classifyNavigationGestureButton_localScreen_returnsNone();
   void classifyNavigationGestureButton_nonGestureEvent_returnsNone();
-  void classifyNavigationGestureButton_unknownDirection_returnsNone();
+  void classifyNavigationGestureButton_zeroDelta_returnsNone();
 };

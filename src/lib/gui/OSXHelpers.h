@@ -13,7 +13,6 @@
 
 void requestOSXNotificationPermission();
 bool isOSXDevelopmentBuild();
-bool isLogiOptionsPlusInstalled();
 bool showOSXNotification(const QString &title, const QString &body);
 bool isOSXInterfaceStyleDark();
 void forceAppActive();

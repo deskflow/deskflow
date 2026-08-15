@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -51,6 +52,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
+  ui->cbMacNavigationGestures->setVisible(deskflow::platform::isMac());
   initConnections();
   onChange();
 }
@@ -90,6 +92,7 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
+  Settings::setValue(Settings::Server::MacNavigationGesturesEnabled, m_macNavigationGesturesEnabled);
   Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
 
   QStringList screenNames;
@@ -277,6 +280,14 @@ void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
   onChange();
 }
 
+void ServerConfigDialog::toggleMacNavigationGestures(bool enabled)
+{
+  if (m_macNavigationGesturesEnabled == enabled)
+    return;
+  m_macNavigationGesturesEnabled = enabled;
+  onChange();
+}
+
 void ServerConfigDialog::toggleProtocol()
 {
   m_protocol = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
@@ -401,6 +412,9 @@ void ServerConfigDialog::loadFromConfig()
   m_relativeMouseMoves = Settings::value(Settings::Server::RelativeMouseMoves).toBool();
   ui->cbRelativeMouseMoves->setChecked(m_relativeMouseMoves);
 
+  m_macNavigationGesturesEnabled = Settings::value(Settings::Server::MacNavigationGesturesEnabled).toBool();
+  ui->cbMacNavigationGestures->setChecked(m_macNavigationGesturesEnabled);
+
   m_win32keepForeground = Settings::value(Settings::Server::Win32KeepForeground).toBool();
   ui->cbWin32KeepForeground->setChecked(m_win32keepForeground);
 
@@ -492,6 +506,7 @@ void ServerConfigDialog::initConnections() const
   );
 
   connect(ui->cbRelativeMouseMoves, &QCheckBox::toggled, this, &ServerConfigDialog::toggleRelativeMouseMoves);
+  connect(ui->cbMacNavigationGestures, &QCheckBox::toggled, this, &ServerConfigDialog::toggleMacNavigationGestures);
   connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
   connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
   connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
@@ -556,6 +571,7 @@ void ServerConfigDialog::onChange()
       m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() &&
       m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt() &&
       m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool() &&
+      m_macNavigationGesturesEnabled == Settings::value(Settings::Server::MacNavigationGesturesEnabled).toBool() &&
       m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool() &&
       m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool() &&
       m_defaultLockToComputerState == Settings::value(Settings::Server::DefaultLockToComputerState).toBool();

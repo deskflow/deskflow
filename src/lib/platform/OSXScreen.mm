@@ -61,11 +61,6 @@ enum
 
 static const double kCarbonLoopWaitTimeout = 10.0;
 static constexpr auto kNavigationGestureEventType = static_cast<CGEventType>(NSEventTypeGesture);
-// CoreGraphics does not publish this field. Its value is reverse engineered
-// and matches the gesture events observed from Logi Options+.
-static constexpr auto kNavigationGestureSwipeDirectionField = static_cast<CGEventField>(117);
-static constexpr int64_t kNavigationGestureSwipeLeft = 4;
-static constexpr int64_t kNavigationGestureSwipeRight = 8;
 
 // Synthetic mouse button and drag events require event numbers on macOS 27 and later.
 static inline bool needsEventNumber()
@@ -1737,15 +1732,18 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
   case NX_NULLEVENT:
     break;
   case kNavigationGestureEventType: {
-    // Leave local and opt-out behavior untouched, including avoiding access to
-    // the undocumented field below.
     if (screen->m_isOnScreen || !screen->m_navigationGesturesEnabled) {
       break;
     }
 
-    const auto direction = CGEventGetIntegerValueField(event, kNavigationGestureSwipeDirectionField);
+    NSEvent *nativeEvent = [NSEvent eventWithCGEvent:event];
+    if (nativeEvent == nil || nativeEvent.type != NSEventTypeSwipe) {
+      break;
+    }
+
+    const auto deltaX = static_cast<double>(nativeEvent.deltaX);
     const auto button =
-        classifyNavigationGestureButton(type, screen->m_isOnScreen, screen->m_navigationGesturesEnabled, direction);
+        classifyNavigationGestureButton(type, screen->m_isOnScreen, screen->m_navigationGesturesEnabled, deltaX);
     if (button == kButtonNone) {
       break;
     }
@@ -1753,9 +1751,7 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
     const auto mask = screen->m_keyState->getActiveModifiers();
     screen->sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
     screen->sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
-    LOG_DEBUG(
-        "forwarding macOS navigation gesture direction=%lld as button=%d", static_cast<long long>(direction), button
-    );
+    LOG_DEBUG("forwarding macOS navigation gesture deltaX=%+.3f as button=%d", deltaX, button);
     break;
   }
   default:
@@ -1794,20 +1790,19 @@ bool OSXScreen::navigationGesturesEnabledFromOptions(const OptionsList &options,
   return currentValue;
 }
 
-ButtonID OSXScreen::classifyNavigationGestureButton(CGEventType type, bool isOnScreen, bool enabled, int64_t direction)
+ButtonID OSXScreen::classifyNavigationGestureButton(CGEventType type, bool isOnScreen, bool enabled, double deltaX)
 {
   if (type != kNavigationGestureEventType || isOnScreen || !enabled) {
     return kButtonNone;
   }
 
-  switch (direction) {
-  case kNavigationGestureSwipeLeft:
+  if (deltaX > 0.0) {
     return kButtonExtra0;
-  case kNavigationGestureSwipeRight:
-    return kButtonExtra1;
-  default:
-    return kButtonNone;
   }
+  if (deltaX < 0.0) {
+    return kButtonExtra1;
+  }
+  return kButtonNone;
 }
 
 void OSXScreen::MouseButtonState::set(uint32_t button, EMouseButtonState state)

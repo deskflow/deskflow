@@ -368,6 +368,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbMacNavigationGestures">
+            <property name="text">
+             <string>Forward macOS navigation gestures</string>
+            </property>
+            <property name="toolTip">
+             <string>Forwards macOS back and forward gestures as standard mouse buttons while controlling a client.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbWin32KeepForeground">
             <property name="enabled">
              <bool>true</bool>
