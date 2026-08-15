@@ -541,23 +541,27 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
   return isAccepted;
 }
 
+bool ServerConfigDialog::isGeneralConfigModified() const
+{
+  return m_originalServerConfigIsExternal != Settings::value(Settings::Server::ExternalConfig).toBool() ||
+         m_originalServerConfigUsesExternalFile != Settings::value(Settings::Server::ExternalConfigFile).toString() ||
+         m_protocol != Settings::networkProtocol() ||
+         m_enableClipboard != Settings::value(Settings::Server::EnableClipboard).toBool() ||
+         m_clipboardSize != Settings::value(Settings::Server::ClipboardSize).toUInt() ||
+         m_enableHeartbeat != Settings::value(Settings::Server::EnableHeatbeat).toBool() ||
+         m_heartbeatRate != Settings::value(Settings::Server::Heartbeat).toInt() ||
+         m_enableSwitchDelay != Settings::value(Settings::Server::EnableSwitchDelay).toBool() ||
+         m_switchDelay != Settings::value(Settings::Server::SwitchDelay).toInt() ||
+         m_enableSwitchDoubleTap != Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() ||
+         m_switchDoubleTap != Settings::value(Settings::Server::SwitchDoubleTap).toInt() ||
+         m_relativeMouseMoves != Settings::value(Settings::Server::RelativeMouseMoves).toBool() ||
+         m_win32keepForeground != Settings::value(Settings::Server::Win32KeepForeground).toBool() ||
+         m_disableLockToComputer != Settings::value(Settings::Server::DisableLockToComputer).toBool() ||
+         m_defaultLockToComputerState != Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
+}
+
 void ServerConfigDialog::onChange()
 {
-  bool isAppConfigDataEqual =
-      m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
-      m_originalServerConfigUsesExternalFile == serverConfig().configFile() &&
-      m_protocol == Settings::networkProtocol() &&
-      m_enableClipboard == Settings::value(Settings::Server::EnableClipboard).toBool() &&
-      m_clipboardSize == Settings::value(Settings::Server::ClipboardSize).toUInt() &&
-      m_enableHeartbeat == Settings::value(Settings::Server::EnableHeatbeat).toBool() &&
-      m_heartbeatRate == Settings::value(Settings::Server::Heartbeat).toInt() &&
-      m_enableSwitchDelay == Settings::value(Settings::Server::EnableSwitchDelay).toBool() &&
-      m_switchDelay == Settings::value(Settings::Server::SwitchDelay).toInt() &&
-      m_enableSwitchDoubleTap == Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() &&
-      m_switchDoubleTap == Settings::value(Settings::Server::SwitchDoubleTap).toInt() &&
-      m_relativeMouseMoves == Settings::value(Settings::Server::RelativeMouseMoves).toBool() &&
-      m_win32keepForeground == Settings::value(Settings::Server::Win32KeepForeground).toBool() &&
-      m_disableLockToComputer == Settings::value(Settings::Server::DisableLockToComputer).toBool() &&
-      m_defaultLockToComputerState == Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
-  m_buttonBox->enableSave(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
+  const bool writable = Settings::isWritable();
+  m_buttonBox->enableSave(writable && (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig)));
 }
