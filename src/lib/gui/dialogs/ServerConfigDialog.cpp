@@ -52,7 +52,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
   initConnections();
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 ServerConfigDialog::~ServerConfigDialog() = default;
@@ -120,7 +120,7 @@ void ServerConfigDialog::addHotkey()
   if (dlg.exec() == QDialog::Accepted) {
     serverConfig().hotkeys().append(hotkey);
     ui->listHotkeys->addItem(hotkey.text());
-    onChange();
+    setButtonBoxEnabledButtons();
   }
 }
 
@@ -136,7 +136,7 @@ void ServerConfigDialog::editHotkey()
   HotkeyDialog dlg(this, hotkey);
   if (dlg.exec() == QDialog::Accepted) {
     ui->listHotkeys->currentItem()->setText(hotkey.text());
-    onChange();
+    setButtonBoxEnabledButtons();
   }
 }
 
@@ -151,7 +151,7 @@ void ServerConfigDialog::removeHotkey()
   serverConfig().hotkeys().removeAt(row);
   ui->listActions->clear();
   delete ui->listHotkeys->item(row);
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &)
@@ -183,7 +183,7 @@ void ServerConfigDialog::addAction()
   if (dlg.exec() == QDialog::Accepted) {
     hotkey.actions().append(action);
     ui->listActions->addItem(action.text());
-    onChange();
+    setButtonBoxEnabledButtons();
   }
 }
 
@@ -206,7 +206,7 @@ void ServerConfigDialog::editAction()
   ActionDialog dlg(this, serverConfig(), hotkey, action);
   if (dlg.exec() == QDialog::Accepted) {
     ui->listActions->currentItem()->setText(action.text());
-    onChange();
+    setButtonBoxEnabledButtons();
   }
 }
 
@@ -227,7 +227,7 @@ void ServerConfigDialog::removeAction()
 
   hotkey.actions().removeAt(actionRow);
   delete ui->listActions->currentItem();
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleClipboard(bool enabled)
@@ -242,7 +242,7 @@ void ServerConfigDialog::toggleClipboard(bool enabled)
     m_clipboardSize = Settings::defaultValue(Settings::Server::ClipboardSize).toUInt();
     ui->sbClipboardSizeLimit->setValue(m_clipboardSize ? m_clipboardSize : 1);
   }
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::setClipboardLimit(int limit)
@@ -251,14 +251,14 @@ void ServerConfigDialog::setClipboardLimit(int limit)
     return;
 
   m_clipboardSize = limit;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleHeartbeat(bool enabled)
 {
   m_enableHeartbeat = enabled;
   ui->sbHeartbeat->setEnabled(enabled);
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::setHeartbeat(int rate)
@@ -266,7 +266,7 @@ void ServerConfigDialog::setHeartbeat(int rate)
   if (rate == m_heartbeatRate)
     return;
   m_heartbeatRate = rate;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
@@ -274,13 +274,13 @@ void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
   if (m_relativeMouseMoves == enabled)
     return;
   m_relativeMouseMoves = enabled;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleProtocol()
 {
   m_protocol = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &)
@@ -294,7 +294,7 @@ void ServerConfigDialog::toggleSwitchDoubleTap(bool enable)
 {
   m_enableSwitchDoubleTap = enable;
   ui->sbSwitchDoubleTap->setEnabled(enable);
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::setSwitchDoubleTap(int within)
@@ -302,14 +302,14 @@ void ServerConfigDialog::setSwitchDoubleTap(int within)
   if (m_switchDoubleTap == within)
     return;
   m_switchDoubleTap = within;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleSwitchDelay(bool enable)
 {
   m_enableSwitchDelay = enable;
   ui->sbSwitchDelay->setEnabled(enable);
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::setSwitchDelay(int delay)
@@ -317,7 +317,7 @@ void ServerConfigDialog::setSwitchDelay(int delay)
   if (m_switchDelay == delay)
     return;
   m_switchDelay = delay;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleDefaultLockToComputerState(bool state)
@@ -325,7 +325,7 @@ void ServerConfigDialog::toggleDefaultLockToComputerState(bool state)
   if (m_defaultLockToComputerState == state)
     return;
   m_defaultLockToComputerState = state;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleLockToComputer(bool disabled)
@@ -333,7 +333,7 @@ void ServerConfigDialog::toggleLockToComputer(bool disabled)
   if (m_disableLockToComputer == disabled)
     return;
   m_disableLockToComputer = disabled;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleWin32Foreground(bool enabled)
@@ -341,7 +341,7 @@ void ServerConfigDialog::toggleWin32Foreground(bool enabled)
   if (m_win32keepForeground == enabled)
     return;
   m_win32keepForeground = enabled;
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::addClient()
@@ -352,7 +352,7 @@ void ServerConfigDialog::addClient()
 void ServerConfigDialog::onScreenRemoved()
 {
   ui->lblNewScreen->setEnabled(true);
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 void ServerConfigDialog::toggleExternalConfig(bool checked)
@@ -361,7 +361,7 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
   serverConfig().setUseExternalConfig(checked);
-  onChange();
+  setButtonBoxEnabledButtons();
 }
 
 bool ServerConfigDialog::browseConfigFile()
@@ -376,7 +376,7 @@ bool ServerConfigDialog::browseConfigFile()
   if (!fileName.isEmpty()) {
     ui->lineConfigFile->setText(fileName);
     serverConfig().setConfigFile(ui->lineConfigFile->text());
-    onChange();
+    setButtonBoxEnabledButtons();
     return true;
   }
 
@@ -504,7 +504,9 @@ void ServerConfigDialog::initConnections() const
       ui->cbDefaultLockToComputerState, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDefaultLockToComputerState
   );
   connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
-  connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+  connect(
+      &m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::setButtonBoxEnabledButtons
+  );
   connect(Settings::instance(), &Settings::settingsWritableChanged, this, &ServerConfigDialog::updateControls);
 }
 
@@ -560,7 +562,7 @@ bool ServerConfigDialog::isGeneralConfigModified() const
          m_defaultLockToComputerState != Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
 }
 
-void ServerConfigDialog::onChange()
+void ServerConfigDialog::setButtonBoxEnabledButtons() const
 {
   const bool writable = Settings::isWritable();
   m_buttonBox->enableSave(writable && (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig)));
