@@ -1,0 +1,61 @@
+name: "Notarize macOS"
+description: "Notarizes and staples both macOS dmgs in a single notarization request"
+
+inputs:
+  package-prefix:
+    description: "Prefix used for the uploaded package artifact names"
+    required: true
+
+  apple-notarize-id:
+    description: "Apple ID used to submit the notarization request"
+    required: true
+
+  apple-notarize-pwd:
+    description: "App-specific password for the Apple ID"
+    required: true
+
+  apple-codesign-dev:
+    description: "Apple Developer ID codesign identity, e.g. 'Developer ID Application: Name (TEAMID)'"
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Download macOS packages
+      uses: actions/download-artifact@v8
+      with:
+        pattern: package-${{ inputs.package-prefix }}-macos-*
+        path: packages
+
+    - name: Notarize & Staple
+      shell: bash
+      env:
+        APPLE_NOTARIZE_ID: ${{ inputs.apple-notarize-id }}
+        APPLE_NOTARIZE_PWD: ${{ inputs.apple-notarize-pwd }}
+        APPLE_CODESIGN_DEV: ${{ inputs.apple-codesign-dev }}
+      run: |
+        set -eo pipefail
+        if [[ ! "$APPLE_CODESIGN_DEV" =~ ^Developer\ ID\ Application:\ .+\ \(([A-Z0-9]+)\)$ ]]; then
+          echo "Could not extract Apple team ID from apple-codesign-dev; expected format 'Developer ID Application: <name> (<team_id>)'" >&2
+          exit 1
+        fi
+        APPLE_NOTARIZE_TEAM="${BASH_REMATCH[1]}"
+        zip -j "$RUNNER_TEMP/notarize.zip" packages/package-${{ inputs.package-prefix }}-macos-arm64/*.dmg packages/package-${{ inputs.package-prefix }}-macos-x64/*.dmg
+        xcrun notarytool submit --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" --wait "$RUNNER_TEMP/notarize.zip"
+        xcrun stapler staple packages/package-${{ inputs.package-prefix }}-macos-arm64/*.dmg
+        xcrun stapler staple packages/package-${{ inputs.package-prefix }}-macos-x64/*.dmg
+
+    - name: Upload arm64
+      uses: actions/upload-artifact@v7
+      with:
+        name: package-${{ inputs.package-prefix }}-macos-arm64
+        path: packages/package-${{ inputs.package-prefix }}-macos-arm64/*.dmg
+        overwrite: true
+
+    - name: Upload x64
+      uses: actions/upload-artifact@v7
+      with:
+        name: package-${{ inputs.package-prefix }}-macos-x64
+        path: packages/package-${{ inputs.package-prefix }}-macos-x64/*.dmg
+        overwrite: true

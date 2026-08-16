@@ -25,23 +25,22 @@ jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
   ci-passed:
     runs-on: ubuntu-latest
-    needs: [main-build, test-results, unix, flatpak]
+    needs: [main-build, mac-build, test-results, unix, flatpak]
     if: always()
 
     steps:
       - name: Check all steps passed
         run: |
-          if [[ ${{needs.main-build.result}} == 'success' && ${{needs.test-results.result}} == 'success' && ${{needs.unix.result}} == 'success' && ${{needs.flatpak.result}} == 'success' ]]; then
+          if [[ ${{needs.main-build.result}} == 'success' && ${{needs.mac-build.result}} == 'success' && ${{needs.test-results.result}} == 'success' && ${{needs.unix.result}} == 'success' && ${{needs.flatpak.result}} == 'success' ]]; then
             echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
           else
             exit 1
           fi
-
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
   test-results:
-    needs: main-build
-    if: always() && needs.main-build.result != 'skipped'
+    needs: [main-build, mac-build]
+    if: always() && needs.main-build.result != 'skipped' && needs.mac-build.result != 'skipped'
 
     runs-on: ubuntu-slim
     timeout-minutes: 5
@@ -102,6 +101,7 @@ jobs:
             vcpkg-triplet: x64-windows-release
             arch: "amd64"
             qt-version: 6.10.3
+            use-msvc-env: true
 
           - name: "windows-2022-arm64"
             runs-on: "windows-11-arm"
@@ -110,18 +110,7 @@ jobs:
             vcpkg-triplet: arm64-windows
             arch: "arm64"
             qt-version: 6.11.1
-
-          - name: "macos-arm64"
-            runs-on: macos-15
-            timeout: 10
-            qt-version: 6.11.1
-            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
-
-          - name: "macos-x64"
-            runs-on: macos-15-intel
-            timeout: 20
-            qt-version: 6.9.3
-            config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
+            use-msvc-env: true
 
           - name: "debian-x86_64"
             runs-on: ubuntu-latest
@@ -250,97 +239,76 @@ jobs:
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v2
 
-      # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
-      # VC++ as that's already pre-installed on the Windows runner.
-      - name: Setup VC++ environment
-        if: ${{ runner.os == 'Windows' }}
-        uses: TheMrMilchmann/setup-msvc-dev@v4
+      - name: Build
+        uses: ./.github/actions/build
         with:
-          arch: ${{matrix.target.arch}}
-          spectre: true
-
-      - name: Install dependencies
-        id: get-deps
-        uses: ./.github/actions/install-dependencies
-        with:
-          qt-version: ${{matrix.target.qt-version}}
-          vcpkg-triplet: ${{matrix.target.vcpkg-triplet}}
+          name: ${{ matrix.target.name }}
+          qt-version: ${{ matrix.target.qt-version }}
+          config-args: ${{ matrix.target.config-args }}
+          vcpkg-triplet: ${{ matrix.target.vcpkg-triplet }}
+          arch: ${{ matrix.target.arch }}
           like: ${{ matrix.target.like }}
+          package-prefix: ${{ env.PACKAGE_PREFIX }}
+          use-msvc-env: ${{ matrix.target.use-msvc-env || false }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get version
-        uses: ./.github/actions/get-version
+  mac-build:
+    needs: lint-clang
+    name: ${{ matrix.target.name }}
+    runs-on: ${{ matrix.target.runs-on }}
+    permissions:
+      contents: write
+    timeout-minutes: ${{ matrix.target.timeout }}
+    strategy:
+      fail-fast: false
 
-      - name: Configure
-        run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
+      matrix:
+        target:
+          - name: "macos-arm64"
+            runs-on: macos-15
+            timeout: 10
+            qt-version: 6.11.1
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
+
+          - name: "macos-x64"
+            runs-on: macos-15-intel
+            timeout: 20
+            qt-version: 6.9.3
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
+    steps:
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v2
 
       - name: Build
-        shell: bash
-        run: |
-          if [[ "${{matrix.target.like}}" != "arch" ]]; then
-            if [ "$RUNNER_OS" != "macOS" ]; then
-              cmake --build build --config Release -j8 --target package
-            else
-              cmake --build build --config Release -j8
-              packaged=false
-              for i in $(seq 1 5); do
-                if cmake --build build --config Release -j8 --target package; then
-                  echo "Package successful"
-                  packaged=true
-                  break
-                else
-                  echo "Package attempt $i failed"
-                  sleep 1
-                fi
-              done
-              if [ "$packaged" != true ]; then
-                echo "Packaging failed after $i attempts" >&2
-                exit 1
-              fi
-            fi
-          else
-            cmake --build build --config Release -j8
-            useradd -m build
-            sudo chown -R build build
-            cd build
-            sudo -u build makepkg -s
-            export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
-            export ARCH=$(uname -m)
-            mv *.pkg.tar.zst deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-${OSNAME}-${ARCH}.pkg.tar.zst
-            cd ..
-          fi
-
-      - name: Check for unexpected repo changes
-        shell: bash
-        run: |
-          if [[ `git status --porcelain` ]]; then
-            echo "Unexpected changes to the repo, Often caused by forgetting to commit the updated translation files"
-            exit 1
-          fi
-
-      - name: Tests
-        uses: ./.github/actions/run-tests
-        timeout-minutes: 2
+        uses: ./.github/actions/build
         with:
-          job: ${{ matrix.target.name }}
+          name: ${{ matrix.target.name }}
+          qt-version: ${{ matrix.target.qt-version }}
+          config-args: ${{ matrix.target.config-args }}
+          package-prefix: ${{ env.PACKAGE_PREFIX }}
+          use-retry-on-package: true
+          use-apple-codesign: true
+          apple-codesign-dev: ${{ secrets.APPLE_CODESIGN_DEV }}
+          apple-codesign-p12: ${{ secrets.APPLE_CODESIGN_P12 }}
+          apple-codesign-p12-pwd: ${{ secrets.APPLE_CODESIGN_P12_PWD }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test package
-        uses: ./.github/actions/test-package
-        with:
-          like: ${{ matrix.target.like }}
+  notarize-macos:
+    needs: mac-build
+    runs-on: macos-15
+    timeout-minutes: 15
 
-      - name: Update Development Documentation
-        if: matrix.target.like == 'arch' && github.ref == 'refs/heads/master'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/docs/dev/html
-          force_orphan: true
+    steps:
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v2
 
-      - name: Upload
-        uses: actions/upload-artifact@v7
+      - name: Notarize macOS
+        uses: ./.github/actions/notarize-macos
         with:
-          name: package-${{ env.PACKAGE_PREFIX }}-${{ matrix.target.name }}
-          path: ${{github.workspace}}/build/deskflow[-_]*.*
+          package-prefix: ${{ env.PACKAGE_PREFIX }}
+          apple-notarize-id: ${{ secrets.APPLE_NOTARIZE_ID }}
+          apple-notarize-pwd: ${{ secrets.APPLE_NOTARIZE_PWD }}
+          apple-codesign-dev: ${{ secrets.APPLE_CODESIGN_DEV }}
 
   # Technically, "unix" is a misnomer, but we use it here to mean "Unix-like BSD-derived".
   unix:
@@ -426,7 +394,7 @@ jobs:
           path: ${{github.workspace}}/deskflow[-_]*.flatpak
 
   release:
-    needs: ci-passed
+    needs: [ci-passed, notarize-macos]
     if: (github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v'))
     runs-on: ubuntu-latest
 
