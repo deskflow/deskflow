@@ -281,16 +281,21 @@ jobs:
               cmake --build build --config Release -j8 --target package
             else
               cmake --build build --config Release -j8
+              packaged=false
               for i in $(seq 1 5); do
-                cmake --build build --config Release -j8 --target package 2>&1
-                if [ $? -eq 0 ]; then
+                if cmake --build build --config Release -j8 --target package; then
                   echo "Package successful"
+                  packaged=true
                   break
                 else
                   echo "Package attempt $i failed"
                   sleep 1
                 fi
               done
+              if [ "$packaged" != true ]; then
+                echo "Packaging failed after $i attempts" >&2
+                exit 1
+              fi
             fi
           else
             cmake --build build --config Release -j8
