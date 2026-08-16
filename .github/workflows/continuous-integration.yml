@@ -113,15 +113,15 @@ jobs:
 
           - name: "macos-arm64"
             runs-on: macos-15
-            timeout: 10
+            timeout: 20
             qt-version: 6.11.2
             config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
 
           - name: "macos-x64"
             runs-on: macos-15-intel
-            timeout: 20
+            timeout: 30
             qt-version: 6.9.3
-            config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk ${APPLE_CODESIGN_DEV:+-DAPPLE_CODESIGN_DEV="$APPLE_CODESIGN_DEV"}'
 
           - name: "debian-x86_64"
             runs-on: ubuntu-latest
@@ -271,7 +271,17 @@ jobs:
         uses: ./.github/actions/get-version
 
       - name: Configure
+        env:
+          APPLE_CODESIGN_DEV: ${{ secrets.APPLE_CODESIGN_DEV }}
         run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
+
+      - name: Import code-signing certificate
+        if: runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v')))
+        uses: ./.github/actions/codesign-keychain
+        with:
+          action: import
+          apple-codesign-p12: ${{ secrets.APPLE_CODESIGN_P12 }}
+          apple-codesign-p12-pwd: ${{ secrets.APPLE_CODESIGN_P12_PWD }}
 
       - name: Build
         shell: bash
@@ -308,6 +318,26 @@ jobs:
             mv *.pkg.tar.zst deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-${OSNAME}-${ARCH}.pkg.tar.zst
             cd ..
           fi
+
+      - name: Notarize (macOS)
+        if: runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v')))
+        shell: bash
+        env:
+          APPLE_NOTARIZE_ID: ${{ secrets.APPLE_NOTARIZE_ID }}
+          APPLE_NOTARIZE_PWD: ${{ secrets.APPLE_NOTARIZE_PWD }}
+          APPLE_CODESIGN_DEV: ${{ secrets.APPLE_CODESIGN_DEV }}
+        run: |
+          [[ "$APPLE_CODESIGN_DEV" =~ ^Developer\ ID\ Application:\ .+\ \(([A-Z0-9]+)\)$ ]]
+          APPLE_NOTARIZE_TEAM="${BASH_REMATCH[1]}"
+          xcrun codesign -s "${APPLE_CODESIGN_DEV}" build/deskflow[-_]*.dmg
+          xcrun notarytool submit --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" --wait build/deskflow[-_]*.dmg
+          xcrun stapler staple build/deskflow[-_]*.dmg
+
+      - name: Clean up keychain
+        if: always() && runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v')))
+        uses: ./.github/actions/codesign-keychain
+        with:
+          action: cleanup
 
       - name: Check for unexpected repo changes
         shell: bash

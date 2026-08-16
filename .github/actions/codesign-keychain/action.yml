@@ -1,0 +1,47 @@
+name: "Apple code-signing keychain"
+description: "Imports or cleans up the temporary keychain used to hold the Apple Developer ID certificate"
+
+inputs:
+  action:
+    description: "Which lifecycle step to run: 'import' or 'cleanup'"
+    required: true
+
+  apple-codesign-p12:
+    description: "Base64-encoded Apple codesign certificate (.p12), required for 'import'"
+    required: false
+
+  apple-codesign-p12-pwd:
+    description: "Password for the Apple codesign certificate (.p12), required for 'import'"
+    required: false
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Import certificate
+      if: inputs.action == 'import'
+      shell: bash
+      env:
+        APPLE_CODESIGN_P12: ${{ inputs.apple-codesign-p12 }}
+        APPLE_CODESIGN_P12_PWD: ${{ inputs.apple-codesign-p12-pwd }}
+      run: |
+        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+        KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+        APPLE_CODESIGN_BUILD_PWD=$(openssl rand -hex 32)
+        echo "::add-mask::$APPLE_CODESIGN_BUILD_PWD"
+        echo -n "$APPLE_CODESIGN_P12" | base64 --decode > $CERTIFICATE_PATH
+        security create-keychain -p "$APPLE_CODESIGN_BUILD_PWD" $KEYCHAIN_PATH
+        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+        security unlock-keychain -p "$APPLE_CODESIGN_BUILD_PWD" $KEYCHAIN_PATH
+        security import $CERTIFICATE_PATH -k $KEYCHAIN_PATH -P "$APPLE_CODESIGN_P12_PWD" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$APPLE_CODESIGN_BUILD_PWD" $KEYCHAIN_PATH
+        security list-keychains -d user -s $KEYCHAIN_PATH
+
+    - name: Clean up keychain
+      if: inputs.action == 'cleanup'
+      shell: bash
+      run: |
+        if [ -f $RUNNER_TEMP/build.keychain ]; then
+          security delete-keychain $RUNNER_TEMP/build.keychain
+        fi
+        rm -f $RUNNER_TEMP/build_certificate.p12
