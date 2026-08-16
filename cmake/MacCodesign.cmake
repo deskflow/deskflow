@@ -37,6 +37,7 @@ function(_finalize_mac_codesign)
     OUTPUT ${stamp_file}
     COMMAND /usr/bin/codesign
             --force
+            --deep
             --options runtime
             --entitlements "${CMAKE_SOURCE_DIR}/src/apps/res/entitlements-dev.plist"
             --sign "${APPLE_CODESIGN_DEV}"
