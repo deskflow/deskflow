@@ -74,21 +74,21 @@ void ActionDialog::accept()
   m_action.setKeySequence(ui->keySequenceWidget->keySequence());
   m_action.setType(ui->comboActionType->currentIndex());
 
-  m_action.typeScreenNames().clear();
+  m_action.clearScreens();
 
   int screenCount = ui->listScreens->count();
 
   for (int i = 0; i < ui->listScreens->count(); i++) {
     const auto &item = ui->listScreens->item(i);
-    m_action.typeScreenNames().append(item->text());
+    m_action.addScreen(item->text());
     if (item->checkState() == Qt::Unchecked) {
       screenCount--;
-      m_action.typeScreenNames().removeLast();
+      m_action.removeScreen(item->text());
     }
   }
 
   if (screenCount == ui->listScreens->count())
-    m_action.typeScreenNames().clear();
+    m_action.clearScreens();
 
   m_action.setHaveScreens(screenCount);
 
