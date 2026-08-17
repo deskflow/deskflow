@@ -64,14 +64,14 @@ const KeySequence &Action::keySequence() const
 
 void Action::loadSettings(QSettings &settings)
 {
-  keySequence().loadSettings(settings);
+  m_keySequence.loadSettings(settings);
   setType(settings.value(SettingsKeys::ActionType, static_cast<int>(Type::keyDown)).toInt());
 
-  typeScreenNames().clear();
+  m_typeScreenNames.clear();
   int numTypeScreens = settings.beginReadArray(SettingsKeys::ScreenNames);
   for (int i = 0; i < numTypeScreens; i++) {
     settings.setArrayIndex(i);
-    typeScreenNames().append(settings.value(SettingsKeys::ScreenName).toString());
+    m_typeScreenNames.append(settings.value(SettingsKeys::ScreenName).toString());
   }
   settings.endArray();
 
@@ -89,18 +89,18 @@ void Action::saveSettings(QSettings &settings) const
   settings.setValue(SettingsKeys::ActionType, type());
 
   settings.beginWriteArray(SettingsKeys::ScreenNames);
-  for (int i = 0; i < typeScreenNames().size(); i++) {
+  for (int i = 0; i < m_typeScreenNames.size(); i++) {
     settings.setArrayIndex(i);
-    settings.setValue(SettingsKeys::ScreenName, typeScreenNames()[i]);
+    settings.setValue(SettingsKeys::ScreenName, m_typeScreenNames[i]);
   }
   settings.endArray();
 
-  settings.setValue(SettingsKeys::SwitchToScreen, switchScreenName());
-  settings.setValue(SettingsKeys::SwitchDirection, switchDirection());
-  settings.setValue(SettingsKeys::LockToScreen, lockCursorMode());
-  settings.setValue(SettingsKeys::ActiveOnRelease, activeOnRelease());
-  settings.setValue(SettingsKeys::HasScreens, haveScreens());
-  settings.setValue(SettingsKeys::RestartServer, restartServer());
+  settings.setValue(SettingsKeys::SwitchToScreen, m_switchScreenName);
+  settings.setValue(SettingsKeys::SwitchDirection, m_switchDirection);
+  settings.setValue(SettingsKeys::LockToScreen, m_lockCursorMode);
+  settings.setValue(SettingsKeys::ActiveOnRelease, m_activeOnRelease);
+  settings.setValue(SettingsKeys::HasScreens, m_hasScreens);
+  settings.setValue(SettingsKeys::RestartServer, m_restartServer);
 }
 
 int Action::type() const
@@ -108,9 +108,28 @@ int Action::type() const
   return m_type;
 }
 
-const QStringList &Action::typeScreenNames() const
+QStringList Action::typeScreenNames() const
 {
   return m_typeScreenNames;
+}
+
+void Action::clearScreens()
+{
+  m_typeScreenNames.clear();
+}
+
+void Action::addScreen(const QString &screen)
+{
+  if (m_typeScreenNames.contains(screen))
+    return;
+  m_typeScreenNames.append(screen);
+}
+
+void Action::removeScreen(const QString &screen)
+{
+  if (!m_typeScreenNames.contains(screen))
+    return;
+  m_typeScreenNames.removeAll(screen);
 }
 
 const QString &Action::switchScreenName() const
@@ -143,11 +162,6 @@ bool Action::restartServer() const
   return m_restartServer;
 }
 
-KeySequence &Action::keySequence()
-{
-  return m_keySequence;
-}
-
 void Action::setKeySequence(const KeySequence &seq)
 {
   m_keySequence = seq;
@@ -156,11 +170,6 @@ void Action::setKeySequence(const KeySequence &seq)
 void Action::setType(int t)
 {
   m_type = t;
-}
-
-QStringList &Action::typeScreenNames()
-{
-  return m_typeScreenNames;
 }
 
 void Action::setSwitchScreenName(const QString &n)

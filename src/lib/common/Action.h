@@ -14,7 +14,6 @@
 #include <QString>
 #include <QStringList>
 
-class ActionDialog;
 class QSettings;
 class QTextStream;
 
@@ -33,8 +32,6 @@ struct SettingsKeys
 
 class Action
 {
-  friend class ActionDialog;
-  friend QTextStream &operator<<(QTextStream &outStream, const Action &action);
 
 public:
   enum class Type
@@ -69,31 +66,40 @@ public:
   Action() = default;
 
   QString text() const;
-  const KeySequence &keySequence() const;
+
   void loadSettings(QSettings &settings);
   void saveSettings(QSettings &settings) const;
+
+  const KeySequence &keySequence() const;
+  void setKeySequence(const KeySequence &seq);
+
   int type() const;
-  const QStringList &typeScreenNames() const;
+  void setType(int t);
+
+  QStringList typeScreenNames() const;
+  void clearScreens();
+  void addScreen(const QString &screen);
+  void removeScreen(const QString &screen);
+
   const QString &switchScreenName() const;
+  void setSwitchScreenName(const QString &n);
+
   int switchDirection() const;
+  void setSwitchDirection(int d);
+
   int lockCursorMode() const;
+  void setLockCursorMode(int m);
+
   bool activeOnRelease() const;
+  void setActiveOnRelease(bool b);
+
   bool haveScreens() const;
+  void setHaveScreens(bool b);
+
   bool restartServer() const;
+  void setRestartServer(bool b);
 
   bool operator==(const Action &a) const = default;
-
-protected:
-  KeySequence &keySequence();
-  void setKeySequence(const KeySequence &seq);
-  void setType(int t);
-  QStringList &typeScreenNames();
-  void setSwitchScreenName(const QString &n);
-  void setSwitchDirection(int d);
-  void setLockCursorMode(int m);
-  void setActiveOnRelease(bool b);
-  void setHaveScreens(bool b);
-  void setRestartServer(bool b);
 
 private:
   KeySequence m_keySequence;
