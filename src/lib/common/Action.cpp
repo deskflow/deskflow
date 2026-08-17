@@ -57,6 +57,11 @@ QString Action::text() const
   return text;
 }
 
+const KeySequence &Action::keySequence() const
+{
+  return m_keySequence;
+}
+
 void Action::loadSettings(QSettings &settings)
 {
   keySequence().loadSettings(settings);
@@ -96,6 +101,96 @@ void Action::saveSettings(QSettings &settings) const
   settings.setValue(SettingsKeys::ActiveOnRelease, activeOnRelease());
   settings.setValue(SettingsKeys::HasScreens, haveScreens());
   settings.setValue(SettingsKeys::RestartServer, restartServer());
+}
+
+int Action::type() const
+{
+  return m_type;
+}
+
+const QStringList &Action::typeScreenNames() const
+{
+  return m_typeScreenNames;
+}
+
+const QString &Action::switchScreenName() const
+{
+  return m_switchScreenName;
+}
+
+int Action::switchDirection() const
+{
+  return m_switchDirection;
+}
+
+int Action::lockCursorMode() const
+{
+  return m_lockCursorMode;
+}
+
+bool Action::activeOnRelease() const
+{
+  return m_activeOnRelease;
+}
+
+bool Action::haveScreens() const
+{
+  return m_hasScreens;
+}
+
+bool Action::restartServer() const
+{
+  return m_restartServer;
+}
+
+KeySequence &Action::keySequence()
+{
+  return m_keySequence;
+}
+
+void Action::setKeySequence(const KeySequence &seq)
+{
+  m_keySequence = seq;
+}
+
+void Action::setType(int t)
+{
+  m_type = t;
+}
+
+QStringList &Action::typeScreenNames()
+{
+  return m_typeScreenNames;
+}
+
+void Action::setSwitchScreenName(const QString &n)
+{
+  m_switchScreenName = n;
+}
+
+void Action::setSwitchDirection(int d)
+{
+  m_switchDirection = d;
+}
+
+void Action::setLockCursorMode(int m)
+{
+  m_lockCursorMode = m;
+}
+
+void Action::setActiveOnRelease(bool b)
+{
+  m_activeOnRelease = b;
+}
+
+void Action::setHaveScreens(bool b)
+{
+  m_hasScreens = b;
+}
+
+void Action::setRestartServer(bool b)
+{
+  m_restartServer = b;
 }
 
 QTextStream &operator<<(QTextStream &outStream, const Action &action)

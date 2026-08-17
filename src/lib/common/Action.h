@@ -69,88 +69,31 @@ public:
   Action() = default;
 
   QString text() const;
-  const KeySequence &keySequence() const
-  {
-    return m_keySequence;
-  }
+  const KeySequence &keySequence() const;
   void loadSettings(QSettings &settings);
   void saveSettings(QSettings &settings) const;
-  int type() const
-  {
-    return m_type;
-  }
-  const QStringList &typeScreenNames() const
-  {
-    return m_typeScreenNames;
-  }
-  const QString &switchScreenName() const
-  {
-    return m_switchScreenName;
-  }
-  int switchDirection() const
-  {
-    return m_switchDirection;
-  }
-  int lockCursorMode() const
-  {
-    return m_lockCursorMode;
-  }
-  bool activeOnRelease() const
-  {
-    return m_activeOnRelease;
-  }
-  bool haveScreens() const
-  {
-    return m_hasScreens;
-  }
-  bool restartServer() const
-  {
-    return m_restartServer;
-  }
+  int type() const;
+  const QStringList &typeScreenNames() const;
+  const QString &switchScreenName() const;
+  int switchDirection() const;
+  int lockCursorMode() const;
+  bool activeOnRelease() const;
+  bool haveScreens() const;
+  bool restartServer() const;
 
   bool operator==(const Action &a) const = default;
 
 protected:
-  KeySequence &keySequence()
-  {
-    return m_keySequence;
-  }
-  void setKeySequence(const KeySequence &seq)
-  {
-    m_keySequence = seq;
-  }
-  void setType(int t)
-  {
-    m_type = t;
-  }
-  QStringList &typeScreenNames()
-  {
-    return m_typeScreenNames;
-  }
-  void setSwitchScreenName(const QString &n)
-  {
-    m_switchScreenName = n;
-  }
-  void setSwitchDirection(int d)
-  {
-    m_switchDirection = d;
-  }
-  void setLockCursorMode(int m)
-  {
-    m_lockCursorMode = m;
-  }
-  void setActiveOnRelease(bool b)
-  {
-    m_activeOnRelease = b;
-  }
-  void setHaveScreens(bool b)
-  {
-    m_hasScreens = b;
-  }
-  void setRestartServer(bool b)
-  {
-    m_restartServer = b;
-  }
+  KeySequence &keySequence();
+  void setKeySequence(const KeySequence &seq);
+  void setType(int t);
+  QStringList &typeScreenNames();
+  void setSwitchScreenName(const QString &n);
+  void setSwitchDirection(int d);
+  void setLockCursorMode(int m);
+  void setActiveOnRelease(bool b);
+  void setHaveScreens(bool b);
+  void setRestartServer(bool b);
 
 private:
   KeySequence m_keySequence;
