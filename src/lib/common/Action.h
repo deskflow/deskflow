@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -18,17 +18,18 @@ class ActionDialog;
 class QSettings;
 class QTextStream;
 
-namespace SettingsKeys {
-inline static const QString ActionType = QStringLiteral("type");
-inline static const QString ScreenNames = QStringLiteral("typeScreenNames");
-inline static const QString ScreenName = QStringLiteral("typeScreenName");
-inline static const QString SwitchToScreen = QStringLiteral("switchScreenName");
-inline static const QString SwitchDirection = QStringLiteral("switchInDirection");
-inline static const QString LockToScreen = QStringLiteral("lockCursorToScreen");
-inline static const QString ActiveOnRelease = QStringLiteral("activeOnRelease");
-inline static const QString HasScreens = QStringLiteral("hasScreens");
-inline static const QString RestartServer = QStringLiteral("restartServer");
-} // namespace SettingsKeys
+struct SettingsKeys
+{
+  inline static const QString ActionType = QStringLiteral("type");
+  inline static const QString ScreenNames = QStringLiteral("typeScreenNames");
+  inline static const QString ScreenName = QStringLiteral("typeScreenName");
+  inline static const QString SwitchToScreen = QStringLiteral("switchScreenName");
+  inline static const QString SwitchDirection = QStringLiteral("switchInDirection");
+  inline static const QString LockToScreen = QStringLiteral("lockCursorToScreen");
+  inline static const QString ActiveOnRelease = QStringLiteral("activeOnRelease");
+  inline static const QString HasScreens = QStringLiteral("hasScreens");
+  inline static const QString RestartServer = QStringLiteral("restartServer");
+};
 
 class Action
 {
