@@ -107,6 +107,7 @@ MainWindow::MainWindow()
 
   m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
+  m_actionSettings->setShortcut(QKeySequence::Preferences);
 
   m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
   m_actionStartCore->setMenuRole(QAction::NoRole);
