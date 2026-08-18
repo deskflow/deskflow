@@ -32,6 +32,8 @@ HelpDialog::HelpDialog(QWidget *parent, const QUrl &source)
   m_btnHome->setMaximumWidth(m_btnHome->height());
   m_btnHome->setEnabled(false);
   m_btnClose->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::WindowClose));
+  m_btnClose->setDefault(true);
+  m_btnClose->setFocus();
 
   updateText();
 
