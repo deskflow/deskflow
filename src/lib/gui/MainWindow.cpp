@@ -120,6 +120,7 @@ MainWindow::MainWindow()
 
   m_actionShowHelp->setIcon(QIcon::fromTheme(QStringLiteral("question")));
   m_actionShowHelp->setMenuRole(QAction::NoRole);
+  m_actionShowHelp->setShortcut(QKeySequence::HelpContents);
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
