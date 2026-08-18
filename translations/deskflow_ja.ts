@@ -258,11 +258,11 @@ Do you want to connect to the server?
     <name>HelpDialog</name>
     <message>
         <source>%1 Help</source>
-        <translation type="unfinished">%1 ヘルプ</translation>
+        <translation>%1 ヘルプ</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">近い</translation>
+        <translation>閉じる</translation>
     </message>
 </context>
 <context>
@@ -418,7 +418,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>View &amp;Help</source>
-        <translation type="unfinished">ヘルプを表示 (&amp;H)</translation>
+        <translation>ヘルプを表示(&amp;H)</translation>
     </message>
     <message>
         <source>No IP Detected</source>
@@ -1163,11 +1163,11 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>%1 Clear Settings</source>
-        <translation type="unfinished">%1 設定消去</translation>
+        <translation>%1 設定消去</translation>
     </message>
     <message>
         <source>&lt;p&gt;Are you sure you want to clear all settings and restart %1?&lt;/p&gt; &lt;p&gt;This action cannot be undone.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;すべての設定を消去して %1 を再起動してもよろしいですか？&lt;/p&gt; &lt;p&gt;この操作は元に戻せません。&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;すべての設定を消去して %1 を再起動してもよろしいですか？&lt;/p&gt; &lt;p&gt;この操作は元に戻せません。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Required messages</source>
@@ -1255,34 +1255,34 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
     <message>
         <source>Remove all settings</source>
-        <translation type="unfinished">すべての設定を削除する</translation>
+        <translation>すべての設定を消去する</translation>
     </message>
 </context>
 <context>
     <name>SettingsDialogButtonBox</name>
     <message>
         <source>Settings are read only</source>
-        <translation type="unfinished">設定は読み取り専用です</translation>
+        <translation>設定は読み取り専用です</translation>
     </message>
     <message>
         <source>%1 is not writable</source>
-        <translation type="unfinished">%1 は書き込み可能ではありません</translation>
+        <translation>%1 は書き込み可能ではありません</translation>
     </message>
     <message>
         <source>Close and save changes</source>
-        <translation type="unfinished">変更を保存して閉じる</translation>
+        <translation>変更を保存して閉じる</translation>
     </message>
     <message>
         <source>Close and forget changes</source>
-        <translation type="unfinished">変更を破棄して閉じる</translation>
+        <translation>変更を破棄して閉じる</translation>
     </message>
     <message>
         <source>Reset to stored values</source>
-        <translation type="unfinished">変更前の値にリセットする</translation>
+        <translation>変更前の値にリセットする</translation>
     </message>
     <message>
         <source>Reset to default values</source>
-        <translation type="unfinished">デフォルト値にリセットする</translation>
+        <translation>デフォルト値にリセットする</translation>
     </message>
 </context>
 <context>
