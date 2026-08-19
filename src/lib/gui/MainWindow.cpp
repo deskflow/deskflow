@@ -43,6 +43,7 @@
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
+#include <QOperatingSystemVersion>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
@@ -620,7 +621,7 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-  if (!Settings::value(Settings::Gui::Autohide).toBool())
+  if (!Settings::value(Settings::Gui::Autohide).toBool() || !m_trayIconAvailable)
     showAndActivate();
   else if (deskflow::platform::isMac())
     // macOS to call hide after this function ends
@@ -681,6 +682,13 @@ void MainWindow::createMenuBar()
 
 void MainWindow::setupTrayIcon()
 {
+#if defined(Q_OS_MACOS)
+  if (QOperatingSystemVersion::current().majorVersion() == 27) {
+    qWarning() << "system tray is disabled on macOS 27 because Qt crashes while tracking its menu";
+    return;
+  }
+#endif
+
   auto trayMenu = new QMenu(this);
   trayMenu->addActions(
       {m_actionStartCore, m_actionRestartCore, m_actionStopCore, m_actionMinimize, m_actionRestore, m_actionTrayQuit}
@@ -691,6 +699,7 @@ void MainWindow::setupTrayIcon()
 
   setTrayIcon();
   m_trayIcon->show();
+  m_trayIconAvailable = true;
 }
 
 void MainWindow::applyConfig()
@@ -886,7 +895,7 @@ void MainWindow::handlePeerFingerprint(const QString &fingerprint)
 
 bool MainWindow::maybeHideToTray()
 {
-  if (!Settings::value(Settings::Gui::CloseToTray).toBool()) {
+  if (!m_trayIconAvailable || !Settings::value(Settings::Gui::CloseToTray).toBool()) {
     return false;
   }
 
