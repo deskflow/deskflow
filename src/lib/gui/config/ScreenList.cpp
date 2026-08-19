@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2021 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -79,9 +80,8 @@ void ScreenList::addScreenByPriority(const Screen &newScreen)
   bool isAdded = false;
   for (const auto &index : indexes) {
     if (index >= 0 && index < size()) {
-      auto &screen = operator[](index);
-      if (screen.isNull()) {
-        screen = newScreen;
+      if (screenIndexAt(index % m_width, index / m_width) == -1) {
+        operator[](index) = newScreen;
         isAdded = true;
         break;
       }
@@ -96,12 +96,30 @@ void ScreenList::addScreenByPriority(const Screen &newScreen)
 void ScreenList::addScreenToFirstEmpty(const Screen &newScreen)
 {
   for (int i = 0; i < size(); ++i) {
-    auto &screen = operator[](i);
-    if (screen.isNull()) {
-      screen = newScreen;
+    if (screenIndexAt(i % m_width, i / m_width) == -1) {
+      operator[](i) = newScreen;
       break;
     }
   }
+}
+
+int ScreenList::screenIndexAt(int column, int row) const
+{
+  if (column < 0 || column >= m_width || row < 0 || (static_cast<qsizetype>(row) + 1) * m_width > size())
+    return -1;
+
+  for (int i = 0; i < size(); ++i) {
+    const auto &screen = at(i);
+    if (screen.isNull())
+      continue;
+    const int anchorColumn = i % m_width;
+    const int anchorRow = i / m_width;
+    if (column >= anchorColumn && column < anchorColumn + screen.width() && row >= anchorRow &&
+        row < anchorRow + screen.height())
+      return i;
+  }
+
+  return -1;
 }
 
 bool ScreenList::operator==(const ScreenList &sc) const

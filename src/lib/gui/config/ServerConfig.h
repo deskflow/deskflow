@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -79,7 +80,7 @@ private:
   {
     return m_Hotkeys;
   }
-  int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
+  QString linksSection(int idx) const;
   bool findScreenName(const QString &name, int &index);
   bool fixNoServer(const QString &name, int &index);
 
