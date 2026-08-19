@@ -438,6 +438,7 @@ bool EiScreen::canLeave()
 void EiScreen::leave()
 {
   if (!m_isPrimary) {
+    fakeMouseMove(m_w / 2, m_h / 2);
     stopEmulating();
   }
 
