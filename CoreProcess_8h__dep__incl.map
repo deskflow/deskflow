@@ -1,0 +1,12 @@
+<map id="src/lib/gui/core/CoreProcess.h" name="src/lib/gui/core/CoreProcess.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="117,5,314,30"/>
+<area shape="rect" id="Node000002" href="$MainWindow_8cpp.html" title=" " alt="" coords="5,158,186,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,39,146,57,123,80,112,99,105,121,98,159,94,156,100,119,107,97,119,76,143,53,174,36"/>
+<area shape="rect" id="Node000003" href="$MainWindow_8h.html" title=" " alt="" coords="132,78,299,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,44,218,79,213,77,214,48"/>
+<area shape="rect" id="Node000005" href="$CoreProcess_8cpp.html" title=" " alt="" coords="323,78,534,103"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="265,33,396,77,391,78,265,38"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="188,111,115,159,112,155,182,112"/>
+<area shape="rect" id="Node000004" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="210,151,360,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="237,112,271,151,265,150,235,117"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="Server::LockCursorToScreenInfo" name="Server::LockCursorToScreenInfo">
+<area shape="rect" id="Node000001" title="Lock cursor to screen data." alt="" coords="5,78,218,103"/>
+<area shape="rect" id="Node000002" href="$classEventData.html" title=" " alt="" coords="71,5,152,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,44,114,79,109,77,110,48"/>
+</map>
