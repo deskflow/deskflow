@@ -15,8 +15,6 @@ endif()
 
 add_library(${target} STATIC
   ${platform_sources}
-  Action.cpp
-  Action.h
   Diagnostic.cpp
   Diagnostic.h
   FileTail.cpp
