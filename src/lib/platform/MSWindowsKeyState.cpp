@@ -1278,6 +1278,12 @@ KeyID MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
   // But they have different X11 keysym. So we should distinguish them.
   if ((LOWORD(m_keyLayout) & 0xffffu) == 0x0412u) { // 0x0412 : Korean Locale ID
     if (virtualKey == VK_HANGUL || virtualKey == VK_HANJA) {
+      // The real hangul and hanja keys always come with the extended bit set
+      // a plain 0x39 means the space bar was pressed and the client expects a space.
+      if (button == 0x039u) {
+        return 0x20;
+      }
+
       // If shift-space is used to change the input mode,
       // the extented bit is not set. So add it to get right key id.
       button |= 0x100u;
