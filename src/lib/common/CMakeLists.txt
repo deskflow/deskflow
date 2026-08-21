@@ -15,6 +15,8 @@ add_library(common STATIC
   Coordinate.h
   Enums.h
   ExitCodes.h
+  Hotkey.cpp
+  Hotkey.h
   I18N.h
   I18N.cpp
   KeySequence.h
