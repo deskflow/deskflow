@@ -177,7 +177,7 @@ void ServerConfigDialog::addAction()
   Action action;
   ActionDialog dlg(this, serverConfig(), hotkey, action);
   if (dlg.exec() == QDialog::Accepted) {
-    hotkey.actions().append(action);
+    hotkey.addAction(action);
     ui->listActions->addItem(action.text());
     setButtonBoxEnabledButtons();
   }
@@ -197,7 +197,7 @@ void ServerConfigDialog::editAction()
     qDebug() << "Attempt to remove out of bounds action row: " << actionRow;
     return;
   }
-  Action &action = hotkey.actions()[actionRow];
+  Action &action = hotkey.actionAt(actionRow);
 
   ActionDialog dlg(this, serverConfig(), hotkey, action);
   if (dlg.exec() == QDialog::Accepted) {
@@ -221,7 +221,7 @@ void ServerConfigDialog::removeAction()
     return;
   }
 
-  hotkey.actions().removeAt(actionRow);
+  hotkey.removeActionAt(actionRow);
   delete ui->listActions->currentItem();
   setButtonBoxEnabledButtons();
 }

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "common/Constants.h"
-#include "gui/Hotkey.h"
+#include "common/Hotkey.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"
 

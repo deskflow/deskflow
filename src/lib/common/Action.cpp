@@ -57,16 +57,21 @@ QString Action::text() const
   return text;
 }
 
+const KeySequence &Action::keySequence() const
+{
+  return m_keySequence;
+}
+
 void Action::loadSettings(QSettings &settings)
 {
-  keySequence().loadSettings(settings);
+  m_keySequence.loadSettings(settings);
   setType(settings.value(SettingsKeys::ActionType, static_cast<int>(Type::keyDown)).toInt());
 
-  typeScreenNames().clear();
+  m_typeScreenNames.clear();
   int numTypeScreens = settings.beginReadArray(SettingsKeys::ScreenNames);
   for (int i = 0; i < numTypeScreens; i++) {
     settings.setArrayIndex(i);
-    typeScreenNames().append(settings.value(SettingsKeys::ScreenName).toString());
+    m_typeScreenNames.append(settings.value(SettingsKeys::ScreenName).toString());
   }
   settings.endArray();
 
@@ -84,18 +89,117 @@ void Action::saveSettings(QSettings &settings) const
   settings.setValue(SettingsKeys::ActionType, type());
 
   settings.beginWriteArray(SettingsKeys::ScreenNames);
-  for (int i = 0; i < typeScreenNames().size(); i++) {
+  for (int i = 0; i < m_typeScreenNames.size(); i++) {
     settings.setArrayIndex(i);
-    settings.setValue(SettingsKeys::ScreenName, typeScreenNames()[i]);
+    settings.setValue(SettingsKeys::ScreenName, m_typeScreenNames[i]);
   }
   settings.endArray();
 
-  settings.setValue(SettingsKeys::SwitchToScreen, switchScreenName());
-  settings.setValue(SettingsKeys::SwitchDirection, switchDirection());
-  settings.setValue(SettingsKeys::LockToScreen, lockCursorMode());
-  settings.setValue(SettingsKeys::ActiveOnRelease, activeOnRelease());
-  settings.setValue(SettingsKeys::HasScreens, haveScreens());
-  settings.setValue(SettingsKeys::RestartServer, restartServer());
+  settings.setValue(SettingsKeys::SwitchToScreen, m_switchScreenName);
+  settings.setValue(SettingsKeys::SwitchDirection, m_switchDirection);
+  settings.setValue(SettingsKeys::LockToScreen, m_lockCursorMode);
+  settings.setValue(SettingsKeys::ActiveOnRelease, m_activeOnRelease);
+  settings.setValue(SettingsKeys::HasScreens, m_hasScreens);
+  settings.setValue(SettingsKeys::RestartServer, m_restartServer);
+}
+
+int Action::type() const
+{
+  return m_type;
+}
+
+QStringList Action::typeScreenNames() const
+{
+  return m_typeScreenNames;
+}
+
+void Action::clearScreens()
+{
+  m_typeScreenNames.clear();
+}
+
+void Action::addScreen(const QString &screen)
+{
+  if (m_typeScreenNames.contains(screen))
+    return;
+  m_typeScreenNames.append(screen);
+}
+
+void Action::removeScreen(const QString &screen)
+{
+  if (!m_typeScreenNames.contains(screen))
+    return;
+  m_typeScreenNames.removeAll(screen);
+}
+
+const QString &Action::switchScreenName() const
+{
+  return m_switchScreenName;
+}
+
+int Action::switchDirection() const
+{
+  return m_switchDirection;
+}
+
+int Action::lockCursorMode() const
+{
+  return m_lockCursorMode;
+}
+
+bool Action::activeOnRelease() const
+{
+  return m_activeOnRelease;
+}
+
+bool Action::haveScreens() const
+{
+  return m_hasScreens;
+}
+
+bool Action::restartServer() const
+{
+  return m_restartServer;
+}
+
+void Action::setKeySequence(const KeySequence &seq)
+{
+  m_keySequence = seq;
+}
+
+void Action::setType(int t)
+{
+  m_type = t;
+}
+
+void Action::setSwitchScreenName(const QString &n)
+{
+  m_switchScreenName = n;
+}
+
+void Action::setSwitchDirection(int d)
+{
+  m_switchDirection = d;
+}
+
+void Action::setLockCursorMode(int m)
+{
+  m_lockCursorMode = m;
+}
+
+void Action::setActiveOnRelease(bool b)
+{
+  m_activeOnRelease = b;
+}
+
+void Action::setHaveScreens(bool b)
+{
+  m_hasScreens = b;
+}
+
+void Action::setRestartServer(bool b)
+{
+  m_restartServer = b;
 }
 
 QTextStream &operator<<(QTextStream &outStream, const Action &action)

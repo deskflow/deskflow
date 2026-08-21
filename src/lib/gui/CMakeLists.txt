@@ -15,16 +15,10 @@ endif()
 
 add_library(${target} STATIC
   ${platform_sources}
-  Action.cpp
-  Action.h
   Diagnostic.cpp
   Diagnostic.h
   FileTail.cpp
   FileTail.h
-  Hotkey.cpp
-  Hotkey.h
-  KeySequence.cpp
-  KeySequence.h
   Logger.cpp
   Logger.h
   MainWindow.cpp

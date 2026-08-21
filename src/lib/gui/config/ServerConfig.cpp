@@ -8,7 +8,7 @@
 
 #include "ServerConfig.h"
 
-#include "Hotkey.h"
+#include "common/Hotkey.h"
 #include "common/Settings.h"
 
 #include <QAbstractButton>
