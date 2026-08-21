@@ -10,10 +10,3 @@ create_test(
   SOURCE LoggerTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
 )
-
-create_test(
-  NAME KeySequenceTests
-  DEPENDS gui
-  SOURCE KeySequenceTests.cpp
-  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
-)

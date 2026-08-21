@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "KeySequence.h"
+#include "common/KeySequence.h"
 
 #include <QList>
 #include <QString>

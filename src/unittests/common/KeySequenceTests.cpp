@@ -6,7 +6,7 @@
 
 #include "KeySequenceTests.h"
 
-#include "gui/KeySequence.h"
+#include "common/KeySequence.h"
 
 void KeySequenceTests::toString_controlShiftPlus_usesNamedPlus()
 {
