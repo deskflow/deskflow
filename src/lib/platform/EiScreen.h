@@ -96,6 +96,11 @@ public:
     return m_maximumClipboardSize;
   }
 
+  //! Prefer Input Capture portal zones for desktop shape (logical pixels).
+  //! EIS regions often report physical pixels under fractional/integer scale>1
+  //! (e.g. Hyprland), which breaks edge leave/release. Portal zones match barriers.
+  void setPortalDesktopShape(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height);
+
 protected:
   // IPlatformScreen overrides
   void handleSystemEvent(const Event &event) override;
@@ -172,6 +177,8 @@ private:
   std::uint32_t m_w = 0;
   std::uint32_t m_h = 0;
   bool m_isShapeInitialized = false;
+  // When true, updateShape() must not overwrite with EIS physical regions.
+  bool m_portalShape = false;
 
   // true if mouse has entered the screen
   bool m_isOnScreen;

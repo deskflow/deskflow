@@ -842,6 +842,12 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
     zones = zones->next;
   }
 
+  // Sync EiScreen shape to the portal logical desktop so edge leave matches
+  // barrier coordinates under compositor scale≠1 (physical EIS vs logical portal).
+  if (boundsInit) {
+    m_screen->setPortalDesktopShape(unionLeft, unionTop, unionRight - unionLeft, unionBottom - unionTop);
+  }
+
   GList *list = nullptr;
   for (auto const &b : m_barriers) {
     list = g_list_append(list, b);
