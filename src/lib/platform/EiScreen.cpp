@@ -8,6 +8,7 @@
 
 #include "platform/EiScreen.h"
 
+#include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "common/Constants.h"
@@ -519,8 +520,54 @@ bool EiScreen::isPrimary() const
   return m_isPrimary;
 }
 
+void EiScreen::setPortalDesktopShape(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height)
+{
+  if (width <= 0 || height <= 0) {
+    return;
+  }
+
+  const auto newX = static_cast<std::uint32_t>(x);
+  const auto newY = static_cast<std::uint32_t>(y);
+  const auto newW = static_cast<std::uint32_t>(width);
+  const auto newH = static_cast<std::uint32_t>(height);
+
+  bool changed = false;
+  {
+    std::scoped_lock lock{m_mutex};
+    m_portalShape = true;
+    changed = !m_isShapeInitialized || newX != m_x || newY != m_y || newW != m_w || newH != m_h;
+
+    if (!m_isShapeInitialized) {
+      m_cursorX = static_cast<std::int32_t>(newX + newW / 2);
+      m_cursorY = static_cast<std::int32_t>(newY + newH / 2);
+      m_isShapeInitialized = true;
+    } else if (changed) {
+      m_cursorX = std::clamp(m_cursorX, static_cast<int32_t>(newX), static_cast<int32_t>(newX + newW - 1));
+      m_cursorY = std::clamp(m_cursorY, static_cast<int32_t>(newY), static_cast<int32_t>(newY + newH - 1));
+    }
+
+    m_x = newX;
+    m_y = newY;
+    m_w = newW;
+    m_h = newH;
+  }
+
+  LOG_NOTE("portal desktop shape (logical): %dx%d@%d,%d", width, height, x, y);
+  if (changed) {
+    sendEvent(EventTypes::ScreenShapeChanged, nullptr);
+  }
+}
+
 void EiScreen::updateShape()
 {
+  // Portal zones are in compositor logical coordinates and match pointer
+  // barriers. Prefer them once known so scaled Wayland sessions (Hyprland
+  // scale 1.25/1.6/2, …) can leave the primary screen at the real edge.
+  if (m_portalShape) {
+    LOG_DEBUG("keeping portal desktop shape: %dx%d@%d,%d", m_w, m_h, m_x, m_y);
+    return;
+  }
+
   std::uint32_t newW = 1;
   std::uint32_t newH = 1;
   std::uint32_t newX = std::numeric_limits<uint32_t>::max();
@@ -543,7 +590,22 @@ void EiScreen::updateShape()
     return;
   }
 
-  LOG_DEBUG("logical output size: %dx%d@%d.%d", newW, newH, newX, newY);
+  // EIS historically stored right/bottom edges in newW/newH when origin is 0.
+  // Convert to width/height so getShape() stays consistent with portal shape.
+  if (newX != std::numeric_limits<uint32_t>::max() && newW > newX) {
+    newW = newW - newX;
+  }
+  if (newY != std::numeric_limits<uint32_t>::max() && newH > newY) {
+    newH = newH - newY;
+  }
+  if (newX == std::numeric_limits<uint32_t>::max()) {
+    newX = 0;
+  }
+  if (newY == std::numeric_limits<uint32_t>::max()) {
+    newY = 0;
+  }
+
+  LOG_DEBUG("logical output size (eis): %dx%d@%d,%d", newW, newH, newX, newY);
 
   const bool changed = newX != m_x || newY != m_y || newW != m_w || newH != m_h;
 
@@ -854,8 +916,14 @@ void EiScreen::onMotionEvent(ei_event *event)
 
   if (m_isOnScreen) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", m_cursorX, m_cursorY);
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_cursorX, m_cursorY));
-    if (m_portalInputCapture->isActive()) {
+    // Deliver immediately so leave() can clear m_isOnScreen before we decide
+    // whether this barrier activation was a false edge (must release) or a
+    // real client switch (must keep capture for secondary motion).
+    m_events->addEvent(Event(
+        EventTypes::PrimaryScreenMotionOnPrimary, getEventTarget(), MotionInfo::alloc(m_cursorX, m_cursorY),
+        Event::EventFlags::DeliverImmediately
+    ));
+    if (m_isOnScreen && m_portalInputCapture->isActive()) {
       m_portalInputCapture->release();
     }
   } else {
