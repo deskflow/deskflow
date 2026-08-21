@@ -12,7 +12,7 @@
 #include <QString>
 #include <QTextStream>
 
-#include "Action.h"
+#include "common/Action.h"
 #include "common/KeySequence.h"
 
 class HotkeyDialog;

@@ -10,6 +10,8 @@ configure_file(Constants.h.in Constants.h @ONLY)
 configure_file(VersionInfo.h.in VersionInfo.h @ONLY)
 
 add_library(common STATIC
+  Action.cpp
+  Action.h
   Coordinate.h
   Enums.h
   ExitCodes.h

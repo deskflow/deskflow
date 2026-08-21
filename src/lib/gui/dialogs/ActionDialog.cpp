@@ -9,8 +9,8 @@
 #include "ActionDialog.h"
 #include "ui_ActionDialog.h"
 
-#include "Action.h"
 #include "Hotkey.h"
+#include "common/Action.h"
 #include "common/KeySequence.h"
 #include "config/ServerConfig.h"
 
