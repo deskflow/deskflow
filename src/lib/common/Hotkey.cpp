@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -14,6 +14,25 @@ QString Hotkey::text() const
 {
   return m_keySequence.isMouseButton() ? kMousebutton.arg(m_keySequence.toString())
                                        : kKeystroke.arg(m_keySequence.toString());
+}
+
+Action &Hotkey::actionAt(int index)
+{
+  return m_actions[index];
+}
+
+void Hotkey::addAction(const Action &action)
+{
+  if (m_actions.contains(action))
+    return;
+  m_actions.append(action);
+}
+
+void Hotkey::removeActionAt(int index)
+{
+  if (index < 0 || index >= m_actions.size())
+    return;
+  m_actions.removeAt(index);
 }
 
 void Hotkey::loadSettings(QSettings &settings)
