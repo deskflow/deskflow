@@ -11,7 +11,7 @@
 
 #include "Action.h"
 #include "Hotkey.h"
-#include "KeySequence.h"
+#include "common/KeySequence.h"
 #include "config/ServerConfig.h"
 
 #include <QTimer>

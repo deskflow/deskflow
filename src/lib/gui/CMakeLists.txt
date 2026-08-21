@@ -23,8 +23,6 @@ add_library(${target} STATIC
   FileTail.h
   Hotkey.cpp
   Hotkey.h
-  KeySequence.cpp
-  KeySequence.h
   Logger.cpp
   Logger.h
   MainWindow.cpp
