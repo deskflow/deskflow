@@ -19,8 +19,6 @@ add_library(${target} STATIC
   Diagnostic.h
   FileTail.cpp
   FileTail.h
-  Hotkey.cpp
-  Hotkey.h
   Logger.cpp
   Logger.h
   MainWindow.cpp
