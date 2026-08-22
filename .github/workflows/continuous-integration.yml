@@ -101,7 +101,7 @@ jobs:
             config-args: "-G Ninja"
             vcpkg-triplet: x64-windows-release
             arch: "amd64"
-            qt-version: 6.11.2
+            qt-version: 6.12
 
           - name: "windows-2022-arm64"
             runs-on: "windows-11-arm"
@@ -109,12 +109,12 @@ jobs:
             config-args: "-G Ninja"
             vcpkg-triplet: arm64-windows
             arch: "arm64"
-            qt-version: 6.11.2
+            qt-version: 6.12
 
           - name: "macos-arm64"
             runs-on: macos-15
             timeout: 10
-            qt-version: 6.11.2
+            qt-version: 6.12
             config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
 
           - name: "macos-x64"
