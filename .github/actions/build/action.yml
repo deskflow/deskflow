@@ -1,0 +1,220 @@
+name: "Build"
+description: "Configures, builds, packages, tests, and uploads a single build target"
+
+inputs:
+  name:
+    description: "The matrix target name, used for job naming and artifact naming"
+    required: true
+
+  qt-version:
+    description: "The version of Qt to install (Windows & macOS)"
+    required: true
+
+  config-args:
+    description: "Extra CMake configure arguments"
+    required: false
+    default: ""
+
+  vcpkg-triplet:
+    description: "vcpkg triplet to use (Windows)"
+    required: false
+    default: ""
+
+  arch:
+    description: "Target architecture (Windows)"
+    required: false
+    default: ""
+
+  like:
+    description: "Linux distro family: debian, fedora, suse, arch"
+    required: false
+    default: ""
+
+  package-prefix:
+    description: "Prefix used for uploaded package artifact names"
+    required: true
+
+  use-retry-on-package:
+    description: "Retry the cpack/dmg packaging step on failure (macOS)"
+    required: false
+    default: "false"
+
+  use-msvc-env:
+    description: "Run vcvarsall.bat to set up the MSVC environment (Windows)"
+    required: false
+    default: "false"
+
+  use-apple-codesign:
+    description: "Sign the build with an Apple Developer ID certificate (macOS)"
+    required: false
+    default: "false"
+
+  apple-codesign-dev:
+    description: "Apple Developer ID codesign identity"
+    required: false
+    default: ""
+
+  apple-codesign-p12:
+    description: "Base64-encoded Apple codesign certificate (.p12)"
+    required: false
+    default: ""
+
+  apple-codesign-p12-pwd:
+    description: "Password for the Apple codesign certificate (.p12)"
+    required: false
+    default: ""
+
+  github-token:
+    description: "Token used to publish dev docs to gh-pages"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+
+  steps:
+    # This effectively runs `vcvarsall.bat`, etc. It's not actually installing
+    # VC++ as that's already pre-installed on the Windows runner.
+    - name: Setup VC++ environment
+      if: ${{ inputs.use-msvc-env == 'true' }}
+      uses: TheMrMilchmann/setup-msvc-dev@v4
+      with:
+        arch: ${{ inputs.arch }}
+        spectre: true
+
+    - name: Install dependencies
+      id: get-deps
+      uses: ./.github/actions/install-dependencies
+      with:
+        qt-version: ${{ inputs.qt-version }}
+        vcpkg-triplet: ${{ inputs.vcpkg-triplet }}
+        like: ${{ inputs.like }}
+
+    - name: Get version
+      uses: ./.github/actions/get-version
+
+    - name: Configure
+      if: ${{ inputs.use-apple-codesign != 'true' }}
+      shell: bash
+      env:
+        VCPKG_CMAKE_CONFIG: ${{ steps.get-deps.outputs.vcpkg-cmake-config }}
+      run: |
+        VCPKG_CMAKE_CONFIG="${VCPKG_CMAKE_CONFIG//\\//}"
+        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DSKIP_BUILD_TESTS=ON -DCMAKE_COMPILE_WARNING_AS_ERROR=ON ${{ inputs.config-args }} $VCPKG_CMAKE_CONFIG -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
+
+    - name: Configure (with codesign)
+      if: ${{ inputs.use-apple-codesign == 'true' }}
+      shell: bash
+      env:
+        APPLE_CODESIGN_DEV: ${{ inputs.apple-codesign-dev }}
+        VCPKG_CMAKE_CONFIG: ${{ steps.get-deps.outputs.vcpkg-cmake-config }}
+      run: |
+        VCPKG_CMAKE_CONFIG="${VCPKG_CMAKE_CONFIG//\\//}"
+        cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DSKIP_BUILD_TESTS=ON -DCMAKE_COMPILE_WARNING_AS_ERROR=ON ${{ inputs.config-args }} $VCPKG_CMAKE_CONFIG -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}" -DAPPLE_CODESIGN_DEV="$APPLE_CODESIGN_DEV"
+
+    - name: Import codesign certificate
+      if: ${{ inputs.use-apple-codesign == 'true' }}
+      shell: bash
+      env:
+        APPLE_CODESIGN_P12: ${{ inputs.apple-codesign-p12 }}
+        APPLE_CODESIGN_P12_PWD: ${{ inputs.apple-codesign-p12-pwd }}
+      run: |
+        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+        KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+        APPLE_CODESIGN_BUILD_PWD=$(openssl rand -hex 32)
+        echo "::add-mask::$APPLE_CODESIGN_BUILD_PWD"
+        echo -n "$APPLE_CODESIGN_P12" | base64 --decode > $CERTIFICATE_PATH
+        security create-keychain -p "$APPLE_CODESIGN_BUILD_PWD" $KEYCHAIN_PATH
+        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+        security unlock-keychain -p "$APPLE_CODESIGN_BUILD_PWD" $KEYCHAIN_PATH
+        security import $CERTIFICATE_PATH -k $KEYCHAIN_PATH -P "$APPLE_CODESIGN_P12_PWD" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$APPLE_CODESIGN_BUILD_PWD" $KEYCHAIN_PATH
+        security list-keychains -d user -s $KEYCHAIN_PATH
+
+    - name: Build
+      if: ${{ inputs.like != 'arch' && inputs.use-retry-on-package != 'true' }}
+      shell: bash
+      run: cmake --build build --config Release -j8 --target package
+
+    - name: Build (with package retry)
+      if: ${{ inputs.like != 'arch' && inputs.use-retry-on-package == 'true' }}
+      shell: bash
+      run: |
+        cmake --build build --config Release -j8
+        packaged=false
+        for i in $(seq 1 5); do
+          if cmake --build build --config Release -j8 --target package; then
+            echo "Package successful"
+            packaged=true
+            break
+          else
+            echo "Package attempt $i failed"
+            sleep 1
+          fi
+        done
+        if [ "$packaged" != true ]; then
+          echo "Packaging failed after $i attempts" >&2
+          exit 1
+        fi
+
+    - name: Build (arch package)
+      if: ${{ inputs.like == 'arch' }}
+      shell: bash
+      run: |
+        cmake --build build --config Release -j8
+        useradd -m build
+        sudo chown -R build build
+        cd build
+        sudo -u build makepkg -s
+        export OSNAME=$(cat /etc/os-release | grep ^ID= | sed 's/ID=//g')
+        export ARCH=$(uname -m)
+        mv *.pkg.tar.zst deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-${OSNAME}-${ARCH}.pkg.tar.zst
+        cd ..
+
+    - name: Codesign package
+      if: ${{ inputs.use-apple-codesign == 'true' }}
+      shell: bash
+      env:
+        APPLE_CODESIGN_DEV: ${{ inputs.apple-codesign-dev }}
+      run: xcrun codesign -s "${APPLE_CODESIGN_DEV}" build/deskflow[-_]*.dmg
+
+    - name: Clean up keychain
+      if: ${{ always() && inputs.use-apple-codesign == 'true' }}
+      shell: bash
+      run: |
+        if [ -f $RUNNER_TEMP/build.keychain ]; then
+          security delete-keychain $RUNNER_TEMP/build.keychain
+        fi
+        rm -f $RUNNER_TEMP/build_certificate.p12
+
+    - name: Check for unexpected repo changes
+      shell: bash
+      run: |
+        if [[ `git status --porcelain` ]]; then
+          echo "Unexpected changes to the repo, Often caused by forgetting to commit the updated translation files"
+          exit 1
+        fi
+
+    - name: Tests
+      uses: ./.github/actions/run-tests
+      with:
+        job: ${{ inputs.name }}
+
+    - name: Test package
+      uses: ./.github/actions/test-package
+      with:
+        like: ${{ inputs.like }}
+
+    - name: Update Development Documentation
+      if: ${{ inputs.like == 'arch' && github.ref == 'refs/heads/master' }}
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ inputs.github-token }}
+        publish_dir: build/docs/dev/html
+        force_orphan: true
+
+    - name: Upload
+      uses: actions/upload-artifact@v7
+      with:
+        name: package-${{ inputs.package-prefix }}-${{ inputs.name }}
+        path: ${{github.workspace}}/build/deskflow[-_]*.*

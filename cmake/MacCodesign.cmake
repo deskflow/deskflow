@@ -33,10 +33,14 @@ function(_finalize_mac_codesign)
   set(stamp_file "${CMAKE_BINARY_DIR}/CMakeFiles/codesign-dev.stamp")
 
   # Use a stamp file because codesign modifies the binaries it signs.
+  # --deep is needed because deskflow-core lands directly in Contents/MacOS as a
+  # second executable rather than being deployed by macdeployqt; codesign refuses
+  # to seal a bundle that contains embedded, unsigned code otherwise.
   add_custom_command(
     OUTPUT ${stamp_file}
     COMMAND /usr/bin/codesign
             --force
+            --deep
             --options runtime
             --entitlements "${CMAKE_SOURCE_DIR}/src/apps/res/entitlements-dev.plist"
             --sign "${APPLE_CODESIGN_DEV}"
