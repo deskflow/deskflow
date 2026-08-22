@@ -43,7 +43,7 @@
 #include "platform/EiScreen.h"
 #endif
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 #include "platform/OSXScreen.h"
 #endif
 
@@ -393,7 +393,7 @@ deskflow::Screen *ServerApp::createScreen()
   return new deskflow::Screen(
       new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
-#elif defined(Q_OS_MAC)
+#elif defined(Q_OS_MACOS)
   return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
 #else
   if (deskflow::platform::isWayland()) {

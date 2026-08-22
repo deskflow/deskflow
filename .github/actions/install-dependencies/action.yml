@@ -71,6 +71,7 @@ runs:
         version: ${{inputs.qt-version}}
         cache: true
         cache-key-prefix: ${{matrix.target.os}}-${{inputs.qt-version}}
+        aqtsource: git+https://github.com/miurahr/aqtinstall.git@master
 
     - name: Build and cache vcpkg
       if: ${{ runner.os == 'Windows' }}
