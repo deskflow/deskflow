@@ -60,7 +60,7 @@ inline QFont fixedFont()
   QFont f = QFontDatabase::systemFont(QFontDatabase::FixedFont);
 #endif
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
   f.setPointSize(12);
 #endif
   return f;

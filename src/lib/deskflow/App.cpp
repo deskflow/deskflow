@@ -22,7 +22,7 @@
 
 #include <stdexcept>
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
