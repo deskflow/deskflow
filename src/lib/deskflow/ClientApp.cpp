@@ -37,7 +37,7 @@
 #include "platform/EiScreen.h"
 #endif
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 #include "platform/OSXScreen.h"
 #endif
 
@@ -108,7 +108,7 @@ deskflow::Screen *ClientApp::createScreen()
       ),
       getEvents()
   );
-#elif defined(Q_OS_MAC)
+#elif defined(Q_OS_MACOS)
   return new deskflow::Screen(
       new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool()), getEvents()
   );
