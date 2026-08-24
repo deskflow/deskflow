@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -34,6 +35,7 @@ void Screen::loadSettings(QSettingsProxy &settings)
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 
   m_Aliases = Settings::value(Settings::Screen::Aliases.arg(name)).toStringList();
+  m_KeyMappings = Settings::value(Settings::Screen::KeyMappings.arg(name)).toStringList();
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const
@@ -46,6 +48,7 @@ void Screen::saveSettings(QSettingsProxy &settings) const
     return;
 
   Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
+  Settings::setValue(Settings::Screen::KeyMappings.arg(screenName), m_KeyMappings);
 
   settings.setValue("switchCornerSize", switchCornerSize());
 
@@ -76,6 +79,9 @@ QString Screen::screensSection() const
 
   out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
 
+  for (const auto &mapping : keyMappings()) {
+    out.append(lineTemplate.arg(QStringLiteral("keymap"), mapping));
+  }
   return out;
 }
 
@@ -83,5 +89,6 @@ bool Screen::operator==(const Screen &screen) const
 {
   return m_Name == screen.m_Name && m_Aliases == screen.m_Aliases && m_Modifiers == screen.m_Modifiers &&
          m_SwitchCorners == screen.m_SwitchCorners && m_SwitchCornerSize == screen.m_SwitchCornerSize &&
-         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped && m_isServer == screen.m_isServer;
+         m_KeyMappings == screen.m_KeyMappings && m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped &&
+         m_isServer == screen.m_isServer;
 }

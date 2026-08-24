@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2016 - 2025 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -127,6 +128,7 @@ public:
   struct Screen
   {
     inline static const auto Aliases = QStringLiteral("screen_%1/aliases");
+    inline static const auto KeyMappings = QStringLiteral("screen_%1/keyMappings");
   };
 
   // Track Removed keys to make upgrading config easier

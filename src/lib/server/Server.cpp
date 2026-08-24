@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -1518,6 +1518,17 @@ void Server::onScreensaver(bool activated)
   }
 }
 
+Server::ServerConfig::MappedKeyEvent
+Server::mapKeyForScreen(const std::string &screen, KeyID id, KeyModifierMask mask) const
+{
+  const auto mapped = m_config->mapKeyEvent(screen, id, mask);
+  if (mapped.m_id != id) {
+    LOG_DEBUG("remapped key %d to %d for %s", id, mapped.m_id, screen.c_str());
+  }
+
+  return mapped;
+}
+
 void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang, const char *screens)
 {
   LOG_VERBOSE("onKeyDown id=%d mask=0x%04x button=0x%04x lang=%s", id, mask, button, lang.c_str());
@@ -1525,7 +1536,8 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
 
   // relay
   if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(screens)) {
-    m_active->keyDown(id, mask, button, lang);
+    const auto mapped = mapKeyForScreen(getName(m_active), id, mask);
+    m_active->keyDown(mapped.m_id, mapped.m_mask, button, lang);
   } else {
     if (!screens && m_keyboardBroadcasting) {
       screens = m_keyboardBroadcastingScreens.c_str();
@@ -1535,7 +1547,8 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
     }
     for (ClientList::const_iterator index = m_clients.begin(); index != m_clients.end(); ++index) {
       if (IKeyState::KeyInfo::contains(screens, index->first)) {
-        index->second->keyDown(id, mask, button, lang);
+        const auto mapped = mapKeyForScreen(index->first, id, mask);
+        index->second->keyDown(mapped.m_id, mapped.m_mask, button, lang);
       }
     }
   }
@@ -1548,7 +1561,8 @@ void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const cha
 
   // relay
   if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(screens)) {
-    m_active->keyUp(id, mask, button);
+    const auto mapped = mapKeyForScreen(getName(m_active), id, mask);
+    m_active->keyUp(mapped.m_id, mapped.m_mask, button);
   } else {
     if (!screens && m_keyboardBroadcasting) {
       screens = m_keyboardBroadcastingScreens.c_str();
@@ -1558,7 +1572,8 @@ void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const cha
     }
     for (ClientList::const_iterator index = m_clients.begin(); index != m_clients.end(); ++index) {
       if (IKeyState::KeyInfo::contains(screens, index->first)) {
-        index->second->keyUp(id, mask, button);
+        const auto mapped = mapKeyForScreen(index->first, id, mask);
+        index->second->keyUp(mapped.m_id, mapped.m_mask, button);
       }
     }
   }
@@ -1573,7 +1588,11 @@ void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButto
   assert(m_active != nullptr);
 
   // relay
-  m_active->keyRepeat(id, mask, count, button, lang);
+  const auto mapped = mapKeyForScreen(getName(m_active), id, mask);
+  if (!mapped.m_repeatable) {
+    return;
+  }
+  m_active->keyRepeat(mapped.m_id, mapped.m_mask, count, button, lang);
 }
 
 void Server::onMouseDown(ButtonID id)

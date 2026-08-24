@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -334,6 +334,7 @@ private:
   void onMouseUp(ButtonID);
   bool onMouseMovePrimary(int32_t x, int32_t y);
   void onMouseMoveSecondary(int32_t dx, int32_t dy);
+  ServerConfig::MappedKeyEvent mapKeyForScreen(const std::string &screen, KeyID id, KeyModifierMask mask) const;
   void onMouseWheel(int32_t xDelta, int32_t yDelta);
 
   // add client to list and attach event handlers for client

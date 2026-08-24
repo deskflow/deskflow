@@ -607,6 +607,79 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupKeyMappings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Key Mappings</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutKeyMappings">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayoutAddMapping">
+            <item>
+             <widget class="QComboBox" name="comboMapFrom">
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>Key arriving from this computer.</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblMapArrow">
+              <property name="text">
+               <string notr="true">→</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboMapTo">
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>Key sent to this screen instead.</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnAddMapping">
+              <property name="text">
+               <string>A&amp;dd</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMappingError">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listKeyMappings"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnRemoveMapping">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>R&amp;emove</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupAliases">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">

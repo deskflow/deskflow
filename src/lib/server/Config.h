@@ -11,6 +11,7 @@
 #include "base/BaseException.h"
 #include "base/String.h"
 #include "deskflow/IPlatformScreen.h"
+#include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
 #include "net/NetworkAddress.h"
 #include "server/InputFilter.h"
@@ -53,7 +54,16 @@ class Config
 {
 public:
   using ScreenOptions = std::map<OptionID, OptionValue>;
+  //! Keys rewritten on their way to a screen, keyed by the incoming KeyID
+  using ScreenKeyMap = std::map<KeyID, KeyID>;
   using Interval = std::pair<float, float>;
+
+  struct MappedKeyEvent
+  {
+    KeyID m_id;
+    KeyModifierMask m_mask;
+    bool m_repeatable;
+  };
 
   class CellEdge
   {
@@ -133,6 +143,7 @@ private:
 
   public:
     ScreenOptions m_options;
+    ScreenKeyMap m_keyMap;
   };
   using CellMap = std::map<std::string, Cell, deskflow::string::CaselessCmp>;
   using NameMap = std::map<std::string, std::string, deskflow::string::CaselessCmp>;
@@ -351,6 +362,17 @@ public:
   */
   const ScreenOptions *getOptions(const std::string &name) const;
 
+  //! Get the key rewrites for a screen, nullptr when the screen is unknown
+  const ScreenKeyMap *keyMap(const std::string &name) const;
+
+  //! Rewrite \p id for \p name, returning it unchanged when no rewrite applies
+  KeyID mapKey(const std::string &name, KeyID id) const;
+
+  MappedKeyEvent mapKeyEvent(const std::string &name, KeyID id, KeyModifierMask mask) const;
+
+  //! Add a key rewrite to a screen, replacing any existing rewrite of \p from
+  bool addKeyMapping(const std::string &name, KeyID from, KeyID to);
+
   //! Check for lock to screen action
   /*!
   Returns \c true if this configuration has a lock to screen action.
@@ -394,6 +416,7 @@ public:
   //@}
 
 private:
+  static KeyModifierMask modifierMaskForKey(KeyID id);
   void readSection(ConfigReadContext &);
   void readSectionOptions(ConfigReadContext &);
   void readSectionScreens(ConfigReadContext &);

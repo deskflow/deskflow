@@ -24,6 +24,32 @@
 using namespace deskflow::string;
 
 namespace deskflow::server {
+
+KeyModifierMask Config::modifierMaskForKey(KeyID id)
+{
+  switch (id) {
+  case kKeyShift_L:
+  case kKeyShift_R:
+    return KeyModifierShift;
+  case kKeyControl_L:
+  case kKeyControl_R:
+    return KeyModifierControl;
+  case kKeyAlt_L:
+  case kKeyAlt_R:
+    return KeyModifierAlt;
+  case kKeyMeta_L:
+  case kKeyMeta_R:
+    return KeyModifierMeta;
+  case kKeySuper_L:
+  case kKeySuper_R:
+    return KeyModifierSuper;
+  case kKeyAltGr:
+    return KeyModifierAltGr;
+  default:
+    return 0;
+  }
+}
+
 //
 // Config
 //
@@ -301,6 +327,50 @@ Config::link_const_iterator Config::endNeighbor(const std::string &srcName) cons
 const NetworkAddress &Config::getDeskflowAddress() const
 {
   return m_deskflowAddress;
+}
+
+const Config::ScreenKeyMap *Config::keyMap(const std::string &name) const
+{
+  const auto index = m_map.find(name);
+  if (index == m_map.end()) {
+    return nullptr;
+  }
+
+  return &index->second.m_keyMap;
+}
+
+KeyID Config::mapKey(const std::string &name, KeyID id) const
+{
+  const auto mappings = keyMap(name);
+  if (mappings == nullptr) {
+    return id;
+  }
+
+  const auto mapping = mappings->find(id);
+  return mapping == mappings->end() ? id : mapping->second;
+}
+
+Config::MappedKeyEvent Config::mapKeyEvent(const std::string &name, KeyID id, KeyModifierMask mask) const
+{
+  const auto mapped = mapKey(name, id);
+  if (mapped == id) {
+    return {id, mask, true};
+  }
+
+  const auto sourceModifier = modifierMaskForKey(id);
+  const auto targetModifier = modifierMaskForKey(mapped);
+  return {mapped, (mask & ~sourceModifier) | targetModifier, (sourceModifier == 0) == (targetModifier == 0)};
+}
+
+bool Config::addKeyMapping(const std::string &name, KeyID from, KeyID to)
+{
+  const auto index = m_map.find(name);
+  if (index == m_map.end()) {
+    return false;
+  }
+
+  index->second.m_keyMap[from] = to;
+  return true;
 }
 
 const Config::ScreenOptions *Config::getOptions(const std::string &name) const
@@ -616,6 +686,29 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionScreenSwitchCornerSize, s.parseInt(value));
       } else if (name == "preserveFocus") {
         addOption(screen, kOptionScreenPreserveFocus, s.parseBoolean(value));
+      } else if (name == "keymap") {
+        const auto comma = value.find(',');
+        if (comma == std::string::npos) {
+          throw ServerConfigReadException(s, "syntax for keymap: keymap = fromKey,toKey");
+        }
+        const auto trim = [](std::string s) {
+          const auto first = s.find_first_not_of(" \t");
+          if (first == std::string::npos) {
+            return std::string();
+          }
+          return s.substr(first, s.find_last_not_of(" \t") - first + 1);
+        };
+        const auto fromName = trim(value.substr(0, comma));
+        const auto toName = trim(value.substr(comma + 1));
+        KeyID from = kKeyNone;
+        KeyID to = kKeyNone;
+        if (!deskflow::KeyMap::parseKey(fromName, from) || from == kKeyNone) {
+          throw ServerConfigReadException(s, "unknown key \"%{1}\"", fromName);
+        }
+        if (!deskflow::KeyMap::parseKey(toName, to) || to == kKeyNone) {
+          throw ServerConfigReadException(s, "unknown key \"%{1}\"", toName);
+        }
+        addKeyMapping(screen, from, to);
       } else {
         // unknown argument
         throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
@@ -1383,6 +1476,13 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
         if (name != nullptr && !value.empty()) {
           s << "\t\t" << name << " = " << value << std::endl;
         }
+      }
+    }
+
+    if (const auto mappings = config.keyMap(screen); mappings != nullptr) {
+      for (const auto &[from, to] : *mappings) {
+        s << "\t\t" << "keymap = " << deskflow::KeyMap::formatKey(from, 0) << "," << deskflow::KeyMap::formatKey(to, 0)
+          << std::endl;
       }
     }
   }

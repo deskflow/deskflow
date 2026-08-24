@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -31,13 +32,13 @@ class Screen : public ScreenConfig
   friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen)
   {
     return outStream << screen.name() << screen.switchCornerSize() << screen.aliases() << screen.modifiers()
-                     << screen.switchCorners() << screen.fixes() << screen.isServer();
+                     << screen.switchCorners() << screen.fixes() << screen.isServer() << screen.keyMappings();
   }
 
   friend QDataStream &operator>>(QDataStream &inStream, Screen &screen)
   {
     return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >> screen.m_Aliases >> screen.m_Modifiers >>
-           screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer;
+           screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer >> screen.m_KeyMappings;
   }
 
 public:
@@ -79,6 +80,10 @@ public:
   [[nodiscard]] int switchCornerSize() const
   {
     return m_SwitchCornerSize;
+  }
+  [[nodiscard]] const QStringList &keyMappings() const
+  {
+    return m_KeyMappings;
   }
   [[nodiscard]] bool fix(const Fix f) const
   {
@@ -143,6 +148,10 @@ protected:
   {
     m_SwitchCornerSize = val;
   }
+  QStringList &keyMappings()
+  {
+    return m_KeyMappings;
+  }
   void setFix(const Fix f, const bool on)
   {
     m_Fixes[static_cast<int8_t>(f)] = on;
@@ -163,6 +172,7 @@ private:
   QList<int> m_Modifiers = {0, 1, 2, 3, 4, 5, 6};
   QList<bool> m_SwitchCorners = {false, false, false, false};
   int m_SwitchCornerSize = 0;
+  QStringList m_KeyMappings;
   QList<bool> m_Fixes{false, false, false, false};
   bool m_Swapped = false;
   bool m_isServer = false;

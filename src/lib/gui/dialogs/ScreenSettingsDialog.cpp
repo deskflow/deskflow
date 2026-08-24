@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,6 +9,8 @@
 #include "ScreenSettingsDialog.h"
 #include "ui_ScreenSettingsDialog.h"
 
+#include "deskflow/KeyMap.h"
+#include "deskflow/KeyTypes.h"
 #include "gui/config/Screen.h"
 #include "validators/AliasValidator.h"
 #include "validators/ScreenNameValidator.h"
@@ -56,6 +59,11 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   ui->chkDeadBottomRight->setChecked(m_screen->switchCorner(static_cast<int>(BottomRight)));
   ui->sbSwitchCornerSize->setValue(m_screen->switchCornerSize());
 
+  fillKeyNames();
+  for (const auto &mapping : m_screen->keyMappings()) {
+    new QListWidgetItem(mapping, ui->listKeyMappings);
+  }
+
   ui->chkFixCapsLock->setChecked(m_screen->fix(CapsLock));
   ui->chkFixNumLock->setChecked(m_screen->fix(NumLock));
   ui->chkFixScrollLock->setChecked(m_screen->fix(ScrollLock));
@@ -63,6 +71,9 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
 
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ScreenSettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ScreenSettingsDialog::reject);
+  connect(ui->btnAddMapping, &QPushButton::clicked, this, &ScreenSettingsDialog::addKeyMapping);
+  connect(ui->btnRemoveMapping, &QPushButton::clicked, this, &ScreenSettingsDialog::removeKeyMapping);
+  connect(ui->listKeyMappings, &QListWidget::itemSelectionChanged, this, &ScreenSettingsDialog::keyMappingSelected);
   connect(ui->btnAddAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::addAlias);
   connect(ui->btnRemoveAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::removeAlias);
   connect(ui->lineAddAlias, &QLineEdit::textChanged, this, &ScreenSettingsDialog::checkNewAliasName);
@@ -114,12 +125,68 @@ void ScreenSettingsDialog::accept()
   m_screen->setSwitchCorner(BottomRight, ui->chkDeadBottomRight->isChecked());
   m_screen->setSwitchCornerSize(ui->sbSwitchCornerSize->value());
 
+  m_screen->keyMappings().clear();
+  for (int i = 0; i < ui->listKeyMappings->count(); i++) {
+    m_screen->keyMappings().append(ui->listKeyMappings->item(i)->text());
+  }
+
   m_screen->setFix(CapsLock, ui->chkFixCapsLock->isChecked());
   m_screen->setFix(NumLock, ui->chkFixNumLock->isChecked());
   m_screen->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
   m_screen->setFix(XTest, ui->chkFixXTest->isChecked());
 
   QDialog::accept();
+}
+
+void ScreenSettingsDialog::fillKeyNames() const
+{
+  QStringList names;
+  for (const KeyNameMapEntry *entry = kKeyNameMap; entry->m_name != nullptr; ++entry) {
+    names.append(QString::fromUtf8(entry->m_name));
+  }
+  names.sort(Qt::CaseInsensitive);
+
+  ui->comboMapFrom->addItems(names);
+  ui->comboMapTo->addItems(names);
+  ui->comboMapFrom->setCurrentIndex(-1);
+  ui->comboMapTo->setCurrentIndex(-1);
+}
+
+void ScreenSettingsDialog::addKeyMapping()
+{
+  const auto from = ui->comboMapFrom->currentText().trimmed();
+  const auto to = ui->comboMapTo->currentText().trimmed();
+
+  KeyID parsed = kKeyNone;
+  if (!deskflow::KeyMap::parseKey(from.toStdString(), parsed) || parsed == kKeyNone) {
+    ui->lblMappingError->setText(tr("Unknown key: %1").arg(from));
+    return;
+  }
+  if (!deskflow::KeyMap::parseKey(to.toStdString(), parsed) || parsed == kKeyNone) {
+    ui->lblMappingError->setText(tr("Unknown key: %1").arg(to));
+    return;
+  }
+
+  const auto entry = QStringLiteral("%1,%2").arg(from, to);
+  if (!ui->listKeyMappings->findItems(from + QStringLiteral(","), Qt::MatchStartsWith).isEmpty()) {
+    ui->lblMappingError->setText(tr("%1 is already mapped").arg(from));
+    return;
+  }
+
+  ui->lblMappingError->clear();
+  new QListWidgetItem(entry, ui->listKeyMappings);
+  ui->comboMapFrom->setCurrentIndex(-1);
+  ui->comboMapTo->setCurrentIndex(-1);
+}
+
+void ScreenSettingsDialog::removeKeyMapping() const
+{
+  qDeleteAll(ui->listKeyMappings->selectedItems());
+}
+
+void ScreenSettingsDialog::keyMappingSelected() const
+{
+  ui->btnRemoveMapping->setEnabled(!ui->listKeyMappings->selectedItems().isEmpty());
 }
 
 void ScreenSettingsDialog::addAlias()
