@@ -25,9 +25,7 @@ private Q_SLOTS:
   void getKeyMap_distinguishesDeadKeyOutputsByModifier();
   void getKeyMap_doesNotAssumeDeadKeyOutput();
   void getKeyMap_preservesDirectDeadKeyOutput();
-  void fakeKeyDown_multiCharacterOutput_releasesPreviousKey();
-  void fakeKeyDown_repeatedCharacter_clicksKeyAgain();
-  void fakeKeyRepeat_genuineRepeat_preservesRepeatFlag();
+  void sendKeyEvents_multiCharacterButton_releasesIntermediateKey();
 
 private:
   bool isKeyPressed(const OSXKeyState &keyState, KeyButton button);

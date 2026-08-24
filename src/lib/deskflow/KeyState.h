@@ -182,12 +182,6 @@ private:
   // synthesize key events.  synthesize auto-repeat events count times.
   void fakeKeys(const Keystrokes &, uint32_t count);
 
-  // synthesize a repeated key, tracking whether it came from a real repeat
-  // event or from multiple characters sharing one server button.
-  bool fakeKeyRepeat(
-      KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang, bool genuineRepeat
-  );
-
   // update key state to match changes to modifiers
   void updateModifierKeyState(KeyButton button, const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers);
 

@@ -403,6 +403,20 @@ bool OSXKeyState::fakeCtrlAltDel()
   return false;
 }
 
+void OSXKeyState::sendKeyEvents(
+    void *target, bool press, bool isAutoRepeat, const KeyIDs &keys, KeyModifierMask mask, KeyButton button
+)
+{
+  bool sentKey = false;
+  for (const auto key : keys) {
+    if (press && !isAutoRepeat && sentKey) {
+      KeyState::sendKeyEvent(target, false, false, kKeyNone, mask, 1, button);
+    }
+    KeyState::sendKeyEvent(target, press, isAutoRepeat, key, mask, 1, button);
+    sentKey = true;
+  }
+}
+
 bool OSXKeyState::fakeMediaKey(KeyID id)
 {
   return fakeNativeMediaKey(id);

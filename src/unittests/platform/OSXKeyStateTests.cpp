@@ -18,6 +18,23 @@
 #define A_CHAR_BUTTON 001
 
 namespace {
+class RecordingEventQueue : public EventQueue
+{
+public:
+  void addEvent(Event &&event) override
+  {
+    m_events.push_back(std::move(event));
+  }
+
+  const std::vector<Event> &events() const
+  {
+    return m_events;
+  }
+
+private:
+  std::vector<Event> m_events;
+};
+
 class DeadKeyResource : public IOSXKeyResource
 {
 public:
@@ -160,55 +177,6 @@ public:
   }
 };
 
-class RecordingOSXKeyState : public OSXKeyState
-{
-public:
-  RecordingOSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap) : OSXKeyState(events, keyMap, {"pt"}, true)
-  {
-  }
-
-  int32_t pollActiveGroup() const override
-  {
-    return 0;
-  }
-
-  const deskflow::KeyMap::Keystrokes &keystrokes() const
-  {
-    return m_keystrokes;
-  }
-
-protected:
-  void fakeKey(const Keystroke &keystroke) override
-  {
-    m_keystrokes.push_back(keystroke);
-  }
-
-private:
-  deskflow::KeyMap::Keystrokes m_keystrokes;
-};
-
-bool addApostropheAndMEntries(deskflow::KeyMap &keyMap)
-{
-  deskflow::KeyMap::KeyItem item;
-  item.m_group = 0;
-
-  item.m_id = kKeyDeadAcute;
-  item.m_button = 1;
-  keyMap.addKeyEntry(item);
-
-  item.m_id = ' ';
-  item.m_button = 2;
-  keyMap.addKeyEntry(item);
-
-  item.m_id = 'm';
-  item.m_button = 3;
-  keyMap.addKeyEntry(item);
-
-  const KeyID apostropheSequence[] = {kKeyDeadAcute, ' '};
-  const bool added = keyMap.addKeyCombinationEntry('\'', 0, apostropheSequence, std::size(apostropheSequence));
-  keyMap.finish();
-  return added;
-}
 } // namespace
 
 void OSXKeyStateTests::initTestCase()
@@ -399,66 +367,31 @@ void OSXKeyStateTests::getKeyMap_preservesDirectDeadKeyOutput()
   QCOMPARE(entry->at(0).m_id, static_cast<KeyID>('\''));
 }
 
-void OSXKeyStateTests::fakeKeyDown_multiCharacterOutput_releasesPreviousKey()
+void OSXKeyStateTests::sendKeyEvents_multiCharacterButton_releasesIntermediateKey()
 {
   deskflow::KeyMap keyMap;
-  QVERIFY(addApostropheAndMEntries(keyMap));
+  RecordingEventQueue eventQueue;
+  OSXKeyState keyState(&eventQueue, keyMap, {"pt"}, true);
 
-  EventQueue eventQueue;
-  RecordingOSXKeyState keyState(&eventQueue, keyMap);
-  keyState.fakeKeyDown('\'', 0, 47, "pt");
-  keyState.fakeKeyDown('m', 0, 47, "pt");
+  keyState.sendKeyEvents(this, true, false, {'\'', 'm'}, 0, 47);
+  keyState.sendKeyEvents(this, false, false, {kKeyNone}, 0, 47);
+  keyState.sendKeyEvents(this, true, false, {'\''}, 0, 48);
+  keyState.sendKeyEvents(this, true, true, {'m'}, 0, 48);
+  keyState.sendKeyEvents(this, false, false, {kKeyNone}, 0, 48);
 
-  const auto &keystrokes = keyState.keystrokes();
-  QCOMPARE(keystrokes.size(), 5);
-  QCOMPARE(keystrokes.at(3).m_type, deskflow::KeyMap::Keystroke::KeyType::Button);
-  QCOMPARE(keystrokes.at(3).m_data.m_button.m_button, 2);
-  QVERIFY(!keystrokes.at(3).m_data.m_button.m_press);
-  QCOMPARE(keystrokes.at(4).m_type, deskflow::KeyMap::Keystroke::KeyType::Button);
-  QCOMPARE(keystrokes.at(4).m_data.m_button.m_button, 3);
-  QVERIFY(keystrokes.at(4).m_data.m_button.m_press);
-  QVERIFY(!keystrokes.at(4).m_data.m_button.m_repeat);
-}
-
-void OSXKeyStateTests::fakeKeyDown_repeatedCharacter_clicksKeyAgain()
-{
-  deskflow::KeyMap keyMap;
-  deskflow::KeyMap::KeyItem item;
-  item.m_id = '\'';
-  item.m_group = 0;
-  item.m_button = 1;
-  keyMap.addKeyEntry(item);
-  keyMap.finish();
-
-  EventQueue eventQueue;
-  RecordingOSXKeyState keyState(&eventQueue, keyMap);
-  keyState.fakeKeyDown('\'', 0, 47, "pt");
-  keyState.fakeKeyDown('\'', 0, 47, "pt");
-
-  const auto &keystrokes = keyState.keystrokes();
-  QCOMPARE(keystrokes.size(), 3);
-  QVERIFY(keystrokes.at(0).m_data.m_button.m_press);
-  QVERIFY(!keystrokes.at(0).m_data.m_button.m_repeat);
-  QVERIFY(!keystrokes.at(1).m_data.m_button.m_press);
-  QVERIFY(keystrokes.at(2).m_data.m_button.m_press);
-  QVERIFY(!keystrokes.at(2).m_data.m_button.m_repeat);
-}
-
-void OSXKeyStateTests::fakeKeyRepeat_genuineRepeat_preservesRepeatFlag()
-{
-  deskflow::KeyMap keyMap;
-  QVERIFY(addApostropheAndMEntries(keyMap));
-
-  EventQueue eventQueue;
-  RecordingOSXKeyState keyState(&eventQueue, keyMap);
-  keyState.fakeKeyDown('\'', 0, 47, "pt");
-  QVERIFY(keyState.fakeKeyRepeat('m', 0, 1, 47, "pt"));
-
-  const auto &keystrokes = keyState.keystrokes();
-  QCOMPARE(keystrokes.size(), 5);
-  QCOMPARE(keystrokes.at(4).m_data.m_button.m_button, 3);
-  QVERIFY(keystrokes.at(4).m_data.m_button.m_press);
-  QVERIFY(keystrokes.at(4).m_data.m_button.m_repeat);
+  const std::vector<EventTypes> expected = {EventTypes::KeyStateKeyDown, EventTypes::KeyStateKeyUp,
+                                            EventTypes::KeyStateKeyDown, EventTypes::KeyStateKeyUp,
+                                            EventTypes::KeyStateKeyDown, EventTypes::KeyStateKeyRepeat,
+                                            EventTypes::KeyStateKeyUp};
+  const std::vector<KeyID> expectedKeys = {'\'', kKeyNone, 'm', kKeyNone, '\'', 'm', kKeyNone};
+  const std::vector<KeyButton> expectedButtons = {47, 47, 47, 47, 48, 48, 48};
+  QCOMPARE(eventQueue.events().size(), expected.size());
+  for (size_t i = 0; i < expected.size(); ++i) {
+    QCOMPARE(eventQueue.events().at(i).getType(), expected.at(i));
+    const auto *info = static_cast<IKeyState::KeyInfo *>(eventQueue.events().at(i).getData());
+    QCOMPARE(info->m_key, expectedKeys.at(i));
+    QCOMPARE(info->m_button, expectedButtons.at(i));
+  }
 }
 
 bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState, KeyButton button)
