@@ -794,11 +794,11 @@ void KeyState::setHalfDuplexMask(KeyModifierMask mask)
 
 void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const std::string &lang)
 {
-  // if this server key is already down then this is probably a
-  // mis-reported autorepeat.
+  // Multiple characters from one server event share a button.  Reuse the
+  // repeat transition path, but preserve normal key-press semantics.
   serverID &= kButtonMask;
   if (m_serverKeys[serverID] != 0) {
-    fakeKeyRepeat(id, mask, 1, serverID, lang);
+    fakeKeyRepeat(id, mask, 1, serverID, lang, false);
     return;
   }
 
@@ -841,6 +841,13 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
 
 bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton serverID, const std::string &lang)
 {
+  return fakeKeyRepeat(id, mask, count, serverID, lang, true);
+}
+
+bool KeyState::fakeKeyRepeat(
+    KeyID id, KeyModifierMask mask, int32_t count, KeyButton serverID, const std::string &lang, bool genuineRepeat
+)
+{
   LOG_VERBOSE("fakeKeyRepeat");
   serverID &= kButtonMask;
 
@@ -863,6 +870,20 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
     return false;
   }
 
+  if (!genuineRepeat) {
+    bool foundPress = false;
+    for (auto &key : keys) {
+      if (key.m_type == Keystroke::KeyType::Button && key.m_data.m_button.m_button == localID &&
+          key.m_data.m_button.m_press) {
+        key.m_data.m_button.m_repeat = false;
+        foundPress = true;
+      }
+    }
+    if (localID == oldLocalID && foundPress) {
+      keys.insert(keys.begin(), Keystroke(oldLocalID, false, false, m_keyClientData[oldLocalID]));
+    }
+  }
+
   // if the KeyButton for the auto-repeat is not the same as for the
   // initial press then mark the initial key as released and the new
   // key as pressed.  this can happen when we auto-repeat after a
@@ -870,13 +891,24 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
   // generate an 'a with accent' followed by a repeating 'a'.  the
   // KeyButtons for the two KeyIDs might be different.
   if (localID != oldLocalID) {
-    // replace key up with previous KeyButton but leave key down
-    // alone so it uses the new KeyButton.
+    // Replace the new key's release with the previous KeyButton but leave
+    // its press alone.  Some repeat sequences contain only a key press, so
+    // prepend the missing release in that case.
+    bool foundRelease = false;
+    bool foundPress = false;
     for (auto &key : keys) {
       if (key.m_type == Keystroke::KeyType::Button && key.m_data.m_button.m_button == localID) {
-        key.m_data.m_button.m_button = oldLocalID;
-        break;
+        if (!key.m_data.m_button.m_press) {
+          key.m_data.m_button.m_button = oldLocalID;
+          key.m_data.m_button.m_client = m_keyClientData[oldLocalID];
+          foundRelease = true;
+          break;
+        }
+        foundPress = true;
       }
+    }
+    if (!foundRelease && foundPress) {
+      keys.insert(keys.begin(), Keystroke(oldLocalID, false, false, m_keyClientData[oldLocalID]));
     }
 
     // note that old key is now up

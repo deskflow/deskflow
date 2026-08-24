@@ -20,6 +20,13 @@ private Q_SLOTS:
   void fakePollShift();
   void fakePollChar();
   void fakePollCharWithModifier();
+  void getKeyMap_addsLayoutSpecificDeadKeyOutput();
+  void getKeyMap_usesDeadKeyThatProducesSpacingOutput();
+  void getKeyMap_doesNotAssumeDeadKeyOutput();
+  void getKeyMap_preservesDirectDeadKeyOutput();
+  void fakeKeyDown_multiCharacterOutput_releasesPreviousKey();
+  void fakeKeyDown_repeatedCharacter_clicksKeyAgain();
+  void fakeKeyRepeat_genuineRepeat_preservesRepeatFlag();
 
 private:
   bool isKeyPressed(const OSXKeyState &keyState, KeyButton button);

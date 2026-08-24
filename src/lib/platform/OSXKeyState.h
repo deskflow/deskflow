@@ -24,6 +24,8 @@ A key state for OS X.
 class OSXKeyState : public KeyState
 {
 public:
+  friend class OSXKeyStateTests;
+
   using KeyIDs = std::vector<KeyID>;
 
   OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled);

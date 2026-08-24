@@ -124,19 +124,6 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, 
     return false;
   }
 
-  int32_t numGroups = group + 1;
-  if (getNumGroups() > numGroups) {
-    numGroups = getNumGroups();
-  }
-  KeyGroupTable &groupTable = m_keyIDMap[id];
-  if (groupTable.size() < static_cast<size_t>(numGroups)) {
-    groupTable.resize(numGroups);
-  }
-  if (!groupTable[group].empty()) {
-    // key is already in the table
-    return false;
-  }
-
   // convert to buttons
   KeyItemList items;
   for (uint32_t i = 0; i < numKeys; ++i) {
@@ -171,7 +158,27 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, 
     }
   }
 
-  // add key
+  return addKeyCombinationEntry(id, group, items);
+}
+
+bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyItemList &items)
+{
+  if (id == kKeyNone || items.empty()) {
+    return false;
+  }
+
+  int32_t numGroups = group + 1;
+  if (getNumGroups() > numGroups) {
+    numGroups = getNumGroups();
+  }
+  KeyGroupTable &groupTable = m_keyIDMap[id];
+  if (groupTable.size() < static_cast<size_t>(numGroups)) {
+    groupTable.resize(numGroups);
+  }
+  if (!groupTable[group].empty()) {
+    return false;
+  }
+
   groupTable[group].push_back(items);
   return true;
 }

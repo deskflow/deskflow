@@ -27,8 +27,11 @@ public:
   uint32_t getNumButtons() const override;
   uint32_t getTableForModifier(uint32_t mask) const override;
   KeyID getKey(uint32_t table, uint32_t button) const override;
+  KeyID getDeadKeyOutput(uint32_t table, uint32_t button) const override;
 
 private:
+  KeyID resolveDeadKeyOutput(UInt32 deadKeyState) const;
+
   const UCKeyboardLayout *m_layout;
   uint32_t m_keyboardType;
 };
