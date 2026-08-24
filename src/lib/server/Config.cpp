@@ -464,10 +464,12 @@ void Config::readSectionOptions(ConfigReadContext &s)
     addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
   }
 
-  addOption("", kOptionDefaultLockToScreenState, Settings::value(Settings::Server::DefaultLockToComputerState).toInt());
-  addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toInt());
-  addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toInt());
-  addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toInt());
+  addOption(
+      "", kOptionDefaultLockToScreenState, Settings::value(Settings::Server::DefaultLockToComputerState).toBool()
+  );
+  addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toBool());
+  addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toBool());
+  addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toBool());
   addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());
   addOption("", kOptionClipboardSharingSize, Settings::value(Settings::Server::ClipboardSize).toUInt() * 1024);
 
