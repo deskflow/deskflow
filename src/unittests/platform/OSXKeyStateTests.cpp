@@ -118,6 +118,48 @@ public:
   }
 };
 
+class ModifierSensitiveDeadKeyResource : public IOSXKeyResource
+{
+public:
+  bool isValid() const override
+  {
+    return true;
+  }
+
+  uint32_t getNumModifierCombinations() const override
+  {
+    return 4;
+  }
+
+  uint32_t getNumTables() const override
+  {
+    return 2;
+  }
+
+  uint32_t getNumButtons() const override
+  {
+    return 2;
+  }
+
+  uint32_t getTableForModifier(uint32_t mask) const override
+  {
+    return (mask & 2) != 0 ? 1 : 0;
+  }
+
+  KeyID getKey(uint32_t, uint32_t button) const override
+  {
+    return button == 0 ? kKeyDeadAcute : static_cast<KeyID>(' ');
+  }
+
+  KeyID getDeadKeyOutput(uint32_t table, uint32_t button) const override
+  {
+    if (button != 0) {
+      return kKeyNone;
+    }
+    return table == 0 ? static_cast<KeyID>('\'') : static_cast<KeyID>(0x00b4);
+  }
+};
+
 class RecordingOSXKeyState : public OSXKeyState
 {
 public:
@@ -302,6 +344,25 @@ void OSXKeyStateTests::getKeyMap_usesDeadKeyThatProducesSpacingOutput()
   QVERIFY(acute != nullptr);
   QCOMPARE(acute->size(), 2);
   QCOMPARE(acute->at(0).m_button, 1);
+}
+
+void OSXKeyStateTests::getKeyMap_distinguishesDeadKeyOutputsByModifier()
+{
+  EventQueue eventQueue;
+  OSXKeyState keyState(&eventQueue, {"pt"}, true);
+  deskflow::KeyMap keyMap;
+  ModifierSensitiveDeadKeyResource resource;
+
+  QVERIFY(keyState.getKeyMap(keyMap, 0, resource));
+  keyMap.finish();
+
+  const auto *apostrophe = keyMap.findCompatibleKey('\'', 0, 0, KeyModifierShift);
+  QVERIFY(apostrophe != nullptr);
+  QCOMPARE(apostrophe->at(0).m_required, 0);
+
+  const auto *acute = keyMap.findCompatibleKey(0x00b4, 0, KeyModifierShift, KeyModifierShift);
+  QVERIFY(acute != nullptr);
+  QCOMPARE(acute->at(0).m_required, KeyModifierShift);
 }
 
 void OSXKeyStateTests::getKeyMap_doesNotAssumeDeadKeyOutput()

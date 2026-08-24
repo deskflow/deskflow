@@ -22,6 +22,7 @@ private Q_SLOTS:
   void fakePollCharWithModifier();
   void getKeyMap_addsLayoutSpecificDeadKeyOutput();
   void getKeyMap_usesDeadKeyThatProducesSpacingOutput();
+  void getKeyMap_distinguishesDeadKeyOutputsByModifier();
   void getKeyMap_doesNotAssumeDeadKeyOutput();
   void getKeyMap_preservesDirectDeadKeyOutput();
   void fakeKeyDown_multiCharacterOutput_releasesPreviousKey();
