@@ -115,7 +115,7 @@ jobs:
             runs-on: macos-15
             timeout: 20
             qt-version: 6.11.2
-            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14 ${APPLE_CODESIGN_DEV:+-DAPPLE_CODESIGN_DEV="$APPLE_CODESIGN_DEV"}'
 
           - name: "macos-x64"
             runs-on: macos-15-intel
@@ -272,7 +272,7 @@ jobs:
 
       - name: Configure
         env:
-          APPLE_CODESIGN_DEV: ${{ secrets.APPLE_CODESIGN_DEV }}
+          APPLE_CODESIGN_DEV: ${{ ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v'))) && secrets.APPLE_CODESIGN_DEV || '' }}
         run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
 
       - name: Import code-signing certificate
@@ -330,7 +330,15 @@ jobs:
           [[ "$APPLE_CODESIGN_DEV" =~ ^Developer\ ID\ Application:\ .+\ \(([A-Z0-9]+)\)$ ]]
           APPLE_NOTARIZE_TEAM="${BASH_REMATCH[1]}"
           xcrun codesign -s "${APPLE_CODESIGN_DEV}" build/deskflow[-_]*.dmg
-          xcrun notarytool submit --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" --wait build/deskflow[-_]*.dmg
+          submission_log="${RUNNER_TEMP}/notarize.log"
+          xcrun notarytool submit --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" --wait build/deskflow[-_]*.dmg | tee "${submission_log}"
+          submission_id=$(grep 'id:' "${submission_log}" | tail -1 | awk '{print $2}')
+          submission_status=$(grep 'status:' "${submission_log}" | tail -1 | awk '{print $2}')
+          if [ "$submission_status" != "Accepted" ]; then
+            xcrun notarytool log --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" "$submission_id"
+            echo "Notarization failed with status: $submission_status" >&2
+            exit 1
+          fi
           xcrun stapler staple build/deskflow[-_]*.dmg
 
       - name: Clean up keychain
