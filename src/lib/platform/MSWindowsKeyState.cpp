@@ -665,7 +665,7 @@ KeyID MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info, Key
   bool noAltGr = ((charAndVirtKey & 0xff000000u) != 0);
 
   // handle some keys via table lookup
-  KeyID id = getKeyID(vkCode, (KeyButton)((info >> 16) & 0x1ffu));
+  KeyID id = getKeyID(vkCode, (KeyButton)((info >> 16) & kButtonMask));
 
   // check if not in table;  map character to key id
   if (id == kKeyNone && wc != 0) {
@@ -954,7 +954,7 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
       case VK_INSERT:
       case VK_DELETE:
         // also add extended key for these
-        m_buttonToVK[i | 0x100u] = vk;
+        m_buttonToVK[i | kButtonExtendedBit] = vk;
         break;
       }
 
@@ -1007,17 +1007,14 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
       default:
         // add extended key if virtual keys don't match
         if (m_buttonToVK[button] != i) {
-          m_buttonToVK[button | 0x100u] = i;
+          m_buttonToVK[button | kButtonExtendedBit] = i;
         }
         break;
       }
     }
 
-    // add the extended printscreen (alt+printscreen)
-    // or maybe it's the non-extended printscreen?
-    // scancodes and keyboard inputs are complicated
-    if (m_buttonToVK[0x54u] == 0) {
-      m_buttonToVK[0x54u] = VK_SNAPSHOT;
+    if (m_buttonToVK[kScanCodeAltPrintScreen] == 0) {
+      m_buttonToVK[kScanCodeAltPrintScreen] = VK_SNAPSHOT;
     }
 
     // set virtual key to button table
@@ -1084,7 +1081,7 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
           KeyID id[s_numCombinations];
 
           bool anyFound = false;
-          KeyButton button = static_cast<KeyButton>(i & 0xffu);
+          KeyButton button = static_cast<KeyButton>(i & ~kButtonExtendedBit);
           for (size_t j = 0; j < s_numCombinations; ++j) {
             for (size_t k = 0; k < s_numModifiers; ++k) {
               // if ((j & (1 << k)) != 0) {
@@ -1187,9 +1184,9 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
 
     // special handling of VK_SNAPSHOT
     if (vk == VK_SNAPSHOT)
-      scanCode = (getActiveModifiers() & KeyModifierAlt) ? 0x54 : 0x137;
+      scanCode = (getActiveModifiers() & KeyModifierAlt) ? kScanCodeAltPrintScreen : kScanCodePrintScreen;
 
-    if (scanCode & 0x100)
+    if (scanCode & kButtonExtendedBit)
       flags |= KEYEVENTF_EXTENDEDKEY;
 
     // vk,sc,flags,keystroke.m_data.m_button.m_repeat
@@ -1276,16 +1273,16 @@ KeyID MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
   // VK_HANGUL == VK_KANA, VK_HANJA == NK_KANJI
   // which are used to change the input mode of IME.
   // But they have different X11 keysym. So we should distinguish them.
-  if ((LOWORD(m_keyLayout) & 0xffffu) == 0x0412u) { // 0x0412 : Korean Locale ID
+  if (PRIMARYLANGID(LOWORD(m_keyLayout)) == LANG_KOREAN) {
     if (virtualKey == VK_HANGUL || virtualKey == VK_HANJA) {
       // If shift-space is used to change the input mode,
-      // the extented bit is not set. So add it to get right key id.
-      button |= 0x100u;
+      // the extended bit is not set. So add it to get right key id.
+      button |= kButtonExtendedBit;
     }
   }
 
-  if ((button & 0x100u) != 0) {
-    virtualKey += 0x100u;
+  if ((button & kButtonExtendedBit) != 0) {
+    virtualKey += kButtonExtendedBit;
   }
   return s_virtualKey[virtualKey];
 }
