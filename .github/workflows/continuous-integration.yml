@@ -6,7 +6,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [master]
+    branches: [master, mac-codesign-fix]
     tags:
       - "v*"
   pull_request:
@@ -276,7 +276,7 @@ jobs:
         run: ${{env.CMAKE_CONFIGURE}} ${{ matrix.target.config-args }} ${{ steps.get-deps.outputs.vcpkg-cmake-config }} -DPACKAGE_VERSION_LABEL="${{env.DESKFLOW_PACKAGE_VERSION}}"
 
       - name: Import code-signing certificate
-        if: runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v')))
+        if: runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/mac-codesign-fix') || (contains(github.ref, '/tags/v')))
         uses: ./.github/actions/codesign-keychain
         with:
           action: import
@@ -320,7 +320,7 @@ jobs:
           fi
 
       - name: Notarize (macOS)
-        if: runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v')))
+        if: runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/mac-codesign-fix') || (contains(github.ref, '/tags/v')))
         shell: bash
         env:
           APPLE_NOTARIZE_ID: ${{ secrets.APPLE_NOTARIZE_ID }}
@@ -330,11 +330,19 @@ jobs:
           [[ "$APPLE_CODESIGN_DEV" =~ ^Developer\ ID\ Application:\ .+\ \(([A-Z0-9]+)\)$ ]]
           APPLE_NOTARIZE_TEAM="${BASH_REMATCH[1]}"
           xcrun codesign -s "${APPLE_CODESIGN_DEV}" build/deskflow[-_]*.dmg
-          xcrun notarytool submit --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" --wait build/deskflow[-_]*.dmg
+          submission=$(xcrun notarytool submit --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" --wait --output-format json build/deskflow[-_]*.dmg)
+          echo "$submission"
+          submission_id=$(echo "$submission" | jq -r .id)
+          submission_status=$(echo "$submission" | jq -r .status)
+          if [ "$submission_status" != "Accepted" ]; then
+            xcrun notarytool log --apple-id "${APPLE_NOTARIZE_ID}" --password "${APPLE_NOTARIZE_PWD}" --team-id "${APPLE_NOTARIZE_TEAM}" "$submission_id"
+            echo "Notarization failed with status: $submission_status" >&2
+            exit 1
+          fi
           xcrun stapler staple build/deskflow[-_]*.dmg
 
       - name: Clean up keychain
-        if: always() && runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (contains(github.ref, '/tags/v')))
+        if: always() && runner.os == 'macOS' && ((github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/mac-codesign-fix') || (contains(github.ref, '/tags/v')))
         uses: ./.github/actions/codesign-keychain
         with:
           action: cleanup
