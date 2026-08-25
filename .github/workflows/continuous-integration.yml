@@ -115,7 +115,7 @@ jobs:
             runs-on: macos-15
             timeout: 20
             qt-version: 6.11.2
-            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14'
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=14 ${APPLE_CODESIGN_DEV:+-DAPPLE_CODESIGN_DEV="$APPLE_CODESIGN_DEV"}'
 
           - name: "macos-x64"
             runs-on: macos-15-intel
