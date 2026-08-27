@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 if(UNIX AND NOT APPLE)
+  pkg_check_modules(WAYLAND_CLIENT REQUIRED QUIET wayland-client)
   pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
   message(STATUS "libei version: ${LIBEI_VERSION}")
 
@@ -103,12 +104,51 @@ elseif(APPLE)
     OSXScreenSaverUtil.m
   )
 elseif(UNIX)
+  find_program(WAYLAND_SCANNER wayland-scanner REQUIRED)
+  set(PROTOCOLS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/protocols")
+  set(WLR_VIRTUAL_POINTER_XML "${PROTOCOLS_DIR}/wlr-virtual-pointer-unstable-v1.xml")
+  set(XDG_OUTPUT_XML "${PROTOCOLS_DIR}/xdg-output-unstable-v1.xml")
+  set(VIRTUAL_KEYBOARD_XML "${PROTOCOLS_DIR}/virtual-keyboard-unstable-v1.xml")
+  set(WLR_VIRTUAL_POINTER_HEADER "${CMAKE_CURRENT_BINARY_DIR}/wlr-virtual-pointer-unstable-v1-client-protocol.h")
+  set(WLR_VIRTUAL_POINTER_CODE "${CMAKE_CURRENT_BINARY_DIR}/wlr-virtual-pointer-unstable-v1-protocol.c")
+  set(XDG_OUTPUT_HEADER "${CMAKE_CURRENT_BINARY_DIR}/xdg-output-unstable-v1-client-protocol.h")
+  set(XDG_OUTPUT_CODE "${CMAKE_CURRENT_BINARY_DIR}/xdg-output-unstable-v1-protocol.c")
+  set(VIRTUAL_KEYBOARD_HEADER "${CMAKE_CURRENT_BINARY_DIR}/virtual-keyboard-unstable-v1-client-protocol.h")
+  set(VIRTUAL_KEYBOARD_CODE "${CMAKE_CURRENT_BINARY_DIR}/virtual-keyboard-unstable-v1-protocol.c")
+  add_custom_command(
+    OUTPUT "${WLR_VIRTUAL_POINTER_HEADER}" "${WLR_VIRTUAL_POINTER_CODE}"
+    COMMAND "${WAYLAND_SCANNER}" client-header "${WLR_VIRTUAL_POINTER_XML}" "${WLR_VIRTUAL_POINTER_HEADER}"
+    COMMAND "${WAYLAND_SCANNER}" private-code "${WLR_VIRTUAL_POINTER_XML}" "${WLR_VIRTUAL_POINTER_CODE}"
+    DEPENDS "${WLR_VIRTUAL_POINTER_XML}"
+  )
+  add_custom_command(
+    OUTPUT "${XDG_OUTPUT_HEADER}" "${XDG_OUTPUT_CODE}"
+    COMMAND "${WAYLAND_SCANNER}" client-header "${XDG_OUTPUT_XML}" "${XDG_OUTPUT_HEADER}"
+    COMMAND "${WAYLAND_SCANNER}" private-code "${XDG_OUTPUT_XML}" "${XDG_OUTPUT_CODE}"
+    DEPENDS "${XDG_OUTPUT_XML}"
+  )
+  add_custom_command(
+    OUTPUT "${VIRTUAL_KEYBOARD_HEADER}" "${VIRTUAL_KEYBOARD_CODE}"
+    COMMAND "${WAYLAND_SCANNER}" client-header "${VIRTUAL_KEYBOARD_XML}" "${VIRTUAL_KEYBOARD_HEADER}"
+    COMMAND "${WAYLAND_SCANNER}" private-code "${VIRTUAL_KEYBOARD_XML}" "${VIRTUAL_KEYBOARD_CODE}"
+    DEPENDS "${VIRTUAL_KEYBOARD_XML}"
+  )
   set(PLATFORM_SOURCES
     XDGPortalRegistry.h
     XDGPowerManager.cpp
     XDGPowerManager.h
     XDGKeyUtil.h
     XDGKeyUtil.cpp
+    WlrVirtualPointer.cpp
+    WlrVirtualPointer.h
+    WlrVirtualKeyboard.cpp
+    WlrVirtualKeyboard.h
+    protocols/wlr-virtual-pointer-unstable-v1.xml
+    protocols/xdg-output-unstable-v1.xml
+    protocols/virtual-keyboard-unstable-v1.xml
+    "${WLR_VIRTUAL_POINTER_CODE}"
+    "${XDG_OUTPUT_CODE}"
+    "${VIRTUAL_KEYBOARD_CODE}"
   )
   if (BUILD_X11_SUPPORT)
     configure_file(XWindowsConfig.h.in XWindowsConfig.h @ONLY)
@@ -192,13 +232,16 @@ if(UNIX)
     if (HAVE_LP_CLIPBOARD)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_CLIPBOARD)
     endif()
-    target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
+    target_include_directories(platform
+      PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS}
+      PRIVATE ${WAYLAND_CLIENT_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
     target_link_libraries(platform
       PUBLIC
         Qt6::DBus
       PRIVATE
         Qt6::Gui
         ${LIBXKBCOMMON_LINK_LIBRARIES}
+        ${WAYLAND_CLIENT_LINK_LIBRARIES}
         ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
   endif()
 endif()

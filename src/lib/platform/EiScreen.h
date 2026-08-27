@@ -29,6 +29,8 @@ namespace deskflow {
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+class WlrVirtualPointer;
+class WlrVirtualKeyboard;
 class EiClipboard;
 
 using ClipboardInfo = IScreen::ClipboardInfo;
@@ -127,6 +129,10 @@ private:
   void ensureEmulating() const;
   void stopEmulating() const;
   void cancelIdleEmulationTimer() const;
+  void cancelClipboardTimer();
+  bool readWlrClipboardText(std::string &text) const;
+  bool writeWlrClipboardText(const std::string &text) const;
+  void syncWlrClipboard();
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
@@ -163,6 +169,9 @@ private:
   // this screen even while the deskflow cursor logically sits on it.
   mutable bool m_isEmulating = false;
   mutable EventQueueTimer *m_idleEmulationTimer = nullptr;
+  EventQueueTimer *m_clipboardTimer = nullptr;
+  std::string m_lastWlrClipboardText;
+  bool m_lastWlrClipboardTextValid = false;
   // Chosen empirically on one machine in 2026-06; not derived from any protocol constant.
   static constexpr double s_idleEmulationTimeout = 4.0;
 
@@ -188,6 +197,8 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+  WlrVirtualPointer *m_wlrPointer = nullptr;
+  WlrVirtualKeyboard *m_wlrKeyboard = nullptr;
 
   struct HotKeyItem
   {

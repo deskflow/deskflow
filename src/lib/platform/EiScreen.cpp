@@ -20,11 +20,14 @@
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#include "platform/WlrVirtualKeyboard.h"
+#include "platform/WlrVirtualPointer.h"
 
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
 
@@ -46,7 +49,10 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       m_h{1},
       m_isOnScreen{isPrimary}
 {
-  initEi();
+  const auto useWlrVirtualInput = usePortal && !isPrimary &&
+                                  qEnvironmentVariable("XDG_CURRENT_DESKTOP").contains("Hyprland", Qt::CaseInsensitive);
+  if (!useWlrVirtualInput)
+    initEi();
   m_keyState = new EiKeyState(this, events);
   // install event handlers
   m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
@@ -60,6 +66,28 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
     if (isPrimary) {
       m_portalInputCapture = new PortalInputCapture(this, m_events);
       // Portal input capture manages its own clipboard
+    } else if (useWlrVirtualInput) {
+      m_wlrPointer = new WlrVirtualPointer();
+      if (!m_wlrPointer->ready()) {
+        delete m_wlrPointer;
+        m_wlrPointer = nullptr;
+        initEi();
+        m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
+          handlePortalSessionClosed();
+        });
+        m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
+      } else {
+        m_w = m_wlrPointer->width();
+        m_h = m_wlrPointer->height();
+        LOG_INFO("wlroots virtual pointer screen size: %ux%u", m_w, m_h);
+        m_wlrKeyboard = new WlrVirtualKeyboard();
+        if (!m_wlrKeyboard->ready()) {
+          delete m_wlrKeyboard;
+          m_wlrKeyboard = nullptr;
+          LOG_WARN("wlroots virtual keyboard is unavailable; keyboard sharing remains disabled");
+        }
+      }
+      m_clipboard = new EiClipboard(kClipboardClipboard);
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
@@ -90,14 +118,18 @@ EiScreen::~EiScreen()
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
 
   cancelIdleEmulationTimer();
+  cancelClipboardTimer();
 
-  cleanupEi();
+  if (m_ei)
+    cleanupEi();
 
   delete m_keyState;
   delete m_clipboard;
 
   delete m_portalRemoteDesktop;
   delete m_portalInputCapture;
+  delete m_wlrKeyboard;
+  delete m_wlrPointer;
 }
 
 void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
@@ -279,9 +311,6 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press)
 {
   uint32_t code;
 
-  if (!m_eiPointer)
-    return;
-
   switch (button) {
   case kButtonLeft:
     code = 0x110; // BTN_LEFT
@@ -297,6 +326,13 @@ void EiScreen::fakeMouseButton(ButtonID button, bool press)
     break;
   }
 
+  if (m_wlrPointer) {
+    m_wlrPointer->button(code, press);
+    return;
+  }
+  if (!m_eiPointer)
+    return;
+
   ensureEmulating();
   ei_device_button_button(m_eiPointer, code, press);
   ei_device_frame(m_eiPointer, ei_now(m_ei));
@@ -311,6 +347,16 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
     return;
   }
 
+  if (m_wlrPointer) {
+    m_cursorX = x;
+    m_cursorY = y;
+    // The XDG-output protocol gave us Hyprland's real logical desktop extent.
+    // Re-anchor every Deskflow coordinate in that frame. Relative deltas lose
+    // sync whenever a cursor crosses an L-shaped monitor-layout gap, and also
+    // discard the initial coordinate sent before enter().
+    m_wlrPointer->motionAbsolute(x, y, m_w, m_h);
+    return;
+  }
   if (!m_eiAbs)
     return;
 
@@ -321,6 +367,10 @@ void EiScreen::fakeMouseMove(int32_t x, int32_t y)
 
 void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 {
+  if (m_wlrPointer) {
+    m_wlrPointer->motion(dx, dy);
+    return;
+  }
   if (!m_eiPointer)
     return;
 
@@ -331,6 +381,12 @@ void EiScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 
 void EiScreen::fakeMouseWheel(ScrollDelta delta) const
 {
+  if (m_wlrPointer) {
+    // Deskflow's wheel convention is the inverse of the wlroots virtual
+    // pointer protocol, matching the conversion used by the libei backend.
+    m_wlrPointer->scroll(-delta.x, -delta.y);
+    return;
+  }
   if (!m_eiPointer)
     return;
 
@@ -345,6 +401,12 @@ void EiScreen::fakeMouseWheel(ScrollDelta delta) const
 
 void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 {
+  if (m_wlrKeyboard) {
+    const auto xkbKeycode = keycode + 8;
+    m_keyState->updateXkbState(xkbKeycode, isDown);
+    m_wlrKeyboard->key(keycode, isDown);
+    return;
+  }
   if (!m_eiKeyboard)
     return;
 
@@ -357,16 +419,83 @@ void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 
 void EiScreen::enable()
 {
-  // Nothing really to be done here
-  // Portal-based clipboard gets notifications via events
-  // Socket-based clipboard is passive (no monitoring needed)
+  if (m_wlrPointer && !m_clipboardTimer) {
+    m_clipboardTimer = m_events->newTimer(1.0, nullptr);
+    m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { syncWlrClipboard(); });
+    syncWlrClipboard();
+  }
 }
 
 void EiScreen::disable()
 {
-  // Nothing to do here
-  // Portal-based clipboard gets notifications via events
-  // Socket-based clipboard is passive (no monitoring needed)
+  cancelClipboardTimer();
+}
+
+void EiScreen::cancelClipboardTimer()
+{
+  if (m_clipboardTimer) {
+    m_events->removeHandler(EventTypes::Timer, m_clipboardTimer);
+    m_events->deleteTimer(m_clipboardTimer);
+    m_clipboardTimer = nullptr;
+  }
+}
+
+bool EiScreen::readWlrClipboardText(std::string &text) const
+{
+  constexpr auto command = "wl-paste --no-newline 2>/dev/null";
+  auto *pipe = popen(command, "r");
+  if (!pipe)
+    return false;
+
+  text.clear();
+  char buffer[4096];
+  const auto maximumBytes = m_maximumClipboardSize * 1024;
+  while (const auto count = fread(buffer, 1, sizeof(buffer), pipe)) {
+    if (text.size() + count > maximumBytes) {
+      pclose(pipe);
+      LOG_WARN("Wayland clipboard exceeds Deskflow limit of %zu KB", m_maximumClipboardSize);
+      return false;
+    }
+    text.append(buffer, count);
+  }
+
+  const auto status = pclose(pipe);
+  return status != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0;
+}
+
+bool EiScreen::writeWlrClipboardText(const std::string &text) const
+{
+  constexpr auto command = "wl-copy --type 'text/plain;charset=utf-8' 2>/dev/null";
+  auto *pipe = popen(command, "w");
+  if (!pipe)
+    return false;
+
+  const auto written = fwrite(text.data(), 1, text.size(), pipe);
+  const auto status = pclose(pipe);
+  return written == text.size() && status != -1 && WIFEXITED(status) && WEXITSTATUS(status) == 0;
+}
+
+void EiScreen::syncWlrClipboard()
+{
+  if (!m_wlrPointer || !m_clipboard)
+    return;
+
+  std::string text;
+  if (!readWlrClipboardText(text))
+    return;
+  if (m_lastWlrClipboardTextValid && text == m_lastWlrClipboardText)
+    return;
+
+  if (!m_clipboard->open(0))
+    return;
+  if (m_clipboard->empty())
+    m_clipboard->add(IClipboard::Format::Text, text);
+  m_clipboard->close();
+
+  m_lastWlrClipboardText = std::move(text);
+  m_lastWlrClipboardTextValid = true;
+  LOG_DEBUG("Wayland clipboard changed; synchronizing with Deskflow");
+  sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 }
 
 void EiScreen::cancelIdleEmulationTimer() const
@@ -419,7 +548,7 @@ void EiScreen::stopEmulating() const
 void EiScreen::enter()
 {
   m_isOnScreen = true;
-  if (!m_isPrimary && m_eiAbs) {
+  if (!m_isPrimary && (m_eiAbs || m_wlrPointer)) {
     // Emulation is started lazily by ensureEmulating() on the first injected
     // input and released again after a short idle, so this screen can DPMS-sleep
     // while the cursor sits here with no relayed activity.
@@ -466,6 +595,21 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 
   bool ok = IClipboard::copy(m_clipboard, clipboard);
 
+  if (ok && m_wlrPointer && id == kClipboardClipboard) {
+    std::string text;
+    if (clipboard->open(clipboard->getTime())) {
+      if (clipboard->has(IClipboard::Format::Text))
+        text = clipboard->get(IClipboard::Format::Text);
+      clipboard->close();
+    }
+    if (writeWlrClipboardText(text)) {
+      m_lastWlrClipboardText = std::move(text);
+      m_lastWlrClipboardTextValid = true;
+    } else {
+      LOG_WARN("failed to write Deskflow clipboard to the Wayland clipboard");
+    }
+  }
+
   if (ok && m_portalRemoteDesktop && id == kClipboardClipboard) {
     m_portalRemoteDesktop->claimClipboard();
   }
@@ -475,9 +619,7 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 
 void EiScreen::checkClipboards()
 {
-  // For portal-based input capture, clipboard changes come via portal events
-  // For socket-based, clipboard is passive and changes are sent explicitly
-  // Nothing to do here
+  syncWlrClipboard();
 }
 
 void EiScreen::openScreensaver(bool notify)
@@ -899,6 +1041,8 @@ void EiScreen::handlePortalSessionClosed()
 
 void EiScreen::handleSystemEvent(const Event &)
 {
+  if (!m_ei)
+    return;
   std::scoped_lock lock{m_mutex};
 
   // Only one ei_dispatch per system event, see the comment in
