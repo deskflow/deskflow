@@ -330,6 +330,11 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
 
   // get keyboard info
   AutoTISInputSourceRef currentKeyboardLayout = copyKeyboardLayoutForKeyTranslation();
+  AutoTISInputSourceRef inputSource(TISCopyCurrentKeyboardInputSource(), CFRelease);
+  if (inputSource == nullptr ||
+      TISGetInputSourceProperty(inputSource.get(), kTISPropertyUnicodeKeyLayoutData) == nullptr) {
+    m_deadKeyState = 0;
+  }
   CFDataRef ref = nullptr;
   {
     std::lock_guard<std::mutex> lock(g_tisMutex);
@@ -382,7 +387,8 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
 
     // get the characters
     if (status == 0) {
-      if (count != 0 || m_deadKeyState == 0) {
+      if (count != 0 || m_deadKeyState == 0 || inputSource == nullptr ||
+          TISGetInputSourceProperty(inputSource.get(), kTISPropertyUnicodeKeyLayoutData) == nullptr) {
         m_deadKeyState = 0;
         for (UniCharCount i = 0; i < count; ++i) {
           ids.push_back(IOSXKeyResource::unicharToKeyID(chars[i]));

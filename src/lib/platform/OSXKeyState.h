@@ -67,6 +67,11 @@ public:
   */
   KeyButton mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CGEventRef event) const;
 
+  void clearDeadKeyState() const
+  {
+    m_deadKeyState = 0;
+  }
+
   //! Map key and mask to native values
   /*!
   Calculates mac virtual key and mask for a key \p key and modifiers

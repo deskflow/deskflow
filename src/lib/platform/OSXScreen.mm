@@ -61,6 +61,12 @@ enum
 
 static const double kCarbonLoopWaitTimeout = 10.0;
 
+// EVKey/IME: local typed text is corrupted (U+202F inserted) when a kCGHIDEventTap
+// listens for keyboard events, even if the callback returns immediately.
+static const CGEventMask kLocalScreenEventMask =
+    kCGEventMaskForAllEvents &
+    ~(CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventKeyUp) | CGEventMaskBit(kCGEventFlagsChanged));
+
 // Synthetic mouse button and drag events require event numbers on macOS 27 and later.
 static inline bool needsEventNumber()
 {
@@ -709,7 +715,8 @@ void OSXScreen::recreateEventTap(CGEventTapOptions option, CGEventMask mask)
   }
 
   CGEventTapCallBack cb = m_isPrimary ? handleCGInputEvent : handleCGInputEventSecondary;
-  m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, option, mask, cb, this);
+  CGEventTapPlacement placement = m_isPrimary ? kCGTailAppendEventTap : kCGHeadInsertEventTap;
+  m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, placement, option, mask, cb, this);
   if (!m_eventTapPort) {
     return;
   }
@@ -743,7 +750,7 @@ void OSXScreen::enable()
 
   if (m_isPrimary) {
     // FIXME -- start watching jump zones
-    recreateEventTap(kCGEventTapOptionDefault, kCGEventMaskForAllEvents);
+    recreateEventTap(kCGEventTapOptionDefault, kLocalScreenEventMask);
   } else {
     // FIXME -- prevent system from entering power save mode
 
@@ -808,6 +815,12 @@ void OSXScreen::disable()
 
 void OSXScreen::enter()
 {
+  if (auto *keyState = static_cast<OSXKeyState *>(m_keyState)) {
+    keyState->clearDeadKeyState();
+  }
+  if (m_isPrimary) {
+    recreateEventTap(kCGEventTapOptionDefault, kLocalScreenEventMask);
+  }
   m_isOnScreen = true;
   showCursor();
 
@@ -850,8 +863,14 @@ void OSXScreen::leave()
     CGAssociateMouseAndMouseCursorPosition(false);
   }
 
-  // now off screen
   m_isOnScreen = false;
+
+  if (auto *keyState = static_cast<OSXKeyState *>(m_keyState)) {
+    keyState->clearDeadKeyState();
+  }
+  if (m_isPrimary) {
+    recreateEventTap(kCGEventTapOptionDefault, kCGEventMaskForAllEvents);
+  }
 }
 
 bool OSXScreen::setClipboard(ClipboardID, const IClipboard *src)
