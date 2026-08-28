@@ -689,6 +689,49 @@ void OSXScreen::hideCursor()
   m_cursorHidden = true;
 }
 
+void OSXScreen::recreateEventTap(CGEventTapOptions option, CGEventMask mask)
+{
+  if (m_eventTapRunLoop) {
+    CFRunLoopStop(m_eventTapRunLoop);
+  }
+  if (m_eventTapThread.joinable()) {
+    m_eventTapThread.join();
+  }
+  if (m_eventTapRLSR) {
+    CFRelease(m_eventTapRLSR);
+    m_eventTapRLSR = nullptr;
+  }
+  if (m_eventTapPort) {
+    CGEventTapEnable(m_eventTapPort, false);
+    CFMachPortInvalidate(m_eventTapPort);
+    CFRelease(m_eventTapPort);
+    m_eventTapPort = nullptr;
+  }
+
+  CGEventTapCallBack cb = m_isPrimary ? handleCGInputEvent : handleCGInputEventSecondary;
+  m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, option, mask, cb, this);
+  if (!m_eventTapPort) {
+    return;
+  }
+
+  m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+  if (!m_eventTapRLSR) {
+    return;
+  }
+
+  auto sem = dispatch_semaphore_create(0);
+  m_eventTapThread = std::thread([this, sem]() {
+    m_eventTapRunLoop = CFRunLoopGetCurrent();
+    CFRunLoopAddSource(m_eventTapRunLoop, m_eventTapRLSR, kCFRunLoopDefaultMode);
+    dispatch_semaphore_signal(sem);
+    CFRunLoopRun();
+    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+    m_eventTapRunLoop = nullptr;
+  });
+  dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+  dispatch_release(sem);
+}
+
 void OSXScreen::enable()
 {
   // watch the clipboard
@@ -700,12 +743,7 @@ void OSXScreen::enable()
 
   if (m_isPrimary) {
     // FIXME -- start watching jump zones
-
-    // kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-    m_eventTapPort = CGEventTapCreate(
-        kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, kCGEventMaskForAllEvents, handleCGInputEvent,
-        this
-    );
+    recreateEventTap(kCGEventTapOptionDefault, kCGEventMaskForAllEvents);
   } else {
     // FIXME -- prevent system from entering power save mode
 
@@ -717,34 +755,13 @@ void OSXScreen::enable()
     // there may be a better way to do this, but we register an event handler even if we're
     // not on the primary display (acting as a client). This way, if a local event comes in
     // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it.
-    m_eventTapPort = CGEventTapCreate(
-        kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, kCGEventMaskForAllEvents,
-        handleCGInputEventSecondary, this
-    );
+    recreateEventTap(kCGEventTapOptionDefault, kCGEventMaskForAllEvents);
   }
 
-  if (m_eventTapPort) {
-    m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-    if (m_eventTapRLSR) {
-      // Run the event tap on a dedicated thread with its own CFRunLoop so it fires
-      // independently of whatever event loop the calling thread runs (e.g. QCoreApplication).
-      // Use a semaphore to ensure m_eventTapRunLoop is set before enable() returns.
-      auto sem = dispatch_semaphore_create(0);
-      m_eventTapThread = std::thread([this, sem]() {
-        m_eventTapRunLoop = CFRunLoopGetCurrent();
-        CFRunLoopAddSource(m_eventTapRunLoop, m_eventTapRLSR, kCFRunLoopDefaultMode);
-        dispatch_semaphore_signal(sem);
-        CFRunLoopRun();
-        CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
-        m_eventTapRunLoop = nullptr;
-      });
-      dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-      dispatch_release(sem);
-    } else {
-      LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
-    }
-  } else {
+  if (!m_eventTapPort) {
     LOG_ERR("failed to create quartz event tap");
+  } else if (!m_eventTapRLSR) {
+    LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
   }
 }
 

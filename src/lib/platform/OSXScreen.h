@@ -159,6 +159,8 @@ private:
 
   bool checkAXPermissions();
 
+  void recreateEventTap(CGEventTapOptions option, CGEventMask mask);
+
   // global hotkey operating mode
   static bool isGlobalHotKeyOperatingModeAvailable();
   static void setGlobalHotKeysEnabled(bool enabled);
