@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: (C) 2024 Deskflow Developers
+# SPDX-License-Identifier: MIT
+# Maintainer: Deskflow Developers
+
+_basename=@CMAKE_PROJECT_NAME@
+pkgname=${_basename}-git
+pkgver=@CMAKE_PROJECT_VERSION@
+pkgrel=1
+pkgdesc="@CMAKE_PROJECT_DESCRIPTION@"
+url="@CMAKE_PROJECT_HOMEPAGE_URL@"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+license=(LicenseRef-GPL-2.0-only-WITH-OpenSSL-Exception)
+conflicts=('synergy-git' 'synergy-1.6' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin' 'synergy3-beta-bin' 'synergy3-stable-bin' 'barrier' 'barrier-git' 'barrier-headless' 'barrier-headless-git' 'input-leap' 'input-leap-git' 'input-leap-headless-git' 'input-leap-headless' 'waynergy' 'waynergy-git' 'qsynergy' 'slim-synergy' 'quicksynergy' 'deskflow')
+provides=("$_basename")
+depends=(
+  glibc
+  hicolor-icon-theme
+  libei
+  libgcc
+  libglvnd
+  libice
+  libportal
+  libsm
+  libstdc++
+  libx11
+  libxext
+  libxi
+  libxinerama
+  libxkbcommon
+  libxkbcommon-x11
+  libxkbfile
+  libxrandr
+  libxtst
+  openssl
+  qt6-base
+  qt6-svg
+  qt6-translations
+)
+
+options=('!debug')
+
+package() {
+  # By default, `makepkg` will run from the `src` directory, which would
+  # only install the binaries, and not the .desktop file, etc. To install
+  # everything, we need to set DESTDIR.
+  cd $startdir
+  DESTDIR=$pkgdir cmake --install .
+}

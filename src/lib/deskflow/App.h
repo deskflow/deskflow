@@ -1,0 +1,152 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2012 - 2026 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+#include "base/EventQueue.h"
+#include "base/Log.h"
+#include "common/ExitCodes.h"
+#include "deskflow/IApp.h"
+#include "net/SocketMultiplexer.h"
+
+#if defined(Q_OS_WIN)
+#include "deskflow/win32/AppUtilWindows.h"
+#else
+#include "deskflow/unix/AppUtilUnix.h"
+#endif
+
+#include <QObject>
+#include <QThread>
+
+#include <memory>
+#include <stdexcept>
+
+namespace deskflow {
+class Screen;
+}
+
+class FileLogOutputter;
+class IEventQueue;
+class SocketMultiplexer;
+
+class App : public QObject, private IApp
+{
+public:
+  class XNoEiSupport : public std::runtime_error
+  {
+  public:
+    XNoEiSupport() : std::runtime_error("libei is not supported")
+    {
+      // do nothing
+    }
+  };
+
+  explicit App(IEventQueue *events, const QString &processName);
+  App(App const &) = delete;
+  App(App &&) = delete;
+  ~App() override;
+
+  App &operator=(App const &) = delete;
+  App &operator=(App &&) = delete;
+
+  virtual void parseArgs() = 0;
+  virtual void loadConfig() = 0;
+  virtual bool loadConfig(const QString &filename) = 0;
+
+  void setByeFunc(void (*bye)(int)) override
+  {
+    m_bye = bye;
+  }
+  void bye(int error) override
+  {
+    m_bye(error);
+  }
+  IEventQueue *getEvents() const override
+  {
+    return m_events;
+  }
+
+  ARCH_APP_UTIL &appUtil()
+  {
+    return m_appUtil;
+  }
+
+  void run(QThread &coreThread);
+  void quit() const;
+  void setupFileLogging();
+  void loggingFilterWarning() const;
+  void initApp() override;
+
+  void setEvents(EventQueue &events)
+  {
+    m_events = &events;
+  }
+  void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer> &&sm)
+  {
+    m_socketMultiplexer = std::move(sm);
+  }
+
+  SocketMultiplexer *getSocketMultiplexer() const
+  {
+    return m_socketMultiplexer.get();
+  }
+
+  static App &instance()
+  {
+    assert(s_instance != nullptr);
+    return *s_instance;
+  }
+
+  QString processName() const
+  {
+    return m_pname;
+  }
+
+  void handleScreenError() const;
+
+  void updateExitCode(int errorCode)
+  {
+    m_exitCode = errorCode;
+  }
+
+  int getExitCode() const
+  {
+    return m_exitCode;
+  }
+
+protected:
+  void runEventsLoop(const void *);
+
+  struct LoopErrorCode
+  {
+    int m_errorCode;
+    explicit LoopErrorCode(int errorCode) : m_errorCode(errorCode)
+    {
+    }
+  };
+
+private:
+  void (*m_bye)(int);
+  IEventQueue *m_events = nullptr;
+  static App *s_instance;
+  FileLogOutputter *m_fileLog = nullptr;
+  ARCH_APP_UTIL m_appUtil;
+  std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
+  QString m_pname;
+  int m_exitCode = s_exitSuccess;
+};
+
+#if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
+constexpr static auto s_helpNoWayland = //
+    "\nYour Linux distribution does not support Wayland EI (emulated input)\n"
+    "which is required for Wayland support.  Please use a Linux distribution\n"
+    "that supports Wayland EI.\n";
+
+#else
+constexpr static auto s_helpNoWayland = "";
+#endif

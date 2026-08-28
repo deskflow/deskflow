@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>org.deskflow.deskflow</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>GPL-2.0-only</project_license>
+	<name>Deskflow</name>
+	<developer id="org.deskflow">
+		<name>Deskflow Developers</name>
+	</developer>
+	<summary>Software Keyboard and mouse sharing</summary>
+	<summary xml:lang="zh_CN">用软件共享键鼠</summary>
+	<summary xml:lang="ko">키보드 및 마우스 공유 소프트웨어</summary>
+	<description>
+		<p>
+			Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
+		</p>
+		<p xml:lang="zh_CN">
+			使用一台计算机的键盘、鼠标或触控板来控制附近的其它计算机，并在它们之间无缝工作。
+		</p>
+		<p xml:lang="ko">
+			한 대의 컴퓨터에 연결된 키보드, 마우스 또는 트랙패드로 주변의 다른 컴퓨터를 제어하고, 컴퓨터 사이를 끊김 없이 오가며 작업할 수 있습니다.
+		</p>
+	</description>
+	<launchable type="desktop-id">org.deskflow.deskflow.desktop</launchable>
+	<url type="homepage">https://deskflow.org</url>
+	<url type="bugtracker">https://github.com/deskflow/deskflow/issues</url>
+	<url type="faq">https://github.com/deskflow/deskflow/wiki/Project-FAQ</url>
+	<url type="help">https://github.com/deskflow/deskflow/wiki#user-guides</url>
+	<url type="vcs-browser">https://github.com/deskflow/deskflow</url>
+	<url type="contribute">https://github.com/deskflow/deskflow/wiki/Contributing</url>
+	<screenshots>
+		<screenshot type="default">
+			<image>https://deskflow.org/screenshots/deskflow-client.png</image>
+			<caption>Deskflow in client mode on KDE</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-server.png</image>
+			<caption>Deskflow in server mode on KDE</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-log.png</image>
+			<caption>Deskflow with the log visible on KDE</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-client-dark.png</image>
+			<caption>Deskflow in client mode on KDE (dark mode)</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-server-dark.png</image>
+			<caption>Deskflow in server mode on KDE (dark mode)</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-log-dark.png</image>
+			<caption>Deskflow with the log visible on KDE (dark mode)</caption>
+		</screenshot>
+	</screenshots>
+	<provides> <id>org.deskflow.deskflow.desktop</id> </provides>
+	<categories>
+		<category>Utility</category>
+	</categories>
+	<keywords>
+		<keyword>Input</keyword>
+		<keyword xml:lang="zh_CN">输入</keyword>
+		<keyword xml:lang="ko">입력</keyword>
+		<keyword>Sharing</keyword>
+		<keyword xml:lang="zh_CN">共享</keyword>
+		<keyword xml:lang="ko">공유</keyword>
+		<keyword translate="no">KVM</keyword>
+		<keyword translate="no">Synergy</keyword>
+	</keywords>
+	<branding>
+		<color type="primary" scheme_preference="light">#dddddd</color>
+		<color type="primary" scheme_preference="dark">#555555</color>
+	</branding>
+	<content_rating type="oars-1.0" />
+	<releases>
+		<release version="1.26.0" date="2026-02-16" urgency="high">
+			<description>
+				<p>This stable release fixes known issues and adds a few new features, For the full changelog, see the release page.</p>
+				<ul>
+					<li>New: Korean(ko) translation</li>
+					<li>New: Option to start in the "locked to computer" state</li>
+					<li>New: Option to show the version in the windows title</li>
+					<li>New: Clients can now use a list hostnames or ips for the server address</li>
+					<li>New: Client options are in a new client configuration dialog</li>
+					<li>New: Provide a more accurate suggested IP, Update as network info changes if needed.</li>
+					<li>New: Add a simple search to the log</li>
+					<li>New: Lookup host name with IP4 or IP6</li>
+					<li>New: Replace broken scroll speed with a scroll scaling options</li>
+					<li>Fix: Horizontal scrolling is working again on all platforms</li>
+					<li>Fix: Key repeat events are now sent as repeat not press and release</li>
+					<li>Fix: Deskflow-core correctly blocks new instances when run without the `--new-instance` option</li>
+					<li>Fix: Server Mode, Only use the external config path if the option is enabled</li>
+					<li>Fix: Allow comma and semicolon to be used in the hotkey configuration</li>
+					<li>Fix: Gui can crash when clearing settings in debug mode</li>
+					<li>Fix: Mouse Back and Forward buttons are now working (again) on all platforms</li>
+					<li>Fix: macOS, crash when the log is opened and the gui minimized</li>
+					<li>Fix: macOS, restore Preferences menu entry when the application is using non english language</li>
+					<li>Fix: macOS, try icon was not showing when in `Colorful` mode</li>
+					<li>Fix: macOS, do not allow the os to kill deskflow for memory reasons</li>
+					<li>Fix: macOS, possible server crash when a client disconnects abruptly</li>
+					<li>Fix: macOS, possible crash on screen wake / screen saver activation</li>
+					<li>Fix: macOS, Wrong keys send when using "RIME" input method</li>
+					<li>Fix: Windows, possible crash when the daemon is started for the first time</li>
+					<li>Use `Computer` in place of `Screen` to indicate we work with Computers display layout and not individual screens attached</li>
+					<li>Clean and update the settings when starting up.</li>
+					<li>Do not show client connection error messages dialogs if the gui is hidden</li>
+					<li>Use Qt 6.9.3 for Intel Mac builds.</li>
+					<li>Windows: Use ICU dlls from the host system</li>
+					<li>Code continues to be cleaned of unused methods and updated to modern C++</li>
+					<li>Consolidate Debug levels to remove DEBUG3-5 levels</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.26.0</url>
+		</release>
+		<release version="1.25.0" date="2025-11-21" urgency="high">
+			<description>
+				<p>This stable release fixes known issues and adds a few new features. Most notable symbolic icon support, I18N support and experimental support for wl-clipboard to access clipboards on wayland. This release also continues our trend of cleaning up the codebase. For the full changelog, see the release page.</p>
+				<ul>
+					<li>Removed the ability to use toml config and env based config files</li>
+					<li>Set XDG app ID (app_id) on Wayland</li>
+					<li>Support symbolic icon deployment and recoloring</li>
+					<li>Added Spanish translation</li>
+					<li>Added Italian translation</li>
+					<li>Added Japanese translation</li>
+					<li>Added Simplified Chinese translation</li>
+					<li>Added Russian translation</li>
+					<li>Translate the GUI without needed to restart the application</li>
+					<li>Expose setting to adjust clients scroll speed</li>
+					<li>Expose setting to show the GUI debug messages in the log</li>
+					<li>Expose setting to allow use of wl-clipboard backend on Wayland</li>
+					<li>Fixed the port settings not being used from settings</li>
+					<li>Save the geometry info into a state file</li>
+					<li>The Core (deskflow-core) has a new CLI interface</li>
+					<li>Fixed Wayland sleep inhibit on client</li>
+					<li>Fixed XWindowsScreen: properly calculate xrandr/xinerama screens</li>
+					<li>Fixed XWindowsScreen: stop centering panned screens on client when leaving the screen</li>
+					<li>Fixed stop retying to launch the Core if its crashed</li>
+					<li>Fixed various input issues</li>
+					<li>Fixed apply scroll lock setting on initialization</li>
+					<li>Fixed crash caused by hostnames with invalid characters returned default value</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.25.0</url>
+		</release>
+		<release version="1.24.0" date="2025-09-11" urgency="high">
+			<description>
+				<p>This stable release fixes issues found in the previous version and adds a few new features. This release also uses more C++20 features. For the full changelog, see the release page.</p>
+				<ul>
+					<li>Fix: Less confusing fingerprint comparision dialog.</li>
+					<li>Fix: AltGr and other modifiers are generally detected better.</li>
+					<li>Fix: Big Endian test failures</li>
+					<li>Fix: Client scroll direction being ignored on wayland clients.</li>
+					<li>Feat: Unify deskflow-client and deskflow-server into one binary deskflow-core.</li>
+					<li>Feat: Prevent more than one instance of deskflow-core starting.</li>
+					<li>Feat: Remove defunct --no-xinitthreads option.</li>
+					<li>Feat: Ability to persist remote desktop access</li>
+					<li>Feat: Gui can show all log levels, upgrading users will want to reset their log level as the values have changed</li>
+					<li>Feat: Log can be detached or docked in the window</li>
+					<li>Refactor: Use more icons in places</li>
+					<li>Refactor: Update the Server Config Dialog's GUI</li>
+					<li>Chore: Continue to update codebase to use C++20 features.</li>
+					<li>Chore: Clean more sonar smells</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.24.0</url>
+		</release>
+		<release version="1.23.0" date="2025-07-23" urgency="high">
+			<description>
+				<p>This stable release fixes issues found in the previous version and adds a few new features. This release also uses more C++20 features. For the full changelog, see the release page.</p>
+				<ul>
+					<li>Fix: Core app not running when app starts minimized.</li>
+					<li>Fix: Several items in the server configuration dialog being enabled at the wrong time.</li>
+					<li>Fix: Use the correct license in our appstream data (GPL2.0 only).</li>
+					<li>Fix: Apps saved size could grow over time on desktops using client side decorations.</li>
+					<li>Fix: Use the system monospace font in the log area, instead of forcing one that may not be on the system.</li>
+					<li>Fix: Issue with incorrect borders being set for libEI, causing issues on edges without neighbors.</li>
+					<li>Feat: Add Restart action for the core process.</li>
+					<li>Feat: Remove defunct --no-xinitthreads option.</li>
+					<li>Feat: Make 2048 the minimum encryption key size.</li>
+					<li>Feat: Provide additional connection information in the status area.</li>
+					<li>Chore: Continue to update codebase to use C++20 features.</li>
+					<li>Chore: Clean more sonar smells</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.23.0</url>
+		</release>
+		<release version="1.22.0" date="2025-05-28" urgency="high">
+			<description>
+				<p>This stable release fixes a issues found in the previous version. For the full changelog see the release page.</p>
+				<ul>
+					<li>Remove: Broken drag and drop file transfer support</li>
+					<li>Remove: DESKFLOW_RESET_ALL and --no-reset. reset settings is now done by passing the --reset option instead</li>
+					<li>Continue migration to Qt by using more Qt classes in more places</li>
+					<li>Retire SHA1 generation and use SHA256 always to compare</li>
+					<li>Add missing accelerators for gui controls</li>
+					<li>unittests binary is now legacytests</li>
+					<li>integtests have been remove and replaced with Qt based tests run during build</li>
+					<li>Fix: Potential XDG-Portal release issue</li>
+					<li>Fix: Issue where the first start dialog could hang in the background</li>
+					<li>Fix: Edge cases that could cause incorrect settings causing client / server process to crash</li>
+					<li>Fix: Default server config file is Deskflow-server.conf</li>
+					<li>Backport: Event Types from downstream</li>
+					<li>Backport: Cleaner error handling from downstream</li>
+					<li>Improve Windows Daemon</li>
+					<li>Better detection of arm on windows, in build and installer</li>
+					<li>Chore: Clean up sonar scan code smells</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.22.0</url>
+		</release>
+		<release version="1.21.2" date="2025-04-07" urgency="high">
+			<description>
+				<p>This stable release fixes a few critical bugs in 1.21.1. For the full changelog see the release page.</p>
+				<ul>
+					<li>Fix: Crash with Qt 6.9</li>
+					<li>Fix: Windows settings in wrong locations</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.21.2</url>
+		</release>
+		<release version="1.21.1" date="2025-03-31" urgency="high">
+			<description>
+				<p>This stable release fixes a few critical bugs in 1.21.0. For the full changelog see the release page.</p>
+				<ul>
+					<li>Fix: Flatpak can't save settings'</li>
+					<li>Fix: Crash on localfingerprint dialog</li>
+					<li>Fix: Check for updates settings reading from wrong value</li>
+					<li>Fix: Windows settings saving blocked for non admin users </li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.21.1</url>
+		</release>
+		<release version="1.21.0" date="2025-03-27" urgency="high">
+			<description>
+				<p>This stable release removes some dependencies, additionally fixes several bugs. For the full changelog see the release page.</p>
+				<ul>
+					<li>Cleanup unused classes</li>
+					<li>New Settings class</li>
+					<li>Remove need for pugixml</li>
+					<li>Remove need for libNotify</li>
+					<li>Remove need for gio</li>
+					<li>Remove need for gitkpixbuf</li>
+					<li>Fix issues with windows installer when msvc is missing</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.21.0</url>
+		</release>
+		<release version="1.20.1" date="2025-03-07" urgency="low">
+			<description>
+				<p>This stable release introduces a Windows dependency requirement and fixes a macOS bug.</p>
+				<ul>
+					<li>Fix: macOS menu bar icon invisible when menu bar is light</li>
+					<li>Feature: Add Windows installer check for Visual C++ Redistributable</li>
+					<li>Feature: Prevent Windows binaries running if MSVC runtime too old</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.20.1</url>
+		</release>
+		<release version="1.20.0" date="2025-03-03" urgency="high">
+			<description>
+				<p>This stable release fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<ul>
+					<li>Feature: Peer Id Checking - Fixes CVE-2021-42072 and CVE-2021-42073</li>
+					<li>Feature: Use Sha256 fingerprints</li>
+					<li>Feature: Gui cleanup and improvements</li>
+					<li>Remove: Inverse connection option</li>
+					<li>Fix: Screen Corner option</li>
+					<li>Fix: Show new client dialog</li>
+					<li>Win32: Daemon Improvements</li>
+					<li>Win32: Fix clear settings</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.20.0</url>
+		</release>
+		<release version="1.19.0" date="2025-01-31" urgency="high">
+			<description>
+				<p>This stable release fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<ul>
+					<li>Feature: New Fallback icon theme</li>
+					<li>Feature: Allow only one gui instance</li>
+					<li>Fix: Modifier remapping on macOS</li>
+					<li>Fix: Show Screen icons again in the server settings</li>
+					<li>Fix: Show the TLS Label</li>
+					<li>Fix: Mainwindow restore </li>
+					<li>Fix: Hotkey with more then one action now work again</li>
+					<li>Better Detection of evdev on BSD</li>
+					<li>Better language detection on X11</li>
+					<li>Better deal with screen changes on wayland</li>
+					<li>Remove Legacy tray icons</li>
+					<li>Lots of Internal Cleanup</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.19.0</url>
+		</release>
+		<release version="1.18.0" date="2024-12-26" urgency="high">
+			<description>
+				<p>This stable release fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<ul>
+					<li>Fix CVE-2021-42075: Close connection on app-level handshake failure</li>
+					<li>Fix CVE-2021-42074: Handle SSL race conditions and segmentation fault</li>
+					<li>Fix CVE-2021-42076: Enforce maximum message length </li>
+					<li>Add a visiblity toggle for the log</li>
+					<li>Fix deskflow will now hide or show when the tray icon is clicked</li>
+					<li>Fix how Utf-16 surrogates are handled</li>
+					<li>Avoid encoding empty data to the clipboard on Windows</li>
+					<li>Create new Tray Icons for windows</li>
+					<li>Always show the tray menu entry for the restore action on macOS</li>
+					<li>Correctly restore window when hidden with command+H on macOS</li>
+					<li>Update the windows clipboard format listener to monitor the clipboard</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.18.0</url>
+		</release>
+		<release version="1.17.2" date="2024-11-20" urgency="medium">
+			<description>
+				<p>This stable Release contains alot of internal refactoring.</p>
+				<ul>
+					<li>docs: Update readme to use latest for the stable link and continuous</li>
+					<li>chore: rm unused res/doxygen.cfg.in</li>
+					<li>chore: rm unused res/License.tex</li>
+					<li>chore: rm unused res/License.rtf</li>
+					<li>refactor: mv res/gui/win/app.rc => src/gui/src/app.rc</li>
+					<li>refactor: mv res/app.ico src/gui/src/app.ico</li>
+					<li>refactor: mv src/lib/gui/TrayIcon => src/gui/src/TrayIcon</li>
+					<li>feat: use platform native styles when possible</li>
+					<li>refactor: use theme icon for document open fallback to the folder icon</li>
+					<li>refactor mv: res/gui => src/gui/res</li>
+					<li>chore: alphabetize app.qrc resource file</li>
+					<li>chore rm: unused app.svg</li>
+					<li>refactor: mv res/app.png and res/app.svg => deploy</li>
+					<li>refactor: mv res/dist/linux/app.desktop.in => deploy/org.deskflow.desktop</li>
+					<li>refactor: mv res/dist/arch => deploy/dist/arch</li>
+					<li>chore: rm unneeded res/dist/flatpak/flatpak-desktop.patch</li>
+					<li>refactor: mv res/dist/flatpak => deploy/res/flatpak</li>
+					<li>refactor: mv res/dist/mac => deploy/dist/mac</li>
+					<li>refactor: mv res/dist/wix => deploy/dist/wix</li>
+					<li>build: add metainfo</li>
+					<li>ci: rename ci.yml to => continuous-integration.yml</li>
+					<li>Rename CI badge to match new .yml filename</li>
+					<li>chore: update the deskflow shipped icon to have proper padding</li>
+					<li>chore: adjust branding light / dark colors to dddddd / 555555</li>
+					<li>fix: SettingsDialog ui generating nonsence alignment tags when edited</li>
+					<li>feat: SettingsDialog, Allow user to toggle the check for updates settings</li>
+					<li>fix: MainWindow not saving initial update flag</li>
+					<li>build: rm DESKFLOW_APP_ID define</li>
+					<li>build: rm DESKFLOW_DOMAIN define</li>
+					<li>build: rm DESKFLOW_APP_NAME define</li>
+					<li>build: rm DESKFLOW_AUTHOR_NAME define</li>
+					<li>build: rm DESKFLOW_MAINTAINER define</li>
+					<li>build: rm DESKFLOW_WEBSITE_URL define</li>
+					<li>build: rm DESKFLOW_VERSION_URL define</li>
+					<li>build: rm DESKFLOW_HELP_TEXT define</li>
+					<li>build: rm DESKFLOW_RES_DIR define</li>
+					<li>build: rm DESKFLOW_MAC_BUNDLE_CODE</li>
+					<li>build: rm GUI_BINARY_NAME define</li>
+					<li>build: rm SERVER_BINARY_NAME define</li>
+					<li>build:rm CLIENT_BINARY_NAME define</li>
+					<li>build: rm CORE_BINARY_NAME define</li>
+					<li>build: rm DAEMON_BINARY_NAME</li>
+					<li>build: remove DESKFLOW_SHOW_DEV_THANKS define</li>
+					<li>fix: single typo in README.md</li>
+					<li>feat: fix flatpak recipe</li>
+					<li>ci: build flatpaks</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.2</url>
+		</release>
+		<release version="1.17.1" date="2024-11-07" urgency="high">
+			<description>
+				<p>This stable release has a very long changelog some notable ones are.</p>
+				<ul>
+					<li>Remove word 'beta' from Wayland message</li>
+					<li>docs: Update `README.md` with Matrix link</li>
+					<li>Make `README.md` more relevant to current repo state</li>
+					<li>Use #pragma once for headers</li>
+					<li>Remove Python `.venv` dir caching to reduce complexity</li>
+					<li>Add discussion value to project values in README.md</li>
+					<li>Use modern Qt connections in GUI</li>
+					<li>chore: rm unused string_utils file</li>
+					<li>build: findSSL via cmake</li>
+					<li>fix: Set correct QGuiApplication::desktopFileName</li>
+					<li>feat: Use native style on KDE Plasma</li>
+					<li>build: Don't force CMAKE_INSTALL_PREFIX</li>
+					<li>CI: Requires Lint to pass before running other jobs. Allow CI to be skipped for non code changes</li>
+					<li>Move res/config.h.in -> src/lib/config.h.in</li>
+					<li>build: Drop warnings_as_errors</li>
+					<li>chore: cmake user files to gitignore</li>
+					<li>chore: add basic .gitattributes</li>
+					<li>Use high res icons and remove unused</li>
+					<li>Coverage for `AboutDialog.cpp`</li>
+					<li>CI cleanup and consolidation</li>
+					<li>Remove dead `test-dist-upload.yml` file</li>
+					<li>fix: align --display explanation in help message</li>
+					<li>Use version from Git tags instead of `VERSION` file</li>
+					<li>Add leading edge philosophy to README.md</li>
+					<li>Fixed minor typos in the bug report template</li>
+					<li>Change TLS dir to same as Qt config</li>
+					<li>Restore `pull_request` trigger for `codeql-analysis.yml`</li>
+					<li>Fixed error count logic for test summary</li>
+					<li>Solve QCheckBox 6.7+ warning and exclude GUI from coverage</li>
+					<li>build: set project description</li>
+					<li>fix: Check for errors before reading version string</li>
+					<li>ci: clearer and cleaner steps</li>
+					<li>Arch package fixup</li>
+					<li>Force LF in gitattributes</li>
+					<li>docs: Add other build type to bug report template</li>
+					<li>Fixed code style in `ci.yml` workflow</li>
+					<li>Remove `cmake-format` linter (more harm than good)</li>
+					<li>Ignore paths for CodeQL Analysis</li>
+					<li>Always run PR comments job</li>
+					<li>docs: Add .editorconfig file</li>
+					<li>Remove Wayland experimental pop</li>
+					<li>build: linux packages with proper names using cpack</li>
+					<li>ci: vcpkg cache working</li>
+					<li>fix: Use `OPENSSL_EXE_DIR` instead of `OPENSSL_ROOT_DIR` on Windows</li>
+					<li>build: Add `gtest-args` for VS Code users</li>
+					<li>chore: Replace assert with warning for screen boundary issue</li>
+					<li>chore: resolve cmake cap nits</li>
+					<li>fix: Let users select version number and build in About Dialog</li>
+					<li>Adjust Clang-format linter rules</li>
+					<li>chore: Update feature request template</li>
+					<li>build: update required ssl to 3.0+</li>
+					<li>ci: Use `cmake` instead of `make` directly for Arch package</li>
+					<li>build: Require cmake 3.24</li>
+					<li>ci: use vcpkg action on ci to cache</li>
+					<li>ci: Remove CMake presets</li>
+					<li>build: get CLI11 via file download if not on system</li>
+					<li>ci: remove unused cache step</li>
+					<li>build: arch package won't install /bin</li>
+					<li>build: use File to dl toml++ if not on system</li>
+					<li>ci: Catch std::exception on toml::parse_file</li>
+					<li>Optional FreeBSD integtests  and reduce CMake arg dupe</li>
+					<li>fix: server config dialog show event</li>
+					<li>docs: Checkbox for continuous build on bug template</li>
+					<li>build: use vcpkg for all depends, vcpkg action on ci to cache</li>
+					<li>Remove `.ui` files from being the base class</li>
+					<li>Protocol interoperability for Input Leap (Barrier) and Synergy</li>
+					<li>build: arch package requires tomlplusplus and cli11</li>
+					<li>build: Use Fetch Content for Gtest</li>
+					<li>fix:#7760 use a proper fedora package name</li>
+					<li>Static cast screen column count for scan alert 559</li>
+					<li>build: remove stale meson parts for wintoast</li>
+					<li>ci: Normalize CI step names, descriptions, etc</li>
+					<li>ci: New macOS CI with Qt action</li>
+					<li>Drop `.ui` file for setup wizard</li>
+					<li>Clazy nits</li>
+					<li>ci: Bump containers for analyze workflows</li>
+					<li>ci: use fancy checkout action</li>
+					<li>Fix the windows installer</li>
+					<li>build: Require libei and libportal on linux</li>
+					<li>Unify Jobs into one matrix</li>
+					<li>docs: Update Readme</li>
+					<li>ci: remove unused libportal check from Librarires.cmake</li>
+					<li>docs: Remove confusing value line in readme</li>
+					<li>Simplify build by using Docker containers directly</li>
+					<li>docs: Remote build containers badge</li>
+					<li>Elaborate on settings dialog help (what's this)</li>
+					<li>Mosty glob free</li>
+					<li>build: update package names for linux to be more unified</li>
+					<li>chore: add link to wayland discussion</li>
+					<li>docs: readme add mac os xattr note</li>
+					<li>Update README.md to restore sponsor link</li>
+					<li>docs: Fixed sponsor link in README</li>
+					<li>User docs</li>
+					<li>chore: settingsDialog rm unused CoreTool include</li>
+					<li>Do not build deskflow legacy</li>
+					<li>build: add deskflow devs to binaries copyright</li>
+					<li>doc: correct target for documents</li>
+					<li>docs: Improve error messages around Doxygen</li>
+					<li>fix: crash on --help arg</li>
+					<li>docs: contributors on readme</li>
+					<li>Clean up scripts directory</li>
+					<li>No UI about dialog</li>
+					<li>chore: add homebrew tap info to readme</li>
+					<li>chore: Replace screen leave/enter asserts with warnings</li>
+					<li>CI: added updated winget package submission</li>
+					<li>ci: Use GITHUB_TOKEN in place of PAT</li>
+					<li>ci: use pre-release for continuous to stop it from grabbing latest tag</li>
+					<li>ci: git-version-action: Always report described version</li>
+					<li>ci: adjust pacakge script to use the names we would like when in cpack</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.1</url>
+		</release>
+		<release version="1.17.0" date="2024-10-02" urgency="low">
+			<description>
+				<p>This is the first Deskflow release.</p>
+				<ul>
+					<li>Use Deskflow Name</li>
+					<li>fix: windows build typos</li>
+					<li>Fix broken CI caused by renaming project to Deskflow</li>
+					<li>fix: protocol compatibility with Synergy</li>
+					<li>Remove Google Drive upload and always upload to GitHub</li>
+					<li>fix: stuck keys on leave</li>
+					<li>ci: always upgrade packages on arch</li>
+					<li>ci: option to skip changelog lint in PR</li>
+					<li>docs: fixed link to config.yaml in README.md</li>
+					<li>docs: add sponsor badge and blurb to readme</li>
+					<li>ci: lint and add comment to PR on fail</li>
+					<li>docs: add build type to bug report form</li>
+					<li>docs: add extra badges and fix sponsor link</li>
+					<li>build: default to system tomlplusplus and CLI11</li>
+					<li>ci: give write permission for PR comments</li>
+					<li>build: fixed option name for SYSTEM_TOMLPLUSPLUS</li>
+					<li>build: script to create Python virtual env</li>
+					<li>build: set BUILD_DATE instead of using __DATE__</li>
+					<li>ci: delete ChangeLog because it's redundant</li>
+					<li>feat: use new Deskflow graphics</li>
+					<li>fix: various typos found by unit193</li>
+					<li>docs: add new logo to readme and update screenshot</li>
+					<li>ci: use workflow_run to comment on PRs</li>
+					<li>feat: change most domains to Deskflow</li>
+					<li>feat: ask for permission before update check</li>
+					<li>ci: remove restore-keys for vcpkg and use local bootstrap</li>
+					<li>ci: add pr comment based on ci result</li>
+					<li>ci: add link back to workflow summary in pr comment</li>
+					<li>ci: use github.event.workflow_run.id for CI summary comment</li>
+					<li>ci: check for summaries dir before building message</li>
+					<li>ci: handle files with same name in ci comment workflow</li>
+					<li>ci: fixed syntax error in ci comment workflow</li>
+					<li>ci: use braces block for formatting in ci comment</li>
+					<li>ci: use job summary instead of pr comment</li>
+					<li>ci: lookup pr number by head sha for ci comment</li>
+					<li>fix: Update onMouseMoveSecondary to allow offset adjustments</li>
+					<li>ci: lock qt version to 6.7.2 on win/mac</li>
+					<li>docs: Fixed broken URL in README.md</li>
+					<li>fix: Use library config for Windows OpenSSL</li>
+					<li>Relocate commercial code downstream</li>
+					<li>build: Bump min libei and libportal versions</li>
+					<li>Use sonarsource/sonarcloud-github-c-cpp</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.0</url>
+		</release>
+	</releases>
+</component>

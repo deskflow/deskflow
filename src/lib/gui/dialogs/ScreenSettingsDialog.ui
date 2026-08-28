@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScreenSettingsDialog</class>
+ <widget class="QDialog" name="ScreenSettingsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>503</width>
+    <height>558</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Computer settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="_2">
+   <item>
+    <widget class="QGroupBox" name="groupComputerName">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Computer Info</string>
+     </property>
+     <layout class="QVBoxLayout" name="_3">
+      <item>
+       <layout class="QHBoxLayout" name="_4">
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Name</string>
+          </property>
+          <property name="buddy">
+           <cstring>lineNameEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineNameEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maxLength">
+           <number>255</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblNameError">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string notr="true">lblNameError</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="layoutOptions">
+     <item>
+      <layout class="QVBoxLayout" name="layoutLeftSide">
+       <item>
+        <widget class="QGroupBox" name="groupModifers">
+         <property name="title">
+          <string>Modifier Keys</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>M&amp;eta</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboMeta</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>&amp;Ctrl</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboCtrl</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>S&amp;uper</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboSuper</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Al&amp;t</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboAlt</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboMeta">
+            <property name="currentIndex">
+             <number>3</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="comboShift">
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="maximumSize">
+             <size>
+              <width>40</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>&amp;Shift</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboShift</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QComboBox" name="comboAlt">
+            <property name="currentIndex">
+             <number>2</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QComboBox" name="comboSuper">
+            <property name="currentIndex">
+             <number>4</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="comboCtrl">
+            <property name="currentIndex">
+             <number>1</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="labelAltGr">
+            <property name="text">
+             <string>Alt &amp;Gr</string>
+            </property>
+            <property name="buddy">
+             <cstring>comboAltGr</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QComboBox" name="comboAltGr">
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>Shift</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ctrl</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Meta</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Super</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Alt Gr</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>None</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupDeadCorners">
+         <property name="title">
+          <string>Dead Corners</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>20</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SizeConstraint::SetMinAndMaxSize</enum>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="layoutDeadCornersTop">
+            <item>
+             <widget class="QCheckBox" name="chkDeadTopLeft">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Top Left</string>
+              </property>
+              <property name="autoRepeatInterval">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkDeadTopRight">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Top Right</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LayoutDirection::RightToLeft</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="layoutCornerSize">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Corner si&amp;ze</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbSwitchCornerSize</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sbSwitchCornerSize">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="layoutDeadCornersBottom">
+            <item>
+             <widget class="QCheckBox" name="chkDeadBottomLeft">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Bottom Left</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="chkDeadBottomRight">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Bottom Right</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LayoutDirection::RightToLeft</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="layoutRightSide">
+       <item>
+        <widget class="QGroupBox" name="groupFixes">
+         <property name="title">
+          <string>Fixes</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QCheckBox" name="chkFixScrollLock">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>SCROLL LOCK key</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkFixCapsLock">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>CAPS LOCK key</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkFixNumLock">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>NUM LOCK key</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkFixXTest">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>XTest for Xinerama</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupAliases">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Aliases</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLineEdit" name="lineAddAlias">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>168</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maxLength">
+               <number>255</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnAddAlias">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>&amp;Add</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblAliasError">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string notr="true">lblAliasError</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="listAliases">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnRemoveAlias">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>&amp;Remove</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Save</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>lineNameEdit</tabstop>
+  <tabstop>comboMeta</tabstop>
+  <tabstop>comboShift</tabstop>
+  <tabstop>comboCtrl</tabstop>
+  <tabstop>comboSuper</tabstop>
+  <tabstop>comboAltGr</tabstop>
+  <tabstop>comboAlt</tabstop>
+  <tabstop>chkDeadTopLeft</tabstop>
+  <tabstop>chkDeadTopRight</tabstop>
+  <tabstop>sbSwitchCornerSize</tabstop>
+  <tabstop>chkDeadBottomLeft</tabstop>
+  <tabstop>chkDeadBottomRight</tabstop>
+  <tabstop>chkFixScrollLock</tabstop>
+  <tabstop>chkFixCapsLock</tabstop>
+  <tabstop>chkFixNumLock</tabstop>
+  <tabstop>chkFixXTest</tabstop>
+  <tabstop>lineAddAlias</tabstop>
+  <tabstop>btnAddAlias</tabstop>
+  <tabstop>listAliases</tabstop>
+  <tabstop>btnRemoveAlias</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

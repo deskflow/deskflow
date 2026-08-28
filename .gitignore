@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: Copyright (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: Copyright (C) 2011 Synergy App Ltd
+# SPDX-FileCopyrightText: Copyright (C) 2010 Jason Axelson <BostonVaulter@gmail.com>
+# SPDX-License-Identifier: MIT
+
+# temp dirs created during build
+/build
+/dist
+/deps
+/tmp
+/vcpkg
+/vcpkg_installed
+/.cache
+/.venv
+aqtinstall.log
+Brewfile.lock.json
+
+# typical developer-created files
+deskflow-config.toml
+.vscode
+.DS_Store
+*.code-workspace
+.env*
+/scripts/*.egg-info
+/*.user
+*.ui.autosave
+
+#Qt creator 18 user files
+/.qtcreator
+
+# generated vcpkg file
+vcpkg.json
+
+#Generic linux files
+**/*.directory
+
+#CMake ignores
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeUserPresets.json
+CMakeFiles/*
+
+# vscode folder
+/.vscode
+
+# scripts folder
+/scripts
+
+# Ai helperfilers
+**/[cC]laude.[mM][dD]
+**/CLAUDE.[mM][dD]

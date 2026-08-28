@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" width="32" height="32">
+    <style type="text/css" id="current-color-scheme">
+        .ColorScheme-Text {
+            color:#232629;
+        }
+    </style>
+    <g id="system-search" transform="translate(0 -32) translate(-22,32)">
+        <path id="path66" class="ColorScheme-Text" d="m35 4a9 9 0 0 0-9 9 9 9 0 0 0 9 9 9 9 0 0 0 5.994141-2.298828l8.298828 8.298828 0.707031-0.707031-8.300781-8.300782a9 9 0 0 0 2.300781-5.992187 9 9 0 0 0-9-9zm0 1a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8z" fill="currentColor"/>
+        <path id="path68" d="m22 0v32h32v-32z" fill="none"/>
+    </g>
+</svg>

@@ -1,0 +1,10 @@
+<svg version="1.1" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+    <style
+        type="text/css"
+        id="current-color-scheme">
+        .ColorScheme-NegativeText {
+            color:#da4453;
+        }
+    </style>
+    <path class="ColorScheme-NegativeText" d="M 3.6992188 3 L 3 3.6992188 L 10.300781 11 L 3 18.300781 C 3 18.300781 3.7112147 18.993333 3.6992188 19 L 11 11.699219 L 18.300781 19 C 18.288781 18.9933 19 18.300781 19 18.300781 L 11.699219 11.001953 L 19 3.6992188 L 18.300781 3 L 11 10.300781 L 3.6992188 3 z " fill="currentColor"/>
+</svg>

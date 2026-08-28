@@ -1,0 +1,24 @@
+changelog:
+  categories:
+    - title: Features
+      labels:
+        - "🪄 feature request"
+        - "✨ enhancement"
+    - title: Fixes
+      labels:
+        - "🩹 fix"
+    - title: Build
+      labels:
+        - "🚧 build"
+    - title: Documentation
+      labels:
+        - "📝 document"
+    - title: Translations
+      labels:
+        - ":speech_balloon: I18N"
+    - title: CI Updates
+      labels:
+        - ":robot: ci"
+    - title: Commits
+      labels:
+        - "*"

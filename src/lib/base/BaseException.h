@@ -1,0 +1,50 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+#include <stdexcept>
+#include <string>
+
+#include <QByteArray>
+#include <QString>
+
+//! Exception base class
+/*!
+This is the base class of most exception types.
+*/
+class BaseException : public std::runtime_error
+{
+public:
+  //! Use getWhat() as the result of what()
+  BaseException();
+  //! Use \c msg as the result of what()
+  explicit BaseException(const QString &msg);
+  ~BaseException() throw() override = default;
+
+  //! Reason for exception
+  const char *what() const throw() override;
+
+protected:
+  //! Get a human readable string describing the exception
+  virtual QString getWhat() const noexcept
+  {
+    return {};
+  }
+
+  //! Format a string
+  /*!
+  Looks up a message format using \c id, using \c defaultFormat if
+  no format can be found, then replaces positional parameters in
+  the format string and returns the result.
+  */
+  virtual QString format(const char *id, const char *defaultFormat, ...) const noexcept;
+
+private:
+  mutable QByteArray m_what;
+};

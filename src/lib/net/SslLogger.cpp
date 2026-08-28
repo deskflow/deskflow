@@ -1,0 +1,167 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2015 - 2022 Synergy App Ltd
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#include "SslLogger.h"
+#include <iterator>
+#include <sstream>
+
+#include <base/Log.h>
+#include <deskflow/ipc/CoreIpc.h>
+#include <openssl/err.h>
+#include <openssl/ssl.h>
+
+namespace {
+
+void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack)
+{
+  char msg[128] = {0};
+  for (int i = 0; i < sk_SSL_CIPHER_num(stack); ++i) {
+    auto cipher = sk_SSL_CIPHER_value(stack, i);
+    SSL_CIPHER_description(cipher, msg, sizeof(msg));
+
+    // SSL puts a newline in the description
+    if (auto pos = strnlen(msg, sizeof(msg)) - 1; msg[pos] == '\n') {
+      msg[pos] = '\0';
+    }
+
+    LOG_VERBOSE("%s", msg);
+  }
+}
+
+void logLocalSecureCipherInfo(const SSL *ssl)
+{
+  auto sStack = SSL_get_ciphers(ssl);
+
+  if (sStack) {
+    LOG_VERBOSE("available local ciphers:");
+    showCipherStackDesc(sStack);
+  } else {
+    LOG_VERBOSE("local cipher list not available");
+  }
+}
+
+void logRemoteSecureCipherInfo(const SSL *ssl)
+{
+  auto cStack = SSL_get_client_ciphers(ssl);
+
+  if (cStack) {
+    LOG_VERBOSE("available remote ciphers:");
+    showCipherStackDesc(cStack);
+  } else {
+    LOG_VERBOSE("remote cipher list not available");
+  }
+}
+
+} // namespace
+
+void SslLogger::logSecureLibInfo()
+{
+  if (CLOG->getFilter() >= LogLevel::Level::Debug) {
+    LOG_DEBUG("openssl version: %s", SSLeay_version(SSLEAY_VERSION));
+    LOG_VERBOSE("openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS));
+    LOG_VERBOSE("openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON));
+    LOG_VERBOSE("openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM));
+    LOG_VERBOSE("openssl dir: %s", SSLeay_version(SSLEAY_DIR));
+  }
+}
+
+void SslLogger::logSecureCipherInfo(const SSL *ssl)
+{
+  if (ssl && CLOG->getFilter() >= LogLevel::Level::Verbose) {
+    logLocalSecureCipherInfo(ssl);
+    logRemoteSecureCipherInfo(ssl);
+  }
+}
+
+void SslLogger::logSecureConnectInfo(const SSL *ssl)
+{
+  if (ssl) {
+    auto cipher = SSL_get_current_cipher(ssl);
+
+    if (cipher) {
+      char msg[128] = {0};
+      SSL_CIPHER_description(cipher, msg, sizeof(msg));
+      LOG_DEBUG("openssl cipher: %s", QString(msg).trimmed().toStdString().c_str());
+
+      // For some reason SSL_get_version is return mismatching information to
+      // SSL_CIPHER_description
+      //  so grab the version out the description instead, This seems like a
+      //  hacky way of doing it. But when the cipher says "TLSv1.2" but the
+      //  get_version returns "TLSv1/SSLv3" we it doesn't look right For some
+      //  reason macOS hates regex's so stringstream is used
+      std::istringstream iss(msg);
+
+      // Take the stream input and splits it into a vetor directly
+      const std::vector<std::string> parts{
+          std::istream_iterator<std::string>{iss}, std::istream_iterator<std::string>{}
+      };
+      if (parts.size() > 2) {
+        LOG_DEBUG("network encryption protocol: %s", parts[1].c_str());
+        ipcSendToClient("secureSocket", parts[1].c_str());
+      } else {
+        LOG_ERR("could not split cipher for protocol");
+        LOG_DEBUG("network encryption protocol: %s", msg);
+        ipcSendToClient("secureSocket", msg);
+      }
+    } else {
+      LOG_ERR("could not get secure socket cipher");
+    }
+  }
+}
+
+void SslLogger::logError(const std::string &reason)
+{
+  if (!reason.empty()) {
+    LOG_ERR("secure socket error: %s", reason.c_str());
+  }
+
+  auto id = ERR_get_error();
+  if (id) {
+    char error[65535] = {0};
+    ERR_error_string_n(id, error, sizeof(error));
+    LOG_ERR("openssl error: %s", error);
+  }
+}
+
+void SslLogger::logErrorByCode(int code, int retry)
+{
+  switch (code) {
+  case SSL_ERROR_NONE:
+    break;
+
+  case SSL_ERROR_ZERO_RETURN:
+    LOG_DEBUG("tls connection closed");
+    break;
+
+  case SSL_ERROR_WANT_READ:
+    LOG_VERBOSE("want to read, error=%d, attempt=%d", code, retry);
+    break;
+
+  case SSL_ERROR_WANT_WRITE:
+    LOG_VERBOSE("want to write, error=%d, attempt=%d", code, retry);
+    break;
+
+  case SSL_ERROR_WANT_CONNECT:
+    LOG_VERBOSE("want to connect, error=%d, attempt=%d", code, retry);
+    break;
+
+  case SSL_ERROR_WANT_ACCEPT:
+    LOG_VERBOSE("want to accept, error=%d, attempt=%d", code, retry);
+    break;
+
+  case SSL_ERROR_SYSCALL:
+    LOG_ERR("tls error occurred (system call failure)");
+    break;
+
+  case SSL_ERROR_SSL:
+    LOG_ERR("tls error occurred (generic failure)");
+    break;
+
+  default:
+    LOG_ERR("tls error occurred (unknown failure)");
+    break;
+  }
+}

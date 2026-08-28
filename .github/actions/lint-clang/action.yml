@@ -1,0 +1,91 @@
+name: "Lint Clang"
+description: "Checks for Clang lint errors and posts a helpful comment"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Dependencies
+      run: pipx install --global clang-format==20.1.0
+      shell: bash
+
+    - name: Run format command
+      run: find src/ -regex '.*\.\(cpp\|hpp\|cc\|cxx\|h\|c\|m\|mm\)' -exec clang-format -i {} \;
+      shell: bash
+
+    - name: Find changes
+      id: changes
+      run: |
+        file=clang-format.diff
+        diff=$(git diff | tee $file)
+
+        if [ -z "$diff" ]; then
+          echo "No changes detected"
+          exit 0
+        fi
+
+        echo "file=$file" >> $GITHUB_OUTPUT
+
+        {
+          echo "diff<<EOF"
+          cat $file
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
+
+      shell: bash
+
+    - name: Upload to GitHub
+      id: upload
+      if: steps.changes.outputs.diff
+      uses: actions/upload-artifact@v7
+      with:
+        name: clang-format-diff
+        path: ${{ steps.changes.outputs.file }}
+        if-no-files-found: error
+
+    - name: Set summary
+      id: summary
+      if: steps.changes.outputs.diff
+      run: |
+        code_block="\`\`\`"
+
+        clang_version=$(clang-format --version | sed -n 's/^.*version //p')
+
+        summary=$(cat <<EOF
+        ❌ \`clang-format\` \`v${clang_version}\`: It looks like your changes don't match our code style.
+
+        🛠️ Please either run \`clang-format -i\` on the file or apply this patch with \`git apply\`:
+
+        [\`${{ steps.changes.outputs.file }}\`](${{ steps.upload.outputs.artifact-url }})
+        $code_block diff
+        ${{ steps.changes.outputs.diff }}
+        $code_block
+
+        Hint: Install the right version of \`clang-format\`, e.g.: \`pipx install --global clang-format==${clang_version}\`
+        EOF
+        )
+        echo "$summary" >> $GITHUB_STEP_SUMMARY
+
+        pr_comment=$(cat <<EOF
+        ### Lint result
+        
+        $summary
+        EOF
+        )
+
+        file="ci-summary.md"
+        echo "$pr_comment" | tee $file
+        echo "file=$file" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Upload CI summary as artifact
+      if: steps.summary.outputs.file
+      uses: actions/upload-artifact@v7
+      with:
+        name: summary-clang-format
+        path: ${{ steps.summary.outputs.file }}
+        if-no-files-found: error
+
+    - name: Fail if diff exists
+      if: steps.changes.outputs.diff
+      run: exit 1
+      shell: bash

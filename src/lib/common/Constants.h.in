@@ -1,0 +1,39 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 Synergy App Ltd
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+const auto kAppName = "@CMAKE_PROJECT_PROPER_NAME@";
+const auto kAppId = "@CMAKE_PROJECT_NAME@";
+const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
+const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
+const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
+const auto kRevFqdnName = "@CMAKE_PROJECT_REV_FQDN@";
+
+const auto kCopyright = //
+    "Copyright @CMAKE_PROJECT_COPYRIGHT@\n"
+    "Copyright (C) 2012-2025 Synergy App Ltd\n"
+    "Copyright (C) 2009-2012 Nick Bolton\n"
+    "Copyright (C) 2002-2009 Chris Schoeneman";
+
+const auto kCoreBinName = "@CORE_BINARY@";
+const auto kCoreIpcName = "@CMAKE_PROJECT_NAME@-core";
+
+const auto kServerGridHeight = 3;
+const auto kServerGridWidth = 5;
+
+#ifdef _WIN32
+
+// clang-format off
+const auto kWindowsRuntimeMajor = @REQUIRED_MSVC_RUNTIME_MAJOR@;
+const auto kWindowsRuntimeMinor = @REQUIRED_MSVC_RUNTIME_MINOR@;
+// clang-format on
+
+constexpr auto kCloseEventName = L"Global\\@CMAKE_PROJECT_PROPER_NAME@Close";
+constexpr auto kSendSasEventName = L"Global\\@CMAKE_PROJECT_PROPER_NAME@SendSAS";
+
+#endif

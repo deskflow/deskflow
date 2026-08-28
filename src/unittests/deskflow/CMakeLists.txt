@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-License-Identifier: MIT
+
+if(WIN32)
+  set(extra_libs platform version)
+endif()
+
+create_test(
+  NAME ClipboardTests
+  DEPENDS app
+  LIBS arch base io ${extra_libs}
+  SOURCE ClipboardTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
+  NAME ClipboardChunksTests
+  DEPENDS app
+  LIBS arch base io ${extra_libs}
+  SOURCE ClipboardChunksTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
+  NAME IKeyStateTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE IKeyStateTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
+  NAME KeyMapTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE KeyMapTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
+  NAME KeyStateTests
+  DEPENDS app
+  LIBS arch base mt ${extra_libs}
+  SOURCE KeyStateTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
+  NAME KeyboardLayoutManagerTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE KeyboardLayoutManagerTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+if(BUILD_X11_SUPPORT)
+  create_test(
+    NAME XkbLayoutParserTests
+    DEPENDS app
+    LIBS arch base ${extra_libs}
+    SOURCE XkbLayoutParserTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+  )
+endif()
+

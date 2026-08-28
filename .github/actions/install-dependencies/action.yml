@@ -1,0 +1,96 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-License-Identifier: MIT
+
+name: "Install dependencies for deskflow"
+description: "Install the dependencies needed to build deskflow"
+
+inputs:
+  like:
+    description: "Used only on linux distro type: debian, fedora, suse, arch"
+    required: false
+
+  qt-version:
+    description: "The version of Qt to install (Windows & macOS)"
+    required: false
+
+  vcpkg-triplet:
+    description: "vcpkg triplet to use (Windows)"
+    required: false
+
+outputs:
+  vcpkg-cmake-config:
+    description: "windows vcpkg output for cmaket"
+    value: ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Install Depends
+      if: ${{ runner.os != 'Windows' }}
+      run: |
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            brew install openssl --quiet
+          elif [ "$RUNNER_OS" == "Linux" ]; then
+            if [ ${{inputs.like}} == "debian" ]; then
+              apt update -qqq > /dev/null
+              apt install -qqq cmake build-essential ninja-build \
+                xorg-dev libx11-dev libxtst-dev libssl-dev libxkbfile-dev \
+                qt6-base-dev qt6-tools-dev libxkbregistry-dev libxkbcommon-dev \
+                libei-dev libportal-dev help2man -y >/dev/null
+            elif [ ${{inputs.like}} == "fedora" ]; then
+              dnf config-manager setopt fedora-cisco-openh264.enabled=0
+              dnf install -y cmake make ninja-build gcc-c++ rpm-build openssl-devel \
+                libXtst-devel libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel libxkbcommon-x11-devel \
+                libei-devel libxkbcommon-devel libportal-devel help2man libXinerama-devel libXrandr-devel
+            elif [ ${{inputs.like}} == "suse" ]; then
+              zypper refresh
+              zypper install -y --force-resolution \
+                cmake make ninja gcc-c++ rpm-build libopenssl-devel \
+                libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel \
+                qt6-linguist-devel libxkbcommon-devel libxkbcommon-x11-devel libxkbregistry-devel \
+                libei-devel libportal-devel help2man libXinerama-devel libXrandr-devel
+            elif [ ${{ inputs.like }} == "arch" ]; then
+              pacman -Syu --noconfirm base-devel cmake ninja \
+                gcc openssl libxtst libxkbfile libei libportal libxkbcommon-x11 \
+                qt6-base qt6-tools qt6-svg qt6-translations qt6-declarative help2man doxygen graphviz rsync libxkbcommon libxinerama libxrandr
+            else
+              echo "Unknown like"
+            fi
+          else
+            echo "Unknown OS: $RUNNER_OS"
+          fi
+      shell: bash
+
+    - name: Install Qt
+      if: ${{runner.os != 'Linux' }}
+      uses: jurplel/install-qt-action@v4
+      env:
+        AQT_CONFIG: ${{ github.workspace }}/.github/actions/install-dependencies/aqt.ini
+      with:
+        version: ${{inputs.qt-version}}
+        cache: true
+        cache-key-prefix: ${{matrix.target.os}}-${{inputs.qt-version}}
+        aqtsource: git+https://github.com/miurahr/aqtinstall.git@16db45a70b5905ad596941b223469bc86a56901e
+
+    - name: Build and cache vcpkg
+      if: ${{ runner.os == 'Windows' }}
+      id: vcpkg
+      uses: johnwason/vcpkg-action@v8
+      with:
+        pkgs: openssl
+        extra-args: --classic --host-triplet=${{inputs.vcpkg-triplet}}
+        triplet: ${{inputs.vcpkg-triplet}}
+        token: ${{ github.token }}
+        revision: master
+
+    - name: Install Wix
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        dotnet tool install --global wix --version 5.0.2
+        wix extension add --global WixToolset.UI.wixext/5.0.2
+        wix extension add --global WixToolset.Util.wixext/5.0.2
+        wix extension add --global WixToolset.Firewall.wixext/5.0.2
+      shell: pwsh
+

@@ -1,0 +1,41 @@
+name: "Run Valgrind"
+description: "Runs Valgrind against a specified target and parses a summary"
+
+inputs:
+  executable:
+    description: "The executable to run under Valgrind"
+    required: true
+
+outputs:
+  summary:
+    description: "The parsed Valgrind summary"
+    value: ${{ steps.parse.outputs.summary }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Valgrind
+      id: run
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: |
+        valgrind \
+        --leak-check=full \
+        --show-leak-kinds=all \
+        --track-origins=yes \
+        --verbose \
+        ${{ inputs.executable }} \
+        2>&1 | tee valgrind.log
+      shell: bash
+      continue-on-error: true
+
+    - name: Parse output
+      id: parse
+      run: |
+        echo "summary<<EOF" >> $GITHUB_OUTPUT
+        echo "$(grep -A 2 "HEAP SUMMARY:" valgrind.log)" >> $GITHUB_OUTPUT
+        echo >> $GITHUB_OUTPUT
+        echo "$(awk '/LEAK SUMMARY/,/ERROR SUMMARY/' valgrind.log)" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+      shell: bash

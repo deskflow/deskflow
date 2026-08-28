@@ -1,0 +1,76 @@
+app-id: org.deskflow.deskflow
+runtime: org.kde.Platform
+runtime-version: "6.11"
+sdk: org.kde.Sdk
+command: deskflow
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=network
+  - --device=dri
+  - --talk-name=org.kde.StatusNotifierWatcher
+cleanup:
+  - /include
+  - "*.a"
+  - /bin/ei-debug-events
+  - /lib/cmake
+  - /lib/pkgconfig
+  - /share/pkgconfig
+  - /share/cmake
+  - /share/gir-1.0
+  - /lib/girepository-1.0
+modules:
+  - name: python3-Jinja2
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} --no-build-isolation Jinja2
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl
+        sha256: 85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67
+        x-checker-data:
+          type: pypi
+          name: Jinja2
+          packagetype: bdist_wheel
+      - type: file
+        url: https://files.pythonhosted.org/packages/87/5b/aae44c6655f3801e81aa3eef09dbbf012431987ba564d7231722f68df02d/MarkupSafe-2.1.5.tar.gz
+        sha256: d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709c6544b
+    cleanup:
+      - '*'
+  - name: libei
+    buildsystem: meson
+    config-opts:
+        - -Ddocumentation=[]
+        - -Dtests=disabled
+        - -Dliboeffis=disabled
+    sources:
+        - type: git
+          url: https://gitlab.freedesktop.org/libinput/libei
+          tag: 1.6.0
+          commit: 8a46bf3d4b6af7f25a61be53386cf618218114ef
+          x-checker-data:
+            type: git
+            tag-pattern: ^([\\d.]+)$
+  - name: libportal
+    buildsystem: meson
+    config-opts:
+      - -Ddocs=false
+      - -Dtests=false
+      - -Dportal-tests=false
+      - -Dvapi=false
+      - -Dbackend-qt6=auto
+    sources:
+      - type: git
+        url: https://github.com/flatpak/libportal.git
+        tag: 0.10.0
+        commit: c23024018c8eb076549a1517fcb2d7f80d3e2ed5
+  - name: deskflow
+    buildsystem: cmake-ninja
+    config-opts:
+      - "-DCMAKE_BUILD_TYPE=Release"
+    sources:
+      - type: dir
+        path: ../../../
+

@@ -1,0 +1,110 @@
+<CPackWiXPatch>
+  <CPackWiXFragment Id="CM_CP_deskflow_daemon.exe">
+    <ServiceInstall
+      Id="ServiceInstall"
+      Name="Deskflow"
+      DisplayName="Deskflow"
+      Description="Runs the Core process on secure desktops (UAC prompts, login screen, etc)."
+      ErrorControl="normal"
+      Start="auto"
+      Type="ownProcess">
+      <util:ServiceConfig
+        ResetPeriodInDays="1"
+        RestartServiceDelayInSeconds="1"
+        FirstFailureActionType="restart"
+        SecondFailureActionType="restart"
+        ThirdFailureActionType="none"
+      />
+    </ServiceInstall>
+    <ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
+    <RemoveFile Id="RmOldLog" On="install" Name="deskflow-daemon.log"/>
+  </CPackWiXFragment>
+
+  <CPackWiXFragment Id="CM_CP_deskflow_core.exe">
+    <firewall:FirewallException Id="ServerFirewallException" Name="Deskflow Server" Program="[INSTALL_ROOT]deskflow-core.exe" Scope="any"/>
+    <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-core.exe" Scope="any"/>
+  </CPackWiXFragment>
+
+  <CPackWiXFragment Id="#PRODUCT">
+    <Property Id="VC_REDIST_INSTALLED">
+      <RegistrySearch
+        Id="FindVCRedist"
+        Root="HKLM"
+        Key="SOFTWARE\Microsoft\VisualStudio\@REQUIRED_MSVC_RUNTIME_MAJOR@.0\VC\Runtimes\@BUILD_ARCHITECTURE@"
+        Name="Installed"
+        Type="raw" />
+    </Property>
+
+    <Binary Id="CustomDLL" SourceFile="@CMAKE_CURRENT_BINARY_DIR@/wix-custom.dll" />
+
+    <!--
+      Close any running Deskflow processes before file replacement so the
+      installer does not have to schedule files for replace-on-reboot.
+      Legacy names (deskflow-server.exe, deskflow-client.exe) are still
+      listed so upgrades from pre-1.24 installs (separate server/client
+      binaries) also complete without prompting for a reboot.
+    -->
+    <util:CloseApplication
+      Id="CloseDeskflowGui"
+      Target="deskflow.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowCore"
+      Target="deskflow-core.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowServer"
+      Target="deskflow-server.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowClient"
+      Target="deskflow-client.exe"
+      CloseMessage="yes"
+      RebootPrompt="no"
+      TerminateProcess="10" />
+
+    <UI>
+       <Publish Dialog="ExitDialog"
+           Control="Finish"
+           Event="DoAction"
+           Value="RunDeskflow"
+           Condition= "WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
+       <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+       <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Run Deskflow when finished" />
+    </UI>
+    <CustomAction
+      Id="CheckVCRedist"
+      BinaryRef="CustomDLL"
+      DllEntry="CheckVCRedist"
+      Execute="immediate" />
+
+    <CustomAction
+      Id="ShowVCRedistError"
+      Error="Microsoft Visual C++ Redistributable v@REQUIRED_MSVC_RUNTIME_MAJOR@.@REQUIRED_MSVC_RUNTIME_MINOR@ or later is required. Please download and install the latest version and then restart the installation. See our documentation for instructions." />
+
+    <CustomAction
+      Id="RunDeskflow"
+      ExeCommand="[INSTALL_ROOT]deskflow.exe"
+      Directory="INSTALL_ROOT"
+      Execute="immediate"
+      Impersonate="yes"
+      Return="asyncNoWait" />
+
+    <InstallExecuteSequence>
+      <Custom
+        Action="CheckVCRedist"
+        Before="InstallInitialize"
+        Condition="NOT Installed AND VC_REDIST_INSTALLED" />
+      <Custom
+        Action="ShowVCRedistError"
+        Before="InstallInitialize"
+        Condition="NOT Installed AND (NOT VC_REDIST_INSTALLED OR NOT VC_REDIST_VERSION_OK)" />
+    </InstallExecuteSequence>
+  </CPackWiXFragment>
+</CPackWiXPatch>

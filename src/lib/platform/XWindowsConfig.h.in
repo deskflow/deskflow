@@ -1,0 +1,26 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2009 Synergy App Ltd
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+/* Define to 1 if you have the <X11/extensions/Xrandr.h> header file. */
+#define HAVE_X11_EXTENSIONS_XRANDR_H @HAVE_X11_EXTENSIONS_XRANDR_H@
+
+/* Define to 1 if you have the <X11/extensions/dpms.h> header file. */
+#define HAVE_X11_EXTENSIONS_DPMS_H @HAVE_X11_EXTENSIONS_DPMS_H@
+
+/* Define to 1 if you have the <X11/extensions/Xinerama.h> header file. */
+#define HAVE_X11_EXTENSIONS_XINERAMA_H @HAVE_X11_EXTENSIONS_XINERAMA_H@
+
+/* Define to 1 if you have the <X11/extensions/XTest.h> header file. */
+#define HAVE_X11_EXTENSIONS_XTEST_H @HAVE_X11_EXTENSIONS_XTEST_H@
+
+/* Define to 1 if you have the <X11/extensions/XInput2.h> header file. */
+#define HAVE_XI2 @HAVE_XI2@
+
+/* Define this if the XKB extension is available. */
+#define HAVE_XKB_EXTENSION @HAVE_XKB_EXTENSION@

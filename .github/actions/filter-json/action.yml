@@ -1,0 +1,37 @@
+name: Filter JSON
+description: A composite action to filter a JSON file using `jq`
+
+inputs:
+  json-file:
+    description: "The JSON file to filter"
+    required: true
+
+  condition:
+    description: "A condition to determine if the JSON should be filtered"
+    required: true
+
+  jq-filter:
+    description: "A `jq` filter to run on the JSON"
+    required: true
+
+outputs:
+  json:
+    description: "JSON filtered using `jq`"
+    value: ${{ steps.filter.outputs.json }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: filter
+      shell: bash
+      run: |
+        json_file="${{ inputs.json-file }}"
+        if [ ${{ inputs.condition }} ]; then
+          echo "Filtering JSON"
+          json=$(jq '${{ inputs.jq-filter }}' $json_file)
+        else
+          echo "Not filtering JSON"
+          json=$(cat $json_file)
+        fi
+        echo $json
+        echo "json=$(echo $json)" >> $GITHUB_OUTPUT

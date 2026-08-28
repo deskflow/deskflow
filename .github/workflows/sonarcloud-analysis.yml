@@ -1,0 +1,100 @@
+name: "SonarCloud Analysis"
+
+# This is best run as a standalone workflow, not as part of another workflow like CI
+# because of how GitHub understands the code scanning workflows in it's UI.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/sonarcloud-analysis.yml'
+      - 'sonar-project.properties'
+      - 'cmake/Libraries.cmake'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - '!src/res/**'
+      - '!src/unittests/**'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/codeql-analysis.yml'
+      - 'cmake/Libraries.cmake'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - '!src/res/**'
+      - '!src/unittests/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sonar:
+    # This job would fail for contributors who open PRs as the workflow runs outside of our repo
+    # in this scenario. Having a var that only we set to true prevents this job from running.
+    if: ${{ vars.SONAR_SCANNER_ENABLED }}
+
+    runs-on: ubuntu-latest
+    container: debian:trixie-slim
+    timeout-minutes: 20
+
+    env:
+      CPU_CORE_COUNT: 4
+
+    steps:
+      - name: Install container dependencies
+        run: |
+          apt update -qqq > /dev/null
+          apt install -qqq git curl unzip gcovr dirmngr gpg > /dev/null
+
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v2
+
+      - name: Install project dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          like: "debian"
+
+      - name: Install Build Wrapper
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8
+
+      - name: Configure
+        run: |
+          cmake -B build \
+            -G "Ninja" \
+            -DCMAKE_BUILD_TYPE="Debug" \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DSKIP_BUILD_TESTS=ON \
+            -DENABLE_COVERAGE=ON
+
+      - name: Build
+        run: |
+          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
+
+      - name: Test coverage
+        shell: bash
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          tests=(`cmake --build build  --target help | grep -o "^coverage-[^:]*"`)
+          for i in "${tests[@]}"; do
+            cmake --build build --target "$i"
+          done
+
+      - name: Get coverage report paths
+        id: coverage-paths
+        run: |
+          paths=$(ls -w 0 -m build/coverage-*.xml | sed 's/ //g')
+          if [ -z "$paths" ]; then
+            echo "Error: No coverage files found"
+            exit 1
+          fi
+          echo "csv=$paths" >> $GITHUB_OUTPUT
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v8
+        with:
+          args: >
+            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }}
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,0 +1,181 @@
+[Icon Theme]
+Name=deskflow-dark
+
+Comment=Striped down Breeze Dark by the KDE VDG
+
+DisplayDepth=32
+
+#Inherits=breeze-dark,hicolor
+
+Example=folder
+
+FollowsColorScheme=true
+
+DesktopDefault=48
+DesktopSizes=16,22,32,48,64,128,256
+ToolbarDefault=22
+ToolbarSizes=16,22,32,48
+MainToolbarDefault=22
+MainToolbarSizes=16,22,32,48
+SmallDefault=16
+SmallSizes=16,22,32,48
+PanelDefault=48
+PanelSizes=16,22,32,48,64,128,256
+DialogDefault=32
+DialogSizes=16,22,32,48,64,128,256
+
+KDE-Extensions=.svg
+
+########## Directories
+########## ordered by category and alphabetically
+
+Directories=actions/16,actions/22,actions/24,actions/32,apps/64,devices/64,places/64,status/16,status/22,status,24,status/32,status/64
+ScaledDirectories=actions/16@2x,actions/16@3x,actions/22@2x,actions/22@3x,actions/24@2x,actions/24@3x,actions/32@2x,actions/32@3x
+
+[apps/64]
+Size=64
+Context=Applications
+Type=Scalable
+MinSize=22
+MaxSize=256
+
+
+########## Actions
+########## ordered by size
+
+#16x16 - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/16]
+Size=16
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#16x16@2x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/16@2x]
+Size=16
+Scale=2
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#16x16@3x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/16@3x]
+Size=16
+Scale=3
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+
+#22x22 - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/22]
+Size=22
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#22x22@2x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/22@2x]
+Size=22
+Scale=2
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#22x22@3x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/22@3x]
+Size=22
+Scale=3
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#24x24 - Fixed size - GTK icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/24]
+Size=24
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#24x24@2x - Fixed size - GTK icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/24@2x]
+Size=24
+Scale=2
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#24x24@3x - Fixed size - GTK icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/24@3x]
+Size=24
+Scale=3
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#32x32 - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/32]
+Size=32
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#32x32@2x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/32@2x]
+Size=32
+Scale=2
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#32x32@3x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[actions/32@3x]
+Size=32
+Scale=3
+Context=Actions
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#64x64 - Fixed size - For folder icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
+[places/64]
+Size=64
+Type=Scalable
+Context=Places
+MinSize=48
+MaxSize=256
+
+#32x32 - Fixed size - For dialog icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
+[status/32]
+Size=32
+Context=Status
+Type=Scalable
+MinSize=22
+MaxSize=256
+
+#64x64 - Fixed size - For dialog icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
+[status/64]
+Size=64
+Context=Status
+Type=Scalable
+MinSize=22
+MaxSize=256
+
+#64x64 - Fixed size - For dialog icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
+[devices/64]
+Size=64
+Context=Devices
+Type=Scalable
+MinSize=22
+MaxSize=256

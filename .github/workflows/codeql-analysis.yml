@@ -1,0 +1,58 @@
+name: "CodeQL Analysis"
+
+# This is best run as a standalone workflow, not as part of another workflow like CI
+# because of how GitHub understands the code scanning workflows in it's UI.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/codeql-analysis.yml'
+      - 'cmake/Libraries.cmake'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - '!src/res/**'
+      - '!src/unittests/**'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/codeql-analysis.yml'
+      - 'cmake/Libraries.cmake'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - '!src/res/**'
+      - '!src/unittests/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    runs-on: ubuntu-latest
+    container: debian:trixie-slim
+    timeout-minutes: 20
+
+    steps:
+      - name: Install container dependencies
+        run: |
+          apt update -qqq > /dev/null
+          apt install -qqq git > /dev/null
+
+      - name: Fancy Checkout
+        uses: sithlord48/fancy-checkout@v2
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          like: "debian"
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: cpp
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4

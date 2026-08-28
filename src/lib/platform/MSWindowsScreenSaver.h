@@ -1,0 +1,79 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+#include "deskflow/IScreenSaver.h"
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+class Thread;
+
+//! Microsoft windows screen saver implementation
+class MSWindowsScreenSaver : public IScreenSaver
+{
+public:
+  MSWindowsScreenSaver();
+  ~MSWindowsScreenSaver() override;
+
+  //! @name manipulators
+  //@{
+
+  //! Check if screen saver started
+  /*!
+  Check if the screen saver really started.  Returns false if it
+  hasn't, true otherwise.  When the screen saver stops, \c msg will
+  be posted to the current thread's message queue with the given
+  parameters.
+  */
+  bool checkStarted(UINT msg, WPARAM, LPARAM);
+
+  //@}
+
+  // IScreenSaver overrides
+  void enable() override;
+  void disable() override;
+  void activate() override;
+  void deactivate() override;
+  bool isActive() const override;
+
+private:
+  class FindScreenSaverInfo
+  {
+  public:
+    HDESK m_desktop;
+    HWND m_window;
+  };
+
+  static BOOL CALLBACK killScreenSaverFunc(HWND hwnd, LPARAM lParam);
+
+  void watchDesktop();
+  void watchProcess(HANDLE process);
+  void unwatchProcess();
+  void watchDesktopThread(const void *);
+  void watchProcessThread(const void *);
+
+  void setSecure(bool secure, bool saveSecureAsInt);
+  bool isSecure(bool *wasSecureAnInt) const;
+
+private:
+  BOOL m_wasEnabled;
+  bool m_wasSecure = false;
+  bool m_wasSecureAnInt = false;
+
+  HANDLE m_process = nullptr;
+  Thread *m_watch = nullptr;
+  DWORD m_threadID = 0;
+  UINT m_msg = 0;
+  WPARAM m_wParam = 0;
+  LPARAM m_lParam = 0;
+
+  // checkActive state.  true if the screen saver is being watched
+  // for deactivation (and is therefore active).
+  bool m_active = false;
+};

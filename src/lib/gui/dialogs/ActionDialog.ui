@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ActionDialog</class>
+ <widget class="QDialog" name="ActionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>706</width>
+    <height>256</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Configure Action</string>
+  </property>
+  <layout class="QVBoxLayout" name="_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QComboBox" name="comboTriggerOn">
+       <item>
+        <property name="text">
+         <string>When the hotkey is pressed</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>When the hotkey is released</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboActionType">
+       <item>
+        <property name="text">
+         <string>Press key(s)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Release key(s)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Press and release key(s)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch to a computer</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch in a direction</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch to next computer</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Modify the cursor lock</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Restart the server</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QComboBox" name="comboSwitchToScreen">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboSwitchInDirection">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Switch to the computer on the left</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch to the computer on the right</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch to the computer above</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Switch to the computer below</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboLockCursorToScreen">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Toggle the cursor lock</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Enable the cursor lock</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Disable the cursor lock</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="KeySequenceWidget" name="keySequenceWidget"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupScreens">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Computers to receive this event</string>
+     </property>
+     <layout class="QHBoxLayout" name="_3">
+      <item>
+       <widget class="QListWidget" name="listScreens">
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KeySequenceWidget</class>
+   <extends>QLineEdit</extends>
+   <header>widgets/KeySequenceWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,15 @@
+name: "Get version"
+description: "Gets the version number from GitHub environment"
+
+runs:
+  using: "composite"
+
+  steps:
+    - run: |
+        echo "DESKFLOW_VERSION=$(git describe --long | sed 's/-/./g;s/v//g'  | grep -o '^[0-9]*.[0-9]*.[0-9]*.[0-9]*')">> $GITHUB_ENV
+        if [[ "$GITHUB_REF" == *"tags/v"* ]]; then
+          echo "DESKFLOW_PACKAGE_VERSION=$(echo $GITHUB_REF | sed 's,refs/tags/v,,g')">> $GITHUB_ENV
+        else
+          echo "DESKFLOW_PACKAGE_VERSION=continuous">> $GITHUB_ENV
+        fi
+      shell: bash

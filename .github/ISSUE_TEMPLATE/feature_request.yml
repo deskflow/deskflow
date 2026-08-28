@@ -1,0 +1,27 @@
+name: Feature request
+description: Had an idea how to improve Deskflow? Share it with us.
+type: "Triage [feature]"
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to help us improve Deskflow.
+
+  - type: textarea
+    id: request
+    attributes:
+      label: Feature Request
+      description: |
+        Please describe the feature you have in mind.
+    validations:
+      required: true
+
+  - type: input
+    id: votes
+    attributes:
+      label: Voting Instructions
+      description: Do not modify these instructions
+      value: |
+        React with :+1: or :-1: to vote on this request
+    validations:
+      required: true
+
