@@ -78,7 +78,7 @@ Screen::~Screen()
   // Perhaps it indicates that the cursor is still being controlled on the
   // client while it's shutting down? i.e. the screen is entered and is not the
   // server, or the screen is not entered and is the server.
-  if (m_entered == m_isPrimary) {
+  if (m_entered != m_isPrimary) {
     LOG(
         (CLOG_DEBUG "current screen: entered=%s, primary=%s", //
          m_entered ? "yes" : "no", m_isPrimary ? "yes" : "no")
