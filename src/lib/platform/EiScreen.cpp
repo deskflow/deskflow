@@ -141,26 +141,23 @@ void EiScreen::initEi()
 
 void EiScreen::cleanupEi()
 {
+  for (auto device : m_eiDevices) {
+    delete static_cast<ScrollRemainder *>(ei_device_get_user_data(device));
+    ei_device_set_user_data(device, nullptr);
+  }
+
   if (m_eiPointer) {
-    free(ei_device_get_user_data(m_eiPointer));
-    ei_device_set_user_data(m_eiPointer, nullptr);
     m_eiPointer = ei_device_unref(m_eiPointer);
   }
   if (m_eiKeyboard) {
-    free(ei_device_get_user_data(m_eiKeyboard));
-    ei_device_set_user_data(m_eiKeyboard, nullptr);
     m_eiKeyboard = ei_device_unref(m_eiKeyboard);
   }
   if (m_eiAbs) {
-    free(ei_device_get_user_data(m_eiAbs));
-    ei_device_set_user_data(m_eiAbs, nullptr);
     m_eiAbs = ei_device_unref(m_eiAbs);
   }
   m_eiSeat = ei_seat_unref(m_eiSeat);
-  for (auto it = m_eiDevices.begin(); it != m_eiDevices.end(); it++) {
-    free(ei_device_get_user_data(*it));
-    ei_device_set_user_data(*it, nullptr);
-    ei_device_unref(*it);
+  for (auto device : m_eiDevices) {
+    ei_device_unref(device);
   }
   m_eiDevices.clear();
   m_ei = ei_unref(m_ei);
@@ -636,11 +633,15 @@ void EiScreen::removeDevice(struct ei_device *device)
     cancelIdleEmulationTimer();
   }
 
-  for (auto it = m_eiDevices.begin(); it != m_eiDevices.end(); it++) {
+  delete static_cast<ScrollRemainder *>(ei_device_get_user_data(device));
+  ei_device_set_user_data(device, nullptr);
+
+  for (auto it = m_eiDevices.begin(); it != m_eiDevices.end();) {
     if (*it == device) {
-      m_eiDevices.erase(it);
+      it = m_eiDevices.erase(it);
       ei_device_unref(device);
-      break;
+    } else {
+      ++it;
     }
   }
 
