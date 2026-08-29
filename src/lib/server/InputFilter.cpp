@@ -791,14 +791,6 @@ void InputFilter::addFilterRule(const Rule &rule)
   }
 }
 
-void InputFilter::removeFilterRule(uint32_t index)
-{
-  if (m_primaryClient != nullptr) {
-    m_ruleList[index].disable(m_primaryClient);
-  }
-  m_ruleList.erase(m_ruleList.begin() + index);
-}
-
 InputFilter::Rule &InputFilter::getRule(uint32_t index)
 {
   return m_ruleList[index];
