@@ -378,9 +378,6 @@ public:
   // add rule, adopting the condition and the actions
   void addFilterRule(const Rule &rule);
 
-  // remove a rule
-  void removeFilterRule(uint32_t index);
-
   // get rule by index
   Rule &getRule(uint32_t index);
 
