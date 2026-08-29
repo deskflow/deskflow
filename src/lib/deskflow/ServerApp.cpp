@@ -522,6 +522,9 @@ int ServerApp::mainLoop()
     // a fatal startup failure exits by throwing, skipping the cleanup below;
     // tear down here so the screen's worker threads don't outlive the app.
     cleanupServer();
+    // The multiplexer owns a worker thread and must be destroyed on this core thread before unwinding.
+    // Keep the normal shutdown path below in sync; validate both startup failure and service stop/restart.
+    setSocketMultiplexer({});
     throw;
   }
 
@@ -553,6 +556,7 @@ int ServerApp::mainLoop()
   getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
   getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
   cleanupServer();
+  setSocketMultiplexer({});
   LOG_INFO("stopped server");
 
   return exitCode;
