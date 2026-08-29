@@ -269,7 +269,7 @@ void CoreProcess::startProcessFromDaemon()
   }
 }
 
-void CoreProcess::stopForegroundProcess() const
+void CoreProcess::stopForegroundProcess()
 {
   if (m_processState != ProcessState::Stopping) {
     qCritical("not stopping core desktop process, unexpected process state");
@@ -282,10 +282,35 @@ void CoreProcess::stopForegroundProcess() const
   }
 
   qInfo("stopping core desktop process");
+  if (m_coreIpcClient && m_coreIpcClient->isConnected()) {
+    qDebug("sending stop command to core process");
+    m_coreIpcClient->sendStop();
+
+    // Fallback: if the core doesn't confirm shutdown via IPC within the
+    // timeout, force-terminate it so we never hang in the Stopping state.
+    QTimer::singleShot(kRetryDelay, this, [this] {
+      if (m_processState != ProcessState::Stopping) {
+        return;
+      }
+
+      qWarning("core process did not confirm graceful stop in time, forcing terminate");
+
+      if (m_coreIpcClient) {
+        m_coreIpcClient->disconnectFromServer();
+        m_coreIpcClient->deleteLater();
+        m_coreIpcClient = nullptr;
+      }
+
+      if (m_process && m_process->state() == QProcess::ProcessState::Running) {
+        m_process->terminate();
+      }
+    });
+    return;
+  }
 
   if (m_process->state() == QProcess::ProcessState::Running) {
-    qDebug("process is running, closing");
-    m_process->close();
+    qDebug("process is running, terminating");
+    m_process->terminate();
   } else {
     qDebug("process is not running, skipping terminate");
   }
@@ -432,6 +457,12 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
             return;
           }
 
+          if (m_coreIpcClient) {
+            m_coreIpcClient->disconnectFromServer();
+            m_coreIpcClient->deleteLater();
+            m_coreIpcClient = nullptr;
+          }
+
           m_coreIpcClient = new ipc::CoreIpcClient(this);
           connect(m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived);
           connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [] {
@@ -440,8 +471,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
           connect(m_coreIpcClient, &ipc::CoreIpcClient::connectionFailed, this, [] {
             qWarning("failed to establish core ipc connection");
           });
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::serverShutdown, this, [] {
+          connect(m_coreIpcClient, &ipc::CoreIpcClient::serverShutdown, this, [this, client = m_coreIpcClient] {
             qDebug("core ipc server shut down cleanly");
+            client->deleteLater();
+            if (m_coreIpcClient == client)
+              m_coreIpcClient = nullptr;
           });
 
           m_coreIpcClient->connectToServer();
@@ -468,7 +502,7 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
 
   qInfo("stopping core process (%s mode)", qPrintable(processModeToString(processMode)));
 
-  if (m_coreIpcClient) {
+  if (m_coreIpcClient && processMode != ProcessMode::Desktop) {
     m_coreIpcClient->disconnectFromServer();
     m_coreIpcClient->deleteLater();
     m_coreIpcClient = nullptr;
@@ -499,6 +533,21 @@ void CoreProcess::restart()
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
 
+  const bool waitForProcess = m_process && m_process->state() != QProcess::ProcessState::NotRunning;
+
+  if (waitForProcess) {
+    qInfo("waiting for current desktop core to exit before restarting");
+
+    connect(
+        m_process, &QProcess::finished, this,
+        [this](int, QProcess::ExitStatus) {
+          qInfo("desktop core exited, restarting");
+          start();
+        },
+        Qt::SingleShotConnection
+    );
+  }
+
   if (m_lastProcessMode != std::nullopt && m_lastProcessMode != processMode) {
     const auto debugMessage =
         QStringLiteral("process mode changed to %1, stopping %2 process")
@@ -512,7 +561,9 @@ void CoreProcess::restart()
     stop();
   }
 
-  start();
+  if (!waitForProcess) {
+    start();
+  }
 }
 
 void CoreProcess::cleanup()
