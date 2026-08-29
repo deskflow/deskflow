@@ -35,12 +35,15 @@ KeyboardLayoutManager::KeyboardLayoutManager(const std::vector<std::string> &loc
 
 void KeyboardLayoutManager::setRemoteLayouts(const std::string_view &remoteLayouts)
 {
+  if (!remoteLayouts.empty() && remoteLayouts.size() % 2 != 0) {
+    LOG_ERR("remote layouts are the incorrect size, can not process them");
+    return;
+  }
+
   m_remoteLayouts.clear();
-  if (!remoteLayouts.empty()) {
-    for (size_t i = 0; i <= remoteLayouts.size() - 2; i += 2) {
-      auto rLangs = remoteLayouts.substr(i, 2);
-      m_remoteLayouts.emplace_back(rLangs);
-    }
+  for (size_t i = 0; i + 2 <= remoteLayouts.size(); i += 2) {
+    auto rLangs = remoteLayouts.substr(i, 2);
+    m_remoteLayouts.emplace_back(rLangs);
   }
   LOG_INFO("remote layouts: %s", vectorToString(m_remoteLayouts, ", ").c_str());
 }
