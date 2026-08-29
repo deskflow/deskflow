@@ -517,7 +517,7 @@ int ServerApp::mainLoop()
 
   // start server, etc
   try {
-    appUtil().startNode();
+    startNode();
   } catch (...) {
     // a fatal startup failure exits by throwing, skipping the cleanup below;
     // tear down here so the screen's worker threads don't outlive the app.

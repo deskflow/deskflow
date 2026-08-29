@@ -323,7 +323,7 @@ int ClientApp::mainLoop()
   setSocketMultiplexer(std::make_unique<SocketMultiplexer>());
 
   // start client, etc
-  appUtil().startNode();
+  startNode();
 
   // run event loop.  if startClient() failed we're supposed to retry
   // later.  the timer installed by startClient() will take care of

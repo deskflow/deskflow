@@ -126,11 +126,6 @@ AppUtilWindows &AppUtilWindows::instance()
   return (AppUtilWindows &)AppUtil::instance();
 }
 
-void AppUtilWindows::startNode()
-{
-  app().startNode();
-}
-
 std::vector<std::string> AppUtilWindows::getKeyboardLayoutList()
 {
   std::vector<std::string> layoutLangCodes;

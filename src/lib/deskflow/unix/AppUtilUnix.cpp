@@ -34,11 +34,6 @@ int AppUtilUnix::run()
   return app().runInner(&startStatic);
 }
 
-void AppUtilUnix::startNode()
-{
-  app().startNode();
-}
-
 std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 {
   std::vector<std::string> layoutLangCodes;
