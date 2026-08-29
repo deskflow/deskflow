@@ -367,8 +367,11 @@ void MSWindowsDesks::destroyClass(ATOM windowClass) const
 
 HWND MSWindowsDesks::createWindow(ATOM windowClass, const wchar_t *name) const
 {
+  // The primary hider must participate in hit testing so its blank class cursor wins over
+  // resize cursors from windows underneath the center parking position.
+  const DWORD extendedStyle = m_isPrimary ? WS_EX_TOOLWINDOW : WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW;
   HWND window = CreateWindowEx(
-      WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
+      extendedStyle, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
       MSWindowsScreen::getWindowInstance(), nullptr
   );
   if (window == nullptr) {
