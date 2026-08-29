@@ -96,7 +96,12 @@ void IpcServer::handleDisconnected()
 void IpcServer::handleErrorOccurred()
 {
   const auto clientSocket = qobject_cast<QLocalSocket *>(sender());
-  LOG_ERR("%s ipc server client error: %s", m_typeName.constData(), clientSocket->errorString().toUtf8().constData());
+  if (clientSocket->error() == QLocalSocket::PeerClosedError) {
+    LOG_DEBUG("%s ipc server client closed connection", m_typeName.constData());
+  } else {
+    LOG_ERR("%s ipc server client error: %s", m_typeName.constData(), clientSocket->errorString().toUtf8().constData());
+  }
+
   m_clients.remove(clientSocket);
   clientSocket->deleteLater();
 }
