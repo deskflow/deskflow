@@ -15,6 +15,8 @@ private Q_SLOTS:
   void initTestCase();
   // Test are run in order top to bottom
   void remoteLayouts();
+  void remoteLayouts_tooShort_returnsEmpty();
+  void remoteLayouts_oddLength_returnsEmpty();
   void localLayout();
   void missedLayout();
   void serializeLocalLayouts();
