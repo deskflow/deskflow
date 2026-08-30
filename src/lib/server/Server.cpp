@@ -127,8 +127,8 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   setConfig(config);
 
   // enable primary client
-  m_primaryClient->enable();
   m_inputFilter->setPrimaryClient(m_primaryClient);
+  m_primaryClient->enable();
 
   // Determine if scroll lock is already set. If so, lock the cursor to the
   // primary screen (unless the user has disabled lock to screen in config)
@@ -175,11 +175,11 @@ Server::~Server()
     delete client;
   }
 
+  // disable and disconnect primary client
+  m_primaryClient->disable();
   // remove input filter
   m_inputFilter->setPrimaryClient(nullptr);
 
-  // disable and disconnect primary client
-  m_primaryClient->disable();
   removeClient(m_primaryClient);
 }
 
