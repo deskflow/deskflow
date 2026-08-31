@@ -44,3 +44,13 @@ create_test(
   SOURCE EventQueueTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
 )
+
+if(APPLE)
+  create_test(
+    NAME EventQueueAutoreleaseTests
+    DEPENDS base
+    LIBS arch mt "-framework Foundation"
+    SOURCE EventQueueAutoreleaseTests.mm
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
+  )
+endif()

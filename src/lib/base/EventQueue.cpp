@@ -9,6 +9,7 @@
 #include "base/EventQueue.h"
 
 #include "arch/Arch.h"
+#include "arch/ScopedAutoreleasePool.h"
 #include "base/EventQueueTimer.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
@@ -166,6 +167,10 @@ bool EventQueue::getEvent(Event &event, double timeout)
 
 bool EventQueue::dispatchEvent(const Event &event)
 {
+  // The event loop thread has no run loop, so nothing else drains what Apple
+  // frameworks autorelease while handlers run.
+  deskflow::ScopedAutoreleasePool pool;
+
   void *target = event.getTarget();
   if (auto typeHandler = getHandler(event.getType(), target); typeHandler.has_value()) {
     (*typeHandler)(event);
