@@ -1159,12 +1159,14 @@ bool OSXScreen::onKey(CGEventRef event)
     return false;
   }
 
-  // check for AltGr in mask.  if set we send neither the AltGr nor
-  // the super modifiers to clients then remove AltGr before passing
-  // the modifiers to onKey.
+  // AltGr marks a printable character that was translated using the
+  // macOS Option layer.  The KeyID already contains Option's effect, so
+  // don't also send Option (represented by KeyModifierAlt) to clients.
+  // Keep Option in the local state so its separate key-up event remains
+  // balanced.
   KeyModifierMask sendMask = (mask & ~KeyModifierAltGr);
   if ((mask & KeyModifierAltGr) != 0) {
-    sendMask &= ~KeyModifierSuper;
+    sendMask &= ~KeyModifierAlt;
   }
   mask &= ~KeyModifierAltGr;
 
