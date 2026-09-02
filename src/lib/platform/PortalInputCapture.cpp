@@ -524,6 +524,9 @@ void PortalInputCapture::addBarrier(
   gint y1 = 0;
   gint y2 = 0;
 
+  // a horizontal barrier must not share an end point with a vertical one: mutter's release only
+  // clears the held barrier and re-runs the warp from the trapped point, so a pointer sitting on
+  // both lines is caught again by the other before it moves and never leaves the corner
   using enum BarrierSide;
   switch (side) {
   case Left:
@@ -539,15 +542,15 @@ void PortalInputCapture::addBarrier(
     y2 = zoneY + static_cast<gint>(zoneHeight) - 1;
     break;
   case Top:
-    x1 = zoneX;
+    x1 = zoneX + 1;
     y1 = zoneY;
-    x2 = zoneX + static_cast<gint>(zoneWidth) - 1;
+    x2 = zoneX + static_cast<gint>(zoneWidth) - 2;
     y2 = zoneY;
     break;
   case Bottom:
-    x1 = zoneX;
+    x1 = zoneX + 1;
     y1 = zoneY + static_cast<gint>(zoneHeight);
-    x2 = zoneX + static_cast<gint>(zoneWidth) - 1;
+    x2 = zoneX + static_cast<gint>(zoneWidth) - 2;
     y2 = y1;
     break;
   }
