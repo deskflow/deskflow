@@ -73,6 +73,10 @@ void ServerConfigDialog::save()
   // now that the dialog has been accepted, copy the new server config to the
   // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
+  if (Settings::value(Settings::Server::EnableClipboard).toBool() != m_enableClipboard) {
+    Settings::setValue(Settings::Server::XdpRestoreToken, QString());
+    Settings::setValue(Settings::Server::XdpClipboardRetried, false);
+  }
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
   Settings::setValue(Settings::Server::EnableClipboard, m_enableClipboard);
   Settings::setValue(Settings::Server::ClipboardSize, m_clipboardSize);
