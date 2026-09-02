@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -18,6 +19,8 @@
 #include <QString>
 #include <QStringList>
 
+#include <algorithm>
+
 class QSettings;
 class QTextStream;
 class ScreenSettingsDialog;
@@ -31,13 +34,14 @@ class Screen : public ScreenConfig
   friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen)
   {
     return outStream << screen.name() << screen.switchCornerSize() << screen.aliases() << screen.modifiers()
-                     << screen.switchCorners() << screen.fixes() << screen.isServer();
+                     << screen.switchCorners() << screen.fixes() << screen.isServer() << screen.width()
+                     << screen.height();
   }
 
   friend QDataStream &operator>>(QDataStream &inStream, Screen &screen)
   {
     return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >> screen.m_Aliases >> screen.m_Modifiers >>
-           screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer;
+           screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer >> screen.m_Width >> screen.m_Height;
   }
 
 public:
@@ -94,11 +98,6 @@ public:
   [[nodiscard]] QString screensSection() const;
   [[nodiscard]] QString aliasesSection() const;
 
-  [[nodiscard]] bool swapped() const
-  {
-    return m_Swapped;
-  }
-
   void setName(const QString &name)
   {
     m_Name = name;
@@ -110,6 +109,22 @@ public:
   void markAsServer()
   {
     m_isServer = true;
+  }
+  [[nodiscard]] int width() const
+  {
+    return m_Width;
+  }
+  void setWidth(const int width)
+  {
+    m_Width = std::max(width, 1);
+  }
+  [[nodiscard]] int height() const
+  {
+    return m_Height;
+  }
+  void setHeight(const int height)
+  {
+    m_Height = std::max(height, 1);
   }
 
   bool operator==(const Screen &screen) const;
@@ -151,10 +166,6 @@ protected:
   {
     return m_Fixes;
   }
-  void setSwapped(const bool on)
-  {
-    m_Swapped = on;
-  }
 
 private:
   QPixmap m_Pixmap = QIcon::fromTheme("video-display").pixmap(QSize(96, 96));
@@ -164,6 +175,7 @@ private:
   QList<bool> m_SwitchCorners = {false, false, false, false};
   int m_SwitchCornerSize = 0;
   QList<bool> m_Fixes{false, false, false, false};
-  bool m_Swapped = false;
   bool m_isServer = false;
+  int m_Width = 1;
+  int m_Height = 1;
 };
