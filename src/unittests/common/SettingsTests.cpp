@@ -101,4 +101,14 @@ void SettingsTests::checkCleanScreenName_LongName()
   QCOMPARE(Settings::value(Settings::Core::ComputerName).toString(), expected);
 }
 
+void SettingsTests::checkClearState()
+{
+  Settings::setValue(Settings::Gui::WindowGeometry, QRect(1, 2, 3, 4));
+  QVERIFY(Settings::value(Settings::Gui::WindowGeometry).toRect().isValid());
+
+  Settings::clearState();
+
+  QVERIFY(!Settings::value(Settings::Gui::WindowGeometry).toRect().isValid());
+}
+
 QTEST_MAIN(SettingsTests)

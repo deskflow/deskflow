@@ -60,6 +60,12 @@ void Settings::setStateFile(const QString &stateFile)
   qInfo().noquote() << "state file changed:" << instance()->m_stateSettings->fileName();
 }
 
+void Settings::clearState()
+{
+  instance()->m_stateSettings->clear();
+  instance()->m_stateSettings->sync();
+}
+
 Settings::Settings(QObject *parent) : QObject(parent), m_settingsWatcher{new QFileSystemWatcher(this)}
 {
   QString fileToLoad;
