@@ -1180,9 +1180,7 @@ bool OSXScreen::onKey(CGEventRef event)
   }
 
   // send key events
-  for (OSXKeyState::KeyIDs::const_iterator i = keys.begin(); i != keys.end(); ++i) {
-    m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat, *i, sendMask, 1, button);
-  }
+  m_keyState->sendKeyEvents(getEventTarget(), down, isRepeat, keys, sendMask, button);
 
   return true;
 }
