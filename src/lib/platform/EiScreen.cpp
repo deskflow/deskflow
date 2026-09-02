@@ -852,9 +852,13 @@ void EiScreen::onMotionEvent(ei_event *event)
 
   auto dx = ei_event_pointer_get_dx(event);
   auto dy = ei_event_pointer_get_dy(event);
+  if (!std::isfinite(dx) || !std::isfinite(dy)) {
+    LOG_WARN("dropping pointer motion with non-finite delta: %g,%g", dx, dy);
+    return;
+  }
 
   if (m_isOnScreen) {
-    LOG_DEBUG("event: motion on primary x=%i y=%i)", m_cursorX, m_cursorY);
+    LOG_DEBUG("event: motion on primary x=%i y=%i", m_cursorX, m_cursorY);
     sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_cursorX, m_cursorY));
     if (m_portalInputCapture->isActive()) {
       m_portalInputCapture->release();
