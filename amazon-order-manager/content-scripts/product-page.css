@@ -1,0 +1,60 @@
+/* Orderkoll – panel på produktsidan. Egen visuell identitet (mörk marinblå),
+   Amazons orange används bara som accent på bekräftande knapp. */
+#aom-product-panel {
+  margin: 12px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid #d9dde4;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(35, 47, 62, 0.08);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 13px;
+  color: #232f3e;
+}
+#aom-product-panel .aom-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#aom-product-panel .aom-btn {
+  border: 1px solid #2b3055;
+  background: #ffffff;
+  color: #2b3055;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#aom-product-panel .aom-btn:hover { background: #f2f4f8; }
+#aom-product-panel .aom-btn:disabled { opacity: .6; cursor: progress; }
+#aom-product-panel .aom-btn-primary { background: #2b3055; color: #ffffff; }
+#aom-product-panel .aom-btn-primary:hover { background: #232f3e; }
+#aom-product-panel .aom-output { margin-top: 10px; }
+#aom-product-panel .aom-table { width: 100%; border-collapse: collapse; }
+#aom-product-panel .aom-table th,
+#aom-product-panel .aom-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #edf0f4;
+  font-size: 12.5px;
+}
+#aom-product-panel .aom-table th { color: #5b6472; font-weight: 600; }
+#aom-product-panel .aom-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eef1f7;
+  color: #2b3055;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+#aom-product-panel .aom-badge[data-method="Bild"] { background: #fff4e0; color: #8a5a00; }
+#aom-product-panel .aom-good { color: #1f7a4d; font-weight: 600; }
+#aom-product-panel .aom-warn { color: #8a5a00; font-weight: 600; }
+#aom-product-panel .aom-note,
+#aom-product-panel .aom-disclaimer {
+  margin: 8px 0 0;
+  color: #5b6472;
+  font-size: 11.5px;
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orderkoll – bevispaket</title>
+    <link rel="stylesheet" href="../content-scripts/overlay/overlay-styles.css" />
+    <style>
+      body { margin: 0; background: var(--aom-bg); }
+      .proof-wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; display: flex; flex-direction: column; gap: 16px; }
+      .proof-head h1 { margin: 0 0 4px; font-size: 20px; }
+      .proof-grid { display: grid; grid-template-columns: 180px 1fr; gap: 8px 16px; font-size: 13.5px; }
+      .proof-images { display: flex; flex-wrap: wrap; gap: 10px; }
+      .proof-images img { max-width: 180px; max-height: 180px; border: 1px solid var(--aom-line); border-radius: 10px; background: #fff; }
+      .proof-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+      .proof-ok { color: var(--aom-good); font-weight: 600; }
+      .proof-bad { color: var(--aom-bad); font-weight: 600; }
+      .proof-diff td { vertical-align: top; }
+      @media print {
+        .proof-actions, .aom-btn { display: none !important; }
+        body { background: #fff; }
+      }
+    </style>
+  </head>
+  <body class="aom-scope">
+    <div class="proof-wrap">
+      <header class="proof-head">
+        <h1 id="title">Bevispaket</h1>
+        <p class="aom-muted" id="subtitle"></p>
+      </header>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Fakta</h2>
+        <div class="proof-grid" id="facts"></div>
+        <p id="verify"></p>
+      </section>
+
+      <section class="aom-card proof-actions">
+        <button class="aom-btn aom-btn-primary" type="button" id="zip">Ladda ner ZIP (råfiler + hashar)</button>
+        <button class="aom-btn" type="button" id="print">Skriv ut / spara som PDF</button>
+        <button class="aom-btn" type="button" id="diff">Jämför med dagens sida</button>
+        <button class="aom-btn" type="button" id="open">Öppna sparad HTML</button>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Bilder</h2>
+        <div class="proof-images" id="images"></div>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Filer och hashar</h2>
+        <table class="aom-table" id="files"></table>
+      </section>
+
+      <section class="aom-card" id="diffCard" hidden>
+        <h2 class="aom-card-title">Skillnader mot dagens sida</h2>
+        <div id="diffOut"></div>
+      </section>
+    </div>
+
+    <script src="../lib/constants.js"></script>
+    <script src="../lib/parser-utils.js"></script>
+    <script src="../lib/dates.js"></script>
+    <script src="../lib/db.js"></script>
+    <script src="../lib/zip.js"></script>
+    <script src="../lib/price-match.js"></script>
+    <script src="../lib/proof-diff.js"></script>
+    <script src="proof.js"></script>
+  </body>
+</html>

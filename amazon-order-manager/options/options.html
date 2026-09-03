@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orderkoll – inställningar</title>
+    <link rel="stylesheet" href="../content-scripts/overlay/overlay-styles.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body class="aom-scope">
+    <div class="opt-wrap">
+      <header class="opt-head">
+        <h1>Orderkoll – inställningar</h1>
+        <p class="aom-muted" id="disclaimer"></p>
+      </header>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Risk och ansvar</h2>
+        <p id="risk"></p>
+        <label class="aom-check">
+          <input type="checkbox" id="riskNoticeAcknowledged" />
+          <span>Jag har läst och förstått detta.</span>
+        </label>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Synk</h2>
+        <label class="aom-check">
+          <input type="checkbox" id="backgroundSyncEnabled" />
+          <span>Bakgrundssynk påslagen</span>
+        </label>
+        <label class="opt-field">
+          <span>Synkintervall (minuter)</span>
+          <input class="aom-input" type="number" id="syncIntervalMinutes" min="1" max="1440" step="1" />
+        </label>
+        <label class="opt-field">
+          <span>Så här öppnas bakgrundsfliken</span>
+          <select class="aom-input" id="backgroundTabMode">
+            <option value="background-tab">Bakgrundsflik i nuvarande fönster</option>
+            <option value="minimized-window">Minimerat fönster</option>
+          </select>
+        </label>
+        <label class="opt-field">
+          <span>Max antal orderdetaljsidor per synk</span>
+          <input class="aom-input" type="number" id="maxDetailVisitsPerSync" min="0" max="20" step="1" />
+        </label>
+        <label class="opt-field">
+          <span>Paus mellan hämtningar (min/max ms)</span>
+          <span class="opt-pair">
+            <input class="aom-input" type="number" id="requestDelayMinMs" min="1000" step="500" />
+            <input class="aom-input" type="number" id="requestDelayMaxMs" min="1000" step="500" />
+          </span>
+        </label>
+        <label class="aom-check">
+          <input type="checkbox" id="notificationsEnabled" />
+          <span>Systemnotiser (en sammanfattande per synkomgång)</span>
+        </label>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Prisjämförelse</h2>
+        <div id="markets" class="opt-markets"></div>
+        <label class="opt-field">
+          <span>Tröskelvärde för bildmatchning (0–1)</span>
+          <input class="aom-input" type="number" id="imageMatchThreshold" min="0.5" max="1" step="0.01" />
+        </label>
+        <p class="aom-muted">Valutakurser hämtas från ECB:s dagliga referenskurser.</p>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Lagerbevakning och bevisarkiv</h2>
+        <label class="opt-field">
+          <span>Minsta intervall per bevakad produkt (minuter)</span>
+          <input class="aom-input" type="number" id="stockCheckMinIntervalMinutes" min="15" step="5" />
+        </label>
+        <label class="opt-field">
+          <span>Städa oanvända ögonblicksbilder efter (dygn)</span>
+          <input class="aom-input" type="number" id="provisionalTtlDays" min="1" max="30" step="1" />
+        </label>
+        <label class="opt-field">
+          <span>Nedskala bevis utan flagga efter (dagar, tomt = aldrig)</span>
+          <input class="aom-input" type="number" id="proofDownscaleAfterDays" min="30" step="30" />
+        </label>
+        <p class="aom-muted" id="usage">Lagring: –</p>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Bank- och kortreklamation</h2>
+        <p class="aom-muted">
+          Fristen skiljer sig mellan kortutgivare och finns inte i lag. Inget standardvärde
+          används – ange den frist din bank uppger, per betalsätt.
+        </p>
+        <div id="bankRows" class="opt-bank"></div>
+        <button class="aom-btn" type="button" id="addBank">Lägg till betalsätt</button>
+      </section>
+
+      <section class="aom-card">
+        <h2 class="aom-card-title">Data</h2>
+        <div class="opt-row">
+          <button class="aom-btn" type="button" id="export">Exportera allt som JSON</button>
+          <button class="aom-btn" type="button" id="clear">Radera all lokal data</button>
+        </div>
+        <p class="aom-muted">
+          All data ligger lokalt i din webbläsare. Ingenting skickas till Amazon, till oss eller
+          till någon tredje part.
+        </p>
+      </section>
+
+      <p class="opt-status" id="status" role="status"></p>
+    </div>
+
+    <script src="../lib/constants.js"></script>
+    <script src="../lib/parser-utils.js"></script>
+    <script src="../lib/status-model.js"></script>
+    <script src="../lib/dates.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

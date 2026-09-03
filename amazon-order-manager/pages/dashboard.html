@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orderkoll</title>
+    <link rel="stylesheet" href="../content-scripts/overlay/overlay-styles.css" />
+    <style>
+      html, body { height: 100%; margin: 0; }
+      body { background: var(--aom-bg); }
+      #mount, #mount .aom-shell { min-height: 100vh; }
+    </style>
+  </head>
+  <body class="aom-scope">
+    <div id="mount"></div>
+    <script src="../lib/constants.js"></script>
+    <script src="../lib/parser-utils.js"></script>
+    <script src="../lib/status-model.js"></script>
+    <script src="../lib/dates.js"></script>
+    <script src="../lib/format.js"></script>
+    <script src="../lib/anomaly-detection.js"></script>
+    <script src="../lib/chart.js"></script>
+    <script src="../lib/dashboard.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>

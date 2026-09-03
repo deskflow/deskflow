@@ -1,0 +1,13 @@
+body { margin: 0; background: var(--aom-bg); }
+.opt-wrap { max-width: 780px; margin: 0 auto; padding: 24px 20px 60px; display: flex; flex-direction: column; gap: 16px; }
+.opt-head h1 { margin: 0 0 6px; font-size: 20px; }
+.opt-field { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 10px 0; font-size: 13.5px; }
+.opt-field .aom-input { max-width: 260px; }
+.opt-pair { display: flex; gap: 8px; }
+.opt-pair .aom-input { width: 110px; min-width: 0; }
+.opt-markets { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+.opt-bank { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.opt-bank-row { display: flex; gap: 8px; align-items: center; }
+.opt-bank-row .aom-input { min-width: 0; }
+.opt-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.opt-status { min-height: 18px; color: var(--aom-good); font-size: 13px; font-weight: 600; }

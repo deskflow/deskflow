@@ -1,0 +1,16 @@
+{
+  "name": "orderkoll",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Oberoende orderhanterare för Amazon.se – Chrome-tillägg (MV3). Ingen byggkedja: mappen laddas som den är.",
+  "scripts": {
+    "test": "node --test tests/unit.test.js",
+    "test:dom": "node --test tests/dom.test.mjs",
+    "test:ext": "node --test tests/extension.test.mjs",
+    "test:all": "npm run test && npm run test:dom && npm run test:ext",
+    "icons": "python3 tools/make-icons.py"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

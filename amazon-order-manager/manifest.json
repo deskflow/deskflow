@@ -1,0 +1,127 @@
+{
+  "manifest_version": 3,
+  "name": "Orderkoll – orderhanterare för Amazon.se",
+  "short_name": "Orderkoll",
+  "version": "0.1.0",
+  "description": "Oberoende orderöversikt för ditt eget Amazon.se-konto: status, mottagningsbekräftelse, avvikelser, returfönster, prisjämförelse och lokalt bevisarkiv.",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "Orderkoll",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "options_page": "options/options.html",
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "*://*.amazon.se/*",
+    "*://*.amazon.de/*",
+    "*://*.amazon.fr/*",
+    "*://*.amazon.it/*",
+    "*://*.amazon.es/*",
+    "*://*.amazon.nl/*",
+    "*://*.amazon.co.uk/*",
+    "*://m.media-amazon.com/*",
+    "*://*.ssl-images-amazon.com/*",
+    "https://www.ecb.europa.eu/stats/eurofxref/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.amazon.se/gp/css/order-history*",
+        "*://*.amazon.se/your-orders/orders*",
+        "*://*.amazon.se/gp/your-account/order-history*"
+      ],
+      "js": [
+        "lib/constants.js",
+        "lib/parser-utils.js",
+        "lib/status-model.js",
+        "content-scripts/order-history.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.amazon.se/gp/your-account/order-details*",
+        "*://*.amazon.se/your-orders/order-details*",
+        "*://*.amazon.se/gp/css/summary/edit.html*",
+        "*://*.amazon.se/progress-tracker/*"
+      ],
+      "js": [
+        "lib/constants.js",
+        "lib/parser-utils.js",
+        "lib/status-model.js",
+        "content-scripts/order-detail.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.amazon.se/spr/returns*",
+        "*://*.amazon.se/gp/orc/returns*",
+        "*://*.amazon.se/your-account/order-history*returnFilter*",
+        "*://*.amazon.se/gp/css/returns*"
+      ],
+      "js": [
+        "lib/constants.js",
+        "lib/parser-utils.js",
+        "content-scripts/returns-page.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.amazon.se/dp/*",
+        "*://*.amazon.se/gp/product/*",
+        "*://*.amazon.se/*/dp/*"
+      ],
+      "js": [
+        "lib/constants.js",
+        "lib/parser-utils.js",
+        "lib/price-match.js",
+        "content-scripts/product-page.js"
+      ],
+      "css": ["content-scripts/product-page.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.amazon.se/*"],
+      "js": [
+        "lib/constants.js",
+        "lib/parser-utils.js",
+        "lib/status-model.js",
+        "lib/dates.js",
+        "lib/format.js",
+        "lib/anomaly-detection.js",
+        "lib/chart.js",
+        "lib/dashboard.js",
+        "content-scripts/overlay/overlay-mount.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*.png", "content-scripts/overlay/overlay-styles.css"],
+      "matches": ["*://*.amazon.se/*"]
+    }
+  ]
+}

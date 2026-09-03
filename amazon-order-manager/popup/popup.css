@@ -1,0 +1,62 @@
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --ink: #1c2430; --muted: #66707e;
+  --line: #e2e6ec; --navy: #232f3e; --brand: #2b3055; --accent: #ff9900;
+  --accent-ink: #3d2a00; --good: #1f7a4d; --bad: #b12704; --warn: #8a5a00;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161a20; --surface: #1e242c; --ink: #e8ecf2; --muted: #97a1ad;
+    --line: #2c333d; --navy: #10151c; --brand: #8fa0e0; --accent: #ffab2e;
+    --accent-ink: #241700; --good: #4cc38a; --bad: #f0736a; --warn: #e0a33a;
+    color-scheme: dark;
+  }
+}
+body {
+  width: 380px; margin: 0; padding: 12px 14px 14px; background: var(--bg); color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 13px;
+}
+.pop-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pop-brand { display: flex; align-items: center; gap: 7px; font-weight: 700; }
+.pop-mark { width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(140deg, #4d5c96, #2b3055); }
+.pop-fresh { color: var(--muted); font-size: 11.5px; }
+.pop-banner { margin: 10px 0 0; padding: 8px 10px; border-radius: 9px; background: #fff5e6;
+  border: 1px solid #ffdca8; color: var(--warn); font-size: 12.5px; }
+@media (prefers-color-scheme: dark) { .pop-banner { background: #2e2515; border-color: #4a3a19; } }
+.pop-actions { display: flex; gap: 8px; margin: 12px 0 4px; }
+.pop-btn { flex: 1; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 999px; padding: 7px 10px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.pop-btn:hover:not(:disabled) { background: #eef1f7; }
+@media (prefers-color-scheme: dark) { .pop-btn:hover:not(:disabled) { background: #262d37; } }
+.pop-btn:disabled { opacity: .5; cursor: default; }
+.pop-btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.pop-hint { margin: 6px 0 0; color: var(--muted); font-size: 11.5px; min-height: 14px; }
+.pop-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+.pop-stat { display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 9px 10px;
+  font: inherit; color: inherit; cursor: pointer; text-align: left; }
+.pop-stat.is-active { border-color: var(--brand); }
+.pop-stat span { font-size: 18px; font-weight: 700; }
+.pop-stat small { color: var(--muted); font-size: 11.5px; }
+.pop-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px;
+  max-height: 320px; overflow: auto; }
+.pop-item { display: flex; gap: 9px; align-items: flex-start; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; }
+.pop-thumb { width: 36px; height: 36px; object-fit: contain; border-radius: 7px; background: #fff; border: 1px solid var(--line); flex: none; }
+.pop-thumb:not([src]) { background: transparent; border-style: dashed; }
+.pop-body { flex: 1; min-width: 0; }
+.pop-title { font-weight: 600; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pop-meta { color: var(--muted); font-size: 11.5px; }
+.pop-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #eef1f7; color: #3c4756; }
+.pop-chip-levererad { background: #e4f3ec; color: var(--good); }
+.pop-chip-pa_vag { background: #e7ecfa; color: #3d4b7a; }
+.pop-chip-avbruten { background: #fdeceb; color: var(--bad); }
+@media (prefers-color-scheme: dark) {
+  .pop-chip { background: #262d37; color: #c3cad4; }
+  .pop-chip-levererad { background: #17331f; }
+  .pop-chip-pa_vag { background: #1c2540; color: #9db0f0; }
+  .pop-chip-avbruten { background: #3a1f1c; }
+}
+.pop-confirm { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+  border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+.pop-empty, .pop-disclaimer { color: var(--muted); font-size: 11.5px; margin: 10px 0 0; line-height: 1.45; }

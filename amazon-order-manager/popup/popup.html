@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <title>Orderkoll</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body class="aom-scope">
+    <header class="pop-header">
+      <div class="pop-brand"><span class="pop-mark" aria-hidden="true"></span> Orderkoll</div>
+      <span class="pop-fresh" id="freshness">Senast synkad: –</span>
+    </header>
+
+    <div id="banner" class="pop-banner" hidden></div>
+
+    <div class="pop-actions">
+      <button id="sync" class="pop-btn pop-btn-primary" type="button">Synka</button>
+      <button id="panel" class="pop-btn" type="button">Öppna panel</button>
+      <button id="options" class="pop-btn" type="button">Inställningar</button>
+    </div>
+    <p id="sync-hint" class="pop-hint"></p>
+
+    <div class="pop-stats">
+      <button class="pop-stat" data-filter="alla" type="button"><span id="count-orders">0</span><small>Ordrar</small></button>
+      <button class="pop-stat" data-filter="bekrafta" type="button"><span id="count-pending">0</span><small>Att bekräfta</small></button>
+      <button class="pop-stat" data-filter="avvikelser" type="button"><span id="count-flagged">0</span><small>Avvikelser</small></button>
+    </div>
+
+    <ul id="list" class="pop-list"></ul>
+    <p id="empty" class="pop-empty" hidden>Ingen orderdata sparad ännu. Gå till dina ordrar på amazon.se och tryck Synka.</p>
+    <p class="pop-disclaimer" id="disclaimer"></p>
+
+    <script src="../lib/constants.js"></script>
+    <script src="../lib/parser-utils.js"></script>
+    <script src="../lib/status-model.js"></script>
+    <script src="../lib/dates.js"></script>
+    <script src="../lib/format.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
