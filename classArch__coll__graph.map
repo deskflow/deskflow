@@ -1,0 +1,9 @@
+<map id="Arch" name="Arch">
+<area shape="rect" id="Node000001" title="Delegating implementation of architecture dependent interfaces." alt="" coords="177,78,225,103"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,98,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,34,178,76,174,79,89,40"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="122,5,280,30"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,44,203,79,199,76,199,48"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="304,5,437,30"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="331,36,226,81,225,76,326,37"/>
+</map>
