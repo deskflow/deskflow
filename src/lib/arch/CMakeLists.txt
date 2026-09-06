@@ -35,7 +35,7 @@ endif()
 
 if(APPLE)
   list(APPEND PLATFORM_CODE
-    ScopedAutoreleasePool.cpp
+    ScopedAutoreleasePoolOSX.cpp
   )
 endif()
 
@@ -47,7 +47,7 @@ add_library(arch STATIC ${PLATFORM_CODE}
   IArchLog.h
   IArchMultithread.h
   IArchNetwork.h
-  ScopedAutoreleasePool.h
+  ScopedAutoreleasePoolOSX.h
 )
 
 target_link_libraries (arch PUBLIC common)

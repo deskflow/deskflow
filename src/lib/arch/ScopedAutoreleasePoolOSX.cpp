@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "arch/ScopedAutoreleasePool.h"
+#include "arch/ScopedAutoreleasePoolOSX.h"
 
 #if defined(__APPLE__)
 

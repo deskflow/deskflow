@@ -9,7 +9,7 @@
 #include "base/EventQueue.h"
 
 #include "arch/Arch.h"
-#include "arch/ScopedAutoreleasePool.h"
+#include "arch/ScopedAutoreleasePoolOSX.h"
 #include "base/EventQueueTimer.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
