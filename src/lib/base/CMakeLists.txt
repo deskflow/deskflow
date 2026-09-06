@@ -1,9 +1,17 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
-add_library(base STATIC
+if(APPLE)
+  set(PLATFORM_CODE
+    OSXAutoReleasePool.h
+    OSXAutoReleasePool.mm
+  )
+endif()
+
+add_library(base STATIC ${PLATFORM_CODE}
   BaseException.cpp
   BaseException.h
   DirectionTypes.h
