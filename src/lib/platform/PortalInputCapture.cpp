@@ -475,7 +475,15 @@ std::pair<double, double> PortalInputCapture::mapPortalReleasePosition(double x,
   const auto screenTop = screenY;
   const auto screenRight = screenX + screenW - 1;
   const auto screenBottom = screenY + screenH - 1;
-  const auto jumpZoneSize = m_screen->getJumpZoneSize();
+  // IPrimaryScreen::getJumpZoneSize() returns 1px on every backend (X11, Win32,
+  // macOS, EI) - fine for those barrier implementations, but too tight here:
+  // releasing the pointer only 1px inside a libportal InputCapture barrier
+  // re-triggers that same barrier almost immediately (observed as a rapid
+  // activate/release feedback loop, several times per second, on Hyprland's
+  // InputCapture backend), so the pointer never actually settles back onto
+  // the local screen. Use a larger portal-specific minimum instead.
+  constexpr std::int32_t kPortalReleaseMargin = 15;
+  const auto jumpZoneSize = std::max<std::int32_t>(m_screen->getJumpZoneSize(), kPortalReleaseMargin);
   Bounds portalBounds;
   if (!getPortalBounds(portalBounds)) {
     return {x, y};
