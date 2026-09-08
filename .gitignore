@@ -49,3 +49,13 @@ CMakeFiles/*
 # Ai helperfilers
 **/[cC]laude.[mM][dD]
 **/CLAUDE.[mM][dD]
+
+# Nix
+/result
+/result-*
+
+# Devbox
+.devbox/
+
+# Allow .envrc (direnv) — ignored by .env* above
+!.envrc

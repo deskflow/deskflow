@@ -106,6 +106,45 @@ Then install either:
 - Stable: `brew install deskflow`
 - Continuous: `brew install deskflow-dev`
 
+## Installing with Nix
+
+Deskflow can be installed and run using [Nix](https://nixos.org/) on Linux and macOS.
+
+### Default (recommended)
+
+On Linux, builds from source using the [nixpkgs](https://github.com/NixOS/nixpkgs) packaging (inheriting its fixup logic and testing). On macOS, builds from source directly (nixpkgs does not package Deskflow for Darwin):
+
+```bash
+nix run github:deskflow/deskflow
+nix profile install github:deskflow/deskflow
+```
+
+### From source (all platforms)
+
+Builds Deskflow from source on all platforms, bypassing the nixpkgs packaging:
+
+```bash
+nix run github:deskflow/deskflow#source
+nix profile install github:deskflow/deskflow#source
+```
+
+### nixpkgs version (Linux only)
+
+Uses the [nixpkgs](https://github.com/NixOS/nixpkgs)-packaged version at its pinned version:
+
+```bash
+nix run github:deskflow/deskflow#nixpkgs
+nix profile install github:deskflow/deskflow#nixpkgs
+```
+
+### Development shell
+
+Enter a development shell with all build dependencies:
+
+```bash
+nix develop
+```
+
 ## Similar Projects
 
 In the open source developer community, similar projects collaborate for the improvement of all

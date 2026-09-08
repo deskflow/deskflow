@@ -28,6 +28,7 @@ path = [
  , "src/apps/res/deskflow.plist.in"
  , "src/apps/res/entitlements-dev.plist"
  , "translations/*.ts"
+ , "flake.lock"
 ]
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
