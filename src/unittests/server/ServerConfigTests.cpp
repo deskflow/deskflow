@@ -9,6 +9,8 @@
 
 #include "server/Config.h"
 
+#include <sstream>
+
 class OnlySystemFilter : public InputFilter::Condition
 {
 public:
@@ -29,6 +31,44 @@ public:
 };
 
 using namespace deskflow::server;
+
+void ServerConfigTests::inputLockAction_data()
+{
+  QTest::addColumn<QString>("action");
+  QTest::addColumn<bool>("valid");
+  QTest::newRow("no deadline") << "lockInput()" << true;
+  QTest::newRow("short test deadline") << "lockInput(30)" << true;
+  QTest::newRow("maximum deadline") << "lockInput(300)" << true;
+  QTest::newRow("zero") << "lockInput(0)" << false;
+  QTest::newRow("negative") << "lockInput(-1)" << false;
+  QTest::newRow("fraction") << "lockInput(1.5)" << false;
+  QTest::newRow("too large") << "lockInput(301)" << false;
+  QTest::newRow("overflow") << "lockInput(999999999999999999999)" << false;
+  QTest::newRow("extra argument") << "lockInput(10,20)" << false;
+  QTest::newRow("invalid text") << "lockInput(cat)" << false;
+  QTest::newRow("missing close") << "lockInput(30" << false;
+}
+
+void ServerConfigTests::inputLockAction()
+{
+  QFETCH(QString, action);
+  QFETCH(bool, valid);
+  const auto text =
+      "section: screens\n  mac:\nend\nsection: options\n  keystroke(Control+Alt+Super+l) = " + action.toStdString() +
+      "\nend\n";
+  std::istringstream input(text);
+  Config config(nullptr);
+  if (valid) {
+    input >> config;
+    std::ostringstream output;
+    output << config;
+    QVERIFY(output.str().find(action.toStdString()) != std::string::npos);
+    Config copy(config);
+    QCOMPARE(copy, config);
+  } else {
+    QVERIFY_THROWS_EXCEPTION(ServerConfigReadException, input >> config);
+  }
+}
 
 void ServerConfigTests::equalityCheck()
 {

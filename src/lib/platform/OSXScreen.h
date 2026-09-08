@@ -35,6 +35,7 @@ class EventQueueTimer;
 class Mutex;
 class Thread;
 class OSXKeyState;
+class OSXInputLock;
 class OSXScreenSaver;
 class IEventQueue;
 class Mutex;
@@ -79,6 +80,10 @@ public:
   // IPlatformScreen overrides
   void enable() override;
   void disable() override;
+  void requestInputLock(unsigned autoReleaseSeconds) override;
+  bool isInputBlocked() const override;
+  void confirmInputLock(uint64_t generation, bool success) override;
+  void resumeInput(uint64_t generation) override;
   void enter() override;
   bool canLeave() override;
   void leave() override;
@@ -292,6 +297,7 @@ private:
   // Quartz input event support
   CFMachPortRef m_eventTapPort;
   CFRunLoopSourceRef m_eventTapRLSR;
+  std::unique_ptr<OSXInputLock> m_inputLock;
 
   // for double click coalescing.
   double m_lastClickTime;

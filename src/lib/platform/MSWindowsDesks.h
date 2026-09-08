@@ -13,6 +13,7 @@
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 
+#include <atomic>
 #include <map>
 #include <string>
 
@@ -155,6 +156,12 @@ public:
   */
   void fakeMouseButton(ButtonID id, bool press);
 
+  // A failed injection makes the remote key state uncertain for this session.
+  bool hasInputError() const
+  {
+    return m_inputError.load();
+  }
+
   //! Fake mouse move
   /*!
   Synthesize a mouse move to the absolute coordinates \c x,y.
@@ -278,4 +285,5 @@ private:
   bool m_leaveForegroundOption;
 
   IEventQueue *m_events;
+  mutable std::atomic<bool> m_inputError{false};
 };

@@ -45,7 +45,7 @@ static const int16_t kProtocolMajorVersion = 1;
  * @note When incrementing the minor version, the Deskflow application version should also increment
  * @since Protocol version 1.0
  */
-static const int16_t kProtocolMinorVersion = 8;
+static const int16_t kProtocolMinorVersion = 9;
 
 /**
  * @brief Default TCP port for Deskflow connections
@@ -488,6 +488,12 @@ extern const char *const kMsgCInfoAck;
  * @since Protocol version 1.3
  */
 extern const char *const kMsgCKeepAlive;
+
+// Experimental 1.9 input-release request: generation high/low words and a
+// bitmask of shared mouse buttons. The reply carries the same generation
+// and a one-byte result (0 failure, 1 released). CALV is not a release result.
+extern const char *const kMsgCInputRelease;
+extern const char *const kMsgDInputReleased;
 
 /** @} */ // end of protocol_commands group
 

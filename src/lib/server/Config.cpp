@@ -1066,6 +1066,23 @@ void Config::parseAction(
     action = new InputFilter::SwitchToNextScreenAction(m_events);
   }
 
+  else if (name == "lockInput") {
+    unsigned seconds = 0;
+    if (args.size() > 1) {
+      throw ServerConfigReadException(s, "syntax for action: lockInput([1..300 seconds])");
+    }
+    if (!args.empty() && !args[0].empty()) {
+      if (args[0].size() > 3 || args[0].find_first_not_of("0123456789") != std::string::npos) {
+        throw ServerConfigReadException(s, "syntax for action: lockInput([1..300 seconds])");
+      }
+      seconds = static_cast<unsigned>(std::stoul(args[0]));
+      if (seconds == 0 || seconds > 300) {
+        throw ServerConfigReadException(s, "syntax for action: lockInput([1..300 seconds])");
+      }
+    }
+    action = new InputFilter::LockInputAction(m_events, seconds);
+  }
+
   else if (name == "lockCursorToScreen") {
     if (args.size() > 1) {
       throw ServerConfigReadException(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
@@ -1952,7 +1969,9 @@ void ConfigReadContext::parseNameWithArgs(
   }
 
   // verify ')'
-  if (j == std::string::npos) {
+  // j was also used to trim the argument; an empty argument makes it npos
+  // even when the closing parenthesis was found. i retains its position.
+  if (i >= line.size() || line[i] != ')') {
     // expected )
     throw ServerConfigReadException(*this, "missing )");
   }

@@ -49,6 +49,38 @@ public:
   */
   virtual void disable() = 0;
 
+  // Shared input locking is opt-in and currently implemented by the Mac
+  // primary screen. These defaults keep other platforms and clients unchanged.
+  virtual void requestInputLock(unsigned autoReleaseSeconds)
+  {
+    (void)autoReleaseSeconds;
+  }
+  virtual bool isInputBlocked() const
+  {
+    return false;
+  }
+  virtual void confirmInputLock(uint64_t generation, bool success)
+  {
+    (void)generation;
+    (void)success;
+  }
+  virtual void resumeInput(uint64_t generation)
+  {
+    (void)generation;
+  }
+
+  // Release shared synthetic input without leaving or moving the screen.
+  // Only platforms with a checked injection path may report success.
+  virtual bool supportsInputRelease() const
+  {
+    return false;
+  }
+  virtual bool releaseInput(uint32_t buttons)
+  {
+    (void)buttons;
+    return false;
+  }
+
   //! Enter screen
   /*!
   Called when the user navigates to this screen.

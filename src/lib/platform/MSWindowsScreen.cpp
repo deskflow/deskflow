@@ -745,6 +745,21 @@ void MSWindowsScreen::fakeAllKeysUp()
   updateMouseKeys();
 }
 
+bool MSWindowsScreen::releaseInput(uint32_t buttons)
+{
+  // Unlike leave(), this is independent of GetCursorPos/canLeave and keeps
+  // the active screen and cursor unchanged. Include implicit modifiers.
+  fakeAllKeysUp();
+  for (ButtonID button = kButtonLeft; button < NumButtonIDs; ++button) {
+    if (buttons & (1u << button)) {
+      fakeMouseButton(button, false);
+    }
+  }
+  // Each desk message is synchronous. The desk thread records both failed
+  // injection and unavailable delivery, so a no-op cannot confirm a reset.
+  return !m_desks->hasInputError();
+}
+
 HCURSOR
 MSWindowsScreen::createBlankCursor() const
 {

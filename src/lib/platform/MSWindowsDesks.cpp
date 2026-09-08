@@ -81,7 +81,7 @@
 // enable; <unused>
 #define DESKFLOW_MSG_FAKE_INPUT DESKFLOW_HOOK_LAST_MSG + 12
 
-static void send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags)
+static bool send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags)
 {
   INPUT inp;
   inp.type = INPUT_KEYBOARD;
@@ -90,10 +90,10 @@ static void send_keyboard_input(WORD wVk, WORD wScan, DWORD dwFlags)
   inp.ki.dwFlags = dwFlags & 0xF;
   inp.ki.time = 0;
   inp.ki.dwExtraInfo = 0;
-  SendInput(1, &inp, sizeof(inp));
+  return SendInput(1, &inp, sizeof(inp)) == 1;
 }
 
-static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
+static bool send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
 {
   INPUT inp;
   inp.type = INPUT_MOUSE;
@@ -103,7 +103,7 @@ static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
   inp.mi.mouseData = dwData;
   inp.mi.time = 0;
   inp.mi.dwExtraInfo = 0;
-  SendInput(1, &inp, sizeof(inp));
+  return SendInput(1, &inp, sizeof(inp)) == 1;
 }
 
 //
@@ -312,8 +312,14 @@ void MSWindowsDesks::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 void MSWindowsDesks::sendMessage(UINT msg, WPARAM wParam, LPARAM lParam) const
 {
   if (m_activeDesk != nullptr && m_activeDesk->m_window != nullptr) {
-    PostThreadMessage(m_activeDesk->m_threadID, msg, wParam, lParam);
-    waitForDesk();
+    if (PostThreadMessage(m_activeDesk->m_threadID, msg, wParam, lParam)) {
+      waitForDesk();
+      return;
+    }
+  }
+  if (msg == DESKFLOW_MSG_FAKE_KEY || msg == DESKFLOW_MSG_FAKE_BUTTON) {
+    m_inputError = true;
+    LOG_ERR("shared input could not reach the desktop thread");
   }
 }
 
@@ -679,12 +685,17 @@ void MSWindowsDesks::deskThread(const void *vdesk)
 
     case DESKFLOW_MSG_FAKE_KEY:
       // Note, this is intended to be HI/LOWORD and not HI/LOBYTE
-      send_keyboard_input(HIWORD(msg.lParam), LOWORD(msg.lParam), (DWORD)msg.wParam);
+      if (!send_keyboard_input(HIWORD(msg.lParam), LOWORD(msg.lParam), (DWORD)msg.wParam) &&
+          !m_inputError.exchange(true)) {
+        LOG_ERR("SendInput rejected a shared key; input state uncertain (last error=%lu)", GetLastError());
+      }
       break;
 
     case DESKFLOW_MSG_FAKE_BUTTON:
       if (msg.wParam != 0) {
-        send_mouse_input((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam);
+        if (!send_mouse_input((DWORD)msg.wParam, 0, 0, (DWORD)msg.lParam) && !m_inputError.exchange(true)) {
+          LOG_ERR("SendInput rejected a shared mouse button; input state uncertain (last error=%lu)", GetLastError());
+        }
       }
       break;
 

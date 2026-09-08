@@ -201,6 +201,10 @@ public:
   //@}
 
 private:
+  void handleInputLockPrepare(const Event &event);
+  void handleInputLockResume(const Event &event);
+  void handleInputLockRemoteReady(const Event &event, BaseClientProxy *client);
+
   // get canonical name of client
   std::string getName(const BaseClientProxy *) const;
 
@@ -471,4 +475,9 @@ private:
   bool m_defaultLockToScreenState = false;
   bool m_disableLockToScreen = false;
   bool m_enableClipboard = true;
+
+  uint64_t m_inputLockGeneration = 0;
+  std::set<BaseClientProxy *> m_sharedInputTargets;
+  std::map<BaseClientProxy *, std::set<ButtonID>> m_sharedButtons;
+  std::set<BaseClientProxy *> m_inputLockWaiting;
 };

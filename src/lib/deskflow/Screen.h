@@ -68,6 +68,9 @@ public:
   */
   bool leave();
 
+  bool supportsInputRelease() const;
+  bool releaseInput(uint32_t buttons);
+
   //! Update configuration
   /*!
   This is called when the configuration has changed.  \c activeSides

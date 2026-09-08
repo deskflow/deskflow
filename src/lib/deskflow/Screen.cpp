@@ -150,6 +150,18 @@ bool Screen::leave()
   return true;
 }
 
+bool Screen::supportsInputRelease() const
+{
+  return !m_isPrimary && m_screen->supportsInputRelease();
+}
+
+bool Screen::releaseInput(uint32_t buttons)
+{
+  // A lock reset is independent of canLeave(), cursor position, clipboard
+  // ownership and the active screen. In particular, do not route via COUT.
+  return !m_isPrimary && m_screen->releaseInput(buttons);
+}
+
 void Screen::reconfigure(uint32_t activeSides)
 {
   assert(m_isPrimary);

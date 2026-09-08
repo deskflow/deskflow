@@ -8,6 +8,7 @@
 #include "server/PrimaryClient.h"
 
 #include "base/Log.h"
+#include "deskflow/IPlatformScreen.h"
 #include "deskflow/Screen.h"
 //
 // PrimaryClient
@@ -33,6 +34,11 @@ uint32_t PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
 void PrimaryClient::unregisterHotKey(uint32_t id)
 {
   m_screen->unregisterHotKey(id);
+}
+
+bool PrimaryClient::isInputBlocked() const
+{
+  return m_screen->getPlatformScreen()->isInputBlocked();
 }
 
 void PrimaryClient::fakeInputBegin()

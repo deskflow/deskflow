@@ -26,6 +26,7 @@
 #include "mt/Thread.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
+#include "platform/OSXInputLock.h"
 #include "platform/OSXKeyState.h"
 #include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
@@ -113,6 +114,21 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
   try {
     m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
     m_keyState = new OSXKeyState(m_events, AppUtil::instance().getKeyboardLayoutList(), enableLangSync);
+    if (m_isPrimary) {
+      m_inputLock = std::make_unique<OSXInputLock>(m_events, getEventTarget(), [this](bool sharingRestored) {
+        if (sharingRestored) {
+          m_keyState->resetInputState();
+          m_buttonState.reset();
+          m_activeModifierHotKey = 0;
+          m_activeModifierHotKeyMask = 0;
+          if (!m_isOnScreen) {
+            hideCursor();
+            return;
+          }
+        }
+        showCursor();
+      });
+    }
 
     if (Settings::value(Settings::Core::PreventSleep).toBool()) {
       m_powerManager.disableSleep();
@@ -686,7 +702,22 @@ void OSXScreen::enable()
   if (m_eventTapPort) {
     m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
     if (m_eventTapRLSR) {
-      CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+      if (m_inputLock) {
+        // Attach and initialize on the callback thread as one operation.
+        // No callback may run between attaching the source and seeding the
+        // initial visible state, including when enable() runs off-main.
+        const auto startCapture = ^{
+          CFRunLoopAddSource(CFRunLoopGetMain(), m_eventTapRLSR, kCFRunLoopCommonModes);
+          m_inputLock->start(m_eventTapPort);
+        };
+        if ([NSThread isMainThread]) {
+          startCapture();
+        } else {
+          dispatch_sync(dispatch_get_main_queue(), startCapture);
+        }
+      } else {
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+      }
     } else {
       LOG_ERR("failed to create a CFRunLoopSourceRef for the quartz event tap");
     }
@@ -697,12 +728,18 @@ void OSXScreen::enable()
 
 void OSXScreen::disable()
 {
+  if (m_inputLock) {
+    m_inputLock->stop();
+  }
   showCursor();
 
   // FIXME -- stop watching jump zones, stop capturing input
 
   if (m_eventTapRLSR) {
-    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+    CFRunLoopRemoveSource(
+        m_inputLock ? CFRunLoopGetMain() : CFRunLoopGetCurrent(), m_eventTapRLSR,
+        m_inputLock ? kCFRunLoopCommonModes : kCFRunLoopDefaultMode
+    );
     CFRelease(m_eventTapRLSR);
     m_eventTapRLSR = nullptr;
   }
@@ -722,6 +759,32 @@ void OSXScreen::disable()
   }
 
   m_isOnScreen = m_isPrimary;
+}
+
+void OSXScreen::requestInputLock(unsigned autoReleaseSeconds)
+{
+  if (m_inputLock) {
+    m_inputLock->request(autoReleaseSeconds);
+  }
+}
+
+bool OSXScreen::isInputBlocked() const
+{
+  return m_inputLock && m_inputLock->blocksForwarding();
+}
+
+void OSXScreen::confirmInputLock(uint64_t generation, bool success)
+{
+  if (m_inputLock) {
+    m_inputLock->confirm(generation, success);
+  }
+}
+
+void OSXScreen::resumeInput(uint64_t generation)
+{
+  if (m_inputLock) {
+    m_inputLock->resume(generation);
+  }
 }
 
 void OSXScreen::enter()
@@ -847,6 +910,9 @@ void OSXScreen::handleSystemEvent(const Event &event)
   assert(carbonEvent != nullptr);
 
   uint32_t eventClass = GetEventClass(*carbonEvent);
+  if (isInputBlocked() && (eventClass == kEventClassMouse || eventClass == kEventClassKeyboard)) {
+    return;
+  }
 
   switch (eventClass) {
   case kEventClassMouse:
@@ -1335,6 +1401,9 @@ pascal OSStatus OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler, E
   IEventQueue *events = screen->getEvents();
 
   if (kind == kEventSystemUserSessionDeactivated) {
+    if (screen->m_inputLock) {
+      screen->m_inputLock->cancel();
+    }
     LOG_DEBUG("user session deactivated");
     events->addEvent(Event(EventTypes::ScreenSuspend, screen->getEventTarget()));
   } else if (kind == kEventSystemUserSessionActivated) {
@@ -1431,6 +1500,9 @@ void OSXScreen::handlePowerChangeRequest(natural_t messageType, void *messageArg
   // we've received a power change notification
   switch (messageType) {
   case kIOMessageSystemWillSleep:
+    if (m_inputLock) {
+      m_inputLock->cancel();
+    }
     // OSXScreen has to handle this in the main thread so we have to
     // queue a confirm sleep event here.  we actually don't allow the
     // system to sleep until the event is handled.
@@ -1621,6 +1693,17 @@ OSXScreen::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, 
 CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
   OSXScreen *screen = (OSXScreen *)refcon;
+
+  if (screen->m_inputLock) {
+    switch (screen->m_inputLock->filter(type, event, screen->m_isOnScreen)) {
+    case OSXInputLock::FilterResult::Suppress:
+      return nullptr;
+    case OSXInputLock::FilterResult::LocalOnly:
+      return event;
+    case OSXInputLock::FilterResult::Pass:
+      break;
+    }
+  }
 
   switch (type) {
   case kCGEventLeftMouseDown:

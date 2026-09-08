@@ -63,6 +63,8 @@ public:
   Client(Client &&) = delete;
   ~Client() override;
 
+  bool releaseInput(uint32_t buttons);
+
   Client &operator=(Client const &) = delete;
   Client &operator=(Client &&) = delete;
 

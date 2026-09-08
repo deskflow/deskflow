@@ -73,6 +73,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   Screen.h
   ScreenException.cpp
   ScreenException.h
+  SharedInputLock.h
+  SharedInputLockEvent.h
   ServerApp.cpp
   ServerApp.h
   StreamChunker.cpp

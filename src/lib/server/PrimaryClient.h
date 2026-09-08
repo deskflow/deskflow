@@ -50,6 +50,8 @@ public:
   */
   virtual void unregisterHotKey(uint32_t id);
 
+  bool isInputBlocked() const;
+
   //! Prepare to synthesize input on primary screen
   /*!
   Prepares the primary screen to receive synthesized input.  We do not

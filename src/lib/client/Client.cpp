@@ -210,6 +210,11 @@ bool Client::leave()
   return true;
 }
 
+bool Client::releaseInput(uint32_t buttons)
+{
+  return m_screen->releaseInput(buttons);
+}
+
 void Client::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
   m_screen->setClipboard(id, clipboard);
@@ -588,14 +593,15 @@ void Client::handleHello()
     return;
   }
 
-  LOG_DEBUG(
-      "saying hello back with version %s %d.%d", protocolName.c_str(), kProtocolMajorVersion, kProtocolMinorVersion
-  );
+  // Preserve interoperability with existing 1.8 servers. The input-release
+  // extension is advertised only when both endpoints support it.
+  const int16_t minor = serverMajor == 1 && serverMinor >= 9 && m_screen->supportsInputRelease() ? 9 : 8;
+  LOG_DEBUG("saying hello back with version %s %d.%d", protocolName.c_str(), kProtocolMajorVersion, minor);
 
   // dynamically build write format for hello back since `ProtocolUtil::writef`
   // doesn't support formatting fixed length strings yet.
   std::string helloBackMessage = protocolName + kMsgHelloBackArgs;
-  ProtocolUtil::writef(m_stream, helloBackMessage.c_str(), kProtocolMajorVersion, kProtocolMinorVersion, &m_name);
+  ProtocolUtil::writef(m_stream, helloBackMessage.c_str(), kProtocolMajorVersion, minor, &m_name);
 
   // now connected but waiting to complete handshake
   setupScreen();

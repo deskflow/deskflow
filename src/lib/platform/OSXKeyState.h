@@ -30,6 +30,8 @@ public:
   OSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled);
   ~OSXKeyState() override = default;
 
+  void resetInputState();
+
   //! @name modifiers
   //@{
 

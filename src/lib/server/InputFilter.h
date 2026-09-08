@@ -127,6 +127,19 @@ public:
     virtual void perform(const Event &) = 0;
   };
 
+  class LockInputAction : public Action
+  {
+  public:
+    explicit LockInputAction(IEventQueue *events, unsigned autoReleaseSeconds = 0);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
+
+  private:
+    IEventQueue *m_events;
+    unsigned m_autoReleaseSeconds;
+  };
+
   // LockCursorToScreenAction
   class LockCursorToScreenAction : public Action
   {

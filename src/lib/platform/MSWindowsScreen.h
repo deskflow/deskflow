@@ -104,6 +104,11 @@ public:
   bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override;
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
+  bool supportsInputRelease() const override
+  {
+    return true;
+  }
+  bool releaseInput(uint32_t buttons) override;
 
   // IPlatformScreen overrides
   void enable() override;

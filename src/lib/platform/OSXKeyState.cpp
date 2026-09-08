@@ -440,6 +440,12 @@ int32_t OSXKeyState::pollActiveGroup() const
   return 0;
 }
 
+void OSXKeyState::resetInputState()
+{
+  m_deadKeyState = 0;
+  updateKeyState();
+}
+
 void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   ::KeyMap km;

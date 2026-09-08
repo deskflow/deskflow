@@ -1,6 +1,13 @@
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
+# Deliberately independent of Qt and platform input APIs; also runnable with a
+# C++20 compiler before installing the GUI build dependencies.
+add_executable(SharedInputLockTests SharedInputLockTests.cpp)
+target_include_directories(SharedInputLockTests PRIVATE ${PROJECT_SOURCE_DIR}/src/lib)
+add_test(NAME SharedInputLockTests COMMAND SharedInputLockTests)
+set_property(GLOBAL APPEND PROPERTY ${CMAKE_PROJECT_NAME}_tests SharedInputLockTests)
+
 if(WIN32)
   set(extra_libs version)
 endif()

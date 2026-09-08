@@ -10,6 +10,7 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "deskflow/KeyMap.h"
+#include "deskflow/SharedInputLockEvent.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
 
@@ -892,8 +893,36 @@ bool InputFilter::operator==(const InputFilter &x) const
   return (aList == bList);
 }
 
+InputFilter::LockInputAction::LockInputAction(IEventQueue *events, unsigned autoReleaseSeconds)
+    : m_events(events),
+      m_autoReleaseSeconds(autoReleaseSeconds)
+{
+}
+
+InputFilter::Action *InputFilter::LockInputAction::clone() const
+{
+  return new LockInputAction(*this);
+}
+
+std::string InputFilter::LockInputAction::format() const
+{
+  return m_autoReleaseSeconds == 0 ? "lockInput()" : "lockInput(" + std::to_string(m_autoReleaseSeconds) + ")";
+}
+
+void InputFilter::LockInputAction::perform(const Event &event)
+{
+  Event request(EventTypes::ServerLockInput, event.getTarget(), nullptr, Event::EventFlags::DeliverImmediately);
+  request.setDataObject(new deskflow::SharedInputLockRequest(m_autoReleaseSeconds));
+  m_events->addEvent(std::move(request));
+}
+
 void InputFilter::handleEvent(const Event &event)
 {
+  // Discard queued input before evaluating actions (including restart/switch
+  // and synthetic input actions), not just before forwarding keystrokes.
+  if (m_primaryClient && m_primaryClient->isInputBlocked()) {
+    return;
+  }
   // copy event and adjust target
   Event myEvent(
       event.getType(), this, event.getData(),

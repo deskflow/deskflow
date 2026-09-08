@@ -142,6 +142,15 @@ enum class EventTypes : uint32_t
   */
   ServerLockCursorToScreen,
 
+  /// Request shared input suppression on a supported primary screen.
+  ServerLockInput,
+  /// Capture has closed the input gate; release previously forwarded input.
+  SharedInputLockPrepare,
+  /// The client reported the result of a checked input-release request.
+  SharedInputLockRemoteReady,
+  /// FIFO boundary before resuming shared input.
+  SharedInputLockResume,
+
   /// This event is sent when the computer has been switched to a client.
   ServerScreenSwitched,
 

@@ -51,6 +51,16 @@ public:
     return false;
   }
 
+  virtual bool supportsInputRelease() const
+  {
+    return false;
+  }
+  virtual void requestInputRelease(uint64_t generation, uint32_t buttons)
+  {
+    (void)generation;
+    (void)buttons;
+  }
+
   //@}
 
   // IScreen

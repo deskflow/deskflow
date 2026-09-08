@@ -269,6 +269,22 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     leave();
   }
 
+  else if (memcmp(code, kMsgCInputRelease, 4) == 0) {
+    uint32_t high = 0, low = 0, buttons = 0;
+    if (!ProtocolUtil::readf(m_stream, kMsgCInputRelease + 4, &high, &low, &buttons) || (high == 0 && low == 0) ||
+        (buttons & ~((1u << NumButtonIDs) - 2u)) != 0) {
+      return Unknown;
+    }
+    flushCompressedMouse();
+    bool released = false;
+    try {
+      released = m_client->releaseInput(buttons);
+    } catch (const std::exception &e) {
+      LOG_ERR("input release failed: %s", e.what());
+    }
+    ProtocolUtil::writef(m_stream, kMsgDInputReleased, high, low, released ? 1 : 0);
+  }
+
   else if (memcmp(code, kMsgCClipboard, 4) == 0) {
     grabClipboard();
   }

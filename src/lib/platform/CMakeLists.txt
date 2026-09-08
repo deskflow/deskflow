@@ -74,6 +74,10 @@ elseif(APPLE)
     OSXCocoaApp.m
     OSXEventQueueBuffer.cpp
     OSXEventQueueBuffer.h
+    OSXInputLockHeldInputs.h
+    OSXInputLock.h
+    OSXInputLockModifiers.h
+    OSXInputLock.mm
     OSXKeyState.cpp
     OSXKeyState.h
     OSXMediaKeySupport.h

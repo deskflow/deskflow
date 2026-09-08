@@ -17,6 +17,7 @@
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
+#include "deskflow/SharedInputLockEvent.h"
 #include "deskflow/StreamChunker.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
@@ -24,14 +25,15 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 
-#ifdef _WIN32
 #include <algorithm>
+#ifdef _WIN32
 #include <array>
 #endif
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <stdexcept>
 
 using namespace deskflow::server;
 
@@ -66,6 +68,25 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   }
 
   // install event handlers
+  m_events->addHandler(EventTypes::ServerLockInput, m_inputFilter, [this](const auto &e) {
+    if (!m_primaryClient->isInputBlocked()) {
+      if ((m_active != m_primaryClient && !m_active->supportsInputRelease()) ||
+          std::any_of(m_sharedInputTargets.begin(), m_sharedInputTargets.end(), [](const auto *client) {
+            return !client->supportsInputRelease();
+          })) {
+        LOG_WARN("input lock requires a client with the checked input-release extension");
+        return;
+      }
+      const auto *request = static_cast<const deskflow::SharedInputLockRequest *>(e.getDataObject());
+      m_screen->getPlatformScreen()->requestInputLock(request->autoReleaseSeconds);
+    }
+  });
+  m_events->addHandler(EventTypes::SharedInputLockPrepare, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    handleInputLockPrepare(e);
+  });
+  m_events->addHandler(EventTypes::SharedInputLockResume, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    handleInputLockResume(e);
+  });
   m_events->addHandler(EventTypes::Timer, this, [this](const auto &) { handleSwitchWaitTimeout(); });
   m_events->addHandler(EventTypes::KeyStateKeyDown, m_inputFilter, [this](const auto &e) { handleKeyDownEvent(e); });
   m_events->addHandler(EventTypes::KeyStateKeyUp, m_inputFilter, [this](const auto &e) { handleKeyUpEvent(e); });
@@ -144,6 +165,11 @@ Server::~Server()
 {
   // remove event handlers and timers
   using enum EventTypes;
+  m_events->removeHandler(ServerLockInput, m_inputFilter);
+  m_events->removeHandler(SharedInputLockPrepare, m_primaryClient->getEventTarget());
+  m_events->removeHandler(SharedInputLockResume, m_primaryClient->getEventTarget());
+  m_inputLockGeneration = 0;
+  m_inputLockWaiting.clear();
   m_events->removeHandler(KeyStateKeyDown, m_inputFilter);
   m_events->removeHandler(KeyStateKeyUp, m_inputFilter);
   m_events->removeHandler(KeyStateKeyRepeat, m_inputFilter);
@@ -1267,6 +1293,10 @@ void Server::handleWheelEvent(const Event &event)
 
 void Server::handleSwitchWaitTimeout()
 {
+  if (m_primaryClient->isInputBlocked()) {
+    stopSwitch();
+    return;
+  }
   // ignore if mouse is locked to screen
   if (isLockedToScreen()) {
     LOG_DEBUG1("locked to screen");
@@ -1299,6 +1329,9 @@ void Server::handleClientCloseTimeout(BaseClientProxy *client)
 
 void Server::handleSwitchToScreenEvent(const Event &event)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   const auto *info = static_cast<SwitchToScreenInfo *>(event.getData());
 
   ClientList::const_iterator index = m_clients.find(info->m_screen);
@@ -1311,6 +1344,9 @@ void Server::handleSwitchToScreenEvent(const Event &event)
 
 void Server::handleSwitchInDirectionEvent(const Event &event)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   const auto *info = static_cast<SwitchInDirectionInfo *>(event.getData());
 
   // jump to screen in chosen direction from center of this screen
@@ -1326,6 +1362,9 @@ void Server::handleSwitchInDirectionEvent(const Event &event)
 
 void Server::handleToggleScreenEvent(const Event &)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   // Get the list of connected screens in config order
   std::vector<std::string> screens;
   getClients(screens);
@@ -1361,6 +1400,9 @@ void Server::handleToggleScreenEvent(const Event &)
 
 void Server::handleKeyboardBroadcastEvent(const Event &event)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   const auto *info = static_cast<KeyboardBroadcastInfo *>(event.getData());
 
   // choose new state
@@ -1393,6 +1435,9 @@ void Server::handleKeyboardBroadcastEvent(const Event &event)
 
 void Server::handleLockCursorToScreenEvent(const Event &event)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   const auto *info = static_cast<LockCursorToScreenInfo *>(event.getData());
 
   // choose new state
@@ -1524,12 +1569,18 @@ void Server::onScreensaver(bool activated)
 
 void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang, const char *screens)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG_DEBUG1("onKeyDown id=%d mask=0x%04x button=0x%04x lang=%s", id, mask, button, lang.c_str());
   assert(m_active != nullptr);
 
   // relay
   if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(screens)) {
     m_active->keyDown(id, mask, button, lang);
+    if (m_active != m_primaryClient) {
+      m_sharedInputTargets.insert(m_active);
+    }
   } else {
     if (!screens && m_keyboardBroadcasting) {
       screens = m_keyboardBroadcastingScreens.c_str();
@@ -1540,6 +1591,9 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
     for (ClientList::const_iterator index = m_clients.begin(); index != m_clients.end(); ++index) {
       if (IKeyState::KeyInfo::contains(screens, index->first)) {
         index->second->keyDown(id, mask, button, lang);
+        if (index->second != m_primaryClient) {
+          m_sharedInputTargets.insert(index->second);
+        }
       }
     }
   }
@@ -1547,6 +1601,9 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
 
 void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const char *screens)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG_DEBUG1("onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button);
   assert(m_active != nullptr);
 
@@ -1570,6 +1627,9 @@ void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const cha
 
 void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG(
       (CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x lang=\"%s\"", id, mask, count, button,
        lang.c_str())
@@ -1578,28 +1638,50 @@ void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButto
 
   // relay
   m_active->keyRepeat(id, mask, count, button, lang);
+  if (m_active != m_primaryClient) {
+    m_sharedInputTargets.insert(m_active);
+  }
 }
 
 void Server::onMouseDown(ButtonID id)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG_DEBUG1("onMouseDown id=%d", id);
   assert(m_active != nullptr);
 
   // relay
   m_active->mouseDown(id);
+  if (m_active != m_primaryClient) {
+    m_sharedButtons[m_active].insert(id);
+    m_sharedInputTargets.insert(m_active);
+  }
 }
 
 void Server::onMouseUp(ButtonID id)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG_DEBUG1("onMouseUp id=%d", id);
   assert(m_active != nullptr);
 
   // relay
   m_active->mouseUp(id);
+  if (auto buttons = m_sharedButtons.find(m_active); buttons != m_sharedButtons.end()) {
+    buttons->second.erase(id);
+    if (buttons->second.empty()) {
+      m_sharedButtons.erase(buttons);
+    }
+  }
 }
 
 bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return false;
+  }
   LOG_DEBUG2("onMouseMovePrimary %d,%d", x, y);
 
   // mouse move on primary (server's) screen
@@ -1697,6 +1779,9 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG_DEBUG2("mouse move on secondary: %+d,%+d", dx, dy);
 
   // TODO: move this to client side and use a qt setting or cli arg instead of env var.
@@ -1869,6 +1954,9 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 
 void Server::onMouseWheel(int32_t xDelta, int32_t yDelta)
 {
+  if (m_primaryClient->isInputBlocked()) {
+    return;
+  }
   LOG_DEBUG1("onMouseWheel %+d,%+d", xDelta, yDelta);
   assert(m_active != nullptr);
 
@@ -1884,6 +1972,9 @@ bool Server::addClient(BaseClientProxy *client)
   }
 
   // add event handlers
+  m_events->addHandler(EventTypes::SharedInputLockRemoteReady, client->getEventTarget(), [this, client](const auto &e) {
+    handleInputLockRemoteReady(e, client);
+  });
   m_events->addHandler(EventTypes::ScreenShapeChanged, client->getEventTarget(), [this, client](const auto &) {
     handleShapeChanged(client);
   });
@@ -1920,6 +2011,14 @@ bool Server::removeClient(BaseClientProxy *client)
   }
 
   // remove event handlers
+  m_events->removeHandler(SharedInputLockRemoteReady, client->getEventTarget());
+  m_sharedInputTargets.erase(client);
+  m_sharedButtons.erase(client);
+  if (m_inputLockWaiting.erase(client) != 0) {
+    // The remaining replies cannot prove that the disappeared client released.
+    m_inputLockWaiting.clear();
+    m_screen->getPlatformScreen()->confirmInputLock(m_inputLockGeneration, false);
+  }
   m_events->removeHandler(ScreenShapeChanged, client->getEventTarget());
   m_events->removeHandler(ClipboardGrabbed, client->getEventTarget());
   m_events->removeHandler(ClipboardChanged, client->getEventTarget());
@@ -1929,6 +2028,86 @@ bool Server::removeClient(BaseClientProxy *client)
   m_clientSet.erase(i);
 
   return true;
+}
+
+void Server::handleInputLockPrepare(const Event &event)
+{
+  const auto *info = static_cast<const deskflow::SharedInputLockEvent *>(event.getDataObject());
+  m_inputLockGeneration = info->generation;
+  m_inputLockWaiting.clear();
+  stopSwitch();
+  m_xDelta = m_yDelta = m_xDelta2 = m_yDelta2 = 0;
+
+  // Flush compressed motion and release input in place on the client. A
+  // reset must not depend on leaving the screen or move a relative cursor.
+  if (m_active != m_primaryClient) {
+    m_sharedInputTargets.insert(m_active);
+  }
+  const bool supported = std::all_of(m_sharedInputTargets.begin(), m_sharedInputTargets.end(), [](const auto *client) {
+    return client->supportsInputRelease();
+  });
+  if (!supported) {
+    LOG_WARN("input lock release is unsupported by a participating client");
+    m_screen->getPlatformScreen()->confirmInputLock(m_inputLockGeneration, false);
+    return;
+  }
+
+  try {
+    for (auto *client : m_sharedInputTargets) {
+      uint32_t buttons = 0;
+      if (const auto held = m_sharedButtons.find(client); held != m_sharedButtons.end()) {
+        for (auto button : held->second) {
+          if (button >= NumButtonIDs || button == kButtonNone) {
+            throw std::runtime_error("unsupported shared mouse button");
+          }
+          buttons |= 1u << button;
+        }
+      }
+      m_inputLockWaiting.insert(client);
+      client->requestInputRelease(m_inputLockGeneration, buttons);
+    }
+  } catch (const std::exception &e) {
+    LOG_ERR("shared input release failed: %s", e.what());
+    m_inputLockWaiting.clear();
+    m_screen->getPlatformScreen()->confirmInputLock(m_inputLockGeneration, false);
+    return;
+  }
+
+  if (m_inputLockWaiting.empty()) {
+    m_screen->getPlatformScreen()->confirmInputLock(m_inputLockGeneration, true);
+  }
+}
+
+void Server::handleInputLockRemoteReady(const Event &event, BaseClientProxy *client)
+{
+  const auto *info = static_cast<const deskflow::SharedInputLockEvent *>(event.getDataObject());
+  if (info->generation != m_inputLockGeneration || m_inputLockWaiting.erase(client) == 0) {
+    return;
+  }
+  if (!info->success) {
+    m_inputLockWaiting.clear();
+    m_screen->getPlatformScreen()->confirmInputLock(m_inputLockGeneration, false);
+    return;
+  }
+  m_sharedButtons.erase(client);
+  m_sharedInputTargets.erase(client);
+  if (m_inputLockWaiting.empty()) {
+    m_screen->getPlatformScreen()->confirmInputLock(m_inputLockGeneration, true);
+  }
+}
+
+void Server::handleInputLockResume(const Event &event)
+{
+  const auto *info = static_cast<const deskflow::SharedInputLockEvent *>(event.getDataObject());
+  if (info->generation != m_inputLockGeneration) {
+    return;
+  }
+  // All earlier physical events have passed the blocked handlers. Derived
+  // filter events are delivered immediately and cannot trail this boundary.
+  m_inputLockWaiting.clear();
+  m_screen->getPlatformScreen()->resumeInput(info->generation);
+  // Keep the generation until the next prepare: a new physical press while
+  // the acknowledgement is in flight may require another resume boundary.
 }
 
 void Server::closeClient(BaseClientProxy *client, const char *msg)
