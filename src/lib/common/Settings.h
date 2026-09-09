@@ -109,7 +109,7 @@ public:
     inline static const auto DefaultLockToComputerState = QStringLiteral("server/defaultLockToComputerState");
     inline static const auto DisableLockToComputer = QStringLiteral("server/disableLockToComputer");
     inline static const auto EnableClipboard = QStringLiteral("server/enableClipboard");
-    inline static const auto EnableHeatbeat = QStringLiteral("server/enableHeatbeat");
+    inline static const auto EnableHeartbeat = QStringLiteral("server/enableHeartbeat");
     inline static const auto EnableSwitchDelay = QStringLiteral("server/enableSwitchDelay");
     inline static const auto EnableSwitchDoubleTap = QStringLiteral("server/enableSwitchDoubleTap");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
@@ -307,7 +307,7 @@ private:
     , Server::DefaultLockToComputerState
     , Server::DisableLockToComputer
     , Server::EnableClipboard
-    , Server::EnableHeatbeat
+    , Server::EnableHeartbeat
     , Server::EnableSwitchDelay
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig
@@ -341,7 +341,7 @@ private:
     , Log::GuiDebug
     , Server::DefaultLockToComputerState
     , Server::DisableLockToComputer
-    , Server::EnableHeatbeat
+    , Server::EnableHeartbeat
     , Server::EnableSwitchDelay
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig
@@ -380,7 +380,7 @@ private:
     , {InternalConfig::NumRows, Server::GridHeight}
     , {InternalConfig::Heatbeat, Server::Heartbeat}
     , {InternalConfig::SwitchDelay, Server::SwitchDelay}
-    , {InternalConfig::HasHeartbeat, Server::EnableHeatbeat}
+    , {InternalConfig::HasHeartbeat, Server::EnableHeartbeat}
     , {InternalConfig::HasSwitchDelay, Server::EnableSwitchDelay}
     , {InternalConfig::HasSwitchDoubleTap, Server::EnableSwitchDoubleTap}
     , {InternalConfig::ClipboardSharing, Server::EnableClipboard}

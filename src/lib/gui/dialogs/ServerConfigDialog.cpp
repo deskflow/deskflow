@@ -80,7 +80,7 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
   Settings::setValue(Settings::Server::EnableClipboard, m_enableClipboard);
   Settings::setValue(Settings::Server::ClipboardSize, m_clipboardSize);
-  Settings::setValue(Settings::Server::EnableHeatbeat, m_enableHeartbeat);
+  Settings::setValue(Settings::Server::EnableHeartbeat, m_enableHeartbeat);
   Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
   Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
@@ -385,7 +385,7 @@ bool ServerConfigDialog::browseConfigFile()
 void ServerConfigDialog::loadFromConfig()
 {
   m_protocol = Settings::networkProtocol();
-  m_enableHeartbeat = Settings::value(Settings::Server::EnableHeatbeat).toBool();
+  m_enableHeartbeat = Settings::value(Settings::Server::EnableHeartbeat).toBool();
   m_heartbeatRate = Settings::value(Settings::Server::Heartbeat).toInt();
   m_relativeMouseMoves = Settings::value(Settings::Server::RelativeMouseMoves).toBool();
   m_win32keepForeground = Settings::value(Settings::Server::Win32KeepForeground).toBool();
@@ -540,7 +540,7 @@ void ServerConfigDialog::updateControls() const
 void ServerConfigDialog::restoreFromDefaults()
 {
   m_protocol = networkProtocolFromString(Settings::defaultValue(Settings::Server::Protocol).toString());
-  m_enableHeartbeat = Settings::defaultValue(Settings::Server::EnableHeatbeat).toBool();
+  m_enableHeartbeat = Settings::defaultValue(Settings::Server::EnableHeartbeat).toBool();
   m_heartbeatRate = Settings::defaultValue(Settings::Server::Heartbeat).toInt();
   m_relativeMouseMoves = Settings::defaultValue(Settings::Server::RelativeMouseMoves).toBool();
   m_win32keepForeground = Settings::defaultValue(Settings::Server::Win32KeepForeground).toBool();
@@ -592,7 +592,7 @@ bool ServerConfigDialog::isGeneralConfigModified() const
          m_protocol != Settings::networkProtocol() ||
          m_enableClipboard != Settings::value(Settings::Server::EnableClipboard).toBool() ||
          m_clipboardSize != Settings::value(Settings::Server::ClipboardSize).toUInt() ||
-         m_enableHeartbeat != Settings::value(Settings::Server::EnableHeatbeat).toBool() ||
+         m_enableHeartbeat != Settings::value(Settings::Server::EnableHeartbeat).toBool() ||
          m_heartbeatRate != Settings::value(Settings::Server::Heartbeat).toInt() ||
          m_enableSwitchDelay != Settings::value(Settings::Server::EnableSwitchDelay).toBool() ||
          m_switchDelay != Settings::value(Settings::Server::SwitchDelay).toInt() ||
@@ -611,7 +611,7 @@ bool ServerConfigDialog::isGeneralConfigDefault() const
          m_protocol == networkProtocolFromString(Settings::defaultValue(Settings::Server::Protocol).toString()) &&
          m_enableClipboard == Settings::defaultValue(Settings::Server::EnableClipboard).toBool() &&
          m_clipboardSize == Settings::defaultValue(Settings::Server::ClipboardSize).toUInt() &&
-         m_enableHeartbeat == Settings::defaultValue(Settings::Server::EnableHeatbeat).toBool() &&
+         m_enableHeartbeat == Settings::defaultValue(Settings::Server::EnableHeartbeat).toBool() &&
          m_heartbeatRate == Settings::defaultValue(Settings::Server::Heartbeat).toInt() &&
          m_enableSwitchDelay == Settings::defaultValue(Settings::Server::EnableSwitchDelay).toBool() &&
          m_switchDelay == Settings::defaultValue(Settings::Server::SwitchDelay).toInt() &&

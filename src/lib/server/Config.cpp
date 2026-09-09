@@ -452,7 +452,7 @@ void Config::readSection(ConfigReadContext &s)
 
 void Config::readSectionOptions(ConfigReadContext &s)
 {
-  if (Settings::value(Settings::Server::EnableHeatbeat).toBool()) {
+  if (Settings::value(Settings::Server::EnableHeartbeat).toBool()) {
     addOption("", kOptionHeartbeat, Settings::value(Settings::Server::Heartbeat).toInt());
   }
 
