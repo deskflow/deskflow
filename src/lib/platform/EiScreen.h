@@ -11,6 +11,7 @@
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
 
+#include <bitset>
 #include <climits>
 #include <libei.h>
 #include <map>
@@ -143,6 +144,9 @@ private:
   EiKeyState *m_keyState = nullptr;
 
   KeyID m_lastPressed = kKeyNone;
+
+  // mouse buttons currently held, indexed by ButtonID
+  std::bitset<NumButtonIDs> m_buttons;
 
   // clipboard stuff
   EiClipboard *m_clipboard = nullptr;
