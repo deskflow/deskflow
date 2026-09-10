@@ -22,6 +22,7 @@
 #include "platform/PortalRemoteDesktop.h"
 
 #include <algorithm>
+#include <bit>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
@@ -261,9 +262,13 @@ std::int32_t EiScreen::getJumpZoneSize() const
   return 1;
 }
 
-bool EiScreen::isAnyMouseButtonDown(uint32_t &) const
+bool EiScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
 {
-  return false;
+  if (m_buttons.none())
+    return false;
+
+  buttonID = std::countr_zero(m_buttons.to_ulong());
+  return true;
 }
 
 void EiScreen::getCursorCenter(int32_t &x, int32_t &y) const
@@ -424,6 +429,8 @@ void EiScreen::enter()
   } else if (m_isPrimary) {
     LOG_DEBUG("releasing input capture at x=%i y=%i", m_cursorX, m_cursorY);
     m_portalInputCapture->release(m_cursorX, m_cursorY);
+    // no more button events once capture is released, so drop any held state
+    updateButtons();
   }
 }
 
@@ -631,6 +638,8 @@ void EiScreen::removeDevice(struct ei_device *device)
   if (wasTracked) {
     m_isEmulating = false;
     cancelIdleEmulationTimer();
+    // same as for a paused device: no release events follow a removal
+    updateButtons();
   }
 
   delete static_cast<ScrollRemainder *>(ei_device_get_user_data(device));
@@ -756,6 +765,8 @@ void EiScreen::onButtonEvent(ei_event *event)
     LOG_DEBUG("event: button not recognized");
     return;
   }
+
+  m_buttons.set(buttonID, pressed);
 
   auto eventType = pressed ? EventTypes::PrimaryScreenButtonDown : EventTypes::PrimaryScreenButtonUp;
 
@@ -968,6 +979,9 @@ void EiScreen::handleSystemEvent(const Event &)
     case EI_EVENT_DEVICE_PAUSED:
       LOG_DEBUG("device %s is paused", ei_device_get_name(device));
       m_isEmulating = false;
+      // a paused device is reset to neutral by the EIS side and sends no
+      // further events, so the releases for held buttons never arrive
+      updateButtons();
       cancelIdleEmulationTimer();
       break;
     case EI_EVENT_DEVICE_RESUMED:
@@ -1026,7 +1040,9 @@ void EiScreen::handleSystemEvent(const Event &)
 void EiScreen::updateButtons()
 {
   // libei relies on the EIS implementation to keep our button count correct,
-  // so there's not much we need to/can do here.
+  // and the held buttons cannot be polled, so resyncing means assuming that
+  // everything is released.
+  m_buttons.reset();
 }
 
 IKeyState *EiScreen::getKeyState() const
