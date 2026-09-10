@@ -126,10 +126,19 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   // set initial configuration
   setConfig(config);
 
+  // If we are using libportal, we need to set the primary client first.
+  // This enables the rules of the primary client. The hotkeys are then enabled in EiScreen.cpp after the rules
+  // registered them.
+#if WINAPI_LIBPORTAL
   // enable primary client
+  m_inputFilter->setPrimaryClient(m_primaryClient);
+  m_primaryClient->enable();
+  // If we are on Mac, X11 or Windows, we need a key map, which is created in screen->enable().
+  // So we need to enable the screen first, then enable the primary client.
+#else
   m_primaryClient->enable();
   m_inputFilter->setPrimaryClient(m_primaryClient);
-
+#endif
   // Determine if scroll lock is already set. If so, lock the cursor to the
   // primary screen (unless the user has disabled lock to screen in config)
   if (!m_disableLockToScreen && (m_primaryClient->getToggleMask() & KeyModifierScrollLock)) {
@@ -175,11 +184,16 @@ Server::~Server()
     delete client;
   }
 
-  // remove input filter
-  m_inputFilter->setPrimaryClient(nullptr);
-
+  // See at Server::Server for why we do this in this order.
+#if WINAPI_LIBPORTAL
   // disable and disconnect primary client
   m_primaryClient->disable();
+  // remove input filter
+  m_inputFilter->setPrimaryClient(nullptr);
+#else
+  m_inputFilter->setPrimaryClient(nullptr);
+  m_primaryClient->disable();
+#endif
   removeClient(m_primaryClient);
 }
 
