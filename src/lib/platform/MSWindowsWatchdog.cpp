@@ -14,7 +14,6 @@
 #include "common/Constants.h"
 #include "common/LogLevel.h"
 #include "deskflow/App.h"
-#include "mt/Thread.h"
 #include "platform/MSWindowsHandle.h"
 
 #include <Shellapi.h>
@@ -74,6 +73,11 @@ MSWindowsWatchdog::MSWindowsWatchdog(bool foreground, FileLogOutputter &fileLogO
   initOutputReadPipe();
 }
 
+MSWindowsWatchdog::~MSWindowsWatchdog()
+{
+  stop();
+}
+
 void MSWindowsWatchdog::startAsync()
 {
   m_mainThread = std::make_unique<Thread>(new TMethodJob(this, &MSWindowsWatchdog::mainLoop, nullptr));
@@ -83,20 +87,21 @@ void MSWindowsWatchdog::startAsync()
 
 void MSWindowsWatchdog::stop()
 {
-  const auto kThreadWaitSeconds = 5;
+  static constexpr double kThreadWaitSeconds = 5;
 
   m_running = false;
 
-  if (!m_mainThread->wait(kThreadWaitSeconds)) {
-    LOG_WARN("could not stop main thread");
+  if (m_mainThread != nullptr && !m_mainThread->wait(kThreadWaitSeconds)) {
+    LOG_WARN("main thread is slow to stop, waiting");
+    m_mainThread->wait();
   }
-
-  if (!m_outputThread->wait(kThreadWaitSeconds)) {
-    LOG_WARN("could not stop output thread");
+  if (m_outputThread != nullptr && !m_outputThread->wait(kThreadWaitSeconds)) {
+    LOG_WARN("output thread is slow to stop, waiting");
+    m_outputThread->wait();
   }
-
-  if (!m_sasThread->wait(kThreadWaitSeconds)) {
-    LOG_WARN("could not stop sas thread");
+  if (m_sasThread != nullptr && !m_sasThread->wait(kThreadWaitSeconds)) {
+    LOG_WARN("sas thread is slow to stop, waiting");
+    m_sasThread->wait();
   }
 }
 
