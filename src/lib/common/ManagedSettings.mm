@@ -38,6 +38,10 @@ QVariant Settings::managedValue(const QString &key)
     const char *encodedType = [value objCType];
     if (strcmp(encodedType, @encode(BOOL)) == 0 || strcmp(encodedType, @encode(bool)) == 0)
       return QVariant([value boolValue]);
+    // Settings such as the scroll scales hold a fraction, which intValue would
+    // truncate to a whole number
+    if (strcmp(encodedType, @encode(double)) == 0 || strcmp(encodedType, @encode(float)) == 0)
+      return QVariant([value doubleValue]);
     return QVariant([value intValue]);
   }
 

@@ -374,8 +374,12 @@ bool Settings::setValue(const QString &key, const QVariant &value)
 
 QVariant Settings::value(const QString &key)
 {
-  if (isManaged(key))
-    return managedValue(key);
+  // A policy holding a type with no QVariant equivalent falls through to the
+  // stored value rather than handing the caller an invalid QVariant
+  if (isManaged(key)) {
+    if (const auto managed = managedValue(key); managed.isValid())
+      return managed;
+  }
 
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
