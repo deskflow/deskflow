@@ -72,20 +72,46 @@ KeyID OSXKeyLayoutResource::getKey(uint32_t table, uint32_t button) const
     if (deadKeyState == 0) {
       return kKeyNone;
     }
-    UniChar spaceChars[4] = {0};
-    UniCharCount spaceCount = 0;
-    status = UCKeyTranslate(
-        m_layout, kVK_Space, kUCKeyActionDown, 0, m_keyboardType, 0, &deadKeyState,
-        sizeof(spaceChars) / sizeof(spaceChars[0]), &spaceCount, spaceChars
-    );
-    if (status != noErr || spaceCount != 1) {
-      return kKeyNone;
-    }
-    return deskflow::KeyMap::getDeadKey(unicharToKeyID(spaceChars[0]));
+    return deskflow::KeyMap::getDeadKey(resolveDeadKeyOutput(deadKeyState));
   }
 
   // no support for multi-character output (matches the uchr parser).
   if (count != 1) {
+    return kKeyNone;
+  }
+
+  return unicharToKeyID(chars[0]);
+}
+
+KeyID OSXKeyLayoutResource::getDeadKeyOutput(uint32_t table, uint32_t button) const
+{
+  if (m_layout == nullptr || button >= s_numButtons) {
+    return kKeyNone;
+  }
+
+  UInt32 deadKeyState = 0;
+  UniChar chars[4] = {0};
+  UniCharCount count = 0;
+  const OSStatus status = UCKeyTranslate(
+      m_layout, static_cast<UInt16>(button), kUCKeyActionDown, table, m_keyboardType, 0, &deadKeyState,
+      sizeof(chars) / sizeof(chars[0]), &count, chars
+  );
+  if (status != noErr || count != 0 || deadKeyState == 0) {
+    return kKeyNone;
+  }
+
+  return resolveDeadKeyOutput(deadKeyState);
+}
+
+KeyID OSXKeyLayoutResource::resolveDeadKeyOutput(UInt32 deadKeyState) const
+{
+  UniChar chars[4] = {0};
+  UniCharCount count = 0;
+  const OSStatus status = UCKeyTranslate(
+      m_layout, kVK_Space, kUCKeyActionDown, 0, m_keyboardType, 0, &deadKeyState, sizeof(chars) / sizeof(chars[0]),
+      &count, chars
+  );
+  if (status != noErr || count != 1) {
     return kKeyNone;
   }
 
