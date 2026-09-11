@@ -1,0 +1,11 @@
+<map id="src/lib/deskflow/ipc/CoreIpcServer.h" name="src/lib/deskflow/ipc/CoreIpcServer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="35,5,168,44"/>
+<area shape="rect" id="Node000002" href="$IpcServer_8h.html" title=" " alt="" coords="57,92,146,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,42,104,77,99,76,100,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,165,75,189"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="79,47,63,67,48,93,41,122,40,150,35,149,36,121,43,91,59,64,81,42"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="137,165,188,189"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="123,42,144,64,160,91,167,121,167,151,163,148,162,122,155,93,140,67,122,47"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,116,62,155,58,151,89,118"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="113,115,145,153,140,153,110,120"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="src/lib/base/ILogOutputter.h" name="src/lib/base/ILogOutputter.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="36,5,218,30"/>
+<area shape="rect" id="Node000002" href="$Log_8h.html" title=" " alt="" coords="138,78,223,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,28,165,65,160,66,136,33"/>
+<area shape="rect" id="Node000003" href="$LogLevel_8h.html" title=" " alt="" coords="5,151,143,175"/>
+<area shape="poly" id="edge8_Node000001_Node000003" title=" " alt="" coords="125,28,86,137,81,135,121,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="161,105,106,144,103,140,165,101"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="140,223,205,248"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="182,101,177,208,172,207,178,104"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="217,151,256,175"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="191,101,221,139,216,139,189,106"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="280,151,337,175"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="202,101,277,142,272,143,201,106"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="39,223,109,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="76,174,77,209,71,207,72,178"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="91,173,147,213,141,215,89,178"/>
+</map>

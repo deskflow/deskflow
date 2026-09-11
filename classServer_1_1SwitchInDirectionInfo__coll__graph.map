@@ -1,0 +1,5 @@
+<map id="Server::SwitchInDirectionInfo" name="Server::SwitchInDirectionInfo">
+<area shape="rect" id="Node000001" title="Switch in direction data." alt="" coords="5,78,198,103"/>
+<area shape="rect" id="Node000002" href="$classEventData.html" title=" " alt="" coords="61,5,142,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,44,104,79,99,77,100,48"/>
+</map>

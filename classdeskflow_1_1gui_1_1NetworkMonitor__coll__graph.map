@@ -1,0 +1,5 @@
+<map id="deskflow::gui::NetworkMonitor" name="deskflow::gui::NetworkMonitor">
+<area shape="rect" id="Node000001" title="Monitor network activity changes and provide IP address updates." alt="" coords="5,78,203,103"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="69,5,139,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,44,106,79,102,77,102,48"/>
+</map>
