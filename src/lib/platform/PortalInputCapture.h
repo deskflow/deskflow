@@ -38,6 +38,7 @@ public:
   void disable();
   void release();
   void release(double x, double y);
+  void claimClipboard() const;
   bool isActive() const
   {
     return m_isActive;
@@ -166,6 +167,7 @@ private:
 
   bool m_enabled = false;
   bool m_isActive = false;
+  mutable bool m_clipboardClaimPending = false;
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
