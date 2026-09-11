@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Utilizza un tempo di riconnessione dinamico basato sui tentativi di connessione</translation>
     </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestito dalla tua organizzazione</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
@@ -1057,6 +1061,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Cerca un file di configurazione</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestito dalla tua organizzazione</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Abilita il blocco al computer all&apos;avvio</translation>
     </message>
@@ -1166,6 +1174,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>Verbose debug output</source>
         <translation>Output di debug dettagliato</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Gestito dalla tua organizzazione</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>

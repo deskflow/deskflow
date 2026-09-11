@@ -33,7 +33,7 @@ private:
   /**
    * @brief updateControls update widget enable state
    */
-  void updateControls() const;
+  void updateControls();
 
   /**
    * @brief initConnections
@@ -63,6 +63,8 @@ private:
    * @brief Load the client setting into the gui
    */
   void load();
+
+  void applyManagedLocks();
 
   /**
    * @brief Set the gui values to the defalut values for all client settings
