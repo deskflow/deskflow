@@ -14,6 +14,7 @@
 
 #include <Carbon/Carbon.h>
 #include <IOKit/IOMessage.h>
+#include <IOKit/pwr_mgt/IOPMLib.h>
 #include <mach/mach_init.h>
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
@@ -284,6 +285,7 @@ private:
   CondVar<bool> *m_pmThreadReady;
   CFRunLoopRef m_pmRunloop;
   io_connect_t m_pmRootPort;
+  IOPMAssertionID m_userActivityAssertionID = kIOPMNullAssertionID;
 
   // hot key stuff
   HotKeyMap m_hotKeys;
