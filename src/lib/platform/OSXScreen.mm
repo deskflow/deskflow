@@ -476,9 +476,7 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
   // Dragging events also need the click state
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
-  // Fix for sticky keys
-  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-  CGEventSetFlags(event, modifiers);
+  CGEventSetFlags(event, getModifiers());
 
   // Set movement deltas to fix issues with certain 3D programs
   SInt64 deltaX = pos.x;
@@ -499,6 +497,11 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
   CGEventPost(kCGHIDEventTap, event);
 
   CFRelease(event);
+}
+
+CGEventFlags OSXScreen::getModifiers() const
+{
+  return m_keyState->getModifierStateAsOSXFlags() | m_localModifiers.load(std::memory_order_relaxed);
 }
 
 void OSXScreen::fakeMouseButton(ButtonID id, bool press)
@@ -574,9 +577,7 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
-  // Fix for sticky keys
-  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-  CGEventSetFlags(event, modifiers);
+  CGEventSetFlags(event, getModifiers());
 
   m_buttonState.set(index, state);
   CGEventPost(kCGHIDEventTap, event);
@@ -634,9 +635,7 @@ void OSXScreen::fakeMouseWheel(ScrollDelta delta) const
     // is the right choice here over kCGScrollEventUnitPixel
     CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, delta.y, delta.x);
 
-    // Fix for sticky keys
-    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
-    CGEventSetFlags(scrollEvent, modifiers);
+    CGEventSetFlags(scrollEvent, getModifiers());
 
     CGEventPost(kCGHIDEventTap, scrollEvent);
     CFRelease(scrollEvent);
@@ -1660,11 +1659,21 @@ bool OSXScreen::HotKeyItem::operator<(const HotKeyItem &x) const
 CGEventRef
 OSXScreen::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
+  OSXScreen *screen = (OSXScreen *)refcon;
+
+  if (type == kCGEventFlagsChanged) {
+    static constexpr CGEventFlags kTrackedModifiers = kCGEventFlagMaskShift | kCGEventFlagMaskControl |
+                                                      kCGEventFlagMaskAlternate | kCGEventFlagMaskCommand |
+                                                      kCGEventFlagMaskAlphaShift;
+    const CGEventFlags eventFlags = CGEventGetFlags(event);
+    const CGEventFlags injected = screen->m_keyState->getModifierStateAsOSXFlags();
+    screen->m_localModifiers.store(eventFlags & kTrackedModifiers & ~injected, std::memory_order_relaxed);
+  }
+
   // this fix is really screwing with the correct show/hide behavior. it
   // should be tested better before reintroducing.
   return event;
 
-  OSXScreen *screen = (OSXScreen *)refcon;
   if (screen->m_cursorHidden && type == kCGEventMouseMoved) {
 
     CGPoint pos = CGEventGetLocation(event);

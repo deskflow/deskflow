@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -18,6 +18,7 @@
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
 
+#include <atomic>
 #include <bitset>
 #include <map>
 #include <memory>
@@ -106,6 +107,14 @@ private:
   bool updateScreenShape();
   bool updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
+
+  /**
+   * @brief Modifier flags for synthetic mouse events.
+   *
+   * Local modifiers come from the event tap rather than ambient session
+   * state, so deskflow's own injected modifiers cannot feed back and stick.
+   */
+  CGEventFlags getModifiers() const;
 
   // convenience function to send events
   void sendEvent(EventTypes type, void * = nullptr) const;
@@ -302,6 +311,9 @@ private:
   CFRunLoopSourceRef m_eventTapRLSR;
   std::thread m_eventTapThread;
   CFRunLoopRef m_eventTapRunLoop = nullptr;
+
+  // Written on the tap thread, read on the injection thread.
+  std::atomic<CGEventFlags> m_localModifiers{0};
 
   // for double click coalescing.
   double m_lastClickTime;
