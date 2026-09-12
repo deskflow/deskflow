@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Mikhail Slyusarev <slyusarevmikhail@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -14,6 +15,7 @@ class QWidget;
 class QMouseEvent;
 class QResizeEvent;
 class QDragEnterEvent;
+class QDropEvent;
 class ScreenSetupModel;
 
 class ScreenSetupView : public QTableView
@@ -26,18 +28,36 @@ public:
   ScreenSetupModel *model() const;
 
 private:
+  enum class ResizeAxis
+  {
+    Width,
+    Height,
+    Both
+  };
+
   void showScreenConfig(int col, int row);
+  void updateSpans();
+  QModelIndex resizeGripAt(const QPoint &pos, ResizeAxis &axis) const;
+  void resizeSpanTo(const QPoint &pos);
 
 protected:
   void mouseDoubleClickEvent(QMouseEvent *) override;
+  void mousePressEvent(QMouseEvent *) override;
+  void mouseMoveEvent(QMouseEvent *) override;
+  void mouseReleaseEvent(QMouseEvent *) override;
   void setTableSize();
   void resizeEvent(QResizeEvent *) override;
   void dragEnterEvent(QDragEnterEvent *event) override;
   void dragMoveEvent(QDragMoveEvent *event) override;
+  void dropEvent(QDropEvent *event) override;
   void startDrag(Qt::DropActions supportedActions) override;
   void initViewItemOption(QStyleOptionViewItem *option) const override;
   void scrollTo(const QModelIndex &, ScrollHint) override
   {
     // do nothing
   }
+
+private:
+  QPersistentModelIndex m_resizeIndex;
+  ResizeAxis m_resizeAxis = ResizeAxis::Width;
 };
