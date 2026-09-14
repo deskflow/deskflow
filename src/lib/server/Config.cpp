@@ -303,6 +303,11 @@ const NetworkAddress &Config::getDeskflowAddress() const
   return m_deskflowAddress;
 }
 
+const std::vector<uint32_t> &Config::getLocalKeys() const
+{
+  return m_localKeys;
+}
+
 const Config::ScreenOptions *Config::getOptions(const std::string &name) const
 {
   // find options
@@ -482,6 +487,39 @@ void Config::readSectionOptions(ConfigReadContext &s)
     m_deskflowAddress.resolve();
   } catch (SocketAddressException &e) {
     throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
+  }
+
+  // local-only key codes: always delivered to the host and never forwarded
+  // to a client, regardless of which screen has focus.  Stored as a
+  // comma/space-separated list of host virtual key codes (e.g. "64,79,80,90").
+  const std::string localKeys = Settings::value(Settings::Server::LocalKeys).toString().toStdString();
+  m_localKeys.clear();
+  {
+    std::string::size_type pos = 0;
+    while (true) {
+      pos = localKeys.find_first_not_of(" \t,;", pos);
+      if (pos == std::string::npos) {
+        break;
+      }
+      std::string::size_type end = localKeys.find_first_of(" \t,;", pos);
+      if (end == std::string::npos) {
+        end = localKeys.size();
+      }
+      std::string token = localKeys.substr(pos, end - pos);
+      unsigned long keyCode = 0;
+      bool valid = !token.empty();
+      for (char c : token) {
+        if (c < '0' || c > '9') {
+          valid = false;
+          break;
+        }
+        keyCode = keyCode * 10 + static_cast<unsigned long>(c - '0');
+      }
+      if (!valid) {
+        throw ServerConfigReadException(s, "invalid key code in localKeys: " + token);
+      }
+      m_localKeys.push_back(static_cast<uint32_t>(keyCode));
+    }
   }
 
   std::string line;

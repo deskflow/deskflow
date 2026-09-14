@@ -1124,6 +1124,9 @@ void Server::processOptions()
       }
     }
   }
+  // Apply the local-only key list to the primary screen. This is a no-op on
+  // platforms that do not support local-only keys (e.g. Linux/Windows).
+  m_screen->getPlatformScreen()->setLocalKeys(m_config->getLocalKeys());
   if (m_relativeMoves && !newRelativeMoves) {
     stopRelativeMoves();
   }

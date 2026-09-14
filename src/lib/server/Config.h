@@ -343,6 +343,13 @@ public:
   //! Get the server address
   const NetworkAddress &getDeskflowAddress() const;
 
+  //! Get the local-only key codes
+  /*!
+  Returns the list of key codes that should be delivered locally and never
+  forwarded to a client.  Empty by default.
+  */
+  const std::vector<uint32_t> &getLocalKeys() const;
+
   //! Get the screen options
   /*!
   Returns all the added options for the named screen.  Returns nullptr
@@ -415,6 +422,7 @@ private:
   CellMap m_map;
   NameMap m_nameToCanonicalName;
   NetworkAddress m_deskflowAddress;
+  std::vector<uint32_t> m_localKeys;
   ScreenOptions m_globalOptions;
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction = false;

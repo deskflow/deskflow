@@ -890,6 +890,19 @@ void OSXScreen::setOptions(const OptionsList &)
   // no options
 }
 
+void OSXScreen::setLocalKeys(const std::vector<uint32_t> &keys)
+{
+  m_localKeys.clear();
+  for (uint32_t keyCode : keys) {
+    m_localKeys.insert(keyCode);
+  }
+}
+
+bool OSXScreen::isLocalKey(uint32_t keyCode) const
+{
+  return m_localKeys.count(keyCode) > 0;
+}
+
 void OSXScreen::setSequenceNumber(uint32_t seqNum)
 {
   m_sequenceNumber = seqNum;
@@ -1710,6 +1723,14 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
   case kCGEventKeyDown:
   case kCGEventKeyUp:
   case kCGEventFlagsChanged:
+    // local-only key: deliver it to the host and never forward it to a
+    // client, regardless of which screen has focus.  Modifier-only
+    // (flags-changed) events always pass through to keep modifier state
+    // consistent with the remote side.
+    if (type != kCGEventFlagsChanged &&
+        screen->isLocalKey(CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode))) {
+      return event;
+    }
     screen->onKey(event);
     break;
   case kCGEventTapDisabledByTimeout:

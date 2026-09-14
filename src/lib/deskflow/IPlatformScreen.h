@@ -122,6 +122,14 @@ public:
   */
   virtual void setOptions(const OptionsList &options) = 0;
 
+  //! Set local-only key codes
+  /*!
+  Set the key codes that should always be delivered locally (to the host
+  system) and never forwarded to a client, regardless of which screen has
+  focus.  Platforms that do not support local-only keys ignore this list.
+  */
+  virtual void setLocalKeys(const std::vector<uint32_t> &keys) {}
+
   //! Set clipboard sequence number
   /*!
   Sets the sequence number to use in subsequent clipboard events.

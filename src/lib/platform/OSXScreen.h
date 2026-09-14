@@ -21,6 +21,7 @@
 #include <bitset>
 #include <map>
 #include <memory>
+#include <set>
 #include <thread>
 #include <vector>
 
@@ -90,6 +91,7 @@ public:
   void screensaver(bool activate) override;
   void resetOptions() override;
   void setOptions(const OptionsList &options) override;
+  void setLocalKeys(const std::vector<uint32_t> &keys) override;
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
   std::string getSecureInputApp() const override;
@@ -122,6 +124,9 @@ private:
   void constructMouseButtonEventMap();
 
   bool onKey(CGEventRef event);
+
+  // true if the given key code is in the local-only set
+  bool isLocalKey(uint32_t keyCode) const;
 
   void onMediaKey(CGEventRef event);
 
@@ -253,6 +258,10 @@ private:
 
   // keyboard stuff
   OSXKeyState *m_keyState;
+
+  // key codes that are always delivered locally and never forwarded to a
+  // client (see setLocalKeys)
+  std::set<uint32_t> m_localKeys;
 
   // clipboards
   OSXClipboard m_pasteboard;
