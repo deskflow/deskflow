@@ -1025,7 +1025,8 @@ void EiScreen::handleSystemEvent(const Event &)
       }
       break;
     case EI_EVENT_KEYBOARD_MODIFIERS:
-      // FIXME
+      LOG_VERBOSE("event: keyboard modifiers locked=0x%x", ei_event_keyboard_get_xkb_mods_locked(event));
+      m_keyState->updateLockedModifiers(ei_event_keyboard_get_xkb_mods_locked(event));
       break;
 
     // events below are for a receiver context (barriers)
