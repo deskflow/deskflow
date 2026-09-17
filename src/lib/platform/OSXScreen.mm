@@ -1660,17 +1660,13 @@ bool OSXScreen::HotKeyItem::operator<(const HotKeyItem &x) const
 CGEventRef
 OSXScreen::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
-  // this fix is really screwing with the correct show/hide behavior. it
-  // should be tested better before reintroducing.
-  return event;
-
   OSXScreen *screen = (OSXScreen *)refcon;
   if (screen->m_cursorHidden && type == kCGEventMouseMoved) {
 
     CGPoint pos = CGEventGetLocation(event);
     if (pos.x != screen->m_xCenter || pos.y != screen->m_yCenter) {
 
-      LOG_DEBUG("show cursor on secondary, type=%d pos=%d,%d", type, pos.x, pos.y);
+      LOG_DEBUG("show cursor on secondary, type=%d pos=%.0f,%.0f", static_cast<int>(type), pos.x, pos.y);
       screen->showCursor();
     }
   }
