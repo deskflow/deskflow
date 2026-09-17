@@ -352,9 +352,9 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
 
   // if we've used a command key then we want the glyph produced without
   // the option key (i.e. the base glyph).
-  // if (isCommand) {
-  modifiers &= ~optionKey;
-  //}
+  if (isCommand) {
+    modifiers &= ~optionKey;
+  }
 
   // choose action
   uint16_t action;
