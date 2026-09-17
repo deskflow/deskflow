@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 - 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -13,6 +13,7 @@
 #include "common/Settings.h"
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include "platform/EiClipboard.h"
 #include "platform/PortalClipboard.h"
 #endif
 
@@ -77,6 +78,9 @@ void PortalRemoteDesktop::reconnect(unsigned int timeout)
 void PortalRemoteDesktop::handleSessionClosed(XdpSession *session)
 {
   LOG_ERR("portal remote desktop session was closed, reconnecting");
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_clipboardClaimTracker.reset();
+#endif
   g_signal_handler_disconnect(session, m_sessionSignalId);
   m_sessionSignalId = 0;
   m_events->addEvent(Event(EventTypes::EISessionClosed, m_screen->getEventTarget()));
@@ -126,6 +130,11 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
       return;
     }
   }
+
+  // A clipboard update can arrive before the asynchronous portal session is
+  // ready. Publish the current cache now; the tracker suppresses this when the
+  // same content was already advertised after session start.
+  claimClipboard();
 #endif
 
   free(m_sessionRestoreToken);
@@ -235,6 +244,10 @@ void PortalRemoteDesktop::claimClipboard() const
   }
   if (!xdp_session_is_clipboard_enabled(m_session)) {
     LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
+    return;
+  }
+  if (!m_clipboardClaimTracker.shouldPublish(m_screen->getClipboardCache())) {
+    LOG_DEBUG("skipping duplicate portal clipboard claim");
     return;
   }
   PortalClipboard::claimOwnership(m_screen->getClipboardCache(), m_session);
