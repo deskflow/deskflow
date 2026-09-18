@@ -1,0 +1,5 @@
+<map id="Server::SwitchToScreenInfo" name="Server::SwitchToScreenInfo">
+<area shape="rect" id="Node000001" title="Switch to screen data." alt="" coords="5,78,190,103"/>
+<area shape="rect" id="Node000002" href="$classEventData.html" title=" " alt="" coords="57,5,138,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,44,100,79,95,77,96,48"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="src/lib/arch/IArchLog.h" name="src/lib/arch/IArchLog.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="7,5,160,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,151,71,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,28,59,79,45,136,40,135,54,77,76,33"/>
+<area shape="rect" id="Node000003" href="$LogLevel_8h.html" title=" " alt="" coords="68,78,205,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="93,28,121,65,116,66,92,33"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="123,103,68,144,65,139,118,103"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="102,151,171,175"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="138,101,139,136,134,134,135,105"/>
+</map>

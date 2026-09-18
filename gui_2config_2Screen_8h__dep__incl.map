@@ -1,0 +1,55 @@
+<map id="src/lib/gui/config/Screen.h" name="src/lib/gui/config/Screen.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1431,5,1547,44"/>
+<area shape="rect" id="Node000002" href="$ScreenSetupModel_8cpp.html" title=" " alt="" coords="1460,272,1676,297"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1476,56,1467,94,1466,112,1469,130,1487,173,1512,213,1559,273,1554,271,1508,216,1483,176,1464,131,1461,112,1462,93,1472,60"/>
+<area shape="rect" id="Node000003" href="$gui_2config_2Screen_8cpp.html" title=" " alt="" coords="1479,92,1595,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1508,55,1529,92,1524,90,1506,60"/>
+<area shape="rect" id="Node000004" href="$ScreenList_8h.html" title=" " alt="" coords="508,92,624,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1414,35,625,107,625,102,1417,30"/>
+<area shape="rect" id="Node000024" href="$ScreenSettingsDialog_8cpp.html" title=" " alt="" coords="1620,92,1796,131"/>
+<area shape="poly" id="edge29_Node000001_Node000024" title=" " alt="" coords="1552,47,1662,91,1657,91,1551,53"/>
+<area shape="rect" id="Node000005" href="$ScreenSetupModel_8h.html" title=" " alt="" coords="984,186,1186,210"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="639,122,1015,184,1011,186,639,127"/>
+<area shape="rect" id="Node000012" href="$ScreenList_8cpp.html" title=" " alt="" coords="15,179,131,217"/>
+<area shape="poly" id="edge12_Node000004_Node000012" title=" " alt="" coords="490,124,332,148,144,181,133,183,130,179,143,176,331,143,495,121"/>
+<area shape="rect" id="Node000013" href="$ServerConfig_8h.html" title=" " alt="" coords="594,179,710,217"/>
+<area shape="poly" id="edge13_Node000004_Node000013" title=" " alt="" coords="596,139,635,178,630,178,595,144"/>
+<area shape="rect" id="Node000022" href="$ScreenDuplicationsValidator_8cpp.html" title=" " alt="" coords="156,179,369,217"/>
+<area shape="poly" id="edge27_Node000004_Node000022" title=" " alt="" coords="491,134,331,180,329,176,496,131"/>
+<area shape="rect" id="Node000023" href="$ScreenNameValidator_8cpp.html" title=" " alt="" coords="393,179,569,217"/>
+<area shape="poly" id="edge28_Node000004_Node000023" title=" " alt="" coords="539,140,502,180,498,176,535,143"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="1166,211,1504,271,1498,272,1166,216"/>
+<area shape="rect" id="Node000006" href="$ServerConfigDialog_8h.html" title=" " alt="" coords="738,265,888,304"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="1036,215,874,267,873,262,1031,216"/>
+<area shape="rect" id="Node000009" href="$NewScreenWidget_8cpp.html" title=" " alt="" coords="1099,265,1258,304"/>
+<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="1109,218,1160,265,1155,264,1108,223"/>
+<area shape="rect" id="Node000010" href="$ScreenSetupView_8cpp.html" title=" " alt="" coords="1282,265,1435,304"/>
+<area shape="poly" id="edge10_Node000005_Node000010" title=" " alt="" coords="1137,213,1300,265,1295,265,1136,218"/>
+<area shape="rect" id="Node000011" href="$TrashScreenWidget_8cpp.html" title=" " alt="" coords="911,265,1075,304"/>
+<area shape="poly" id="edge11_Node000005_Node000011" title=" " alt="" coords="1064,220,1015,267,1012,262,1059,222"/>
+<area shape="rect" id="Node000007" href="$MainWindow_8cpp.html" title=" " alt="" coords="223,446,403,470"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="781,313,681,393,630,409,559,424,404,448,403,443,558,419,628,404,678,388,776,315"/>
+<area shape="rect" id="Node000008" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="742,352,905,391"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="819,318,823,353,819,350,816,322"/>
+<area shape="poly" id="edge23_Node000013_Node000006" title=" " alt="" coords="701,222,780,265,775,265,701,228"/>
+<area shape="rect" id="Node000014" href="$MainWindow_8h.html" title=" " alt="" coords="502,359,668,384"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="671,229,683,267,684,286,678,305,665,324,649,339,614,361,612,356,646,335,661,320,673,303,678,286,678,268,669,234"/>
+<area shape="rect" id="Node000016" href="$ServerConfig_8cpp.html" title=" " alt="" coords="388,265,515,304"/>
+<area shape="poly" id="edge17_Node000013_Node000016" title=" " alt="" coords="591,225,497,267,495,262,596,223"/>
+<area shape="rect" id="Node000017" href="$CoreProcess_8h.html" title=" " alt="" coords="168,272,365,297"/>
+<area shape="poly" id="edge18_Node000013_Node000017" title=" " alt="" coords="576,220,326,274,325,269,580,216"/>
+<area shape="rect" id="Node000019" href="$ActionDialog_8cpp.html" title=" " alt="" coords="539,265,663,304"/>
+<area shape="poly" id="edge22_Node000013_Node000019" title=" " alt="" coords="635,229,614,267,610,263,630,233"/>
+<area shape="rect" id="Node000020" href="$SettingsDialog_8h.html" title=" " alt="" coords="21,265,144,304"/>
+<area shape="poly" id="edge24_Node000013_Node000020" title=" " alt="" coords="576,219,459,237,365,244,273,251,156,268,145,270,142,265,155,263,272,246,365,239,459,232,581,217"/>
+<area shape="poly" id="edge16_Node000014_Node000007" title=" " alt="" coords="536,388,351,448,350,442,531,389"/>
+<area shape="rect" id="Node000015" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="510,439,660,477"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="587,397,587,440,583,437,583,401"/>
+<area shape="poly" id="edge19_Node000017_Node000007" title=" " alt="" coords="259,310,252,350,252,370,257,390,276,420,300,446,295,444,272,424,252,392,247,371,247,350,255,314"/>
+<area shape="poly" id="edge20_Node000017_Node000014" title=" " alt="" coords="325,299,543,357,538,360,324,304"/>
+<area shape="rect" id="Node000018" href="$CoreProcess_8cpp.html" title=" " alt="" coords="266,359,477,384"/>
+<area shape="poly" id="edge21_Node000017_Node000018" title=" " alt="" coords="293,304,360,358,355,359,292,309"/>
+<area shape="poly" id="edge25_Node000020_Node000007" title=" " alt="" coords="121,311,300,444,295,447,119,316"/>
+<area shape="rect" id="Node000021" href="$SettingsDialog_8cpp.html" title=" " alt="" coords="5,352,141,391"/>
+<area shape="poly" id="edge26_Node000020_Node000021" title=" " alt="" coords="80,317,78,352,72,351,78,322"/>
+</map>

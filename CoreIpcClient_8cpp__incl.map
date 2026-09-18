@@ -1,0 +1,14 @@
+<map id="src/lib/gui/ipc/CoreIpcClient.cpp" name="src/lib/gui/ipc/CoreIpcClient.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="136,5,342,30"/>
+<area shape="rect" id="Node000002" href="$CoreIpcClient_8h.html" title=" " alt="" coords="30,78,141,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,33,126,73,123,69,215,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="166,78,312,103"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="240,28,241,63,237,61,238,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="336,78,401,103"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="261,28,337,70,331,71,260,33"/>
+<area shape="rect" id="Node000003" href="$IpcClient_8h.html" title=" " alt="" coords="5,151,89,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,106,63,138,58,136,80,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="51,223,120,248"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="91,101,103,150,102,181,97,210,92,207,97,180,98,151,88,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="55,174,75,209,69,210,52,178"/>
+</map>

@@ -1,0 +1,40 @@
+<map id="src/lib/client/ServerProxy1_7.h" name="src/lib/client/ServerProxy1_7.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="163,5,362,30"/>
+<area shape="rect" id="Node000002" href="$ServerProxy_8h.html" title=" " alt="" coords="194,78,332,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="263,28,265,63,260,62,262,33"/>
+<area shape="rect" id="Node000003" href="$Enums_8h.html" title=" " alt="" coords="6,151,133,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="229,105,117,147,114,143,232,101"/>
+<area shape="rect" id="Node000005" href="$ClipboardChunk_8h.html" title=" " alt="" coords="305,151,487,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="285,101,363,142,358,144,285,106"/>
+<area shape="rect" id="Node000013" href="$ClipboardTypes_8h.html" title=" " alt="" coords="99,223,277,248"/>
+<area shape="poly" id="edge18_Node000002_Node000013" title=" " alt="" coords="258,101,203,211,199,208,255,105"/>
+<area shape="rect" id="Node000018" href="$KeyTypes_8h.html" title=" " alt="" coords="666,151,811,175"/>
+<area shape="poly" id="edge19_Node000002_Node000018" title=" " alt="" coords="332,99,653,147,649,150,333,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,223,75,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="64,178,53,210,48,208,65,173"/>
+<area shape="rect" id="Node000006" href="$Chunk_8h.html" title=" " alt="" coords="574,223,700,248"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="436,173,586,218,580,219,436,179"/>
+<area shape="poly" id="edge12_Node000005_Node000013" title=" " alt="" coords="360,178,238,220,236,216,364,174"/>
+<area shape="rect" id="Node000015" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="378,223,550,248"/>
+<area shape="poly" id="edge14_Node000005_Node000015" title=" " alt="" coords="408,173,445,212,440,212,407,179"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="725,223,790,248"/>
+<area shape="poly" id="edge16_Node000005_Node000016" title=" " alt="" coords="464,173,712,222,707,224,464,179"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="301,223,355,248"/>
+<area shape="poly" id="edge17_Node000005_Node000017" title=" " alt="" coords="387,174,351,214,348,210,383,178"/>
+<area shape="rect" id="Node000007" href="$Event_8h.html" title=" " alt="" coords="586,296,683,321"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="639,246,638,282,634,279,635,251"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="707,296,768,321"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="654,246,711,287,706,286,653,251"/>
+<area shape="rect" id="Node000008" href="$EventTypes_8h.html" title=" " alt="" coords="688,369,789,393"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="653,319,712,360,706,359,651,324"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="512,369,581,393"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="623,320,574,361,572,356,618,322"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="605,369,664,393"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="636,319,637,355,633,352,633,323"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="751,441,814,466"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="747,392,770,429,765,427,745,396"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="296,296,357,321"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="211,246,293,288,288,289,211,251"/>
+<area shape="poly" id="edge15_Node000015_Node000014" title=" " alt="" coords="444,247,364,291,362,286,439,250"/>
+<area shape="poly" id="edge20_Node000018_Node000009" title=" " alt="" coords="758,173,784,194,804,222,813,249,817,278,816,334,807,386,794,428,791,424,802,385,811,334,812,278,807,251,799,225,780,197,757,178"/>
+</map>

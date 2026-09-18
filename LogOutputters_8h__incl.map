@@ -1,0 +1,20 @@
+<map id="src/lib/base/LogOutputters.h" name="src/lib/base/LogOutputters.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="213,5,399,30"/>
+<area shape="rect" id="Node000002" href="$ILogOutputter_8h.html" title=" " alt="" coords="137,78,280,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="288,32,238,71,235,67,292,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="148,296,213,321"/>
+<area shape="poly" id="edge10_Node000001_Node000006" title=" " alt="" coords="314,28,338,68,362,125,369,157,371,189,366,221,352,250,327,275,295,291,261,302,229,307,228,302,260,297,293,287,324,270,348,246,361,219,366,189,364,158,357,127,333,71,313,33"/>
+<area shape="rect" id="Node000003" href="$Log_8h.html" title=" " alt="" coords="166,151,251,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="210,101,211,136,206,134,207,106"/>
+<area shape="rect" id="Node000004" href="$LogLevel_8h.html" title=" " alt="" coords="5,223,143,248"/>
+<area shape="poly" id="edge9_Node000002_Node000004" title=" " alt="" coords="199,105,97,214,93,210,197,100"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="185,178,111,218,108,214,188,174"/>
+<area shape="poly" id="edge8_Node000003_Node000006" title=" " alt="" coords="209,174,188,282,183,280,204,177"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="217,223,256,248"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="214,173,229,210,224,208,212,178"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="280,223,337,248"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="226,173,282,214,277,214,225,179"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="39,296,109,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="76,247,77,281,71,280,72,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="92,246,153,286,148,288,91,251"/>
+</map>
