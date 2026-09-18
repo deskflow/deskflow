@@ -36,5 +36,5 @@ void ClientProxy1_8::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, 
       (CLOG_VERBOSE "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, layout=%s", getName().c_str(), key,
        mask, button, language.c_str())
   );
-  ProtocolUtil::writef(getStream(), kMsgDKeyDownLang, key, mask, button, &language);
+  ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button, &language);
 }

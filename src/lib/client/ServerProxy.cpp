@@ -221,23 +221,23 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     mouseWheel();
   }
 
-  else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
+  else if (memcmp(code, kMsgDKeyDown1_1, 4) == 0) {
     uint16_t id = 0;
     uint16_t mask = 0;
     uint16_t button = 0;
-    ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
+    ProtocolUtil::readf(m_stream, kMsgDKeyDown1_1 + 4, &id, &mask, &button);
     LOG_VERBOSE("recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
 
     keyDown(id, mask, button, "");
   }
 
-  else if (memcmp(code, kMsgDKeyDownLang, 4) == 0) {
+  else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
     std::string lang;
     uint16_t id = 0;
     uint16_t mask = 0;
     uint16_t button = 0;
 
-    ProtocolUtil::readf(m_stream, kMsgDKeyDownLang + 4, &id, &mask, &button, &lang);
+    ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button, &lang);
     LOG_VERBOSE("recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str());
 
     keyDown(id, mask, button, lang);

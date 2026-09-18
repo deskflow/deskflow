@@ -504,7 +504,7 @@ extern const char *const kMsgCKeepAlive;
  */
 
 /**
- * @brief Key press with language code (v1.8+)
+ * @brief Key press event
  *
  * **Message Code**: `"DKDL"`
  * **Direction**: Primary → Secondary
@@ -524,34 +524,6 @@ extern const char *const kMsgCKeepAlive;
  * "DKDL\x00\x61\x00\x00\x00\x1E\x00\x00\x00\x02en"
  * ```
  *
- * Enhanced version of kMsgDKeyDown that includes language information
- * to help clients handle unknown language characters correctly.
- *
- * @see kMsgDKeyDown
- * @since Protocol version 1.8
- */
-extern const char *const kMsgDKeyDownLang;
-
-/**
- * @brief Key press event
- *
- * **Message Code**: `"DKDN"`
- * **Direction**: Primary → Secondary
- * **Format**: `"DKDN%2i%2i%2i"`
- * **Parameters**:
- * - `$1`: KeyID (2 bytes) - Virtual key identifier, often called a "keysym" on Linux/X11. This is platform-dependent
- * and corresponds to values like `XK_a` on X11/Linux, `'a'` on macOS, and `'A'` on Windows.
- * - `$2`: KeyModifierMask (2 bytes) - Active modifier keys
- * - `$3`: KeyButton (2 bytes) - Physical key code, often called a "keycode" or "scancode". This is the raw,
- * platform-dependent scan code of the key pressed.
- *
- * **Example**:
- *
- * 'a' key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E)
- * ```
- * "DKDN\x00\x61\x00\x00\x00\x1E"
- * ```
- *
  * **Key Mapping Strategy**:
  * The KeyButton parameter is crucial for proper key release handling.
  * The secondary screen should:
@@ -564,10 +536,41 @@ extern const char *const kMsgDKeyDownLang;
  * - Different keyboard layouts may produce different KeyIDs
  * - Modifier keys released before the main key can alter KeyID
  *
- * @see kMsgDKeyUp, kMsgDKeyDownLang
- * @since Protocol version 1.1
+ * The language code helps clients handle characters from a keyboard layout
+ * they do not have active. Only sent to clients that replied 1.8 in their hello.
+ *
+ * @see kMsgDKeyUp, kMsgDKeyDown1_1
+ * @since Protocol version 1.8
  */
 extern const char *const kMsgDKeyDown;
+
+/**
+ * @brief Key press event (v1.1 to v1.7)
+ *
+ * **Message Code**: `"DKDN"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DKDN%2i%2i%2i"`
+ * **Parameters**:
+ * - `$1`: KeyID (2 bytes) - Virtual key identifier
+ * - `$2`: KeyModifierMask (2 bytes) - Active modifier keys
+ * - `$3`: KeyButton (2 bytes) - Physical key code
+ *
+ * **Example**:
+ *
+ * 'a' key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E)
+ * ```
+ * "DKDN\x00\x61\x00\x00\x00\x1E"
+ * ```
+ *
+ * Version without the language code. Used when communicating with
+ * protocol version 1.1 through 1.7 clients (Synergy 1.4 to 1.14.1,
+ * Barrier, Input Leap). The key mapping strategy is the same as for
+ * kMsgDKeyDown.
+ *
+ * @see kMsgDKeyDown
+ * @since Protocol version 1.1
+ */
+extern const char *const kMsgDKeyDown1_1;
 
 /**
  * @brief Key press event (legacy v1.0)
@@ -582,8 +585,8 @@ extern const char *const kMsgDKeyDown;
  * Legacy version without KeyButton parameter. Used only when
  * communicating with protocol version 1.0 clients.
  *
- * @deprecated Use kMsgDKeyDown for protocol version 1.1+
- * @see kMsgDKeyDown
+ * @deprecated Use kMsgDKeyDown1_1 for protocol version 1.1+
+ * @see kMsgDKeyDown1_1
  * @since Protocol version 1.0
  */
 extern const char *const kMsgDKeyDown1_0;

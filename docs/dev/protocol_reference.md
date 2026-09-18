@@ -155,8 +155,8 @@ This table lists all protocol messages in alphabetical order. For a typical sequ
 | [**DDRG**](@ref kMsgDDragInfo) | @ref kMsgDDragInfo | Data | Server→Client | Drag file info | [MsgSize](#constraint-protocol-max-message-length), [ListSize](#constraint-max-list) | 1.5+ |
 | [**DFTR**](@ref kMsgDFileTransfer) | @ref kMsgDFileTransfer | Data | Both | File transfer data | [MsgSize](#constraint-protocol-max-message-length) | 1.5+ |
 | [**DINF**](@ref kMsgDInfo) | @ref kMsgDInfo | Data | Client→Server | Screen information | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
-| [**DKDL**](@ref kMsgDKeyDownLang) | @ref kMsgDKeyDownLang | Data | Server→Client | Key down with language | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.8+ |
-| [**DKDN**](@ref kMsgDKeyDown) | @ref kMsgDKeyDown | Data | Server→Client | Key down | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
+| [**DKDL**](@ref kMsgDKeyDown) | @ref kMsgDKeyDown | Data | Server→Client | Key down with language | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.8+ |
+| [**DKDN**](@ref kMsgDKeyDown1_1) | @ref kMsgDKeyDown1_1 | Data | Server→Client | Key down | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
 | [**DKDN**](@ref kMsgDKeyDown1_0) | @ref kMsgDKeyDown1_0 | Data | Server→Client | Key down (legacy) | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.0 |
 | [**DKRP**](@ref kMsgDKeyRepeat) | @ref kMsgDKeyRepeat | Data | Server→Client | Key repeat | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
 | [**DKRP**](@ref kMsgDKeyRepeat1_0) | @ref kMsgDKeyRepeat1_0 | Data | Server→Client | Key repeat (legacy) | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.0 |
@@ -288,8 +288,8 @@ A modifier (modifier mask) represents the state of modifier keys (like Shift, Co
 | **1.4** | Nov 2012 | Synergy | Encryption support (@ref SecureSocket) | 1.4+ |
 | **1.5** | Sep 2013 | Synergy | File transfer | 1.5+ |
 | **1.6** | Jan 2014 | Synergy | Clipboard streaming | 1.6+ |
-| **1.7** | Nov 2021 | Synergy | Secure input notifications | 1.7+ |
-| **1.8** | Jun 2025 | Synergy | Language synchronization | 1.8+ |
+| **1.7** | Sep 2021 | Synergy | Secure input notifications | 1.7+ |
+| **1.8** | Nov 2021 | Synergy | Language synchronization | 1.8+ |
 
 ### Version Migration Guide
 
