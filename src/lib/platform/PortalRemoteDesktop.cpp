@@ -92,9 +92,15 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   g_autoptr(GError) error = nullptr;
   auto session = XDP_SESSION(object);
   if (!xdp_session_start_finish(session, res, &error)) {
-    LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
-    m_events->addEvent(Event(EventTypes::Quit));
+    if (m_sessionIteration <= 1) {
+      LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
+      g_main_loop_quit(m_glibMainLoop);
+      m_events->addEvent(Event(EventTypes::Quit));
+      return;
+    }
+    LOG_DEBUG("failed to start portal remote desktop session, retrying: %s", error->message);
+    g_clear_object(&m_session);
+    reconnect(1000);
     return;
   }
 

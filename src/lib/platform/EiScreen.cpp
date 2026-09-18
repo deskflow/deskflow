@@ -997,16 +997,13 @@ void EiScreen::handleSystemEvent(const Event &)
       //
       // We must release the xdg-portal InputCapture in case it is still active
       // so that the cursor is usable and not stuck on the deskflow server.
+      //
+      // The capture itself is kept and recovers its own session. Replacing it would drop the
+      // portal permission this process was granted, which is not persisted across processes.
       LOG_WARN("disconnected from eis, will afterwards commence attempt to reconnect");
-      if (m_isPrimary) {
-        LOG_DEBUG("re-allocating portal input capture connection and releasing active captures");
-        if (m_portalInputCapture) {
-          if (m_portalInputCapture->isActive()) {
-            m_portalInputCapture->release();
-          }
-          delete m_portalInputCapture;
-          m_portalInputCapture = new PortalInputCapture(this, this->m_events);
-        }
+      if (m_isPrimary && m_portalInputCapture && m_portalInputCapture->isActive()) {
+        LOG_DEBUG("releasing active captures");
+        m_portalInputCapture->release();
       }
       this->handlePortalSessionClosed();
       break;
