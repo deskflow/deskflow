@@ -616,10 +616,42 @@ extern const char *const kMsgDKeyDown1_0;
  * Sent when a key is held down and auto-repeating. The repeat count
  * indicates how many repeat events occurred since the last message.
  *
- * @see kMsgDKeyDown
- * @since Protocol version 1.1
+ * Shares the `DKRP` message code with kMsgDKeyRepeat1_1, so the receiver can
+ * only tell the two apart by the negotiated protocol version. Only sent to
+ * clients that replied 1.8 in their hello.
+ *
+ * @see kMsgDKeyDown, kMsgDKeyRepeat1_1
+ * @since Protocol version 1.8
  */
 extern const char *const kMsgDKeyRepeat;
+
+/**
+ * @brief Key auto-repeat event (v1.1 to v1.7)
+ *
+ * **Message Code**: `"DKRP"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DKRP%2i%2i%2i%2i"`
+ * **Parameters**:
+ * - `$1`: KeyID (2 bytes) - Virtual key identifier
+ * - `$2`: KeyModifierMask (2 bytes) - Active modifier keys
+ * - `$3`: Repeat count (2 bytes) - Number of repeats
+ * - `$4`: KeyButton (2 bytes) - Physical key code
+ *
+ * **Example**:
+ *
+ * 'a' key repeating 3 times
+ * ```
+ * "DKRP\x00\x61\x00\x00\x00\x03\x00\x1E"
+ * ```
+ *
+ * Version without the language code. Used when communicating with
+ * protocol version 1.1 through 1.7 clients (Synergy 1.4 to 1.14.1,
+ * Barrier, Input Leap).
+ *
+ * @see kMsgDKeyRepeat
+ * @since Protocol version 1.1
+ */
+extern const char *const kMsgDKeyRepeat1_1;
 
 /**
  * @brief Key auto-repeat event (legacy v1.0)
@@ -632,10 +664,10 @@ extern const char *const kMsgDKeyRepeat;
  * - `$2`: KeyModifierMask (2 bytes) - Active modifier keys
  * - `$3`: Repeat count (2 bytes) - Number of repeats
  *
- * Legacy version without KeyButton and language parameters.
+ * Legacy version without the KeyButton parameter.
  *
- * @deprecated Use kMsgDKeyRepeat for protocol version 1.1+
- * @see kMsgDKeyRepeat
+ * @deprecated Use kMsgDKeyRepeat1_1 for protocol version 1.1+
+ * @see kMsgDKeyRepeat1_1
  * @since Protocol version 1.0
  */
 extern const char *const kMsgDKeyRepeat1_0;

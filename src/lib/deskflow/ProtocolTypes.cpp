@@ -31,6 +31,7 @@ const char *const kMsgDKeyDown1_1 = "DKDN%2i%2i%2i";
 const char *const kMsgDKeyDown1_0 = "DKDN%2i%2i";
 
 const char *const kMsgDKeyRepeat = "DKRP%2i%2i%2i%2i%s";
+const char *const kMsgDKeyRepeat1_1 = "DKRP%2i%2i%2i%2i";
 const char *const kMsgDKeyRepeat1_0 = "DKRP%2i%2i%2i";
 const char *const kMsgDKeyUp = "DKUP%2i%2i%2i";
 const char *const kMsgDKeyUp1_0 = "DKUP%2i%2i";

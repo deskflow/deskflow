@@ -158,7 +158,8 @@ This table lists all protocol messages in alphabetical order. For a typical sequ
 | [**DKDL**](@ref kMsgDKeyDown) | @ref kMsgDKeyDown | Data | Server→Client | Key down with language | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.8+ |
 | [**DKDN**](@ref kMsgDKeyDown1_1) | @ref kMsgDKeyDown1_1 | Data | Server→Client | Key down | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
 | [**DKDN**](@ref kMsgDKeyDown1_0) | @ref kMsgDKeyDown1_0 | Data | Server→Client | Key down (legacy) | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.0 |
-| [**DKRP**](@ref kMsgDKeyRepeat) | @ref kMsgDKeyRepeat | Data | Server→Client | Key repeat | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
+| [**DKRP**](@ref kMsgDKeyRepeat) | @ref kMsgDKeyRepeat | Data | Server→Client | Key repeat with language | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.8+ |
+| [**DKRP**](@ref kMsgDKeyRepeat1_1) | @ref kMsgDKeyRepeat1_1 | Data | Server→Client | Key repeat | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
 | [**DKRP**](@ref kMsgDKeyRepeat1_0) | @ref kMsgDKeyRepeat1_0 | Data | Server→Client | Key repeat (legacy) | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.0 |
 | [**DKUP**](@ref kMsgDKeyUp) | @ref kMsgDKeyUp | Data | Server→Client | Key up | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
 | [**DKUP**](@ref kMsgDKeyUp1_0) | @ref kMsgDKeyUp1_0 | Data | Server→Client | Key up (legacy) | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.0 |
