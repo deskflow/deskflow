@@ -13,6 +13,7 @@ const char *const kMsgHello = "%7s%2i%2i";
 const char *const kMsgHelloArgs = "%2i%2i";
 const char *const kMsgHelloBack = "%7s%2i%2i%s";
 const char *const kMsgHelloBackArgs = "%2i%2i%s";
+
 const char *const kMsgCNoop = "CNOP";
 const char *const kMsgCClose = "CBYE";
 const char *const kMsgCEnter = "CINN%2i%2i%4i%2i";
@@ -22,9 +23,13 @@ const char *const kMsgCScreenSaver = "CSEC%1i";
 const char *const kMsgCResetOptions = "CROP";
 const char *const kMsgCInfoAck = "CIAK";
 const char *const kMsgCKeepAlive = "CALV";
-const char *const kMsgDKeyDownLang = "DKDL%2i%2i%2i%s";
-const char *const kMsgDKeyDown = "DKDN%2i%2i%2i";
+
+// This is weird, it goes from DKDN to DKDL. Someone misunderstood the pattern (keep the
+// code, pick the form by negotiated version). Do not copy this.
+const char *const kMsgDKeyDown = "DKDL%2i%2i%2i%s";
+const char *const kMsgDKeyDown1_1 = "DKDN%2i%2i%2i";
 const char *const kMsgDKeyDown1_0 = "DKDN%2i%2i";
+
 const char *const kMsgDKeyRepeat = "DKRP%2i%2i%2i%2i%s";
 const char *const kMsgDKeyRepeat1_0 = "DKRP%2i%2i%2i";
 const char *const kMsgDKeyUp = "DKUP%2i%2i%2i";
