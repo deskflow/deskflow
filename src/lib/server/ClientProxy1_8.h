@@ -15,6 +15,7 @@ public:
   ~ClientProxy1_8() override = default;
 
   void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) override;
+  void keyRepeat(KeyID, KeyModifierMask, int32_t count, KeyButton, const std::string &) override;
 
 private:
   void synchronizeLanguages() const;
