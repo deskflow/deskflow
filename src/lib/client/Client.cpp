@@ -12,6 +12,8 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "client/ServerProxy.h"
+#include "client/ServerProxy1_7.h"
+#include "client/ServerProxy1_8.h"
 #include "common/NetworkProtocol.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
@@ -465,18 +467,38 @@ void Client::setupConnection()
   });
 }
 
-void Client::setupScreen()
+bool Client::setupScreen(int16_t protocolMinor)
 {
   assert(m_server == nullptr);
 
   m_ready = false;
-  m_server = new ServerProxy(this, m_stream, m_events);
-  m_events->addHandler(EventTypes::ScreenShapeChanged, getEventTarget(), [this](const auto &) {
-    handleShapeChanged();
-  });
-  m_events->addHandler(EventTypes::ClipboardGrabbed, getEventTarget(), [this](const auto &e) {
-    handleClipboardGrabbed(e);
-  });
+
+  // only 1.6 and later have a proxy: the clipboard, mouse wheel and key message formats
+  // differ below that, and nothing older (synergy 1.4 and earlier) still needs supporting.
+  // a version with no case is refused by the hello handler.
+  switch (protocolMinor) {
+  case 6:
+    m_server = new ServerProxy(this, m_stream, m_events);
+    break;
+  case 7:
+    m_server = new ServerProxy1_7(this, m_stream, m_events);
+    break;
+  case 8:
+    m_server = new ServerProxy1_8(this, m_stream, m_events);
+    break;
+  default:
+    break;
+  }
+
+  if (m_server != nullptr) {
+    m_events->addHandler(EventTypes::ScreenShapeChanged, getEventTarget(), [this](const auto &) {
+      handleShapeChanged();
+    });
+    m_events->addHandler(EventTypes::ClipboardGrabbed, getEventTarget(), [this](const auto &e) {
+      handleClipboardGrabbed(e);
+    });
+  }
+  return m_server != nullptr;
 }
 
 void Client::setupTimer()
@@ -683,6 +705,17 @@ void Client::handleHello()
     );
   }
 
+  // no proxy speaks the negotiated version, so hang up as incompatible rather than
+  // talk a version the client does not implement, the same rule the server applies
+  // when it picks a client proxy
+  if (!setupScreen(helloBackMinor)) {
+    LOG_WARN("server protocol version not supported: %d.%d", serverMajor, serverMinor);
+    sendConnectionFailedEvent(IncompatibleClientException(serverMajor, serverMinor).what());
+    cleanupTimer();
+    cleanupConnection();
+    return;
+  }
+
   LOG_DEBUG("saying hello back with version %s %d.%d", protocolName.c_str(), kProtocolMajorVersion, helloBackMinor);
 
   // dynamically build write format for hello back since `ProtocolUtil::writef`
@@ -691,7 +724,6 @@ void Client::handleHello()
   ProtocolUtil::writef(m_stream, helloBackMessage.c_str(), kProtocolMajorVersion, helloBackMinor, &m_name);
 
   // now connected but waiting to complete handshake
-  setupScreen();
   cleanupTimer();
 
   // make sure we process any remaining messages later.  we won't
