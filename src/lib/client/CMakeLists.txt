@@ -8,6 +8,10 @@ add_library(client STATIC
   Client.h
   ServerProxy.cpp
   ServerProxy.h
+  ServerProxy1_7.cpp
+  ServerProxy1_7.h
+  ServerProxy1_8.cpp
+  ServerProxy1_8.h
 )
 
 target_link_libraries(client PUBLIC common)

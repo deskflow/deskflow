@@ -197,7 +197,7 @@ private:
   void sendConnectionFailedEvent(const char *msg);
   void setupConnecting();
   void setupConnection();
-  void setupScreen();
+  bool setupScreen(int16_t protocolMinor);
   void setupTimer();
   void cleanup();
   void cleanupConnecting();

@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -18,7 +18,6 @@
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
-#include "deskflow/ipc/CoreIpc.h"
 #include "io/IStream.h"
 
 #include <cstring>
@@ -140,12 +139,7 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
     setOptions();
 
     // handshake is complete
-    m_parser = &ServerProxy::parseMessage;
-
-    if (const auto missedKeyboardLayouts = m_layoutManager.getMissedLayouts(); !missedKeyboardLayouts.empty()) {
-      LOG_WARN("server layouts missing on this computer: %s", missedKeyboardLayouts.c_str());
-      ipcSendToClient("missingKeyboardLayouts", QString::fromStdString(missedKeyboardLayouts));
-    }
+    m_parser = &ServerProxy::handleMessage;
 
     m_client->handshakeComplete();
   }
@@ -196,13 +190,27 @@ ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *
     LOG_ERR("server disconnected due to a protocol error");
     requestRefuseConnection(ProtocolError, "server reported a protocol error");
     return Disconnect;
-  } else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
-    setServerLanguages();
   } else {
     return Unknown;
   }
 
   return Okay;
+}
+
+ServerProxy::ConnectionResult ServerProxy::handleMessage(const uint8_t *code)
+{
+  const auto result = parseMessage(code);
+  if (result == ConnectionResult::Okay) {
+    // send a reply.  this is intended to work around a delay when
+    // running a linux server and an OS X (any BSD?) client.  the
+    // client waits to send an ACK (if the system control flag
+    // net.inet.tcp.delayed_ack is 1) in hopes of piggybacking it
+    // on a data packet.  we provide that packet here.  i don't
+    // know why a delayed ACK should cause the server to wait since
+    // TCP_NODELAY is enabled.
+    ProtocolUtil::writef(m_stream, kMsgCNoop);
+  }
+  return result;
 }
 
 ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
@@ -231,18 +239,6 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     keyDown(id, mask, button, "");
   }
 
-  else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
-    std::string lang;
-    uint16_t id = 0;
-    uint16_t mask = 0;
-    uint16_t button = 0;
-
-    ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button, &lang);
-    LOG_VERBOSE("recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str());
-
-    keyDown(id, mask, button, lang);
-  }
-
   else if (memcmp(code, kMsgDKeyUp, 4) == 0) {
     keyUp();
   }
@@ -255,8 +251,15 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     mouseUp();
   }
 
-  else if (memcmp(code, kMsgDKeyRepeat, 4) == 0) {
-    keyRepeat();
+  else if (memcmp(code, kMsgDKeyRepeat1_1, 4) == 0) {
+    uint16_t id = 0;
+    uint16_t mask = 0;
+    uint16_t count = 0;
+    uint16_t button = 0;
+    ProtocolUtil::readf(m_stream, kMsgDKeyRepeat1_1 + 4, &id, &mask, &count, &button);
+    LOG_VERBOSE("recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button);
+
+    keyRepeat(id, mask, count, button, "");
   }
 
   else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
@@ -305,10 +308,6 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     setOptions();
   }
 
-  else if (memcmp(code, kMsgDSecureInputNotification, 4) == 0) {
-    secureInputNotification();
-  }
-
   else if (memcmp(code, kMsgCClose, 4) == 0) {
     // server wants us to hangup
     LOG_VERBOSE("recv close");
@@ -321,15 +320,6 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
   } else {
     return Unknown;
   }
-
-  // send a reply.  this is intended to work around a delay when
-  // running a linux server and an OS X (any BSD?) client.  the
-  // client waits to send an ACK (if the system control flag
-  // net.inet.tcp.delayed_ack is 1) in hopes of piggybacking it
-  // on a data packet.  we provide that packet here.  i don't
-  // know why a delayed ACK should cause the server to wait since
-  // TCP_NODELAY is enabled.
-  ProtocolUtil::writef(m_stream, kMsgCNoop);
 
   return Okay;
 }
@@ -521,8 +511,6 @@ void ServerProxy::enter()
   m_dxMouse = 0;
   m_dyMouse = 0;
   m_seqNum = seqNum;
-  m_serverLayout = "";
-  m_isUserNotifiedAboutLayoutSyncError = false;
 
   // forward
   m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
@@ -588,45 +576,25 @@ void ServerProxy::grabClipboard()
 
 void ServerProxy::keyDown(uint16_t id, uint16_t mask, uint16_t button, const std::string &lang)
 {
-  // get mouse up to date
   flushCompressedMouse();
-  setActiveServerLanguage(lang);
 
-  // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key down translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
-  // forward
   m_client->keyDown(id2, mask2, button, lang);
 }
 
-void ServerProxy::keyRepeat()
+void ServerProxy::keyRepeat(uint16_t id, uint16_t mask, uint16_t count, uint16_t button, const std::string &lang)
 {
-  // get mouse up to date
   flushCompressedMouse();
 
-  // parse
-  uint16_t id;
-  uint16_t mask;
-  uint16_t count;
-  uint16_t button;
-  std::string lang;
-  ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
-  LOG(
-      (CLOG_VERBOSE "recv key repeat id=0x%08x, mask=0x%04x, count=%d, "
-                    "button=0x%04x, lang=\"%s\"",
-       id, mask, count, button, lang.c_str())
-  );
-
-  // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
-  // forward
   m_client->keyRepeat(id2, mask2, count, button, lang);
 }
 
@@ -840,39 +808,4 @@ void ServerProxy::infoAcknowledgment()
 {
   LOG_VERBOSE("recv info acknowledgment");
   m_ignoreMouse = false;
-}
-
-void ServerProxy::secureInputNotification()
-{
-  std::string app;
-  ProtocolUtil::readf(m_stream, kMsgDSecureInputNotification + 4, &app);
-  LOG_INFO("application \"%s\" is blocking the keyboard", app.c_str());
-}
-
-void ServerProxy::setServerLanguages()
-{
-  std::string serverLayout;
-  ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLayout);
-  m_layoutManager.setRemoteLayouts(serverLayout);
-}
-
-void ServerProxy::setActiveServerLanguage(const std::string_view &language)
-{
-  if (!language.empty() && (language.size() > 0)) {
-    if (m_serverLayout != language) {
-      m_isUserNotifiedAboutLayoutSyncError = false;
-      m_serverLayout = language;
-    }
-
-    if (!m_layoutManager.isLayoutInstalled(m_serverLayout)) {
-      if (!m_isUserNotifiedAboutLayoutSyncError) {
-        LOG_WARN("current server layout is not installed on client");
-        m_isUserNotifiedAboutLayoutSyncError = true;
-      }
-    } else {
-      m_isUserNotifiedAboutLayoutSyncError = false;
-    }
-  } else {
-    LOG_VERBOSE("active server layout is empty");
-  }
 }
