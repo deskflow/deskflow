@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
@@ -31,6 +31,16 @@ elseif(UNIX)
       DEPENDS platform
       LIBS base arch
       SOURCE EiKeyStateTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
+  endif()
+
+  if (HAVE_LP_CLIPBOARD)
+    create_test(
+      NAME PortalClipboardTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE PortalClipboardTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
   endif()
