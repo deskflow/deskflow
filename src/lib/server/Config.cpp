@@ -561,6 +561,10 @@ void Config::readSectionScreens(ConfigReadContext &s)
         screen.toStdString(), kOptionHalfDuplexScrollLock,
         Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
     );
+    addOption(
+        screen.toStdString(), kOptionXTestXineramaUnaware,
+        Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
+    );
   }
 
   std::string line;
@@ -608,7 +612,7 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
 
       // handle argument
-      if (name.starts_with("halfDuplex")) {
+      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware") {
         continue;
       } else if (name == "shift") {
         addOption(screen, kOptionModifierMapForShift, s.parseModifierKey(value));
@@ -622,8 +626,6 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionModifierMapForMeta, s.parseModifierKey(value));
       } else if (name == "super") {
         addOption(screen, kOptionModifierMapForSuper, s.parseModifierKey(value));
-      } else if (name == "xtestIsXineramaUnaware") {
-        addOption(screen, kOptionXTestXineramaUnaware, s.parseBoolean(value));
       } else if (name == "switchCorners") {
         addOption(screen, kOptionScreenSwitchCorners, s.parseCorners(value));
       } else if (name == "switchCornerSize") {
