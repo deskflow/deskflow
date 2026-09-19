@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>503</width>
-    <height>558</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -600,6 +600,16 @@
             </property>
             <property name="checked">
              <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkWeakX11Focus">
+            <property name="toolTip">
+             <string>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</string>
+            </property>
+            <property name="text">
+             <string>Weaken X11 Focus</string>
             </property>
            </widget>
           </item>

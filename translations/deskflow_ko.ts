@@ -878,6 +878,14 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Alt &amp;Gr</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Weaken X11 Focus</source>
+        <translation type="unfinished">X11 포커스 약화</translation>
+    </message>
+    <message>
+        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">X11 화면에서만 적용됩니다. 이 기능을 활성화하면 클라이언트가 활성화(전환)되는 즉시 해당 클라이언트의 창으로 포커스가 이동하지 않습니다. 이를 통해 일부 X11 환경에서 발생할 수 있는 원치 않는 포커스 탈취(focus stealing) 문제를 방지할 수 있습니다.</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>

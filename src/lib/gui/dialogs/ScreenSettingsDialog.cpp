@@ -15,6 +15,8 @@
 
 #include <QMessageBox>
 
+#include <common/Settings.h>
+
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
@@ -55,6 +57,8 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   ui->chkDeadBottomLeft->setChecked(m_screen->switchCorner(static_cast<int>(BottomLeft)));
   ui->chkDeadBottomRight->setChecked(m_screen->switchCorner(static_cast<int>(BottomRight)));
   ui->sbSwitchCornerSize->setValue(m_screen->switchCornerSize());
+
+  ui->chkWeakX11Focus->setChecked(Settings::value(Settings::Screen::WeakX11Focus.arg(m_screen->name())).toBool());
 
   ui->chkFixCapsLock->setChecked(m_screen->fix(CapsLock));
   ui->chkFixNumLock->setChecked(m_screen->fix(NumLock));
@@ -118,6 +122,8 @@ void ScreenSettingsDialog::accept()
   m_screen->setFix(NumLock, ui->chkFixNumLock->isChecked());
   m_screen->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
   m_screen->setFix(XTest, ui->chkFixXTest->isChecked());
+
+  Settings::setValue(Settings::Screen::WeakX11Focus.arg(m_screen->name()), ui->chkWeakX11Focus->isChecked());
 
   QDialog::accept();
 }

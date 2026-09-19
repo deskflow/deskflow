@@ -878,6 +878,14 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <source>Alt &amp;Gr</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Weaken X11 Focus</source>
+        <translation type="unfinished">Debilitar el foco de X11</translation>
+    </message>
+    <message>
+        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">Solo para pantallas X11: cuando esta opción está habilitada, el cliente no otorgará el foco a su ventana activa inmediatamente después de cambiar a él. Esto puede ayudar a evitar el robo de foco no deseado en algunas configuraciones de X11.</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>

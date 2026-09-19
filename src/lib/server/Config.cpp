@@ -569,6 +569,11 @@ void Config::readSectionScreens(ConfigReadContext &s)
         screen.toStdString(), kOptionScreenSwitchCornerSize,
         Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
     );
+
+    addOption(
+        screen.toStdString(), kOptionScreenX11WeakFocus,
+        Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool()
+    );
   }
 
   std::string line;
@@ -616,7 +621,8 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
 
       // handle argument
-      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware" || name == "switchCornerSize") {
+      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware" || name == "switchCornerSize" ||
+          name == "preserveFocus") {
         continue;
       } else if (name == "shift") {
         addOption(screen, kOptionModifierMapForShift, s.parseModifierKey(value));
@@ -632,8 +638,6 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionModifierMapForSuper, s.parseModifierKey(value));
       } else if (name == "switchCorners") {
         addOption(screen, kOptionScreenSwitchCorners, s.parseCorners(value));
-      } else if (name == "preserveFocus") {
-        addOption(screen, kOptionScreenPreserveFocus, s.parseBoolean(value));
       } else {
         // unknown argument
         throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
@@ -1016,17 +1020,11 @@ const char *Config::getOptionName(OptionID id)
   if (id == kOptionScreenSwitchCorners) {
     return "switchCorners";
   }
-  if (id == kOptionScreenPreserveFocus) {
-    return "preserveFocus";
-  }
   return nullptr;
 }
 
 std::string Config::getOptionValue(OptionID id, OptionValue value)
 {
-  if (id == kOptionScreenPreserveFocus) {
-    return (value != 0) ? "true" : "false";
-  }
   if (id == kOptionModifierMapForShift || id == kOptionModifierMapForControl || id == kOptionModifierMapForAlt ||
       id == kOptionModifierMapForAltGr || id == kOptionModifierMapForMeta || id == kOptionModifierMapForSuper) {
     switch (value) {
