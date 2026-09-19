@@ -35,7 +35,6 @@ add_library(${target} STATIC
   VersionChecker.h
   config/Screen.cpp
   config/Screen.h
-  config/ScreenConfig.cpp
   config/ScreenConfig.h
   config/ScreenList.cpp
   config/ScreenList.h

@@ -350,7 +350,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Export server configuration</source>
-        <translation type="unfinished">Exportar configuración del servidor</translation>
+        <translation type="obsolete">Exportar configuración del servidor</translation>
     </message>
     <message>
         <source>You must select a mode</source>
@@ -426,15 +426,15 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Save server configuration as...</source>
-        <translation type="unfinished">Guardar la configuración del servidor como...</translation>
+        <translation type="obsolete">Guardar la configuración del servidor como...</translation>
     </message>
     <message>
         <source>Save failed</source>
-        <translation type="unfinished">Error al guardar</translation>
+        <translation type="obsolete">Error al guardar</translation>
     </message>
     <message>
         <source>Could not save server configuration to file.</source>
-        <translation type="unfinished">No se pudo guardar la configuración del servidor en el archivo.</translation>
+        <translation type="obsolete">No se pudo guardar la configuración del servidor en el archivo.</translation>
     </message>
     <message>
         <source>Start</source>
@@ -555,11 +555,11 @@ Nombres válidos:
     </message>
     <message>
         <source>read</source>
-        <translation type="unfinished">leer</translation>
+        <translation type="obsolete">leer</translation>
     </message>
     <message>
         <source>read and write</source>
-        <translation type="unfinished">leer y escribir</translation>
+        <translation type="obsolete">leer y escribir</translation>
     </message>
     <message>
         <source>The Core executable could not be started.
@@ -570,7 +570,7 @@ Verifique si tiene permisos suficientes para ejecutar %1.</translation>
     <message>
         <source>
 Additionally, check you are able to %1 the server config file: %2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
 Además, verifique que puede %1 el archivo de configuración del servidor: %2</translation>
     </message>
     <message>
@@ -1035,26 +1035,26 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation type="unfinished">Utilice un archivo de configuración del servidor para crear diseños de computadora complejos que no son posibles con el editor de diseño de computadora simple basado en cuadrícula.
+        <translation type="obsolete">Utilice un archivo de configuración del servidor para crear diseños de computadora complejos que no son posibles con el editor de diseño de computadora simple basado en cuadrícula.
 
 Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GUI) de configuración del servidor.</translation>
     </message>
     <message>
         <source>Use a server config file</source>
-        <translation type="unfinished">Utilice un archivo de configuración del servidor</translation>
+        <translation type="obsolete">Utilice un archivo de configuración del servidor</translation>
     </message>
     <message>
         <source>Config file path</source>
-        <translation type="unfinished">Ruta del archivo de configuración</translation>
+        <translation type="obsolete">Ruta del archivo de configuración</translation>
     </message>
     <message>
         <source>%1 Configurations (*.conf);;All files (*.*)</source>
         <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
-        <translation type="unfinished">%1 Configuraciones (*.conf);;Todos los archivos (*.*)</translation>
+        <translation type="obsolete">%1 Configuraciones (*.conf);;Todos los archivos (*.*)</translation>
     </message>
     <message>
         <source>Browse for a config file</source>
-        <translation type="unfinished">Busque un archivo de configuración</translation>
+        <translation type="obsolete">Busque un archivo de configuración</translation>
     </message>
     <message>
         <source>Enable lock to computer at startup</source>

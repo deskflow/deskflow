@@ -21,17 +21,25 @@ Screen::Screen(const QString &name)
 
 void Screen::loadSettings(QSettingsProxy &settings)
 {
-  const auto name = settings.value("name").toString();
+  const auto name = settings.value(Settings::Layout::ScreenName).toString();
   setName(name);
 
   if (name.isEmpty())
     return;
 
-  setSwitchCornerSize(settings.value("switchCornerSize").toInt());
+  setSwitchCornerSize(settings.value(Settings::Layout::ScreenSwitchCornerSize).toInt());
 
-  readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
-  readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
-  readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
+  readSettings(
+      settings, modifiers(), Settings::Layout::ScreenModifierArray, Settings::Layout::ScreenModifier,
+      static_cast<int>(DefaultMod), static_cast<int>(NumModifiers)
+  );
+  readSettings(
+      settings, switchCorners(), Settings::Layout::ScreenSwitchCornerArray, Settings::Layout::ScreenSwitchCorner, false,
+      static_cast<int>(NumSwitchCorners)
+  );
+  readSettings(
+      settings, fixes(), Settings::Layout::ScreenFixArray, Settings::Layout::ScreenFix, 0, static_cast<int>(NumFixes)
+  );
 
   m_Aliases = Settings::value(Settings::Screen::Aliases.arg(name)).toStringList();
 }
@@ -40,43 +48,20 @@ void Screen::saveSettings(QSettingsProxy &settings) const
 {
 
   const auto screenName = name();
-  settings.setValue("name", screenName);
+  settings.setValue(Settings::Layout::ScreenName, screenName);
 
   if (screenName.isEmpty())
     return;
 
   Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
 
-  settings.setValue("switchCornerSize", switchCornerSize());
+  settings.setValue(Settings::Layout::ScreenSwitchCornerSize, switchCornerSize());
 
-  writeSettings(settings, modifiers(), "modifier");
-  writeSettings(settings, switchCorners(), "switchCorner");
-  writeSettings(settings, fixes(), "fix");
-}
-
-QString Screen::screensSection() const
-{
-  const auto lineTemplate = QStringLiteral("\t\t%1 = %2\n");
-
-  QString out = QStringLiteral("\t%1:\n").arg(name());
-  for (int i = 0; i < modifiers().size(); i++) {
-    if (modifier(i) != i)
-      out.append(lineTemplate.arg(modifierName(i), modifierName(modifier(i))));
-  }
-
-  for (int i = 0; i < fixes().size(); i++)
-    out.append(lineTemplate.arg(fixName(i), fixes().at(i) ? QStringLiteral("true") : QStringLiteral("false")));
-
-  auto corners = QStringLiteral("none");
-  for (int i = 0; i < switchCorners().size(); i++) {
-    if (switchCorners()[i])
-      corners.append(QStringLiteral(" +%1 ").arg(switchCornerName(i)));
-  }
-  out.append(lineTemplate.arg(QStringLiteral("switchCorners"), corners));
-
-  out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
-
-  return out;
+  writeSettings(settings, modifiers(), Settings::Layout::ScreenModifierArray, Settings::Layout::ScreenModifier);
+  writeSettings(
+      settings, switchCorners(), Settings::Layout::ScreenSwitchCornerArray, Settings::Layout::ScreenSwitchCorner
+  );
+  writeSettings(settings, fixes(), Settings::Layout::ScreenFixArray, Settings::Layout::ScreenFix);
 }
 
 bool Screen::operator==(const Screen &screen) const

@@ -9,7 +9,6 @@
 #include "ServerConfigDialog.h"
 #include "ui_ServerConfigDialog.h"
 
-#include "common/Constants.h"
 #include "common/NetworkProtocol.h"
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
@@ -17,9 +16,6 @@
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
 #include "gui/widgets/SettingsDialogButtonBox.h"
-
-#include <QFileDialog>
-#include <QMessageBox>
 
 using enum ScreenConfig::SwitchCorner;
 
@@ -29,8 +25,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_columns{Settings::value(Settings::Server::GridWidth).toInt()},
       m_rows{Settings::value(Settings::Server::GridHeight).toInt()},
       m_originalServerConfig(config),
-      m_originalServerConfigIsExternal(config.useExternalConfig()),
-      m_originalServerConfigUsesExternalFile(config.configFile()),
       m_serverConfig(config),
       m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows),
       m_buttonBox{new SettingsDialogButtonBox(this)}
@@ -44,7 +38,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
   ui->lblNewScreen->setEnabled(!model().isFull());
   ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
-  ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
@@ -60,18 +53,6 @@ bool ServerConfigDialog::addClient(const QString &clientName)
 
 void ServerConfigDialog::save()
 {
-  if (ui->groupExternalConfig->isChecked() && !QFile::exists(ui->lineConfigFile->text())) {
-
-    auto selectedButton = QMessageBox::warning(
-        this, "Filename invalid", "Please select a valid configuration file.", QMessageBox::Ok | QMessageBox::Ignore
-    );
-
-    if (selectedButton != QMessageBox::Ok || !browseConfigFile()) {
-      return;
-    }
-  }
-  // now that the dialog has been accepted, copy the new server config to the
-  // original one, which is a reference to the one in MainWindow.
   setOriginalServerConfig(serverConfig());
   if (Settings::value(Settings::Server::EnableClipboard).toBool() != m_enableClipboard) {
     Settings::setValue(Settings::Server::XdpRestoreToken, QString());
@@ -90,8 +71,6 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
   Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
-  Settings::setValue(Settings::Server::ExternalConfig, ui->groupExternalConfig->isChecked());
-  Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
 
   QStringList screenNames;
   const auto screenList = m_screenSetupModel.m_Screens;
@@ -108,8 +87,6 @@ void ServerConfigDialog::save()
 
 void ServerConfigDialog::cancel()
 {
-  serverConfig().setUseExternalConfig(m_originalServerConfigIsExternal);
-  serverConfig().setConfigFile(m_originalServerConfigUsesExternalFile);
   QDialog::reject();
 }
 
@@ -355,33 +332,6 @@ void ServerConfigDialog::onScreenRemoved()
   setButtonBoxEnabledButtons();
 }
 
-void ServerConfigDialog::toggleExternalConfig(bool checked)
-{
-  ui->widgetExternalConfigControls->setEnabled(checked);
-  ui->tabWidget->setTabEnabled(0, !checked);
-  ui->tabWidget->setTabEnabled(1, !checked);
-  serverConfig().setUseExternalConfig(checked);
-  setButtonBoxEnabledButtons();
-}
-
-bool ServerConfigDialog::browseConfigFile()
-{
-  //: %1 is replaced with the application names
-  //: (*.conf) and (*.*) should not be translated
-  const auto deskflowConfigFilter = tr("%1 Configurations (*.conf);;All files (*.*)");
-
-  QString fileName =
-      QFileDialog::getOpenFileName(this, tr("Browse for a config file"), "", deskflowConfigFilter.arg(kAppName));
-
-  if (!fileName.isEmpty()) {
-    ui->lineConfigFile->setText(fileName);
-    setServerConfig();
-    return true;
-  }
-
-  return false;
-}
-
 void ServerConfigDialog::loadFromConfig()
 {
   m_protocol = Settings::networkProtocol();
@@ -398,10 +348,47 @@ void ServerConfigDialog::loadFromConfig()
   m_enableClipboard = Settings::value(Settings::Server::EnableClipboard).toBool();
   m_clipboardSize = Settings::value(Settings::Server::ClipboardSize).toUInt();
 
-  ui->lineConfigFile->setText(serverConfig().configFile());
-  ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
-
   refreshControls();
+
+  m_enableHeartbeat = Settings::value(Settings::Server::EnableHeartbeat).toBool();
+  ui->cbHeartbeat->setChecked(m_enableHeartbeat);
+  ui->sbHeartbeat->setEnabled(ui->cbHeartbeat->isChecked());
+
+  m_heartbeatRate = Settings::value(Settings::Server::Heartbeat).toInt();
+  ui->sbHeartbeat->setValue(m_heartbeatRate);
+
+  m_relativeMouseMoves = Settings::value(Settings::Server::RelativeMouseMoves).toBool();
+  ui->cbRelativeMouseMoves->setChecked(m_relativeMouseMoves);
+
+  m_win32keepForeground = Settings::value(Settings::Server::Win32KeepForeground).toBool();
+  ui->cbWin32KeepForeground->setChecked(m_win32keepForeground);
+
+  m_enableSwitchDelay = Settings::value(Settings::Server::EnableSwitchDelay).toBool();
+  ui->cbSwitchDelay->setChecked(m_enableSwitchDelay);
+  ui->sbSwitchDelay->setEnabled(ui->cbSwitchDelay->isChecked());
+
+  m_switchDelay = Settings::value(Settings::Server::SwitchDelay).toInt();
+  ui->sbSwitchDelay->setValue(m_switchDelay);
+
+  m_enableSwitchDoubleTap = Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool();
+  ui->cbSwitchDoubleTap->setChecked(m_enableSwitchDoubleTap);
+  ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
+
+  m_switchDoubleTap = Settings::value(Settings::Server::SwitchDoubleTap).toInt();
+  ui->sbSwitchDoubleTap->setValue(m_switchDoubleTap);
+
+  m_defaultLockToComputerState = Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
+  ui->cbDefaultLockToComputerState->setChecked(m_defaultLockToComputerState);
+
+  m_disableLockToComputer = Settings::value(Settings::Server::DisableLockToComputer).toBool();
+  ui->cbDisableLockToComputer->setChecked(m_disableLockToComputer);
+
+  m_enableClipboard = Settings::value(Settings::Server::EnableClipboard).toBool();
+  ui->cbEnableClipboard->setChecked(m_enableClipboard);
+  ui->sbClipboardSizeLimit->setEnabled(m_enableClipboard);
+
+  m_clipboardSize = Settings::value(Settings::Server::ClipboardSize).toUInt();
+  ui->sbClipboardSizeLimit->setValue(m_clipboardSize);
 
   ui->listHotkeys->clear();
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
@@ -426,9 +413,6 @@ void ServerConfigDialog::loadFromConfig()
 
 void ServerConfigDialog::resetFromSettings()
 {
-  m_serverConfig = m_originalServerConfig;
-  m_serverConfig.setConfigFile(m_originalServerConfigUsesExternalFile);
-  m_serverConfig.setUseExternalConfig(m_originalServerConfigIsExternal);
   loadFromConfig();
   if (ui->tabWidget->currentWidget() == ui->tabComputers) {
     ui->screenSetupView->reset();
@@ -451,8 +435,6 @@ void ServerConfigDialog::refreshControls()
   ui->cbSwitchDoubleTap->setChecked(m_enableSwitchDoubleTap);
   ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
   ui->sbSwitchDoubleTap->setValue(m_switchDoubleTap);
-  ui->widgetExternalConfigControls->setEnabled(ui->groupExternalConfig->isChecked());
-  toggleExternalConfig(ui->groupExternalConfig->isChecked());
   ui->cbDefaultLockToComputerState->setChecked(m_defaultLockToComputerState);
   ui->cbDisableLockToComputer->setChecked(m_disableLockToComputer);
   ui->cbEnableClipboard->setChecked(m_enableClipboard);
@@ -499,9 +481,6 @@ void ServerConfigDialog::initConnections() const
 
   connect(ui->cbRelativeMouseMoves, &QCheckBox::toggled, this, &ServerConfigDialog::toggleRelativeMouseMoves);
   connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
-  connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
-  connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
-  connect(ui->lineConfigFile, &QLineEdit::textChanged, this, &ServerConfigDialog::setServerConfig);
 
   connect(
       ui->sbClipboardSizeLimit, QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -533,7 +512,6 @@ void ServerConfigDialog::updateControls() const
   ui->cbSwitchDoubleTap->setEnabled(writable);
   ui->sbSwitchDoubleTap->setEnabled(writable && ui->cbSwitchDoubleTap->isChecked());
   ui->sbSwitchDelay->setEnabled(writable && ui->cbSwitchDelay->isChecked());
-  ui->groupExternalConfig->setEnabled(writable);
   setButtonBoxEnabledButtons();
 }
 
@@ -553,22 +531,8 @@ void ServerConfigDialog::restoreFromDefaults()
   m_enableClipboard = Settings::defaultValue(Settings::Server::EnableClipboard).toBool();
   m_clipboardSize = Settings::defaultValue(Settings::Server::ClipboardSize).toUInt();
 
-  ui->groupExternalConfig->setChecked(Settings::defaultValue(Settings::Server::ExternalConfig).toBool());
-  ui->lineConfigFile->setText(Settings::defaultValue(Settings::Server::ExternalConfigFile).toString());
-
   refreshControls();
   updateControls();
-}
-
-void ServerConfigDialog::setServerConfig()
-{
-  const auto configFile = ui->lineConfigFile->text();
-  if (!QFile::exists(configFile)) {
-    m_buttonBox->enableSave(false);
-    return;
-  }
-  serverConfig().setConfigFile(configFile);
-  setButtonBoxEnabledButtons();
 }
 
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
@@ -587,9 +551,7 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 
 bool ServerConfigDialog::isGeneralConfigModified() const
 {
-  return m_originalServerConfigIsExternal != Settings::value(Settings::Server::ExternalConfig).toBool() ||
-         m_originalServerConfigUsesExternalFile != Settings::value(Settings::Server::ExternalConfigFile).toString() ||
-         m_protocol != Settings::networkProtocol() ||
+  return m_protocol != Settings::networkProtocol() ||
          m_enableClipboard != Settings::value(Settings::Server::EnableClipboard).toBool() ||
          m_clipboardSize != Settings::value(Settings::Server::ClipboardSize).toUInt() ||
          m_enableHeartbeat != Settings::value(Settings::Server::EnableHeartbeat).toBool() ||
@@ -606,9 +568,7 @@ bool ServerConfigDialog::isGeneralConfigModified() const
 
 bool ServerConfigDialog::isGeneralConfigDefault() const
 {
-  return ui->groupExternalConfig->isChecked() == Settings::defaultValue(Settings::Server::ExternalConfig).toBool() &&
-         ui->lineConfigFile->text() == Settings::defaultValue(Settings::Server::ExternalConfigFile).toString() &&
-         m_protocol == networkProtocolFromString(Settings::defaultValue(Settings::Server::Protocol).toString()) &&
+  return m_protocol == networkProtocolFromString(Settings::defaultValue(Settings::Server::Protocol).toString()) &&
          m_enableClipboard == Settings::defaultValue(Settings::Server::EnableClipboard).toBool() &&
          m_clipboardSize == Settings::defaultValue(Settings::Server::ClipboardSize).toUInt() &&
          m_enableHeartbeat == Settings::defaultValue(Settings::Server::EnableHeartbeat).toBool() &&
