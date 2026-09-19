@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -42,8 +43,7 @@ public:
     CapsLock,
     NumLock,
     ScrollLock,
-    XTest,
-    NumFixes
+    XTest
   };
 
 protected:
@@ -91,10 +91,6 @@ public:
   {
     return m_ModifierNames[idx];
   }
-  static const char *fixName(int idx)
-  {
-    return m_FixNames[idx];
-  }
   static const char *switchCornerName(int idx)
   {
     return m_SwitchCornerNames[idx];
@@ -102,6 +98,5 @@ public:
 
 private:
   static const char *m_ModifierNames[];
-  static const char *m_FixNames[];
   static const char *m_SwitchCornerNames[];
 };

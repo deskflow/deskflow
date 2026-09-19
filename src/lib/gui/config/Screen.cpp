@@ -31,7 +31,6 @@ void Screen::loadSettings(QSettingsProxy &settings)
 
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
   readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
-  readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 
   m_Fixes[static_cast<int>(CapsLock)] = Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(name)).toBool();
   m_Fixes[static_cast<int>(NumLock)] = Settings::value(Settings::Screen::HalfDuplexNumLock.arg(name)).toBool();
@@ -60,7 +59,6 @@ void Screen::saveSettings(QSettingsProxy &settings) const
 
   writeSettings(settings, modifiers(), "modifier");
   writeSettings(settings, switchCorners(), "switchCorner");
-  writeSettings(settings, fixes(), "fix");
 }
 
 QString Screen::screensSection() const
@@ -72,9 +70,6 @@ QString Screen::screensSection() const
     if (modifier(i) != i)
       out.append(lineTemplate.arg(modifierName(i), modifierName(modifier(i))));
   }
-
-  for (int i = 0; i < fixes().size(); i++)
-    out.append(lineTemplate.arg(fixName(i), fixes().at(i) ? QStringLiteral("true") : QStringLiteral("false")));
 
   auto corners = QStringLiteral("none");
   for (int i = 0; i < switchCorners().size(); i++) {
