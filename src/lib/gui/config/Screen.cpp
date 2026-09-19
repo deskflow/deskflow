@@ -34,6 +34,7 @@ void Screen::loadSettings(QSettingsProxy &settings)
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 
   m_Fixes[static_cast<int>(CapsLock)] = Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(NumLock)] = Settings::value(Settings::Screen::HalfDuplexNumLock.arg(name)).toBool();
 
   m_Aliases = Settings::value(Settings::Screen::Aliases.arg(name)).toStringList();
 }
@@ -49,6 +50,7 @@ void Screen::saveSettings(QSettingsProxy &settings) const
   Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
   Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
   Settings::setValue(Settings::Screen::HalfDuplexCapsLock.arg(screenName), m_Fixes[static_cast<int>(CapsLock)]);
+  Settings::setValue(Settings::Screen::HalfDuplexNumLock.arg(screenName), m_Fixes[static_cast<int>(NumLock)]);
 
   settings.setValue("switchCornerSize", switchCornerSize());
 

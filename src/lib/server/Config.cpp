@@ -553,6 +553,10 @@ void Config::readSectionScreens(ConfigReadContext &s)
         screen.toStdString(), kOptionHalfDuplexCapsLock,
         Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
     );
+    addOption(
+        screen.toStdString(), kOptionHalfDuplexNumLock,
+        Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool()
+    );
   }
 
   std::string line;
@@ -600,10 +604,8 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
 
       // handle argument
-      if (name == "halfDuplexCapsLock") {
+      if (name == "halfDuplexCapsLock" || name == "halfDuplexNumLock") {
         continue;
-      } else if (name == "halfDuplexNumLock") {
-        addOption(screen, kOptionHalfDuplexNumLock, s.parseBoolean(value));
       } else if (name == "halfDuplexScrollLock") {
         addOption(screen, kOptionHalfDuplexScrollLock, s.parseBoolean(value));
       } else if (name == "shift") {
