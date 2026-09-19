@@ -402,7 +402,7 @@ void Settings::removeUnknownScreens(const QStringList &knownScreens)
 
 QVariant Settings::screenDefaults(const QString &key)
 {
-  if (key.contains(QStringLiteral("halfDuplex")))
+  if (key.contains(QStringLiteral("halfDuplex")) || key.contains("xtestIsXineramaUnaware"))
     return false;
   return QVariant();
 }
