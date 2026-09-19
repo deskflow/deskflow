@@ -404,6 +404,8 @@ QVariant Settings::screenDefaults(const QString &key)
 {
   if (key.contains(QStringLiteral("halfDuplex")) || key.contains("xtestIsXineramaUnaware"))
     return false;
+  if (key.endsWith("switchCornerSize"))
+    return 0;
   return QVariant();
 }
 

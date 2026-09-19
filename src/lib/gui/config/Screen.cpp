@@ -27,7 +27,7 @@ void Screen::loadSettings(QSettingsProxy &settings)
   if (name.isEmpty())
     return;
 
-  setSwitchCornerSize(settings.value("switchCornerSize").toInt());
+  setSwitchCornerSize(Settings::value(Settings::Screen::SwitchCornerSize.arg(name)).toInt());
 
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
   readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
@@ -54,8 +54,7 @@ void Screen::saveSettings(QSettingsProxy &settings) const
   Settings::setValue(Settings::Screen::HalfDuplexNumLock.arg(screenName), m_Fixes[static_cast<int>(NumLock)]);
   Settings::setValue(Settings::Screen::HalfDuplexScrollLock.arg(screenName), m_Fixes[static_cast<int>(ScrollLock)]);
   Settings::setValue(Settings::Screen::XtestIsXineramaUnaware.arg(screenName), m_Fixes[static_cast<int>(XTest)]);
-
-  settings.setValue("switchCornerSize", switchCornerSize());
+  Settings::setValue(Settings::Screen::SwitchCornerSize.arg(screenName), switchCornerSize());
 
   writeSettings(settings, modifiers(), "modifier");
   writeSettings(settings, switchCorners(), "switchCorner");
@@ -77,9 +76,6 @@ QString Screen::screensSection() const
       corners.append(QStringLiteral(" +%1 ").arg(switchCornerName(i)));
   }
   out.append(lineTemplate.arg(QStringLiteral("switchCorners"), corners));
-
-  out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
-
   return out;
 }
 
