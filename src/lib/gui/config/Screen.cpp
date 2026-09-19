@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -27,31 +27,37 @@ void Screen::loadSettings(QSettingsProxy &settings)
   if (name.isEmpty())
     return;
 
-  setSwitchCornerSize(settings.value("switchCornerSize").toInt());
+  setSwitchCornerSize(Settings::value(Settings::Screen::SwitchCornerSize.arg(name)).toInt());
 
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
   readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
-  readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
+
+  m_Fixes[static_cast<int>(CapsLock)] = Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(NumLock)] = Settings::value(Settings::Screen::HalfDuplexNumLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(ScrollLock)] = Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(XTest)] = Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(name)).toBool();
 
   m_Aliases = Settings::value(Settings::Screen::Aliases.arg(name)).toStringList();
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const
 {
-
   const auto screenName = name();
   settings.setValue("name", screenName);
 
   if (screenName.isEmpty())
     return;
 
+  Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
   Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
-
-  settings.setValue("switchCornerSize", switchCornerSize());
+  Settings::setValue(Settings::Screen::HalfDuplexCapsLock.arg(screenName), m_Fixes[static_cast<int>(CapsLock)]);
+  Settings::setValue(Settings::Screen::HalfDuplexNumLock.arg(screenName), m_Fixes[static_cast<int>(NumLock)]);
+  Settings::setValue(Settings::Screen::HalfDuplexScrollLock.arg(screenName), m_Fixes[static_cast<int>(ScrollLock)]);
+  Settings::setValue(Settings::Screen::XtestIsXineramaUnaware.arg(screenName), m_Fixes[static_cast<int>(XTest)]);
+  Settings::setValue(Settings::Screen::SwitchCornerSize.arg(screenName), switchCornerSize());
 
   writeSettings(settings, modifiers(), "modifier");
   writeSettings(settings, switchCorners(), "switchCorner");
-  writeSettings(settings, fixes(), "fix");
 }
 
 QString Screen::screensSection() const
@@ -64,18 +70,12 @@ QString Screen::screensSection() const
       out.append(lineTemplate.arg(modifierName(i), modifierName(modifier(i))));
   }
 
-  for (int i = 0; i < fixes().size(); i++)
-    out.append(lineTemplate.arg(fixName(i), fixes().at(i) ? QStringLiteral("true") : QStringLiteral("false")));
-
   auto corners = QStringLiteral("none");
   for (int i = 0; i < switchCorners().size(); i++) {
     if (switchCorners()[i])
       corners.append(QStringLiteral(" +%1 ").arg(switchCornerName(i)));
   }
   out.append(lineTemplate.arg(QStringLiteral("switchCorners"), corners));
-
-  out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
-
   return out;
 }
 

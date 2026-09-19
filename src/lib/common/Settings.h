@@ -129,6 +129,13 @@ public:
   struct Screen
   {
     inline static const auto Aliases = QStringLiteral("screen_%1/aliases");
+    inline static const auto Name = QStringLiteral("screen_%1/name");
+    inline static const auto HalfDuplexCapsLock = QStringLiteral("screen_%1/halfDuplexCapsLock");
+    inline static const auto HalfDuplexNumLock = QStringLiteral("screen_%1/halfDuplexNumLock");
+    inline static const auto HalfDuplexScrollLock = QStringLiteral("screen_%1/halfDuplexScrollLock");
+    inline static const auto XtestIsXineramaUnaware = QStringLiteral("screen_%1/xtestIsXineramaUnaware");
+    inline static const auto SwitchCornerSize = QStringLiteral("screen_%1/switchCornerSize");
+    inline static const auto PreserveFocus = QStringLiteral("screen_%1/preserveFocus");
   };
 
   // Track Removed keys to make upgrading config easier
@@ -199,6 +206,8 @@ public:
   static QStringList validGroups();
   static QString portableSettingsFile();
   static void removeUnknownScreens(const QStringList &knownScreens);
+  static QVariant screenDefaults(const QString &key);
+  static QStringList knownScreens();
 
 Q_SIGNALS:
   void settingsChanged(const QString key);

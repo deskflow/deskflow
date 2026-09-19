@@ -164,8 +164,14 @@ Each screen will have a section where its configuration will be stored, if the s
 
 |Option              |    Valid Values    |Description|
 |:-------------------|:------------------:|:-----------|
-| aliases            | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
-
+| aliases              | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
+| name                 | Valid hostname    | The name of the client. |
+| halfDuplexCapsLock   | `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+| halfDuplexNumLock    | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+| halfDuplexScrollLock | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+|xtestIsXineramaUnaware| `true` or `false` | This option works around a bug in the XTest extension when used in combination with Xinerama. It affects X11 clients only. Not all versions of the XTest extension are aware of the Xinerama extension. As a result, they do not move the mouse correctly when using multiple Xinerama screens. This option is currently ''true'' by default. If you know your XTest extension is Xinerama aware then set this option to ''false''.|
+| switchCornerSize     | integer (N)       | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|
+| preserveFocus        | `true` or `false` | When true don't drop focus when switching computers|
 
 ### InternalConfig
 
@@ -189,11 +195,6 @@ hotkeys\1\keys\1\key=83
 hotkeys\1\keys\size=1
 hotkeys\size=1
 screens\1\name=
-screens\10\fixArray\1\fix=false
-screens\10\fixArray\2\fix=false
-screens\10\fixArray\3\fix=false
-screens\10\fixArray\4\fix=false
-screens\10\fixArray\size=4
 screens\10\modifierArray\1\modifier=0
 screens\10\modifierArray\2\modifier=1
 screens\10\modifierArray\3\modifier=2
@@ -207,7 +208,6 @@ screens\10\switchCornerArray\2\switchCorner=false
 screens\10\switchCornerArray\3\switchCorner=false
 screens\10\switchCornerArray\4\switchCorner=false
 screens\10\switchCornerArray\size=4
-screens\10\switchCornerSize=0
 screens\11\name=
 screens\12\name=
 screens\13\name=
@@ -218,11 +218,6 @@ screens\3\name=
 screens\4\name=
 screens\5\name=
 screens\6\name=
-screens\7\fixArray\1\fix=false
-screens\7\fixArray\2\fix=false
-screens\7\fixArray\3\fix=false
-screens\7\fixArray\4\fix=false
-screens\7\fixArray\size=4
 screens\7\modifierArray\1\modifier=0
 screens\7\modifierArray\2\modifier=1
 screens\7\modifierArray\3\modifier=2
@@ -236,12 +231,6 @@ screens\7\switchCornerArray\2\switchCorner=false
 screens\7\switchCornerArray\3\switchCorner=false
 screens\7\switchCornerArray\4\switchCorner=false
 screens\7\switchCornerArray\size=4
-screens\7\switchCornerSize=0
-screens\8\fixArray\1\fix=false
-screens\8\fixArray\2\fix=false
-screens\8\fixArray\3\fix=false
-screens\8\fixArray\4\fix=false
-screens\8\fixArray\size=4
 screens\8\modifierArray\1\modifier=0
 screens\8\modifierArray\2\modifier=1
 screens\8\modifierArray\3\modifier=2
@@ -255,12 +244,6 @@ screens\8\switchCornerArray\2\switchCorner=false
 screens\8\switchCornerArray\3\switchCorner=false
 screens\8\switchCornerArray\4\switchCorner=false
 screens\8\switchCornerArray\size=4
-screens\8\switchCornerSize=0
-screens\9\fixArray\1\fix=false
-screens\9\fixArray\2\fix=false
-screens\9\fixArray\3\fix=false
-screens\9\fixArray\4\fix=false
-screens\9\fixArray\size=4
 screens\9\modifierArray\1\modifier=0
 screens\9\modifierArray\2\modifier=1
 screens\9\modifierArray\3\modifier=2
@@ -274,7 +257,6 @@ screens\9\switchCornerArray\2\switchCorner=false
 screens\9\switchCornerArray\3\switchCorner=false
 screens\9\switchCornerArray\4\switchCorner=false
 screens\9\switchCornerArray\size=4
-screens\9\switchCornerSize=0
 screens\size=15
 ```
 
@@ -306,14 +288,12 @@ The file is parsed top to bottom and names cannot be used before they've been de
 section: screens
 	moe:
 	larry:
-		halfDuplexCapsLock = true
-		halfDuplexNumLock = true
 	curly:
 		meta = alt
 end
 ```
 
-This declares three computers named ''moe'', ''larry'', and ''curly''. Computer ''larry'' has half-duplex ''Caps Lock'' and ''Num Lock'' keys (see below) and computer ''curly'' converts the ''Meta'' modifier key to the ''Alt'' modifier key.
+This declares three computers named ''moe'', ''larry'', and ''curly''. Computer ' computer ''curly'' converts the ''Meta'' modifier key to the ''Alt'' modifier key.
 
 #### screen options
 
@@ -321,13 +301,7 @@ A computer can have the following options:
 
 |Option | Valid Values| Description|
 |:----------|:-----------:|:-----------|
-|halfDuplexCapsLock| `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
-|halfDuplexNumLock | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
-|halfDuplexScrollLock| `true` or `false`| This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
-|xtestIsXineramaUnaware| `true` or `false`| This option works around a bug in the XTest extension when used in combination with Xinerama. It affects X11 clients only. Not all versions of the XTest extension are aware of the Xinerama extension. As a result, they do not move the mouse correctly when using multiple Xinerama screens. This option is currently ''true'' by default. If you know your XTest extension is Xinerama aware then set this option to ''false''.|
-|preserveFocus| `true` or `false` | When true don't drop focus when switching computers|
 |switchCorners | none top-left top-right bottom-left bottom-right left right top bottom all | Deskflow won't switch computers when the mouse reaches the edge of the computer if it's in a listed corner. The size of all corners is given by the `switchCornerSize` option. The first name in the list is one of the above names and defines the initial set of corners. Subsequent names are prefixed with + or - to add the corner to or remove the corner from the set, respectively. For example: `all -left +top-left` starts will all corners, removes the left corners (top and bottom) then adds the top-left back in, resulting in the top-left, bottom-left and bottom-right corners.|
-|switchCornerSize | integer (N) | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|
 |shift | shift ctrl alt meta super none | Map the server's shift modifer to different key on a client computer|
 |ctrl  | shift ctrl alt meta super none | Map the server's ctrl modifer to different key on a client computer|
 |alt | shift ctrl alt meta super none | Map the server's alt modifer to different key on a client computer|

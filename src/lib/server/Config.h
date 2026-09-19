@@ -438,8 +438,6 @@ public:
 
   bool operator!() const;
 
-  OptionValue parseBoolean(const std::string &) const;
-  OptionValue parseInt(const std::string &) const;
   OptionValue parseModifierKey(const std::string &) const;
   OptionValue parseCorner(const std::string &) const;
   OptionValue parseCorners(const std::string &) const;

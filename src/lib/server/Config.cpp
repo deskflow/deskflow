@@ -12,7 +12,6 @@
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
-#include "deskflow/ProtocolTypes.h"
 #include "net/SocketException.h"
 #include "server/Server.h"
 
@@ -547,6 +546,36 @@ void Config::readSectionOptions(ConfigReadContext &s)
 
 void Config::readSectionScreens(ConfigReadContext &s)
 {
+  const auto screens = Settings::knownScreens();
+  for (const auto &screen : screens) {
+    addOption(
+        screen.toStdString(), kOptionHalfDuplexCapsLock,
+        Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
+    );
+    addOption(
+        screen.toStdString(), kOptionHalfDuplexNumLock,
+        Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool()
+    );
+    addOption(
+        screen.toStdString(), kOptionHalfDuplexScrollLock,
+        Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
+    );
+    addOption(
+        screen.toStdString(), kOptionXTestXineramaUnaware,
+        Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
+    );
+
+    addOption(
+        screen.toStdString(), kOptionScreenSwitchCornerSize,
+        Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
+    );
+
+    addOption(
+        screen.toStdString(), kOptionScreenPreserveFocus,
+        Settings::value(Settings::Screen::PreserveFocus.arg(screen)).toBool()
+    );
+  }
+
   std::string line;
   std::string screen;
   while (s.readLine(line)) {
@@ -592,12 +621,9 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
 
       // handle argument
-      if (name == "halfDuplexCapsLock") {
-        addOption(screen, kOptionHalfDuplexCapsLock, s.parseBoolean(value));
-      } else if (name == "halfDuplexNumLock") {
-        addOption(screen, kOptionHalfDuplexNumLock, s.parseBoolean(value));
-      } else if (name == "halfDuplexScrollLock") {
-        addOption(screen, kOptionHalfDuplexScrollLock, s.parseBoolean(value));
+      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware" || name == "switchCornerSize" ||
+          name == "preserveFocus") {
+        continue;
       } else if (name == "shift") {
         addOption(screen, kOptionModifierMapForShift, s.parseModifierKey(value));
       } else if (name == "ctrl") {
@@ -610,14 +636,8 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionModifierMapForMeta, s.parseModifierKey(value));
       } else if (name == "super") {
         addOption(screen, kOptionModifierMapForSuper, s.parseModifierKey(value));
-      } else if (name == "xtestIsXineramaUnaware") {
-        addOption(screen, kOptionXTestXineramaUnaware, s.parseBoolean(value));
       } else if (name == "switchCorners") {
         addOption(screen, kOptionScreenSwitchCorners, s.parseCorners(value));
-      } else if (name == "switchCornerSize") {
-        addOption(screen, kOptionScreenSwitchCornerSize, s.parseInt(value));
-      } else if (name == "preserveFocus") {
-        addOption(screen, kOptionScreenPreserveFocus, s.parseBoolean(value));
       } else {
         // unknown argument
         throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
@@ -1479,34 +1499,6 @@ uint32_t ConfigReadContext::getLineNumber() const
 bool ConfigReadContext::operator!() const
 {
   return !m_stream;
-}
-
-OptionValue ConfigReadContext::parseBoolean(const std::string &arg) const
-{
-  if (CaselessCmp::equal(arg, "true")) {
-    return static_cast<OptionValue>(true);
-  }
-  if (CaselessCmp::equal(arg, "false")) {
-    return static_cast<OptionValue>(false);
-  }
-  throw ServerConfigReadException(*this, "invalid boolean argument \"%{1}\"", arg);
-}
-
-OptionValue ConfigReadContext::parseInt(const std::string &arg) const
-{
-  const char *s = arg.c_str();
-  char *end;
-  long tmp = strtol(s, &end, 10);
-  if (*end != '\0') {
-    // invalid characters
-    throw ServerConfigReadException(*this, "invalid integer argument \"%{1}\"", arg);
-  }
-  auto value = static_cast<OptionValue>(tmp);
-  if (value != tmp) {
-    // out of range
-    throw ServerConfigReadException(*this, "integer argument \"%{1}\" out of range", arg);
-  }
-  return value;
 }
 
 OptionValue ConfigReadContext::parseModifierKey(const std::string &arg) const
