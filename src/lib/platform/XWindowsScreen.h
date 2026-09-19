@@ -228,7 +228,7 @@ private:
 
   // stuff to work around lost focus issues on certain systems
   // (ie: a MythTV front-end).
-  bool m_preserveFocus = false;
+  bool m_weakFocus = false;
 
   // XKB extension stuff
   bool m_xkb = false;
