@@ -134,6 +134,7 @@ public:
     inline static const auto HalfDuplexNumLock = QStringLiteral("screen_%1/halfDuplexNumLock");
     inline static const auto HalfDuplexScrollLock = QStringLiteral("screen_%1/halfDuplexScrollLock");
     inline static const auto XtestIsXineramaUnaware = QStringLiteral("screen_%1/xtestIsXineramaUnaware");
+    inline static const auto SwitchCornerSize = QStringLiteral("screen_%1/switchCornerSize");
   };
 
   // Track Removed keys to make upgrading config easier

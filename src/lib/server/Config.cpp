@@ -564,6 +564,11 @@ void Config::readSectionScreens(ConfigReadContext &s)
         screen.toStdString(), kOptionXTestXineramaUnaware,
         Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
     );
+
+    addOption(
+        screen.toStdString(), kOptionScreenSwitchCornerSize,
+        Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
+    );
   }
 
   std::string line;
@@ -611,7 +616,7 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
 
       // handle argument
-      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware") {
+      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware" || name == "switchCornerSize") {
         continue;
       } else if (name == "shift") {
         addOption(screen, kOptionModifierMapForShift, s.parseModifierKey(value));
@@ -627,8 +632,6 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionModifierMapForSuper, s.parseModifierKey(value));
       } else if (name == "switchCorners") {
         addOption(screen, kOptionScreenSwitchCorners, s.parseCorners(value));
-      } else if (name == "switchCornerSize") {
-        addOption(screen, kOptionScreenSwitchCornerSize, s.parseInt(value));
       } else if (name == "preserveFocus") {
         addOption(screen, kOptionScreenPreserveFocus, s.parseBoolean(value));
       } else {
@@ -1012,9 +1015,6 @@ const char *Config::getOptionName(OptionID id)
   }
   if (id == kOptionScreenSwitchCorners) {
     return "switchCorners";
-  }
-  if (id == kOptionScreenSwitchCornerSize) {
-    return "switchCornerSize";
   }
   if (id == kOptionScreenPreserveFocus) {
     return "preserveFocus";
