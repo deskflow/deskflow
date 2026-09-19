@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">연결 시도 횟수에 따라 동적 재연결 시간을 사용합니다</translation>
     </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">조직에서 관리함</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
@@ -1057,6 +1061,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>설정 파일 찾아보기</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">조직에서 관리함</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation>시작 시 컴퓨터 잠금 사용</translation>
     </message>
@@ -1190,6 +1198,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>상세 디버그 출력</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">조직에서 관리함</translation>
     </message>
     <message>
         <source>Automatic</source>

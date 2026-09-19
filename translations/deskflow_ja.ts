@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation>接続試行回数に基づき、再接続時間を動的に調整する</translation>
     </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">組織によって管理されています</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
@@ -1059,6 +1063,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>設定ファイルを選択</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">組織によって管理されています</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation>起動時にコンピューター間移動のロックを有効にする</translation>
     </message>
@@ -1192,6 +1200,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>詳細なデバッグ出力</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">組織によって管理されています</translation>
     </message>
     <message>
         <source>Automatic</source>

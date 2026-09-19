@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">Использовать динамическое время переподключения в зависимости от попыток подключения</translation>
     </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Управляется вашей организацией</translation>
+    </message>
 </context>
 <context>
     <name>FingerprintDialog</name>
@@ -1055,6 +1059,10 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Выбор файла конфигурации</translation>
     </message>
     <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Управляется вашей организацией</translation>
+    </message>
+    <message>
         <source>Enable lock to computer at startup</source>
         <translation>Включать привязку к компьютеру при запуске</translation>
     </message>
@@ -1188,6 +1196,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Verbose debug output</source>
         <translation>Подробный вывод отладки</translation>
+    </message>
+    <message>
+        <source>Managed by your organization</source>
+        <translation type="unfinished">Управляется вашей организацией</translation>
     </message>
     <message>
         <source>Automatic</source>
