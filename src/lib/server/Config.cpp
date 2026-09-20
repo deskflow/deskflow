@@ -12,7 +12,6 @@
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
-#include "deskflow/ProtocolTypes.h"
 #include "net/SocketException.h"
 #include "server/Server.h"
 
@@ -1006,53 +1005,17 @@ const char *Config::getOptionName(OptionID id)
   if (id == kOptionModifierMapForSuper) {
     return "super";
   }
-  if (id == kOptionHeartbeat) {
-    return "heartbeat";
-  }
   if (id == kOptionScreenSwitchCorners) {
     return "switchCorners";
   }
   if (id == kOptionScreenSwitchCornerSize) {
     return "switchCornerSize";
   }
-  if (id == kOptionScreenSwitchDelay) {
-    return "switchDelay";
-  }
-  if (id == kOptionScreenSwitchTwoTap) {
-    return "switchDoubleTap";
-  }
-  if (id == kOptionScreenSwitchNeedsShift) {
-    return "switchNeedsShift";
-  }
-  if (id == kOptionScreenSwitchNeedsControl) {
-    return "switchNeedsControl";
-  }
-  if (id == kOptionScreenSwitchNeedsAlt) {
-    return "switchNeedsAlt";
-  }
   if (id == kOptionXTestXineramaUnaware) {
     return "xtestIsXineramaUnaware";
   }
-  if (id == kOptionRelativeMouseMoves) {
-    return "relativeMouseMoves";
-  }
-  if (id == kOptionWin32KeepForeground) {
-    return "win32KeepForeground";
-  }
   if (id == kOptionScreenPreserveFocus) {
     return "preserveFocus";
-  }
-  if (id == kOptionDefaultLockToScreenState) {
-    return "defaultLockToScreenState";
-  }
-  if (id == kOptionDisableLockToScreen) {
-    return "disableLockToScreen";
-  }
-  if (id == kOptionClipboardSharing) {
-    return "clipboardSharing";
-  }
-  if (id == kOptionClipboardSharingSize) {
-    return "clipboardSharingSize";
   }
   return nullptr;
 }
@@ -1060,10 +1023,7 @@ const char *Config::getOptionName(OptionID id)
 std::string Config::getOptionValue(OptionID id, OptionValue value)
 {
   if (id == kOptionHalfDuplexCapsLock || id == kOptionHalfDuplexNumLock || id == kOptionHalfDuplexScrollLock ||
-      id == kOptionScreenSwitchNeedsShift || id == kOptionScreenSwitchNeedsControl ||
-      id == kOptionScreenSwitchNeedsAlt || id == kOptionXTestXineramaUnaware || id == kOptionRelativeMouseMoves ||
-      id == kOptionWin32KeepForeground || id == kOptionScreenPreserveFocus || id == kOptionClipboardSharing ||
-      id == kOptionClipboardSharingSize) {
+      id == kOptionXTestXineramaUnaware || id == kOptionScreenPreserveFocus) {
     return (value != 0) ? "true" : "false";
   }
   if (id == kOptionModifierMapForShift || id == kOptionModifierMapForControl || id == kOptionModifierMapForAlt ||
@@ -1090,10 +1050,6 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
     default:
       return "none";
     }
-  }
-  if (id == kOptionHeartbeat || id == kOptionScreenSwitchCornerSize || id == kOptionScreenSwitchDelay ||
-      id == kOptionScreenSwitchTwoTap) {
-    return deskflow::string::sprintf("%d", value);
   }
   if (id == kOptionScreenSwitchCorners) {
     std::string result("none");

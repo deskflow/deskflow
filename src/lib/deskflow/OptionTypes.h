@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -48,9 +49,6 @@ static const OptionID kOptionScreenSwitchCorners = OPTION_CODE("SSCM");
 static const OptionID kOptionScreenSwitchCornerSize = OPTION_CODE("SSCS");
 static const OptionID kOptionScreenSwitchDelay = OPTION_CODE("SSWT");
 static const OptionID kOptionScreenSwitchTwoTap = OPTION_CODE("SSTT");
-static const OptionID kOptionScreenSwitchNeedsShift = OPTION_CODE("SSNS");
-static const OptionID kOptionScreenSwitchNeedsControl = OPTION_CODE("SSNC");
-static const OptionID kOptionScreenSwitchNeedsAlt = OPTION_CODE("SSNA");
 static const OptionID kOptionXTestXineramaUnaware = OPTION_CODE("XTXU");
 static const OptionID kOptionScreenPreserveFocus = OPTION_CODE("SFOC");
 static const OptionID kOptionRelativeMouseMoves = OPTION_CODE("MDLT");
