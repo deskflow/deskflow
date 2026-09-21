@@ -1436,23 +1436,6 @@ bool ConfigReadContext::operator!() const
   return !m_stream;
 }
 
-OptionValue ConfigReadContext::parseInt(const std::string &arg) const
-{
-  const char *s = arg.c_str();
-  char *end;
-  long tmp = strtol(s, &end, 10);
-  if (*end != '\0') {
-    // invalid characters
-    throw ServerConfigReadException(*this, "invalid integer argument \"%{1}\"", arg);
-  }
-  auto value = static_cast<OptionValue>(tmp);
-  if (value != tmp) {
-    // out of range
-    throw ServerConfigReadException(*this, "integer argument \"%{1}\" out of range", arg);
-  }
-  return value;
-}
-
 OptionValue ConfigReadContext::parseModifierKey(const std::string &arg) const
 {
   if (CaselessCmp::equal(arg, "shift")) {
