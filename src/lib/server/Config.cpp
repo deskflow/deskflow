@@ -1436,17 +1436,6 @@ bool ConfigReadContext::operator!() const
   return !m_stream;
 }
 
-OptionValue ConfigReadContext::parseBoolean(const std::string &arg) const
-{
-  if (CaselessCmp::equal(arg, "true")) {
-    return static_cast<OptionValue>(true);
-  }
-  if (CaselessCmp::equal(arg, "false")) {
-    return static_cast<OptionValue>(false);
-  }
-  throw ServerConfigReadException(*this, "invalid boolean argument \"%{1}\"", arg);
-}
-
 OptionValue ConfigReadContext::parseInt(const std::string &arg) const
 {
   const char *s = arg.c_str();
