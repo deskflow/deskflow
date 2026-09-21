@@ -66,7 +66,6 @@ inline static const auto s_topLeftCornerMask = 1 << 0;
 inline static const auto s_topRightCornerMask = 1 << 1;
 inline static const auto s_bottomLeftCornerMask = 1 << 2;
 inline static const auto s_bottomRightCornerMask = 1 << 3;
-inline static const auto s_allCornersMask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3;
 //@}
 
 #undef OPTION_CODE

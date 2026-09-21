@@ -162,16 +162,20 @@ This section contains options used when in server mode it will begin with `[serv
 
 Each screen will have a section where its configuration will be stored, if the screen was named "foo" the section will be named `[screen_foo]`
 
-|Option              |    Valid Values    |Description|
-|:-------------------|:------------------:|:-----------|
-| aliases              | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
-| name                 | Valid hostname    | The name of the client. |
-| halfDuplexCapsLock   | `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
-| halfDuplexNumLock    | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
-| halfDuplexScrollLock | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
-| switchCornerSize     | integer (N)       | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|
-|xtestIsXineramaUnaware| `true` or `false` | This option works around a bug in the XTest extension when used in combination with Xinerama. It affects X11 clients only. Not all versions of the XTest extension are aware of the Xinerama extension. As a result, they do not move the mouse correctly when using multiple Xinerama screens. This option is currently ''true'' by default. If you know your XTest extension is Xinerama aware then set this option to ''false''.|
-| weakX11Focus         | `true` or `false` | This X11 Client will not gain focus until an input event has been processed its screen |
+|Option                  |    Valid Values   |Description|
+|:-----------------------|:-----------------:|:-----------|
+| aliases                | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
+| name                   | Valid hostname    | The name of the client. |
+| halfDuplexCapsLock     | `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+| halfDuplexNumLock      | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+| halfDuplexScrollLock   | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+| switchCornerSize       | integer (N)       | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|
+| switchCornerTopLeft    | `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
+| switchCornerTopRight   | `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
+| switchCornerBottomLeft | `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
+| switchCornerBottomRight| `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
+| xtestIsXineramaUnaware | `true` or `false` | This option works around a bug in the XTest extension when used in combination with Xinerama. It affects X11 clients only. Not all versions of the XTest extension are aware of the Xinerama extension. As a result, they do not move the mouse correctly when using multiple Xinerama screens. This option is currently ''true'' by default. If you know your XTest extension is Xinerama aware then set this option to ''false''.|
+| weakX11Focus           | `true` or `false` | This X11 Client will not gain focus until an input event has been processed its screen |
 
 ### InternalConfig
 
@@ -203,11 +207,6 @@ screens\10\modifierArray\5\modifier=4
 screens\10\modifierArray\6\modifier=5
 screens\10\modifierArray\size=6
 screens\10\name=null
-screens\10\switchCornerArray\1\switchCorner=false
-screens\10\switchCornerArray\2\switchCorner=false
-screens\10\switchCornerArray\3\switchCorner=false
-screens\10\switchCornerArray\4\switchCorner=false
-screens\10\switchCornerArray\size=4
 screens\11\name=
 screens\12\name=
 screens\13\name=
@@ -226,11 +225,6 @@ screens\7\modifierArray\5\modifier=4
 screens\7\modifierArray\6\modifier=5
 screens\7\modifierArray\size=6
 screens\7\name=void
-screens\7\switchCornerArray\1\switchCorner=false
-screens\7\switchCornerArray\2\switchCorner=false
-screens\7\switchCornerArray\3\switchCorner=false
-screens\7\switchCornerArray\4\switchCorner=false
-screens\7\switchCornerArray\size=4
 screens\8\modifierArray\1\modifier=0
 screens\8\modifierArray\2\modifier=1
 screens\8\modifierArray\3\modifier=2
@@ -239,11 +233,6 @@ screens\8\modifierArray\5\modifier=4
 screens\8\modifierArray\6\modifier=5
 screens\8\modifierArray\size=6
 screens\8\name=chris-Precision-5570
-screens\8\switchCornerArray\1\switchCorner=false
-screens\8\switchCornerArray\2\switchCorner=false
-screens\8\switchCornerArray\3\switchCorner=false
-screens\8\switchCornerArray\4\switchCorner=false
-screens\8\switchCornerArray\size=4
 screens\9\modifierArray\1\modifier=0
 screens\9\modifierArray\2\modifier=1
 screens\9\modifierArray\3\modifier=2
@@ -252,11 +241,6 @@ screens\9\modifierArray\5\modifier=4
 screens\9\modifierArray\6\modifier=5
 screens\9\modifierArray\size=6
 screens\9\name=abyss.lan
-screens\9\switchCornerArray\1\switchCorner=false
-screens\9\switchCornerArray\2\switchCorner=false
-screens\9\switchCornerArray\3\switchCorner=false
-screens\9\switchCornerArray\4\switchCorner=false
-screens\9\switchCornerArray\size=4
 screens\size=15
 ```
 
@@ -301,7 +285,6 @@ A computer can have the following options:
 
 |Option | Valid Values| Description|
 |:----------|:-----------:|:-----------|
-|switchCorners | none top-left top-right bottom-left bottom-right left right top bottom all | Deskflow won't switch computers when the mouse reaches the edge of the computer if it's in a listed corner. The size of all corners is given by the `switchCornerSize` option. The first name in the list is one of the above names and defines the initial set of corners. Subsequent names are prefixed with + or - to add the corner to or remove the corner from the set, respectively. For example: `all -left +top-left` starts will all corners, removes the left corners (top and bottom) then adds the top-left back in, resulting in the top-left, bottom-left and bottom-right corners.|
 |shift | shift ctrl alt meta super none | Map the server's shift modifer to different key on a client computer|
 |ctrl  | shift ctrl alt meta super none | Map the server's ctrl modifer to different key on a client computer|
 |alt | shift ctrl alt meta super none | Map the server's alt modifer to different key on a client computer|
