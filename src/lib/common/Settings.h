@@ -138,7 +138,7 @@ public:
     inline static const auto NumRows = QStringLiteral("internalConfig/numRows");
     inline static const auto NumColumns = QStringLiteral("internalConfig/numColumns");
     inline static const auto ClipboardSharing = QStringLiteral("internalConfig/clipboardSharing");
-    inline static const auto Heatbeat = QStringLiteral("internalConfig/heartbeat");
+    inline static const auto Heartbeat = QStringLiteral("internalConfig/heartbeat");
     inline static const auto SwitchDelay = QStringLiteral("internalConfig/switchDelay");
     inline static const auto HasHeartbeat = QStringLiteral("internalConfig/hasHeartbeat");
     inline static const auto HasSwitchDelay = QStringLiteral("internalConfig/hasSwitchDelay");
@@ -379,7 +379,7 @@ private:
       {Core::ScreenName, Core::ComputerName}
     , {InternalConfig::NumColumns, Server::GridWidth}
     , {InternalConfig::NumRows, Server::GridHeight}
-    , {InternalConfig::Heatbeat, Server::Heartbeat}
+    , {InternalConfig::Heartbeat, Server::Heartbeat}
     , {InternalConfig::SwitchDelay, Server::SwitchDelay}
     , {InternalConfig::HasHeartbeat, Server::EnableHeartbeat}
     , {InternalConfig::HasSwitchDelay, Server::EnableSwitchDelay}
@@ -403,7 +403,7 @@ private:
     , InternalConfig::HasHeartbeat
     , InternalConfig::HasSwitchDelay
     , InternalConfig::HasSwitchDoubleTap
-    , InternalConfig::Heatbeat
+    , InternalConfig::Heartbeat
     , InternalConfig::NumColumns
     , InternalConfig::NumRows
     , InternalConfig::RelativeMouseMoves
