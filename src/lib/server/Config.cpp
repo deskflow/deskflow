@@ -45,11 +45,41 @@ bool Config::addScreen(const std::string &name)
   // add name
   m_nameToCanonicalName.try_emplace(name, name);
 
+  const auto screen = QString::fromStdString(name);
   // add aliases
-  const auto aliases = Settings::value(Settings::Screen::Aliases.arg(QString::fromStdString(name))).toStringList();
+  const auto aliases = Settings::value(Settings::Screen::Aliases.arg(screen)).toStringList();
   for (const auto &alias : aliases)
     m_nameToCanonicalName.try_emplace(alias.toStdString(), name);
 
+  addOption(
+      name, kOptionHalfDuplexCapsLock, Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
+  );
+  addOption(name, kOptionHalfDuplexNumLock, Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool());
+  addOption(
+      name, kOptionHalfDuplexScrollLock, Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
+  );
+  addOption(
+      name, kOptionXTestXineramaUnaware, Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
+  );
+  addOption(
+      name, kOptionScreenSwitchCornerSize, Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
+  );
+  addOption(name, kOptionScreenX11WeakFocus, Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool());
+
+  OptionValue cornerValue = s_noCornerMask;
+  if (Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(screen)).toBool()) {
+    cornerValue = cornerValue | s_topLeftCornerMask;
+  }
+  if (Settings::value(Settings::Screen::SwitchCornerTopRight.arg(screen)).toBool()) {
+    cornerValue = cornerValue | s_topRightCornerMask;
+  }
+  if (Settings::value(Settings::Screen::SwitchCornerBottomLeft.arg(screen)).toBool()) {
+    cornerValue = cornerValue | s_bottomLeftCornerMask;
+  }
+  if (Settings::value(Settings::Screen::SwitchCornerBottomRight.arg(screen)).toBool()) {
+    cornerValue = cornerValue | s_bottomRightCornerMask;
+  }
+  addOption(name, kOptionScreenSwitchCorners, cornerValue);
   return true;
 }
 
@@ -560,46 +590,6 @@ void Config::readSectionScreens(ConfigReadContext &s)
     if (!addScreen(screenName)) {
       throw ServerConfigReadException(s, "duplicate screen name \"%{1}\"", screenName);
     }
-
-    addOption(
-        screenName, kOptionHalfDuplexCapsLock,
-        Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
-    );
-    addOption(
-        screenName, kOptionHalfDuplexNumLock, Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool()
-    );
-    addOption(
-        screenName, kOptionHalfDuplexScrollLock,
-        Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
-    );
-    addOption(
-        screenName, kOptionXTestXineramaUnaware,
-        Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
-    );
-
-    addOption(
-        screenName, kOptionScreenSwitchCornerSize,
-        Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
-    );
-
-    addOption(
-        screenName, kOptionScreenX11WeakFocus, Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool()
-    );
-
-    OptionValue cornerValue = s_noCornerMask;
-    if (Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(screen)).toBool()) {
-      cornerValue = cornerValue | s_topLeftCornerMask;
-    }
-    if (Settings::value(Settings::Screen::SwitchCornerTopRight.arg(screen)).toBool()) {
-      cornerValue = cornerValue | s_topRightCornerMask;
-    }
-    if (Settings::value(Settings::Screen::SwitchCornerBottomLeft.arg(screen)).toBool()) {
-      cornerValue = cornerValue | s_bottomLeftCornerMask;
-    }
-    if (Settings::value(Settings::Screen::SwitchCornerBottomRight.arg(screen)).toBool()) {
-      cornerValue = cornerValue | s_bottomRightCornerMask;
-    }
-    addOption(screenName, kOptionScreenSwitchCorners, cornerValue);
   }
 
   std::string line;
@@ -621,7 +611,9 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
       // add the screen to the configuration
       if (!screens.contains(QString::fromStdString(screen))) {
-        throw ServerConfigReadException(s, "please add this screen to the general configuration \"%{1}\"", screen);
+        if (!addScreen(screen)) {
+          throw ServerConfigReadException(s, "duplicate screen name \"%{1}\"", screen);
+        }
       }
     } else if (screen.empty()) {
       throw ServerConfigReadException(s, "argument before first screen");
