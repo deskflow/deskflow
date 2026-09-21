@@ -351,7 +351,8 @@ jobs:
         shell: bash
         run: |
           if [[ `git status --porcelain` ]]; then
-            echo "Unexpected changes to the repo, Often caused by forgetting to commit the updated translation files"
+            echo "Unexpected files changed in the repo, Often caused by forgetting to commit the updated translation files"
+            git status --porcelain=v1
             exit 1
           fi
 
