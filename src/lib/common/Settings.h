@@ -133,9 +133,13 @@ public:
     inline static const auto HalfDuplexCapsLock = QStringLiteral("screen_%1/halfDuplexCapsLock");
     inline static const auto HalfDuplexNumLock = QStringLiteral("screen_%1/halfDuplexNumLock");
     inline static const auto HalfDuplexScrollLock = QStringLiteral("screen_%1/halfDuplexScrollLock");
-    inline static const auto XtestIsXineramaUnaware = QStringLiteral("screen_%1/xtestIsXineramaUnaware");
     inline static const auto SwitchCornerSize = QStringLiteral("screen_%1/switchCornerSize");
     inline static const auto WeakX11Focus = QStringLiteral("screen_%1/weakX11Focus");
+    inline static const auto SwitchCornerTopLeft = QStringLiteral("screen_%1/switchCornerTopLeft");
+    inline static const auto SwitchCornerTopRight = QStringLiteral("screen_%1/switchCornerTopRight");
+    inline static const auto SwitchCornerBottomLeft = QStringLiteral("screen_%1/switchCornerBottomLeft");
+    inline static const auto SwitchCornerBottomRight = QStringLiteral("screen_%1/switchCornerBottomRight");
+    inline static const auto XtestIsXineramaUnaware = QStringLiteral("screen_%1/xtestIsXineramaUnaware");
   };
 
   // Track Removed keys to make upgrading config easier

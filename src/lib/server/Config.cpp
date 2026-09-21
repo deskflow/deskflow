@@ -548,32 +548,58 @@ void Config::readSectionScreens(ConfigReadContext &s)
 {
   const auto screens = Settings::knownScreens();
   for (const auto &screen : screens) {
+    if (screen.isEmpty())
+      continue;
+    const auto screenName = screen.toStdString();
+
+    if (!isValidScreenName(screenName)) {
+      throw ServerConfigReadException(s, "invalid screen name \"%{1}\"", screenName);
+    }
+
+    // add the screen to the configuration
+    if (!addScreen(screenName)) {
+      throw ServerConfigReadException(s, "duplicate screen name \"%{1}\"", screenName);
+    }
+
     addOption(
-        screen.toStdString(), kOptionHalfDuplexCapsLock,
+        screenName, kOptionHalfDuplexCapsLock,
         Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
     );
     addOption(
-        screen.toStdString(), kOptionHalfDuplexNumLock,
-        Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool()
+        screenName, kOptionHalfDuplexNumLock, Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool()
     );
     addOption(
-        screen.toStdString(), kOptionHalfDuplexScrollLock,
+        screenName, kOptionHalfDuplexScrollLock,
         Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
     );
     addOption(
-        screen.toStdString(), kOptionXTestXineramaUnaware,
+        screenName, kOptionXTestXineramaUnaware,
         Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
     );
 
     addOption(
-        screen.toStdString(), kOptionScreenSwitchCornerSize,
+        screenName, kOptionScreenSwitchCornerSize,
         Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
     );
 
     addOption(
-        screen.toStdString(), kOptionScreenX11WeakFocus,
-        Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool()
+        screenName, kOptionScreenX11WeakFocus, Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool()
     );
+
+    OptionValue cornerValue = s_noCornerMask;
+    if (Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(screen)).toBool()) {
+      cornerValue = cornerValue | s_topLeftCornerMask;
+    }
+    if (Settings::value(Settings::Screen::SwitchCornerTopRight.arg(screen)).toBool()) {
+      cornerValue = cornerValue | s_topRightCornerMask;
+    }
+    if (Settings::value(Settings::Screen::SwitchCornerBottomLeft.arg(screen)).toBool()) {
+      cornerValue = cornerValue | s_bottomLeftCornerMask;
+    }
+    if (Settings::value(Settings::Screen::SwitchCornerBottomRight.arg(screen)).toBool()) {
+      cornerValue = cornerValue | s_bottomRightCornerMask;
+    }
+    addOption(screenName, kOptionScreenSwitchCorners, cornerValue);
   }
 
   std::string line;
@@ -593,10 +619,9 @@ void Config::readSectionScreens(ConfigReadContext &s)
       if (!isValidScreenName(screen)) {
         throw ServerConfigReadException(s, "invalid screen name \"%{1}\"", screen);
       }
-
       // add the screen to the configuration
-      if (!addScreen(screen)) {
-        throw ServerConfigReadException(s, "duplicate screen name \"%{1}\"", screen);
+      if (!screens.contains(QString::fromStdString(screen))) {
+        throw ServerConfigReadException(s, "please add this screen to the general configuration \"%{1}\"", screen);
       }
     } else if (screen.empty()) {
       throw ServerConfigReadException(s, "argument before first screen");
@@ -621,7 +646,7 @@ void Config::readSectionScreens(ConfigReadContext &s)
       }
 
       // handle argument
-      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware" || name == "switchCornerSize" ||
+      if (name.starts_with("halfDuplex") || name == "xtestIsXineramaUnaware" || name.starts_with("switchCorner") ||
           name == "preserveFocus") {
         continue;
       } else if (name == "shift") {
@@ -636,8 +661,6 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionModifierMapForMeta, s.parseModifierKey(value));
       } else if (name == "super") {
         addOption(screen, kOptionModifierMapForSuper, s.parseModifierKey(value));
-      } else if (name == "switchCorners") {
-        addOption(screen, kOptionScreenSwitchCorners, s.parseCorners(value));
       } else {
         // unknown argument
         throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
@@ -1017,9 +1040,6 @@ const char *Config::getOptionName(OptionID id)
   if (id == kOptionModifierMapForSuper) {
     return "super";
   }
-  if (id == kOptionScreenSwitchCorners) {
-    return "switchCorners";
-  }
   return nullptr;
 }
 
@@ -1049,22 +1069,6 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
     default:
       return "none";
     }
-  }
-  if (id == kOptionScreenSwitchCorners) {
-    std::string result("none");
-    if ((value & s_topLeftCornerMask) != 0) {
-      result += " +top-left";
-    }
-    if ((value & s_topRightCornerMask) != 0) {
-      result += " +top-right";
-    }
-    if ((value & s_bottomLeftCornerMask) != 0) {
-      result += " +bottom-left";
-    }
-    if ((value & s_bottomRightCornerMask) != 0) {
-      result += " +bottom-right";
-    }
-    return result;
   }
   return "";
 }
@@ -1460,76 +1464,6 @@ OptionValue ConfigReadContext::parseModifierKey(const std::string &arg) const
     return static_cast<OptionValue>(kKeyModifierIDNull);
   }
   throw ServerConfigReadException(*this, "invalid argument \"%{1}\"", arg);
-}
-
-OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
-{
-  if (CaselessCmp::equal(arg, "left")) {
-    return s_topLeftCornerMask | s_bottomLeftCornerMask;
-  } else if (CaselessCmp::equal(arg, "right")) {
-    return s_topRightCornerMask | s_bottomRightCornerMask;
-  } else if (CaselessCmp::equal(arg, "top")) {
-    return s_topLeftCornerMask | s_topRightCornerMask;
-  } else if (CaselessCmp::equal(arg, "bottom")) {
-    return s_bottomLeftCornerMask | s_bottomRightCornerMask;
-  } else if (CaselessCmp::equal(arg, "top-left")) {
-    return s_topLeftCornerMask;
-  } else if (CaselessCmp::equal(arg, "top-right")) {
-    return s_topRightCornerMask;
-  } else if (CaselessCmp::equal(arg, "bottom-left")) {
-    return s_bottomLeftCornerMask;
-  } else if (CaselessCmp::equal(arg, "bottom-right")) {
-    return s_bottomRightCornerMask;
-  } else if (CaselessCmp::equal(arg, "none")) {
-    return s_noCornerMask;
-  } else if (CaselessCmp::equal(arg, "all")) {
-    return s_allCornersMask;
-  }
-  throw ServerConfigReadException(*this, "invalid argument \"%{1}\"", arg);
-}
-
-OptionValue ConfigReadContext::parseCorners(const std::string &args) const
-{
-  // find first token
-  std::string::size_type i = args.find_first_not_of(" \t", 0);
-  if (i == std::string::npos) {
-    throw ServerConfigReadException(*this, "missing corner argument");
-  }
-  std::string::size_type j = args.find_first_of(" \t", i);
-
-  // parse first corner token
-  OptionValue corners = parseCorner(args.substr(i, j - i));
-
-  // get +/-
-  i = args.find_first_not_of(" \t", j);
-  while (i != std::string::npos) {
-    // parse +/-
-    bool add;
-    if (args[i] == '-') {
-      add = false;
-    } else if (args[i] == '+') {
-      add = true;
-    } else {
-      throw ServerConfigReadException(*this, "invalid corner operator \"%{1}\"", std::string(args.c_str() + i, 1));
-    }
-
-    // get next corner token
-    i = args.find_first_not_of(" \t", i + 1);
-    j = args.find_first_of(" \t", i);
-    if (i == std::string::npos) {
-      throw ServerConfigReadException(*this, "missing corner argument");
-    }
-
-    // parse next corner token
-    if (add) {
-      corners |= parseCorner(args.substr(i, j - i));
-    } else {
-      corners &= ~parseCorner(args.substr(i, j - i));
-    }
-    i = args.find_first_not_of(" \t", j);
-  }
-
-  return corners;
 }
 
 Config::Interval ConfigReadContext::parseInterval(const ArgList &args) const

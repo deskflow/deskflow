@@ -9,5 +9,3 @@
 #include "ScreenConfig.h"
 
 const char *ScreenConfig::m_ModifierNames[] = {"shift", "ctrl", "alt", "meta", "super", "altgr", "none"};
-
-const char *ScreenConfig::m_SwitchCornerNames[] = {"top-left", "top-right", "bottom-left", "bottom-right"};
