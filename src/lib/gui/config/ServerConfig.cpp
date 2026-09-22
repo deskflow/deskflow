@@ -14,7 +14,6 @@
 #include <QAbstractButton>
 #include <QPushButton>
 
-using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 

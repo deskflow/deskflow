@@ -10,7 +10,7 @@
 #include "config/ScreenConfig.h"
 #include <common/Settings.h>
 
-using enum ScreenConfig::Modifier;
+using enum KeyboardModifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
@@ -84,7 +84,10 @@ QString Screen::screensSection() const
   QString out = QStringLiteral("\t%1:\n").arg(name());
   for (int i = 0; i < modifiers().size(); i++) {
     if (modifier(i) != i)
-      out.append(lineTemplate.arg(modifierName(i), modifierName(modifier(i))));
+      out.append(lineTemplate.arg(
+          keyboardModifierToOption(static_cast<KeyboardModifier>(i)),
+          keyboardModifierToOption(static_cast<KeyboardModifier>(modifier(i)))
+      ));
   }
   return out;
 }

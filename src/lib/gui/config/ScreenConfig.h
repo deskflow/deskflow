@@ -18,18 +18,6 @@ class ScreenConfig
 {
 
 public:
-  enum class Modifier : int8_t
-  {
-    DefaultMod = -1,
-    Shift,
-    Ctrl,
-    Alt,
-    Meta,
-    Super,
-    AltGr,
-    None,
-    NumModifiers
-  };
   enum class SwitchCorner : int8_t
   {
     TopLeft,
@@ -84,13 +72,4 @@ protected:
     }
     settings.endArray();
   }
-
-public:
-  static const char *modifierName(int idx)
-  {
-    return m_ModifierNames[idx];
-  }
-
-private:
-  static const char *m_ModifierNames[];
 };

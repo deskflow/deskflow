@@ -10,6 +10,7 @@
 
 #include "ScreenConfig.h"
 
+#include "common/KeyboardModifier.h"
 #include "common/QSettingsProxy.h"
 
 #include <QIcon>
@@ -62,7 +63,7 @@ public:
   }
   [[nodiscard]] int modifier(int m) const
   {
-    return m_Modifiers[m] == static_cast<int>(ScreenConfig::Modifier::DefaultMod) ? m : m_Modifiers[m];
+    return m_Modifiers[m] == static_cast<int>(KeyboardModifier::DefaultMod) ? m : m_Modifiers[m];
   }
   [[nodiscard]] const QList<int> &modifiers() const
   {
@@ -119,7 +120,7 @@ protected:
   {
     return m_Aliases;
   }
-  void setModifier(const Modifier m, const int n)
+  void setModifier(const KeyboardModifier m, const int n)
   {
     m_Modifiers[static_cast<int8_t>(m)] = n;
   }
