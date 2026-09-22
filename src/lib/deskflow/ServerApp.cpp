@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Rex Kelly <rexfordkelly@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
@@ -463,7 +464,9 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
 {
   auto *server = new Server(config, primaryClient, m_serverScreen, getEvents());
   try {
-    getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
+    getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &e) {
+      handleScreenSwitched(e);
+    });
 
   } catch (std::bad_alloc &ba) {
     delete server;
@@ -473,9 +476,13 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
   return server;
 }
 
-void ServerApp::handleScreenSwitched() const
+void ServerApp::handleScreenSwitched(const Event &event) const
 {
-  // do nothing
+  const auto *info = static_cast<const Server::SwitchToScreenInfo *>(event.getDataObject());
+  if (info == nullptr) {
+    return;
+  }
+  ipcSendToClient(QStringLiteral("screenSwitched"), QString::fromStdString(info->m_screen));
 }
 
 std::unique_ptr<ISocketFactory> ServerApp::getSocketFactory() const
