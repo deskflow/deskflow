@@ -17,7 +17,6 @@
 
 #include <common/Settings.h>
 
-using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
@@ -45,12 +44,12 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   for (int i = 0; i < m_screen->aliases().count(); i++)
     new QListWidgetItem(m_screen->aliases()[i], ui->listAliases);
 
-  ui->comboShift->setCurrentIndex(m_screen->modifier(static_cast<int>(Shift)));
-  ui->comboCtrl->setCurrentIndex(m_screen->modifier(static_cast<int>(Ctrl)));
-  ui->comboAlt->setCurrentIndex(m_screen->modifier(static_cast<int>(Alt)));
-  ui->comboMeta->setCurrentIndex(m_screen->modifier(static_cast<int>(Meta)));
-  ui->comboSuper->setCurrentIndex(m_screen->modifier(static_cast<int>(Super)));
-  ui->comboAltGr->setCurrentIndex(m_screen->modifier(static_cast<int>(AltGr)));
+  ui->comboShift->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Shift)));
+  ui->comboCtrl->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Ctrl)));
+  ui->comboAlt->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Alt)));
+  ui->comboMeta->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Meta)));
+  ui->comboSuper->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Super)));
+  ui->comboAltGr->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::AltGr)));
 
   ui->chkDeadTopLeft->setChecked(m_screen->switchCorner(static_cast<int>(TopLeft)));
   ui->chkDeadTopRight->setChecked(m_screen->switchCorner(static_cast<int>(TopRight)));
@@ -105,12 +104,12 @@ void ScreenSettingsDialog::accept()
       m_screen->addAlias(alias);
   }
 
-  m_screen->setModifier(Shift, ui->comboShift->currentIndex());
-  m_screen->setModifier(Ctrl, ui->comboCtrl->currentIndex());
-  m_screen->setModifier(Alt, ui->comboAlt->currentIndex());
-  m_screen->setModifier(Meta, ui->comboMeta->currentIndex());
-  m_screen->setModifier(Super, ui->comboSuper->currentIndex());
-  m_screen->setModifier(AltGr, ui->comboAltGr->currentIndex());
+  m_screen->setModifier(KeyboardModifier::Shift, ui->comboShift->currentIndex());
+  m_screen->setModifier(KeyboardModifier::Ctrl, ui->comboCtrl->currentIndex());
+  m_screen->setModifier(KeyboardModifier::Alt, ui->comboAlt->currentIndex());
+  m_screen->setModifier(KeyboardModifier::Meta, ui->comboMeta->currentIndex());
+  m_screen->setModifier(KeyboardModifier::Super, ui->comboSuper->currentIndex());
+  m_screen->setModifier(KeyboardModifier::AltGr, ui->comboAltGr->currentIndex());
 
   m_screen->setSwitchCorner(TopLeft, ui->chkDeadTopLeft->isChecked());
   m_screen->setSwitchCorner(TopRight, ui->chkDeadTopRight->isChecked());

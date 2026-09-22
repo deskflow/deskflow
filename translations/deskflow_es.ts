@@ -735,6 +735,34 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <source>%1 is already running</source>
         <translation type="unfinished">%1 ya se está ejecutando</translation>
     </message>
+    <message>
+        <source>Alt</source>
+        <translation type="unfinished">Alt</translation>
+    </message>
+    <message>
+        <source>AltGr</source>
+        <translation type="unfinished">AltGr</translation>
+    </message>
+    <message>
+        <source>Ctrl</source>
+        <translation type="unfinished">Ctrl</translation>
+    </message>
+    <message>
+        <source>Meta</source>
+        <translation type="unfinished">Meta</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ninguno</translation>
+    </message>
+    <message>
+        <source>Shift</source>
+        <translation type="unfinished">Shift</translation>
+    </message>
+    <message>
+        <source>Super</source>
+        <translation type="unfinished">Súper</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>
