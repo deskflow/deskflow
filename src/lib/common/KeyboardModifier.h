@@ -5,6 +5,9 @@
  */
 
 #pragma once
+
+#include "KeyModifierID.h"
+
 #include <QObject>
 #include <QString>
 
@@ -25,8 +28,7 @@ enum class KeyboardModifier : int8_t
   Meta,
   Super,
   AltGr,
-  None,
-  NumModifiers
+  None
 };
 Q_DECLARE_METATYPE(KeyboardModifier);
 
@@ -51,6 +53,11 @@ static QString keyboardModifierToOption(const KeyboardModifier modifier)
   default:
     return {};
   }
+}
+
+static QString valueToKeyboardModifierOption(int modifier)
+{
+  return keyboardModifierToOption(KeyboardModifier(modifier));
 }
 
 static KeyboardModifier keyboardModifierFromString(const QString &modifier)
@@ -78,4 +85,29 @@ static KeyboardModifier keyboardModifierFromString(const QString &modifier)
       modifier.localeAwareCompare(QObject::tr("None")) == 0)
     return None;
   return DefaultMod;
+}
+
+static int modifierValueFromString(const QString &modifier)
+{
+  return static_cast<int>(keyboardModifierFromString(modifier));
+}
+
+static int32_t modifierIDValueFromString(const QString &modifier)
+{
+  auto mod = keyboardModifierToOption(keyboardModifierFromString(modifier));
+  if (mod == kModifierNameShift)
+    return static_cast<int32_t>(kKeyModifierIDShift);
+  if (mod == kModifierNameCtrl)
+    return static_cast<int32_t>(kKeyModifierIDControl);
+  if (mod == kModifierNameAlt)
+    return static_cast<int32_t>(kKeyModifierIDAlt);
+  if (mod == kModifierNameAltGr)
+    return static_cast<int32_t>(kKeyModifierIDAltGr);
+  if (mod == kModifierNameMeta)
+    return static_cast<int32_t>(kKeyModifierIDMeta);
+  if (mod == kModifierNameSuper)
+    return static_cast<int32_t>(kKeyModifierIDSuper);
+  if (mod == kModifierNameNone)
+    return static_cast<int32_t>(kKeyModifierIDNull);
+  return static_cast<int32_t>(-1);
 }

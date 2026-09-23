@@ -133,12 +133,18 @@ public:
     inline static const auto HalfDuplexCapsLock = QStringLiteral("screen_%1/halfDuplexCapsLock");
     inline static const auto HalfDuplexNumLock = QStringLiteral("screen_%1/halfDuplexNumLock");
     inline static const auto HalfDuplexScrollLock = QStringLiteral("screen_%1/halfDuplexScrollLock");
+    inline static const auto ModifierAlt = QStringLiteral("screen_%1/modifierAlt");
+    inline static const auto ModifierAltGr = QStringLiteral("screen_%1/modifierAltGr");
+    inline static const auto ModifierCtrl = QStringLiteral("screen_%1/modifierCtrl");
+    inline static const auto ModifierMeta = QStringLiteral("screen_%1/modifierMeta");
+    inline static const auto ModifierShift = QStringLiteral("screen_%1/modifierShift");
+    inline static const auto ModifierSuper = QStringLiteral("screen_%1/modifierSuper");
     inline static const auto SwitchCornerSize = QStringLiteral("screen_%1/switchCornerSize");
-    inline static const auto WeakX11Focus = QStringLiteral("screen_%1/weakX11Focus");
     inline static const auto SwitchCornerTopLeft = QStringLiteral("screen_%1/switchCornerTopLeft");
     inline static const auto SwitchCornerTopRight = QStringLiteral("screen_%1/switchCornerTopRight");
     inline static const auto SwitchCornerBottomLeft = QStringLiteral("screen_%1/switchCornerBottomLeft");
     inline static const auto SwitchCornerBottomRight = QStringLiteral("screen_%1/switchCornerBottomRight");
+    inline static const auto WeakX11Focus = QStringLiteral("screen_%1/weakX11Focus");
     inline static const auto XtestIsXineramaUnaware = QStringLiteral("screen_%1/xtestIsXineramaUnaware");
   };
 

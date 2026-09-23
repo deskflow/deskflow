@@ -27,9 +27,14 @@ void Screen::loadSettings(QSettingsProxy &settings)
   if (name.isEmpty())
     return;
 
-  setSwitchCornerSize(Settings::value(Settings::Screen::SwitchCornerSize.arg(name)).toInt());
+  setModifier(Alt, modifierValueFromString(Settings::value(Settings::Screen::ModifierAlt.arg(name)).toString()));
+  setModifier(AltGr, modifierValueFromString(Settings::value(Settings::Screen::ModifierAltGr.arg(name)).toString()));
+  setModifier(Ctrl, modifierValueFromString(Settings::value(Settings::Screen::ModifierCtrl.arg(name)).toString()));
+  setModifier(Meta, modifierValueFromString(Settings::value(Settings::Screen::ModifierMeta.arg(name)).toString()));
+  setModifier(Shift, modifierValueFromString(Settings::value(Settings::Screen::ModifierShift.arg(name)).toString()));
+  setModifier(Super, modifierValueFromString(Settings::value(Settings::Screen::ModifierSuper.arg(name)).toString()));
 
-  readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
+  setSwitchCornerSize(Settings::value(Settings::Screen::SwitchCornerSize.arg(name)).toInt());
 
   m_SwitchCorners[static_cast<int>(TopLeft)] =
       Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(name)).toBool();
@@ -74,22 +79,35 @@ void Screen::saveSettings(QSettingsProxy &settings) const
       Settings::Screen::SwitchCornerBottomRight.arg(screenName), m_SwitchCorners[static_cast<int>(BottomRight)]
   );
 
-  writeSettings(settings, modifiers(), "modifier");
+  Settings::setValue(
+      Settings::Screen::ModifierAlt.arg(screenName),
+      valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Alt)))
+  );
+  Settings::setValue(
+      Settings::Screen::ModifierAltGr.arg(screenName),
+      valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::AltGr)))
+  );
+  Settings::setValue(
+      Settings::Screen::ModifierCtrl.arg(screenName),
+      valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Ctrl)))
+  );
+  Settings::setValue(
+      Settings::Screen::ModifierMeta.arg(screenName),
+      valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Meta)))
+  );
+  Settings::setValue(
+      Settings::Screen::ModifierShift.arg(screenName),
+      valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Shift)))
+  );
+  Settings::setValue(
+      Settings::Screen::ModifierSuper.arg(screenName),
+      valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Super)))
+  );
 }
 
 QString Screen::screensSection() const
 {
-  const auto lineTemplate = QStringLiteral("\t\t%1 = %2\n");
-
-  QString out = QStringLiteral("\t%1:\n").arg(name());
-  for (int i = 0; i < modifiers().size(); i++) {
-    if (modifier(i) != i)
-      out.append(lineTemplate.arg(
-          keyboardModifierToOption(static_cast<KeyboardModifier>(i)),
-          keyboardModifierToOption(static_cast<KeyboardModifier>(modifier(i)))
-      ));
-  }
-  return out;
+  return QStringLiteral("\t%1:\n").arg(name());
 }
 
 bool Screen::operator==(const Screen &screen) const

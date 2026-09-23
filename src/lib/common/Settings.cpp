@@ -9,6 +9,7 @@
 #include "LogLevel.h"
 #include "NetworkProtocol.h"
 #include "UrlConstants.h"
+#include "common/KeyboardModifier.h"
 
 #include <QCoreApplication>
 #include <QFile>
@@ -407,6 +408,18 @@ QVariant Settings::screenDefaults(const QString &key)
     return false;
   if (key.endsWith("switchCornerSize"))
     return 0;
+  if (key == "modifierAlt")
+    return keyboardModifierToOption(KeyboardModifier::Alt);
+  if (key == "modifierAltGr")
+    return keyboardModifierToOption(KeyboardModifier::AltGr);
+  if (key == "modifierCtrl")
+    return keyboardModifierToOption(KeyboardModifier::Ctrl);
+  if (key == "modifierMeta")
+    return keyboardModifierToOption(KeyboardModifier::Meta);
+  if (key == "modifierShift")
+    return keyboardModifierToOption(KeyboardModifier::Shift);
+  if (key == "modifierSuper")
+    return keyboardModifierToOption(KeyboardModifier::Super);
   return QVariant();
 }
 
