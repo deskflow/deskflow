@@ -438,7 +438,6 @@ public:
 
   bool operator!() const;
 
-  OptionValue parseModifierKey(const std::string &) const;
   Config::Interval parseInterval(const ArgList &args) const;
   void parseNameWithArgs(
       const std::string &type, const std::string &line, const std::string &delim, std::string::size_type &index,

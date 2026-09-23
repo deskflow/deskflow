@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <common/KeyModifierID.h>
 #include <stdint.h>
 //! Key ID
 /*!
@@ -44,16 +45,6 @@ typedef uint32_t KeyModifierMask;
 using KeyModifierMask = uint32_t;
 #endif
 
-//! Modifier key ID
-/*!
-Type to hold the id of a key modifier (e.g. a shift key).
-*/
-#if __APPLE__
-typedef uint32_t KeyModifierID;
-#else
-using KeyModifierID = uint32_t;
-#endif
-
 //! @name Modifier key masks
 //@{
 static const KeyModifierMask KeyModifierShift = 0x0001;
@@ -82,18 +73,6 @@ static const uint32_t kKeyModifierBitCapsLock = 12;
 static const uint32_t kKeyModifierBitNumLock = 13;
 static const uint32_t kKeyModifierBitScrollLock = 14;
 static const int32_t kKeyModifierNumBits = 16;
-//@}
-
-//! @name Modifier key identifiers
-//@{
-static const KeyModifierID kKeyModifierIDNull = 0;
-static const KeyModifierID kKeyModifierIDShift = 1;
-static const KeyModifierID kKeyModifierIDControl = 2;
-static const KeyModifierID kKeyModifierIDAlt = 3;
-static const KeyModifierID kKeyModifierIDMeta = 4;
-static const KeyModifierID kKeyModifierIDSuper = 5;
-static const KeyModifierID kKeyModifierIDAltGr = 6;
-static const KeyModifierID kKeyModifierIDLast = 7;
 //@}
 
 //! @name Key identifiers

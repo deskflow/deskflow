@@ -157,15 +157,6 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 {
-  outStream << "section: screens" << Qt::endl;
-
-  for (const Screen &s : config.screens()) {
-    if (!s.isNull())
-      outStream << s.screensSection();
-  }
-
-  outStream << "end" << Qt::endl << Qt::endl;
-
   outStream << "section: links" << Qt::endl;
 
   for (int i = 0; const auto &screen : config.screens()) {

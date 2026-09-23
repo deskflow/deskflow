@@ -169,6 +169,12 @@ Each screen will have a section where its configuration will be stored, if the s
 | halfDuplexCapsLock     | `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | halfDuplexNumLock      | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | halfDuplexScrollLock   | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
+| modifierAlt             | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's alt modifer to different key on this computer|
+| modifierAltGr           | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's altgr modifer to different key on this computer|
+| modifierCtrl            | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's ctrl modifer to different key on this computer|
+| modifierMeta            | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's meta modifer to different key on this computer|
+| modifierShift           | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's shift modifer to different key on this computer|
+| modifierSuper           | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's super modifer to different key on thist computer|
 | switchCornerSize       | integer (N)       | Sets the size of all corners in pixels. The cursor must be within `N` pixels of the corner to be considered to be in the corner.|
 | switchCornerTopLeft    | `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
 | switchCornerTopRight   | `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
@@ -199,13 +205,6 @@ hotkeys\1\keys\1\key=83
 hotkeys\1\keys\size=1
 hotkeys\size=1
 screens\1\name=
-screens\10\modifierArray\1\modifier=0
-screens\10\modifierArray\2\modifier=1
-screens\10\modifierArray\3\modifier=2
-screens\10\modifierArray\4\modifier=3
-screens\10\modifierArray\5\modifier=4
-screens\10\modifierArray\6\modifier=5
-screens\10\modifierArray\size=6
 screens\10\name=null
 screens\11\name=
 screens\12\name=
@@ -217,29 +216,8 @@ screens\3\name=
 screens\4\name=
 screens\5\name=
 screens\6\name=
-screens\7\modifierArray\1\modifier=0
-screens\7\modifierArray\2\modifier=1
-screens\7\modifierArray\3\modifier=2
-screens\7\modifierArray\4\modifier=3
-screens\7\modifierArray\5\modifier=4
-screens\7\modifierArray\6\modifier=5
-screens\7\modifierArray\size=6
 screens\7\name=void
-screens\8\modifierArray\1\modifier=0
-screens\8\modifierArray\2\modifier=1
-screens\8\modifierArray\3\modifier=2
-screens\8\modifierArray\4\modifier=3
-screens\8\modifierArray\5\modifier=4
-screens\8\modifierArray\6\modifier=5
-screens\8\modifierArray\size=6
 screens\8\name=chris-Precision-5570
-screens\9\modifierArray\1\modifier=0
-screens\9\modifierArray\2\modifier=1
-screens\9\modifierArray\3\modifier=2
-screens\9\modifierArray\4\modifier=3
-screens\9\modifierArray\5\modifier=4
-screens\9\modifierArray\6\modifier=5
-screens\9\modifierArray\size=6
 screens\9\name=abyss.lan
 screens\size=15
 ```
@@ -258,38 +236,10 @@ end
 
 Comments are introduced by ''#'' and continue to the end of the line. ''name'' must be one of the following:
 
-* ''screens''
 * ''links''
 * ''options''
 
 The file is parsed top to bottom and names cannot be used before they've been defined in the `screens` or as an alias in the general config. So the `links` must appear after the `screens`.
-
-### The screens section
-
-''args'' is a list of computer names, one name per line, each followed by a colon. Names are arbitrary strings but they must be unique. The hostname of each computer is recommended. (This is the computer's network name on win32 and the name reported by the program hostname on Unix and OS X. Note that OS X may append .local to the name you gave your computer; e.g. somehost.local.) There must be a computer name for the server and each client. Each computer can specify a number of options. Options have the form name = value and are listed one per line after the computer name.
-
-```
-section: screens
-	moe:
-	larry:
-	curly:
-		meta = alt
-end
-```
-
-This declares three computers named ''moe'', ''larry'', and ''curly''. Computer ' computer ''curly'' converts the ''Meta'' modifier key to the ''Alt'' modifier key.
-
-#### screen options
-
-A computer can have the following options:
-
-|Option | Valid Values| Description|
-|:----------|:-----------:|:-----------|
-|shift | shift ctrl alt meta super none | Map the server's shift modifer to different key on a client computer|
-|ctrl  | shift ctrl alt meta super none | Map the server's ctrl modifer to different key on a client computer|
-|alt | shift ctrl alt meta super none | Map the server's alt modifer to different key on a client computer|
-|meta|  shift ctrl alt meta super none | Map the server's meta modifer to different key on a client computer|
-|super|  shift ctrl alt meta super none | Map the server's super modifer to different key on a client computer|
 
 ### links secion
 
