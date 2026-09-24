@@ -21,7 +21,7 @@ runs:
           hdiutil detach /tmp/deskflow-dmg
 
         elif [ "$RUNNER_OS" == "Windows" ]; then
-          7z x build/deskflow-*-portable.7z -otmp/deskflow-pkg
+          7z x build/deskflow-*-portable.zip -otmp/deskflow-pkg
           exe=$(find tmp/deskflow-pkg -name "deskflow-core.exe" -type f | head -1)
           exe_dir=$(dirname "$exe")
           pkg_root=$(dirname "$exe_dir")
