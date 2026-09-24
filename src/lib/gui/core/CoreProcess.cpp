@@ -464,7 +464,12 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
           }
 
           m_coreIpcClient = new ipc::CoreIpcClient(this);
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived);
+
+          // queued so a modal dialog opened by a handler can't block readyRead and strand later messages
+          connect(
+              m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived,
+              Qt::QueuedConnection
+          );
           connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [] {
             qDebug("connected to core ipc server");
           });
