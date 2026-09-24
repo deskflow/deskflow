@@ -57,7 +57,7 @@ static QString keyboardModifierToOption(const KeyboardModifier modifier)
 
 static QString valueToKeyboardModifierOption(int modifier)
 {
-  return keyboardModifierToOption(KeyboardModifier(modifier));
+  return keyboardModifierToOption(static_cast<KeyboardModifier>(modifier));
 }
 
 static KeyboardModifier keyboardModifierFromString(const QString &modifier)
