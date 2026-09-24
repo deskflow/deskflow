@@ -10,6 +10,7 @@
 
 #include <QDebug>
 #include <QLocalSocket>
+#include <QPointer>
 #include <QTimer>
 
 namespace deskflow::gui::ipc {
@@ -131,10 +132,12 @@ void IpcClient::handleErrorOccurred()
 
 void IpcClient::handleReadyRead()
 {
+  const QPointer<IpcClient> self(this);
   QByteArray data = m_readBuffer + m_socket->readAll();
   m_readBuffer.clear();
 
-  while (data.contains('\n')) {
+  // A message handler can run a nested event loop (e.g. a modal dialog) which processes a pending deleteLater().
+  while (self && data.contains('\n')) {
     const auto index = data.indexOf('\n');
     const auto message = QString::fromUtf8(data.left(index));
     data.remove(0, index + 1);
@@ -161,7 +164,9 @@ void IpcClient::handleReadyRead()
     processCommand(parts.at(0), parts);
   }
 
-  if (!data.isEmpty()) {
+  if (!self) {
+    qDebug("ipc client destroyed while handling messages, discarding remaining data");
+  } else if (!data.isEmpty()) {
     m_readBuffer = data;
   }
 }
