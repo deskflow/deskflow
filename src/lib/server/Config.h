@@ -408,8 +408,6 @@ private:
   );
 
   void parseScreens(const ConfigReadContext &, const std::string_view &, std::set<std::string> &screens) const;
-  static const char *getOptionName(OptionID);
-  static std::string getOptionValue(OptionID, OptionValue);
 
 private:
   CellMap m_map;

@@ -987,59 +987,6 @@ void Config::parseScreens(const ConfigReadContext &c, const std::string_view &s,
   }
 }
 
-const char *Config::getOptionName(OptionID id)
-{
-  if (id == kOptionModifierMapForShift) {
-    return "shift";
-  }
-  if (id == kOptionModifierMapForControl) {
-    return "ctrl";
-  }
-  if (id == kOptionModifierMapForAlt) {
-    return "alt";
-  }
-  if (id == kOptionModifierMapForAltGr) {
-    return "altgr";
-  }
-  if (id == kOptionModifierMapForMeta) {
-    return "meta";
-  }
-  if (id == kOptionModifierMapForSuper) {
-    return "super";
-  }
-  return nullptr;
-}
-
-std::string Config::getOptionValue(OptionID id, OptionValue value)
-{
-  if (id == kOptionModifierMapForShift || id == kOptionModifierMapForControl || id == kOptionModifierMapForAlt ||
-      id == kOptionModifierMapForAltGr || id == kOptionModifierMapForMeta || id == kOptionModifierMapForSuper) {
-    switch (value) {
-    case kKeyModifierIDShift:
-      return "shift";
-
-    case kKeyModifierIDControl:
-      return "ctrl";
-
-    case kKeyModifierIDAlt:
-      return "alt";
-
-    case kKeyModifierIDAltGr:
-      return "altgr";
-
-    case kKeyModifierIDMeta:
-      return "meta";
-
-    case kKeyModifierIDSuper:
-      return "super";
-
-    default:
-      return "none";
-    }
-  }
-  return "";
-}
-
 //
 // Config::Name
 //
@@ -1315,15 +1262,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
 
   // options section
   s << "section: options" << std::endl;
-  if (const Config::ScreenOptions *options = config.getOptions(""); options && options->size() > 0) {
-    for (auto [optionId, optionValue] : *options) {
-      const char *name = Config::getOptionName(optionId);
-      std::string value = Config::getOptionValue(optionId, optionValue);
-      if (name != nullptr && !value.empty()) {
-        s << "\t" << name << " = " << value << std::endl;
-      }
-    }
-  }
+
   if (config.m_deskflowAddress.isValid()) {
     s << "\taddress = " << config.m_deskflowAddress.getHostname().c_str() << std::endl;
   }
