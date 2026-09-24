@@ -17,7 +17,7 @@ set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/cpack-options.cmake)
 
 set(OS_STRING "win-${BUILD_ARCHITECTURE}")
 
-list(APPEND CPACK_GENERATOR "7Z")
+list(APPEND CPACK_GENERATOR "ZIP")
 
 # If Wix4+ is installed make a package
 find_program(WIX_APP wix)
