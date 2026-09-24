@@ -197,7 +197,7 @@ void Settings::checkIfSettingsWritableChange()
 QVariant Settings::defaultValue(const QString &key)
 {
   if (key.startsWith(QStringLiteral("screen_"))) {
-    const auto screenKey = key.mid(0, key.indexOf('/') + 1);
+    const auto screenKey = key.mid(key.indexOf('/') + 1);
     return screenDefaults(screenKey);
   }
 
