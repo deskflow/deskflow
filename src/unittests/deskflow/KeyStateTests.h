@@ -29,6 +29,8 @@ private Q_SLOTS:
   void isKeyDown_noKeysDown_returnsFalse();
   void isKeyDown_keyDown_retrunsTrue();
   void updateKeyState_pollInsertsSingleKey_keyIsDown();
+  void fakeKeyDown_langSyncEnabled_switchesToServerGroup();
+  void fakeKeyDown_langSyncDisabled_keepsLocalGroup();
 
 private:
   Arch m_arch;
