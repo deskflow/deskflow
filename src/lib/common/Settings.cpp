@@ -244,7 +244,7 @@ void Settings::cleanSettings()
       continue;
     if (const auto group = key.mid(0, key.indexOf('/')); !m_validKeys.contains(key) && m_validGroup.contains(group))
       m_settings->remove(key);
-    if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toStringList().isEmpty())
+    if (!m_settings->value(key).isValid())
       m_settings->remove(key);
   }
 }
