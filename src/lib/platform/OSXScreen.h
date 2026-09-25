@@ -18,6 +18,7 @@
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
 
+#include <atomic>
 #include <bitset>
 #include <map>
 #include <memory>
@@ -130,6 +131,8 @@ private:
   // Added here to allow the carbon cursor hack to be called.
   void showCursor();
   void hideCursor();
+  void handleMenuBarShown();
+  void cancelMenuBarRehide();
 
   // map deskflow mouse button to mac buttons
   ButtonID mapDeskflowButtonToMac(uint16_t) const;
@@ -221,7 +224,7 @@ private:
   bool m_isPrimary;
 
   // true if mouse has entered the screen
-  bool m_isOnScreen;
+  std::atomic<bool> m_isOnScreen;
 
   // the display
   CGDirectDisplayID m_displayID;
@@ -250,6 +253,8 @@ private:
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
   bool m_cursorHidden;
+  bool m_menuBarNotifyRegistered = false;
+  uint64_t m_menuBarGeneration = 0;
 
   // keyboard stuff
   OSXKeyState *m_keyState;
