@@ -421,6 +421,14 @@ Do you want to connect to the server?
         <translation type="unfinished">查看帮助(&amp;H)</translation>
     </message>
     <message>
+        <source>Invalid Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer name already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>未检测到 IP</translation>
     </message>
@@ -510,14 +518,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <source>Ctrl+Q</source>
         <extracomment>Quit shortcut</extracomment>
         <translation>Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Invalid Screen Name</source>
-        <translation>无效的屏幕名称</translation>
-    </message>
-    <message>
-        <source>Screen name already exists</source>
-        <translation>屏幕名称已存在</translation>
     </message>
     <message>
         <source>The name you have chosen is invalid.
@@ -671,8 +671,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>%1 - 新客户端</translation>
     </message>
     <message>
-        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation type="unfinished">已接受名为“%1”的新客户端。您需要将其添加到服务器的屏幕布局中。</translation>
+        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s computer layout.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -885,43 +885,43 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>移除(&amp;R)</translation>
     </message>
     <message>
-        <source>Screen name is empty</source>
-        <translation>屏幕名称为空</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>屏幕名称不能为空。请填写名称或取消对话框。</translation>
-    </message>
-    <message>
-        <source>Screen name matches alias</source>
-        <translation>屏幕名称与别名匹配</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>屏幕名称不能与别名相同。请移除别名或更改屏幕名称。</translation>
-    </message>
-    <message>
         <source>Alt Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt Gr</translation>
     </message>
     <message>
         <source>Alt &amp;Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt &amp;Gr</translation>
     </message>
     <message>
         <source>Weaken X11 Focus</source>
         <translation type="unfinished">弱化 X11 焦点</translation>
     </message>
     <message>
-        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">仅适用于 X11 屏幕。启用此选项后，当切换到该客户端时，它不会立即将焦点赋予其当前获得焦点的窗口。这有助于在某些 X11 配置下防止意外的焦点抢占。</translation>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">仅限 X11 系统：启用此选项后，当切换到该客户端时，其当前获得焦点的窗口不会立即获取焦点。这有助于在某些 X11 配置下防止意外的焦点抢占。</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">计算机名称为空</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">计算机名称不能为空。请填写名称或取消对话框。</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">计算机名称与别名匹配</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">计算机名称不能与别名相同。请删除别名或更改计算机名称。</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;屏幕：&lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;双击编辑设置&lt;br&gt;将屏幕拖到垃圾桶以移除</translation>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;计算机：&lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;双击以编辑设置&lt;br&gt;将计算机拖至废纸篓以将其移除</translation>
     </message>
 </context>
 <context>

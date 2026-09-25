@@ -117,7 +117,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
 {
   m_displayID = CGMainDisplayID();
   if (!updateScreenShape(m_displayID, 0)) {
-    throw DisplayInvalidException("failed to initialize screen shape");
+    throw DisplayInvalidException("failed to initialize computer shape");
   }
 
   try {
@@ -1074,9 +1074,9 @@ void OSXScreen::displayReconfigurationCallback(
   LOG_VERBOSE("event: display was reconfigured: %x %x %x", flags, mask, flags & mask);
 
   if (flags & mask) { /* Something actually did change */
-    LOG_VERBOSE("event: screen changed shape; refreshing dimensions");
+    LOG_VERBOSE("event: computer changed shape; refreshing dimensions");
     if (!screen->updateScreenShape(displayID, flags)) {
-      LOG_ERR("failed to update screen shape during display reconfiguration");
+      LOG_ERR("failed to update computer shape during display reconfiguration");
     }
   }
 }
@@ -1359,7 +1359,7 @@ bool OSXScreen::updateScreenShape()
   sendEvent(EventTypes::ScreenShapeChanged);
 
   LOG_DEBUG(
-      "screen shape: center=%d,%d size=%dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount,
+      "computer shape: center=%d,%d size=%dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount,
       (displayCount == 1) ? "display" : "displays"
   );
 

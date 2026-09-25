@@ -113,7 +113,12 @@ void Settings::upgradeSettings()
   if (const auto logValue = m_settings->value(Settings::Log::Level).toString();
       !LogLevel::logLevelOptions().contains(logValue, Qt::CaseInsensitive))
     m_settings->setValue(Settings::Log::Level, defaultValue(Settings::Log::Level));
-
+  const auto screenKeys = m_settings->allKeys().filter("screen_");
+  for (const auto &key : screenKeys) {
+    auto newKey = key;
+    newKey.replace("screen_", "computer_");
+    m_settings->setValue(newKey, m_settings->value(key));
+  }
   for (const auto [oldKey, newKey] : m_upgradedMap.asKeyValueRange()) {
     if (m_settings->contains(newKey) || !m_settings->contains(oldKey))
       continue;
@@ -196,40 +201,40 @@ void Settings::upgradeSettings()
     m_settings->endGroup();
 
     // Write Settings
-    if (!m_settings->contains(Settings::Screen::Name.arg(name)))
-      m_settings->setValue(Settings::Screen::Name.arg(name), name);
-    if (!m_settings->contains(Settings::Screen::SwitchCornerSize.arg(name)))
-      m_settings->setValue(Settings::Screen::SwitchCornerSize.arg(name), switchCornerSize);
-    if (!m_settings->contains(Settings::Screen::HalfDuplexCapsLock.arg(name)))
-      m_settings->setValue(Settings::Screen::HalfDuplexCapsLock.arg(name), fixTemp.at(0));
-    if (!m_settings->contains(Settings::Screen::HalfDuplexNumLock.arg(name)))
-      m_settings->setValue(Settings::Screen::HalfDuplexNumLock.arg(name), fixTemp.at(1));
-    if (!m_settings->contains(Settings::Screen::HalfDuplexScrollLock.arg(name)))
-      m_settings->setValue(Settings::Screen::HalfDuplexScrollLock.arg(name), fixTemp.at(2));
-    if (!m_settings->contains(Settings::Screen::XtestIsXineramaUnaware.arg(name)))
-      m_settings->setValue(Settings::Screen::XtestIsXineramaUnaware.arg(name), fixTemp.at(3));
-    if (!m_settings->contains(Settings::Screen::SwitchCornerTopLeft.arg(name)))
-      m_settings->setValue(Settings::Screen::SwitchCornerTopLeft.arg(name), cornerTemp.at(0));
-    if (!m_settings->contains(Settings::Screen::SwitchCornerTopRight.arg(name)))
-      m_settings->setValue(Settings::Screen::SwitchCornerTopRight.arg(name), cornerTemp.at(1));
-    if (!m_settings->contains(Settings::Screen::SwitchCornerBottomLeft.arg(name)))
-      m_settings->setValue(Settings::Screen::SwitchCornerBottomLeft.arg(name), cornerTemp.at(2));
-    if (!m_settings->contains(Settings::Screen::SwitchCornerBottomRight.arg(name)))
-      m_settings->setValue(Settings::Screen::SwitchCornerBottomRight.arg(name), cornerTemp.at(3));
-    if (!m_settings->contains(Settings::Screen::ModifierShift.arg(name)))
-      m_settings->setValue(Settings::Screen::ModifierShift.arg(name), modifierTemp.at(0));
-    if (!m_settings->contains(Settings::Screen::ModifierCtrl.arg(name)))
-      m_settings->setValue(Settings::Screen::ModifierCtrl.arg(name), modifierTemp.at(1));
-    if (!m_settings->contains(Settings::Screen::ModifierAlt.arg(name)))
-      m_settings->setValue(Settings::Screen::ModifierAlt.arg(name), modifierTemp.at(2));
-    if (!m_settings->contains(Settings::Screen::ModifierMeta.arg(name)))
-      m_settings->setValue(Settings::Screen::ModifierMeta.arg(name), modifierTemp.at(3));
-    if (!m_settings->contains(Settings::Screen::ModifierSuper.arg(name)))
-      m_settings->setValue(Settings::Screen::ModifierSuper.arg(name), modifierTemp.at(4));
-    if (!m_settings->contains(Settings::Screen::ModifierAltGr.arg(name)))
-      m_settings->setValue(Settings::Screen::ModifierAltGr.arg(name), modifierTemp.at(5));
-    if (!m_settings->contains(Settings::Screen::Aliases.arg(name))) {
-      m_settings->setValue(Settings::Screen::Aliases.arg(name), aliases);
+    if (!m_settings->contains(Settings::Computer::Name.arg(name)))
+      m_settings->setValue(Settings::Computer::Name.arg(name), name);
+    if (!m_settings->contains(Settings::Computer::SwitchCornerSize.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerSize.arg(name), switchCornerSize);
+    if (!m_settings->contains(Settings::Computer::HalfDuplexCapsLock.arg(name)))
+      m_settings->setValue(Settings::Computer::HalfDuplexCapsLock.arg(name), fixTemp.at(0));
+    if (!m_settings->contains(Settings::Computer::HalfDuplexNumLock.arg(name)))
+      m_settings->setValue(Settings::Computer::HalfDuplexNumLock.arg(name), fixTemp.at(1));
+    if (!m_settings->contains(Settings::Computer::HalfDuplexScrollLock.arg(name)))
+      m_settings->setValue(Settings::Computer::HalfDuplexScrollLock.arg(name), fixTemp.at(2));
+    if (!m_settings->contains(Settings::Computer::XtestIsXineramaUnaware.arg(name)))
+      m_settings->setValue(Settings::Computer::XtestIsXineramaUnaware.arg(name), fixTemp.at(3));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerTopLeft.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerTopLeft.arg(name), cornerTemp.at(0));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerTopRight.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerTopRight.arg(name), cornerTemp.at(1));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerBottomLeft.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerBottomLeft.arg(name), cornerTemp.at(2));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerBottomRight.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerBottomRight.arg(name), cornerTemp.at(3));
+    if (!m_settings->contains(Settings::Computer::ModifierShift.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierShift.arg(name), modifierTemp.at(0));
+    if (!m_settings->contains(Settings::Computer::ModifierCtrl.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierCtrl.arg(name), modifierTemp.at(1));
+    if (!m_settings->contains(Settings::Computer::ModifierAlt.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierAlt.arg(name), modifierTemp.at(2));
+    if (!m_settings->contains(Settings::Computer::ModifierMeta.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierMeta.arg(name), modifierTemp.at(3));
+    if (!m_settings->contains(Settings::Computer::ModifierSuper.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierSuper.arg(name), modifierTemp.at(4));
+    if (!m_settings->contains(Settings::Computer::ModifierAltGr.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierAltGr.arg(name), modifierTemp.at(5));
+    if (!m_settings->contains(Settings::Computer::Aliases.arg(name))) {
+      m_settings->setValue(Settings::Computer::Aliases.arg(name), aliases);
     }
   }
 }
@@ -238,7 +243,7 @@ void Settings::cleanSettings()
 {
   const QStringList keys = m_settings->allKeys();
   for (const QString &key : keys) {
-    if (m_oldServerConfigKeys.contains(key))
+    if (m_oldServerConfigKeys.contains(key) || key.startsWith("screen_"))
       m_settings->remove(key);
     if (key.startsWith(QStringLiteral("internalConfig")))
       continue;
@@ -303,9 +308,9 @@ void Settings::checkIfSettingsWritableChange()
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if (key.startsWith(QStringLiteral("screen_"))) {
-    const auto screenKey = key.mid(key.indexOf('/') + 1);
-    return screenDefaults(screenKey);
+  if (key.startsWith(QStringLiteral("computer_"))) {
+    const auto computerKey = key.mid(key.indexOf('/') + 1);
+    return computerDefaults(computerKey);
   }
 
   if (m_defaultFalseValues.contains(key))
@@ -498,17 +503,17 @@ QString Settings::portableSettingsFile()
   return QFileInfo(filename).absoluteFilePath();
 }
 
-void Settings::removeUnknownScreens(const QStringList &knownScreens)
+void Settings::removeUnknownComputers(const QStringList &knownComputers)
 {
   const QStringList knownGroups = instance()->m_settings->childGroups();
   for (const auto &group : knownGroups) {
-    if (m_validGroup.contains(group) || knownScreens.contains(group))
+    if (m_validGroup.contains(group) || knownComputers.contains(group))
       continue;
     instance()->m_settings->remove(group);
   }
 }
 
-QVariant Settings::screenDefaults(const QString &key)
+QVariant Settings::computerDefaults(const QString &key)
 {
   if (key.contains(QStringLiteral("halfDuplex")) || key.contains("xtestIsXineramaUnaware") || key.contains("X11") ||
       key.contains("Left") || key.contains("Right"))
@@ -530,12 +535,12 @@ QVariant Settings::screenDefaults(const QString &key)
   return QVariant();
 }
 
-QStringList Settings::knownScreens()
+QStringList Settings::knownComputers()
 {
   const QStringList knownGroups = instance()->m_settings->childGroups();
   QStringList screens;
   for (const auto &group : knownGroups) {
-    if (group.startsWith("screen_")) {
+    if (group.startsWith("computer_")) {
       screens.append(Settings::value(QStringLiteral("%1/name").arg(group)).toString());
     }
   }

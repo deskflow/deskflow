@@ -76,17 +76,17 @@ Screen::~Screen()
   // can still see when it happens but it won't cause the process to pause. This
   // also gives us the added benefit of seeing when it happens in production.
   // Perhaps it indicates that the cursor is still being controlled on the
-  // client while it's shutting down? i.e. the screen is entered and is not the
-  // server, or the screen is not entered and is the server.
+  // client while it's shutting down? i.e. the computer is entered and is not the
+  // server, or the computer is not entered and is the server.
   if (m_entered != m_isPrimary) {
     LOG(
-        (CLOG_DEBUG "current screen: entered=%s, primary=%s", //
+        (CLOG_DEBUG "current computer: entered=%s, primary=%s", //
          m_entered ? "yes" : "no", m_isPrimary ? "yes" : "no")
     );
     if (m_isPrimary) {
-      LOG_WARN("current primary screen is not entered on shutdown");
+      LOG_WARN("current primary computer is not entered on shutdown");
     } else {
-      LOG_WARN("current secondary screen is entered on shutdown");
+      LOG_WARN("current secondary computer is entered on shutdown");
     }
   }
 
@@ -133,10 +133,10 @@ void Screen::disable()
 
 void Screen::enter(KeyModifierMask toggleMask)
 {
-  LOG_INFO("entering screen");
+  LOG_INFO("entering computer");
 
   if (m_entered) {
-    LOG_WARN("screen already entered");
+    LOG_WARN("computer already entered");
   }
 
   // now on screen
@@ -150,19 +150,19 @@ void Screen::enter(KeyModifierMask toggleMask)
   }
 
   if (Settings::value(Settings::Core::EnableEnterCommand).toBool()) {
-    const auto commandLine = Settings::value(Settings::Core::ScreenEnterCommand).toString();
-    LOG_DEBUG("running screen enter command: %s", qPrintable(commandLine));
+    const auto commandLine = Settings::value(Settings::Core::ComputerEnterCommand).toString();
+    LOG_DEBUG("running computer enter command: %s", qPrintable(commandLine));
     if (!runScreenCommand(commandLine))
-      LOG_ERR("failed to run screen enter command");
+      LOG_ERR("failed to run computer enter command");
   }
 }
 
 bool Screen::leave()
 {
-  LOG_INFO("leaving screen");
+  LOG_INFO("leaving computer");
 
   if (!m_entered) {
-    LOG_WARN("screen already left");
+    LOG_WARN("computer already left");
   }
 
   if (!m_screen->canLeave()) {
@@ -177,10 +177,10 @@ bool Screen::leave()
 
   m_screen->leave();
   if (Settings::value(Settings::Core::EnableExitCommand).toBool()) {
-    const auto commandLine = Settings::value(Settings::Core::ScreenExitCommand).toString();
-    LOG_DEBUG("running screen exit command: %s", qPrintable(commandLine));
+    const auto commandLine = Settings::value(Settings::Core::ComputerExitCommand).toString();
+    LOG_DEBUG("running computer exit command: %s", qPrintable(commandLine));
     if (!runScreenCommand(commandLine))
-      LOG_ERR("failed to run screen exit command");
+      LOG_ERR("failed to run computer exit command");
   }
 
   // make sure our idea of clipboard ownership is correct

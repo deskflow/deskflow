@@ -457,6 +457,14 @@ Do you want to connect to the server?
         <translation>%1 Error de conexión</translation>
     </message>
     <message>
+        <source>Invalid Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer name already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation type="unfinished">No se detectó ninguna IP</translation>
     </message>
@@ -514,14 +522,6 @@ La dirección IP asignada ahora no es válida; es posible que deba reiniciar el 
         <source>Ctrl+Q</source>
         <extracomment>Quit shortcut</extracomment>
         <translation type="unfinished">Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Invalid Screen Name</source>
-        <translation type="unfinished">Nombre de pantalla no válido</translation>
-    </message>
-    <message>
-        <source>Screen name already exists</source>
-        <translation type="unfinished">El nombre de pantalla ya existe</translation>
     </message>
     <message>
         <source>The name you have chosen is invalid.
@@ -669,8 +669,8 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">%1 - Nuevo cliente</translation>
     </message>
     <message>
-        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation type="unfinished">Se ha aceptado un nuevo cliente llamado &apos;%1&apos;. Deberá agregarlo al diseño de pantalla de su servidor.</translation>
+        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s computer layout.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -883,43 +883,43 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">Elimina&amp;r</translation>
     </message>
     <message>
-        <source>Screen name is empty</source>
-        <translation type="unfinished">El nombre de pantalla está vacío</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation type="unfinished">El nombre de usuario no puede estar vacío. Escriba un nombre o cancele el diálogo.</translation>
-    </message>
-    <message>
-        <source>Screen name matches alias</source>
-        <translation type="unfinished">El nombre de pantalla coincide con el alias</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation type="unfinished">El nombre de usuario no puede ser el mismo que un alias. Elimine el alias o cambie el nombre de usuario.</translation>
-    </message>
-    <message>
         <source>Alt Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt Gr</translation>
     </message>
     <message>
         <source>Alt &amp;Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt &amp;Gr</translation>
     </message>
     <message>
         <source>Weaken X11 Focus</source>
         <translation type="unfinished">Debilitar el foco de X11</translation>
     </message>
     <message>
-        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">Solo para pantallas X11: cuando esta opción está habilitada, el cliente no otorgará el foco a su ventana activa inmediatamente después de cambiar a él. Esto puede ayudar a evitar el robo de foco no deseado en algunas configuraciones de X11.</translation>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">Solo para equipos con X11: al activar esta opción, el cliente no otorgará el foco a su ventana activa inmediatamente después de cambiar a él. Esto puede ayudar a evitar el robo de foco no deseado en algunas configuraciones de X11.</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">El nombre del equipo está vacío.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">El nombre del equipo no puede estar vacío. Por favor, introduzca un nombre o cancele el cuadro de diálogo.</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">El nombre del equipo coincide con el alias.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">El nombre del equipo no puede ser igual a un alias. Elimine el alias o cambie el nombre del equipo.</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;Pantalla: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Haga doble clic para editar la configuración&lt;br&gt;Arrastre la pantalla a la papelera para eliminarla</translation>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Equipo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Haz doble clic para editar la configuración&lt;br&gt;Arrastra el equipo a la papelera para eliminarlo</translation>
     </message>
 </context>
 <context>

@@ -164,7 +164,7 @@ void App::initApp()
 
 void App::handleScreenError() const
 {
-  LOG_CRIT("error on screen");
+  LOG_CRIT("error on computer");
   getEvents()->addEvent(Event(EventTypes::Quit));
 }
 

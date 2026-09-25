@@ -31,9 +31,9 @@ enum class Direction : uint8_t
 };
 
 /**
- * @brief Bitmask values for screen edge directions
+ * @brief Bitmask values for computer edge directions
  *
- * Used to create bitmasks representing multiple screen edges.
+ * Used to create bitmasks representing multiple computer edges.
  * Useful for configuration and edge detection.
  *
  * @since Protocol version 1.0
