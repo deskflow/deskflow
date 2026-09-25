@@ -11,6 +11,7 @@
 #include "deskflow/KeyTypes.h"
 
 #include <map>
+#include <optional>
 #include <set>
 #include <vector>
 
@@ -218,6 +219,11 @@ public:
   ) const;
 
   void setLanguageData(std::vector<std::string> layouts);
+
+  // Override the legacy language list with one entry per actual keymap group.
+  // Keep duplicates and use empty entries for groups without usable key layouts.
+  // Unlike the legacy list, this mapping follows the keymap when it is swapped.
+  void setGroupLanguageData(std::vector<std::string> languages);
 
   //! Get number of groups
   /*!
@@ -470,6 +476,7 @@ private:
 
   // Language sync data
   std::vector<std::string> m_keyboardLayouts;
+  std::optional<std::vector<std::string>> m_groupLanguages;
 
   // parsing/formatting tables
   static NameToKeyMap *s_nameToKeyMap;
