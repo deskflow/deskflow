@@ -192,7 +192,9 @@ bool showNewClientPrompt(QWidget *parent, const QString &clientName)
     // This is why we do not show a dialog with an option to ignore the new client
     QMessageBox::information(
         parent, QObject::tr("%1 - New Client").arg(kAppName),
-        QObject::tr("A new client called '%1' has been accepted. You'll need to add it to your server's screen layout.")
+        QObject::tr(
+            "A new client called '%1' has been accepted. You'll need to add it to your server's computer layout."
+        )
             .arg(clientName)
     );
     return true;

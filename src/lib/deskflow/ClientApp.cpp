@@ -115,14 +115,14 @@ deskflow::Screen *ClientApp::createScreen()
 #else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
-    LOG_INFO("using ei screen for wayland");
+    LOG_INFO("detected wayland platform");
     return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif
   }
 #if WINAPI_XWINDOWS
-  LOG_INFO("using legacy x windows screen");
+  LOG_INFO("detected X11 platform");
   return new deskflow::Screen(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents()),
       getEvents()

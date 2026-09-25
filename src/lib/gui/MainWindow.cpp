@@ -1160,10 +1160,10 @@ void MainWindow::setHostName()
     ui->lineEditName->setText(screenName);
     blockSignals(false);
 
-    const auto title = tr("Invalid Screen Name");
+    const auto title = tr("Invalid Computer Name");
     QString body;
     if (existingScreen) {
-      body = tr("Screen name already exists");
+      body = tr("Computer name already exists");
     } else {
       body =
           tr("The name you have chosen is invalid.\n\n"

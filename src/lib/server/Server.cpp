@@ -142,10 +142,10 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   // Determine if scroll lock is already set. If so, lock the cursor to the
   // primary screen (unless the user has disabled lock to screen in config)
   if (!m_disableLockToScreen && (m_primaryClient->getToggleMask() & KeyModifierScrollLock)) {
-    LOG_INFO("scroll lock is on, locking cursor to screen");
+    LOG_INFO("scroll lock is on, locking cursor to computer");
     m_lockedToScreen = true;
   } else if (m_defaultLockToScreenState) {
-    LOG_INFO("default screen lock is on, locking cursor to screen");
+    LOG_INFO("default screen lock is on, locking cursor to computer");
     m_lockedToScreen = true;
   }
 }
@@ -372,7 +372,7 @@ bool Server::isLockedToScreen() const
   // locked if we say we're locked
   if (isLockedToScreenServer()) {
     if (!m_defaultLockToScreenState) {
-      LOG_INFO("cursor is locked to screen, check scroll lock key");
+      LOG_INFO("cursor is locked to computer, check scroll lock key");
     }
     return true;
   }
@@ -456,7 +456,7 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     // leave active screen
     if (!m_active->leave()) {
       // cannot leave screen
-      LOG_WARN("can't leave screen");
+      LOG_WARN("can't leave computer");
       return;
     }
 
@@ -662,7 +662,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
       if (x >= 0) {
         break;
       }
-      LOG_VERBOSE("skipping over screen %s", getName(dst).c_str());
+      LOG_VERBOSE("skipping over computer %s", getName(dst).c_str());
       dst = getNeighbor(lastGoodScreen, srcSide, x, y);
     }
     assert(lastGoodScreen != nullptr);
@@ -678,7 +678,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
       if (x < dw) {
         break;
       }
-      LOG_VERBOSE("skipping over screen %s", getName(dst).c_str());
+      LOG_VERBOSE("skipping over computer %s", getName(dst).c_str());
       dst = getNeighbor(lastGoodScreen, srcSide, x, y);
     }
     assert(lastGoodScreen != nullptr);
@@ -694,7 +694,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
       if (y >= 0) {
         break;
       }
-      LOG_VERBOSE("skipping over screen %s", getName(dst).c_str());
+      LOG_VERBOSE("skipping over computer %s", getName(dst).c_str());
       dst = getNeighbor(lastGoodScreen, srcSide, x, y);
     }
     assert(lastGoodScreen != nullptr);
@@ -710,7 +710,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
       if (y < dh) {
         break;
       }
-      LOG_VERBOSE("skipping over screen %s", getName(dst).c_str());
+      LOG_VERBOSE("skipping over computer %s", getName(dst).c_str());
       dst = getNeighbor(lastGoodScreen, srcSide, x, y);
     }
     assert(lastGoodScreen != nullptr);
@@ -855,7 +855,7 @@ bool Server::isSwitchOkay(
 
   // ignore if mouse is locked to screen and don't try to switch later
   if (!preventSwitch && isLockedToScreen()) {
-    LOG_VERBOSE("locked to screen");
+    LOG_VERBOSE("locked to computer");
     preventSwitch = true;
     stopSwitch();
   }
@@ -1137,7 +1137,7 @@ void Server::handleShapeChanged(BaseClientProxy *client)
     return;
   }
 
-  LOG_DEBUG("screen \"%s\" shape changed", getName(client).c_str());
+  LOG_DEBUG("computer \"%s\" shape changed", getName(client).c_str());
 
   // update jump coordinate
   int32_t x;
@@ -1177,13 +1177,13 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
   // screen to grab.
   ClipboardInfo &clipboard = m_clipboards[info->m_id];
   if (grabber != m_primaryClient && info->m_sequenceNumber < clipboard.m_clipboardSeqNum) {
-    LOG_DEBUG("ignored screen \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id);
+    LOG_DEBUG("ignored computer \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id);
     return;
   }
 
   // mark screen as owning clipboard
   LOG_DEBUG(
-      "screen \"%s\" grabbed clipboard %d from \"%s\"", getName(grabber).c_str(), info->m_id,
+      "computer \"%s\" grabbed clipboard %d from \"%s\"", getName(grabber).c_str(), info->m_id,
       clipboard.m_clipboardOwner.c_str()
   );
   clipboard.m_clipboardOwner = getName(grabber);
@@ -1208,7 +1208,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
   }
 
   if (grabber == m_primaryClient && m_active != m_primaryClient) {
-    LOG_DEBUG("clipboard grabbed while active screen was changed, resending clipboard data");
+    LOG_DEBUG("clipboard grabbed while active computer was changed, resending clipboard data");
     onClipboardChanged(m_primaryClient, info->m_id, clipboard.m_clipboardSeqNum);
   }
 }
@@ -1277,7 +1277,7 @@ void Server::handleSwitchWaitTimeout()
 {
   // ignore if mouse is locked to screen
   if (isLockedToScreen()) {
-    LOG_VERBOSE("locked to screen");
+    LOG_VERBOSE("locked to computer");
     stopSwitch();
     return;
   }
@@ -1316,7 +1316,7 @@ void Server::handleSwitchToScreenEvent(const Event &event)
 
   ClientList::const_iterator index = m_clients.find(info->m_screen);
   if (index == m_clients.end()) {
-    LOG_VERBOSE("screen \"%s\" not active", info->m_screen.c_str());
+    LOG_VERBOSE("computer \"%s\" not active", info->m_screen.c_str());
   } else {
     jumpToScreen(index->second);
   }
@@ -1344,7 +1344,7 @@ void Server::handleToggleScreenEvent(const Event &)
   getClients(screens);
 
   if (screens.size() < 2) {
-    LOG_ERR("not enough screens to toggle");
+    LOG_ERR("not enough computers to toggle");
     return;
   }
 
@@ -1352,7 +1352,7 @@ void Server::handleToggleScreenEvent(const Event &)
   std::string currentScreen = getName(m_active);
   auto it = std::ranges::find(screens, currentScreen);
   if (it == screens.end()) {
-    LOG_ERR("current screen not found in list");
+    LOG_ERR("current computer not found in list");
     return;
   }
 
@@ -1365,7 +1365,7 @@ void Server::handleToggleScreenEvent(const Event &)
   // Find the client for the next screen
   ClientList::const_iterator clientIt = m_clients.find(*nextIt);
   if (clientIt == m_clients.end()) {
-    LOG_ERR("next screen not active");
+    LOG_ERR("next computer not active");
     return;
   }
 
@@ -1443,7 +1443,7 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   // ignore update if sequence number is old
   if (seqNum < clipboard.m_clipboardSeqNum) {
-    LOG_INFO("ignored screen \"%s\" update of clipboard %d (mis-sequenced)", getName(sender).c_str(), id);
+    LOG_INFO("ignored computer \"%s\" update of clipboard %d (mis-sequenced)", getName(sender).c_str(), id);
     return;
   }
 
@@ -1461,12 +1461,12 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   // ignore if data hasn't changed
   if (data == clipboard.m_clipboardData) {
-    LOG_DEBUG("ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id);
+    LOG_DEBUG("ignored computer \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id);
     return;
   }
 
   // got new data
-  LOG_INFO("screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id);
+  LOG_INFO("computer \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id);
   clipboard.m_clipboardData = data;
 
   // tell all clients except the sender that the clipboard is dirty
