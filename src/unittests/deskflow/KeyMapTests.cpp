@@ -201,4 +201,104 @@ void KeyMapTests::parseKey_plusSymbol_parsesAsAsciiKey()
   QCOMPARE(key, static_cast<KeyID>('+'));
 }
 
+void KeyMapTests::groupLanguages_preserveSourceIndices()
+{
+  KeyMap keyMap;
+  keyMap.setLanguageData({"zh", "en", "fr"});
+  // IME before ABC, another English layout, then French.
+  keyMap.setGroupLanguageData({"", "en", "en", "fr"});
+
+  QCOMPARE(keyMap.getLanguageGroupID(0, "en"), 1);
+  QCOMPARE(keyMap.getLanguageGroupID(1, "fr"), 3);
+}
+
+void KeyMapTests::groupLanguages_keepCurrentDuplicate()
+{
+  KeyMap keyMap;
+  keyMap.setGroupLanguageData({"en", "", "en"});
+
+  QCOMPARE(keyMap.getLanguageGroupID(2, "en"), 2);
+}
+
+void KeyMapTests::groupLanguages_imeOnlyKeepsCurrentGroup()
+{
+  KeyMap keyMap;
+  keyMap.setLanguageData({"en", "zh"});
+  keyMap.setGroupLanguageData({"en", "", "", "fr"});
+
+  QCOMPARE(keyMap.getLanguageGroupID(0, "zh"), 0);
+  QCOMPARE(keyMap.getLanguageGroupID(3, "zh"), 3);
+  QCOMPARE(keyMap.getLanguageGroupID(3, "ja"), 3);
+}
+
+void KeyMapTests::groupLanguages_emptyLanguageKeepsCurrentGroup()
+{
+  KeyMap keyMap;
+  keyMap.setGroupLanguageData({"", "en"});
+
+  QCOMPARE(keyMap.getLanguageGroupID(1, ""), 1);
+}
+
+void KeyMapTests::groupLanguages_followKeymapSwap()
+{
+  KeyMap active;
+  active.setLanguageData({"en", "zh", "fr"});
+  active.setGroupLanguageData({"en", "", "fr"});
+  KeyMap rebuilt;
+  rebuilt.setGroupLanguageData({"", "en", "en", "fr"});
+
+  active.swap(rebuilt);
+
+  QCOMPARE(active.getLanguageGroupID(0, "en"), 1);
+  QCOMPARE(active.getLanguageGroupID(1, "fr"), 3);
+  QCOMPARE(active.getLanguageGroupID(1, "zh"), 1);
+  QCOMPARE(rebuilt.getLanguageGroupID(0, "fr"), 2);
+}
+
+void KeyMapTests::groupLanguages_emptyOverrideDoesNotUseInstalledList()
+{
+  KeyMap keyMap;
+  keyMap.setLanguageData({"en", "zh"});
+  keyMap.setGroupLanguageData({});
+
+  QCOMPARE(keyMap.getLanguageGroupID(0, "zh"), 0);
+}
+
+void KeyMapTests::groupLanguages_legacyMappingIsPreserved()
+{
+  KeyMap keyMap;
+  keyMap.setLanguageData({"en", "fr"});
+  KeyMap rebuilt;
+  keyMap.swap(rebuilt);
+
+  QCOMPARE(keyMap.getLanguageGroupID(0, "fr"), 1);
+  QCOMPARE(keyMap.getLanguageGroupID(1, "en"), 0);
+  QCOMPARE(keyMap.getLanguageGroupID(1, "zh"), 1);
+}
+
+void KeyMapTests::mapKey_imeOnlyLanguageDoesNotSwitchGroup()
+{
+  KeyMap keyMap;
+  keyMap.setLanguageData({"zh", "en"});
+  keyMap.setGroupLanguageData({"", "en", ""});
+  KeyMap::KeyItem item;
+  item.m_id = 'a';
+  item.m_button = 1;
+  item.m_group = 1;
+  keyMap.addKeyEntry(item);
+  keyMap.finish();
+
+  KeyMap::Keystrokes keys;
+  KeyMap::ModifierToKeys modifiers;
+  KeyModifierMask state = 0;
+  auto result = keyMap.mapKey(keys, 'a', 1, modifiers, state, 0, false, "zh");
+
+  QVERIFY(result != nullptr);
+  QCOMPARE(result->m_group, 1);
+  QVERIFY(!keys.empty());
+  for (const auto &key : keys) {
+    QVERIFY(key.m_type != KeyMap::Keystroke::KeyType::Group);
+  }
+}
+
 QTEST_MAIN(KeyMapTests)

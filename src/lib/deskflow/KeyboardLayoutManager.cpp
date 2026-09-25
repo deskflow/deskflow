@@ -27,6 +27,25 @@ std::string vectorToString(const std::vector<std::string> &vector, const std::st
 
 namespace deskflow {
 
+std::string KeyboardLayoutManager::normalizeLanguageCode(std::string_view language)
+{
+  language = language.substr(0, language.find('-'));
+  if (language.size() != 2) {
+    return {};
+  }
+
+  std::string result(language);
+  for (auto &c : result) {
+    if (c >= 'A' && c <= 'Z') {
+      c += 'a' - 'A';
+    }
+    if (c < 'a' || c > 'z') {
+      return {};
+    }
+  }
+  return result;
+}
+
 KeyboardLayoutManager::KeyboardLayoutManager(const std::vector<std::string> &localLayouts)
     : m_localLayouts(localLayouts)
 {

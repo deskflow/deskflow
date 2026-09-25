@@ -8,8 +8,11 @@
 #include "platform/OSXKeyState.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "deskflow/KeyboardLayoutManager.h"
 #include "platform/OSXKeyLayoutResource.h"
 #include "platform/OSXMediaKeySupport.h"
+
+#include <QString>
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
@@ -215,16 +218,18 @@ AutoTISInputSourceRef copyKeyboardLayoutForKeyTranslation()
 // OSXKeyState
 //
 
-OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled)
-    : KeyState(events, std::move(layouts), isLangSyncEnabled)
+// The installed-language list is not a macOS group map. getKeyMap() supplies
+// group-aligned language data after enumerating the actual input sources.
+OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<std::string>, bool isLangSyncEnabled)
+    : KeyState(events, {}, isLangSyncEnabled)
 {
   init();
 }
 
 OSXKeyState::OSXKeyState(
-    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled
+    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string>, bool isLangSyncEnabled
 )
-    : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled)
+    : KeyState(events, keyMap, {}, isLangSyncEnabled)
 {
   init();
 }
@@ -472,13 +477,17 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
 
 int32_t OSXKeyState::pollActiveGroup() const
 {
-  AutoTISInputSourceRef keyboardLayout(nullptr, CFRelease);
-  CFDataRef id = nullptr;
+  // Key groups describe the layout underneath an IME, not the IME itself.
+  auto keyboardLayout = copyKeyboardLayoutForKeyTranslation();
+  std::string id;
   {
     std::lock_guard<std::mutex> lock(g_tisMutex);
-    keyboardLayout = AutoTISInputSourceRef(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
-    if (keyboardLayout)
-      id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceID);
+    if (keyboardLayout) {
+      auto sourceID = (CFStringRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceID);
+      if (sourceID) {
+        id = QString::fromCFString(sourceID).toStdString();
+      }
+    }
   }
 
   GroupMap::const_iterator i = m_groupMap.find(id);
@@ -509,20 +518,24 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 {
   // update keyboard groups
   int32_t numGroups{0};
+  m_groupMap.clear();
   if (getGroups(m_groups)) {
-    m_groupMap.clear();
     numGroups = CFArrayGetCount(m_groups.get());
     for (int32_t g = 0; g < numGroups; ++g) {
       TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), g);
-      CFDataRef id = nullptr;
       {
         std::lock_guard<std::mutex> lock(g_tisMutex);
-        id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceID);
+        auto id = (CFStringRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceID);
+        if (id) {
+          m_groupMap[QString::fromCFString(id).toStdString()] = g;
+        }
       }
-      m_groupMap[id] = g;
     }
   }
 
+  // Installed languages include IMEs, but language sync must only target usable
+  // key layouts. Preserve every source index, including gaps and duplicates.
+  std::vector<std::string> groupLanguages(numGroups);
   uint32_t keyboardType = LMGetKbdType();
   for (int32_t g = 0; g < numGroups; ++g) {
     // add special keys
@@ -547,13 +560,26 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
       OSXKeyLayoutResource keyResource(resource, keyboardType);
       if (keyResource.isValid()) {
         LOG_VERBOSE("using key layout for group %d", g);
-        getKeyMap(keyMap, g, keyResource);
+        if (getKeyMap(keyMap, g, keyResource)) {
+          std::lock_guard<std::mutex> lock(g_tisMutex);
+          auto selectable =
+              (CFBooleanRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceIsSelectCapable);
+          auto languages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
+          if (selectable && CFBooleanGetValue(selectable) && languages && CFArrayGetCount(languages) > 0) {
+            auto language = (CFStringRef)CFArrayGetValueAtIndex(languages, 0);
+            if (language) {
+              groupLanguages[g] =
+                  deskflow::KeyboardLayoutManager::normalizeLanguageCode(QString::fromCFString(language).toStdString());
+            }
+          }
+        }
         continue;
       }
     }
 
     LOG_VERBOSE("no keyboard resource for group %d", g);
   }
+  keyMap.setGroupLanguageData(std::move(groupLanguages));
 }
 
 CGEventFlags OSXKeyState::getDeviceDependedFlags() const
@@ -941,7 +967,7 @@ bool OSXKeyState::getGroups(AutoCFArray &groups) const
     kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease);
   }
 
-  if (CFArrayGetCount(kbds.get()) > 0) {
+  if (kbds && CFArrayGetCount(kbds.get()) > 0) {
     groups = std::move(kbds);
   } else {
     LOG_VERBOSE("can't get keyboard layouts");
