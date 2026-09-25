@@ -421,6 +421,14 @@ Do you want to connect to the server?
         <translation>ヘルプを表示(&amp;H)</translation>
     </message>
     <message>
+        <source>Invalid Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer name already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>IPアドレスが見つかりません</translation>
     </message>
@@ -510,14 +518,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <source>Ctrl+Q</source>
         <extracomment>Quit shortcut</extracomment>
         <translation>Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Invalid Screen Name</source>
-        <translation>不正なコンピューター名</translation>
-    </message>
-    <message>
-        <source>Screen name already exists</source>
-        <translation>コンピューター名の重複</translation>
     </message>
     <message>
         <source>The name you have chosen is invalid.
@@ -671,8 +671,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>%1 - 新しいクライアント</translation>
     </message>
     <message>
-        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation>新しいクライアント &apos;%1&apos; が接続許可されました。サーバーのコンピューター配置に追加してください。</translation>
+        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s computer layout.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -885,22 +885,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>削除(&amp;R)</translation>
     </message>
     <message>
-        <source>Screen name is empty</source>
-        <translation>空のコンピューター名</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>コンピューター名を空にすることはできません。なにか名前を入力するか、ダイアログをキャンセルしてください。</translation>
-    </message>
-    <message>
-        <source>Screen name matches alias</source>
-        <translation>コンピューター名と別名の重複</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>コンピューター名は別名と同じにできません。別名を削除するか、コンピューター名を変更してください。</translation>
-    </message>
-    <message>
         <source>Alt Gr</source>
         <translation>Alt Gr</translation>
     </message>
@@ -913,15 +897,31 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation type="unfinished">X11のフォーカスを弱める</translation>
     </message>
     <message>
-        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">X11画面でのみ有効です。これを有効にすると、クライアントに切り替えた際、そのクライアント内のフォーカス対象のウィンドウに即座にフォーカスが移ることはなくなります。これにより、一部のX11環境において意図しないフォーカスの横取りを防ぐことができます。</translation>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">X11環境でのみ有効です。この設定を有効にすると、クライアントに切り替えた際、そのクライアント内のウィンドウに即座にフォーカスが移らなくなります。これにより、一部のX11環境で発生しがちな、意図しないフォーカスの横取り（フォーカス・スティーリング）を防ぐことができます。</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">コンピューター名が空です</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">コンピューター名を空にすることはできません。名前を入力するか、ダイアログをキャンセルしてください。</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">コンピューター名がエイリアスと一致しています</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">コンピューター名をエイリアスと同じにすることはできません。エイリアスを削除するか、コンピューター名を変更してください。</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;コンピューター: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;ダブルクリックで設定&lt;br&gt;ゴミ箱にドラッグして削除</translation>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;コンピュータ: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;ダブルクリックして設定を編集&lt;br&gt;コンピュータをゴミ箱にドラッグして削除</translation>
     </message>
 </context>
 <context>

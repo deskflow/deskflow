@@ -33,7 +33,7 @@ ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numR
   const int span = m_NumColumns * m_NumRows;
   if (span > m_Screens.size()) {
     qCritical(
-        "screen list too small for grid, screens: %lld, cells: %d", static_cast<long long>(m_Screens.size()), span
+        "computer list too small for grid, computers: %lld, cells: %d", static_cast<long long>(m_Screens.size()), span
     );
     m_Screens.resize(span);
   }
@@ -53,9 +53,9 @@ QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
     return screen(index).pixmap();
 
   case Qt::ToolTipRole:
-    return QString(tr("<center>Screen: <b>%1</b></center>"
+    return QString(tr("<center>Computer: <b>%1</b></center>"
                       "<br>Double click to edit settings"
-                      "<br>Drag screen to the trashcan to remove it"))
+                      "<br>Drag computer to the trashcan to remove it"))
         .arg(screen(index).name());
 
   case Qt::DisplayRole:

@@ -14,7 +14,7 @@
 
 QString ScreenOpenFailureException::getWhat() const throw()
 {
-  return format("ScreenOpenFailureException", "unable to open screen");
+  return format("ScreenOpenFailureException", "unable to open computer settings");
 }
 
 //
@@ -23,5 +23,5 @@ QString ScreenOpenFailureException::getWhat() const throw()
 
 QString ScreenUnavailableException::getWhat() const throw()
 {
-  return format("ScreenUnavailableException", "unable to open screen");
+  return format("ScreenUnavailableException", "unable to open computer settings");
 }

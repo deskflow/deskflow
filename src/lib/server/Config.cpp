@@ -442,19 +442,19 @@ bool Config::operator==(const Config &x) const
 void Config::read(ConfigReadContext &context)
 {
   Config tmp(m_events);
-  const auto screens = Settings::knownComputers();
-  for (const auto &screen : screens) {
-    if (screen.isEmpty())
+  const auto computers = Settings::knownComputers();
+  for (const auto &computer : computers) {
+    if (computer.isEmpty())
       continue;
-    const auto screenName = screen.toStdString();
+    const auto computerName = computer.toStdString();
 
-    if (!isValidScreenName(screenName)) {
-      throw ServerConfigReadException(context, "invalid screen name \"%{1}\"", screenName);
+    if (!isValidScreenName(computerName)) {
+      throw ServerConfigReadException(context, "invalid computer name \"%{1}\"", computerName);
     }
 
     // add the screen to the configuration
-    if (!tmp.addScreen(screenName)) {
-      throw ServerConfigReadException(context, "duplicate screen name \"%{1}\"", screenName);
+    if (!tmp.addScreen(computerName)) {
+      throw ServerConfigReadException(context, "duplicate computer name \"%{1}\"", computerName);
     }
   }
   while (context.getStream()) {
@@ -657,13 +657,13 @@ void Config::readSectionLinks(ConfigReadContext &s)
 
       // verify we know about the screen
       if (!isScreen(screen)) {
-        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", screen);
+        throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", screen);
       }
       if (!isCanonicalName(screen)) {
-        throw ServerConfigReadException(s, "cannot use screen name alias here");
+        throw ServerConfigReadException(s, "cannot use computer name alias here");
       }
     } else if (screen.empty()) {
-      throw ServerConfigReadException(s, "argument before first screen");
+      throw ServerConfigReadException(s, "argument before first computer");
     } else {
       // parse argument:  `<name>[(<s0>,<e0>)]=<value>[(<s1>,<e1>)]'
       // the stuff in brackets is optional.  interval values must be
@@ -698,7 +698,7 @@ void Config::readSectionLinks(ConfigReadContext &s)
         throw ServerConfigReadException(s, "unknown side \"%{1}\" in link", side);
       }
       if (!isScreen(dstScreen)) {
-        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", dstScreen);
+        throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", dstScreen);
       }
       if (!connect(
               screen, dir, srcInterval.first, srcInterval.second, dstScreen, dstInterval.first, dstInterval.second
@@ -749,14 +749,14 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
 
   if (name == "connect") {
     if (args.size() != 1) {
-      throw ServerConfigReadException(s, "syntax for condition: connect([screen])");
+      throw ServerConfigReadException(s, "syntax for condition: connect([computer])");
     }
 
     std::string screen = args[0];
     if (isScreen(screen)) {
       screen = getCanonicalName(screen);
     } else if (!screen.empty()) {
-      throw ServerConfigReadException(s, "unknown screen name \"%{1}\" in connect", screen);
+      throw ServerConfigReadException(s, "unknown computer name \"%{1}\" in connect", screen);
     }
 
     return new InputFilter::ScreenConnectedCondition(m_events, screen);
@@ -774,7 +774,7 @@ void Config::parseAction(
 
   if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
     if (args.size() < 1 || args.size() > 2) {
-      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,screens])");
+      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,computers])");
     }
 
     IPlatformScreen::KeyInfo *keyInfo;
@@ -840,7 +840,7 @@ void Config::parseAction(
     if (isScreen(screen)) {
       screen = getCanonicalName(screen);
     } else if (!screen.empty()) {
-      throw ServerConfigReadException(s, "unknown screen name in switchToScreen");
+      throw ServerConfigReadException(s, "unknown computer name in switchToScreen");
     }
 
     action = new InputFilter::SwitchToScreenAction(m_events, screen);
@@ -921,7 +921,7 @@ void Config::parseAction(
 
   else if (name == "keyboardBroadcast") {
     if (args.size() > 2) {
-      throw ServerConfigReadException(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
+      throw ServerConfigReadException(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,computers]])");
     }
 
     InputFilter::KeyboardBroadcastAction::Mode mode = InputFilter::KeyboardBroadcastAction::kToggle;
@@ -935,7 +935,7 @@ void Config::parseAction(
       } else {
         throw ServerConfigReadException(
             s, "syntax for action: "
-               "keyboardBroadcast([{off|on|toggle}[,screens]])"
+               "keyboardBroadcast([{off|on|toggle}[,computers]])"
         );
       }
     }
@@ -980,7 +980,7 @@ void Config::parseScreens(const ConfigReadContext &c, const std::string_view &s,
     } else if (!rawName.empty()) {
       std::string name = getCanonicalName(rawName);
       if (name.empty()) {
-        throw ServerConfigReadException(c, "unknown screen name \"%{1}\"", rawName);
+        throw ServerConfigReadException(c, "unknown computer name \"%{1}\"", rawName);
       }
       screens.insert(name);
     }
