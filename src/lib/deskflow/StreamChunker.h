@@ -14,6 +14,7 @@
 #include <optional>
 #include <string>
 
+#include <QElapsedTimer>
 #include <QString>
 
 class IEventQueue;
@@ -56,4 +57,5 @@ private:
   size_t m_sent = 0;
   bool m_sending = false;
   std::array<std::optional<Transfer>, kClipboardEnd> m_queued;
+  QElapsedTimer m_sinceStart;
 };

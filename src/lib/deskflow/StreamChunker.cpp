@@ -50,6 +50,7 @@ void StreamChunker::beginTransfer(ClipboardID id, Transfer transfer)
   m_currentId = id;
   m_sent = 0;
   m_sending = true;
+  m_sinceStart.start();
   ipcSendToClient(
       QStringLiteral("clipboardSending"), QStringLiteral("%1,%2").arg(m_current.data.size()).arg(m_peerName)
   );
@@ -77,7 +78,8 @@ void StreamChunker::sendNextChunk()
   } else {
     const std::unique_ptr<ClipboardChunk> end(ClipboardChunk::end(m_currentId, m_current.sequence));
     ClipboardChunk::send(m_stream, *end);
-    LOG_DEBUG("sent clipboard %d, size: %zu", m_currentId, m_current.data.size());
+    const auto transfer = ClipboardChunk::describeTransfer(m_current.data.size(), m_sinceStart.elapsed());
+    LOG_DEBUG("sent clipboard %d: %s", m_currentId, transfer.constData());
     ipcSendToClient(QStringLiteral("clipboardSent"), m_peerName);
 
     m_sending = false;

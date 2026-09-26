@@ -13,6 +13,8 @@
 #include <cstring>
 #include <limits>
 
+#include <QLocale>
+
 namespace {
 
 void clearCachedData(std::string &dataCached)
@@ -112,6 +114,7 @@ TransferState ClipboardChunk::assemble(
     clearCachedData(dataCached);
     state.expectedSize = static_cast<size_t>(expected);
     state.active = true;
+    state.sinceStart.start();
 
     if (isOversize()) {
       LOG_WARN("not receiving clipboard data, exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
@@ -163,6 +166,9 @@ TransferState ClipboardChunk::assemble(
       reset();
       return Error;
     }
+
+    const auto transfer = describeTransfer(dataCached.size(), state.sinceStart.elapsed());
+    LOG_DEBUG("received clipboard %d: %s", id, transfer.constData());
     return Finished;
   }
 
@@ -200,4 +206,14 @@ void ClipboardChunk::send(deskflow::IStream *stream, const ClipboardChunk &clipb
   }
 
   ProtocolUtil::writef(stream, kMsgDClipboard, id, sequence, mark, &dataChunk);
+}
+
+QByteArray ClipboardChunk::describeTransfer(size_t bytes, qint64 elapsedMs)
+{
+  const auto size =
+      QLocale::c().formattedDataSize(static_cast<qint64>(bytes), 1, QLocale::DataSizeTraditionalFormat).toLower();
+  const auto time = elapsedMs < 1000
+                        ? QStringLiteral("%1 ms").arg(elapsedMs)
+                        : QStringLiteral("%1 seconds").arg(static_cast<double>(elapsedMs) / 1000.0, 0, 'f', 2);
+  return QStringLiteral("%1 in %2").arg(size, time).toUtf8();
 }

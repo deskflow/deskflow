@@ -13,6 +13,9 @@
 #include <cstddef>
 #include <string>
 
+#include <QByteArray>
+#include <QElapsedTimer>
+
 constexpr static auto s_clipboardChunkMetaSize = 7;
 
 namespace deskflow {
@@ -23,6 +26,7 @@ struct ClipboardChunkAssemblyState
 {
   size_t expectedSize = 0;
   bool active = false;
+  QElapsedTimer sinceStart;
 };
 
 class ClipboardChunk : public Chunk
@@ -40,6 +44,7 @@ public:
   );
 
   static void send(deskflow::IStream *stream, const ClipboardChunk &clipboardChunk);
+  static QByteArray describeTransfer(size_t bytes, qint64 elapsedMs);
 
   static size_t getExpectedSize(const ClipboardChunkAssemblyState &state)
   {
