@@ -355,6 +355,7 @@ private:
     , Client::DynamicConnectionRetry
     , Client::InvertYScroll
     , Client::InvertXScroll
+    , Client::LanguageSync
     , Client::XdpClipboardRetried
     , Log::ToFile
     , Log::GuiDebug
@@ -371,7 +372,6 @@ private:
   // When checking the default values this list contains the ones that default to true.
   inline static const QStringList m_defaultTrueValues = {
       Core::UseHooks
-    , Client::LanguageSync
     , Gui::CloseToTray
     , Gui::CloseReminder
     , Gui::LogExpanded

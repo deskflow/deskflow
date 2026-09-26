@@ -100,18 +100,18 @@ const char *ClientApp::daemonName() const
 
 deskflow::Screen *ClientApp::createScreen()
 {
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
+  const auto languageSync = Settings::value(Settings::Client::LanguageSync).toBool();
+  LOG_INFO("keyboard language sync is %s", languageSync ? "enabled" : "disabled");
+#endif
+
 #if defined(Q_OS_WIN)
   return new deskflow::Screen(
-      new MSWindowsScreen(
-          false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(),
-          Settings::value(Settings::Client::LanguageSync).toBool()
-      ),
+      new MSWindowsScreen(false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(), languageSync),
       getEvents()
   );
 #elif defined(Q_OS_MACOS)
-  return new deskflow::Screen(
-      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool()), getEvents()
-  );
+  return new deskflow::Screen(new OSXScreen(getEvents(), false, languageSync), getEvents());
 #else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI

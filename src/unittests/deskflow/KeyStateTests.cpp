@@ -14,6 +14,80 @@
 #include "MockKeyMap.h"
 #include "MockKeyState.h"
 
+#include <algorithm>
+
+namespace {
+
+//! KeyState that records the keystrokes it is asked to synthesize.
+class RecordingKeyState : public KeyState
+{
+public:
+  RecordingKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool langSync)
+      : KeyState(events, keyMap, std::move(layouts), langSync)
+  {
+  }
+
+  int32_t pollActiveGroup() const override
+  {
+    return m_activeGroup;
+  }
+  KeyModifierMask pollActiveModifiers() const override
+  {
+    return 0;
+  }
+  bool fakeCtrlAltDel() override
+  {
+    return false;
+  }
+  void getKeyMap(deskflow::KeyMap &) override
+  {
+  }
+  bool fakeMediaKey(KeyID) override
+  {
+    return false;
+  }
+  void pollPressedKeys(KeyButtonSet &) const override
+  {
+  }
+  void fakeKey(const Keystroke &keystroke) override
+  {
+    m_faked.push_back(keystroke);
+  }
+
+  int countStrokes(Keystroke::KeyType type) const
+  {
+    return static_cast<int>(std::count_if(m_faked.begin(), m_faked.end(), [type](const Keystroke &k) {
+      return k.m_type == type;
+    }));
+  }
+
+  int32_t m_activeGroup = 0;
+  std::vector<Keystroke> m_faked;
+};
+
+//! Two groups on one button: a latin key in group 0 ("en"), a thai key in group 1 ("th").
+void buildTwoGroupKeyMap(deskflow::KeyMap &keyMap, KeyID enKey, KeyID thKey, KeyButton button)
+{
+  deskflow::KeyMap::KeyItem item;
+  item.m_button = button;
+
+  item.m_id = enKey;
+  item.m_group = 0;
+  keyMap.addKeyEntry(item);
+
+  item.m_id = thKey;
+  item.m_group = 1;
+  keyMap.addKeyEntry(item);
+
+  keyMap.finish();
+}
+
+constexpr KeyID kLatinA = 'a';
+constexpr KeyID kThaiFoFan = 0x0e1f; // ฟ, the same physical key as 'a' on a thai layout
+constexpr KeyButton kSharedButton = 1;
+
+} // namespace
+
 void KeyStateTests::initTestCase()
 {
   m_arch.init();
@@ -146,6 +220,37 @@ void KeyStateTests::updateKeyState_pollInsertsSingleKey_keyIsDown()
 
   keyState.updateKeyState();
   QVERIFY(keyState.isKeyDown(1));
+}
+
+void KeyStateTests::fakeKeyDown_langSyncEnabled_switchesToServerGroup()
+{
+  MockEventQueue eventQueue;
+  deskflow::KeyMap keyMap;
+  buildTwoGroupKeyMap(keyMap, kLatinA, kThaiFoFan, kSharedButton);
+
+  RecordingKeyState keyState(&eventQueue, keyMap, {"en", "th"}, true);
+  keyState.fakeKeyDown(kThaiFoFan, 0, kSharedButton, "th");
+
+  QCOMPARE(keyState.countStrokes(deskflow::KeyMap::Keystroke::KeyType::Group), 1);
+  const auto group = std::find_if(keyState.m_faked.begin(), keyState.m_faked.end(), [](const auto &k) {
+    return k.m_type == deskflow::KeyMap::Keystroke::KeyType::Group;
+  });
+  QCOMPARE(group->m_data.m_group.m_group, 1);
+}
+
+void KeyStateTests::fakeKeyDown_langSyncDisabled_keepsLocalGroup()
+{
+  MockEventQueue eventQueue;
+  deskflow::KeyMap keyMap;
+  buildTwoGroupKeyMap(keyMap, kLatinA, kThaiFoFan, kSharedButton);
+
+  RecordingKeyState keyState(&eventQueue, keyMap, {"en", "th"}, false);
+  keyState.fakeKeyDown(kThaiFoFan, 0, kSharedButton, "th");
+
+  // the local layout must be left alone, but the key itself is still pressed by position
+  QCOMPARE(keyState.countStrokes(deskflow::KeyMap::Keystroke::KeyType::Group), 0);
+  QVERIFY(keyState.countStrokes(deskflow::KeyMap::Keystroke::KeyType::Button) > 0);
+  QCOMPARE(keyState.m_faked.front().m_data.m_button.m_button, kSharedButton);
 }
 
 QTEST_MAIN(KeyStateTests)
