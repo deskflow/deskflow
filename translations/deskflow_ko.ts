@@ -175,6 +175,13 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerSetupModel</name>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;설정을 편집하려면 두 번 클릭하세요&lt;br&gt;컴퓨터를 휴지통으로 드래그하여 제거하세요</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -913,13 +920,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">컴퓨터 이름은 별칭과 같을 수 없습니다. 별칭을 제거하거나 컴퓨터 이름을 변경하십시오.</translation>
-    </message>
-</context>
-<context>
-    <name>ScreenSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;설정을 편집하려면 두 번 클릭하세요&lt;br&gt;컴퓨터를 휴지통으로 드래그하여 제거하세요</translation>
     </message>
 </context>
 <context>

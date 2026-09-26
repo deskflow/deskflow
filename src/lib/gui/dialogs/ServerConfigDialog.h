@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "ScreenSetupModel.h"
+#include "ComputerSetupModel.h"
 #include "common/NetworkProtocol.h"
 #include "config/ServerConfig.h"
 
@@ -79,9 +79,9 @@ protected:
   {
     m_originalServerConfig = s;
   }
-  ScreenSetupModel &model()
+  ComputerSetupModel &model()
   {
-    return m_screenSetupModel;
+    return m_computerSetupModel;
   }
 
 private:
@@ -118,6 +118,6 @@ private:
   bool m_defaultLockToComputerState;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
-  ScreenSetupModel m_screenSetupModel;
+  ComputerSetupModel m_computerSetupModel;
   SettingsDialogButtonBox *m_buttonBox = nullptr;
 };

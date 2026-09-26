@@ -175,6 +175,13 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerSetupModel</name>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Компьютер: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Дважды щелкните, чтобы изменить настройки&lt;br&gt;Перетащите компьютер в корзину, чтобы удалить его</translation>
+    </message>
+</context>
+<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -913,13 +920,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">Имя компьютера не может совпадать с псевдонимом. Удалите псевдоним или измените имя компьютера.</translation>
-    </message>
-</context>
-<context>
-    <name>ScreenSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;Компьютер: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Дважды щелкните, чтобы изменить настройки&lt;br&gt;Перетащите компьютер в корзину, чтобы удалить его</translation>
     </message>
 </context>
 <context>
