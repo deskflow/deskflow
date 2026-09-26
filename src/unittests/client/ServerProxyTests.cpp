@@ -11,6 +11,7 @@
 #include "client/Client.h"
 #include "client/ServerProxy.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/Clipboard.h"
 #include "deskflow/ProtocolTypes.h"
 #include "io/IStream.h"
 
@@ -79,8 +80,9 @@ public:
     return static_cast<uint32_t>(bytesToRead);
   }
 
-  void write(const void *, uint32_t) override
+  void write(const void *buffer, uint32_t size) override
   {
+    m_written.emplace_back(static_cast<const char *>(buffer), size);
   }
 
   void flush() override
@@ -115,8 +117,14 @@ public:
     return static_cast<uint32_t>(std::min<size_t>(total, UINT32_MAX));
   }
 
+  const std::vector<std::string> &written() const
+  {
+    return m_written;
+  }
+
 private:
   std::deque<std::string> m_chunks;
+  std::vector<std::string> m_written;
   bool m_inputShutdown = false;
 };
 
@@ -252,6 +260,25 @@ Client *undereferenceableClient()
   return reinterpret_cast<Client *>(0x1);
 }
 
+void fillWithText(Clipboard &clipboard, size_t size)
+{
+  clipboard.open(0);
+  clipboard.empty();
+  clipboard.add(IClipboard::Format::Text, std::string(size, 'a'));
+  clipboard.close();
+}
+
+uint8_t clipboardChunkType(const std::string &message)
+{
+  // the chunk type follows the 4-byte message code, 1-byte clipboard id and 4-byte sequence number
+  return static_cast<uint8_t>(message.at(9));
+}
+
+ClipboardID clipboardChunkId(const std::string &message)
+{
+  return static_cast<ClipboardID>(message.at(4));
+}
+
 TestAppUtil &testAppUtil()
 {
   static TestAppUtil util;
@@ -326,6 +353,87 @@ void ServerProxyTests::parseHandshakeMessage_protocolError_queuesRefusalRequest(
   QVERIFY(request->kind() == Client::DisconnectRequest::Kind::Refuse);
   QVERIFY(request->refusalReason() == deskflow::core::ConnectionRefusal::ProtocolError);
   QCOMPARE(QString::fromUtf8(request->message()), QStringLiteral("server reported a protocol error"));
+}
+
+void ServerProxyTests::onClipboardChanged_largeClipboard_sendsOneChunkPerFlush()
+{
+  RecordingEventQueue events;
+  FakeStream stream;
+  ServerProxy proxy(undereferenceableClient(), &stream, &events);
+  Clipboard clipboard;
+  fillWithText(clipboard, 150 * 1024);
+
+  proxy.onClipboardChanged(kClipboardClipboard, &clipboard);
+
+  QCOMPARE(stream.written().size(), static_cast<size_t>(2));
+  QCOMPARE(clipboardChunkType(stream.written().at(0)), ChunkType::DataStart);
+  QCOMPARE(clipboardChunkType(stream.written().at(1)), ChunkType::DataChunk);
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(3));
+  QCOMPARE(clipboardChunkType(stream.written().at(2)), ChunkType::DataChunk);
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(4));
+  QCOMPARE(clipboardChunkType(stream.written().at(3)), ChunkType::DataChunk);
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(5));
+  QCOMPARE(clipboardChunkType(stream.written().at(4)), ChunkType::DataEnd);
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(5));
+}
+
+void ServerProxyTests::onClipboardChanged_otherClipboardInFlight_waitsForTransferToEnd()
+{
+  RecordingEventQueue events;
+  FakeStream stream;
+  ServerProxy proxy(undereferenceableClient(), &stream, &events);
+  Clipboard clipboard;
+  fillWithText(clipboard, 100 * 1024);
+  Clipboard selection;
+  fillWithText(selection, 10);
+
+  proxy.onClipboardChanged(kClipboardClipboard, &clipboard);
+  proxy.onClipboardChanged(kClipboardSelection, &selection);
+
+  QCOMPARE(stream.written().size(), static_cast<size_t>(2));
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(6));
+  QCOMPARE(clipboardChunkType(stream.written().at(3)), ChunkType::DataEnd);
+  QCOMPARE(clipboardChunkId(stream.written().at(3)), kClipboardClipboard);
+  QCOMPARE(clipboardChunkType(stream.written().at(4)), ChunkType::DataStart);
+  QCOMPARE(clipboardChunkId(stream.written().at(4)), kClipboardSelection);
+  QCOMPARE(clipboardChunkType(stream.written().at(5)), ChunkType::DataChunk);
+  QCOMPARE(clipboardChunkId(stream.written().at(5)), kClipboardSelection);
+}
+
+void ServerProxyTests::onClipboardChanged_sameClipboardInFlight_restartsTransfer()
+{
+  RecordingEventQueue events;
+  FakeStream stream;
+  ServerProxy proxy(undereferenceableClient(), &stream, &events);
+  Clipboard older;
+  fillWithText(older, 150 * 1024);
+  Clipboard newer;
+  fillWithText(newer, 10);
+
+  proxy.onClipboardChanged(kClipboardClipboard, &older);
+  proxy.onClipboardChanged(kClipboardClipboard, &newer);
+
+  QCOMPARE(stream.written().size(), static_cast<size_t>(4));
+  QCOMPARE(clipboardChunkType(stream.written().at(2)), ChunkType::DataStart);
+  QCOMPARE(clipboardChunkType(stream.written().at(3)), ChunkType::DataChunk);
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(5));
+  QCOMPARE(clipboardChunkType(stream.written().at(4)), ChunkType::DataEnd);
+
+  QVERIFY(events.dispatchEvent(Event(EventTypes::StreamOutputFlushed, stream.getEventTarget())));
+  QCOMPARE(stream.written().size(), static_cast<size_t>(5));
 }
 
 QTEST_MAIN(ServerProxyTests)

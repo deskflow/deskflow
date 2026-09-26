@@ -7,6 +7,7 @@
 #pragma once
 
 #include "deskflow/ClipboardChunk.h"
+#include "deskflow/StreamChunker.h"
 #include "server/ClientProxy1_5.h"
 
 #include <string>
@@ -19,13 +20,13 @@ class ClientProxy1_6 : public ClientProxy1_5
 {
 public:
   ClientProxy1_6(const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
-  ~ClientProxy1_6() override;
 
   void setClipboard(ClipboardID id, const IClipboard *clipboard) override;
   bool recvClipboard() override;
 
 private:
   IEventQueue *m_events;
+  StreamChunker m_clipboardSender;
   std::string m_clipboardDataCached;
   ClipboardChunkAssemblyState m_clipboardChunkState;
 };

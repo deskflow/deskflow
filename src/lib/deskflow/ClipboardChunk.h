@@ -39,7 +39,7 @@ public:
       ClipboardChunkAssemblyState &state, size_t maxDataSize
   );
 
-  static void send(deskflow::IStream *stream, void *data);
+  static void send(deskflow::IStream *stream, const ClipboardChunk &clipboardChunk);
 
   static size_t getExpectedSize(const ClipboardChunkAssemblyState &state)
   {

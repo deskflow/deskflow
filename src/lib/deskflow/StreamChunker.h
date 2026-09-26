@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2013 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2013 - 2016, 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -8,15 +8,49 @@
 
 #include "deskflow/ClipboardTypes.h"
 
-#include <string_view>
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <optional>
+#include <string>
 
 class IEventQueue;
+
+namespace deskflow {
+class IStream;
+}
 
 class StreamChunker
 {
 public:
-  static void sendClipboard(
-      const std::string_view &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events,
-      void *eventTarget
-  );
+  StreamChunker(IEventQueue *events, deskflow::IStream *stream);
+  StreamChunker(StreamChunker const &) = delete;
+  StreamChunker(StreamChunker &&) = delete;
+  ~StreamChunker();
+
+  StreamChunker &operator=(StreamChunker const &) = delete;
+  StreamChunker &operator=(StreamChunker &&) = delete;
+
+  void sendClipboard(std::string data, ClipboardID id, uint32_t sequence);
+
+private:
+  struct Transfer
+  {
+    std::string data;
+    uint32_t sequence = 0;
+  };
+
+  void beginTransfer(ClipboardID id, Transfer transfer);
+  void sendNextChunk();
+
+  static constexpr size_t kChunkSize = 64 * 1024;
+
+  IEventQueue *m_events;
+  deskflow::IStream *m_stream;
+  void *m_streamTarget;
+  Transfer m_current;
+  ClipboardID m_currentId = 0;
+  size_t m_sent = 0;
+  bool m_sending = false;
+  std::array<std::optional<Transfer>, kClipboardEnd> m_queued;
 };

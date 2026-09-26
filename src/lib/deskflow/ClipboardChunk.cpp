@@ -171,18 +171,16 @@ TransferState ClipboardChunk::assemble(
   return Error;
 }
 
-void ClipboardChunk::send(deskflow::IStream *stream, void *data)
+void ClipboardChunk::send(deskflow::IStream *stream, const ClipboardChunk &clipboardChunk)
 {
-  const auto *clipboardData = static_cast<ClipboardChunk *>(data);
-
   LOG_VERBOSE("sending clipboard chunk");
 
-  const char *chunk = clipboardData->m_chunk;
+  const char *chunk = clipboardChunk.m_chunk;
   ClipboardID id = chunk[0];
   uint32_t sequence;
   std::memcpy(&sequence, &chunk[1], 4);
   uint8_t mark = chunk[5];
-  std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
+  std::string dataChunk(&chunk[6], clipboardChunk.m_dataSize);
 
   switch (mark) {
   case ChunkType::DataStart:
