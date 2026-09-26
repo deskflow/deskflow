@@ -19,7 +19,9 @@ private Q_SLOTS:
   void endFormatData();
   void assembleAllowsDataAtExpectedSizeAndLimit();
   void assembleRejectsDataBeyondExpectedSize();
-  void assembleRejectsExpectedSizeBeyondLimit();
+  void assembleRefusesExpectedSizeBeyondLimit();
+  void assembleDiscardsOversizeTransferThenAcceptsNext();
+  void assembleAcceptsStartDuringOversizeTransfer();
 
 private:
   Log m_log;
