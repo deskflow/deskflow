@@ -61,10 +61,7 @@ Client::Client(
       m_socketFactory(socketFactory),
       m_screen(screen),
       m_events(events),
-      m_useSecureNetwork(Settings::value(Settings::Security::TlsEnabled).toBool()),
-      m_maximumClipboardReceiveSize(
-          static_cast<size_t>(Settings::value(Settings::Server::ClipboardSize).toUInt()) * 1024 * 1024
-      )
+      m_useSecureNetwork(Settings::value(Settings::Security::TlsEnabled).toBool())
 {
   assert(m_socketFactory != nullptr);
   assert(m_screen != nullptr);
@@ -196,7 +193,7 @@ NetworkAddress Client::getServerAddress() const
 
 size_t Client::getMaximumClipboardReceiveSizeBytes() const
 {
-  return m_maximumClipboardReceiveSize;
+  return m_maximumClipboardSize * 1024;
 }
 
 void *Client::getEventTarget() const

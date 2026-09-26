@@ -242,7 +242,6 @@ private:
   bool m_hasRelativeRestorePosition = false;
   int32_t m_relativeRestoreX = 0;
   int32_t m_relativeRestoreY = 0;
-  size_t m_maximumClipboardReceiveSize = 0;
   size_t m_maximumClipboardSize = INT_MAX;
   size_t m_resolvedAddressesCount = 0;
 };
