@@ -408,7 +408,7 @@ void ServerConfigDialog::loadFromConfig()
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->listHotkeys->addItem(hotkey.text());
 
-  ui->screenSetupView->setModel(&m_computerSetupModel);
+  ui->computerSetupView->setModel(&m_computerSetupModel);
 
   auto &screens = serverConfig().screens();
   auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
@@ -432,8 +432,8 @@ void ServerConfigDialog::resetFromSettings()
   m_serverConfig.setUseExternalConfig(m_originalServerConfigIsExternal);
   loadFromConfig();
   if (ui->tabWidget->currentWidget() == ui->tabComputers) {
-    ui->screenSetupView->reset();
-    ui->screenSetupView->update();
+    ui->computerSetupView->reset();
+    ui->computerSetupView->update();
   }
 }
 

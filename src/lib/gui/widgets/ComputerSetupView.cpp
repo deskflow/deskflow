@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenSetupView.h"
+#include "ComputerSetupView.h"
 
 #include "ComputerSetupModel.h"
 #include "dialogs/ScreenSettingsDialog.h"
@@ -19,7 +19,7 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 
-ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
+ComputerSetupView::ComputerSetupView(QWidget *parent) : QTableView(parent)
 {
   setDropIndicatorShown(true);
   setDragDropMode(DragDrop);
@@ -33,25 +33,25 @@ ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
   verticalHeader()->hide();
 }
 
-void ScreenSetupView::setModel(QAbstractItemModel *model)
+void ComputerSetupView::setModel(QAbstractItemModel *model)
 {
   QTableView::setModel(model);
   setTableSize();
 }
 
-ComputerSetupModel *ScreenSetupView::model() const
+ComputerSetupModel *ComputerSetupView::model() const
 {
   return qobject_cast<ComputerSetupModel *>(QTableView::model());
 }
 
-void ScreenSetupView::showScreenConfig(int col, int row)
+void ComputerSetupView::showScreenConfig(int col, int row)
 {
   ScreenSettingsDialog dlg(this, &model()->computer(col, row), &model()->m_computers);
   dlg.exec();
   Q_EMIT model()->computersChanged();
 }
 
-void ScreenSetupView::setTableSize()
+void ComputerSetupView::setTableSize()
 {
   for (int i = 0; i < model()->columnCount(); i++)
     setColumnWidth(i, width() / model()->columnCount());
@@ -60,13 +60,13 @@ void ScreenSetupView::setTableSize()
     setRowHeight(i, height() / model()->rowCount());
 }
 
-void ScreenSetupView::resizeEvent(QResizeEvent *event)
+void ComputerSetupView::resizeEvent(QResizeEvent *event)
 {
   setTableSize();
   event->ignore();
 }
 
-void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
+void ComputerSetupView::mouseDoubleClickEvent(QMouseEvent *event)
 {
   if (event->buttons() & Qt::LeftButton) {
     int col = columnAt(event->pos().x());
@@ -79,7 +79,7 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
     event->ignore();
 }
 
-void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event)
+void ComputerSetupView::dragEnterEvent(QDragEnterEvent *event)
 {
   // we accept anything that enters us by a drag as long as the
   // mime type is okay. anything else is dealt with in dragMoveEvent()
@@ -89,7 +89,7 @@ void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event)
     event->ignore();
 }
 
-void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
+void ComputerSetupView::dragMoveEvent(QDragMoveEvent *event)
 {
   if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType())) {
     // where does the event come from? myself or someone else?
@@ -114,7 +114,7 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
 }
 
 // this is reimplemented from QAbstractItemView::startDrag()
-void ScreenSetupView::startDrag(Qt::DropActions)
+void ComputerSetupView::startDrag(Qt::DropActions)
 {
   QModelIndexList indexes = selectedIndexes();
 
@@ -145,7 +145,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
   }
 }
 
-void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
+void ComputerSetupView::initViewItemOption(QStyleOptionViewItem *option) const
 {
   // HACK make a basic widget and init from it
   auto w = new QWidget();

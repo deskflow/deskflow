@@ -14,14 +14,14 @@
 
 #include "gui/config/ScreenList.h"
 
-class ScreenSetupView;
+class ComputerSetupView;
 class ServerConfigDialog;
 
 class ComputerSetupModel : public QAbstractTableModel
 {
   Q_OBJECT
 
-  friend class ScreenSetupView;
+  friend class ComputerSetupView;
   friend class ServerConfigDialog;
 
 public:

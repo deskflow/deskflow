@@ -27,7 +27,7 @@ class Screen : public ScreenConfig
 {
   friend class ScreenSettingsDialog;
   friend class ComputerSetupModel;
-  friend class ScreenSetupView;
+  friend class ComputerSetupView;
 
   friend QDataStream &operator<<(QDataStream &outStream, const Screen &screen)
   {

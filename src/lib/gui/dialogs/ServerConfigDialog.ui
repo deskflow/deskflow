@@ -146,7 +146,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="ScreenSetupView" name="screenSetupView">
+        <widget class="ComputerSetupView" name="computerSetupView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -885,9 +885,9 @@ Enabling this setting will disable the server config GUI.</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ScreenSetupView</class>
+   <class>ComputerSetupView</class>
    <extends>QTableView</extends>
-   <header>widgets/ScreenSetupView.h</header>
+   <header>widgets/ComputerSetupView.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -902,7 +902,7 @@ Enabling this setting will disable the server config GUI.</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>screenSetupView</tabstop>
+  <tabstop>computerSetupView</tabstop>
   <tabstop>listHotkeys</tabstop>
   <tabstop>btnNewHotkey</tabstop>
   <tabstop>btnEditHotkey</tabstop>
