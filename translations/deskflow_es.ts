@@ -1368,6 +1368,18 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Ya está disponible una nueva versión v%1</translation>
     </message>
     <message>
+        <source>Sending clipboard to %1 (%2)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clipboard not shared, %1 is over the %2 limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receiving clipboard from %1 (%2)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>View local fingerprint</source>
         <translation type="unfinished">Ver huella digital local</translation>
     </message>

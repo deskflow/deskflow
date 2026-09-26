@@ -394,6 +394,10 @@ void Client::sendClipboard(ClipboardID id)
     std::string data = clipboard.marshall();
     if (data.size() >= m_maximumClipboardSize * 1024) {
       LOG_WARN("not sending clipboard data, exceeds limit: %zu KB", m_maximumClipboardSize);
+      ipcSendToClient(
+          QStringLiteral("clipboardOverLimit"),
+          QStringLiteral("%1,%2").arg(data.size()).arg(m_maximumClipboardSize * 1024)
+      );
       return;
     }
 

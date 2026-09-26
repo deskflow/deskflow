@@ -10,15 +10,17 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/ClipboardChunk.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "io/IStream.h"
 
 #include <algorithm>
 #include <memory>
 
-StreamChunker::StreamChunker(IEventQueue *events, deskflow::IStream *stream)
+StreamChunker::StreamChunker(IEventQueue *events, deskflow::IStream *stream, const QString &peerName)
     : m_events(events),
       m_stream(stream),
-      m_streamTarget(stream->getEventTarget())
+      m_streamTarget(stream->getEventTarget()),
+      m_peerName(peerName)
 {
   // one chunk per flush, so input written meanwhile isn't queued behind the whole clipboard
   m_events->addHandler(EventTypes::StreamOutputFlushed, m_streamTarget, [this](const auto &) { sendNextChunk(); });
@@ -48,6 +50,9 @@ void StreamChunker::beginTransfer(ClipboardID id, Transfer transfer)
   m_currentId = id;
   m_sent = 0;
   m_sending = true;
+  ipcSendToClient(
+      QStringLiteral("clipboardSending"), QStringLiteral("%1,%2").arg(m_current.data.size()).arg(m_peerName)
+  );
 
   const std::unique_ptr<ClipboardChunk> start(
       ClipboardChunk::start(id, m_current.sequence, std::to_string(m_current.data.size()))
@@ -73,6 +78,7 @@ void StreamChunker::sendNextChunk()
     const std::unique_ptr<ClipboardChunk> end(ClipboardChunk::end(m_currentId, m_current.sequence));
     ClipboardChunk::send(m_stream, *end);
     LOG_DEBUG("sent clipboard %d, size: %zu", m_currentId, m_current.data.size());
+    ipcSendToClient(QStringLiteral("clipboardSent"), m_peerName);
 
     m_sending = false;
     m_current = {};

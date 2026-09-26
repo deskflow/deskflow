@@ -1454,7 +1454,11 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   std::string data = clipboard.m_clipboard.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {
-    LOG_WARN("not sending clipboard data, exceeds limit: %i KB", m_maximumClipboardSize);
+    LOG_WARN("not sending clipboard data, exceeds limit: %zu KB", m_maximumClipboardSize);
+    ipcSendToClient(
+        QStringLiteral("clipboardOverLimit"),
+        QStringLiteral("%1,%2").arg(data.size()).arg(m_maximumClipboardSize * 1024)
+    );
     return;
   }
 

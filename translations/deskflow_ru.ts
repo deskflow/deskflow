@@ -1367,6 +1367,18 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Доступна новая версия v%1</translation>
     </message>
     <message>
+        <source>Sending clipboard to %1 (%2)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clipboard not shared, %1 is over the %2 limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receiving clipboard from %1 (%2)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>View local fingerprint</source>
         <translation>Показать локальный отпечаток</translation>
     </message>

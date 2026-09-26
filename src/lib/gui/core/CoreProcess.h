@@ -94,6 +94,11 @@ Q_SIGNALS:
   void retryIn(int seconds);
   void peerFingerprint(const QString &fingerprint);
   void missingKeyboardLayouts(const QString &layouts);
+  void clipboardSending(qint64 bytes, const QString &peer);
+  void clipboardSent(const QString &peer);
+  void clipboardReceiving(qint64 bytes, const QString &peer);
+  void clipboardReceived(const QString &peer);
+  void clipboardOverLimit(qint64 bytes, qint64 limit);
 
 private Q_SLOTS:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);

@@ -14,6 +14,8 @@
 #include <optional>
 #include <string>
 
+#include <QString>
+
 class IEventQueue;
 
 namespace deskflow {
@@ -23,7 +25,7 @@ class IStream;
 class StreamChunker
 {
 public:
-  StreamChunker(IEventQueue *events, deskflow::IStream *stream);
+  StreamChunker(IEventQueue *events, deskflow::IStream *stream, const QString &peerName);
   StreamChunker(StreamChunker const &) = delete;
   StreamChunker(StreamChunker &&) = delete;
   ~StreamChunker();
@@ -48,6 +50,7 @@ private:
   IEventQueue *m_events;
   deskflow::IStream *m_stream;
   void *m_streamTarget;
+  QString m_peerName;
   Transfer m_current;
   ClipboardID m_currentId = 0;
   size_t m_sent = 0;
