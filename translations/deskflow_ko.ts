@@ -175,6 +175,157 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerSettingsDialog</name>
+    <message>
+        <source>Computer settings</source>
+        <translation type="unfinished">컴퓨터 설정</translation>
+    </message>
+    <message>
+        <source>Computer Info</source>
+        <translation type="unfinished">컴퓨터 정보</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">이름</translation>
+    </message>
+    <message>
+        <source>Modifier Keys</source>
+        <translation type="unfinished">수정 키</translation>
+    </message>
+    <message>
+        <source>M&amp;eta</source>
+        <translation type="unfinished">M&amp;eta</translation>
+    </message>
+    <message>
+        <source>&amp;Ctrl</source>
+        <translation type="unfinished">&amp;Ctrl</translation>
+    </message>
+    <message>
+        <source>S&amp;uper</source>
+        <translation type="unfinished">S&amp;uper</translation>
+    </message>
+    <message>
+        <source>Al&amp;t</source>
+        <translation type="unfinished">Al&amp;t</translation>
+    </message>
+    <message>
+        <source>Shift</source>
+        <translation type="unfinished">Shift</translation>
+    </message>
+    <message>
+        <source>Ctrl</source>
+        <translation type="unfinished">Ctrl</translation>
+    </message>
+    <message>
+        <source>Alt</source>
+        <translation type="unfinished">Alt</translation>
+    </message>
+    <message>
+        <source>Meta</source>
+        <translation type="unfinished">Meta</translation>
+    </message>
+    <message>
+        <source>Super</source>
+        <translation type="unfinished">Super</translation>
+    </message>
+    <message>
+        <source>Alt Gr</source>
+        <translation type="unfinished">Alt Gr</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">없음</translation>
+    </message>
+    <message>
+        <source>&amp;Shift</source>
+        <translation type="unfinished">&amp;Shift</translation>
+    </message>
+    <message>
+        <source>Alt &amp;Gr</source>
+        <translation type="unfinished">Alt &amp;Gr</translation>
+    </message>
+    <message>
+        <source>Dead Corners</source>
+        <translation type="unfinished">화면 걸림 방지</translation>
+    </message>
+    <message>
+        <source>Top Left</source>
+        <translation type="unfinished">왼쪽 위</translation>
+    </message>
+    <message>
+        <source>Top Right</source>
+        <translation type="unfinished">오른쪽 위</translation>
+    </message>
+    <message>
+        <source>Corner si&amp;ze</source>
+        <translation type="unfinished">모서리 크기(&amp;Z)</translation>
+    </message>
+    <message>
+        <source>Bottom Left</source>
+        <translation type="unfinished">왼쪽 아래</translation>
+    </message>
+    <message>
+        <source>Bottom Right</source>
+        <translation type="unfinished">오른쪽 아래</translation>
+    </message>
+    <message>
+        <source>Fixes</source>
+        <translation type="unfinished">수정</translation>
+    </message>
+    <message>
+        <source>SCROLL LOCK key</source>
+        <translation type="unfinished">SCROLL LOCK 키</translation>
+    </message>
+    <message>
+        <source>CAPS LOCK key</source>
+        <translation type="unfinished">CAPS LOCK 키</translation>
+    </message>
+    <message>
+        <source>NUM LOCK key</source>
+        <translation type="unfinished">NUM LOCK 키</translation>
+    </message>
+    <message>
+        <source>XTest for Xinerama</source>
+        <translation type="unfinished">Xinerama용 XTest</translation>
+    </message>
+    <message>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">X11 환경에서만 적용됩니다. 이 기능을 활성화하면 클라이언트가 활성화(전환)되는 즉시 해당 창으로 포커스가 이동하지 않습니다. 이를 통해 일부 X11 설정에서 발생할 수 있는 원치 않는 포커스 탈취(focus stealing) 문제를 방지할 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Weaken X11 Focus</source>
+        <translation type="unfinished">X11 포커스 약화</translation>
+    </message>
+    <message>
+        <source>Aliases</source>
+        <translation type="unfinished">별칭</translation>
+    </message>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">추가(&amp;A)</translation>
+    </message>
+    <message>
+        <source>&amp;Remove</source>
+        <translation type="unfinished">삭제(&amp;R)</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">컴퓨터 이름이 비어 있습니다.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">컴퓨터 이름을 비워둘 수 없습니다. 이름을 입력하거나 대화 상자를 취소하십시오.</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">컴퓨터 이름이 별칭과 일치합니다.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">컴퓨터 이름은 별칭과 같을 수 없습니다. 별칭을 제거하거나 컴퓨터 이름을 변경하십시오.</translation>
+    </message>
+</context>
+<context>
     <name>ComputerSetupModel</name>
     <message>
         <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
@@ -769,157 +920,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
-    </message>
-</context>
-<context>
-    <name>ScreenSettingsDialog</name>
-    <message>
-        <source>Computer settings</source>
-        <translation>컴퓨터 설정</translation>
-    </message>
-    <message>
-        <source>Computer Info</source>
-        <translation>컴퓨터 정보</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>이름</translation>
-    </message>
-    <message>
-        <source>Modifier Keys</source>
-        <translation>수정 키</translation>
-    </message>
-    <message>
-        <source>M&amp;eta</source>
-        <translation>M&amp;eta</translation>
-    </message>
-    <message>
-        <source>&amp;Ctrl</source>
-        <translation>&amp;Ctrl</translation>
-    </message>
-    <message>
-        <source>S&amp;uper</source>
-        <translation>S&amp;uper</translation>
-    </message>
-    <message>
-        <source>Al&amp;t</source>
-        <translation>Al&amp;t</translation>
-    </message>
-    <message>
-        <source>Shift</source>
-        <translation>Shift</translation>
-    </message>
-    <message>
-        <source>Ctrl</source>
-        <translation>Ctrl</translation>
-    </message>
-    <message>
-        <source>Alt</source>
-        <translation>Alt</translation>
-    </message>
-    <message>
-        <source>Meta</source>
-        <translation>Meta</translation>
-    </message>
-    <message>
-        <source>Super</source>
-        <translation>Super</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <source>&amp;Shift</source>
-        <translation>&amp;Shift</translation>
-    </message>
-    <message>
-        <source>Dead Corners</source>
-        <translation>화면 걸림 방지</translation>
-    </message>
-    <message>
-        <source>Top Left</source>
-        <translation>왼쪽 위</translation>
-    </message>
-    <message>
-        <source>Top Right</source>
-        <translation>오른쪽 위</translation>
-    </message>
-    <message>
-        <source>Corner si&amp;ze</source>
-        <translation>모서리 크기(&amp;Z)</translation>
-    </message>
-    <message>
-        <source>Bottom Left</source>
-        <translation>왼쪽 아래</translation>
-    </message>
-    <message>
-        <source>Bottom Right</source>
-        <translation>오른쪽 아래</translation>
-    </message>
-    <message>
-        <source>Fixes</source>
-        <translation>수정</translation>
-    </message>
-    <message>
-        <source>SCROLL LOCK key</source>
-        <translation>SCROLL LOCK 키</translation>
-    </message>
-    <message>
-        <source>CAPS LOCK key</source>
-        <translation>CAPS LOCK 키</translation>
-    </message>
-    <message>
-        <source>NUM LOCK key</source>
-        <translation>NUM LOCK 키</translation>
-    </message>
-    <message>
-        <source>XTest for Xinerama</source>
-        <translation>Xinerama용 XTest</translation>
-    </message>
-    <message>
-        <source>Aliases</source>
-        <translation>별칭</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation>추가(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation>삭제(&amp;R)</translation>
-    </message>
-    <message>
-        <source>Alt Gr</source>
-        <translation type="unfinished">Alt Gr</translation>
-    </message>
-    <message>
-        <source>Alt &amp;Gr</source>
-        <translation type="unfinished">Alt &amp;Gr</translation>
-    </message>
-    <message>
-        <source>Weaken X11 Focus</source>
-        <translation type="unfinished">X11 포커스 약화</translation>
-    </message>
-    <message>
-        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">X11 환경에서만 적용됩니다. 이 기능을 활성화하면 클라이언트가 활성화(전환)되는 즉시 해당 창으로 포커스가 이동하지 않습니다. 이를 통해 일부 X11 설정에서 발생할 수 있는 원치 않는 포커스 탈취(focus stealing) 문제를 방지할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Computer name is empty</source>
-        <translation type="unfinished">컴퓨터 이름이 비어 있습니다.</translation>
-    </message>
-    <message>
-        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation type="unfinished">컴퓨터 이름을 비워둘 수 없습니다. 이름을 입력하거나 대화 상자를 취소하십시오.</translation>
-    </message>
-    <message>
-        <source>Computer name matches alias</source>
-        <translation type="unfinished">컴퓨터 이름이 별칭과 일치합니다.</translation>
-    </message>
-    <message>
-        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
-        <translation type="unfinished">컴퓨터 이름은 별칭과 같을 수 없습니다. 별칭을 제거하거나 컴퓨터 이름을 변경하십시오.</translation>
     </message>
 </context>
 <context>

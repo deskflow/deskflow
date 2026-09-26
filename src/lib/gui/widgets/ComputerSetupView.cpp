@@ -9,7 +9,7 @@
 #include "ComputerSetupView.h"
 
 #include "ComputerSetupModel.h"
-#include "dialogs/ScreenSettingsDialog.h"
+#include "dialogs/ComputerSettingsDialog.h"
 
 #include <QDrag>
 #include <QDragEnterEvent>
@@ -46,7 +46,7 @@ ComputerSetupModel *ComputerSetupView::model() const
 
 void ComputerSetupView::showScreenConfig(int col, int row)
 {
-  ScreenSettingsDialog dlg(this, &model()->computer(col, row), &model()->m_computers);
+  ComputerSettingsDialog dlg(this, &model()->computer(col, row), &model()->m_computers);
   dlg.exec();
   Q_EMIT model()->computersChanged();
 }

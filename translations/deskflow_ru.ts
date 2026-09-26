@@ -175,6 +175,157 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerSettingsDialog</name>
+    <message>
+        <source>Computer settings</source>
+        <translation type="unfinished">Настройки компьютера</translation>
+    </message>
+    <message>
+        <source>Computer Info</source>
+        <translation type="unfinished">Информация о компьютере</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Имя</translation>
+    </message>
+    <message>
+        <source>Modifier Keys</source>
+        <translation type="unfinished">Клавиши-модификаторы</translation>
+    </message>
+    <message>
+        <source>M&amp;eta</source>
+        <translation type="unfinished">M&amp;eta</translation>
+    </message>
+    <message>
+        <source>&amp;Ctrl</source>
+        <translation type="unfinished">&amp;Ctrl</translation>
+    </message>
+    <message>
+        <source>S&amp;uper</source>
+        <translation type="unfinished">S&amp;uper</translation>
+    </message>
+    <message>
+        <source>Al&amp;t</source>
+        <translation type="unfinished">Al&amp;t</translation>
+    </message>
+    <message>
+        <source>Shift</source>
+        <translation type="unfinished">Shift</translation>
+    </message>
+    <message>
+        <source>Ctrl</source>
+        <translation type="unfinished">Ctrl</translation>
+    </message>
+    <message>
+        <source>Alt</source>
+        <translation type="unfinished">Alt</translation>
+    </message>
+    <message>
+        <source>Meta</source>
+        <translation type="unfinished">Meta</translation>
+    </message>
+    <message>
+        <source>Super</source>
+        <translation type="unfinished">Super</translation>
+    </message>
+    <message>
+        <source>Alt Gr</source>
+        <translation type="unfinished">Alt Gr</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Нет</translation>
+    </message>
+    <message>
+        <source>&amp;Shift</source>
+        <translation type="unfinished">&amp;Shift</translation>
+    </message>
+    <message>
+        <source>Alt &amp;Gr</source>
+        <translation type="unfinished">Alt &amp;Gr</translation>
+    </message>
+    <message>
+        <source>Dead Corners</source>
+        <translation type="unfinished">Мертвые зоны в углах</translation>
+    </message>
+    <message>
+        <source>Top Left</source>
+        <translation type="unfinished">Сверху слева</translation>
+    </message>
+    <message>
+        <source>Top Right</source>
+        <translation type="unfinished">Сверху справа</translation>
+    </message>
+    <message>
+        <source>Corner si&amp;ze</source>
+        <translation type="unfinished">Разм&amp;ер угла</translation>
+    </message>
+    <message>
+        <source>Bottom Left</source>
+        <translation type="unfinished">Снизу слева</translation>
+    </message>
+    <message>
+        <source>Bottom Right</source>
+        <translation type="unfinished">Снизу справа</translation>
+    </message>
+    <message>
+        <source>Fixes</source>
+        <translation type="unfinished">Исправления</translation>
+    </message>
+    <message>
+        <source>SCROLL LOCK key</source>
+        <translation type="unfinished">Клавиша SCROLL LOCK</translation>
+    </message>
+    <message>
+        <source>CAPS LOCK key</source>
+        <translation type="unfinished">Клавиша CAPS LOCK</translation>
+    </message>
+    <message>
+        <source>NUM LOCK key</source>
+        <translation type="unfinished">Клавиша NUM LOCK</translation>
+    </message>
+    <message>
+        <source>XTest for Xinerama</source>
+        <translation type="unfinished">XTest для Xinerama</translation>
+    </message>
+    <message>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">Только для систем X11: если эта функция включена, клиент не будет автоматически передавать фокус своему активному окну сразу после переключения на этот клиент. Это помогает предотвратить нежелательный перехват фокуса в некоторых конфигурациях X11.</translation>
+    </message>
+    <message>
+        <source>Weaken X11 Focus</source>
+        <translation type="unfinished">Ослабить фокус X11</translation>
+    </message>
+    <message>
+        <source>Aliases</source>
+        <translation type="unfinished">Псевдонимы</translation>
+    </message>
+    <message>
+        <source>&amp;Add</source>
+        <translation type="unfinished">&amp;Добавить</translation>
+    </message>
+    <message>
+        <source>&amp;Remove</source>
+        <translation type="unfinished">&amp;Удалить</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">Имя компьютера не указано</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">Имя компьютера не может быть пустым. Введите имя или отмените диалог.</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">Имя компьютера совпадает с псевдонимом</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">Имя компьютера не может совпадать с псевдонимом. Удалите псевдоним или измените имя компьютера.</translation>
+    </message>
+</context>
+<context>
     <name>ComputerSetupModel</name>
     <message>
         <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
@@ -769,157 +920,6 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
-    </message>
-</context>
-<context>
-    <name>ScreenSettingsDialog</name>
-    <message>
-        <source>Computer settings</source>
-        <translation>Настройки компьютера</translation>
-    </message>
-    <message>
-        <source>Computer Info</source>
-        <translation>Информация о компьютере</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Имя</translation>
-    </message>
-    <message>
-        <source>Modifier Keys</source>
-        <translation>Клавиши-модификаторы</translation>
-    </message>
-    <message>
-        <source>M&amp;eta</source>
-        <translation>M&amp;eta</translation>
-    </message>
-    <message>
-        <source>&amp;Ctrl</source>
-        <translation>&amp;Ctrl</translation>
-    </message>
-    <message>
-        <source>S&amp;uper</source>
-        <translation>S&amp;uper</translation>
-    </message>
-    <message>
-        <source>Al&amp;t</source>
-        <translation>Al&amp;t</translation>
-    </message>
-    <message>
-        <source>Shift</source>
-        <translation>Shift</translation>
-    </message>
-    <message>
-        <source>Ctrl</source>
-        <translation>Ctrl</translation>
-    </message>
-    <message>
-        <source>Alt</source>
-        <translation>Alt</translation>
-    </message>
-    <message>
-        <source>Meta</source>
-        <translation>Meta</translation>
-    </message>
-    <message>
-        <source>Super</source>
-        <translation>Super</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Нет</translation>
-    </message>
-    <message>
-        <source>&amp;Shift</source>
-        <translation>&amp;Shift</translation>
-    </message>
-    <message>
-        <source>Dead Corners</source>
-        <translation>Мертвые зоны в углах</translation>
-    </message>
-    <message>
-        <source>Top Left</source>
-        <translation>Сверху слева</translation>
-    </message>
-    <message>
-        <source>Top Right</source>
-        <translation>Сверху справа</translation>
-    </message>
-    <message>
-        <source>Corner si&amp;ze</source>
-        <translation>Разм&amp;ер угла</translation>
-    </message>
-    <message>
-        <source>Bottom Left</source>
-        <translation>Снизу слева</translation>
-    </message>
-    <message>
-        <source>Bottom Right</source>
-        <translation>Снизу справа</translation>
-    </message>
-    <message>
-        <source>Fixes</source>
-        <translation>Исправления</translation>
-    </message>
-    <message>
-        <source>SCROLL LOCK key</source>
-        <translation>Клавиша SCROLL LOCK</translation>
-    </message>
-    <message>
-        <source>CAPS LOCK key</source>
-        <translation>Клавиша CAPS LOCK</translation>
-    </message>
-    <message>
-        <source>NUM LOCK key</source>
-        <translation>Клавиша NUM LOCK</translation>
-    </message>
-    <message>
-        <source>XTest for Xinerama</source>
-        <translation>XTest для Xinerama</translation>
-    </message>
-    <message>
-        <source>Aliases</source>
-        <translation>Псевдонимы</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation>&amp;Добавить</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation>&amp;Удалить</translation>
-    </message>
-    <message>
-        <source>Alt Gr</source>
-        <translation type="unfinished">Alt Gr</translation>
-    </message>
-    <message>
-        <source>Alt &amp;Gr</source>
-        <translation type="unfinished">Alt &amp;Gr</translation>
-    </message>
-    <message>
-        <source>Weaken X11 Focus</source>
-        <translation type="unfinished">Ослабить фокус X11</translation>
-    </message>
-    <message>
-        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">Только для систем X11: если эта функция включена, клиент не будет автоматически передавать фокус своему активному окну сразу после переключения на этот клиент. Это помогает предотвратить нежелательный перехват фокуса в некоторых конфигурациях X11.</translation>
-    </message>
-    <message>
-        <source>Computer name is empty</source>
-        <translation type="unfinished">Имя компьютера не указано</translation>
-    </message>
-    <message>
-        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation type="unfinished">Имя компьютера не может быть пустым. Введите имя или отмените диалог.</translation>
-    </message>
-    <message>
-        <source>Computer name matches alias</source>
-        <translation type="unfinished">Имя компьютера совпадает с псевдонимом</translation>
-    </message>
-    <message>
-        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
-        <translation type="unfinished">Имя компьютера не может совпадать с псевдонимом. Удалите псевдоним или измените имя компьютера.</translation>
     </message>
 </context>
 <context>

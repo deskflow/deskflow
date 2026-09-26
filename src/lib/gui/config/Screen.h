@@ -21,11 +21,11 @@
 
 class QSettings;
 class QTextStream;
-class ScreenSettingsDialog;
+class ComputerSettingsDialog;
 
 class Screen : public ScreenConfig
 {
-  friend class ScreenSettingsDialog;
+  friend class ComputerSettingsDialog;
   friend class ComputerSetupModel;
   friend class ComputerSetupView;
 

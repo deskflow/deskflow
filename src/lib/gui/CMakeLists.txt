@@ -53,6 +53,9 @@ add_library(${target} STATIC
   dialogs/ClientConfigDialog.h
   dialogs/ClientConfigDialog.cpp
   dialogs/ClientConfigDialog.ui
+  dialogs/ComputerSettingsDialog.cpp
+  dialogs/ComputerSettingsDialog.h
+  dialogs/ComputerSettingsDialog.ui
   dialogs/FingerprintDialog.cpp
   dialogs/FingerprintDialog.h
   dialogs/HelpDialog.cpp
@@ -60,9 +63,6 @@ add_library(${target} STATIC
   dialogs/HotkeyDialog.cpp
   dialogs/HotkeyDialog.h
   dialogs/HotkeyDialog.ui
-  dialogs/ScreenSettingsDialog.cpp
-  dialogs/ScreenSettingsDialog.h
-  dialogs/ScreenSettingsDialog.ui
   dialogs/ServerConfigDialog.cpp
   dialogs/ServerConfigDialog.h
   dialogs/ServerConfigDialog.ui
