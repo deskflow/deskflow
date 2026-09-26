@@ -35,7 +35,7 @@ public:
   }
 
 protected:
-  void onScreenRemoved();
+  void onComputerRemoved();
   void addClient();
   bool addComputer(const QString &clientName, bool doSilent);
 

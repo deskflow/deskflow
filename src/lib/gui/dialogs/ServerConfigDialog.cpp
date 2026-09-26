@@ -350,7 +350,7 @@ void ServerConfigDialog::addClient()
   addComputer("", false);
 }
 
-void ServerConfigDialog::onScreenRemoved()
+void ServerConfigDialog::onComputerRemoved()
 {
   ui->lblNewScreen->setEnabled(true);
   setButtonBoxEnabledButtons();
@@ -468,7 +468,7 @@ void ServerConfigDialog::initConnections() const
   connect(m_buttonBox, &SettingsDialogButtonBox::reset, this, &ServerConfigDialog::resetFromSettings);
   connect(m_buttonBox, &SettingsDialogButtonBox::restoreDefault, this, &ServerConfigDialog::restoreFromDefaults);
   connect(ui->tabWidget, &QTabWidget::currentChanged, this, &ServerConfigDialog::setButtonBoxEnabledButtons);
-  connect(ui->lblRemoveScreen, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
+  connect(ui->lblRemoveScreen, &RemoveComputerWidget::computerRemoved, this, &ServerConfigDialog::onComputerRemoved);
   connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);
   connect(ui->btnEditHotkey, &QPushButton::clicked, this, &ServerConfigDialog::editHotkey);
   connect(ui->btnRemoveHotkey, &QPushButton::clicked, this, &ServerConfigDialog::removeHotkey);

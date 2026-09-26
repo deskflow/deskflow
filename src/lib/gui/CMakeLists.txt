@@ -107,12 +107,12 @@ add_library(${target} STATIC
   widgets/LogWidget.cpp
   widgets/NewComputerWidget.cpp
   widgets/NewComputerWidget.h
+  widgets/RemoveComputerWidget.cpp
+  widgets/RemoveComputerWidget.h
   widgets/SearchWidget.h
   widgets/SearchWidget.cpp
   widgets/StatusBar.cpp
   widgets/StatusBar.h
-  widgets/TrashScreenWidget.cpp
-  widgets/TrashScreenWidget.h
   widgets/SettingsDialogButtonBox.cpp
   widgets/SettingsDialogButtonBox.h
 )

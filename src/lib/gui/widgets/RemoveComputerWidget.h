@@ -13,12 +13,12 @@ class QWidget;
 class QDragEnterEvent;
 class QDropEvent;
 
-class TrashScreenWidget : public QLabel
+class RemoveComputerWidget : public QLabel
 {
   Q_OBJECT
 
 public:
-  explicit TrashScreenWidget(QWidget *parent) : QLabel(parent)
+  explicit RemoveComputerWidget(QWidget *parent) : QLabel(parent)
   {
     // do nothing
   }
@@ -27,5 +27,5 @@ public:
   void dropEvent(QDropEvent *event) override;
 
 Q_SIGNALS:
-  void screenRemoved();
+  void computerRemoved();
 };

@@ -45,7 +45,7 @@
           <number>6</number>
          </property>
          <item>
-          <widget class="TrashScreenWidget" name="lblRemoveScreen">
+          <widget class="RemoveComputerWidget" name="lblRemoveScreen">
            <property name="acceptDrops">
             <bool>true</bool>
            </property>
@@ -891,9 +891,9 @@ Enabling this setting will disable the server config GUI.</string>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>TrashScreenWidget</class>
+   <class>RemoveComputerWidget</class>
    <extends>QLabel</extends>
-   <header>widgets/TrashScreenWidget.h</header>
+   <header>widgets/RemoveComputerWidget.h</header>
   </customwidget>
   <customwidget>
    <class>NewComputerWidget</class>
