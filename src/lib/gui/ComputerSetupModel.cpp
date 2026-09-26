@@ -139,7 +139,7 @@ bool ComputerSetupModel::dropMimeData(
 
   if (auto oldScreen = Screen(computer(pColumn, pRow)); !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
-    // see ScreenSetupView::startDrag()
+    // see ComputerSetupView::startDrag()
     oldScreen.setSwapped(true);
     computer(sourceColumn, sourceRow) = oldScreen;
   }
