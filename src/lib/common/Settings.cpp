@@ -125,6 +125,113 @@ void Settings::upgradeSettings()
       m_settings->setValue(newKey, m_settings->value(oldKey));
     }
   }
+
+  // move to screens
+
+  m_settings->beginGroup("internalConfig");
+  const int screenArraySize = m_settings->beginReadArray("screens");
+  m_settings->endArray();
+  m_settings->endGroup();
+
+  for (int i = 1; i <= screenArraySize; i++) {
+    m_settings->beginGroup("internalConfig");
+    m_settings->beginReadArray("screens");
+    m_settings->setArrayIndex(i);
+    const auto name = m_settings->value("name", {}).toString();
+
+    if (name.isEmpty()) {
+      m_settings->endArray();
+      m_settings->endGroup();
+      continue;
+    }
+
+    int switchCornerSize = 0;
+    if (m_settings->contains("switchCornerSize"))
+      switchCornerSize = m_settings->value("switchCornerSize", 0).toInt();
+
+    QList<bool> fixTemp;
+    if (m_settings->contains("fixArray/size")) {
+      int fixArraySize = m_settings->beginReadArray("fixArray");
+      for (int j = 0; j < fixArraySize; j++) {
+        m_settings->setArrayIndex(j);
+        fixTemp.append(m_settings->value("fix").toBool());
+      }
+      m_settings->endArray();
+    }
+
+    QList<bool> cornerTemp;
+    if (m_settings->contains("switchCornerArray/size")) {
+      int cornerArraySize = m_settings->beginReadArray("switchCornerArray");
+      for (int j = 0; j < cornerArraySize; j++) {
+        m_settings->setArrayIndex(j);
+        cornerTemp.append(m_settings->value("switchCorner").toBool());
+      }
+      m_settings->endArray();
+    }
+
+    QList<QString> modifierTemp;
+    if (m_settings->contains("modifierArray/size")) {
+      int modifierArraySize = m_settings->beginReadArray("modifierArray");
+      for (int j = 0; j < modifierArraySize; j++) {
+        m_settings->setArrayIndex(j);
+        auto modifier = m_settings->value("modifier").toInt();
+        modifierTemp.append(
+            modifier == -1 ? valueToKeyboardModifierOption(j) : valueToKeyboardModifierOption(modifier)
+        );
+      }
+      m_settings->endArray();
+    }
+
+    QStringList aliases;
+    if (m_settings->contains("aliasArray/size")) {
+      int aliasList = m_settings->beginReadArray("aliasArray");
+      for (int j = 0; j < aliasList; j++) {
+        m_settings->setArrayIndex(j);
+        aliases.append(m_settings->value("alias").toString());
+      }
+      m_settings->endArray();
+      aliases.removeDuplicates();
+    }
+    m_settings->endArray();
+    m_settings->endGroup();
+
+    // Write Settings
+    if (!m_settings->contains(Settings::Screen::Name.arg(name)))
+      m_settings->setValue(Settings::Screen::Name.arg(name), name);
+    if (!m_settings->contains(Settings::Screen::SwitchCornerSize.arg(name)))
+      m_settings->setValue(Settings::Screen::SwitchCornerSize.arg(name), switchCornerSize);
+    if (!m_settings->contains(Settings::Screen::HalfDuplexCapsLock.arg(name)))
+      m_settings->setValue(Settings::Screen::HalfDuplexCapsLock.arg(name), fixTemp.at(0));
+    if (!m_settings->contains(Settings::Screen::HalfDuplexNumLock.arg(name)))
+      m_settings->setValue(Settings::Screen::HalfDuplexNumLock.arg(name), fixTemp.at(1));
+    if (!m_settings->contains(Settings::Screen::HalfDuplexScrollLock.arg(name)))
+      m_settings->setValue(Settings::Screen::HalfDuplexScrollLock.arg(name), fixTemp.at(2));
+    if (!m_settings->contains(Settings::Screen::XtestIsXineramaUnaware.arg(name)))
+      m_settings->setValue(Settings::Screen::XtestIsXineramaUnaware.arg(name), fixTemp.at(3));
+    if (!m_settings->contains(Settings::Screen::SwitchCornerTopLeft.arg(name)))
+      m_settings->setValue(Settings::Screen::SwitchCornerTopLeft.arg(name), cornerTemp.at(0));
+    if (!m_settings->contains(Settings::Screen::SwitchCornerTopRight.arg(name)))
+      m_settings->setValue(Settings::Screen::SwitchCornerTopRight.arg(name), cornerTemp.at(1));
+    if (!m_settings->contains(Settings::Screen::SwitchCornerBottomLeft.arg(name)))
+      m_settings->setValue(Settings::Screen::SwitchCornerBottomLeft.arg(name), cornerTemp.at(2));
+    if (!m_settings->contains(Settings::Screen::SwitchCornerBottomRight.arg(name)))
+      m_settings->setValue(Settings::Screen::SwitchCornerBottomRight.arg(name), cornerTemp.at(3));
+    if (!m_settings->contains(Settings::Screen::ModifierShift.arg(name)))
+      m_settings->setValue(Settings::Screen::ModifierShift.arg(name), modifierTemp.at(0));
+    if (!m_settings->contains(Settings::Screen::ModifierCtrl.arg(name)))
+      m_settings->setValue(Settings::Screen::ModifierCtrl.arg(name), modifierTemp.at(1));
+    if (!m_settings->contains(Settings::Screen::ModifierAlt.arg(name)))
+      m_settings->setValue(Settings::Screen::ModifierAlt.arg(name), modifierTemp.at(2));
+    if (!m_settings->contains(Settings::Screen::ModifierMeta.arg(name)))
+      m_settings->setValue(Settings::Screen::ModifierMeta.arg(name), modifierTemp.at(3));
+    if (!m_settings->contains(Settings::Screen::ModifierSuper.arg(name)))
+      m_settings->setValue(Settings::Screen::ModifierSuper.arg(name), modifierTemp.at(4));
+    if (!m_settings->contains(Settings::Screen::ModifierAltGr.arg(name)))
+      m_settings->setValue(Settings::Screen::ModifierAltGr.arg(name), modifierTemp.at(5));
+    if (!m_settings->contains(Settings::Screen::Aliases.arg(name))) {
+      m_settings->setValue(Settings::Screen::Aliases.arg(name), aliases);
+    }
+  }
 }
 
 void Settings::cleanSettings()
@@ -137,7 +244,7 @@ void Settings::cleanSettings()
       continue;
     if (const auto group = key.mid(0, key.indexOf('/')); !m_validKeys.contains(key) && m_validGroup.contains(group))
       m_settings->remove(key);
-    if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toStringList().isEmpty())
+    if (!m_settings->value(key).isValid())
       m_settings->remove(key);
   }
 }
