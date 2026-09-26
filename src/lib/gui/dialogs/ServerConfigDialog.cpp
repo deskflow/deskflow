@@ -14,8 +14,8 @@
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "dialogs/ActionDialog.h"
+#include "dialogs/ComputerSettingsDialog.h"
 #include "dialogs/HotkeyDialog.h"
-#include "dialogs/ScreenSettingsDialog.h"
 #include "gui/widgets/SettingsDialogButtonBox.h"
 
 #include <QFileDialog>
@@ -578,7 +578,8 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
   bool isAccepted = false;
   Screen newComputer(clientName);
 
-  if (ScreenSettingsDialog dlg(this, &newComputer, &model().m_computers); doSilent || dlg.exec() == QDialog::Accepted) {
+  if (ComputerSettingsDialog dlg(this, &newComputer, &model().m_computers);
+      doSilent || dlg.exec() == QDialog::Accepted) {
     model().addComputer(newComputer);
     isAccepted = true;
   }

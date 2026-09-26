@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenSettingsDialog.h"
-#include "ui_ScreenSettingsDialog.h"
+#include "ComputerSettingsDialog.h"
+#include "ui_ComputerSettingsDialog.h"
 
 #include "gui/config/Screen.h"
 #include "validators/AliasValidator.h"
@@ -20,11 +20,11 @@
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
-ScreenSettingsDialog::~ScreenSettingsDialog() = default;
+ComputerSettingsDialog::~ComputerSettingsDialog() = default;
 
-ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, const ScreenList *screens)
+ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Screen *screen, const ScreenList *screens)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      ui{std::make_unique<Ui::ScreenSettingsDialog>()},
+      ui{std::make_unique<Ui::ComputerSettingsDialog>()},
       m_screen(screen)
 {
 
@@ -64,15 +64,15 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   ui->chkFixScrollLock->setChecked(m_screen->fix(ScrollLock));
   ui->chkFixXTest->setChecked(m_screen->fix(XTest));
 
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ScreenSettingsDialog::accept);
-  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ScreenSettingsDialog::reject);
-  connect(ui->btnAddAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::addAlias);
-  connect(ui->btnRemoveAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::removeAlias);
-  connect(ui->lineAddAlias, &QLineEdit::textChanged, this, &ScreenSettingsDialog::checkNewAliasName);
-  connect(ui->listAliases, &QListWidget::itemSelectionChanged, this, &ScreenSettingsDialog::aliasSelected);
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ComputerSettingsDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ComputerSettingsDialog::reject);
+  connect(ui->btnAddAlias, &QPushButton::clicked, this, &ComputerSettingsDialog::addAlias);
+  connect(ui->btnRemoveAlias, &QPushButton::clicked, this, &ComputerSettingsDialog::removeAlias);
+  connect(ui->lineAddAlias, &QLineEdit::textChanged, this, &ComputerSettingsDialog::checkNewAliasName);
+  connect(ui->listAliases, &QListWidget::itemSelectionChanged, this, &ComputerSettingsDialog::aliasSelected);
 }
 
-void ScreenSettingsDialog::accept()
+void ComputerSettingsDialog::accept()
 {
   if (ui->lineNameEdit->text().isEmpty()) {
     QMessageBox::warning(
@@ -127,7 +127,7 @@ void ScreenSettingsDialog::accept()
   QDialog::accept();
 }
 
-void ScreenSettingsDialog::addAlias()
+void ComputerSettingsDialog::addAlias()
 {
   if (!ui->lineAddAlias->text().isEmpty() &&
       ui->listAliases->findItems(ui->lineAddAlias->text(), Qt::MatchFixedString).isEmpty()) {
@@ -136,18 +136,18 @@ void ScreenSettingsDialog::addAlias()
   }
 }
 
-void ScreenSettingsDialog::removeAlias() const
+void ComputerSettingsDialog::removeAlias() const
 {
   QList<QListWidgetItem *> items = ui->listAliases->selectedItems();
   qDeleteAll(items);
 }
 
-void ScreenSettingsDialog::checkNewAliasName(const QString &text)
+void ComputerSettingsDialog::checkNewAliasName(const QString &text)
 {
   ui->btnAddAlias->setEnabled(!text.isEmpty() && ui->lblAliasError->text().isEmpty());
 }
 
-void ScreenSettingsDialog::aliasSelected()
+void ComputerSettingsDialog::aliasSelected()
 {
   ui->btnRemoveAlias->setEnabled(!ui->listAliases->selectedItems().isEmpty());
 }
