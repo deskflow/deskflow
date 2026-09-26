@@ -91,6 +91,7 @@ elseif(APPLE)
     OSXKeyState.h
     OSXMediaKeySupport.h
     OSXMediaKeySupport.m
+    OSXMenuBarEventBridge.h
     OSXPasteboardPeeker.h
     OSXPasteboardPeeker.m
     OSXPowerManager.cpp

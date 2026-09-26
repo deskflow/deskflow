@@ -91,6 +91,7 @@ enum class EventTypes : uint32_t
   SocketDisconnected,
 
   OsxScreenConfirmSleep,
+  OsxScreenMenuBarShown,
 
   /// This event is sent whenever a server accepts a client.
   ClientListenerAccepted,

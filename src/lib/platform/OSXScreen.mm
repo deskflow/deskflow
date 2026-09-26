@@ -7,6 +7,7 @@
  */
 
 #include "platform/OSXScreen.h"
+#include "platform/OSXMenuBarEventBridge.h"
 
 #include "arch/Arch.h"
 #include "arch/ArchException.h"
@@ -58,6 +59,30 @@ enum
   kDeskflowMouseScrollAxisX = 'saxx',
   kDeskflowMouseScrollAxisY = 'saxy'
 };
+
+// These menu bar notification APIs and the event ID are undocumented.
+// Weak imports preserve the original capture path when they are unavailable.
+using MenuBarNotifyProc = void (*)(uint32_t, void *, unsigned int, void *);
+extern "C"
+{
+  CGError CGSRegisterNotifyProc(MenuBarNotifyProc, uint32_t, void *) __attribute__((weak_import));
+  CGError CGSRemoveNotifyProc(MenuBarNotifyProc, uint32_t, void *) __attribute__((weak_import));
+}
+static constexpr uint32_t kMenuBarShownNotification = 1302;
+
+static OSXMenuBarEventBridge &menuBarEventBridge()
+{
+  // Native callbacks can race unregistration. Keep their small routing state
+  // alive until process exit; no screen/queue is retained after cancellation.
+  static auto *bridge = new OSXMenuBarEventBridge;
+  return *bridge;
+}
+
+static void menuBarShown(uint32_t type, void *, unsigned int, void *)
+{
+  if (type == kMenuBarShownNotification)
+    menuBarEventBridge().notify();
+}
 
 static const double kCarbonLoopWaitTimeout = 10.0;
 
@@ -643,8 +668,42 @@ void OSXScreen::fakeMouseWheel(ScrollDelta delta) const
   }
 }
 
+void OSXScreen::cancelMenuBarRehide()
+{
+  menuBarEventBridge().cancel(getEventTarget());
+  m_menuBarGeneration = 0;
+}
+
+void OSXScreen::handleMenuBarShown()
+{
+  if (!m_isPrimary || m_isOnScreen || !m_cursorHidden ||
+      !menuBarEventBridge().take(getEventTarget(), m_menuBarGeneration))
+    return;
+  m_menuBarGeneration = 0;
+
+  // The fullscreen menu bar can make the cursor visible after leave() hid it.
+  // Reapply our existing hide, without accumulating a count or re-associating
+  // the cursor (showCursor/hideCursor would both re-associate it).
+  LOG_DEBUG("reapplying cursor hide after menu bar notification");
+  m_cursorHidden = false;
+  CGError error = CGDisplayShowCursor(m_displayID);
+  if (error == kCGErrorSuccess) {
+    m_cursorHidden = true;
+    error = CGDisplayHideCursor(m_displayID);
+  }
+  if (error != kCGErrorSuccess) {
+    LOG_ERR("failed to reapply cursor hide, error=%d; stopping core", error);
+    m_events->addEvent(Event(EventTypes::Quit, nullptr, new ExitEventData(s_exitFailed)));
+  }
+}
+
 void OSXScreen::showCursor()
 {
+  if (m_isPrimary && !m_cursorHidden) {
+    CGAssociateMouseAndMouseCursorPosition(true);
+    return;
+  }
+
   LOG_DEBUG("showing cursor");
 
   CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
@@ -691,6 +750,21 @@ void OSXScreen::hideCursor()
 
 void OSXScreen::enable()
 {
+  if (m_isPrimary) {
+    cancelMenuBarRehide();
+    m_events->addHandler(EventTypes::OsxScreenMenuBarShown, getEventTarget(), [this](const auto &) {
+      handleMenuBarShown();
+    });
+    if (CGSRegisterNotifyProc && CGSRemoveNotifyProc) {
+      CGError error = CGSRegisterNotifyProc(menuBarShown, kMenuBarShownNotification, nullptr);
+      m_menuBarNotifyRegistered = error == kCGErrorSuccess;
+      if (!m_menuBarNotifyRegistered)
+        LOG_WARN("menu bar notification unavailable, error=%d", error);
+    } else {
+      LOG_WARN("menu bar notification API unavailable; using original cursor capture");
+    }
+  }
+
   // watch the clipboard
   m_clipboardTimer = m_events->newTimer(1.0, nullptr);
   m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { checkClipboards(); });
@@ -750,6 +824,15 @@ void OSXScreen::enable()
 
 void OSXScreen::disable()
 {
+  cancelMenuBarRehide();
+  m_events->removeHandler(EventTypes::OsxScreenMenuBarShown, getEventTarget());
+  if (m_menuBarNotifyRegistered) {
+    CGError error = CGSRemoveNotifyProc(menuBarShown, kMenuBarShownNotification, nullptr);
+    if (error != kCGErrorSuccess)
+      LOG_WARN("failed to remove menu bar notification, error=%d", error);
+    m_menuBarNotifyRegistered = false;
+  }
+
   showCursor();
 
   // FIXME -- stop watching jump zones, stop capturing input
@@ -791,6 +874,7 @@ void OSXScreen::disable()
 
 void OSXScreen::enter()
 {
+  cancelMenuBarRehide();
   m_isOnScreen = true;
   showCursor();
 
@@ -822,6 +906,12 @@ bool OSXScreen::canLeave()
 
 void OSXScreen::leave()
 {
+  if (m_isPrimary && !m_isOnScreen)
+    return;
+  if (m_isPrimary && m_menuBarNotifyRegistered)
+    m_menuBarGeneration = menuBarEventBridge().arm(m_events, getEventTarget());
+  // Route and consume input immediately, including while native capture starts.
+  m_isOnScreen = false;
   hideCursor();
 
   if (m_isPrimary) {
@@ -832,9 +922,6 @@ void OSXScreen::leave()
     // which re-associates. re-coupled in enter()/disable().
     CGAssociateMouseAndMouseCursorPosition(false);
   }
-
-  // now off screen
-  m_isOnScreen = false;
 }
 
 bool OSXScreen::setClipboard(ClipboardID, const IClipboard *src)
@@ -1525,7 +1612,8 @@ bool OSXScreen::checkAXPermissions()
     return true;
   }
   LOG_CRIT("process is not trusted anymore, quitting");
-  disable();
+  // Also called on the event tap thread: request owner-thread shutdown instead
+  // of joining this same thread or altering notification ownership here.
   App &app = App::instance();
   app.getEvents()->addEvent(Event(EventTypes::Quit, nullptr, new ExitEventData(s_exitFailed)));
   return false;
