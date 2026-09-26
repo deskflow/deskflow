@@ -89,11 +89,10 @@ void OSXClipboard::add(Format format, const std::string &data)
     LOG_DEBUG("format of data to be added to clipboard was kHTML");
   }
 
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-
+  // only the first flavour per format is written, the rest are for reading since macos converts text on demand
+  bool added = false;
+  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end() && !added; ++index) {
     IOSXClipboardConverter *converter = *index;
-
-    // skip converters for other formats
     if (converter->getFormat() == format) {
       std::string osXData = converter->fromIClipboard(data);
       CFStringRef flavorType = converter->getOSXFormat();
@@ -105,6 +104,7 @@ void OSXClipboard::add(Format format, const std::string &data)
 
         CFRelease(dataRef);
         LOG_DEBUG("added %d bytes to clipboard format: %d", data.size(), format);
+        added = true;
       }
     }
   }
