@@ -269,7 +269,7 @@ void ClipboardChunksTests::assembleRejectsDataBeyondExpectedSize()
   QVERIFY(!state.active);
 }
 
-void ClipboardChunksTests::assembleRejectsExpectedSizeBeyondLimit()
+void ClipboardChunksTests::assembleRefusesExpectedSizeBeyondLimit()
 {
   MemoryStream stream;
   stream.push(encodeClipboardMsg(0, 7, ChunkType::DataStart, "8"));
@@ -279,10 +279,61 @@ void ClipboardChunksTests::assembleRejectsExpectedSizeBeyondLimit()
   uint32_t seq = 0;
   ClipboardChunkAssemblyState state;
 
-  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Error);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
   QVERIFY(cached.empty());
-  QCOMPARE(ClipboardChunk::getExpectedSize(state), static_cast<size_t>(0));
+}
+
+void ClipboardChunksTests::assembleDiscardsOversizeTransferThenAcceptsNext()
+{
+  MemoryStream stream;
+  stream.push(encodeClipboardMsg(0, 7, ChunkType::DataStart, "8"));
+  stream.push(encodeClipboardMsg(0, 7, ChunkType::DataChunk, "ABCD"));
+  stream.push(encodeClipboardMsg(0, 7, ChunkType::DataChunk, "EFGH"));
+  stream.push(encodeClipboardMsg(0, 7, ChunkType::DataEnd, ""));
+  stream.push(encodeClipboardMsg(0, 8, ChunkType::DataStart, "4"));
+  stream.push(encodeClipboardMsg(0, 8, ChunkType::DataChunk, "WXYZ"));
+  stream.push(encodeClipboardMsg(0, 8, ChunkType::DataEnd, ""));
+
+  std::string cached;
+  ClipboardID id = kClipboardEnd;
+  uint32_t seq = 0;
+  ClipboardChunkAssemblyState state;
+
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
+  QVERIFY(cached.empty());
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
+  QVERIFY(cached.empty());
   QVERIFY(!state.active);
+
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Started);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::InProgress);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Finished);
+  QCOMPARE(cached, std::string("WXYZ"));
+  QCOMPARE(seq, static_cast<uint32_t>(8));
+}
+
+void ClipboardChunksTests::assembleAcceptsStartDuringOversizeTransfer()
+{
+  MemoryStream stream;
+  stream.push(encodeClipboardMsg(0, 7, ChunkType::DataStart, "8"));
+  stream.push(encodeClipboardMsg(0, 7, ChunkType::DataChunk, "ABCD"));
+  stream.push(encodeClipboardMsg(0, 8, ChunkType::DataStart, "4"));
+  stream.push(encodeClipboardMsg(0, 8, ChunkType::DataChunk, "WXYZ"));
+  stream.push(encodeClipboardMsg(0, 8, ChunkType::DataEnd, ""));
+
+  std::string cached;
+  ClipboardID id = kClipboardEnd;
+  uint32_t seq = 0;
+  ClipboardChunkAssemblyState state;
+
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Oversize);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Started);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::InProgress);
+  QCOMPARE(ClipboardChunk::assemble(&stream, cached, id, seq, state, 4), TransferState::Finished);
+  QCOMPARE(cached, std::string("WXYZ"));
 }
 
 QTEST_MAIN(ClipboardChunksTests)

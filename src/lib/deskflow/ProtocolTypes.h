@@ -175,6 +175,7 @@ enum class TransferState : uint8_t
   Started,    ///< Reception started
   InProgress, ///< Reception in progress
   Finished,   ///< Reception completed successfully
+  Oversize,   ///< Declared size over the limit, chunks are discarded
   Error       ///< Reception failed with error
 };
 

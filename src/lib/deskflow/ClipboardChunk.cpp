@@ -7,7 +7,6 @@
 #include "deskflow/ClipboardChunk.h"
 
 #include "base/Log.h"
-#include "base/String.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
@@ -88,6 +87,7 @@ TransferState ClipboardChunk::assemble(
     state = {};
     clearCachedData(dataCached);
   };
+  auto isOversize = [&]() { return state.expectedSize > maxDataSize; };
 
   if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
     reset();
@@ -113,10 +113,9 @@ TransferState ClipboardChunk::assemble(
     state.expectedSize = static_cast<size_t>(expected);
     state.active = true;
 
-    if (state.expectedSize > maxDataSize) {
-      LOG_ERR("clipboard size exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
-      reset();
-      return Error;
+    if (isOversize()) {
+      LOG_WARN("not receiving clipboard data, exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
+      return Oversize;
     }
 
     LOG_DEBUG("start receiving clipboard data, expected size=%zu", state.expectedSize);
@@ -126,6 +125,11 @@ TransferState ClipboardChunk::assemble(
       LOG_ERR("clipboard data chunk before start");
       reset();
       return Error;
+    }
+
+    // sender keeps streaming after an oversize start; drop silently, already logged at start
+    if (isOversize()) {
+      return Oversize;
     }
 
     if (wouldExceed(dataCached.size(), data.size(), state.expectedSize)) {
@@ -144,6 +148,12 @@ TransferState ClipboardChunk::assemble(
       LOG_ERR("clipboard end chunk before start");
       reset();
       return Error;
+    }
+
+    // end of an oversize transfer: nothing was cached, so skip the size check; already logged at start
+    if (isOversize()) {
+      reset();
+      return Oversize;
     }
 
     state.active = false;
