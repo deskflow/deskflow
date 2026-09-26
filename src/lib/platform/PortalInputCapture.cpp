@@ -742,7 +742,6 @@ void PortalInputCapture::handleActivated(
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (m_session) {
     LOG_DEBUG("reading clipboard selection on activation");
-    m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 
     XdpSession *session = xdp_input_capture_session_get_session(m_session);
     const char **mimeTypes = xdp_session_get_selection_mime_types(session);
