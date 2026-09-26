@@ -23,16 +23,16 @@ namespace deskflow {
 class IStream;
 }
 
-class StreamChunker
+class ClipboardSender
 {
 public:
-  StreamChunker(IEventQueue *events, deskflow::IStream *stream, const QString &peerName);
-  StreamChunker(StreamChunker const &) = delete;
-  StreamChunker(StreamChunker &&) = delete;
-  ~StreamChunker();
+  ClipboardSender(IEventQueue *events, deskflow::IStream *stream, const QString &peerName);
+  ClipboardSender(ClipboardSender const &) = delete;
+  ClipboardSender(ClipboardSender &&) = delete;
+  ~ClipboardSender();
 
-  StreamChunker &operator=(StreamChunker const &) = delete;
-  StreamChunker &operator=(StreamChunker &&) = delete;
+  ClipboardSender &operator=(ClipboardSender const &) = delete;
+  ClipboardSender &operator=(ClipboardSender &&) = delete;
 
   void sendClipboard(std::string data, ClipboardID id, uint32_t sequence);
 
