@@ -528,6 +528,9 @@ void ServerProxy::leave()
 
 void ServerProxy::setClipboard()
 {
+  // a large clipboard can hold keep-alives back past the timeout, but its chunks show the server is alive
+  resetKeepAliveAlarm();
+
   // parse
   ClipboardID id;
   uint32_t seq;
