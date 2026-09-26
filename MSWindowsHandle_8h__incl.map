@@ -1,0 +1,18 @@
+<map id="src/lib/platform/MSWindowsHandle.h" name="src/lib/platform/MSWindowsHandle.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="171,5,356,44"/>
+<area shape="rect" id="Node000002" href="$Log_8h.html" title=" " alt="" coords="166,92,251,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,43,228,81,224,77,248,47"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="275,92,361,117"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="277,42,304,79,298,79,276,47"/>
+<area shape="rect" id="Node000003" href="$LogLevel_8h.html" title=" " alt="" coords="5,165,143,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="185,119,111,159,108,155,188,115"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="140,237,205,262"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="208,116,182,223,177,221,203,118"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="217,165,256,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="214,115,229,151,224,150,212,120"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="280,165,337,189"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="226,115,282,155,277,156,225,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="39,237,109,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="76,188,77,223,71,221,72,192"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="91,187,147,227,141,229,89,192"/>
+</map>

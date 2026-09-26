@@ -1,0 +1,28 @@
+<map id="src/lib/gui/dialogs/HotkeyDialog.cpp" name="src/lib/gui/dialogs/HotkeyDialog.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="316,5,445,44"/>
+<area shape="rect" id="Node000002" href="$HotkeyDialog_8h.html" title=" " alt="" coords="255,92,365,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="365,43,333,82,329,78,362,47"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="389,92,516,117"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="398,42,434,80,429,80,398,47"/>
+<area shape="rect" id="Node000003" href="$Hotkey_8h.html" title=" " alt="" coords="187,165,313,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,115,271,155,267,151,298,119"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="337,165,405,189"/>
+<area shape="poly" id="edge14_Node000002_Node000010" title=" " alt="" coords="320,115,354,153,349,153,320,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="78,383,131,407"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="197,192,152,208,99,233,50,267,29,288,12,311,9,321,9,330,20,348,41,363,66,377,62,380,38,368,16,352,4,332,3,320,8,309,25,284,47,262,97,228,150,203,201,188"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="243,383,308,407"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="275,187,309,206,348,233,384,267,412,309,416,324,413,338,405,350,392,361,360,376,324,387,323,382,358,371,390,356,401,347,408,336,411,324,407,311,380,270,344,237,306,210,275,192"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="473,237,571,262"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="295,187,465,232,460,234,295,193"/>
+<area shape="rect" id="Node000007" href="$Action_8h.html" title=" " alt="" coords="188,237,312,262"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="251,188,252,223,247,221,249,192"/>
+<area shape="rect" id="Node000008" href="$KeySequence_8h.html" title=" " alt="" coords="21,310,188,335"/>
+<area shape="poly" id="edge13_Node000003_Node000008" title=" " alt="" coords="232,192,178,239,125,300,121,296,175,235,236,188"/>
+<area shape="poly" id="edge10_Node000007_Node000004" title=" " alt="" coords="247,261,230,298,201,337,174,359,144,377,142,373,170,355,197,333,225,295,243,264"/>
+<area shape="poly" id="edge11_Node000007_Node000005" title=" " alt="" coords="254,260,273,368,268,367,250,264"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="224,264,144,305,141,300,228,261"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="312,310,398,335"/>
+<area shape="poly" id="edge12_Node000007_Node000009" title=" " alt="" coords="268,260,328,301,323,301,267,265"/>
+<area shape="poly" id="edge8_Node000008_Node000004" title=" " alt="" coords="106,333,107,368,102,366,103,337"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="133,333,235,375,231,378,132,338"/>
+</map>

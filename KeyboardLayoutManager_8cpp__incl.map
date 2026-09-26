@@ -1,0 +1,39 @@
+<map id="src/lib/deskflow/KeyboardLayoutManager.cpp" name="src/lib/deskflow/KeyboardLayoutManager.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="344,5,515,44"/>
+<area shape="rect" id="Node000002" href="$KeyboardLayoutManager_8h.html" title=" " alt="" coords="92,92,266,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="367,47,233,89,230,85,371,43"/>
+<area shape="rect" id="Node000012" href="$Log_8h.html" title=" " alt="" coords="499,237,584,262"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="434,42,444,78,457,116,491,175,525,225,520,224,486,178,452,118,439,80,432,47"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="467,92,541,117"/>
+<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="448,42,485,81,480,81,447,47"/>
+<area shape="rect" id="Node000003" href="$AppUtil_8h.html" title=" " alt="" coords="113,165,244,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="180,115,181,150,176,148,178,120"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="5,237,62,262"/>
+<area shape="poly" id="edge12_Node000002_Node000011" title=" " alt="" coords="160,120,103,167,52,226,48,223,100,163,163,115"/>
+<area shape="rect" id="Node000004" href="$DeskflowException_8h.html" title=" " alt="" coords="275,237,475,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="211,187,331,231,326,233,211,193"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="91,383,144,407"/>
+<area shape="poly" id="edge10_Node000003_Node000007" title=" " alt="" coords="161,192,144,212,127,238,117,272,113,306,116,368,111,367,108,306,112,271,122,236,140,209,165,188"/>
+<area shape="rect" id="Node000010" href="$IApp_8h.html" title=" " alt="" coords="136,237,251,262"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="182,187,191,223,185,222,180,192"/>
+<area shape="poly" id="edge11_Node000003_Node000011" title=" " alt="" coords="154,192,73,232,70,228,156,188"/>
+<area shape="rect" id="Node000005" href="$BaseException_8h.html" title=" " alt="" coords="240,310,392,335"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="367,261,337,300,334,296,363,264"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="178,383,255,407"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="302,334,246,376,244,371,297,336"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="286,335,160,382,158,377,281,335"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="280,383,369,407"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="319,333,323,369,319,366,316,337"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="397,383,462,407"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="336,333,400,374,395,374,334,338"/>
+<area shape="poly" id="edge19_Node000012_Node000009" title=" " alt="" coords="519,262,487,284,458,312,444,339,435,369,431,366,439,337,454,308,483,280,514,264"/>
+<area shape="rect" id="Node000013" href="$LogLevel_8h.html" title=" " alt="" coords="468,310,605,335"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="542,261,540,296,536,293,539,265"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="629,310,667,335"/>
+<area shape="poly" id="edge17_Node000012_Node000015" title=" " alt="" coords="560,260,620,301,615,301,558,265"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="692,310,749,335"/>
+<area shape="poly" id="edge18_Node000012_Node000016" title=" " alt="" coords="571,260,680,304,674,304,571,265"/>
+<area shape="poly" id="edge16_Node000013_Node000009" title=" " alt="" coords="521,334,461,376,459,371,516,336"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="502,383,571,407"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="538,333,538,369,534,365,534,337"/>
+</map>
