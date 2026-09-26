@@ -53,6 +53,7 @@ private:
 
   /// @brief Enables controls when they should be.
   void updateControls();
+  void applyManagedLocks();
 
   /// @brief updates the setting vaule for key size.
   void updateRequestedKeySize() const;

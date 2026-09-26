@@ -90,8 +90,9 @@ private:
   void loadFromConfig();
   void resetFromSettings();
   void refreshControls();
+  void applyManagedLocks();
   void initConnections() const;
-  void updateControls() const;
+  void updateControls();
   void restoreFromDefaults();
   void setServerConfig();
   bool isGeneralConfigModified() const;

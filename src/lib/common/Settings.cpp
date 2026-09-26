@@ -6,6 +6,8 @@
 
 #include "Settings.h"
 
+#include <QDebug>
+
 #include "LogLevel.h"
 #include "NetworkProtocol.h"
 #include "UrlConstants.h"
@@ -349,13 +351,18 @@ QString Settings::logLevelText()
   return Settings::value(Log::Level).toString();
 }
 
-void Settings::setValue(const QString &key, const QVariant &value)
+bool Settings::setValue(const QString &key, const QVariant &value)
 {
+  if (isManaged(key)) {
+    qWarning() << "not changing" << key << "as it is enforced by an administrator policy";
+    return false;
+  }
+
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
 
   if (settings->value(key) == value)
-    return;
+    return true;
 
   if (!value.isValid())
     settings->remove(key);
@@ -368,10 +375,16 @@ void Settings::setValue(const QString &key, const QVariant &value)
 
   settings->sync();
   Q_EMIT instance()->settingsChanged(key);
+  return true;
 }
 
 QVariant Settings::value(const QString &key)
 {
+  if (isManaged(key)) {
+    if (const auto managed = managedValue(key); managed.isValid())
+      return managed;
+  }
+
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
   return settings->value(key, defaultValue(key));
