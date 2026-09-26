@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "NewScreenWidget.h"
+#include "NewComputerWidget.h"
 #include "ComputerSetupModel.h"
 
 #include <QDrag>
@@ -14,12 +14,12 @@
 #include <QMimeData>
 #include <QMouseEvent>
 
-NewScreenWidget::NewScreenWidget(QWidget *parent) : QLabel(parent)
+NewComputerWidget::NewComputerWidget(QWidget *parent) : QLabel(parent)
 {
   // do nothing
 }
 
-void NewScreenWidget::mousePressEvent(QMouseEvent *)
+void NewComputerWidget::mousePressEvent(QMouseEvent *)
 {
   //: Used as the hostname. Translation may not contain spaces
   Screen newScreen(tr("Unnamed"));

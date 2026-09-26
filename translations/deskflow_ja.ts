@@ -594,11 +594,11 @@ Additionally, check you are able to %1 the server config file: %2</source>
     </message>
 </context>
 <context>
-    <name>NewScreenWidget</name>
+    <name>NewComputerWidget</name>
     <message>
         <source>Unnamed</source>
         <extracomment>Used as the hostname. Translation may not contain spaces</extracomment>
-        <translation>Unnamed</translation>
+        <translation type="unfinished">Unnamed</translation>
     </message>
 </context>
 <context>

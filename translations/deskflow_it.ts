@@ -594,11 +594,11 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
     </message>
 </context>
 <context>
-    <name>NewScreenWidget</name>
+    <name>NewComputerWidget</name>
     <message>
         <source>Unnamed</source>
         <extracomment>Used as the hostname. Translation may not contain spaces</extracomment>
-        <translation>Senzanome</translation>
+        <translation type="unfinished">Senzanome</translation>
     </message>
 </context>
 <context>
