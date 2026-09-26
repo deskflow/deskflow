@@ -1,12 +1,12 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenSetupModel.h"
+#include "ComputerSetupModel.h"
 
 #include "common/Constants.h"
 #include "gui/config/Screen.h"
@@ -15,11 +15,11 @@
 #include <QIcon>
 #include <QMimeData>
 
-const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
+const QString ComputerSetupModel::m_MimeType = "application/x-deskflow-screen";
 
-ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numRows)
+ComputerSetupModel::ComputerSetupModel(ScreenList &screens, int numColumns, int numRows)
     : QAbstractTableModel(nullptr),
-      m_Screens(screens),
+      m_computers(screens),
       m_NumColumns(numColumns),
       m_NumRows(numRows)
 {
@@ -31,35 +31,35 @@ ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numR
   }
 
   const int span = m_NumColumns * m_NumRows;
-  if (span > m_Screens.size()) {
+  if (span > m_computers.size()) {
     qCritical(
-        "computer list too small for grid, computers: %lld, cells: %d", static_cast<long long>(m_Screens.size()), span
+        "computer list too small for grid, computers: %lld, cells: %d", static_cast<long long>(m_computers.size()), span
     );
-    m_Screens.resize(span);
+    m_computers.resize(span);
   }
 }
 
-QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
+QVariant ComputerSetupModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid() || index.row() > m_NumRows || index.row() < 0 || index.column() < 0 ||
       index.column() > m_NumColumns)
     return QVariant();
 
-  if (screen(index).isNull())
+  if (computer(index).isNull())
     return QVariant();
 
   switch (role) {
   case Qt::DecorationRole:
-    return screen(index).pixmap();
+    return computer(index).pixmap();
 
   case Qt::ToolTipRole:
     return QString(tr("<center>Computer: <b>%1</b></center>"
                       "<br>Double click to edit settings"
                       "<br>Drag computer to the trashcan to remove it"))
-        .arg(screen(index).name());
+        .arg(computer(index).name());
 
   case Qt::DisplayRole:
-    return screen(index).name();
+    return computer(index).name();
 
   default:
     break;
@@ -67,28 +67,28 @@ QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-Qt::ItemFlags ScreenSetupModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ComputerSetupModel::flags(const QModelIndex &index) const
 {
   if (!index.isValid() || index.row() >= m_NumRows || index.column() >= m_NumColumns)
     return Qt::NoItemFlags;
 
-  if (!screen(index).isNull())
+  if (!computer(index).isNull())
     return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 
   return Qt::ItemIsDropEnabled;
 }
 
-Qt::DropActions ScreenSetupModel::supportedDropActions() const
+Qt::DropActions ComputerSetupModel::supportedDropActions() const
 {
   return Qt::MoveAction | Qt::CopyAction;
 }
 
-QStringList ScreenSetupModel::mimeTypes() const
+QStringList ComputerSetupModel::mimeTypes() const
 {
   return QStringList() << m_MimeType;
 }
 
-QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const
+QMimeData *ComputerSetupModel::mimeData(const QModelIndexList &indexes) const
 {
   auto *pMimeData = new QMimeData();
   QByteArray encodedData;
@@ -97,7 +97,7 @@ QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const
 
   for (const QModelIndex &index : indexes) {
     if (index.isValid())
-      stream << index.column() << index.row() << screen(index);
+      stream << index.column() << index.row() << computer(index);
   }
 
   pMimeData->setData(m_MimeType, encodedData);
@@ -105,7 +105,7 @@ QMimeData *ScreenSetupModel::mimeData(const QModelIndexList &indexes) const
   return pMimeData;
 }
 
-bool ScreenSetupModel::dropMimeData(
+bool ComputerSetupModel::dropMimeData(
     const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent
 )
 {
@@ -137,28 +137,28 @@ bool ScreenSetupModel::dropMimeData(
   Screen droppedScreen;
   stream >> droppedScreen;
 
-  if (auto oldScreen = Screen(screen(pColumn, pRow)); !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
+  if (auto oldScreen = Screen(computer(pColumn, pRow)); !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
     // see ScreenSetupView::startDrag()
     oldScreen.setSwapped(true);
-    screen(sourceColumn, sourceRow) = oldScreen;
+    computer(sourceColumn, sourceRow) = oldScreen;
   }
 
-  screen(pColumn, pRow) = droppedScreen;
+  computer(pColumn, pRow) = droppedScreen;
 
-  Q_EMIT screensChanged();
+  Q_EMIT computersChanged();
 
   return true;
 }
 
-void ScreenSetupModel::addScreen(const Screen &newScreen)
+void ComputerSetupModel::addComputer(const Screen &newComputer)
 {
-  m_Screens.addScreenByPriority(newScreen);
-  Q_EMIT screensChanged();
+  m_computers.addScreenByPriority(newComputer);
+  Q_EMIT computersChanged();
 }
 
-bool ScreenSetupModel::isFull() const
+bool ComputerSetupModel::isFull() const
 {
-  auto emptyScreen = std::ranges::find_if(m_Screens, [](const Screen &item) { return item.isNull(); });
-  return (static_cast<QList<Screen>::const_iterator>(emptyScreen) == m_Screens.cend());
+  auto emptyScreen = std::ranges::find_if(m_computers, [](const Screen &item) { return item.isNull(); });
+  return (static_cast<QList<Screen>::const_iterator>(emptyScreen) == m_computers.cend());
 }

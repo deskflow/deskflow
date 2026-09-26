@@ -8,7 +8,7 @@
 
 #include "ScreenSetupView.h"
 
-#include "ScreenSetupModel.h"
+#include "ComputerSetupModel.h"
 #include "dialogs/ScreenSettingsDialog.h"
 
 #include <QDrag>
@@ -39,16 +39,16 @@ void ScreenSetupView::setModel(QAbstractItemModel *model)
   setTableSize();
 }
 
-ScreenSetupModel *ScreenSetupView::model() const
+ComputerSetupModel *ScreenSetupView::model() const
 {
-  return qobject_cast<ScreenSetupModel *>(QTableView::model());
+  return qobject_cast<ComputerSetupModel *>(QTableView::model());
 }
 
 void ScreenSetupView::showScreenConfig(int col, int row)
 {
-  ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
+  ScreenSettingsDialog dlg(this, &model()->computer(col, row), &model()->m_computers);
   dlg.exec();
-  Q_EMIT model()->screensChanged();
+  Q_EMIT model()->computersChanged();
 }
 
 void ScreenSetupView::setTableSize()
@@ -72,7 +72,7 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
     int col = columnAt(event->pos().x());
     int row = rowAt(event->pos().y());
 
-    if (!model()->screen(col, row).isNull()) {
+    if (!model()->computer(col, row).isNull()) {
       showScreenConfig(col, row);
     }
   } else
@@ -83,7 +83,7 @@ void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event)
 {
   // we accept anything that enters us by a drag as long as the
   // mime type is okay. anything else is dealt with in dragMoveEvent()
-  if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType()))
+  if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType()))
     event->accept();
   else
     event->ignore();
@@ -91,7 +91,7 @@ void ScreenSetupView::dragEnterEvent(QDragEnterEvent *event)
 
 void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
 {
-  if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
+  if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType())) {
     // where does the event come from? myself or someone else?
     if (event->source() == this) {
       // myself is ok, but then it must be a move action, never a copy
@@ -102,8 +102,8 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
       int col = columnAt(point.x());
       int row = rowAt(point.y());
 
-      // a drop from outside is not allowed if there's a screen already there.
-      if (!model()->screen(col, row).isNull())
+      // a drop from outside is not allowed if there's a computer already there.
+      if (!model()->computer(col, row).isNull())
         event->ignore();
       else {
         event->acceptProposedAction();
@@ -125,7 +125,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
   if (pData == nullptr)
     return;
 
-  const QPixmap &pixmap = model()->screen(indexes[0]).pixmap();
+  const QPixmap &pixmap = model()->computer(indexes[0]).pixmap();
   auto *pDrag = new QDrag(this);
   pDrag->setPixmap(pixmap);
   pDrag->setMimeData(pData);
@@ -134,14 +134,14 @@ void ScreenSetupView::startDrag(Qt::DropActions)
   if (pDrag->exec(Qt::MoveAction, Qt::MoveAction) == Qt::MoveAction) {
     selectionModel()->clear();
 
-    // make sure to only delete the drag source if screens weren't swapped
-    // see ScreenSetupModel::dropMimeData
-    if (!model()->screen(indexes[0]).swapped())
-      model()->screen(indexes[0]) = Screen();
+    // make sure to only delete the drag source if computerss weren't swapped
+    // see ComputerSetupModel::dropMimeData
+    if (!model()->computer(indexes[0]).swapped())
+      model()->computer(indexes[0]) = Screen();
     else
-      model()->screen(indexes[0]).setSwapped(false);
+      model()->computer(indexes[0]).setSwapped(false);
 
-    Q_EMIT model()->screensChanged();
+    Q_EMIT model()->computersChanged();
   }
 }
 

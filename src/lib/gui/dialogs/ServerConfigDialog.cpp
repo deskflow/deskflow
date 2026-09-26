@@ -32,7 +32,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_originalServerConfigIsExternal(config.useExternalConfig()),
       m_originalServerConfigUsesExternalFile(config.configFile()),
       m_serverConfig(config),
-      m_screenSetupModel(m_serverConfig.screens(), m_columns, m_rows),
+      m_computerSetupModel(m_serverConfig.screens(), m_columns, m_rows),
       m_buttonBox{new SettingsDialogButtonBox(this)}
 {
   ui->setupUi(this);
@@ -94,7 +94,7 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
 
   QStringList computerNames;
-  const auto computerList = m_screenSetupModel.m_Screens;
+  const auto computerList = m_computerSetupModel.m_computers;
   for (const auto &computer : computerList) {
     const auto &computerName = computer.name();
     if (computerName.isEmpty())
@@ -408,7 +408,7 @@ void ServerConfigDialog::loadFromConfig()
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->listHotkeys->addItem(hotkey.text());
 
-  ui->screenSetupView->setModel(&m_screenSetupModel);
+  ui->screenSetupView->setModel(&m_computerSetupModel);
 
   auto &screens = serverConfig().screens();
   auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
@@ -418,7 +418,7 @@ void ServerConfigDialog::loadFromConfig()
   if (server == screens.end()) {
     Screen serverScreen(serverConfig().getServerName());
     serverScreen.markAsServer();
-    model().screen(m_columns / 2, m_rows / 2) = serverScreen;
+    model().computer(m_columns / 2, m_rows / 2) = serverScreen;
   } else {
     server->markAsServer();
   }
@@ -513,7 +513,8 @@ void ServerConfigDialog::initConnections() const
   );
   connect(ui->cbDisableLockToComputer, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToComputer);
   connect(
-      &m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::setButtonBoxEnabledButtons
+      &m_computerSetupModel, &ComputerSetupModel::computersChanged, this,
+      &ServerConfigDialog::setButtonBoxEnabledButtons
   );
   connect(Settings::instance(), &Settings::settingsWritableChanged, this, &ServerConfigDialog::updateControls);
 }
@@ -575,10 +576,10 @@ void ServerConfigDialog::setServerConfig()
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 {
   bool isAccepted = false;
-  Screen newScreen(clientName);
+  Screen newComputer(clientName);
 
-  if (ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens); doSilent || dlg.exec() == QDialog::Accepted) {
-    model().addScreen(newScreen);
+  if (ScreenSettingsDialog dlg(this, &newComputer, &model().m_computers); doSilent || dlg.exec() == QDialog::Accepted) {
+    model().addComputer(newComputer);
     isAccepted = true;
   }
 

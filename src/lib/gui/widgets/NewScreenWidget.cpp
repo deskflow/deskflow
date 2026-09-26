@@ -7,7 +7,7 @@
  */
 
 #include "NewScreenWidget.h"
-#include "ScreenSetupModel.h"
+#include "ComputerSetupModel.h"
 
 #include <QDrag>
 #include <QLabel>
@@ -29,7 +29,7 @@ void NewScreenWidget::mousePressEvent(QMouseEvent *)
   dataStream << -1 << -1 << newScreen;
 
   auto *pMimeData = new QMimeData;
-  pMimeData->setData(ScreenSetupModel::mimeType(), itemData);
+  pMimeData->setData(ComputerSetupModel::mimeType(), itemData);
 
   auto *pDrag = new QDrag(this);
   pDrag->setMimeData(pMimeData);

@@ -15,6 +15,8 @@ endif()
 
 add_library(${target} STATIC
   ${platform_sources}
+  ComputerSetupModel.cpp
+  ComputerSetupModel.h
   Diagnostic.cpp
   Diagnostic.h
   FileTail.cpp
@@ -26,8 +28,6 @@ add_library(${target} STATIC
   MainWindow.ui
   Messages.cpp
   Messages.h
-  ScreenSetupModel.cpp
-  ScreenSetupModel.h
   StyleUtils.h
   TlsUtility.cpp
   TlsUtility.h

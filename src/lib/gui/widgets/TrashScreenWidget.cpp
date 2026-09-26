@@ -11,11 +11,11 @@
 #include <QDropEvent>
 #include <QMimeData>
 
-#include "ScreenSetupModel.h"
+#include "ComputerSetupModel.h"
 
 void TrashScreenWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-  if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
+  if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType())) {
     event->setDropAction(Qt::MoveAction);
     event->accept();
   } else
@@ -24,7 +24,7 @@ void TrashScreenWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void TrashScreenWidget::dropEvent(QDropEvent *event)
 {
-  if (event->mimeData()->hasFormat(ScreenSetupModel::mimeType())) {
+  if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType())) {
     event->acceptProposedAction();
     Q_EMIT screenRemoved();
   } else {

@@ -14,7 +14,7 @@ class QWidget;
 class QMouseEvent;
 class QResizeEvent;
 class QDragEnterEvent;
-class ScreenSetupModel;
+class ComputerSetupModel;
 
 class ScreenSetupView : public QTableView
 {
@@ -23,7 +23,7 @@ class ScreenSetupView : public QTableView
 public:
   explicit ScreenSetupView(QWidget *parent);
   void setModel(QAbstractItemModel *model) override;
-  ScreenSetupModel *model() const;
+  ComputerSetupModel *model() const;
 
 private:
   void showScreenConfig(int col, int row);
