@@ -594,7 +594,7 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
     </message>
 </context>
 <context>
-    <name>NewScreenWidget</name>
+    <name>NewComputerWidget</name>
     <message>
         <source>Unnamed</source>
         <extracomment>Used as the hostname. Translation may not contain spaces</extracomment>

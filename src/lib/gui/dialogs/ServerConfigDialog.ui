@@ -115,7 +115,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="NewScreenWidget" name="lblNewScreen">
+          <widget class="NewComputerWidget" name="lblNewScreen">
            <property name="toolTip">
             <string>Drag to the grid to add a new computer.</string>
            </property>
@@ -896,9 +896,9 @@ Enabling this setting will disable the server config GUI.</string>
    <header>widgets/TrashScreenWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>NewScreenWidget</class>
+   <class>NewComputerWidget</class>
    <extends>QLabel</extends>
-   <header>widgets/NewScreenWidget.h</header>
+   <header>widgets/NewComputerWidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
