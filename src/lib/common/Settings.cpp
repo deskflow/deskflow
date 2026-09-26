@@ -113,7 +113,12 @@ void Settings::upgradeSettings()
   if (const auto logValue = m_settings->value(Settings::Log::Level).toString();
       !LogLevel::logLevelOptions().contains(logValue, Qt::CaseInsensitive))
     m_settings->setValue(Settings::Log::Level, defaultValue(Settings::Log::Level));
-
+  const auto screenKeys = m_settings->allKeys().filter("screen_");
+  for (const auto &key : screenKeys) {
+    auto newKey = key;
+    newKey.replace("screen_", "computer_");
+    m_settings->setValue(newKey, m_settings->value(key));
+  }
   for (const auto [oldKey, newKey] : m_upgradedMap.asKeyValueRange()) {
     if (m_settings->contains(newKey) || !m_settings->contains(oldKey))
       continue;
@@ -125,19 +130,126 @@ void Settings::upgradeSettings()
       m_settings->setValue(newKey, m_settings->value(oldKey));
     }
   }
+
+  // move to screens
+
+  m_settings->beginGroup("internalConfig");
+  const int screenArraySize = m_settings->beginReadArray("screens");
+  m_settings->endArray();
+  m_settings->endGroup();
+
+  for (int i = 1; i <= screenArraySize; i++) {
+    m_settings->beginGroup("internalConfig");
+    m_settings->beginReadArray("screens");
+    m_settings->setArrayIndex(i);
+    const auto name = m_settings->value("name", {}).toString();
+
+    if (name.isEmpty()) {
+      m_settings->endArray();
+      m_settings->endGroup();
+      continue;
+    }
+
+    int switchCornerSize = 0;
+    if (m_settings->contains("switchCornerSize"))
+      switchCornerSize = m_settings->value("switchCornerSize", 0).toInt();
+
+    QList<bool> fixTemp;
+    if (m_settings->contains("fixArray/size")) {
+      int fixArraySize = m_settings->beginReadArray("fixArray");
+      for (int j = 0; j < fixArraySize; j++) {
+        m_settings->setArrayIndex(j);
+        fixTemp.append(m_settings->value("fix").toBool());
+      }
+      m_settings->endArray();
+    }
+
+    QList<bool> cornerTemp;
+    if (m_settings->contains("switchCornerArray/size")) {
+      int cornerArraySize = m_settings->beginReadArray("switchCornerArray");
+      for (int j = 0; j < cornerArraySize; j++) {
+        m_settings->setArrayIndex(j);
+        cornerTemp.append(m_settings->value("switchCorner").toBool());
+      }
+      m_settings->endArray();
+    }
+
+    QList<QString> modifierTemp;
+    if (m_settings->contains("modifierArray/size")) {
+      int modifierArraySize = m_settings->beginReadArray("modifierArray");
+      for (int j = 0; j < modifierArraySize; j++) {
+        m_settings->setArrayIndex(j);
+        auto modifier = m_settings->value("modifier").toInt();
+        modifierTemp.append(
+            modifier == -1 ? valueToKeyboardModifierOption(j) : valueToKeyboardModifierOption(modifier)
+        );
+      }
+      m_settings->endArray();
+    }
+
+    QStringList aliases;
+    if (m_settings->contains("aliasArray/size")) {
+      int aliasList = m_settings->beginReadArray("aliasArray");
+      for (int j = 0; j < aliasList; j++) {
+        m_settings->setArrayIndex(j);
+        aliases.append(m_settings->value("alias").toString());
+      }
+      m_settings->endArray();
+      aliases.removeDuplicates();
+    }
+    m_settings->endArray();
+    m_settings->endGroup();
+
+    // Write Settings
+    if (!m_settings->contains(Settings::Computer::Name.arg(name)))
+      m_settings->setValue(Settings::Computer::Name.arg(name), name);
+    if (!m_settings->contains(Settings::Computer::SwitchCornerSize.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerSize.arg(name), switchCornerSize);
+    if (!m_settings->contains(Settings::Computer::HalfDuplexCapsLock.arg(name)))
+      m_settings->setValue(Settings::Computer::HalfDuplexCapsLock.arg(name), fixTemp.at(0));
+    if (!m_settings->contains(Settings::Computer::HalfDuplexNumLock.arg(name)))
+      m_settings->setValue(Settings::Computer::HalfDuplexNumLock.arg(name), fixTemp.at(1));
+    if (!m_settings->contains(Settings::Computer::HalfDuplexScrollLock.arg(name)))
+      m_settings->setValue(Settings::Computer::HalfDuplexScrollLock.arg(name), fixTemp.at(2));
+    if (!m_settings->contains(Settings::Computer::XtestIsXineramaUnaware.arg(name)))
+      m_settings->setValue(Settings::Computer::XtestIsXineramaUnaware.arg(name), fixTemp.at(3));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerTopLeft.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerTopLeft.arg(name), cornerTemp.at(0));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerTopRight.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerTopRight.arg(name), cornerTemp.at(1));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerBottomLeft.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerBottomLeft.arg(name), cornerTemp.at(2));
+    if (!m_settings->contains(Settings::Computer::SwitchCornerBottomRight.arg(name)))
+      m_settings->setValue(Settings::Computer::SwitchCornerBottomRight.arg(name), cornerTemp.at(3));
+    if (!m_settings->contains(Settings::Computer::ModifierShift.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierShift.arg(name), modifierTemp.at(0));
+    if (!m_settings->contains(Settings::Computer::ModifierCtrl.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierCtrl.arg(name), modifierTemp.at(1));
+    if (!m_settings->contains(Settings::Computer::ModifierAlt.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierAlt.arg(name), modifierTemp.at(2));
+    if (!m_settings->contains(Settings::Computer::ModifierMeta.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierMeta.arg(name), modifierTemp.at(3));
+    if (!m_settings->contains(Settings::Computer::ModifierSuper.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierSuper.arg(name), modifierTemp.at(4));
+    if (!m_settings->contains(Settings::Computer::ModifierAltGr.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierAltGr.arg(name), modifierTemp.at(5));
+    if (!m_settings->contains(Settings::Computer::Aliases.arg(name))) {
+      m_settings->setValue(Settings::Computer::Aliases.arg(name), aliases);
+    }
+  }
 }
 
 void Settings::cleanSettings()
 {
   const QStringList keys = m_settings->allKeys();
   for (const QString &key : keys) {
-    if (m_oldServerConfigKeys.contains(key))
+    if (m_oldServerConfigKeys.contains(key) || key.startsWith("screen_"))
       m_settings->remove(key);
     if (key.startsWith(QStringLiteral("internalConfig")))
       continue;
     if (const auto group = key.mid(0, key.indexOf('/')); !m_validKeys.contains(key) && m_validGroup.contains(group))
       m_settings->remove(key);
-    if (!m_settings->value(key).canConvert<QStringList>() && m_settings->value(key).toStringList().isEmpty())
+    if (!m_settings->value(key).isValid())
       m_settings->remove(key);
   }
 }
@@ -196,9 +308,9 @@ void Settings::checkIfSettingsWritableChange()
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if (key.startsWith(QStringLiteral("screen_"))) {
-    const auto screenKey = key.mid(key.indexOf('/') + 1);
-    return screenDefaults(screenKey);
+  if (key.startsWith(QStringLiteral("computer_"))) {
+    const auto computerKey = key.mid(key.indexOf('/') + 1);
+    return computerDefaults(computerKey);
   }
 
   if (m_defaultFalseValues.contains(key))
@@ -391,17 +503,17 @@ QString Settings::portableSettingsFile()
   return QFileInfo(filename).absoluteFilePath();
 }
 
-void Settings::removeUnknownScreens(const QStringList &knownScreens)
+void Settings::removeUnknownComputers(const QStringList &knownComputers)
 {
   const QStringList knownGroups = instance()->m_settings->childGroups();
   for (const auto &group : knownGroups) {
-    if (m_validGroup.contains(group) || knownScreens.contains(group))
+    if (m_validGroup.contains(group) || knownComputers.contains(group))
       continue;
     instance()->m_settings->remove(group);
   }
 }
 
-QVariant Settings::screenDefaults(const QString &key)
+QVariant Settings::computerDefaults(const QString &key)
 {
   if (key.contains(QStringLiteral("halfDuplex")) || key.contains("xtestIsXineramaUnaware") || key.contains("X11") ||
       key.contains("Left") || key.contains("Right"))
@@ -423,12 +535,12 @@ QVariant Settings::screenDefaults(const QString &key)
   return QVariant();
 }
 
-QStringList Settings::knownScreens()
+QStringList Settings::knownComputers()
 {
   const QStringList knownGroups = instance()->m_settings->childGroups();
   QStringList screens;
   for (const auto &group : knownGroups) {
-    if (group.startsWith("screen_")) {
+    if (group.startsWith("computer_")) {
       screens.append(Settings::value(QStringLiteral("%1/name").arg(group)).toString());
     }
   }

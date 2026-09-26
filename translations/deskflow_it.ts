@@ -445,6 +445,14 @@ Vuoi connetterti al server?
         <translation>Errore di connessione %1</translation>
     </message>
     <message>
+        <source>Invalid Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer name already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>Nessun IP rilevato</translation>
     </message>
@@ -516,14 +524,6 @@ Nomi validi:
         <source>Ctrl+Q</source>
         <extracomment>Quit shortcut</extracomment>
         <translation>Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Invalid Screen Name</source>
-        <translation>Nome schermo non valido</translation>
-    </message>
-    <message>
-        <source>Screen name already exists</source>
-        <translation>Il nome dello schermo esiste già</translation>
     </message>
     <message>
         <source>This computer&apos;s name:</source>
@@ -669,8 +669,8 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>%1 - Nuovo Client</translation>
     </message>
     <message>
-        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation>Un nuovo client chiamato &quot;%1&quot; è stato accettato. Dovrai aggiungerlo al layout dello schermo del tuo server.</translation>
+        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s computer layout.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -883,43 +883,43 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>&amp;Rimuovi</translation>
     </message>
     <message>
-        <source>Screen name is empty</source>
-        <translation>Il nome dello schermo è vuoto</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>Il nome dello schermo non può essere vuoto. Inserisci un nome o annulla la finestra di dialogo.</translation>
-    </message>
-    <message>
-        <source>Screen name matches alias</source>
-        <translation>Il nome dello schermo corrisponde all&apos;alias</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>Il nome dello schermo non può essere uguale a un alias. Rimuovi l&apos;alias o modifica il nome dello schermo.</translation>
-    </message>
-    <message>
         <source>Alt Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt Gr</translation>
     </message>
     <message>
         <source>Alt &amp;Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt &amp;Gr</translation>
     </message>
     <message>
         <source>Weaken X11 Focus</source>
         <translation type="unfinished">Indebolisci la messa a fuoco di X11</translation>
     </message>
     <message>
-        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">Solo per schermi X11: se questa opzione è abilitata, il client non assegnerà il focus alla finestra attiva nel momento in cui si passa al client stesso. Ciò può aiutare a prevenire il furto di focus indesiderato con alcune configurazioni X11.</translation>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">Solo per computer X11: se questa opzione è abilitata, il client non assegnerà il focus alla propria finestra attiva nel momento in cui si passa al client stesso. Ciò può aiutare a prevenire il furto di focus indesiderato con alcune configurazioni X11.</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">Il nome del computer è vuoto.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">Il nome del computer non può essere vuoto. Inserire un nome oppure annullare la finestra di dialogo.</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">Il nome del computer corrisponde all&apos;alias</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">Il nome del computer non può coincidere con un alias. Rimuovere l&apos;alias o modificare il nome del computer.</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;Schermo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Fai doppio clic per modificare le impostazioni&lt;br&gt;Trascina lo schermo nel cestino per rimuoverlo</translation>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Fai doppio clic per modificare le impostazioni&lt;br&gt;Trascina il computer nel cestino per rimuoverlo</translation>
     </message>
 </context>
 <context>

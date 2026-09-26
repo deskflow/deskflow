@@ -27,30 +27,30 @@ void Screen::loadSettings(QSettingsProxy &settings)
   if (name.isEmpty())
     return;
 
-  setModifier(Alt, modifierValueFromString(Settings::value(Settings::Screen::ModifierAlt.arg(name)).toString()));
-  setModifier(AltGr, modifierValueFromString(Settings::value(Settings::Screen::ModifierAltGr.arg(name)).toString()));
-  setModifier(Ctrl, modifierValueFromString(Settings::value(Settings::Screen::ModifierCtrl.arg(name)).toString()));
-  setModifier(Meta, modifierValueFromString(Settings::value(Settings::Screen::ModifierMeta.arg(name)).toString()));
-  setModifier(Shift, modifierValueFromString(Settings::value(Settings::Screen::ModifierShift.arg(name)).toString()));
-  setModifier(Super, modifierValueFromString(Settings::value(Settings::Screen::ModifierSuper.arg(name)).toString()));
+  setModifier(Alt, modifierValueFromString(Settings::value(Settings::Computer::ModifierAlt.arg(name)).toString()));
+  setModifier(AltGr, modifierValueFromString(Settings::value(Settings::Computer::ModifierAltGr.arg(name)).toString()));
+  setModifier(Ctrl, modifierValueFromString(Settings::value(Settings::Computer::ModifierCtrl.arg(name)).toString()));
+  setModifier(Meta, modifierValueFromString(Settings::value(Settings::Computer::ModifierMeta.arg(name)).toString()));
+  setModifier(Shift, modifierValueFromString(Settings::value(Settings::Computer::ModifierShift.arg(name)).toString()));
+  setModifier(Super, modifierValueFromString(Settings::value(Settings::Computer::ModifierSuper.arg(name)).toString()));
 
-  setSwitchCornerSize(Settings::value(Settings::Screen::SwitchCornerSize.arg(name)).toInt());
+  setSwitchCornerSize(Settings::value(Settings::Computer::SwitchCornerSize.arg(name)).toInt());
 
   m_SwitchCorners[static_cast<int>(TopLeft)] =
-      Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(name)).toBool();
+      Settings::value(Settings::Computer::SwitchCornerTopLeft.arg(name)).toBool();
   m_SwitchCorners[static_cast<int>(TopRight)] =
-      Settings::value(Settings::Screen::SwitchCornerTopRight.arg(name)).toBool();
+      Settings::value(Settings::Computer::SwitchCornerTopRight.arg(name)).toBool();
   m_SwitchCorners[static_cast<int>(BottomLeft)] =
-      Settings::value(Settings::Screen::SwitchCornerBottomLeft.arg(name)).toBool();
+      Settings::value(Settings::Computer::SwitchCornerBottomLeft.arg(name)).toBool();
   m_SwitchCorners[static_cast<int>(BottomRight)] =
-      Settings::value(Settings::Screen::SwitchCornerBottomRight.arg(name)).toBool();
+      Settings::value(Settings::Computer::SwitchCornerBottomRight.arg(name)).toBool();
 
-  m_Fixes[static_cast<int>(CapsLock)] = Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(name)).toBool();
-  m_Fixes[static_cast<int>(NumLock)] = Settings::value(Settings::Screen::HalfDuplexNumLock.arg(name)).toBool();
-  m_Fixes[static_cast<int>(ScrollLock)] = Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(name)).toBool();
-  m_Fixes[static_cast<int>(XTest)] = Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(name)).toBool();
+  m_Fixes[static_cast<int>(CapsLock)] = Settings::value(Settings::Computer::HalfDuplexCapsLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(NumLock)] = Settings::value(Settings::Computer::HalfDuplexNumLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(ScrollLock)] = Settings::value(Settings::Computer::HalfDuplexScrollLock.arg(name)).toBool();
+  m_Fixes[static_cast<int>(XTest)] = Settings::value(Settings::Computer::XtestIsXineramaUnaware.arg(name)).toBool();
 
-  m_Aliases = Settings::value(Settings::Screen::Aliases.arg(name)).toStringList();
+  m_Aliases = Settings::value(Settings::Computer::Aliases.arg(name)).toStringList();
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const
@@ -61,46 +61,48 @@ void Screen::saveSettings(QSettingsProxy &settings) const
   if (screenName.isEmpty())
     return;
 
-  Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
-  Settings::setValue(Settings::Screen::Aliases.arg(screenName), m_Aliases);
-  Settings::setValue(Settings::Screen::HalfDuplexCapsLock.arg(screenName), m_Fixes[static_cast<int>(CapsLock)]);
-  Settings::setValue(Settings::Screen::HalfDuplexNumLock.arg(screenName), m_Fixes[static_cast<int>(NumLock)]);
-  Settings::setValue(Settings::Screen::HalfDuplexScrollLock.arg(screenName), m_Fixes[static_cast<int>(ScrollLock)]);
-  Settings::setValue(Settings::Screen::XtestIsXineramaUnaware.arg(screenName), m_Fixes[static_cast<int>(XTest)]);
-  Settings::setValue(Settings::Screen::SwitchCornerSize.arg(screenName), switchCornerSize());
-  Settings::setValue(Settings::Screen::SwitchCornerTopLeft.arg(screenName), m_SwitchCorners[static_cast<int>(TopLeft)]);
+  Settings::setValue(Settings::Computer::Name.arg(screenName), screenName);
+  Settings::setValue(Settings::Computer::Aliases.arg(screenName), m_Aliases);
+  Settings::setValue(Settings::Computer::HalfDuplexCapsLock.arg(screenName), m_Fixes[static_cast<int>(CapsLock)]);
+  Settings::setValue(Settings::Computer::HalfDuplexNumLock.arg(screenName), m_Fixes[static_cast<int>(NumLock)]);
+  Settings::setValue(Settings::Computer::HalfDuplexScrollLock.arg(screenName), m_Fixes[static_cast<int>(ScrollLock)]);
+  Settings::setValue(Settings::Computer::XtestIsXineramaUnaware.arg(screenName), m_Fixes[static_cast<int>(XTest)]);
+  Settings::setValue(Settings::Computer::SwitchCornerSize.arg(screenName), switchCornerSize());
   Settings::setValue(
-      Settings::Screen::SwitchCornerTopRight.arg(screenName), m_SwitchCorners[static_cast<int>(TopRight)]
+      Settings::Computer::SwitchCornerTopLeft.arg(screenName), m_SwitchCorners[static_cast<int>(TopLeft)]
   );
   Settings::setValue(
-      Settings::Screen::SwitchCornerBottomLeft.arg(screenName), m_SwitchCorners[static_cast<int>(BottomLeft)]
+      Settings::Computer::SwitchCornerTopRight.arg(screenName), m_SwitchCorners[static_cast<int>(TopRight)]
   );
   Settings::setValue(
-      Settings::Screen::SwitchCornerBottomRight.arg(screenName), m_SwitchCorners[static_cast<int>(BottomRight)]
+      Settings::Computer::SwitchCornerBottomLeft.arg(screenName), m_SwitchCorners[static_cast<int>(BottomLeft)]
+  );
+  Settings::setValue(
+      Settings::Computer::SwitchCornerBottomRight.arg(screenName), m_SwitchCorners[static_cast<int>(BottomRight)]
   );
 
   Settings::setValue(
-      Settings::Screen::ModifierAlt.arg(screenName),
+      Settings::Computer::ModifierAlt.arg(screenName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Alt)))
   );
   Settings::setValue(
-      Settings::Screen::ModifierAltGr.arg(screenName),
+      Settings::Computer::ModifierAltGr.arg(screenName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::AltGr)))
   );
   Settings::setValue(
-      Settings::Screen::ModifierCtrl.arg(screenName),
+      Settings::Computer::ModifierCtrl.arg(screenName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Ctrl)))
   );
   Settings::setValue(
-      Settings::Screen::ModifierMeta.arg(screenName),
+      Settings::Computer::ModifierMeta.arg(screenName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Meta)))
   );
   Settings::setValue(
-      Settings::Screen::ModifierShift.arg(screenName),
+      Settings::Computer::ModifierShift.arg(screenName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Shift)))
   );
   Settings::setValue(
-      Settings::Screen::ModifierSuper.arg(screenName),
+      Settings::Computer::ModifierSuper.arg(screenName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Super)))
   );
 }

@@ -311,7 +311,7 @@ bool ServerApp::initServer()
     m_serverState = Initialized;
     return true;
   } catch (ScreenUnavailableException &e) {
-    LOG_WARN("primary screen unavailable: %s", e.what());
+    LOG_WARN("primary computer unavailable: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
   } catch (ScreenOpenFailureException &e) {
@@ -398,14 +398,14 @@ deskflow::Screen *ServerApp::createScreen()
 #else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
-    LOG_INFO("using ei screen for wayland");
+    LOG_INFO("detected wayland platform");
     return new deskflow::Screen(new deskflow::EiScreen(true, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif
   }
 #if WINAPI_XWINDOWS
-  LOG_INFO("using legacy x windows screen");
+  LOG_INFO("detected X11 platform");
   return new deskflow::Screen(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
       getEvents()
@@ -416,7 +416,7 @@ deskflow::Screen *ServerApp::createScreen()
 
 PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::Screen *screen)
 {
-  LOG_VERBOSE("creating primary screen");
+  LOG_VERBOSE("creating primary computer");
   return new PrimaryClient(name, screen);
 }
 
@@ -511,7 +511,7 @@ int ServerApp::mainLoop()
 
   // canonicalize the primary screen name
   if (std::string primaryName = m_config->getCanonicalName(m_name); primaryName.empty()) {
-    LOG_CRIT("unknown screen name `%s'", m_name.c_str());
+    LOG_CRIT("unknown computer name `%s'", m_name.c_str());
     return s_exitFailed;
   }
 

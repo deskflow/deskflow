@@ -87,7 +87,7 @@ MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *eve
       m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
       m_events(events)
 {
-  LOG_DEBUG("settting up %s screen", m_isPrimary ? "primary" : "secondary");
+  LOG_DEBUG("settting up %s computer", m_isPrimary ? "primary" : "secondary");
 
   assert(s_windowInstance != nullptr);
   assert(s_screen == nullptr);
@@ -111,7 +111,7 @@ MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *eve
     m_class = createWindowClass();
     m_window = createWindow(m_class, kAppNameW);
     setupMouseKeys();
-    LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
+    LOG_DEBUG("computer shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
     LOG_DEBUG("window is 0x%08x", m_window);
 
     if (Settings::value(Settings::Core::PreventSleep).toBool()) {
@@ -172,7 +172,7 @@ MSWindowsScreen::getWindowInstance()
 
 void MSWindowsScreen::enable()
 {
-  LOG_DEBUG("enabling %s screen", m_isPrimary ? "primary" : "secondary");
+  LOG_DEBUG("enabling %s computer", m_isPrimary ? "primary" : "secondary");
   m_isEnabled = true;
 
   assert(m_isOnScreen == m_isPrimary);
@@ -200,7 +200,7 @@ void MSWindowsScreen::enable()
 
 void MSWindowsScreen::disable()
 {
-  LOG_DEBUG("disabling %s screen", m_isPrimary ? "primary" : "secondary");
+  LOG_DEBUG("disabling %s computer", m_isPrimary ? "primary" : "secondary");
   m_isEnabled = false;
 
   // stop tracking the active desk
@@ -268,7 +268,7 @@ bool MSWindowsScreen::canLeave()
   if (!getThisCursorPos(&pos)) {
     // prevent screen leave when cursor position is not available; if unable to get cursor position,
     // screen will become inaccessible if the cursor leaves the screen.
-    LOG_DEBUG("unable to leave screen, cursor position not available");
+    LOG_DEBUG("unable to leave computer, cursor position not available");
     return false;
   }
 
@@ -307,7 +307,7 @@ void MSWindowsScreen::leave()
     for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
       if (m_keyState->isKeyDown(i)) {
         m_primaryKeyDownList.push_back(i);
-        LOG_VERBOSE("key button %d is down before leaving to another screen", i);
+        LOG_VERBOSE("key button %d is down before leaving to another computer", i);
       }
     }
   }
@@ -1336,7 +1336,7 @@ bool MSWindowsScreen::onDisplayChange()
     // send new screen info
     sendEvent(EventTypes::ScreenShapeChanged);
 
-    LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
+    LOG_DEBUG("computer shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
   }
 
   return true;

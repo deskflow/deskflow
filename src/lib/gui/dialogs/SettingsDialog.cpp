@@ -240,8 +240,8 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Gui::ShowVersionInTitle, ui->cbShowVersion->isChecked());
   Settings::setValue(Settings::Core::EnableEnterCommand, ui->cbRunEnterCommand->isChecked());
   Settings::setValue(Settings::Core::EnableExitCommand, ui->cbRunExitCommand->isChecked());
-  Settings::setValue(Settings::Core::ScreenEnterCommand, ui->lineCommandEnter->text());
-  Settings::setValue(Settings::Core::ScreenExitCommand, ui->lineCommandExit->text());
+  Settings::setValue(Settings::Core::ComputerEnterCommand, ui->lineCommandEnter->text());
+  Settings::setValue(Settings::Core::ComputerExitCommand, ui->lineCommandExit->text());
 
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
@@ -268,8 +268,8 @@ void SettingsDialog::loadFromConfig()
   ui->cbShowVersion->setChecked(Settings::value(Settings::Gui::ShowVersionInTitle).toBool());
   ui->cbRunEnterCommand->setChecked(Settings::value(Settings::Core::EnableEnterCommand).toBool());
   ui->cbRunExitCommand->setChecked(Settings::value(Settings::Core::EnableExitCommand).toBool());
-  ui->lineCommandEnter->setText(Settings::value(Settings::Core::ScreenEnterCommand).toString());
-  ui->lineCommandExit->setText(Settings::value(Settings::Core::ScreenExitCommand).toString());
+  ui->lineCommandEnter->setText(Settings::value(Settings::Core::ComputerEnterCommand).toString());
+  ui->lineCommandExit->setText(Settings::value(Settings::Core::ComputerExitCommand).toString());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
@@ -442,8 +442,8 @@ bool SettingsDialog::isModified() const
       (ui->cbRequireClientCert->isChecked() != Settings::value(Settings::Security::CheckPeers).toBool()) ||
       (ui->cbRunEnterCommand->isChecked() != Settings::value(Settings::Core::EnableEnterCommand).toBool()) ||
       (ui->cbRunExitCommand->isChecked() != Settings::value(Settings::Core::EnableExitCommand).toBool()) ||
-      (ui->lineCommandEnter->text() != Settings::value(Settings::Core::ScreenEnterCommand).toString()) ||
-      (ui->lineCommandExit->text() != Settings::value(Settings::Core::ScreenExitCommand).toString()) ||
+      (ui->lineCommandEnter->text() != Settings::value(Settings::Core::ComputerEnterCommand).toString()) ||
+      (ui->lineCommandExit->text() != Settings::value(Settings::Core::ComputerExitCommand).toString()) ||
       (I18N::nativeTo639Name(ui->comboLanguage->currentText()) != Settings::value(Settings::Core::Language).toString());
 
   if (!ignoreInterface)
@@ -476,8 +476,8 @@ bool SettingsDialog::isDefault() const
       (ui->comboTlsKeyLength->currentText() == Settings::defaultValue(Settings::Security::KeySize).toString()) &&
       (ui->groupSecurity->isChecked() == Settings::defaultValue(Settings::Security::TlsEnabled).toBool()) &&
       (ui->cbRequireClientCert->isChecked() == Settings::defaultValue(Settings::Security::CheckPeers).toBool()) &&
-      (ui->lineCommandEnter->text() == Settings::defaultValue(Settings::Core::ScreenEnterCommand).toString()) &&
-      (ui->lineCommandExit->text() == Settings::defaultValue(Settings::Core::ScreenExitCommand).toString()) &&
+      (ui->lineCommandEnter->text() == Settings::defaultValue(Settings::Core::ComputerEnterCommand).toString()) &&
+      (ui->lineCommandExit->text() == Settings::defaultValue(Settings::Core::ComputerExitCommand).toString()) &&
       (ui->cbRunEnterCommand->isChecked() == Settings::defaultValue(Settings::Core::EnableEnterCommand).toBool()) &&
       (ui->cbRunExitCommand->isChecked() == Settings::defaultValue(Settings::Core::EnableExitCommand).toBool()) &&
       (ui->comboLanguage->currentText() == "English")
@@ -499,8 +499,8 @@ void SettingsDialog::resetToDefault()
   ui->cbShowVersion->setChecked(Settings::defaultValue(Settings::Gui::ShowVersionInTitle).toBool());
   ui->cbRunEnterCommand->setChecked(Settings::defaultValue(Settings::Core::EnableEnterCommand).toBool());
   ui->cbRunExitCommand->setChecked(Settings::defaultValue(Settings::Core::EnableExitCommand).toBool());
-  ui->lineCommandEnter->setText(Settings::defaultValue(Settings::Core::ScreenEnterCommand).toString());
-  ui->lineCommandExit->setText(Settings::defaultValue(Settings::Core::ScreenExitCommand).toString());
+  ui->lineCommandEnter->setText(Settings::defaultValue(Settings::Core::ComputerEnterCommand).toString());
+  ui->lineCommandExit->setText(Settings::defaultValue(Settings::Core::ComputerExitCommand).toString());
 
   const auto autoHide = Settings::defaultValue(Settings::Gui::Autohide).toBool();
   ui->rbCloseToTray->setChecked(autoHide);

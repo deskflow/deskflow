@@ -57,7 +57,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   ui->chkDeadBottomRight->setChecked(m_screen->switchCorner(static_cast<int>(BottomRight)));
   ui->sbSwitchCornerSize->setValue(m_screen->switchCornerSize());
 
-  ui->chkWeakX11Focus->setChecked(Settings::value(Settings::Screen::WeakX11Focus.arg(m_screen->name())).toBool());
+  ui->chkWeakX11Focus->setChecked(Settings::value(Settings::Computer::WeakX11Focus.arg(m_screen->name())).toBool());
 
   ui->chkFixCapsLock->setChecked(m_screen->fix(CapsLock));
   ui->chkFixNumLock->setChecked(m_screen->fix(NumLock));
@@ -76,8 +76,8 @@ void ScreenSettingsDialog::accept()
 {
   if (ui->lineNameEdit->text().isEmpty()) {
     QMessageBox::warning(
-        this, tr("Screen name is empty"),
-        tr("The screen name cannot be empty. "
+        this, tr("Computer name is empty"),
+        tr("The computer name cannot be empty. "
            "Please either fill in a name or cancel the dialog.")
     );
     return;
@@ -94,9 +94,9 @@ void ScreenSettingsDialog::accept()
     QString alias(ui->listAliases->item(i)->text());
     if (alias == ui->lineNameEdit->text()) {
       QMessageBox::warning(
-          this, tr("Screen name matches alias"),
-          tr("The screen name cannot be the same as an alias. "
-             "Please either remove the alias or change the screen name.")
+          this, tr("Computer name matches alias"),
+          tr("The computer name cannot be the same as an alias. "
+             "Please either remove the alias or change the computer name.")
       );
       return;
     }
@@ -122,7 +122,7 @@ void ScreenSettingsDialog::accept()
   m_screen->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
   m_screen->setFix(XTest, ui->chkFixXTest->isChecked());
 
-  Settings::setValue(Settings::Screen::WeakX11Focus.arg(m_screen->name()), ui->chkWeakX11Focus->isChecked());
+  Settings::setValue(Settings::Computer::WeakX11Focus.arg(m_screen->name()), ui->chkWeakX11Focus->isChecked());
 
   QDialog::accept();
 }

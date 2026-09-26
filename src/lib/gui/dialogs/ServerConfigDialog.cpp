@@ -93,17 +93,17 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::ExternalConfig, ui->groupExternalConfig->isChecked());
   Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
 
-  QStringList screenNames;
-  const auto screenList = m_screenSetupModel.m_Screens;
-  for (const auto &screen : screenList) {
-    const auto &screenName = screen.name();
-    if (screenName.isEmpty())
+  QStringList computerNames;
+  const auto computerList = m_screenSetupModel.m_Screens;
+  for (const auto &computer : computerList) {
+    const auto &computerName = computer.name();
+    if (computerName.isEmpty())
       continue;
-    screenNames.append(QStringLiteral("screen_%1").arg(screenName));
-    Settings::setValue(Settings::Screen::Aliases.arg(screenName), screen.aliases());
-    Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
+    computerNames.append(QStringLiteral("computer_%1").arg(computerName));
+    Settings::setValue(Settings::Computer::Aliases.arg(computerName), computer.aliases());
+    Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
   }
-  Settings::removeUnknownScreens(screenNames);
+  Settings::removeUnknownComputers(computerNames);
   QDialog::accept();
 }
 

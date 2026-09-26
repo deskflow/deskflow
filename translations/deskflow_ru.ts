@@ -421,6 +421,14 @@ Do you want to connect to the server?
         <translation type="unfinished">Просмотр &amp;справки</translation>
     </message>
     <message>
+        <source>Invalid Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer name already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>IP-адрес не обнаружен</translation>
     </message>
@@ -510,14 +518,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <source>Ctrl+Q</source>
         <extracomment>Quit shortcut</extracomment>
         <translation>Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Invalid Screen Name</source>
-        <translation>Недопустимое имя экрана</translation>
-    </message>
-    <message>
-        <source>Screen name already exists</source>
-        <translation>Имя экрана уже существует</translation>
     </message>
     <message>
         <source>The name you have chosen is invalid.
@@ -669,8 +669,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>%1 - Новый клиент</translation>
     </message>
     <message>
-        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation>Новый клиент «%1» принят. Вам необходимо добавить его на макет экранов сервера.</translation>
+        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s computer layout.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -883,43 +883,43 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>&amp;Удалить</translation>
     </message>
     <message>
-        <source>Screen name is empty</source>
-        <translation>Имя экрана пустое</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>Имя экрана не может быть пустым. Введите имя или закройте окно.</translation>
-    </message>
-    <message>
-        <source>Screen name matches alias</source>
-        <translation>Имя экрана совпадает с псевдонимом</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>Имя экрана не может совпадать с псевдонимом. Удалите псевдоним или измените имя экрана.</translation>
-    </message>
-    <message>
         <source>Alt Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt Gr</translation>
     </message>
     <message>
         <source>Alt &amp;Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt &amp;Gr</translation>
     </message>
     <message>
         <source>Weaken X11 Focus</source>
         <translation type="unfinished">Ослабить фокус X11</translation>
     </message>
     <message>
-        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">Только для экранов X11: если эта функция включена, окно приложения не будет автоматически получать фокус сразу после переключения на него. Это помогает предотвратить нежелательный перехват фокуса в некоторых конфигурациях X11.</translation>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">Только для систем X11: если эта функция включена, клиент не будет автоматически передавать фокус своему активному окну сразу после переключения на этот клиент. Это помогает предотвратить нежелательный перехват фокуса в некоторых конфигурациях X11.</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">Имя компьютера не указано</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">Имя компьютера не может быть пустым. Введите имя или отмените диалог.</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">Имя компьютера совпадает с псевдонимом</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">Имя компьютера не может совпадать с псевдонимом. Удалите псевдоним или измените имя компьютера.</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;Экран: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Двойной клик для настроек&lt;br&gt;Перетащите экран в корзину для удаления</translation>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Компьютер: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Дважды щелкните, чтобы изменить настройки&lt;br&gt;Перетащите компьютер в корзину, чтобы удалить его</translation>
     </message>
 </context>
 <context>

@@ -48,66 +48,69 @@ bool Config::addScreen(const std::string &name)
 
   const auto screen = QString::fromStdString(name);
   // add aliases
-  const auto aliases = Settings::value(Settings::Screen::Aliases.arg(screen)).toStringList();
+  const auto aliases = Settings::value(Settings::Computer::Aliases.arg(screen)).toStringList();
   for (const auto &alias : aliases)
     m_nameToCanonicalName.try_emplace(alias.toStdString(), name);
 
   addOption(
-      name, kOptionHalfDuplexCapsLock, Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
-  );
-  addOption(name, kOptionHalfDuplexNumLock, Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool());
-  addOption(
-      name, kOptionHalfDuplexScrollLock, Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
+      name, kOptionHalfDuplexCapsLock, Settings::value(Settings::Computer::HalfDuplexCapsLock.arg(screen)).toBool()
   );
   addOption(
-      name, kOptionXTestXineramaUnaware, Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
+      name, kOptionHalfDuplexNumLock, Settings::value(Settings::Computer::HalfDuplexNumLock.arg(screen)).toBool()
   );
   addOption(
-      name, kOptionScreenSwitchCornerSize, Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
+      name, kOptionHalfDuplexScrollLock, Settings::value(Settings::Computer::HalfDuplexScrollLock.arg(screen)).toBool()
   );
-  addOption(name, kOptionScreenX11WeakFocus, Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool());
+  addOption(
+      name, kOptionXTestXineramaUnaware,
+      Settings::value(Settings::Computer::XtestIsXineramaUnaware.arg(screen)).toBool()
+  );
+  addOption(
+      name, kOptionScreenSwitchCornerSize, Settings::value(Settings::Computer::SwitchCornerSize.arg(screen)).toInt()
+  );
+  addOption(name, kOptionScreenX11WeakFocus, Settings::value(Settings::Computer::WeakX11Focus.arg(screen)).toBool());
 
   OptionValue cornerValue = s_noCornerMask;
-  if (Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerTopLeft.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_topLeftCornerMask;
   }
-  if (Settings::value(Settings::Screen::SwitchCornerTopRight.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerTopRight.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_topRightCornerMask;
   }
-  if (Settings::value(Settings::Screen::SwitchCornerBottomLeft.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerBottomLeft.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_bottomLeftCornerMask;
   }
-  if (Settings::value(Settings::Screen::SwitchCornerBottomRight.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerBottomRight.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_bottomRightCornerMask;
   }
   addOption(name, kOptionScreenSwitchCorners, cornerValue);
 
-  auto altModifier = Settings::value(Settings::Screen::ModifierAlt.arg(screen)).toString();
+  auto altModifier = Settings::value(Settings::Computer::ModifierAlt.arg(screen)).toString();
   if (altModifier.isEmpty())
     altModifier = kModifierNameAlt;
   addOption(name, kOptionModifierMapForAlt, modifierIDValueFromString(altModifier));
 
-  auto altgrModifier = Settings::value(Settings::Screen::ModifierAltGr.arg(screen)).toString();
+  auto altgrModifier = Settings::value(Settings::Computer::ModifierAltGr.arg(screen)).toString();
   if (altgrModifier.isEmpty())
     altgrModifier = kModifierNameAltGr;
   addOption(name, kOptionModifierMapForAltGr, modifierIDValueFromString(altgrModifier));
 
-  auto ctrlModifier = Settings::value(Settings::Screen::ModifierCtrl.arg(screen)).toString();
+  auto ctrlModifier = Settings::value(Settings::Computer::ModifierCtrl.arg(screen)).toString();
   if (ctrlModifier.isEmpty())
     ctrlModifier = kModifierNameCtrl;
   addOption(name, kOptionModifierMapForControl, modifierIDValueFromString(ctrlModifier));
 
-  auto metaModifier = Settings::value(Settings::Screen::ModifierMeta.arg(screen)).toString();
+  auto metaModifier = Settings::value(Settings::Computer::ModifierMeta.arg(screen)).toString();
   if (metaModifier.isEmpty())
     metaModifier = kModifierNameMeta;
   addOption(name, kOptionModifierMapForMeta, modifierIDValueFromString(metaModifier));
 
-  auto shiftModifier = Settings::value(Settings::Screen::ModifierShift.arg(screen)).toString();
+  auto shiftModifier = Settings::value(Settings::Computer::ModifierShift.arg(screen)).toString();
   if (shiftModifier.isEmpty())
     shiftModifier = kModifierNameShift;
   addOption(name, kOptionModifierMapForShift, modifierIDValueFromString(shiftModifier));
 
-  auto superModifier = Settings::value(Settings::Screen::ModifierSuper.arg(screen)).toString();
+  auto superModifier = Settings::value(Settings::Computer::ModifierSuper.arg(screen)).toString();
   if (superModifier.isEmpty())
     superModifier = kModifierNameSuper;
   addOption(name, kOptionModifierMapForSuper, modifierIDValueFromString(superModifier));
@@ -439,19 +442,19 @@ bool Config::operator==(const Config &x) const
 void Config::read(ConfigReadContext &context)
 {
   Config tmp(m_events);
-  const auto screens = Settings::knownScreens();
-  for (const auto &screen : screens) {
-    if (screen.isEmpty())
+  const auto computers = Settings::knownComputers();
+  for (const auto &computer : computers) {
+    if (computer.isEmpty())
       continue;
-    const auto screenName = screen.toStdString();
+    const auto computerName = computer.toStdString();
 
-    if (!isValidScreenName(screenName)) {
-      throw ServerConfigReadException(context, "invalid screen name \"%{1}\"", screenName);
+    if (!isValidScreenName(computerName)) {
+      throw ServerConfigReadException(context, "invalid computer name \"%{1}\"", computerName);
     }
 
     // add the screen to the configuration
-    if (!tmp.addScreen(screenName)) {
-      throw ServerConfigReadException(context, "duplicate screen name \"%{1}\"", screenName);
+    if (!tmp.addScreen(computerName)) {
+      throw ServerConfigReadException(context, "duplicate computer name \"%{1}\"", computerName);
     }
   }
   while (context.getStream()) {
@@ -654,13 +657,13 @@ void Config::readSectionLinks(ConfigReadContext &s)
 
       // verify we know about the screen
       if (!isScreen(screen)) {
-        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", screen);
+        throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", screen);
       }
       if (!isCanonicalName(screen)) {
-        throw ServerConfigReadException(s, "cannot use screen name alias here");
+        throw ServerConfigReadException(s, "cannot use computer name alias here");
       }
     } else if (screen.empty()) {
-      throw ServerConfigReadException(s, "argument before first screen");
+      throw ServerConfigReadException(s, "argument before first computer");
     } else {
       // parse argument:  `<name>[(<s0>,<e0>)]=<value>[(<s1>,<e1>)]'
       // the stuff in brackets is optional.  interval values must be
@@ -695,7 +698,7 @@ void Config::readSectionLinks(ConfigReadContext &s)
         throw ServerConfigReadException(s, "unknown side \"%{1}\" in link", side);
       }
       if (!isScreen(dstScreen)) {
-        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", dstScreen);
+        throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", dstScreen);
       }
       if (!connect(
               screen, dir, srcInterval.first, srcInterval.second, dstScreen, dstInterval.first, dstInterval.second
@@ -746,14 +749,14 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
 
   if (name == "connect") {
     if (args.size() != 1) {
-      throw ServerConfigReadException(s, "syntax for condition: connect([screen])");
+      throw ServerConfigReadException(s, "syntax for condition: connect([computer])");
     }
 
     std::string screen = args[0];
     if (isScreen(screen)) {
       screen = getCanonicalName(screen);
     } else if (!screen.empty()) {
-      throw ServerConfigReadException(s, "unknown screen name \"%{1}\" in connect", screen);
+      throw ServerConfigReadException(s, "unknown computer name \"%{1}\" in connect", screen);
     }
 
     return new InputFilter::ScreenConnectedCondition(m_events, screen);
@@ -771,7 +774,7 @@ void Config::parseAction(
 
   if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
     if (args.size() < 1 || args.size() > 2) {
-      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,screens])");
+      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,computers])");
     }
 
     IPlatformScreen::KeyInfo *keyInfo;
@@ -837,7 +840,7 @@ void Config::parseAction(
     if (isScreen(screen)) {
       screen = getCanonicalName(screen);
     } else if (!screen.empty()) {
-      throw ServerConfigReadException(s, "unknown screen name in switchToScreen");
+      throw ServerConfigReadException(s, "unknown computer name in switchToScreen");
     }
 
     action = new InputFilter::SwitchToScreenAction(m_events, screen);
@@ -918,7 +921,7 @@ void Config::parseAction(
 
   else if (name == "keyboardBroadcast") {
     if (args.size() > 2) {
-      throw ServerConfigReadException(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
+      throw ServerConfigReadException(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,computers]])");
     }
 
     InputFilter::KeyboardBroadcastAction::Mode mode = InputFilter::KeyboardBroadcastAction::kToggle;
@@ -932,7 +935,7 @@ void Config::parseAction(
       } else {
         throw ServerConfigReadException(
             s, "syntax for action: "
-               "keyboardBroadcast([{off|on|toggle}[,screens]])"
+               "keyboardBroadcast([{off|on|toggle}[,computers]])"
         );
       }
     }
@@ -977,7 +980,7 @@ void Config::parseScreens(const ConfigReadContext &c, const std::string_view &s,
     } else if (!rawName.empty()) {
       std::string name = getCanonicalName(rawName);
       if (name.empty()) {
-        throw ServerConfigReadException(c, "unknown screen name \"%{1}\"", rawName);
+        throw ServerConfigReadException(c, "unknown computer name \"%{1}\"", rawName);
       }
       screens.insert(name);
     }

@@ -421,6 +421,14 @@ Do you want to connect to the server?
         <translation type="unfinished">도움말 보기(&amp;H)</translation>
     </message>
     <message>
+        <source>Invalid Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer name already exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No IP Detected</source>
         <translation>IP를 감지하지 못했습니다</translation>
     </message>
@@ -510,14 +518,6 @@ A bound IP is now invalid, you may need to restart the server.</source>
         <source>Ctrl+Q</source>
         <extracomment>Quit shortcut</extracomment>
         <translation>Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Invalid Screen Name</source>
-        <translation>잘못된 컴퓨터 이름</translation>
-    </message>
-    <message>
-        <source>Screen name already exists</source>
-        <translation>컴퓨터 이름이 이미 존재합니다</translation>
     </message>
     <message>
         <source>The name you have chosen is invalid.
@@ -669,8 +669,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>%1 - 새 클라이언트</translation>
     </message>
     <message>
-        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s screen layout.</source>
-        <translation>새 클라이언트 &apos;%1&apos;이(가) 허용되었습니다. 서버의 화면 배치에 추가해 주세요.</translation>
+        <source>A new client called &apos;%1&apos; has been accepted. You&apos;ll need to add it to your server&apos;s computer layout.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -883,43 +883,43 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>삭제(&amp;R)</translation>
     </message>
     <message>
-        <source>Screen name is empty</source>
-        <translation>컴퓨터 이름이 비어 있습니다</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>컴퓨터 이름은 비워 둘 수 없습니다. 이름을 입력하거나 대화상자를 취소하세요.</translation>
-    </message>
-    <message>
-        <source>Screen name matches alias</source>
-        <translation>컴퓨터 이름과 별칭이 일치합니다</translation>
-    </message>
-    <message>
-        <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>컴퓨터 이름은 별칭과 같을 수 없습니다. 별칭을 삭제하거나 컴퓨터 이름을 변경하세요.</translation>
-    </message>
-    <message>
         <source>Alt Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt Gr</translation>
     </message>
     <message>
         <source>Alt &amp;Gr</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alt &amp;Gr</translation>
     </message>
     <message>
         <source>Weaken X11 Focus</source>
         <translation type="unfinished">X11 포커스 약화</translation>
     </message>
     <message>
-        <source>X11 screens Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
-        <translation type="unfinished">X11 화면에서만 적용됩니다. 이 기능을 활성화하면 클라이언트가 활성화(전환)되는 즉시 해당 클라이언트의 창으로 포커스가 이동하지 않습니다. 이를 통해 일부 X11 환경에서 발생할 수 있는 원치 않는 포커스 탈취(focus stealing) 문제를 방지할 수 있습니다.</translation>
+        <source>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</source>
+        <translation type="unfinished">X11 환경에서만 적용됩니다. 이 기능을 활성화하면 클라이언트가 활성화(전환)되는 즉시 해당 창으로 포커스가 이동하지 않습니다. 이를 통해 일부 X11 설정에서 발생할 수 있는 원치 않는 포커스 탈취(focus stealing) 문제를 방지할 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Computer name is empty</source>
+        <translation type="unfinished">컴퓨터 이름이 비어 있습니다.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be empty. Please either fill in a name or cancel the dialog.</source>
+        <translation type="unfinished">컴퓨터 이름을 비워둘 수 없습니다. 이름을 입력하거나 대화 상자를 취소하십시오.</translation>
+    </message>
+    <message>
+        <source>Computer name matches alias</source>
+        <translation type="unfinished">컴퓨터 이름이 별칭과 일치합니다.</translation>
+    </message>
+    <message>
+        <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
+        <translation type="unfinished">컴퓨터 이름은 별칭과 같을 수 없습니다. 별칭을 제거하거나 컴퓨터 이름을 변경하십시오.</translation>
     </message>
 </context>
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
-        <translation>&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;더블 클릭하여 설정 편집&lt;br&gt;휴지통으로 드래그하여 삭제</translation>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;설정을 편집하려면 두 번 클릭하세요&lt;br&gt;컴퓨터를 휴지통으로 드래그하여 제거하세요</translation>
     </message>
 </context>
 <context>
