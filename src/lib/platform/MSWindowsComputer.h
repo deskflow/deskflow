@@ -26,11 +26,11 @@ class Thread;
 class MSWindowsDropTarget;
 
 //! Implementation of IPlatformComputer for Microsoft Windows
-class MSWindowsScreen : public PlatformComputer
+class MSWindowsComputer : public PlatformComputer
 {
 public:
-  MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync = false);
-  ~MSWindowsScreen() override;
+  MSWindowsComputer(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync = false);
+  ~MSWindowsComputer() override;
 
   //! @name manipulators
   //@{
@@ -328,7 +328,7 @@ private:
 
   MSWindowsHook m_hook;
 
-  static MSWindowsScreen *s_screen;
+  static MSWindowsComputer *s_screen;
 
   IEventQueue *m_events;
 
