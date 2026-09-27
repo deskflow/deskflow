@@ -24,7 +24,7 @@
 #include "net/TCPSocketFactory.h"
 
 #if defined(Q_OS_WIN)
-#include "platform/MSWindowsScreen.h"
+#include "platform/MSWindowsComputer.h"
 #endif
 
 #include <QFileInfo> // Must include before XWindowsScreen to avoid conflicts with xlib.h
@@ -107,7 +107,7 @@ deskflow::Computer *ClientApp::createComputer()
 
 #if defined(Q_OS_WIN)
   return new deskflow::Computer(
-      new MSWindowsScreen(false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(), languageSync),
+      new MSWindowsComputer(false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(), languageSync),
       getEvents()
   );
 #elif defined(Q_OS_MACOS)

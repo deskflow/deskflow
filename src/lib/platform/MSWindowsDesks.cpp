@@ -18,8 +18,8 @@
 #include "deskflow/win32/AppUtilWindows.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
+#include "platform/MSWindowsComputer.h"
 #include "platform/MSWindowsHook.h"
-#include "platform/MSWindowsScreen.h"
 
 #include <malloc.h>
 
@@ -366,7 +366,7 @@ MSWindowsDesks::createBlankCursor() const
   uint8_t *cursorXOR = new uint8_t[ch * ((cw + 31) >> 2)];
   memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
   memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
-  HCURSOR c = CreateCursor(MSWindowsScreen::getWindowInstance(), 0, 0, cw, ch, cursorAND, cursorXOR);
+  HCURSOR c = CreateCursor(MSWindowsComputer::getWindowInstance(), 0, 0, cw, ch, cursorAND, cursorXOR);
   delete[] cursorXOR;
   delete[] cursorAND;
   return c;
@@ -387,7 +387,7 @@ ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
   classInfo.lpfnWndProc = isPrimary ? &MSWindowsDesks::primaryDeskProc : &MSWindowsDesks::secondaryDeskProc;
   classInfo.cbClsExtra = 0;
   classInfo.cbWndExtra = 0;
-  classInfo.hInstance = MSWindowsScreen::getWindowInstance();
+  classInfo.hInstance = MSWindowsComputer::getWindowInstance();
   classInfo.hIcon = nullptr;
   classInfo.hCursor = m_cursor;
   classInfo.hbrBackground = nullptr;
@@ -400,7 +400,7 @@ ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
 void MSWindowsDesks::destroyClass(ATOM windowClass) const
 {
   if (windowClass != 0) {
-    UnregisterClass(MAKEINTATOM(windowClass), MSWindowsScreen::getWindowInstance());
+    UnregisterClass(MAKEINTATOM(windowClass), MSWindowsComputer::getWindowInstance());
   }
 }
 
@@ -408,7 +408,7 @@ HWND MSWindowsDesks::createWindow(ATOM windowClass, const wchar_t *name) const
 {
   HWND window = CreateWindowEx(
       WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
-      MSWindowsScreen::getWindowInstance(), nullptr
+      MSWindowsComputer::getWindowInstance(), nullptr
   );
   if (window == nullptr) {
     LOG_ERR("failed to create window: %d", GetLastError());

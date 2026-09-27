@@ -37,6 +37,8 @@ if(WIN32)
     MSWindowsClipboardHTMLConverter.h
     MSWindowsClipboardUTF16Converter.cpp
     MSWindowsClipboardUTF16Converter.h
+    MSWindowsComputer.cpp
+    MSWindowsComputer.h
     MSWindowsDebugOutputter.cpp
     MSWindowsDebugOutputter.h
     MSWindowsDesks.cpp
@@ -51,8 +53,6 @@ if(WIN32)
     MSWindowsPowerManager.h
     MSWindowsProcess.cpp
     MSWindowsProcess.h
-    MSWindowsScreen.cpp
-    MSWindowsScreen.h
     MSWindowsScreenSaver.cpp
     MSWindowsScreenSaver.h
     MSWindowsSession.cpp

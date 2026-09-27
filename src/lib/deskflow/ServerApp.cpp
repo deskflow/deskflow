@@ -32,7 +32,7 @@
 #include <QFileInfo>
 
 #if defined(Q_OS_WIN)
-#include "platform/MSWindowsScreen.h"
+#include "platform/MSWindowsComputer.h"
 #endif
 
 #if WINAPI_XWINDOWS
@@ -393,7 +393,7 @@ deskflow::Computer *ServerApp::createComputer()
 {
 #if defined(Q_OS_WIN)
   return new deskflow::Computer(
-      new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
+      new MSWindowsComputer(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
 #elif defined(Q_OS_MACOS)
   return new deskflow::Computer(new OSXScreen(getEvents(), true), getEvents());
