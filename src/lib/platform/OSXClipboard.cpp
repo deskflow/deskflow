@@ -76,6 +76,8 @@ bool OSXClipboard::empty()
   if (m_pboard == nullptr)
     return false;
 
+  m_flavors.reset();
+
   OSStatus err = PasteboardClear(m_pboard);
   if (err != noErr) {
     LOG_WARN("failed to clear clipboard: error %i", err);
@@ -151,13 +153,14 @@ bool OSXClipboard::open(Time time) const
 
   LOG_DEBUG("opening clipboard");
   m_time = time;
+  m_flavors.reset();
   return true;
 }
 
 void OSXClipboard::close() const
 {
   LOG_DEBUG("closing clipboard");
-  /* not needed */
+  m_flavors.reset();
 }
 
 IClipboard::Time OSXClipboard::getTime() const
@@ -194,12 +197,23 @@ IOSXClipboardConverter *OSXClipboard::findConverter(Format format) const
   PasteboardItemID item;
   PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
 
+  // each flavour query can make the copying app produce its data again, so list the flavours once per read
+  if (!m_flavors) {
+    CFArrayRef flavors = nullptr;
+    if (PasteboardCopyItemFlavors(m_pboard, item, &flavors) == noErr)
+      m_flavors.reset(flavors);
+    else
+      LOG_DEBUG("failed to list clipboard flavours");
+  }
+
   // macos converts between image types on request, which would hide which image file was copied
   const bool skipConverted = isImageFile(format);
   const auto found = std::ranges::find_if(m_converters, [this, item, format, skipConverted](auto *converter) {
+    const auto type = converter->getOSXFormat();
     PasteboardFlavorFlags flags = kPasteboardFlavorNoFlags;
-    return converter->getFormat() == format &&
-           PasteboardGetItemFlavorFlags(m_pboard, item, converter->getOSXFormat(), &flags) == noErr &&
+    return converter->getFormat() == format && m_flavors &&
+           CFArrayContainsValue(m_flavors.get(), CFRangeMake(0, CFArrayGetCount(m_flavors.get())), type) &&
+           PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr &&
            !(skipConverted && (flags & kPasteboardFlavorSystemTranslated));
   });
   return found != m_converters.end() ? *found : nullptr;

@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -11,6 +11,7 @@
 #include "deskflow/IClipboard.h"
 
 #include <Carbon/Carbon.h>
+#include <memory>
 #include <vector>
 
 class IOSXClipboardConverter;
@@ -47,6 +48,7 @@ private:
   mutable Time m_time;
   ConverterList m_converters;
   PasteboardRef m_pboard;
+  mutable std::unique_ptr<const __CFArray, decltype(&CFRelease)> m_flavors{nullptr, &CFRelease};
 
   static constexpr const char *kQtPngType = "com.trolltech.anymime.image--png";
 };
