@@ -1415,22 +1415,22 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
 </context>
 <context>
-    <name>validators::ScreenNameValidator</name>
+    <name>validators::ComputerLineNameValidator</name>
     <message>
         <source>Computer name cannot be empty</source>
-        <translation>컴퓨터 이름은 비워 둘 수 없습니다</translation>
+        <translation type="unfinished">컴퓨터 이름은 비워 둘 수 없습니다</translation>
     </message>
     <message>
         <source>Computer name cannot contain spaces</source>
-        <translation>컴퓨터 이름에는 공백을 포함할 수 없습니다</translation>
+        <translation type="unfinished">컴퓨터 이름에는 공백을 포함할 수 없습니다</translation>
     </message>
     <message>
         <source>Contains invalid characters or is too long</source>
-        <translation>유효하지 않은 문자가 포함되어 있거나 너무 깁니다</translation>
+        <translation type="unfinished">유효하지 않은 문자가 포함되어 있거나 너무 깁니다</translation>
     </message>
     <message>
         <source>A computer with this name already exists</source>
-        <translation>동명의 컴퓨터가 이미 존재합니다</translation>
+        <translation type="unfinished">동명의 컴퓨터가 이미 존재합니다</translation>
     </message>
 </context>
 </TS>

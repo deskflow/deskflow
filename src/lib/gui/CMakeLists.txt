@@ -79,6 +79,8 @@ add_library(${target} STATIC
   validators/AliasValidator.h
   validators/ComputerDuplicationsValidator.cpp
   validators/ComputerDuplicationsValidator.h
+  validators/ComputerLineNameValidator.cpp
+  validators/ComputerLineNameValidator.h
   validators/ComputerNameValidator.cpp
   validators/ComputerNameValidator.h
   validators/EmptyStringValidator.cpp
@@ -87,8 +89,6 @@ add_library(${target} STATIC
   validators/IStringValidator.h
   validators/LineEditValidator.cpp
   validators/LineEditValidator.h
-  validators/ScreenNameValidator.cpp
-  validators/ScreenNameValidator.h
   validators/SpacesValidator.cpp
   validators/SpacesValidator.h
   validators/ValidationError.cpp

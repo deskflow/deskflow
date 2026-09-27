@@ -10,7 +10,7 @@
 
 #include "gui/config/Computer.h"
 #include "validators/AliasValidator.h"
-#include "validators/ScreenNameValidator.h"
+#include "validators/ComputerLineNameValidator.h"
 #include "validators/ValidationError.h"
 
 #include <QMessageBox>
@@ -34,7 +34,7 @@ ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *comput
   ui->lineNameEdit->setText(m_computer->name());
 
   const auto valNameError = new validators::ValidationError(this, ui->lblNameError);
-  const auto valName = new validators::ScreenNameValidator(ui->lineNameEdit, valNameError, computers);
+  const auto valName = new validators::ComputerLineNameValidator(ui->lineNameEdit, valNameError, computers);
   ui->lineNameEdit->setValidator(valName);
 
   const auto valAliasError = new validators::ValidationError(this, ui->lblAliasError);

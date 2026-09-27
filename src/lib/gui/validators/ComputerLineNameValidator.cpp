@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenNameValidator.h"
+#include "ComputerLineNameValidator.h"
 
 #include "ComputerDuplicationsValidator.h"
 #include "ComputerNameValidator.h"
@@ -20,7 +20,9 @@
 
 namespace validators {
 
-ScreenNameValidator::ScreenNameValidator(QLineEdit *lineEdit, ValidationError *error, const ComputerList *pScreens)
+ComputerLineNameValidator::ComputerLineNameValidator(
+    QLineEdit *lineEdit, ValidationError *error, const ComputerList *pComputers
+)
     : LineEditValidator(lineEdit, error)
 {
   addValidator(std::make_unique<EmptyStringValidator>(tr("Computer name cannot be empty")));
@@ -28,7 +30,7 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit *lineEdit, ValidationError *e
   addValidator(std::make_unique<ComputerNameValidator>(tr("Contains invalid characters or is too long")));
   addValidator(
       std::make_unique<ComputerDuplicationsValidator>(
-          tr("A computer with this name already exists"), lineEdit ? lineEdit->text() : "", pScreens
+          tr("A computer with this name already exists"), lineEdit ? lineEdit->text() : "", pComputers
       )
   );
 }
