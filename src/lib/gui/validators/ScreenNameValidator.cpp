@@ -6,9 +6,9 @@
 
 #include "ScreenNameValidator.h"
 
+#include "ComputerDuplicationsValidator.h"
 #include "ComputerNameValidator.h"
 #include "EmptyStringValidator.h"
-#include "ScreenDuplicationsValidator.h"
 #include "SpacesValidator.h"
 #include "ValidationError.h"
 
@@ -27,7 +27,7 @@ ScreenNameValidator::ScreenNameValidator(QLineEdit *lineEdit, ValidationError *e
   addValidator(std::make_unique<SpacesValidator>(tr("Computer name cannot contain spaces")));
   addValidator(std::make_unique<ComputerNameValidator>(tr("Contains invalid characters or is too long")));
   addValidator(
-      std::make_unique<ScreenDuplicationsValidator>(
+      std::make_unique<ComputerDuplicationsValidator>(
           tr("A computer with this name already exists"), lineEdit ? lineEdit->text() : "", pScreens
       )
   );

@@ -4,28 +4,28 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenDuplicationsValidator.h"
+#include "ComputerDuplicationsValidator.h"
 #include "gui/config/ComputerList.h"
 
 namespace validators {
 
-ScreenDuplicationsValidator::ScreenDuplicationsValidator(
-    const QString &message, const QString &defaultName, const ComputerList *pScreens
+ComputerDuplicationsValidator::ComputerDuplicationsValidator(
+    const QString &message, const QString &defaultName, const ComputerList *pComputers
 )
     : IStringValidator(message),
       m_defaultName(defaultName),
-      m_pComputerList(pScreens)
+      m_pComputerList(pComputers)
 {
   // do nothing
 }
 
-bool ScreenDuplicationsValidator::validate(const QString &input) const
+bool ComputerDuplicationsValidator::validate(const QString &input) const
 {
   bool result = true;
 
   if (m_pComputerList) {
-    for (const auto &screen : (*m_pComputerList)) {
-      if (!screen.isNull() && !screen.isServer() && input != m_defaultName && input == screen.name()) {
+    for (const auto &computer : (*m_pComputerList)) {
+      if (!computer.isNull() && !computer.isServer() && input != m_defaultName && input == computer.name()) {
         result = false;
         break;
       }

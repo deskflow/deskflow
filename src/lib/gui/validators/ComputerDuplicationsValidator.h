@@ -12,13 +12,13 @@ class ComputerList;
 
 namespace validators {
 
-class ScreenDuplicationsValidator : public IStringValidator
+class ComputerDuplicationsValidator : public IStringValidator
 {
   const QString m_defaultName;
   const ComputerList *m_pComputerList = nullptr;
 
 public:
-  ScreenDuplicationsValidator(const QString &message, const QString &defaultName, const ComputerList *pScreens);
+  ComputerDuplicationsValidator(const QString &message, const QString &defaultName, const ComputerList *pComputers);
   bool validate(const QString &input) const override;
 };
 
