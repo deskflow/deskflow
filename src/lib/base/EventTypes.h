@@ -121,7 +121,7 @@ enum class EventTypes : uint32_t
   ClientProxyUnknownFailure,
 
   /** This event is sent when a client computer has connected.
-      The event data is a pointer to ScreenConnectedInfo that indicates the connected computer.
+      The event data is a pointer to ComputerConnectedInfo that indicates the connected computer.
   */
   ServerConnected,
 
@@ -129,7 +129,7 @@ enum class EventTypes : uint32_t
   ServerDisconnected,
 
   /** This event is sent to inform the server to switch computers.
-      The event data is a pointer to SwitchToScreenInfo that indicates the target computer.
+      The event data is a pointer to SwitchToComputerInfo that indicates the target computer.
   */
   ServerSwitchToScreen,
 
@@ -147,7 +147,7 @@ enum class EventTypes : uint32_t
   ServerKeyboardBroadcast,
 
   /** This event is sent to inform the server to lock the cursor to the active computer or to
-      unlock it. The event data is a pointer to LockCursorToScreenInfo.
+      unlock it. The event data is a pointer to LockCursorToComputerInfo.
   */
   ServerLockCursorToScreen,
 

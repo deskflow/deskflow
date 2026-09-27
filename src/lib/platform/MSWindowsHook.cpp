@@ -8,7 +8,7 @@
 #include "platform/MSWindowsHook.h"
 #include "base/DirectionTypes.h"
 #include "base/Log.h"
-#include "deskflow/ScreenException.h"
+#include "deskflow/DisplayException.h"
 
 #include <cstring>
 #include <mutex>

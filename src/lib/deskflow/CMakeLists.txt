@@ -42,6 +42,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   Computer.h
   DeskflowException.cpp
   DeskflowException.h
+  DisplayException.cpp
+  DisplayException.h
   DisplayInvalidException.h
   IApp.h
   IClient.h
@@ -71,8 +73,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ProtocolTypes.h
   ProtocolUtil.cpp
   ProtocolUtil.h
-  ScreenException.cpp
-  ScreenException.h
   ServerApp.cpp
   ServerApp.h
   StreamChunker.cpp
