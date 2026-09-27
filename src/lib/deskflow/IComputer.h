@@ -12,9 +12,9 @@
 
 class IClipboard;
 
-//! Screen interface
+//! Computer interface
 /*!
-This interface defines the methods common to all screens.
+This interface defines the methods common to all computers.
 */
 class IComputer
 {
@@ -43,10 +43,10 @@ public:
   */
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
 
-  //! Get screen shape
+  //! Get computer shape
   /*!
-  Return the position of the upper-left corner of the screen in \c x and
-  \c y and the size of the screen in \c width and \c height.
+  Return the position of the upper-left corner of the computer in \c x and
+  \c y and the size of the computer in \c width and \c height.
   */
   virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const = 0;
 

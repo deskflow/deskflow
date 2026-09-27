@@ -15,11 +15,11 @@
 #include <QIcon>
 #include <QMimeData>
 
-const QString ComputerSetupModel::m_MimeType = "application/x-deskflow-screen";
+const QString ComputerSetupModel::m_MimeType = "application/x-deskflow-computer";
 
-ComputerSetupModel::ComputerSetupModel(ComputerList &screens, int numColumns, int numRows)
+ComputerSetupModel::ComputerSetupModel(ComputerList &computers, int numColumns, int numRows)
     : QAbstractTableModel(nullptr),
-      m_computers(screens),
+      m_computers(computers),
       m_NumColumns(numColumns),
       m_NumRows(numRows)
 {

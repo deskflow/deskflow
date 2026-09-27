@@ -133,7 +133,7 @@ MainWindow::MainWindow()
   updateText();
   connectSlots();
   setupTrayIcon();
-  updateScreenName();
+  updateComputerName();
   setHelpFilePath();
 
   qDebug().noquote() << "active settings path:" << Settings::settingsPath();
@@ -352,7 +352,7 @@ void MainWindow::settingsChanged(const QString &key)
   }
 
   if (key == Settings::Core::ComputerName)
-    updateScreenName();
+    updateComputerName();
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
@@ -1105,11 +1105,11 @@ void MainWindow::secureSocket(bool secureSocket)
   updateSecurityIcon(m_statusBar->securityIconVisible());
 }
 
-void MainWindow::updateScreenName()
+void MainWindow::updateComputerName()
 {
-  const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
-  ui->lblComputerName->setText(screenName);
-  ui->lineEditName->setText(screenName);
+  const auto computerName = Settings::value(Settings::Core::ComputerName).toString();
+  ui->lblComputerName->setText(computerName);
+  ui->lineEditName->setText(computerName);
   m_serverConfig.updateServerName();
 }
 

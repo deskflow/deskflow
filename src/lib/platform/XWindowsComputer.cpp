@@ -80,16 +80,16 @@ static int xi_opcode;
 // display and the X11 event queue buffer, ignore any calls that try
 // to use the display, and wait to be destroyed.
 
-XWindowsComputer *XWindowsComputer::s_screen = nullptr;
+XWindowsComputer *XWindowsComputer::s_computer = nullptr;
 
 XWindowsComputer::XWindowsComputer(const char *displayName, bool isPrimary, IEventQueue *events)
     : PlatformComputer(events),
       m_isPrimary(isPrimary),
-      m_isOnScreen(m_isPrimary),
+      m_isOnComputer(m_isPrimary),
       m_events(events)
 {
-  assert(s_screen == nullptr);
-  s_screen = this;
+  assert(s_computer == nullptr);
+  s_computer = this;
 
   if (XInitThreads() == 0) {
     throw std::runtime_error("XInitThreads() returned zero");
@@ -103,9 +103,9 @@ XWindowsComputer::XWindowsComputer(const char *displayName, bool isPrimary, IEve
     m_root = DefaultRootWindow(m_display);
     saveShape();
     m_window = openWindow();
-    m_computersaver = new XWindowsScreenSaver(m_display, m_window, getEventTarget(), events);
+    m_screensaver = new XWindowsScreenSaver(m_display, m_window, getEventTarget(), events);
     m_keyState = new XWindowsKeyState(m_display, m_xkb, events, m_keyMap);
-    LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : "");
+    LOG_DEBUG("computer shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : "");
     LOG_DEBUG("window is 0x%08x", m_window);
   } catch (...) {
     if (m_display != nullptr) {
@@ -114,7 +114,7 @@ XWindowsComputer::XWindowsComputer(const char *displayName, bool isPrimary, IEve
     throw;
   }
 
-  // primary/secondary screen only initialization
+  // primary/secondary computer only initialization
   if (m_isPrimary) {
 #ifdef HAVE_XI2
     m_xi2detected = detectXI2();
@@ -155,7 +155,7 @@ XWindowsComputer::XWindowsComputer(const char *displayName, bool isPrimary, IEve
 
 XWindowsComputer::~XWindowsComputer()
 {
-  assert(s_screen != nullptr);
+  assert(s_computer != nullptr);
   assert(m_display != nullptr);
 
   m_events->adoptBuffer(nullptr);
@@ -164,9 +164,9 @@ XWindowsComputer::~XWindowsComputer()
     delete clipboard;
   }
   delete m_keyState;
-  delete m_computersaver;
+  delete m_screensaver;
   m_keyState = nullptr;
-  m_computersaver = nullptr;
+  m_screensaver = nullptr;
   if (m_display != nullptr) {
     // FIXME -- is it safe to clean up the IC and IM without a display?
     if (m_ic != nullptr) {
@@ -180,7 +180,7 @@ XWindowsComputer::~XWindowsComputer()
   }
   XSetIOErrorHandler(nullptr);
 
-  s_screen = nullptr;
+  s_computer = nullptr;
 }
 
 void XWindowsComputer::enable()
@@ -238,7 +238,7 @@ void XWindowsComputer::enter()
   }
 
 #if HAVE_X11_EXTENSIONS_DPMS_H
-  // Force the DPMS to turn screen back on since we don't
+  // Force the DPMS to turn computer back on since we don't
   // actually cause physical hardware input to trigger it
   int dummy;
   CARD16 powerlevel;
@@ -271,8 +271,8 @@ void XWindowsComputer::enter()
     // XAutoRepeatOff(m_display);
   }
 
-  // now on screen
-  m_isOnScreen = true;
+  // now on computer
+  m_isOnComputer = true;
 }
 
 bool XWindowsComputer::canLeave()
@@ -335,8 +335,8 @@ void XWindowsComputer::leave()
     m_filtered.clear();
   }
 
-  // now off screen
-  m_isOnScreen = false;
+  // now off computer
+  m_isOnComputer = false;
 }
 
 bool XWindowsComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
@@ -370,25 +370,25 @@ void XWindowsComputer::checkClipboards()
 
 void XWindowsComputer::openScreensaver(bool notify)
 {
-  m_computersaverNotify = notify;
-  if (!m_computersaverNotify) {
-    m_computersaver->disable();
+  m_screensaverNotify = notify;
+  if (!m_screensaverNotify) {
+    m_screensaver->disable();
   }
 }
 
 void XWindowsComputer::closeScreensaver()
 {
-  if (!m_computersaverNotify) {
-    m_computersaver->enable();
+  if (!m_screensaverNotify) {
+    m_screensaver->enable();
   }
 }
 
 void XWindowsComputer::screensaver(bool activate)
 {
   if (activate) {
-    m_computersaver->activate();
+    m_screensaver->activate();
   } else {
-    m_computersaver->deactivate();
+    m_screensaver->deactivate();
   }
 }
 
@@ -408,7 +408,7 @@ void XWindowsComputer::setOptions(const OptionsList &options)
     if (options[i] == kOptionXTestXineramaUnaware) {
       m_xtestIsXineramaUnaware = (options[i + 1] != 0);
       LOG_VERBOSE("library, XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false");
-    } else if (options[i] == kOptionScreenX11WeakFocus) {
+    } else if (options[i] == kOptionComputerX11WeakFocus) {
       m_weakFocus = (options[i + 1] != 0);
       LOG_VERBOSE("preserve focus: %s", m_weakFocus ? "true" : "false");
     }
@@ -841,7 +841,7 @@ Display *XWindowsComputer::openDisplay(const char *displayName)
   LOG_VERBOSE("calling XOpenDisplay(\"%s\")", displayName);
   Display *display = XOpenDisplay(displayName);
   if (display == nullptr) {
-    throw ScreenUnavailableException();
+    throw X11DisplayUnavailableException();
   }
 
   // verify the availability of the XTest extension
@@ -852,7 +852,7 @@ Display *XWindowsComputer::openDisplay(const char *displayName)
     if (!XQueryExtension(display, XTestExtensionName, &majorOpcode, &firstEvent, &firstError)) {
       LOG_ERR("the XTest extension is not available");
       XCloseDisplay(display);
-      throw ScreenOpenFailureException();
+      throw DisplayOpenFailureException();
     }
   }
 
@@ -888,7 +888,7 @@ Display *XWindowsComputer::openDisplay(const char *displayName)
 
 void XWindowsComputer::saveShape()
 {
-  // get shape of default screen
+  // get shape of default computer
   setShape(WidthOfScreen(DefaultScreenOfDisplay(m_display)), HeightOfScreen(DefaultScreenOfDisplay(m_display)));
 }
 
@@ -901,7 +901,7 @@ void XWindowsComputer::setShape(int32_t width, int32_t height)
   m_w = width;
   m_h = height;
 
-  // get center of screen
+  // get center of computer
   m_xCenter = m_x + (m_w >> 1);
   m_yCenter = m_y + (m_h >> 1);
 
@@ -964,7 +964,7 @@ Window XWindowsComputer::openWindow() const
   if (m_isPrimary) {
     // grab window attributes.  this window is used to capture user
     // input when the user is focused on another client.  it covers
-    // the whole screen.
+    // the whole computer.
     attr.event_mask = PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask |
                       KeymapStateMask | PropertyChangeMask;
     x = m_x;
@@ -973,8 +973,8 @@ Window XWindowsComputer::openWindow() const
     h = m_h;
   } else {
     // cursor hider window attributes.  this window is used to hide the
-    // cursor when it's not on the screen.  the window is hidden as soon
-    // as the cursor enters the screen or the display's real mouse is
+    // cursor when it's not on the computer.  the window is hidden as soon
+    // as the cursor enters the computer or the display's real mouse is
     // moved.  we'll reposition the window as necessary so its
     // position here doesn't matter.  it only needs to be 1x1 because
     // it only needs to contain the cursor's hotspot.
@@ -991,7 +991,7 @@ Window XWindowsComputer::openWindow() const
       CWDontPropagate | CWEventMask | CWOverrideRedirect | CWCursor, &attr
   );
   if (window == None) {
-    throw ScreenOpenFailureException();
+    throw DisplayOpenFailureException();
   }
   return window;
 }
@@ -1054,7 +1054,7 @@ void XWindowsComputer::openIM()
   XGetWindowAttributes(m_display, m_window, &attr);
   XSelectInput(m_display, m_window, attr.your_event_mask | mask);
 
-  // listen for screen-resize messages
+  // listen for computer-resize messages
   XSelectInput(m_display, m_root, StructureNotifyMask);
 }
 
@@ -1112,7 +1112,7 @@ void XWindowsComputer::handleSystemEvent(const Event &event)
         // this is a hot key
         onHotKey(xevent->xkey, isRepeat);
         return;
-      } else if (!m_isOnScreen && onHotKey(xevent->xkey, isRepeat)) {
+      } else if (!m_isOnComputer && onHotKey(xevent->xkey, isRepeat)) {
         return;
       }
 
@@ -1157,7 +1157,7 @@ void XWindowsComputer::handleSystemEvent(const Event &event)
   }
 
   // let screen saver have a go
-  if (m_computersaver->handleXEvent(xevent)) {
+  if (m_screensaver->handleXEvent(xevent)) {
     // screen saver handled it
     return;
   }
@@ -1211,7 +1211,7 @@ void XWindowsComputer::handleSystemEvent(const Event &event)
 
   case SelectionClear: {
     // we just lost the selection.  that means someone else
-    // grabbed the selection so this screen is now the
+    // grabbed the selection so this computer is now the
     // selection owner.  report that to the receiver.
     ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
     if (id != kClipboardEnd) {
@@ -1324,7 +1324,7 @@ void XWindowsComputer::handleSystemEvent(const Event &event)
         // state
         XRRUpdateConfiguration(xevent);
 
-        // requery/recalculate the screen shape
+        // requery/recalculate the computer shape
         saveShape();
 
         // we need to resize m_window, otherwise we'll get a weird problem where
@@ -1502,11 +1502,11 @@ void XWindowsComputer::onMouseMove(const XMotionEvent &xmotion)
       }
     } while (!xevent.xany.send_event);
     cntr = 0;
-  } else if (m_isOnScreen) {
-    // motion on primary screen
+  } else if (m_isOnComputer) {
+    // motion on primary computer
     sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
-    // motion on secondary screen.  warp mouse back to
+    // motion on secondary computer.  warp mouse back to
     // center.
     //
     // my lombard (powerbook g3) running linux and
@@ -1526,9 +1526,9 @@ void XWindowsComputer::onMouseMove(const XMotionEvent &xmotion)
 
     // send event if mouse moved.  do this after warping
     // back to center in case the motion takes us onto
-    // the primary screen.  if we sent the event first
+    // the primary computer.  if we sent the event first
     // in that case then the warp would happen after
-    // warping to the primary screen's enter position,
+    // warping to the primary computer's enter position,
     // effectively overriding it.
     if (x != 0 || y != 0) {
       sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(x, y));
@@ -1607,8 +1607,8 @@ void XWindowsComputer::onError()
 {
   // prevent further access to the X display
   m_events->adoptBuffer(nullptr);
-  m_computersaver->destroy();
-  m_computersaver = nullptr;
+  m_screensaver->destroy();
+  m_screensaver = nullptr;
   m_display = nullptr;
 
   // notify of failure
@@ -1631,7 +1631,7 @@ int XWindowsComputer::ioErrorHandler(Display *)
   // we'll pretend as if we won't exit so we try to make sure we
   // don't access the display anymore.
   LOG_CRIT("x display has unexpectedly disconnected");
-  s_screen->onError();
+  s_computer->onError();
   return 0;
 }
 

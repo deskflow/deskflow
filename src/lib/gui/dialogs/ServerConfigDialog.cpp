@@ -41,9 +41,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   loadFromConfig();
 
-  ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
-  ui->lblNewScreen->setEnabled(!model().isFull());
-  ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
+  ui->lblRemoveComputer->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
+  ui->lblNewComputer->setEnabled(!model().isFull());
+  ui->lblNewComputer->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
   if (!deskflow::platform::isWindows())
@@ -352,7 +352,7 @@ void ServerConfigDialog::addClient()
 
 void ServerConfigDialog::onComputerRemoved()
 {
-  ui->lblNewScreen->setEnabled(true);
+  ui->lblNewComputer->setEnabled(true);
   setButtonBoxEnabledButtons();
 }
 
@@ -468,7 +468,7 @@ void ServerConfigDialog::initConnections() const
   connect(m_buttonBox, &SettingsDialogButtonBox::reset, this, &ServerConfigDialog::resetFromSettings);
   connect(m_buttonBox, &SettingsDialogButtonBox::restoreDefault, this, &ServerConfigDialog::restoreFromDefaults);
   connect(ui->tabWidget, &QTabWidget::currentChanged, this, &ServerConfigDialog::setButtonBoxEnabledButtons);
-  connect(ui->lblRemoveScreen, &RemoveComputerWidget::computerRemoved, this, &ServerConfigDialog::onComputerRemoved);
+  connect(ui->lblRemoveComputer, &RemoveComputerWidget::computerRemoved, this, &ServerConfigDialog::onComputerRemoved);
   connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);
   connect(ui->btnEditHotkey, &QPushButton::clicked, this, &ServerConfigDialog::editHotkey);
   connect(ui->btnRemoveHotkey, &QPushButton::clicked, this, &ServerConfigDialog::removeHotkey);
@@ -584,7 +584,7 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
     isAccepted = true;
   }
 
-  ui->lblNewScreen->setEnabled(!model().isFull());
+  ui->lblNewComputer->setEnabled(!model().isFull());
   return isAccepted;
 }
 

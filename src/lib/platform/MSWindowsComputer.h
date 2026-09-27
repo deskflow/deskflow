@@ -184,8 +184,8 @@ private: // HACK
   // test if event should be ignored
   bool ignore() const;
 
-  // update screen size cache
-  void updateScreenShape();
+  // update computer size cache
+  void updateComputerShape();
 
   // fix timer callback
   void handleFixes();
@@ -206,7 +206,7 @@ private: // HACK
   void updateKeysCB(const void *);
 
   // determine whether the mouse is hidden by the system.
-  // if true and on secondary screen, enable mouse keys to show the cursor.
+  // if true and on secondary computer, enable mouse keys to show the cursor.
   // we were previously restoring the old mouse key settings when not needed, but this was causing
   // issues where the mouse cursor becomes permanently hidden, even if there is a real mouse
   // attached to the system; this could be a windows bug, but losing your mouse is a nightmare
@@ -247,22 +247,22 @@ private:
 
   static HINSTANCE s_windowInstance;
 
-  // true if screen is being used as a primary screen, false otherwise
+  // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary;
 
   // true if hooks are not to be installed (useful for debugging)
   bool m_useHooks;
 
-  // true if mouse has entered the screen
-  bool m_isOnScreen;
+  // true if mouse has entered the computer
+  bool m_isOnComputer;
 
-  // true if the screen is enabled
+  // true if the computer is enabled
   bool m_isEnabled = false;
 
   // our resources
   ATOM m_class = 0;
 
-  // screen shape stuff
+  // computer shape stuff
   int32_t m_x = 0;
   int32_t m_y = 0;
   int32_t m_w = 0;
@@ -290,13 +290,13 @@ private:
   // timer for periodically checking stuff that requires polling
   EventQueueTimer *m_fixTimer = nullptr;
 
-  // the keyboard layout to use when off primary screen
+  // the keyboard layout to use when off primary computer
   HKL m_keyLayout = nullptr;
 
   // screen saver stuff
-  MSWindowsScreenSaver *m_computersaver = nullptr;
-  bool m_computersaverNotify = false;
-  bool m_computersaverActive = false;
+  MSWindowsScreenSaver *m_screensaver = nullptr;
+  bool m_screensaverNotify = false;
+  bool m_screensaverActive = false;
 
   // clipboard stuff.  our window is used mainly as a clipboard
   // owner and as a link in the clipboard viewer chain.
@@ -320,7 +320,7 @@ private:
 
   // m_hasMouse is true if there's a mouse attached to the system or
   // mouse keys is simulating one.  we track this so we can force the
-  // cursor to be displayed when the user has entered this screen.
+  // cursor to be displayed when the user has entered this computer.
   bool m_hasMouse;
 
   bool m_gotMouseKeys = false;
@@ -328,7 +328,7 @@ private:
 
   MSWindowsHook m_hook;
 
-  static MSWindowsComputer *s_screen;
+  static MSWindowsComputer *s_computer;
 
   IEventQueue *m_events;
 

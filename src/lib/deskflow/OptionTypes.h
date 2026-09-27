@@ -45,21 +45,21 @@ static const OptionID kOptionModifierMapForAltGr = OPTION_CODE("MMFG");
 static const OptionID kOptionModifierMapForMeta = OPTION_CODE("MMFM");
 static const OptionID kOptionModifierMapForSuper = OPTION_CODE("MMFR");
 static const OptionID kOptionHeartbeat = OPTION_CODE("HART");
-static const OptionID kOptionScreenSwitchCorners = OPTION_CODE("SSCM");
-static const OptionID kOptionScreenSwitchCornerSize = OPTION_CODE("SSCS");
-static const OptionID kOptionScreenSwitchDelay = OPTION_CODE("SSWT");
-static const OptionID kOptionScreenSwitchTwoTap = OPTION_CODE("SSTT");
+static const OptionID kOptionComputerSwitchCorners = OPTION_CODE("SSCM");
+static const OptionID kOptionComputerSwitchCornerSize = OPTION_CODE("SSCS");
+static const OptionID kOptionComputerSwitchDelay = OPTION_CODE("SSWT");
+static const OptionID kOptionComputerSwitchTwoTap = OPTION_CODE("SSTT");
 static const OptionID kOptionXTestXineramaUnaware = OPTION_CODE("XTXU");
-static const OptionID kOptionScreenX11WeakFocus = OPTION_CODE("SFOC");
+static const OptionID kOptionComputerX11WeakFocus = OPTION_CODE("SFOC");
 static const OptionID kOptionRelativeMouseMoves = OPTION_CODE("MDLT");
 static const OptionID kOptionWin32KeepForeground = OPTION_CODE("_KFW");
-static const OptionID kOptionDefaultLockToScreenState = OPTION_CODE("LTSS");
-static const OptionID kOptionDisableLockToScreen = OPTION_CODE("DLTS");
+static const OptionID kOptionDefaultLockToComputerState = OPTION_CODE("LTSS");
+static const OptionID kOptionDisableLockToComputer = OPTION_CODE("DLTS");
 static const OptionID kOptionClipboardSharing = OPTION_CODE("CLPS");
 static const OptionID kOptionClipboardSharingSize = OPTION_CODE("CLSZ");
 //@}
 
-//! @name Screen switch corner masks
+//! @name Computer switch corner masks
 //@{
 inline static const auto s_noCornerMask = 0;
 inline static const auto s_topLeftCornerMask = 1 << 0;

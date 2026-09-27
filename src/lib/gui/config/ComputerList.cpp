@@ -48,15 +48,15 @@ std::array<int, 8> getNeighborsIndexes(int serverIndex, int width, int size)
 
 /**
  * @brief getServerIndex finds server and returns it's index
- * @param screens list to find server
+ * @param computers list to find server
  * @return server index
  */
-int getServerIndex(const ComputerList &screens)
+int getServerIndex(const ComputerList &computers)
 {
   int serverIndex = -1;
 
-  for (int i = 0; i < screens.size(); ++i) {
-    if (screens[i].isServer()) {
+  for (int i = 0; i < computers.size(); ++i) {
+    if (computers[i].isServer()) {
       serverIndex = i;
       break;
     }

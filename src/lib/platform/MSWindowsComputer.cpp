@@ -77,37 +77,37 @@
 //
 
 HINSTANCE MSWindowsComputer::s_windowInstance = nullptr;
-MSWindowsComputer *MSWindowsComputer::s_screen = nullptr;
+MSWindowsComputer *MSWindowsComputer::s_computer = nullptr;
 
 MSWindowsComputer::MSWindowsComputer(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync)
     : PlatformComputer(events),
       m_isPrimary(isPrimary),
       m_useHooks(useHooks),
-      m_isOnScreen(m_isPrimary),
+      m_isOnComputer(m_isPrimary),
       m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
       m_events(events)
 {
   LOG_DEBUG("settting up %s computer", m_isPrimary ? "primary" : "secondary");
 
   assert(s_windowInstance != nullptr);
-  assert(s_screen == nullptr);
+  assert(s_computer == nullptr);
 
-  s_screen = this;
+  s_computer = this;
   try {
     if (m_isPrimary && m_useHooks) {
       m_hook.loadLibrary();
     }
 
-    m_computersaver = new MSWindowsScreenSaver();
+    m_screensaver = new MSWindowsScreenSaver();
     m_desks = new MSWindowsDesks(
-        m_isPrimary, m_useHooks, m_computersaver, m_events,
+        m_isPrimary, m_useHooks, m_screensaver, m_events,
         new TMethodJob<MSWindowsComputer>(this, &MSWindowsComputer::updateKeysCB)
     );
     m_keyState = new MSWindowsKeyState(
         m_desks, getEventTarget(), m_events, AppUtil::instance().getKeyboardLayoutList(), enableLangSync
     );
 
-    updateScreenShape();
+    updateComputerShape();
     m_class = createWindowClass();
     m_window = createWindow(m_class, kAppNameW);
     setupMouseKeys();
@@ -122,10 +122,10 @@ MSWindowsComputer::MSWindowsComputer(bool isPrimary, bool useHooks, IEventQueue 
   } catch (...) {
     delete m_keyState;
     delete m_desks;
-    delete m_computersaver;
+    delete m_screensaver;
     destroyWindow(m_window);
     destroyClass(m_class);
-    s_screen = nullptr;
+    s_computer = nullptr;
     throw;
   }
 
@@ -140,7 +140,7 @@ MSWindowsComputer::MSWindowsComputer(bool isPrimary, bool useHooks, IEventQueue 
 
 MSWindowsComputer::~MSWindowsComputer()
 {
-  assert(s_screen != nullptr);
+  assert(s_computer != nullptr);
 
   if (m_isEnabled) {
     disable();
@@ -149,13 +149,13 @@ MSWindowsComputer::~MSWindowsComputer()
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
   delete m_keyState;
   delete m_desks;
-  delete m_computersaver;
+  delete m_screensaver;
   destroyWindow(m_window);
   destroyClass(m_class);
 
   OleUninitialize();
 
-  s_screen = nullptr;
+  s_computer = nullptr;
 }
 
 void MSWindowsComputer::init(HINSTANCE windowInstance)
@@ -177,7 +177,7 @@ void MSWindowsComputer::enable()
   LOG_DEBUG("enabling %s computer", m_isPrimary ? "primary" : "secondary");
   m_isEnabled = true;
 
-  assert(m_isOnScreen == m_isPrimary);
+  assert(m_isOnComputer == m_isPrimary);
 
   // we need to poll some things to fix them
   m_fixTimer = m_events->newTimer(1.0, nullptr);
@@ -231,7 +231,7 @@ void MSWindowsComputer::disable()
     m_fixTimer = nullptr;
   }
 
-  m_isOnScreen = m_isPrimary;
+  m_isOnComputer = m_isPrimary;
 }
 
 void MSWindowsComputer::enter()
@@ -249,18 +249,18 @@ void MSWindowsComputer::enter()
 
     m_primaryKeyDownList.clear();
   } else {
-    // Entering a secondary screen. Ensure that no screensaver is active
-    // and that the screen is not in powersave mode.
+    // Entering a secondary computer. Ensure that no screensaver is active
+    // and that the computer is not in powersave mode.
     ArchMiscWindows::wakeupDisplay();
 
-    if (m_computersaver != nullptr && m_computersaverActive) {
-      m_computersaver->deactivate();
-      m_computersaverActive = 0;
+    if (m_screensaver != nullptr && m_screensaverActive) {
+      m_screensaver->deactivate();
+      m_screensaverActive = 0;
     }
   }
 
-  // now on screen
-  m_isOnScreen = true;
+  // now on computer
+  m_isOnComputer = true;
   setupMouseKeys();
 }
 
@@ -268,8 +268,8 @@ bool MSWindowsComputer::canLeave()
 {
   POINT pos;
   if (!getThisCursorPos(&pos)) {
-    // prevent screen leave when cursor position is not available; if unable to get cursor position,
-    // screen will become inaccessible if the cursor leaves the screen.
+    // prevent computer leave when cursor position is not available; if unable to get cursor position,
+    // computer will become inaccessible if the cursor leaves the computer.
     LOG_DEBUG("unable to leave computer, cursor position not available");
     return false;
   }
@@ -314,8 +314,8 @@ void MSWindowsComputer::leave()
     }
   }
 
-  // now off screen
-  m_isOnScreen = false;
+  // now off computer
+  m_isOnComputer = false;
 }
 
 bool MSWindowsComputer::setClipboard(ClipboardID, const IClipboard *src)
@@ -338,15 +338,15 @@ bool MSWindowsComputer::setClipboard(ClipboardID, const IClipboard *src)
 void MSWindowsComputer::checkClipboards()
 {
   // if we think we own the clipboard but we don't then somebody
-  // grabbed the clipboard on this screen without us knowing.
-  // tell the server that this screen grabbed the clipboard.
+  // grabbed the clipboard on this computer without us knowing.
+  // tell the server that this computer grabbed the clipboard.
   //
   // this works around bugs in the clipboard viewer chain.
   // sometimes NT will simply never send WM_DRAWCLIPBOARD
   // messages for no apparent reason and rebooting fixes the
   // problem.  since we don't want a broken clipboard until the
   // next reboot we do this double check.  clipboard ownership
-  // won't be reflected on other screens until we leave but at
+  // won't be reflected on other computers until we leave but at
   // least the clipboard itself will work.
   if (m_ownClipboard && !MSWindowsClipboard::isOwnedByDeskflow()) {
     LOG_DEBUG("clipboard changed: lost ownership and no notification received");
@@ -358,38 +358,38 @@ void MSWindowsComputer::checkClipboards()
 
 void MSWindowsComputer::openScreensaver(bool notify)
 {
-  assert(m_computersaver != nullptr);
+  assert(m_screensaver != nullptr);
 
-  m_computersaverNotify = notify;
-  if (m_computersaverNotify) {
+  m_screensaverNotify = notify;
+  if (m_screensaverNotify) {
     m_desks->installScreensaverHooks(true);
-  } else if (m_computersaver) {
-    m_computersaver->disable();
+  } else if (m_screensaver) {
+    m_screensaver->disable();
   }
 }
 
 void MSWindowsComputer::closeScreensaver()
 {
-  if (m_computersaver != nullptr) {
-    if (m_computersaverNotify) {
+  if (m_screensaver != nullptr) {
+    if (m_screensaverNotify) {
       m_desks->installScreensaverHooks(false);
     } else {
-      m_computersaver->enable();
+      m_screensaver->enable();
     }
   }
-  m_computersaverNotify = false;
+  m_screensaverNotify = false;
 }
 
 void MSWindowsComputer::screensaver(bool activate)
 {
-  assert(m_computersaver != nullptr);
-  if (m_computersaver == nullptr)
+  assert(m_screensaver != nullptr);
+  if (m_screensaver == nullptr)
     return;
 
   if (activate) {
-    m_computersaver->activate();
+    m_screensaver->activate();
   } else {
-    m_computersaver->deactivate();
+    m_screensaver->deactivate();
   }
 }
 
@@ -646,7 +646,7 @@ void MSWindowsComputer::fakeInputBegin()
 {
   assert(m_isPrimary);
 
-  if (!m_isOnScreen) {
+  if (!m_isOnComputer) {
     m_keyState->useSavedModifiers(true);
   }
   m_desks->fakeInputBegin();
@@ -657,7 +657,7 @@ void MSWindowsComputer::fakeInputEnd()
   assert(m_isPrimary);
 
   m_desks->fakeInputEnd();
-  if (!m_isOnScreen) {
+  if (!m_isOnComputer) {
     m_keyState->useSavedModifiers(false);
   }
 }
@@ -804,7 +804,7 @@ HWND MSWindowsComputer::createWindow(ATOM windowClass, const wchar_t *name) cons
   );
   if (window == nullptr) {
     LOG_ERR("failed to create window: %d", GetLastError());
-    throw ScreenOpenFailureException();
+    throw DisplayOpenFailureException();
   }
   return window;
 }
@@ -1042,7 +1042,7 @@ bool MSWindowsComputer::onKey(WPARAM wParam, LPARAM lParam)
   // record keyboard state
   m_keyState->onKey(button, down, oldState);
 
-  if (!down && m_isPrimary && !m_isOnScreen) {
+  if (!down && m_isPrimary && !m_isOnComputer) {
     PrimaryKeyDownList::iterator find = std::find(m_primaryKeyDownList.begin(), m_primaryKeyDownList.end(), button);
     if (find != m_primaryKeyDownList.end()) {
       LOG_VERBOSE("release key button %d on primary", *find);
@@ -1059,7 +1059,7 @@ bool MSWindowsComputer::onKey(WPARAM wParam, LPARAM lParam)
   // GetKeyState() or even GetAsyncKeyState() for that but we can't
   // because our hook doesn't pass on key events for several modifiers.
   // it can't otherwise the system would interpret them normally on
-  // the primary screen even when on a secondary screen.  so tapping
+  // the primary computer even when on a secondary computer.  so tapping
   // alt would activate menus and tapping the windows key would open
   // the start menu.  if you don't pass those events on in the hook
   // then GetKeyState() understandably doesn't reflect the effect of
@@ -1216,10 +1216,10 @@ bool MSWindowsComputer::onMouseButton(WPARAM wParam, LPARAM lParam)
 }
 
 // here's how mouse movements are sent across the network to a client:
-//   1. deskflow checks the mouse position on server screen
+//   1. deskflow checks the mouse position on server computer
 //   2. records the delta (current x,y minus last x,y)
 //   3. records the current x,y as "last" (so we can calc delta next time)
-//   4. on the server, puts the cursor back to the center of the screen
+//   4. on the server, puts the cursor back to the center of the computer
 //      - remember the cursor is hidden on the server at this point
 //      - this actually records the current x,y as "last" a second time (it
 //      seems)
@@ -1243,19 +1243,19 @@ bool MSWindowsComputer::onMouseMove(int32_t mx, int32_t my)
   // save position to compute delta of next motion
   saveMousePosition(mx, my);
 
-  if (m_isOnScreen) {
-    // motion on primary screen
+  if (m_isOnComputer) {
+    // motion on primary computer
     sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
-    // the motion is on the secondary screen, so we warp mouse back to
-    // center on the server screen. if we don't do this, then the mouse
+    // the motion is on the secondary computer, so we warp mouse back to
+    // center on the server computer. if we don't do this, then the mouse
     // will always try to return to the original entry point on the
-    // secondary screen.
+    // secondary computer.
     LOG_VERBOSE("centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter);
     warpCursorNoFlush(m_xCenter, m_yCenter);
 
     // examine the motion.  if it's about the distance
-    // from the center of the screen to an edge then
+    // from the center of the computer to an edge then
     // it's probably a bogus motion that we want to
     // ignore (see warpCursorNoFlush() for a further
     // description).
@@ -1299,13 +1299,13 @@ bool MSWindowsComputer::onScreensaver(bool activated)
   }
 
   if (activated) {
-    if (!m_computersaverActive && m_computersaver->checkStarted(DESKFLOW_MSG_SCREEN_SAVER, FALSE, 0)) {
-      m_computersaverActive = true;
+    if (!m_screensaverActive && m_screensaver->checkStarted(DESKFLOW_MSG_SCREEN_SAVER, FALSE, 0)) {
+      m_screensaverActive = true;
       sendEvent(EventTypes::PrimaryScreenSaverActivated);
     }
   } else {
-    if (m_computersaverActive) {
-      m_computersaverActive = false;
+    if (m_screensaverActive) {
+      m_screensaverActive = false;
       sendEvent(EventTypes::PrimaryScreenSaverDeactivated);
     }
   }
@@ -1315,27 +1315,27 @@ bool MSWindowsComputer::onScreensaver(bool activated)
 
 bool MSWindowsComputer::onDisplayChange()
 {
-  // screen resolution may have changed.  save old shape.
+  // computer resolution may have changed.  save old shape.
   int32_t xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
 
   // update shape
-  updateScreenShape();
+  updateComputerShape();
 
   // do nothing if resolution hasn't changed
   if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
     if (m_isPrimary) {
-      if (!m_isOnScreen) {
+      if (!m_isOnComputer) {
         LOG_VERBOSE("centering cursor on display change: %+d, %+d", m_xCenter, m_yCenter);
         warpCursor(m_xCenter, m_yCenter);
       }
 
-      // tell hook about resize if on screen
+      // tell hook about resize if on computer
       else {
         m_hook.setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
       }
     }
 
-    // send new screen info
+    // send new computer info
     sendEvent(EventTypes::ComputerShapeChanged);
 
     LOG_DEBUG("computer shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
@@ -1385,8 +1385,8 @@ void MSWindowsComputer::warpCursorNoFlush(int32_t x, int32_t y)
       // be an MS security feature). instead we can use fakeMouseMove, which
       // calls mouse_event. IMPORTANT: as of implementing this function, it has
       // an annoying side effect; instead of the mouse returning to the correct
-      // exit point, it returns to the center of the screen. this could have
-      // something to do with the center screen warping technique used (see
+      // exit point, it returns to the center of the computer. this could have
+      // something to do with the center computer warping technique used (see
       // comments for onMouseMove definition).
       fakeMouseMove(x, y);
     }
@@ -1407,7 +1407,7 @@ void MSWindowsComputer::warpCursorNoFlush(int32_t x, int32_t y)
   // to guarantee that.  yielding the CPU here may reduce the
   // chance of undesired behavior.  we'll also check for very
   // large motions that look suspiciously like about half width
-  // or height of the screen.
+  // or height of the computer.
   Arch::sleep(0.0);
 
   // send an event that we can recognize after the mouse warp
@@ -1428,7 +1428,7 @@ bool MSWindowsComputer::ignore() const
   return (m_mark != m_markReceived);
 }
 
-void MSWindowsComputer::updateScreenShape()
+void MSWindowsComputer::updateComputerShape()
 {
   // get shape and center
   m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -1569,7 +1569,7 @@ void MSWindowsComputer::updateKeysCB(const void *)
 {
   // record which keys we think are down
   bool down[IKeyState::s_numButtons];
-  bool sendFixes = (isPrimary() && !m_isOnScreen);
+  bool sendFixes = (isPrimary() && !m_isOnComputer);
   if (sendFixes) {
     for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
       down[i] = m_keyState->isKeyDown(i);
@@ -1598,7 +1598,7 @@ void MSWindowsComputer::updateKeysCB(const void *)
 
 void MSWindowsComputer::setupMouseKeys()
 {
-  // we only need to enable the mouse keys feature when on a secondary screen.
+  // we only need to enable the mouse keys feature when on a secondary computer.
   // this tricks windows into showing the mouse cursor when there is no real mouse.
   if (m_isPrimary) {
     // silent return to avoid noise.
@@ -1616,7 +1616,7 @@ void MSWindowsComputer::setupMouseKeys()
   // is called based on system events such as system setting changes or hardware changes which
   // can occur at any time.
   if (!m_isEnabled) {
-    LOG_DEBUG("mouse keys setup skipped, screen is not enabled");
+    LOG_DEBUG("mouse keys setup skipped, computer is not enabled");
     return;
   }
 
@@ -1675,10 +1675,10 @@ void MSWindowsComputer::updateMouseKeys()
 
 LRESULT CALLBACK MSWindowsComputer::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-  assert(s_screen != nullptr);
+  assert(s_computer != nullptr);
 
   LRESULT result = 0;
-  if (!s_screen->onEvent(hwnd, msg, wParam, lParam, &result)) {
+  if (!s_computer->onEvent(hwnd, msg, wParam, lParam, &result)) {
     result = DefWindowProc(hwnd, msg, wParam, lParam);
   }
 

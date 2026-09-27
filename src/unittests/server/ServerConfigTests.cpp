@@ -34,29 +34,29 @@ void ServerConfigTests::equalityCheck()
 {
   Config a(nullptr);
   Config b(nullptr);
-  QVERIFY(a.addComputer("screenA"));
+  QVERIFY(a.addComputer("computerA"));
   QVERIFY(a != b);
 
-  QVERIFY(b.addComputer("screenB"));
+  QVERIFY(b.addComputer("computerB"));
   QVERIFY(a != b);
 
-  QVERIFY(a.addComputer("screenB"));
-  QVERIFY(a.addComputer("screenC"));
-  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(a.connect("screenB", Direction::Left, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(b.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenC"));
-  QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(b.connect("screenB", Direction::Left, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(a.addOption("screenA", kOptionClipboardSharing, 1));
-  QVERIFY(b.addOption("screenA", kOptionClipboardSharing, 1));
+  QVERIFY(a.addComputer("computerB"));
+  QVERIFY(a.addComputer("computerC"));
+  QVERIFY(a.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(a.connect("computerB", Direction::Left, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerC"));
+  QVERIFY(b.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(b.connect("computerB", Direction::Left, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(a.addOption("computerA", kOptionClipboardSharing, 1));
+  QVERIFY(b.addOption("computerA", kOptionClipboardSharing, 1));
   QVERIFY(a.addOption(std::string(), kOptionClipboardSharing, 1));
   QVERIFY(b.addOption(std::string(), kOptionClipboardSharing, 1));
 
   a.getInputFilter()->addFilterRule(InputFilter::Rule{new OnlySystemFilter()});
   b.getInputFilter()->addFilterRule(InputFilter::Rule{new OnlySystemFilter()});
-  QVERIFY(a.addAlias("screenA", "aliasA"));
-  QVERIFY(b.addAlias("screenA", "aliasA"));
+  QVERIFY(a.addAlias("computerA", "aliasA"));
+  QVERIFY(b.addAlias("computerA", "aliasA"));
   /* TODO Fix linking to the proper libs
   NetworkAddress addr1("localhost", 8080);
   addr1.resolve();
@@ -73,10 +73,10 @@ void ServerConfigTests::equalityCheck_diff_options()
   Config a(nullptr);
   Config b(nullptr);
 
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenA"));
-  QVERIFY(a.addOption("screenA", kOptionClipboardSharing, 0));
-  QVERIFY(b.addOption("screenA", kOptionClipboardSharing, 1));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(a.addOption("computerA", kOptionClipboardSharing, 0));
+  QVERIFY(b.addOption("computerA", kOptionClipboardSharing, 1));
   QVERIFY(a != b);
 }
 
@@ -85,13 +85,13 @@ void ServerConfigTests::equalityCheck_diff_alias()
   Config a(nullptr);
   Config b(nullptr);
 
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenA"));
-  QVERIFY(b.addAlias("screenA", "aliasA"));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(b.addAlias("computerA", "aliasA"));
   QVERIFY(a != b);
 
-  QVERIFY(a.addAlias("screenA", "aliasA"));
-  QVERIFY(b.addAlias("screenA", "aliasB"));
+  QVERIFY(a.addAlias("computerA", "aliasA"));
+  QVERIFY(b.addAlias("computerA", "aliasB"));
   QVERIFY(a != b);
 }
 
@@ -99,8 +99,8 @@ void ServerConfigTests::equalityCheck_diff_filters()
 {
   Config a(nullptr);
   Config b(nullptr);
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenA"));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerA"));
 
   a.getInputFilter()->addFilterRule(InputFilter::Rule{new OnlySystemFilter()});
   QVERIFY(a != b);
@@ -112,8 +112,8 @@ void ServerConfigTests::equalityCheck_diff_address()
 {
   Config a(nullptr);
   Config b(nullptr);
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenA"));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerA"));
   a.setDeskflowAddress(NetworkAddress(8000));
   b.setDeskflowAddress(NetworkAddress(9000));
   QVERIFY(a != b);
@@ -124,11 +124,11 @@ void ServerConfigTests::equalityCheck_diff_neighbours1()
 {
   Config a(nullptr);
   Config b(nullptr);
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(a.addComputer("screenB"));
-  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(b.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenB"));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(a.addComputer("computerB"));
+  QVERIFY(a.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerB"));
   QVERIFY(a != b);
   QVERIFY(b != a);
 }
@@ -137,12 +137,12 @@ void ServerConfigTests::equalityCheck_diff_neighbours2()
 {
   Config a(nullptr);
   Config b(nullptr);
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(a.addComputer("screenB"));
-  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(b.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenB"));
-  QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.25f, "screenB", 0.25f, 1.0f));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(a.addComputer("computerB"));
+  QVERIFY(a.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerB"));
+  QVERIFY(b.connect("computerA", Direction::Bottom, 0.0f, 0.25f, "computerB", 0.25f, 1.0f));
   QVERIFY(a != b);
 }
 
@@ -150,14 +150,14 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
 {
   Config a(nullptr);
   Config b(nullptr);
-  QVERIFY(a.addComputer("screenA"));
-  QVERIFY(a.addComputer("screenB"));
-  QVERIFY(a.addComputer("screenC"));
-  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(b.addComputer("screenA"));
-  QVERIFY(b.addComputer("screenB"));
-  QVERIFY(b.addComputer("screenC"));
-  QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenC", 0.5f, 1.0f));
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(a.addComputer("computerB"));
+  QVERIFY(a.addComputer("computerC"));
+  QVERIFY(a.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerB", 0.5f, 1.0f));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerB"));
+  QVERIFY(b.addComputer("computerC"));
+  QVERIFY(b.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerC", 0.5f, 1.0f));
   QVERIFY(a != b);
 }
 

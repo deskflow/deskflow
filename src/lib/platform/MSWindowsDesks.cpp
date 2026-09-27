@@ -115,8 +115,8 @@ MSWindowsDesks::MSWindowsDesks(
 )
     : m_isPrimary(isPrimary),
       m_useHooks(useHooks),
-      m_isOnScreen(m_isPrimary),
-      m_computersaver(screensaver),
+      m_isOnComputer(m_isPrimary),
+      m_screensaver(screensaver),
       m_deskReady(&m_mutex, false),
       m_updateKeys(updateKeys),
       m_events(events)
@@ -165,7 +165,7 @@ void MSWindowsDesks::disable()
   // destroy desks
   removeDesks();
 
-  m_isOnScreen = m_isPrimary;
+  m_isOnComputer = m_isPrimary;
 }
 
 void MSWindowsDesks::enter()
@@ -219,8 +219,8 @@ void MSWindowsDesks::setShape(
 
 void MSWindowsDesks::installScreensaverHooks(bool install)
 {
-  if (m_isPrimary && m_computersaverNotify != install) {
-    m_computersaverNotify = install;
+  if (m_isPrimary && m_screensaverNotify != install) {
+    m_screensaverNotify = install;
     sendMessage(DESKFLOW_MSG_SCREENSAVER, install, 0);
   }
 }
@@ -412,7 +412,7 @@ HWND MSWindowsDesks::createWindow(ATOM windowClass, const wchar_t *name) const
   );
   if (window == nullptr) {
     LOG_ERR("failed to create window: %d", GetLastError());
-    throw ScreenOpenFailureException();
+    throw DisplayOpenFailureException();
   }
   return window;
 }
@@ -454,7 +454,7 @@ void MSWindowsDesks::deskMouseMove(int32_t x, int32_t y) const
 {
   // when using absolute positioning with mouse_event(),
   // the normalized device coordinates range over only
-  // the primary screen.
+  // the primary computer.
   int32_t w = GetSystemMetrics(SM_CXSCREEN);
   int32_t h = GetSystemMetrics(SM_CYSCREEN);
   send_mouse_input(
@@ -634,7 +634,7 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
 
     // windows can take a while to hide the cursor, so wait a few milliseconds to ensure the cursor
     // is hidden before centering. this doesn't seem to affect the fluidity of the transition.
-    // without this, the cursor appears to flicker in the center of the screen which is annoying.
+    // without this, the cursor appears to flicker in the center of the computer which is annoying.
     // a slightly more elegant but complex solution could be to use a timed event.
     // 30 ms seems to work well enough without making the transition feel janky; a lower number
     // would be better but 10 ms doesn't seem to be quite long enough, as we get noticeable flicker.
@@ -686,7 +686,7 @@ void MSWindowsDesks::deskThread(const void *vdesk)
     case DESKFLOW_MSG_SWITCH:
       if (m_useHooks) {
         MSWindowsHook::uninstall();
-        if (m_computersaverNotify) {
+        if (m_screensaverNotify) {
           MSWindowsHook::uninstallScreenSaver();
           MSWindowsHook::installScreenSaver();
         }
@@ -705,7 +705,7 @@ void MSWindowsDesks::deskThread(const void *vdesk)
           break;
         }
 
-        // a window on the primary screen with low-level hooks
+        // a window on the primary computer with low-level hooks
         // should never activate.
         if (desk->m_window)
           EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
@@ -713,12 +713,12 @@ void MSWindowsDesks::deskThread(const void *vdesk)
       break;
 
     case DESKFLOW_MSG_ENTER:
-      m_isOnScreen = true;
+      m_isOnComputer = true;
       deskEnter(desk);
       break;
 
     case DESKFLOW_MSG_LEAVE:
-      m_isOnScreen = false;
+      m_isOnComputer = false;
       m_keyLayout = (HKL)msg.wParam;
       deskLeave(desk, m_keyLayout);
       break;
@@ -845,10 +845,10 @@ void MSWindowsDesks::checkDesk()
   // active becaue we'd most likely switch to the screensaver desktop
   // which would have the side effect of forcing the screensaver to
   // stop.
-  if (name != m_activeDeskName && !m_computersaver->isActive()) {
+  if (name != m_activeDeskName && !m_screensaver->isActive()) {
     // show cursor on previous desk
-    bool wasOnScreen = m_isOnScreen;
-    if (!wasOnScreen) {
+    bool wasOnComputer = m_isOnComputer;
+    if (!wasOnComputer) {
       sendMessage(DESKFLOW_MSG_ENTER, 0, 0);
     }
 
@@ -869,7 +869,7 @@ void MSWindowsDesks::checkDesk()
     sendMessage(DESKFLOW_MSG_SWITCH, 0, 0);
 
     // hide cursor on new desk
-    if (!wasOnScreen) {
+    if (!wasOnComputer) {
       sendMessage(DESKFLOW_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
     }
 
@@ -904,7 +904,7 @@ void MSWindowsDesks::handleCheckDesk()
   checkDesk();
 
   // also check if screen saver is running if on a modern OS and
-  // this is the primary screen.
+  // this is the primary computer.
   if (m_isPrimary) {
     BOOL running;
     SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, FALSE);

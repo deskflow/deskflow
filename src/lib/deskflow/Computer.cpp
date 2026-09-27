@@ -414,7 +414,7 @@ void Computer::enablePrimary()
   // get notified of screen saver activation/deactivation
   m_computer->openScreensaver(true);
 
-  // claim screen changed size
+  // claim computer changed size
   m_events->addEvent(Event(EventTypes::ComputerShapeChanged, getEventTarget()));
 }
 
@@ -450,7 +450,7 @@ void Computer::enterSecondary(KeyModifierMask) const
 
 void Computer::leavePrimary()
 {
-  // we don't track keys while on the primary screen so update our
+  // we don't track keys while on the primary computer so update our
   // idea of them now.  this is particularly to update the state of
   // the toggle modifiers.
   m_computer->updateKeyState();

@@ -19,11 +19,11 @@
 
 namespace deskflow {
 
-EiKeyState::EiKeyState(EiComputer *screen, IEventQueue *events)
+EiKeyState::EiKeyState(EiComputer *computer, IEventQueue *events)
     : KeyState(
           events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
       ),
-      m_computer{screen}
+      m_computer{computer}
 {
   m_xkb = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
@@ -367,7 +367,7 @@ void EiKeyState::clearStaleModifiers()
   // Recreate the XKB state to clear stuck depressed modifiers that happen when
   // modifier keys are pressed on the client and released on the server. Locked
   // modifiers are real keyboard state; do not clear NumLock/CapsLock/ScrollLock
-  // during screen transitions.
+  // during computer transitions.
   if (m_xkbState) {
     xkb_state_unref(m_xkbState);
   }

@@ -47,7 +47,7 @@ class MSWindowsDesks
 public:
   //! Constructor
   /*!
-  \p isPrimary is true iff the desk is for a primary screen.
+  \p isPrimary is true iff the desk is for a primary computer.
   \p screensaver points to a screensaver object and it's used
   only to check if the screensaver is active.  The \p updateKeys
   job is adopted and is called when the key state should be
@@ -234,20 +234,20 @@ private:
   static LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);
 
 private:
-  // true if screen is being used as a primary screen, false otherwise
+  // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary;
 
   // true if hooks are to be installed (when debugging, it can be useful to disable hooks)
   bool m_useHooks;
 
-  // true if mouse has entered the screen
-  bool m_isOnScreen;
+  // true if mouse has entered the computer
+  bool m_isOnComputer;
 
   // our resources
   ATOM m_deskClass;
   HCURSOR m_cursor;
 
-  // screen shape stuff
+  // computer shape stuff
   int32_t m_x = 0;
   int32_t m_y = 9;
   int32_t m_w = 0;
@@ -261,10 +261,10 @@ private:
   // the timer used to check for desktop switching
   EventQueueTimer *m_timer = nullptr;
 
-  // screen saver stuff
+  // computer saver stuff
   DWORD m_threadID;
-  const IScreenSaver *m_computersaver;
-  bool m_computersaverNotify = false;
+  const IScreenSaver *m_screensaver;
+  bool m_screensaverNotify = false;
 
   // the current desk and it's name
   Desk *m_activeDesk = nullptr;

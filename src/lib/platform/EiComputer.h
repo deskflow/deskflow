@@ -136,12 +136,12 @@ private:
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
-    auto screen = static_cast<EiComputer *>(ei_get_user_data(ei));
-    screen->eiLogEvent(priority, message);
+    auto computer = static_cast<EiComputer *>(ei_get_user_data(ei));
+    computer->eiLogEvent(priority, message);
   }
 
 private:
-  // true if screen is being used as a primary screen, false otherwise
+  // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary = false;
   IEventQueue *m_events = nullptr;
 
@@ -169,7 +169,7 @@ private:
 
   // Lazily-started EIS emulation: only grab while relayed input is actually
   // flowing, and release after a short idle so the compositor can DPMS-sleep
-  // this screen even while the deskflow cursor logically sits on it.
+  // this computer even while the deskflow cursor logically sits on it.
   mutable bool m_isEmulating = false;
   mutable EventQueueTimer *m_idleEmulationTimer = nullptr;
   // Chosen empirically on one machine in 2026-06; not derived from any protocol constant.
@@ -182,8 +182,8 @@ private:
   std::uint32_t m_h = 0;
   bool m_isShapeInitialized = false;
 
-  // true if mouse has entered the screen
-  bool m_isOnScreen;
+  // true if mouse has entered the computer
+  bool m_isOnComputer;
 
   // server: last pointer position
   // client: position sent before enter()

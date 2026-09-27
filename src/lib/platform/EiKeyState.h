@@ -22,7 +22,7 @@ namespace deskflow {
 class EiKeyState : public KeyState
 {
 public:
-  EiKeyState(EiComputer *screen, IEventQueue *events);
+  EiKeyState(EiComputer *computer, IEventQueue *events);
   ~EiKeyState() override;
 
   void init(int fd, std::size_t len);

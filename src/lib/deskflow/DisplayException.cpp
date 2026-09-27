@@ -9,19 +9,19 @@
 #include "deskflow/DisplayException.h"
 
 //
-// ScreenOpenFailureException
+// DisplayOpenFailureException
 //
 
-QString ScreenOpenFailureException::getWhat() const throw()
+QString DisplayOpenFailureException::getWhat() const throw()
 {
-  return format("ScreenOpenFailureException", "unable to open computer settings");
+  return format("DisplayOpenFailureException", "unable to open display");
 }
 
 //
-// ScreenUnavailableException
+// X11DisplayUnavailableException
 //
 
-QString ScreenUnavailableException::getWhat() const throw()
+QString X11DisplayUnavailableException::getWhat() const throw()
 {
-  return format("ScreenUnavailableException", "unable to open computer settings");
+  return format("X11DisplayUnavailableException", "unable to open x11 display");
 }

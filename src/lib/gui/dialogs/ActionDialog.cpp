@@ -27,7 +27,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   connect(
       ui->comboActionType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ActionDialog::actionTypeChanged
   );
-  connect(ui->listScreens, &QListWidget::itemChanged, this, &ActionDialog::itemToggled);
+  connect(ui->listComputers, &QListWidget::itemChanged, this, &ActionDialog::itemToggled);
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ActionDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ActionDialog::reject);
 
@@ -35,7 +35,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   ui->keySequenceWidget->setKeySequence(m_action.keySequence());
 
   ui->comboSwitchInDirection->setCurrentIndex(m_action.switchDirection());
-  ui->comboLockCursorToScreen->setCurrentIndex(m_action.lockCursorMode());
+  ui->comboLockCursorToComputer->setCurrentIndex(m_action.lockCursorMode());
 
   ui->comboActionType->setCurrentIndex(m_action.type());
   ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
@@ -49,19 +49,19 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
         (m_action.haveScreens() && !m_action.typeScreenNames().isEmpty()))
       newListItem->setCheckState(Qt::Unchecked);
 
-    ui->listScreens->addItem(newListItem);
+    ui->listComputers->addItem(newListItem);
 
-    ui->comboSwitchToScreen->addItem(tr("Switch to %1").arg(computer.name()), computer.name());
+    ui->comboSwitchToComputer->addItem(tr("Switch to %1").arg(computer.name()), computer.name());
     if (computer.name() == m_action.switchScreenName())
-      ui->comboSwitchToScreen->setCurrentIndex(ui->comboSwitchToScreen->count() - 1);
+      ui->comboSwitchToComputer->setCurrentIndex(ui->comboSwitchToComputer->count() - 1);
   }
 
   ui->keySequenceWidget->setVisible(false);
-  ui->groupScreens->setVisible(false);
-  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
-  ui->comboSwitchToScreen->setVisible(false);
+  ui->groupComputers->setVisible(false);
+  ui->listComputers->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->comboSwitchToComputer->setVisible(false);
   ui->comboSwitchInDirection->setVisible(false);
-  ui->comboLockCursorToScreen->setVisible(false);
+  ui->comboLockCursorToComputer->setVisible(false);
 
   actionTypeChanged(ui->comboActionType->currentIndex());
 }
@@ -76,10 +76,10 @@ void ActionDialog::accept()
 
   m_action.clearScreens();
 
-  int screenCount = ui->listScreens->count();
+  int screenCount = ui->listComputers->count();
 
-  for (int i = 0; i < ui->listScreens->count(); i++) {
-    const auto &item = ui->listScreens->item(i);
+  for (int i = 0; i < ui->listComputers->count(); i++) {
+    const auto &item = ui->listComputers->item(i);
     m_action.addComputer(item->text());
     if (item->checkState() == Qt::Unchecked) {
       screenCount--;
@@ -87,14 +87,14 @@ void ActionDialog::accept()
     }
   }
 
-  if (screenCount == ui->listScreens->count())
+  if (screenCount == ui->listComputers->count())
     m_action.clearScreens();
 
   m_action.setHaveScreens(screenCount);
 
-  m_action.setSwitchScreenName(ui->comboSwitchToScreen->currentData().toString());
+  m_action.setSwitchScreenName(ui->comboSwitchToComputer->currentData().toString());
   m_action.setSwitchDirection(ui->comboSwitchInDirection->currentIndex());
-  m_action.setLockCursorMode(ui->comboLockCursorToScreen->currentIndex());
+  m_action.setLockCursorMode(ui->comboLockCursorToComputer->currentIndex());
   m_action.setActiveOnRelease(ui->comboTriggerOn->currentIndex());
   m_action.setRestartServer(ui->comboActionType->currentIndex() == ActionTypes::RestartServer);
 
@@ -111,7 +111,7 @@ void ActionDialog::updateSize()
 
 void ActionDialog::keySequenceChanged()
 {
-  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->listComputers->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
 }
 
@@ -124,11 +124,11 @@ void ActionDialog::actionTypeChanged(int index)
 {
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
   ui->keySequenceWidget->setVisible(isKeyAction(index));
-  ui->groupScreens->setVisible(isKeyAction(index));
-  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
-  ui->comboSwitchToScreen->setVisible(index == ActionTypes::SwitchTo);
+  ui->groupComputers->setVisible(isKeyAction(index));
+  ui->listComputers->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->comboSwitchToComputer->setVisible(index == ActionTypes::SwitchTo);
   ui->comboSwitchInDirection->setVisible(index == ActionTypes::SwitchInDirection);
-  ui->comboLockCursorToScreen->setVisible(index == ActionTypes::ModifyCursorLock);
+  ui->comboLockCursorToComputer->setVisible(index == ActionTypes::ModifyCursorLock);
   QTimer::singleShot(1, this, &ActionDialog::updateSize);
 }
 
@@ -140,7 +140,7 @@ bool ActionDialog::isKeyAction(int index) const
 bool ActionDialog::canSave() const
 {
   if (isKeyAction(ui->comboActionType->currentIndex())) {
-    const QList<QListWidgetItem *> items = ui->listScreens->findItems("*", Qt::MatchWildcard);
+    const QList<QListWidgetItem *> items = ui->listComputers->findItems("*", Qt::MatchWildcard);
     int totalChecked = 0;
     for (const auto &item : items) {
       if (item->checkState() == Qt::Checked)

@@ -45,7 +45,7 @@
           <number>6</number>
          </property>
          <item>
-          <widget class="RemoveComputerWidget" name="lblRemoveScreen">
+          <widget class="RemoveComputerWidget" name="lblRemoveComputer">
            <property name="acceptDrops">
             <bool>true</bool>
            </property>
@@ -115,7 +115,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="NewComputerWidget" name="lblNewScreen">
+          <widget class="NewComputerWidget" name="lblNewComputer">
            <property name="toolTip">
             <string>Drag to the grid to add a new computer.</string>
            </property>

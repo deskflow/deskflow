@@ -28,7 +28,7 @@ class EiComputer;
 class PortalGlobalShortcuts
 {
 public:
-  PortalGlobalShortcuts(EiComputer *screen, IEventQueue *events);
+  PortalGlobalShortcuts(EiComputer *computer, IEventQueue *events);
   ~PortalGlobalShortcuts();
   struct HotKey
   {

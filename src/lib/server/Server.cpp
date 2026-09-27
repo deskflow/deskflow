@@ -50,7 +50,7 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Com
 {
   // must have a primary client and it must have a canonical name
   assert(m_primaryClient != nullptr);
-  assert(config.isScreen(primaryClient->getName()));
+  assert(config.isComputer(primaryClient->getName()));
   assert(m_computer != nullptr);
 
   std::string primaryName = getName(primaryClient);
@@ -832,14 +832,14 @@ bool Server::isSwitchOkay(
   // are we in a locked corner?  first check if computer has the option set
   // and, if not, check the global options.
   const Config::ScreenOptions *options = m_config->getOptions(getName(m_active));
-  if (options == nullptr || !options->contains(kOptionScreenSwitchCorners)) {
+  if (options == nullptr || !options->contains(kOptionComputerSwitchCorners)) {
     options = m_config->getOptions("");
   }
-  if (options != nullptr && options->contains(kOptionScreenSwitchCorners)) {
+  if (options != nullptr && options->contains(kOptionComputerSwitchCorners)) {
     // get corner mask and size
-    Config::ScreenOptions::const_iterator i = options->find(kOptionScreenSwitchCorners);
+    Config::ScreenOptions::const_iterator i = options->find(kOptionComputerSwitchCorners);
     auto corners = static_cast<uint32_t>(i->second);
-    i = options->find(kOptionScreenSwitchCornerSize);
+    i = options->find(kOptionComputerSwitchCornerSize);
     int32_t size = 0;
     if (i != options->end()) {
       size = i->second;
@@ -1089,13 +1089,13 @@ void Server::processOptions()
   for (auto [optionId, optionValue] : *options) {
     const OptionID id = optionId;
     const OptionValue value = optionValue;
-    if (id == kOptionScreenSwitchDelay) {
+    if (id == kOptionComputerSwitchDelay) {
       m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);
       if (m_switchWaitDelay < 0.0) {
         m_switchWaitDelay = 0.0;
       }
       stopSwitchWait();
-    } else if (id == kOptionScreenSwitchTwoTap) {
+    } else if (id == kOptionComputerSwitchTwoTap) {
       m_switchTwoTapDelay = 1.0e-3 * static_cast<double>(value);
       if (m_switchTwoTapDelay < 0.0) {
         m_switchTwoTapDelay = 0.0;
@@ -1103,9 +1103,9 @@ void Server::processOptions()
       stopSwitchTwoTap();
     } else if (id == kOptionRelativeMouseMoves) {
       newRelativeMoves = (value != 0);
-    } else if (id == kOptionDefaultLockToScreenState) {
+    } else if (id == kOptionDefaultLockToComputerState) {
       m_defaultLockToComputerState = (value != 0);
-    } else if (id == kOptionDisableLockToScreen) {
+    } else if (id == kOptionDisableLockToComputer) {
       m_disableLockToComputer = (value != 0);
     } else if (id == kOptionClipboardSharing) {
       m_enableClipboard = value;

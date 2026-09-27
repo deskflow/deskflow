@@ -66,8 +66,8 @@ void ServerConfig::setupComputers()
   computers().clear();
   hotkeys().clear();
 
-  // There must always be screen objects for each cell in the screens QList.
-  // Unused computerss are identified by having an empty name.
+  // There must always be computer objects for each cell in the computers QList.
+  // Unused computers are identified by having an empty name.
   for (int i = 0; i < m_columns * m_rows; i++)
     addComputer(Computer());
 }

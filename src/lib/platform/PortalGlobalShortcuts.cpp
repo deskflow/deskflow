@@ -16,8 +16,8 @@
 
 namespace deskflow {
 
-PortalGlobalShortcuts::PortalGlobalShortcuts(EiComputer *screen, IEventQueue *events)
-    : m_computer{screen},
+PortalGlobalShortcuts::PortalGlobalShortcuts(EiComputer *computer, IEventQueue *events)
+    : m_computer{computer},
       m_events{events},
       m_portal{xdp_portal_new()}
 {

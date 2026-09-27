@@ -85,7 +85,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QComboBox" name="comboSwitchToScreen">
+      <widget class="QComboBox" name="comboSwitchToComputer">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -119,7 +119,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboLockCursorToScreen">
+      <widget class="QComboBox" name="comboLockCursorToComputer">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -146,7 +146,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupScreens">
+    <widget class="QGroupBox" name="groupComputers">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -158,7 +158,7 @@
      </property>
      <layout class="QHBoxLayout" name="_3">
       <item>
-       <widget class="QListWidget" name="listScreens">
+       <widget class="QListWidget" name="listComputers">
         <property name="sizeAdjustPolicy">
          <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
         </property>

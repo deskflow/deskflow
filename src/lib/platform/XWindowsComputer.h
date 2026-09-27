@@ -163,18 +163,18 @@ private:
   using HotKeyIDList = std::vector<uint32_t>;
   using HotKeyToIDMap = std::map<HotKeyItem, uint32_t>;
 
-  // true if screen is being used as a primary screen, false otherwise
+  // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary;
 
   Display *m_display = nullptr;
   Window m_root = None;
   Window m_window = None;
 
-  // true if mouse has entered the screen
-  bool m_isOnScreen;
+  // true if mouse has entered the computer
+  bool m_isOnComputer;
 
   uint32_t m_activeSides = 0;
-  // screen shape stuff
+  // computer shape stuff
   int32_t m_x = 0;
   int32_t m_y = 0;
   int32_t m_w = 0;
@@ -209,8 +209,8 @@ private:
   uint32_t m_sequenceNumber = 0;
 
   // screen saver stuff
-  XWindowsScreenSaver *m_computersaver = nullptr;
-  bool m_computersaverNotify = false;
+  XWindowsScreenSaver *m_screensaver = nullptr;
+  bool m_screensaverNotify = false;
 
   // logical to physical button mapping.  m_buttons[i] gives the
   // physical button for logical button i+1.
@@ -221,8 +221,8 @@ private:
 
   // stuff to workaround xtest being xinerama unaware.  attempting
   // to fake a mouse motion under xinerama may behave strangely,
-  // especially if screen 0 is not at 0,0 or if faking a motion on
-  // a screen other than screen 0.
+  // especially if computer 0 is not at 0,0 or if faking a motion on
+  // a computer other than computer 0.
   bool m_xtestIsXineramaUnaware = true;
   bool m_xinerama;
 
@@ -243,8 +243,8 @@ private:
   IEventQueue *m_events = nullptr;
   deskflow::KeyMap m_keyMap;
 
-  // pointer to (singleton) screen.  this is only needed by
+  // pointer to (singleton) computer.  this is only needed by
   // ioErrorHandler().
-  static XWindowsComputer *s_screen;
+  static XWindowsComputer *s_computer;
   [[no_unique_address]] XDGPowerManager m_powerManager;
 };
