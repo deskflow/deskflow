@@ -51,7 +51,7 @@ public:
   void getShape(std::int32_t &x, std::int32_t &y, std::int32_t &width, std::int32_t &height) const override;
   void getCursorPos(std::int32_t &x, std::int32_t &y) const override;
 
-  // IPrimaryScreen overrides
+  // IPrimaryComputer overrides
   void reconfigure(std::uint32_t activeSides) override;
   std::uint32_t activeSides() override;
   void warpCursor(std::int32_t x, std::int32_t y) override;

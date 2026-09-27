@@ -51,8 +51,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   IKeyState.cpp
   IKeyState.h
   IPlatformComputer.h
-  IPrimaryScreen.cpp
-  IPrimaryScreen.h
+  IPrimaryComputer.cpp
+  IPrimaryComputer.h
   IScreenSaver.h
   ISecondaryScreen.h
   KeyTypes.cpp

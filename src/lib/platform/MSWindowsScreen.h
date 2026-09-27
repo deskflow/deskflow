@@ -80,7 +80,7 @@ public:
    */
   virtual void updateDesktopThread();
 
-  // IPrimaryScreen overrides
+  // IPrimaryComputer overrides
   void reconfigure(uint32_t activeSides) override;
   uint32_t activeSides() override;
   void warpCursor(int32_t x, int32_t y) override;

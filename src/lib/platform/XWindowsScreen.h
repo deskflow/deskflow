@@ -42,7 +42,7 @@ public:
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
   void getCursorPos(int32_t &x, int32_t &y) const override;
 
-  // IPrimaryScreen overrides
+  // IPrimaryComputer overrides
   void reconfigure(uint32_t activeSides) override;
   uint32_t activeSides() override;
   void warpCursor(int32_t x, int32_t y) override;
