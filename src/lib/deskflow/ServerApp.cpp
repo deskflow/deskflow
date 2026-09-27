@@ -15,8 +15,8 @@
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
+#include "deskflow/Computer.h"
 #include "deskflow/ProtocolTypes.h"
-#include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
 #include "deskflow/ipc/CoreIpc.h"
 #include "net/SocketException.h"
@@ -216,7 +216,7 @@ void ServerApp::closePrimaryClient(PrimaryClient *primaryClient)
   delete primaryClient;
 }
 
-void ServerApp::closeServerScreen(deskflow::Screen *screen)
+void ServerApp::closeServerScreen(deskflow::Computer *screen)
 {
   if (screen != nullptr) {
     using enum EventTypes;
@@ -300,7 +300,7 @@ bool ServerApp::initServer()
     return true;
   }
 
-  deskflow::Screen *serverScreen = nullptr;
+  deskflow::Computer *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
     std::string name = m_config->getCanonicalName(m_name);
@@ -329,9 +329,9 @@ bool ServerApp::initServer()
   return false;
 }
 
-deskflow::Screen *ServerApp::openServerScreen()
+deskflow::Computer *ServerApp::openServerScreen()
 {
-  deskflow::Screen *screen = createScreen();
+  deskflow::Computer *screen = createComputer();
   getEvents()->addHandler(EventTypes::ScreenError, screen->getEventTarget(), [this](const auto &) {
     handleScreenError();
   });
@@ -387,26 +387,26 @@ bool ServerApp::startServer()
   return false;
 }
 
-deskflow::Screen *ServerApp::createScreen()
+deskflow::Computer *ServerApp::createComputer()
 {
 #if defined(Q_OS_WIN)
-  return new deskflow::Screen(
+  return new deskflow::Computer(
       new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
 #elif defined(Q_OS_MACOS)
-  return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
+  return new deskflow::Computer(new OSXScreen(getEvents(), true), getEvents());
 #else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("detected wayland platform");
-    return new deskflow::Screen(new deskflow::EiScreen(true, getEvents(), true), getEvents());
+    return new deskflow::Computer(new deskflow::EiScreen(true, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif
   }
 #if WINAPI_XWINDOWS
   LOG_INFO("detected X11 platform");
-  return new deskflow::Screen(
+  return new deskflow::Computer(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
       getEvents()
   );
@@ -414,7 +414,7 @@ deskflow::Screen *ServerApp::createScreen()
 #endif // end os check
 }
 
-PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::Screen *screen)
+PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::Computer *screen)
 {
   LOG_VERBOSE("creating primary computer");
   return new PrimaryClient(name, screen);

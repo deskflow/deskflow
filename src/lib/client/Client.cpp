@@ -17,12 +17,12 @@
 #include "common/NetworkProtocol.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
+#include "deskflow/Computer.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
-#include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
 #include "deskflow/ipc/CoreIpc.h"
 #include "net/IDataSocket.h"
@@ -54,17 +54,17 @@ Client::DisconnectRequest::DisconnectRequest(deskflow::core::ConnectionRefusal r
 
 Client::Client(
     IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
-    deskflow::Screen *screen
+    deskflow::Computer *computer
 )
     : m_name(name),
       m_serverAddress(address),
       m_socketFactory(socketFactory),
-      m_screen(screen),
+      m_computer(computer),
       m_events(events),
       m_useSecureNetwork(Settings::value(Settings::Security::TlsEnabled).toBool())
 {
   assert(m_socketFactory != nullptr);
-  assert(m_screen != nullptr);
+  assert(m_computer != nullptr);
 
   // register suspend/resume event handlers
   m_events->addHandler(EventTypes::ScreenSuspend, getEventTarget(), [this](const auto &) { handleSuspend(); });
@@ -169,7 +169,7 @@ void Client::refuseConnection(deskflow::core::ConnectionRefusal reason, const ch
 void Client::handshakeComplete()
 {
   m_ready = true;
-  m_screen->enable();
+  m_computer->enable();
   if (m_relativeMouseMoves && !m_hasRelativeRestorePosition) {
     saveRelativeRestorePosition();
   }
@@ -198,22 +198,22 @@ size_t Client::getMaximumClipboardReceiveSizeBytes() const
 
 void *Client::getEventTarget() const
 {
-  return m_screen->getEventTarget();
+  return m_computer->getEventTarget();
 }
 
 bool Client::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  return m_screen->getClipboard(id, clipboard);
+  return m_computer->getClipboard(id, clipboard);
 }
 
 void Client::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
 {
-  m_screen->getShape(x, y, w, h);
+  m_computer->getShape(x, y, w, h);
 }
 
 void Client::getCursorPos(int32_t &x, int32_t &y) const
 {
-  m_screen->getCursorPos(x, y);
+  m_computer->getCursorPos(x, y);
 }
 
 void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, bool)
@@ -224,8 +224,8 @@ void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, b
     yAbs = m_relativeRestoreY;
     LOG_VERBOSE("using relative restore position: %d,%d", xAbs, yAbs);
   }
-  m_screen->mouseMove(xAbs, yAbs);
-  m_screen->enter(mask);
+  m_computer->mouseMove(xAbs, yAbs);
+  m_computer->enter(mask);
 }
 
 bool Client::leave()
@@ -235,7 +235,7 @@ bool Client::leave()
   }
   m_active = false;
 
-  m_screen->leave();
+  m_computer->leave();
 
   if (m_enableClipboard) {
     // send clipboards that we own and that have changed
@@ -251,14 +251,14 @@ bool Client::leave()
 
 void Client::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  m_screen->setClipboard(id, clipboard);
+  m_computer->setClipboard(id, clipboard);
   m_ownClipboard[id] = false;
   m_sentClipboard[id] = false;
 }
 
 void Client::grabClipboard(ClipboardID id)
 {
-  m_screen->grabClipboard(id);
+  m_computer->grabClipboard(id);
   m_ownClipboard[id] = false;
   m_sentClipboard[id] = false;
 }
@@ -270,54 +270,54 @@ void Client::setClipboardDirty(ClipboardID, bool)
 
 void Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
-  m_screen->keyDown(id, mask, button, lang);
+  m_computer->keyDown(id, mask, button, lang);
 }
 
 void Client::keyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
 {
-  m_screen->keyRepeat(id, mask, count, button, lang);
+  m_computer->keyRepeat(id, mask, count, button, lang);
 }
 
 void Client::keyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
-  m_screen->keyUp(id, mask, button);
+  m_computer->keyUp(id, mask, button);
 }
 
 void Client::mouseDown(ButtonID id)
 {
-  m_screen->mouseDown(id);
+  m_computer->mouseDown(id);
 }
 
 void Client::mouseUp(ButtonID id)
 {
-  m_screen->mouseUp(id);
+  m_computer->mouseUp(id);
 }
 
 void Client::mouseMove(int32_t x, int32_t y)
 {
-  m_screen->mouseMove(x, y);
+  m_computer->mouseMove(x, y);
 }
 
 void Client::mouseRelativeMove(int32_t dx, int32_t dy)
 {
-  m_screen->mouseRelativeMove(dx, dy);
+  m_computer->mouseRelativeMove(dx, dy);
 }
 
 void Client::mouseWheel(int32_t xDelta, int32_t yDelta)
 {
-  m_screen->mouseWheel(xDelta, yDelta);
+  m_computer->mouseWheel(xDelta, yDelta);
 }
 
 void Client::screensaver(bool activate)
 {
-  m_screen->screensaver(activate);
+  m_computer->screensaver(activate);
 }
 
 void Client::resetOptions()
 {
   m_relativeMouseMoves = false;
   m_hasRelativeRestorePosition = false;
-  m_screen->resetOptions();
+  m_computer->resetOptions();
 }
 
 void Client::setOptions(const OptionsList &options)
@@ -358,12 +358,12 @@ void Client::setOptions(const OptionsList &options)
     LOG_INFO("clipboard sharing is disabled because the server set the maximum clipboard size to 0");
   }
 
-  m_screen->setOptions(options);
+  m_computer->setOptions(options);
 }
 
 void Client::saveRelativeRestorePosition()
 {
-  m_screen->getCursorPos(m_relativeRestoreX, m_relativeRestoreY);
+  m_computer->getCursorPos(m_relativeRestoreX, m_relativeRestoreY);
   m_hasRelativeRestorePosition = true;
   LOG_VERBOSE("saved relative restore position: %d,%d", m_relativeRestoreX, m_relativeRestoreY);
 }
@@ -376,7 +376,7 @@ std::string Client::getName() const
 void Client::sendClipboard(ClipboardID id)
 {
   // note -- m_mutex must be locked on entry
-  assert(m_screen != nullptr);
+  assert(m_computer != nullptr);
   assert(m_server != nullptr);
 
   // get clipboard data.  set the clipboard time to the last
@@ -387,7 +387,7 @@ void Client::sendClipboard(ClipboardID id)
   if (clipboard.open(m_timeClipboard[id])) {
     clipboard.close();
   }
-  m_screen->getClipboard(id, &clipboard);
+  m_computer->getClipboard(id, &clipboard);
 
   // check time
   if (m_timeClipboard[id] == 0 || clipboard.getTime() != m_timeClipboard[id]) {
@@ -541,7 +541,7 @@ void Client::cleanupScreen()
 {
   if (m_server != nullptr) {
     if (m_ready) {
-      m_screen->disable();
+      m_computer->disable();
       m_ready = false;
     }
     m_events->removeHandler(EventTypes::ScreenShapeChanged, getEventTarget());

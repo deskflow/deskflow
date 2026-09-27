@@ -22,7 +22,7 @@
 class Event;
 class EventQueueTimer;
 namespace deskflow {
-class Screen;
+class Computer;
 }
 class ServerProxy;
 class IDataSocket;
@@ -89,11 +89,11 @@ public:
   /*!
   This client will attempt to connect to the server using \p name
   as its name and \p address as the server's address and \p factory
-  to create the socket.  \p screen is    the local screen.
+  to create the socket.  \p computer is    the local computer.
   */
   Client(
       IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
-      deskflow::Screen *screen
+      deskflow::Computer *computer
   );
   Client(Client const &) = delete;
   Client(Client &&) = delete;
@@ -223,7 +223,7 @@ private:
   std::string m_name;
   NetworkAddress m_serverAddress;
   ISocketFactory *m_socketFactory = nullptr;
-  deskflow::Screen *m_screen = nullptr;
+  deskflow::Computer *m_computer = nullptr;
   deskflow::IStream *m_stream = nullptr;
   EventQueueTimer *m_timer = nullptr;
   ServerProxy *m_server = nullptr;
