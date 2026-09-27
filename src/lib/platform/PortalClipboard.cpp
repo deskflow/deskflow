@@ -59,23 +59,23 @@ const PortalClipboard::SupportedMime *PortalClipboard::pickSupportedMime(const c
   return nullptr;
 }
 
-QByteArray PortalClipboard::encodeFormat(IClipboard::Format format, const QByteArray &data)
+QByteArray PortalClipboard::encodeFormat(const SupportedMime &entry, const QByteArray &data)
 {
   if (data.isEmpty())
     return {};
 
-  if (format == IClipboard::Format::Bitmap)
-    return ClipboardImage::dibToImage(data, "PNG");
+  if (entry.format == IClipboard::Format::Bitmap)
+    return ClipboardImage::dibToImage(data, entry.imageFormat);
   return data;
 }
 
-QByteArray PortalClipboard::decodeFormat(IClipboard::Format format, const QByteArray &bytes)
+QByteArray PortalClipboard::decodeFormat(const SupportedMime &entry, const QByteArray &bytes)
 {
   if (bytes.isEmpty())
     return {};
 
-  if (format == IClipboard::Format::Bitmap)
-    return ClipboardImage::imageToDib(bytes, "PNG");
+  if (entry.format == IClipboard::Format::Bitmap)
+    return ClipboardImage::imageToDib(bytes, entry.imageFormat);
   return bytes;
 }
 
@@ -118,7 +118,7 @@ void PortalClipboard::claimOwnership(EiClipboard *cache, XdpSession *session)
   cache->open(0);
   QVarLengthArray<const char *, std::size(kSupportedMimes) + 1> mimeTypes;
   for (const auto &entry : kSupportedMimes) {
-    if (cache->has(entry.format))
+    if (entry.offered && cache->has(entry.format))
       mimeTypes.append(entry.mime);
   }
   cache->close();
@@ -163,7 +163,7 @@ void PortalClipboard::serveSelectionTransfer(EiClipboard *cache, XdpSession *ses
     return;
   }
 
-  const auto data = encodeFormat(requested->format, raw);
+  const auto data = encodeFormat(*requested, raw);
   if (data.isEmpty()) {
     LOG_DEBUG("clipboard has no data for mime: %s", mime);
     xdp_session_selection_write_done(session, serial, false);
@@ -242,7 +242,7 @@ bool PortalClipboard::readSelectionIntoCache(
       bytes.replace("\r\n", "\n");
     }
 
-    auto data = decodeFormat(entry.format, bytes);
+    auto data = decodeFormat(entry, bytes);
     if (data.isEmpty())
       continue;
 

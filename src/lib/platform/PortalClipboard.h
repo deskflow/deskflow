@@ -23,13 +23,21 @@ public:
   {
     const char *mime;
     IClipboard::Format format;
+    const char *imageFormat;
+    bool offered;
   };
 
-  // Listed in preference order: richer formats first.
+  // Listed in preference order: richer formats first. Bitmaps are offered as png but read from any image type.
   static constexpr SupportedMime kSupportedMimes[] = {
-      {"image/gif", IClipboard::Format::GIF},    {"image/svg+xml", IClipboard::Format::SVG},
-      {"image/png", IClipboard::Format::Bitmap}, {"text/plain;charset=utf-8", IClipboard::Format::Text},
-      {"text/plain", IClipboard::Format::Text},
+      {"image/gif", IClipboard::Format::GIF, nullptr, true},
+      {"image/svg+xml", IClipboard::Format::SVG, nullptr, true},
+      {"image/png", IClipboard::Format::Bitmap, "PNG", true},
+      {"image/jpeg", IClipboard::Format::Bitmap, "JPEG", false},
+      {"image/bmp", IClipboard::Format::Bitmap, "BMP", false},
+      {"image/tiff", IClipboard::Format::Bitmap, "TIFF", false},
+      {"image/webp", IClipboard::Format::Bitmap, "WEBP", false},
+      {"text/plain;charset=utf-8", IClipboard::Format::Text, nullptr, true},
+      {"text/plain", IClipboard::Format::Text, nullptr, true},
   };
 
   static constexpr int kReadTimeoutMs = 200;
@@ -39,8 +47,8 @@ public:
   static QByteArray formatMimeTypes(const char *const *mimeTypes);
   static const SupportedMime *findSupportedMime(const char *mime);
   static const SupportedMime *pickSupportedMime(const char *const *available);
-  static QByteArray encodeFormat(IClipboard::Format format, const QByteArray &data);
-  static QByteArray decodeFormat(IClipboard::Format format, const QByteArray &bytes);
+  static QByteArray encodeFormat(const SupportedMime &entry, const QByteArray &data);
+  static QByteArray decodeFormat(const SupportedMime &entry, const QByteArray &bytes);
   static QByteArray readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
 
   /// Advertise the cache's formats to the portal selection.
