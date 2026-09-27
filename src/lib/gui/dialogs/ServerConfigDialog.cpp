@@ -99,11 +99,11 @@ void ServerConfigDialog::save()
     const auto &screenName = screen.name();
     if (screenName.isEmpty())
       continue;
-    screenNames.append(QStringLiteral("screen_%1").arg(screenName));
-    Settings::setValue(Settings::Screen::Aliases.arg(screenName), screen.aliases());
-    Settings::setValue(Settings::Screen::Name.arg(screenName), screenName);
+    screenNames.append(QStringLiteral("computer_%1").arg(screenName));
+    Settings::setValue(Settings::Computer::Aliases.arg(screenName), screen.aliases());
+    Settings::setValue(Settings::Computer::Name.arg(screenName), screenName);
   }
-  Settings::removeUnknownScreens(screenNames);
+  Settings::removeUnknownComputers(screenNames);
   QDialog::accept();
 }
 

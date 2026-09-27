@@ -48,66 +48,69 @@ bool Config::addScreen(const std::string &name)
 
   const auto screen = QString::fromStdString(name);
   // add aliases
-  const auto aliases = Settings::value(Settings::Screen::Aliases.arg(screen)).toStringList();
+  const auto aliases = Settings::value(Settings::Computer::Aliases.arg(screen)).toStringList();
   for (const auto &alias : aliases)
     m_nameToCanonicalName.try_emplace(alias.toStdString(), name);
 
   addOption(
-      name, kOptionHalfDuplexCapsLock, Settings::value(Settings::Screen::HalfDuplexCapsLock.arg(screen)).toBool()
-  );
-  addOption(name, kOptionHalfDuplexNumLock, Settings::value(Settings::Screen::HalfDuplexNumLock.arg(screen)).toBool());
-  addOption(
-      name, kOptionHalfDuplexScrollLock, Settings::value(Settings::Screen::HalfDuplexScrollLock.arg(screen)).toBool()
+      name, kOptionHalfDuplexCapsLock, Settings::value(Settings::Computer::HalfDuplexCapsLock.arg(screen)).toBool()
   );
   addOption(
-      name, kOptionXTestXineramaUnaware, Settings::value(Settings::Screen::XtestIsXineramaUnaware.arg(screen)).toBool()
+      name, kOptionHalfDuplexNumLock, Settings::value(Settings::Computer::HalfDuplexNumLock.arg(screen)).toBool()
   );
   addOption(
-      name, kOptionScreenSwitchCornerSize, Settings::value(Settings::Screen::SwitchCornerSize.arg(screen)).toInt()
+      name, kOptionHalfDuplexScrollLock, Settings::value(Settings::Computer::HalfDuplexScrollLock.arg(screen)).toBool()
   );
-  addOption(name, kOptionScreenX11WeakFocus, Settings::value(Settings::Screen::WeakX11Focus.arg(screen)).toBool());
+  addOption(
+      name, kOptionXTestXineramaUnaware,
+      Settings::value(Settings::Computer::XtestIsXineramaUnaware.arg(screen)).toBool()
+  );
+  addOption(
+      name, kOptionScreenSwitchCornerSize, Settings::value(Settings::Computer::SwitchCornerSize.arg(screen)).toInt()
+  );
+  addOption(name, kOptionScreenX11WeakFocus, Settings::value(Settings::Computer::WeakX11Focus.arg(screen)).toBool());
 
   OptionValue cornerValue = s_noCornerMask;
-  if (Settings::value(Settings::Screen::SwitchCornerTopLeft.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerTopLeft.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_topLeftCornerMask;
   }
-  if (Settings::value(Settings::Screen::SwitchCornerTopRight.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerTopRight.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_topRightCornerMask;
   }
-  if (Settings::value(Settings::Screen::SwitchCornerBottomLeft.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerBottomLeft.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_bottomLeftCornerMask;
   }
-  if (Settings::value(Settings::Screen::SwitchCornerBottomRight.arg(screen)).toBool()) {
+  if (Settings::value(Settings::Computer::SwitchCornerBottomRight.arg(screen)).toBool()) {
     cornerValue = cornerValue | s_bottomRightCornerMask;
   }
   addOption(name, kOptionScreenSwitchCorners, cornerValue);
 
-  auto altModifier = Settings::value(Settings::Screen::ModifierAlt.arg(screen)).toString();
+  auto altModifier = Settings::value(Settings::Computer::ModifierAlt.arg(screen)).toString();
   if (altModifier.isEmpty())
     altModifier = kModifierNameAlt;
   addOption(name, kOptionModifierMapForAlt, modifierIDValueFromString(altModifier));
 
-  auto altgrModifier = Settings::value(Settings::Screen::ModifierAltGr.arg(screen)).toString();
+  auto altgrModifier = Settings::value(Settings::Computer::ModifierAltGr.arg(screen)).toString();
   if (altgrModifier.isEmpty())
     altgrModifier = kModifierNameAltGr;
   addOption(name, kOptionModifierMapForAltGr, modifierIDValueFromString(altgrModifier));
 
-  auto ctrlModifier = Settings::value(Settings::Screen::ModifierCtrl.arg(screen)).toString();
+  auto ctrlModifier = Settings::value(Settings::Computer::ModifierCtrl.arg(screen)).toString();
   if (ctrlModifier.isEmpty())
     ctrlModifier = kModifierNameCtrl;
   addOption(name, kOptionModifierMapForControl, modifierIDValueFromString(ctrlModifier));
 
-  auto metaModifier = Settings::value(Settings::Screen::ModifierMeta.arg(screen)).toString();
+  auto metaModifier = Settings::value(Settings::Computer::ModifierMeta.arg(screen)).toString();
   if (metaModifier.isEmpty())
     metaModifier = kModifierNameMeta;
   addOption(name, kOptionModifierMapForMeta, modifierIDValueFromString(metaModifier));
 
-  auto shiftModifier = Settings::value(Settings::Screen::ModifierShift.arg(screen)).toString();
+  auto shiftModifier = Settings::value(Settings::Computer::ModifierShift.arg(screen)).toString();
   if (shiftModifier.isEmpty())
     shiftModifier = kModifierNameShift;
   addOption(name, kOptionModifierMapForShift, modifierIDValueFromString(shiftModifier));
 
-  auto superModifier = Settings::value(Settings::Screen::ModifierSuper.arg(screen)).toString();
+  auto superModifier = Settings::value(Settings::Computer::ModifierSuper.arg(screen)).toString();
   if (superModifier.isEmpty())
     superModifier = kModifierNameSuper;
   addOption(name, kOptionModifierMapForSuper, modifierIDValueFromString(superModifier));
@@ -439,7 +442,7 @@ bool Config::operator==(const Config &x) const
 void Config::read(ConfigReadContext &context)
 {
   Config tmp(m_events);
-  const auto screens = Settings::knownScreens();
+  const auto screens = Settings::knownComputers();
   for (const auto &screen : screens) {
     if (screen.isEmpty())
       continue;
