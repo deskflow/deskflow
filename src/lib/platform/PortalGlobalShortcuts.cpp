@@ -323,7 +323,7 @@ void PortalGlobalShortcuts::handleActivated(
 
   LOG_DEBUG("global shortcut activated: %s timestamp=%" PRIu64, shortcutId, timestamp);
   m_events->addEvent(Event(
-      EventTypes::PrimaryScreenHotkeyDown, m_screen->getEventTarget(), IPrimaryScreen::HotKeyInfo::alloc(hotKeyId)
+      EventTypes::PrimaryScreenHotkeyDown, m_screen->getEventTarget(), IPrimaryComputer::HotKeyInfo::alloc(hotKeyId)
   ));
 }
 
@@ -342,9 +342,9 @@ void PortalGlobalShortcuts::handleDeactivated(
   }
 
   LOG_DEBUG("global shortcut deactivated: %s timestamp=%" PRIu64, shortcutId, timestamp);
-  m_events->addEvent(
-      Event(EventTypes::PrimaryScreenHotkeyUp, m_screen->getEventTarget(), IPrimaryScreen::HotKeyInfo::alloc(hotKeyId))
-  );
+  m_events->addEvent(Event(
+      EventTypes::PrimaryScreenHotkeyUp, m_screen->getEventTarget(), IPrimaryComputer::HotKeyInfo::alloc(hotKeyId)
+  ));
 }
 
 void PortalGlobalShortcuts::handleShortcutsChanged(XdpGlobalShortcutsSession *session, GPtrArray *shortcuts)

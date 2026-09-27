@@ -724,7 +724,7 @@ void PortalInputCapture::handleActivated(
       m_screen->warpCursor(warpX, warpY);
       m_events->addEvent(Event(
           EventTypes::PrimaryScreenMotionOnPrimary, m_screen->getEventTarget(),
-          IPrimaryScreen::MotionInfo::alloc(warpX, warpY)
+          IPrimaryComputer::MotionInfo::alloc(warpX, warpY)
       ));
     } else {
       LOG_WARN("failed to get cursor position");

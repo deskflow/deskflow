@@ -11,19 +11,19 @@
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IComputer.h"
 #include "deskflow/IKeyState.h"
-#include "deskflow/IPrimaryScreen.h"
+#include "deskflow/IPrimaryComputer.h"
 #include "deskflow/ISecondaryScreen.h"
 #include "deskflow/OptionTypes.h"
 
 class IClipboard;
 
-//! Screen interface
+//! Computer interface
 /*!
 This interface defines the methods common to all platform dependent
-screen implementations that are used by both primary and secondary
-screens.
+comptuer implementations that are used by both primary and secondary
+comptuers.
 */
-class IPlatformComputer : public IComputer, public IPrimaryScreen, public ISecondaryScreen, public IKeyState
+class IPlatformComputer : public IComputer, public IPrimaryComputer, public ISecondaryScreen, public IKeyState
 {
 public:
   //! @name manipulators
@@ -150,7 +150,10 @@ public:
   void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override = 0;
   bool
   fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override = 0;
-  bool fakeMediaKey(KeyID) override { return false; }
+  bool fakeMediaKey(KeyID) override
+  {
+    return false;
+  }
 
 protected:
   //! Handle system event

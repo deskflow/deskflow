@@ -5,15 +5,15 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "deskflow/IPrimaryScreen.h"
+#include "deskflow/IPrimaryComputer.h"
 
 #include <cstdlib>
 
 //
-// IPrimaryScreen::ButtonInfo
+// IPrimaryComputer::ButtonInfo
 //
 
-IPrimaryScreen::ButtonInfo *IPrimaryScreen::ButtonInfo::alloc(ButtonID id, KeyModifierMask mask)
+IPrimaryComputer::ButtonInfo *IPrimaryComputer::ButtonInfo::alloc(ButtonID id, KeyModifierMask mask)
 {
   auto *info = (ButtonInfo *)malloc(sizeof(ButtonInfo));
   info->m_button = id;
@@ -21,7 +21,7 @@ IPrimaryScreen::ButtonInfo *IPrimaryScreen::ButtonInfo::alloc(ButtonID id, KeyMo
   return info;
 }
 
-IPrimaryScreen::ButtonInfo *IPrimaryScreen::ButtonInfo::alloc(const ButtonInfo &x)
+IPrimaryComputer::ButtonInfo *IPrimaryComputer::ButtonInfo::alloc(const ButtonInfo &x)
 {
   auto *info = (ButtonInfo *)malloc(sizeof(ButtonInfo));
   info->m_button = x.m_button;
@@ -29,16 +29,16 @@ IPrimaryScreen::ButtonInfo *IPrimaryScreen::ButtonInfo::alloc(const ButtonInfo &
   return info;
 }
 
-bool IPrimaryScreen::ButtonInfo::equal(const ButtonInfo *a, const ButtonInfo *b)
+bool IPrimaryComputer::ButtonInfo::equal(const ButtonInfo *a, const ButtonInfo *b)
 {
   return (a->m_button == b->m_button && a->m_mask == b->m_mask);
 }
 
 //
-// IPrimaryScreen::MotionInfo
+// IPrimaryComputer::MotionInfo
 //
 
-IPrimaryScreen::MotionInfo *IPrimaryScreen::MotionInfo::alloc(int32_t x, int32_t y)
+IPrimaryComputer::MotionInfo *IPrimaryComputer::MotionInfo::alloc(int32_t x, int32_t y)
 {
   auto *info = (MotionInfo *)malloc(sizeof(MotionInfo));
   info->m_x = x;
@@ -47,10 +47,10 @@ IPrimaryScreen::MotionInfo *IPrimaryScreen::MotionInfo::alloc(int32_t x, int32_t
 }
 
 //
-// IPrimaryScreen::WheelInfo
+// IPrimaryComputer::WheelInfo
 //
 
-IPrimaryScreen::WheelInfo *IPrimaryScreen::WheelInfo::alloc(int32_t xDelta, int32_t yDelta)
+IPrimaryComputer::WheelInfo *IPrimaryComputer::WheelInfo::alloc(int32_t xDelta, int32_t yDelta)
 {
   auto *info = (WheelInfo *)malloc(sizeof(WheelInfo));
   info->m_xDelta = xDelta;
@@ -59,10 +59,10 @@ IPrimaryScreen::WheelInfo *IPrimaryScreen::WheelInfo::alloc(int32_t xDelta, int3
 }
 
 //
-// IPrimaryScreen::HotKeyInfo
+// IPrimaryComputer::HotKeyInfo
 //
 
-IPrimaryScreen::HotKeyInfo *IPrimaryScreen::HotKeyInfo::alloc(uint32_t id)
+IPrimaryComputer::HotKeyInfo *IPrimaryComputer::HotKeyInfo::alloc(uint32_t id)
 {
   auto *info = (HotKeyInfo *)malloc(sizeof(HotKeyInfo));
   info->m_id = id;
@@ -70,10 +70,10 @@ IPrimaryScreen::HotKeyInfo *IPrimaryScreen::HotKeyInfo::alloc(uint32_t id)
 }
 
 //
-// IPrimaryScreen::EiConnectInfo
+// IPrimaryComputer::EiConnectInfo
 //
 
-IPrimaryScreen::EiConnectInfo *IPrimaryScreen::EiConnectInfo::alloc(int fd)
+IPrimaryComputer::EiConnectInfo *IPrimaryComputer::EiConnectInfo::alloc(int fd)
 {
   auto *info = (EiConnectInfo *)malloc(sizeof(EiConnectInfo));
   info->m_fd = fd;

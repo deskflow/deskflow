@@ -11,15 +11,15 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 
-//! Primary screen interface
+//! Primary comptuer interface
 /*!
 This interface defines the methods common to all platform dependent
-primary screen implementations.
+primary comptuer implementations.
 */
-class IPrimaryScreen
+class IPrimaryComputer
 {
 public:
-  virtual ~IPrimaryScreen() = default;
+  virtual ~IPrimaryComputer() = default;
   //! Button event data
   class ButtonInfo
   {
@@ -83,14 +83,14 @@ public:
   /*!
   This is called when the configuration has changed.  \c activeSides
   is a bitmask of DirectionMask indicating which sides of the
-  primary screen are linked to clients.  Override to handle the
+  primary comptuer are linked to clients.  Override to handle the
   possible change in jump zones.
   */
   virtual void reconfigure(uint32_t activeSides) = 0;
 
   /**
    * @brief activeSides
-   * @return a bitmask of DirectionMask indicating which sides of the primary screen are linked to clients
+   * @return a bitmask of DirectionMask indicating which sides of the primary comptuer are linked to clients
    */
   virtual uint32_t activeSides() = 0;
 
@@ -104,9 +104,9 @@ public:
 
   //! Register a system hotkey
   /*!
-  Registers a system-wide hotkey.  The screen should arrange for an event
+  Registers a system-wide hotkey.  The comptuer should arrange for an event
   to be delivered to itself when the hot key is pressed or released.  When
-  that happens the screen should post a \c getHotKeyDownEvent() or
+  that happens the comptuer should post a \c getHotKeyDownEvent() or
   \c getHotKeyUpEvent(), respectively.  The hot key is key \p key with
   exactly the modifiers \p mask.  Returns 0 on failure otherwise an id
   that can be used to unregister the hotkey.
@@ -131,16 +131,16 @@ public:
   */
   virtual void unregisterHotKey(uint32_t id) = 0;
 
-  //! Prepare to synthesize input on primary screen
+  //! Prepare to synthesize input on primary comptuer
   /*!
-  Prepares the primary screen to receive synthesized input.  We do not
+  Prepares the primary comptuer to receive synthesized input.  We do not
   want to receive this synthesized input as user input so this method
   ensures that we ignore it.  Calls to \c fakeInputBegin() may not be
   nested.
   */
   virtual void fakeInputBegin() = 0;
 
-  //! Done synthesizing input on primary screen
+  //! Done synthesizing input on primary comptuer
   /*!
   Undoes whatever \c fakeInputBegin() did.
   */
@@ -153,7 +153,7 @@ public:
   //! Get jump zone size
   /*!
   Return the jump zone size, the size of the regions on the edges of
-  the screen that cause the cursor to jump to another screen.
+  the comptuer that cause the cursor to jump to another comptuer.
   */
   virtual int32_t getJumpZoneSize() const = 0;
 
@@ -169,7 +169,7 @@ public:
   /*!
   Return the cursor center position which is where we park the
   cursor to compute cursor motion deltas and should be far from
-  the edges of the screen, typically the center.
+  the edges of the comptuer, typically the center.
   */
   virtual void getCursorCenter(int32_t &x, int32_t &y) const = 0;
 
