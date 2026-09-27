@@ -44,7 +44,7 @@
 #endif
 
 #if defined(Q_OS_MACOS)
-#include "platform/OSXScreen.h"
+#include "platform/OSXComputer.h"
 #endif
 
 #include <fstream>
@@ -396,7 +396,7 @@ deskflow::Computer *ServerApp::createComputer()
       new MSWindowsComputer(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
   );
 #elif defined(Q_OS_MACOS)
-  return new deskflow::Computer(new OSXScreen(getEvents(), true), getEvents());
+  return new deskflow::Computer(new OSXComputer(getEvents(), true), getEvents());
 #else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI

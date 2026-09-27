@@ -83,6 +83,8 @@ elseif(APPLE)
     OSXClipboardUTF16Converter.h
     OSXCocoaApp.h
     OSXCocoaApp.m
+    OSXComputer.h
+    OSXComputer.mm
     OSXEventQueueBuffer.cpp
     OSXEventQueueBuffer.h
     OSXKeyLayoutResource.cpp
@@ -95,8 +97,6 @@ elseif(APPLE)
     OSXPasteboardPeeker.m
     OSXPowerManager.cpp
     OSXPowerManager.h
-    OSXScreen.h
-    OSXScreen.mm
     OSXScreenSaver.cpp
     OSXScreenSaver.h
     OSXScreenSaverControl.h

@@ -42,12 +42,12 @@ class IEventQueue;
 class Mutex;
 
 //! Implementation of IPlatformComputer for OS X
-class OSXScreen : public PlatformComputer
+class OSXComputer : public PlatformComputer
 {
 public:
-  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false);
+  OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSync = false);
 
-  virtual ~OSXScreen();
+  virtual ~OSXComputer();
 
   IEventQueue *getEvents() const
   {
@@ -321,5 +321,5 @@ private:
 
   OSXPowerManager m_powerManager;
 
-  class OSXScreenImpl *m_impl;
+  class OSXComputerImpl *m_impl;
 };
