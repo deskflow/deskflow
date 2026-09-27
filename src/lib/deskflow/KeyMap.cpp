@@ -300,6 +300,9 @@ void KeyMap::setLanguageData(std::vector<std::string> layouts)
 
 int32_t KeyMap::getLanguageGroupID(int32_t group, const std::string &lang) const
 {
+  if (lang.empty()) {
+    return group;
+  }
   auto id = group;
 
   if (auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang); it != m_keyboardLayouts.end()) {
@@ -631,10 +634,12 @@ void KeyMap::addGroupToKeystroke(Keystrokes &keys, int32_t &group, const std::st
 
 const KeyMap::KeyItem *KeyMap::mapModifierKey(
     Keystrokes &keys, KeyID id, int32_t group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-    KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
+    KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &
 ) const
 {
-  return mapCharacterKey(keys, id, group, activeModifiers, currentState, desiredMask, isAutoRepeat, lang);
+  // A modifier has no language. In particular, pressing Shift must not
+  // select the server's Japanese input source after the client chose Eisu.
+  return mapCharacterKey(keys, id, group, activeModifiers, currentState, desiredMask, isAutoRepeat, {});
 }
 
 int32_t KeyMap::findBestKey(const KeyEntryList &entryList, KeyModifierMask desiredState) const

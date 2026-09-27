@@ -14,6 +14,7 @@
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsHandle.h"
 #include "platform/MSWindowsHook.h"
+#include "platform/MSWindowsKeyEvent.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)
@@ -616,6 +617,9 @@ void MSWindowsKeyState::disable()
 
 KeyButton MSWindowsKeyState::virtualKeyToButton(UINT virtualKey) const
 {
+  if (const auto button = deskflow::windows::imeButton(virtualKey); button != 0) {
+    return button;
+  }
   return m_virtualKeyToButton[virtualKey & 0xffu];
 }
 
@@ -1272,6 +1276,16 @@ void MSWindowsKeyState::setWindowGroup(int32_t group)
 
 KeyID MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 {
+  if (const auto id = deskflow::windows::imeKeyID(virtualKey); id != kKeyNone) {
+    return id;
+  }
+
+  // Right Shift is identified by its scan code, not the extended bit.
+  // Some injected events use the generic VK_SHIFT instead of VK_RSHIFT.
+  if (virtualKey == VK_SHIFT) {
+    virtualKey = (button & 0xffu) == 0x36u ? VK_RSHIFT : VK_LSHIFT;
+  }
+
   // Some virtual keycodes have same values.
   // VK_HANGUL == VK_KANA, VK_HANJA == NK_KANJI
   // which are used to change the input mode of IME.
@@ -1297,6 +1311,12 @@ KeyID MSWindowsKeyState::getKeyID(UINT virtualKey, KeyButton button) const
 
 UINT MSWindowsKeyState::mapButtonToVirtualKey(KeyButton button) const
 {
+  if (button == deskflow::windows::imeButton(VK_IME_ON)) {
+    return VK_IME_ON;
+  }
+  if (button == deskflow::windows::imeButton(VK_IME_OFF)) {
+    return VK_IME_OFF;
+  }
   return m_buttonToVK[button];
 }
 

@@ -183,6 +183,44 @@ void KeyMapTests::mapkey()
   QVERIFY(result == nullptr);
 }
 
+void KeyMapTests::modifiersKeepClientLanguage_data()
+{
+  QTest::addColumn<uint32_t>("id");
+  QTest::newRow("left-shift") << kKeyShift_L;
+  QTest::newRow("right-shift") << kKeyShift_R;
+  QTest::newRow("left-control") << kKeyControl_L;
+  QTest::newRow("right-control") << kKeyControl_R;
+  QTest::newRow("left-alt") << kKeyAlt_L;
+  QTest::newRow("right-alt") << kKeyAlt_R;
+  QTest::newRow("altgr") << kKeyAltGr;
+  QTest::newRow("left-super") << kKeySuper_L;
+  QTest::newRow("right-super") << kKeySuper_R;
+}
+
+void KeyMapTests::modifiersKeepClientLanguage()
+{
+  QFETCH(uint32_t, id);
+  KeyMap keyMap;
+  keyMap.setLanguageData({"en", "ja"});
+  for (int group = 0; group < 2; ++group) {
+    KeyMap::KeyItem item;
+    item.m_id = id;
+    item.m_group = group;
+    item.m_button = 42;
+    KeyMap::initModifierKey(item);
+    keyMap.addKeyEntry(item);
+  }
+  keyMap.finish();
+  KeyMap::Keystrokes strokes;
+  KeyMap::ModifierToKeys modifiers;
+  KeyModifierMask state = 0;
+  const auto item = keyMap.mapKey(strokes, id, 0, modifiers, state, 0, false, "ja");
+  QVERIFY(item != nullptr);
+  QCOMPARE(item->m_group, 0);
+  QCOMPARE(strokes.size(), size_t(1));
+  QCOMPARE(strokes.front().m_type, KeyMap::Keystroke::KeyType::Button);
+}
+
 void KeyMapTests::parseModifiers_plusKey_keepsPlusAsKey()
 {
   std::string keystroke = "Control+Shift++";

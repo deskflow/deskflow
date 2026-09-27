@@ -111,6 +111,8 @@ static const KeyEntry s_controlKeys[] = {
     {kKeyControl_R, s_controlRightVK},
     {kKeyAlt_L, s_altVK},
     {kKeyAlt_R, s_altRightVK},
+    // Windows reports its right Alt as AltGr. On macOS it is right Option.
+    {kKeyAltGr, s_altRightVK},
     {kKeySuper_L, s_superVK},
     {kKeySuper_R, s_superRightVK},
     {kKeyMeta_L, s_superVK},
@@ -232,10 +234,10 @@ OSXKeyState::OSXKeyState(
 void OSXKeyState::init()
 {
   m_deadKeyState = 0;
-  m_shiftPressed = false;
-  m_controlPressed = false;
-  m_altPressed = false;
-  m_superPressed = false;
+  m_shiftLeftPressed = false;
+  m_controlLeftPressed = false;
+  m_altLeftPressed = false;
+  m_superLeftPressed = false;
   m_capsPressed = false;
   m_shiftRightPressed = false;
   m_controlRightPressed = false;
@@ -416,19 +418,19 @@ CGEventFlags OSXKeyState::getModifierStateAsOSXFlags() const
 {
   CGEventFlags modifiers = 0;
 
-  if (m_shiftPressed) {
+  if (m_shiftLeftPressed || m_shiftRightPressed) {
     modifiers |= kCGEventFlagMaskShift;
   }
 
-  if (m_controlPressed) {
+  if (m_controlLeftPressed || m_controlRightPressed) {
     modifiers |= kCGEventFlagMaskControl;
   }
 
-  if (m_altPressed) {
+  if (m_altLeftPressed || m_altRightPressed) {
     modifiers |= kCGEventFlagMaskAlternate;
   }
 
-  if (m_superPressed) {
+  if (m_superLeftPressed || m_superRightPressed) {
     modifiers |= kCGEventFlagMaskCommand;
   }
 
@@ -560,20 +562,32 @@ CGEventFlags OSXKeyState::getDeviceDependedFlags() const
 {
   CGEventFlags modifiers = 0;
 
-  if (m_shiftPressed) {
-    modifiers |= m_shiftRightPressed ? NX_DEVICERSHIFTKEYMASK : NX_DEVICELSHIFTKEYMASK;
+  if (m_shiftLeftPressed) {
+    modifiers |= NX_DEVICELSHIFTKEYMASK;
+  }
+  if (m_shiftRightPressed) {
+    modifiers |= NX_DEVICERSHIFTKEYMASK;
   }
 
-  if (m_controlPressed) {
-    modifiers |= m_controlRightPressed ? NX_DEVICERCTLKEYMASK : NX_DEVICELCTLKEYMASK;
+  if (m_controlLeftPressed) {
+    modifiers |= NX_DEVICELCTLKEYMASK;
+  }
+  if (m_controlRightPressed) {
+    modifiers |= NX_DEVICERCTLKEYMASK;
   }
 
-  if (m_altPressed) {
-    modifiers |= m_altRightPressed ? NX_DEVICERALTKEYMASK : NX_DEVICELALTKEYMASK;
+  if (m_altLeftPressed) {
+    modifiers |= NX_DEVICELALTKEYMASK;
+  }
+  if (m_altRightPressed) {
+    modifiers |= NX_DEVICERALTKEYMASK;
   }
 
-  if (m_superPressed) {
-    modifiers |= m_superRightPressed ? NX_DEVICERCMDKEYMASK : NX_DEVICELCMDKEYMASK;
+  if (m_superLeftPressed) {
+    modifiers |= NX_DEVICELCMDKEYMASK;
+  }
+  if (m_superRightPressed) {
+    modifiers |= NX_DEVICERCMDKEYMASK;
   }
 
   return modifiers;
@@ -585,9 +599,7 @@ CGEventFlags OSXKeyState::getKeyboardEventFlags() const
   // http://tinyurl.com/pxl742y
   CGEventFlags modifiers = getModifierStateAsOSXFlags();
 
-  if (!m_capsPressed) {
-    modifiers |= getDeviceDependedFlags();
-  }
+  modifiers |= getDeviceDependedFlags();
 
   return modifiers;
 }
@@ -596,39 +608,27 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
 {
   switch (virtualKey) {
   case s_shiftVK:
-    m_shiftPressed = keyDown;
-    if (keyDown)
-      m_shiftRightPressed = false;
+    m_shiftLeftPressed = keyDown;
     break;
   case s_shiftRightVK:
-    m_shiftPressed = keyDown;
     m_shiftRightPressed = keyDown;
     break;
   case s_controlVK:
-    m_controlPressed = keyDown;
-    if (keyDown)
-      m_controlRightPressed = false;
+    m_controlLeftPressed = keyDown;
     break;
   case s_controlRightVK:
-    m_controlPressed = keyDown;
     m_controlRightPressed = keyDown;
     break;
   case s_altVK:
-    m_altPressed = keyDown;
-    if (keyDown)
-      m_altRightPressed = false;
+    m_altLeftPressed = keyDown;
     break;
   case s_altRightVK:
-    m_altPressed = keyDown;
     m_altRightPressed = keyDown;
     break;
   case s_superVK:
-    m_superPressed = keyDown;
-    if (keyDown)
-      m_superRightPressed = false;
+    m_superLeftPressed = keyDown;
     break;
   case s_superRightVK:
-    m_superPressed = keyDown;
     m_superRightPressed = keyDown;
     break;
   case s_capsLockVK:
@@ -732,6 +732,9 @@ void OSXKeyState::getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, int32_t grou
     item.m_dead = false;
     item.m_client = 0;
     deskflow::KeyMap::initModifierKey(item);
+    if (entry.m_keyID == kKeyAltGr) {
+      item.m_generates = KeyModifierAlt;
+    }
     keyMap.addKeyEntry(item);
 
     if (item.m_lock) {

@@ -23,6 +23,8 @@ A key state for OS X.
 */
 class OSXKeyState : public KeyState
 {
+  friend class OSXKeyStateTests;
+
 public:
   using KeyIDs = std::vector<KeyID>;
 
@@ -157,13 +159,13 @@ private:
   mutable uint32_t m_deadKeyState;
   AutoCFArray m_groups{nullptr, CFRelease};
   GroupMap m_groupMap;
-  bool m_shiftPressed;
-  bool m_controlPressed;
-  bool m_altPressed;
-  bool m_superPressed;
+  bool m_shiftLeftPressed;
+  bool m_controlLeftPressed;
+  bool m_altLeftPressed;
+  bool m_superLeftPressed;
   bool m_capsPressed;
-  // track whether the right-hand variant of a modifier is held so the
-  // device-dependent event flags report the correct side.
+  // Track both sides independently; releasing one side must not clear
+  // the modifier while the other side is still held.
   bool m_shiftRightPressed;
   bool m_controlRightPressed;
   bool m_altRightPressed;

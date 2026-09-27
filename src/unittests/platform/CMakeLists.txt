@@ -3,6 +3,13 @@
 
 if (WIN32)
   create_test(
+    NAME MSWindowsKeyStateTests
+    DEPENDS platform
+    LIBS app base arch mt
+    SOURCE MSWindowsKeyStateTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  create_test(
     NAME MSWindowsClipboardTests
     DEPENDS platform
     LIBS base arch
@@ -20,7 +27,7 @@ elseif(APPLE)
   create_test(
     NAME OSXKeyStateTests
     DEPENDS platform
-    LIBS base arch
+    LIBS app base arch mt
     SOURCE OSXKeyStateTests.cpp
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )

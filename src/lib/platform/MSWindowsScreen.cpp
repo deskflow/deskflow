@@ -25,6 +25,7 @@
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
+#include "platform/MSWindowsKeyEvent.h"
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsScreenSaver.h"
 
@@ -1014,6 +1015,13 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
       (wParam & 0x1000000u) ? 1 : 0, lParam
   );
 
+  // Resolve virtual-key-only input before repeat and modifier bookkeeping.
+  // IME mode commands have independent buttons even if Windows supplies a
+  // layout-dependent scan code for them.
+  const UINT eventVirtualKey = (wParam >> 16) & 0xffu;
+  lParam =
+      deskflow::windows::normalizeKeyEvent(eventVirtualKey, lParam, m_keyState->virtualKeyToButton(eventVirtualKey));
+
   // get event info
   KeyButton button = (KeyButton)((lParam & 0x01ff0000) >> 16);
   bool down = ((lParam & 0x80000000u) == 0x00000000u);
@@ -1025,16 +1033,9 @@ bool MSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
     lParam |= 0x40000000u;
   }
 
-  // if the button is zero then guess what the button should be.
-  // these are badly synthesized key events and logitech software
-  // that maps mouse buttons to keys is known to do this.
-  // alternatively, we could just throw these events out.
+  // Ignore events that have neither a scan code nor a virtual-key mapping.
   if (button == 0) {
-    button = m_keyState->virtualKeyToButton((wParam >> 16) & 0xffu);
-    if (button == 0) {
-      return true;
-    }
-    wasDown = isKeyDown(button);
+    return true;
   }
 
   // record keyboard state
@@ -1685,7 +1686,7 @@ LRESULT CALLBACK MSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 
 void MSWindowsScreen::fakeLocalKey(KeyButton button, bool press) const
 {
-  INPUT input;
+  INPUT input{};
   input.type = INPUT_KEYBOARD;
   input.ki.wVk = m_keyState->mapButtonToVirtualKey(button);
   DWORD pressFlag = press ? KEYEVENTF_EXTENDEDKEY : KEYEVENTF_KEYUP;
