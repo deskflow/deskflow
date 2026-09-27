@@ -8,12 +8,15 @@
 
 #pragma once
 
+#include "deskflow/Clipboard.h"
 #include "deskflow/PlatformComputer.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 
 #include <map>
+#include <memory>
 #include <string>
+#include <thread>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -174,6 +177,8 @@ private: // HACK
   bool onScreensaver(bool activated);
   bool onDisplayChange();
   void onClipboardChange();
+  void startClipboardRead();
+  void onClipboardRead();
 
   // warp cursor without discarding queued events
   void warpCursorNoFlush(int32_t x, int32_t y);
@@ -246,6 +251,7 @@ private:
   using PrimaryKeyDownList = std::vector<KeyButton>;
 
   static HINSTANCE s_windowInstance;
+  static constexpr UINT kClipboardReadMessage = WM_APP + 0x0020;
 
   // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary;
@@ -303,6 +309,11 @@ private:
   HWND m_window = nullptr;
   DWORD m_clipboardSequenceNumber = 0;
   bool m_ownClipboard = false;
+  std::thread m_clipboardReader;
+  std::unique_ptr<Clipboard> m_readingClipboard;
+  DWORD m_readingSequenceNumber = 0;
+  std::unique_ptr<Clipboard> m_clipboardSnapshot;
+  DWORD m_snapshotSequenceNumber = 0;
 
   // one desk per desktop and a cond var to communicate with it
   MSWindowsDesks *m_desks = nullptr;
