@@ -49,7 +49,7 @@ public:
 
   //@}
 
-  // IScreen
+  // IComputer
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override = 0;
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override = 0;

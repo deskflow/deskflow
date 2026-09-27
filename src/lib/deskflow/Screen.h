@@ -8,7 +8,7 @@
 #pragma once
 
 #include "deskflow/ClipboardTypes.h"
-#include "deskflow/IScreen.h"
+#include "deskflow/IComputer.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -26,7 +26,7 @@ namespace deskflow {
 This is a platform independent screen.  It can work as either a
 primary or secondary screen.
 */
-class Screen : public IScreen
+class Screen : public IComputer
 {
 public:
   Screen(IPlatformScreen *platformScreen, IEventQueue *events);
@@ -268,7 +268,7 @@ public:
 
   //@}
 
-  // IScreen overrides
+  // IComputer overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;

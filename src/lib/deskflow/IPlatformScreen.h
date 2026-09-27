@@ -9,9 +9,9 @@
 #pragma once
 
 #include "deskflow/ClipboardTypes.h"
+#include "deskflow/IComputer.h"
 #include "deskflow/IKeyState.h"
 #include "deskflow/IPrimaryScreen.h"
-#include "deskflow/IScreen.h"
 #include "deskflow/ISecondaryScreen.h"
 #include "deskflow/OptionTypes.h"
 
@@ -23,7 +23,7 @@ This interface defines the methods common to all platform dependent
 screen implementations that are used by both primary and secondary
 screens.
 */
-class IPlatformScreen : public IScreen, public IPrimaryScreen, public ISecondaryScreen, public IKeyState
+class IPlatformScreen : public IComputer, public IPrimaryScreen, public ISecondaryScreen, public IKeyState
 {
 public:
   //! @name manipulators
@@ -164,7 +164,7 @@ protected:
   \endcode
   It should remove the handler in its d'tor.  Override the
   \c handleSystemEvent() method to process system events.
-  It should post the events \c IScreen as appropriate.
+  It should post the events \c IComputer as appropriate.
 
   A primary screen has further responsibilities.  It should post
   the events in \c IPrimaryScreen as appropriate.  It should also

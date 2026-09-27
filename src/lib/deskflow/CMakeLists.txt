@@ -45,13 +45,13 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   IClient.h
   IClipboard.cpp
   IClipboard.h
+  IComputer.h
   IKeyState.cpp
   IKeyState.h
   IPlatformScreen.cpp
   IPlatformScreen.h
   IPrimaryScreen.cpp
   IPrimaryScreen.h
-  IScreen.h
   IScreenSaver.h
   ISecondaryScreen.h
   KeyTypes.cpp

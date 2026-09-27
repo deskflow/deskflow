@@ -13,7 +13,7 @@
 #include "common/Constants.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
-#include "deskflow/IScreen.h"
+#include "deskflow/IComputer.h"
 #include "deskflow/OptionTypes.h"
 #include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"

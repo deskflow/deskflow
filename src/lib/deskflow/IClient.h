@@ -8,7 +8,7 @@
 #pragma once
 
 #include "deskflow/ClipboardTypes.h"
-#include "deskflow/IScreen.h"
+#include "deskflow/IComputer.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -20,7 +20,7 @@
 This interface defines the methods necessary for the server to
 communicate with a client.
 */
-class IClient : public IScreen
+class IClient : public IComputer
 {
 public:
   //! @name manipulators
