@@ -50,8 +50,7 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   IComputer.h
   IKeyState.cpp
   IKeyState.h
-  IPlatformScreen.cpp
-  IPlatformScreen.h
+  IPlatformComputer.h
   IPrimaryScreen.cpp
   IPrimaryScreen.h
   IScreenSaver.h

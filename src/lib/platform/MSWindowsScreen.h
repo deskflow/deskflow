@@ -25,7 +25,7 @@ class MSWindowsScreenSaver;
 class Thread;
 class MSWindowsDropTarget;
 
-//! Implementation of IPlatformScreen for Microsoft Windows
+//! Implementation of IPlatformComputer for Microsoft Windows
 class MSWindowsScreen : public PlatformScreen
 {
 public:
@@ -105,7 +105,7 @@ public:
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
 
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void enable() override;
   void disable() override;
   void enter() override;
@@ -123,7 +123,7 @@ public:
   std::string getSecureInputApp() const override;
 
 protected:
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void handleSystemEvent(const Event &event) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;

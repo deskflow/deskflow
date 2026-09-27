@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "deskflow/IPlatformScreen.h"
+#include "deskflow/IPlatformComputer.h"
 
 //! Base screen implementation
 /*!
@@ -16,7 +16,7 @@ This screen implementation is the superclass of all other screen
 implementations.  It implements a handful of methods and requires
 subclasses to implement the rest.
 */
-class PlatformScreen : public IPlatformScreen
+class PlatformScreen : public IPlatformComputer
 {
 public:
   explicit PlatformScreen(IEventQueue *events);
@@ -62,7 +62,7 @@ public:
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
   void clearStaleModifiers() override;
 
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void enable() override = 0;
   void disable() override = 0;
   void enter() override = 0;
@@ -93,7 +93,7 @@ protected:
   */
   virtual IKeyState *getKeyState() const = 0;
 
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void handleSystemEvent(const Event &event) override = 0;
 
   /*!

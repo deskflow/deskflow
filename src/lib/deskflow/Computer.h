@@ -16,7 +16,7 @@
 #include <string>
 
 class IClipboard;
-class IPlatformScreen;
+class IPlatformComputer;
 class IEventQueue;
 
 namespace deskflow {
@@ -29,7 +29,7 @@ primary or secondary computer.
 class Computer : public IComputer
 {
 public:
-  Computer(IPlatformScreen *platformScreen, IEventQueue *events);
+  Computer(IPlatformComputer *platformScreen, IEventQueue *events);
   Computer(Computer const &) = delete;
   Computer(Computer &&) = delete;
   ~Computer() override;
@@ -274,7 +274,7 @@ public:
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
   void getCursorPos(int32_t &x, int32_t &y) const override;
 
-  IPlatformScreen *getPlatformComputer()
+  IPlatformComputer *getPlatformComputer()
   {
     return m_computer;
   }
@@ -292,7 +292,7 @@ protected:
 
 private:
   // our platform dependent computer
-  IPlatformScreen *m_computer = nullptr;
+  IPlatformComputer *m_computer = nullptr;
 
   // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary = false;

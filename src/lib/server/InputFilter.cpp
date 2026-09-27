@@ -31,7 +31,7 @@ void InputFilter::Condition::disablePrimary(PrimaryClient *)
   // do nothing
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, IPlatformScreen::KeyInfo *info)
+InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, IPlatformComputer::KeyInfo *info)
     : m_key(info->m_key),
       m_mask(info->m_mask),
       m_events(events)
@@ -82,7 +82,7 @@ InputFilter::FilterStatus InputFilter::KeystrokeCondition::match(const Event &ev
   }
 
   // check if it's our hotkey
-  if (const auto *kinfo = static_cast<IPlatformScreen::HotKeyInfo *>(event.getData()); kinfo->m_id != m_id) {
+  if (const auto *kinfo = static_cast<IPlatformComputer::HotKeyInfo *>(event.getData()); kinfo->m_id != m_id) {
     return NoMatch;
   }
 
@@ -100,7 +100,7 @@ void InputFilter::KeystrokeCondition::disablePrimary(PrimaryClient *primary)
   m_id = 0;
 }
 
-InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events, const IPlatformScreen::ButtonInfo &info)
+InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events, const IPlatformComputer::ButtonInfo &info)
     : m_button(info.m_button),
       m_mask(info.m_mask),
       m_events(events)
@@ -159,7 +159,7 @@ InputFilter::FilterStatus InputFilter::MouseButtonCondition::match(const Event &
 
   // check if it's the right button and modifiers.  ignore modifiers
   // that cannot be combined with a mouse button.
-  if (const auto *minfo = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+  if (const auto *minfo = static_cast<IPlatformComputer::ButtonInfo *>(event.getData());
       minfo->m_button != m_button || (minfo->m_mask & ~s_ignoreMask) != m_mask) {
     return NoMatch;
   }
@@ -421,7 +421,7 @@ void InputFilter::KeyboardBroadcastAction::perform(const Event &event)
   );
 }
 
-InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue *events, IPlatformScreen::KeyInfo *info, bool press)
+InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue *events, IPlatformComputer::KeyInfo *info, bool press)
     : m_keyInfo(info),
       m_press(press),
       m_events(events)
@@ -434,13 +434,13 @@ InputFilter::KeystrokeAction::~KeystrokeAction()
   free(m_keyInfo);
 }
 
-void InputFilter::KeystrokeAction::adoptInfo(IPlatformScreen::KeyInfo *info)
+void InputFilter::KeystrokeAction::adoptInfo(IPlatformComputer::KeyInfo *info)
 {
   free(m_keyInfo);
   m_keyInfo = info;
 }
 
-const IPlatformScreen::KeyInfo *InputFilter::KeystrokeAction::getInfo() const
+const IPlatformComputer::KeyInfo *InputFilter::KeystrokeAction::getInfo() const
 {
   return m_keyInfo;
 }
@@ -494,7 +494,7 @@ const char *InputFilter::KeystrokeAction::formatName() const
 }
 
 InputFilter::MouseButtonAction::MouseButtonAction(
-    IEventQueue *events, const IPlatformScreen::ButtonInfo &info, bool press
+    IEventQueue *events, const IPlatformComputer::ButtonInfo &info, bool press
 )
     : m_buttonInfo(info),
       m_press(press),
@@ -503,7 +503,7 @@ InputFilter::MouseButtonAction::MouseButtonAction(
   // do nothing
 }
 
-const IPlatformScreen::ButtonInfo &InputFilter::MouseButtonAction::getInfo() const
+const IPlatformComputer::ButtonInfo &InputFilter::MouseButtonAction::getInfo() const
 {
   return m_buttonInfo;
 }
@@ -531,7 +531,7 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
 {
   // send modifiers
   using enum EventTypes;
-  IPlatformScreen::KeyInfo *modifierInfo = nullptr;
+  IPlatformComputer::KeyInfo *modifierInfo = nullptr;
   if (m_buttonInfo.m_mask != 0) {
     KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
     modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo.m_mask, 0, 1);

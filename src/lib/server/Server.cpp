@@ -13,7 +13,7 @@
 #include "deskflow/AppUtil.h"
 #include "deskflow/Computer.h"
 #include "deskflow/DeskflowException.h"
-#include "deskflow/IPlatformScreen.h"
+#include "deskflow/IPlatformComputer.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
@@ -224,7 +224,7 @@ bool Server::setConfig(const ServerConfig &config)
   // configured a LockCursorToScreenAction then we don't add
   // ScrollLock as a hotkey.
   if (!m_disableLockToScreen && !m_config->hasLockToScreenAction()) {
-    IPlatformScreen::KeyInfo *key = IPlatformScreen::KeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
+    IPlatformComputer::KeyInfo *key = IPlatformComputer::KeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
     InputFilter::Rule rule(new InputFilter::KeystrokeCondition(m_events, key));
     rule.adoptAction(new InputFilter::LockCursorToScreenAction(m_events), true);
     m_inputFilter->addFilterRule(rule);
@@ -1225,51 +1225,51 @@ void Server::handleClipboardChanged(const Event &event, BaseClientProxy *client)
 
 void Server::handleKeyDownEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
   onKeyDown(info->m_key, info->m_mask, info->m_button, lang, info->m_screens.c_str());
 }
 
 void Server::handleKeyUpEvent(const Event &event)
 {
-  auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
+  auto *info = static_cast<IPlatformComputer::KeyInfo *>(event.getData());
   onKeyUp(info->m_key, info->m_mask, info->m_button, info->m_screens.c_str());
 }
 
 void Server::handleKeyRepeatEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
   onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button, lang);
 }
 
 void Server::handleButtonDownEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::ButtonInfo *>(event.getData());
   onMouseDown(info->m_button);
 }
 
 void Server::handleButtonUpEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::ButtonInfo *>(event.getData());
   onMouseUp(info->m_button);
 }
 
 void Server::handleMotionPrimaryEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::MotionInfo *>(event.getData());
   onMouseMovePrimary(info->m_x, info->m_y);
 }
 
 void Server::handleMotionSecondaryEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::MotionInfo *>(event.getData());
   onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
 void Server::handleWheelEvent(const Event &event)
 {
-  const auto *info = static_cast<IPlatformScreen::WheelInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformComputer::WheelInfo *>(event.getData());
   onMouseWheel(info->m_xDelta, info->m_yDelta);
 }
 

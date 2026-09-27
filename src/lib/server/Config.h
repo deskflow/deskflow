@@ -10,7 +10,7 @@
 
 #include "base/BaseException.h"
 #include "base/String.h"
-#include "deskflow/IPlatformScreen.h"
+#include "deskflow/IPlatformComputer.h"
 #include "deskflow/OptionTypes.h"
 #include "net/NetworkAddress.h"
 #include "server/InputFilter.h"
@@ -441,9 +441,9 @@ public:
       const std::string &type, const std::string &line, const std::string &delim, std::string::size_type &index,
       std::string &name, ArgList &args
   ) const;
-  IPlatformScreen::KeyInfo *parseKeystroke(const std::string &keystroke) const;
-  IPlatformScreen::KeyInfo *parseKeystroke(const std::string &keystroke, const std::set<std::string> &screens) const;
-  IPlatformScreen::ButtonInfo parseMouse(const std::string &mouse) const;
+  IPlatformComputer::KeyInfo *parseKeystroke(const std::string &keystroke) const;
+  IPlatformComputer::KeyInfo *parseKeystroke(const std::string &keystroke, const std::set<std::string> &screens) const;
+  IPlatformComputer::ButtonInfo parseMouse(const std::string &mouse) const;
   KeyModifierMask parseModifier(const std::string &modifiers) const;
   std::istream &getStream() const
   {

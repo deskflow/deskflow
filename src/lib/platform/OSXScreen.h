@@ -41,7 +41,7 @@ class OSXScreenSaver;
 class IEventQueue;
 class Mutex;
 
-//! Implementation of IPlatformScreen for OS X
+//! Implementation of IPlatformComputer for OS X
 class OSXScreen : public PlatformScreen
 {
 public:
@@ -78,7 +78,7 @@ public:
   void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override;
   void fakeMouseWheel(ScrollDelta delta) const override;
 
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void enable() override;
   void disable() override;
   void enter() override;
@@ -98,7 +98,7 @@ public:
   void waitForCarbonLoop() const;
 
 protected:
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void handleSystemEvent(const Event &e) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;

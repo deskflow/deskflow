@@ -38,7 +38,7 @@ class EiClipboard;
 
 using ClipboardInfo = IComputer::ClipboardInfo;
 
-//! Implementation of IPlatformScreen for X11
+//! Implementation of IPlatformComputer for X11
 class EiScreen : public PlatformScreen
 {
 public:
@@ -70,7 +70,7 @@ public:
   void fakeMouseWheel(ScrollDelta delta) const override;
   void fakeKey(std::uint32_t keycode, bool isDown) const;
 
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void enable() override;
   void disable() override;
   void enter() override;
@@ -102,7 +102,7 @@ public:
   }
 
 protected:
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void handleSystemEvent(const Event &event) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;
