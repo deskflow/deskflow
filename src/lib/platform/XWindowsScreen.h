@@ -9,7 +9,7 @@
 #pragma once
 
 #include "deskflow/KeyMap.h"
-#include "deskflow/PlatformScreen.h"
+#include "deskflow/PlatformComputer.h"
 #include "platform/XDGPowerManager.h"
 #include "platform/XWindowsConfig.h"
 
@@ -25,7 +25,7 @@ class XWindowsKeyState;
 class XWindowsScreenSaver;
 
 //! Implementation of IPlatformComputer for X11
-class XWindowsScreen : public PlatformScreen
+class XWindowsScreen : public PlatformComputer
 {
 public:
   XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events);

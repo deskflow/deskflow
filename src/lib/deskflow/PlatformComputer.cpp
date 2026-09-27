@@ -6,89 +6,89 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "deskflow/PlatformScreen.h"
+#include "deskflow/PlatformComputer.h"
 #include "base/DirectionTypes.h"
 #include "deskflow/App.h"
 
-PlatformScreen::PlatformScreen(IEventQueue *events) : IPlatformComputer(events)
+PlatformComputer::PlatformComputer(IEventQueue *events) : IPlatformComputer(events)
 {
   // do nothing
 }
 
-void PlatformScreen::updateKeyMap()
+void PlatformComputer::updateKeyMap()
 {
   getKeyState()->updateKeyMap();
 }
 
-void PlatformScreen::updateKeyState()
+void PlatformComputer::updateKeyState()
 {
   getKeyState()->updateKeyState();
   updateButtons();
 }
 
-void PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
+void PlatformComputer::setHalfDuplexMask(KeyModifierMask mask)
 {
   getKeyState()->setHalfDuplexMask(mask);
 }
 
-void PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
+void PlatformComputer::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   getKeyState()->fakeKeyDown(id, mask, button, lang);
 }
 
-bool PlatformScreen::fakeKeyRepeat(
+bool PlatformComputer::fakeKeyRepeat(
     KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
 )
 {
   return getKeyState()->fakeKeyRepeat(id, mask, count, button, lang);
 }
 
-bool PlatformScreen::fakeKeyUp(KeyButton button)
+bool PlatformComputer::fakeKeyUp(KeyButton button)
 {
   return getKeyState()->fakeKeyUp(button);
 }
 
-void PlatformScreen::fakeAllKeysUp()
+void PlatformComputer::fakeAllKeysUp()
 {
   getKeyState()->fakeAllKeysUp();
 }
 
-bool PlatformScreen::fakeCtrlAltDel()
+bool PlatformComputer::fakeCtrlAltDel()
 {
   return getKeyState()->fakeCtrlAltDel();
 }
 
-bool PlatformScreen::isKeyDown(KeyButton button) const
+bool PlatformComputer::isKeyDown(KeyButton button) const
 {
   return getKeyState()->isKeyDown(button);
 }
 
-KeyModifierMask PlatformScreen::getActiveModifiers() const
+KeyModifierMask PlatformComputer::getActiveModifiers() const
 {
   return getKeyState()->getActiveModifiers();
 }
 
-KeyModifierMask PlatformScreen::pollActiveModifiers() const
+KeyModifierMask PlatformComputer::pollActiveModifiers() const
 {
   return getKeyState()->pollActiveModifiers();
 }
 
-int32_t PlatformScreen::pollActiveGroup() const
+int32_t PlatformComputer::pollActiveGroup() const
 {
   return getKeyState()->pollActiveGroup();
 }
 
-void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
+void PlatformComputer::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   getKeyState()->pollPressedKeys(pressedKeys);
 }
 
-void PlatformScreen::clearStaleModifiers()
+void PlatformComputer::clearStaleModifiers()
 {
   getKeyState()->clearStaleModifiers();
 }
 
-std::string PlatformScreen::sidesMaskToString(uint32_t sides)
+std::string PlatformComputer::sidesMaskToString(uint32_t sides)
 {
   using enum DirectionMask;
   std::string sidesText;

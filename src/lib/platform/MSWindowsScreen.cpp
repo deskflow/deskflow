@@ -80,7 +80,7 @@ HINSTANCE MSWindowsScreen::s_windowInstance = nullptr;
 MSWindowsScreen *MSWindowsScreen::s_screen = nullptr;
 
 MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync)
-    : PlatformScreen(events),
+    : PlatformComputer(events),
       m_isPrimary(isPrimary),
       m_useHooks(useHooks),
       m_isOnScreen(m_isPrimary),
@@ -721,7 +721,7 @@ void MSWindowsScreen::updateKeys()
 
 void MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
-  PlatformScreen::fakeKeyDown(id, mask, button, lang);
+  PlatformComputer::fakeKeyDown(id, mask, button, lang);
   updateMouseKeys();
 }
 
@@ -729,21 +729,21 @@ bool MSWindowsScreen::fakeKeyRepeat(
     KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
 )
 {
-  bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button, lang);
+  bool result = PlatformComputer::fakeKeyRepeat(id, mask, count, button, lang);
   updateMouseKeys();
   return result;
 }
 
 bool MSWindowsScreen::fakeKeyUp(KeyButton button)
 {
-  bool result = PlatformScreen::fakeKeyUp(button);
+  bool result = PlatformComputer::fakeKeyUp(button);
   updateMouseKeys();
   return result;
 }
 
 void MSWindowsScreen::fakeAllKeysUp()
 {
-  PlatformScreen::fakeAllKeysUp();
+  PlatformComputer::fakeAllKeysUp();
   updateMouseKeys();
 }
 
@@ -1578,11 +1578,11 @@ void MSWindowsScreen::updateKeysCB(const void *)
 
   // update layouts if necessary
   if (m_keyState->didGroupsChange()) {
-    PlatformScreen::updateKeyMap();
+    PlatformComputer::updateKeyMap();
   }
 
   // now update the keyboard state
-  PlatformScreen::updateKeyState();
+  PlatformComputer::updateKeyState();
 
   // now see which keys we thought were down but now think are up.
   // send key releases for these keys to the active client.

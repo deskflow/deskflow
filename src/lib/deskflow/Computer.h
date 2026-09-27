@@ -29,7 +29,7 @@ primary or secondary computer.
 class Computer : public IComputer
 {
 public:
-  Computer(IPlatformComputer *platformScreen, IEventQueue *events);
+  Computer(IPlatformComputer *platformComputer, IEventQueue *events);
   Computer(Computer const &) = delete;
   Computer(Computer &&) = delete;
   ~Computer() override;

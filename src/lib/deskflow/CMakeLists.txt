@@ -65,8 +65,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   OptionTypes.h
   PacketStreamFilter.cpp
   PacketStreamFilter.h
-  PlatformScreen.cpp
-  PlatformScreen.h
+  PlatformComputer.cpp
+  PlatformComputer.h
   ProtocolTypes.cpp
   ProtocolTypes.h
   ProtocolUtil.cpp

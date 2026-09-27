@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "deskflow/PlatformScreen.h"
+#include "deskflow/PlatformComputer.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 
@@ -26,7 +26,7 @@ class Thread;
 class MSWindowsDropTarget;
 
 //! Implementation of IPlatformComputer for Microsoft Windows
-class MSWindowsScreen : public PlatformScreen
+class MSWindowsScreen : public PlatformComputer
 {
 public:
   MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync = false);

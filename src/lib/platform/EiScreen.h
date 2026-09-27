@@ -8,7 +8,7 @@
 #pragma once
 
 #include "deskflow/IComputer.h"
-#include "deskflow/PlatformScreen.h"
+#include "deskflow/PlatformComputer.h"
 #ifdef HAVE_LIBPORTAL_SHORTCUTS
 #include "platform/PortalGlobalShortcuts.h"
 #endif
@@ -39,7 +39,7 @@ class EiClipboard;
 using ClipboardInfo = IComputer::ClipboardInfo;
 
 //! Implementation of IPlatformComputer for X11
-class EiScreen : public PlatformScreen
+class EiScreen : public PlatformComputer
 {
 public:
   EiScreen(bool isPrimary, IEventQueue *events, bool usePortal);
