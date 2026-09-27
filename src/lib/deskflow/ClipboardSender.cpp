@@ -44,6 +44,16 @@ void ClipboardSender::sendClipboard(std::string data, ClipboardID id, uint32_t s
   }
 }
 
+void ClipboardSender::sendRemaining()
+{
+  if (m_sending) {
+    LOG_DEBUG("sending the rest of clipboard %d ahead of input", m_currentId);
+  }
+  while (m_sending) {
+    sendNextChunk();
+  }
+}
+
 void ClipboardSender::beginTransfer(ClipboardID id, Transfer transfer)
 {
   m_current = std::move(transfer);

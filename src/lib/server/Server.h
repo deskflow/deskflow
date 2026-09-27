@@ -329,6 +329,7 @@ private:
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
   void syncClipboardsWhenMouseIdle();
+  void syncClipboardsBeforeInput();
   void syncClipboards();
   qint64 msUntilMouseIdle() const;
   void onScreensaver(bool activated);

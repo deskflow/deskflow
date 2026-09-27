@@ -40,6 +40,11 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
   }
 }
 
+void ClientProxy1_6::finishClipboardTransfers()
+{
+  m_clipboardSender.sendRemaining();
+}
+
 bool ClientProxy1_6::recvClipboard()
 {
   // parse message

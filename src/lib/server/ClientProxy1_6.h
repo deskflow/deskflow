@@ -23,6 +23,7 @@ public:
 
   void setClipboard(ClipboardID id, const IClipboard *clipboard) override;
   bool recvClipboard() override;
+  void finishClipboardTransfers() override;
 
 private:
   IEventQueue *m_events;
