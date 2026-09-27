@@ -40,6 +40,7 @@ public:
       {"image/bmp", IClipboard::Format::Bitmap, "BMP", false},
       {"image/tiff", IClipboard::Format::Bitmap, "TIFF", false},
       {"image/webp", IClipboard::Format::Bitmap, "WEBP", false},
+      {"text/html", IClipboard::Format::HTML, nullptr, true},
       {"text/plain;charset=utf-8", IClipboard::Format::Text, nullptr, true},
       {"text/plain", IClipboard::Format::Text, nullptr, true},
   };

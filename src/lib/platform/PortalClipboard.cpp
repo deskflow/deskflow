@@ -7,6 +7,7 @@
 #include "platform/PortalClipboard.h"
 
 #include "base/Log.h"
+#include "base/Unicode.h"
 #include "deskflow/ClipboardChunk.h"
 #include "platform/ClipboardImage.h"
 #include "platform/EiClipboard.h"
@@ -151,6 +152,10 @@ QByteArray PortalClipboard::decodeFormat(const SupportedMime &entry, const QByte
   if (entry.format == IClipboard::Format::Bitmap) {
     data = ClipboardImage::toPng(bytes, entry.imageFormat);
   } else if (entry.format == IClipboard::Format::Text || entry.format == IClipboard::Format::HTML) {
+    // firefox has offered html as utf-16
+    if (entry.format == IClipboard::Format::HTML && !Unicode::isUTF8(data.toStdString()))
+      data = QByteArray::fromStdString(Unicode::UTF16ToUTF8(data.toStdString()));
+
     while (data.endsWith('\0'))
       data.chop(1);
     data.replace("\r\n", "\n");
