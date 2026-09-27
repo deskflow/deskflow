@@ -411,14 +411,14 @@ void ServerConfigDialog::loadFromConfig()
   ui->computerSetupView->setModel(&m_computerSetupModel);
 
   auto &screens = serverConfig().screens();
-  auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
-    return (screen.name() == serverConfig().getServerName());
+  auto server = std::ranges::find_if(screens, [this](const Computer &computer) {
+    return (computer.name() == serverConfig().getServerName());
   });
 
   if (server == screens.end()) {
-    Screen serverScreen(serverConfig().getServerName());
-    serverScreen.markAsServer();
-    model().computer(m_columns / 2, m_rows / 2) = serverScreen;
+    Computer serverComputer(serverConfig().getServerName());
+    serverComputer.markAsServer();
+    model().computer(m_columns / 2, m_rows / 2) = serverComputer;
   } else {
     server->markAsServer();
   }
@@ -576,7 +576,7 @@ void ServerConfigDialog::setServerConfig()
 bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 {
   bool isAccepted = false;
-  Screen newComputer(clientName);
+  Computer newComputer(clientName);
 
   if (ComputerSettingsDialog dlg(this, &newComputer, &model().m_computers);
       doSilent || dlg.exec() == QDialog::Accepted) {

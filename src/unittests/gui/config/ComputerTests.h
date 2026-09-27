@@ -6,7 +6,7 @@
 
 #include <QTest>
 
-class ScreenTests : public QObject
+class ComputerTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:

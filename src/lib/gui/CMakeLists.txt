@@ -34,8 +34,8 @@ add_library(${target} STATIC
   VersionChecker.cpp
   VersionChecker.h
   config/ComputerConfig.h
-  config/Screen.cpp
-  config/Screen.h
+  config/Computer.cpp
+  config/Computer.h
   config/ScreenList.cpp
   config/ScreenList.h
   config/ServerConfig.cpp

@@ -5,12 +5,12 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenTests.h"
+#include "ComputerTests.h"
 
 #include "common/Settings.h"
-#include "gui/config/Screen.h"
+#include "gui/config/Computer.h"
 
-void ScreenTests::initTestCase()
+void ComputerTests::initTestCase()
 {
   QDir dir;
   QVERIFY(dir.mkpath(m_settingsPath));
@@ -23,17 +23,17 @@ void ScreenTests::initTestCase()
   Settings::setStateFile(m_stateFile);
 }
 
-void ScreenTests::basicFunctionality()
+void ComputerTests::basicFunctionality()
 {
-  Screen screen;
-  QVERIFY(screen.isNull());
+  Computer computer;
+  QVERIFY(computer.isNull());
 
-  screen.setName("stub");
-  QVERIFY(!screen.isNull());
+  computer.setName("stub");
+  QVERIFY(!computer.isNull());
 
-  screen.saveSettings(Settings::proxy());
-  screen.loadSettings(Settings::proxy());
-  QCOMPARE("stub", screen.name());
+  computer.saveSettings(Settings::proxy());
+  computer.loadSettings(Settings::proxy());
+  QCOMPARE("stub", computer.name());
 }
 
-QTEST_MAIN(ScreenTests)
+QTEST_MAIN(ComputerTests)

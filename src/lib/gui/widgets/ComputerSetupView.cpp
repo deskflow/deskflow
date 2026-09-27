@@ -137,7 +137,7 @@ void ComputerSetupView::startDrag(Qt::DropActions)
     // make sure to only delete the drag source if computerss weren't swapped
     // see ComputerSetupModel::dropMimeData
     if (!model()->computer(indexes[0]).swapped())
-      model()->computer(indexes[0]) = Screen();
+      model()->computer(indexes[0]) = Computer();
     else
       model()->computer(indexes[0]).setSwapped(false);
 

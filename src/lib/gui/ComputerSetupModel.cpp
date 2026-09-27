@@ -9,7 +9,7 @@
 #include "ComputerSetupModel.h"
 
 #include "common/Constants.h"
-#include "gui/config/Screen.h"
+#include "gui/config/Computer.h"
 
 #include <QIODevice>
 #include <QIcon>
@@ -134,10 +134,11 @@ bool ComputerSetupModel::dropMimeData(
   if (sourceColumn == pColumn && sourceRow == pRow)
     return false;
 
-  Screen droppedScreen;
+  Computer droppedScreen;
   stream >> droppedScreen;
 
-  if (auto oldScreen = Screen(computer(pColumn, pRow)); !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
+  if (auto oldScreen = Computer(computer(pColumn, pRow));
+      !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
     // see ComputerSetupView::startDrag()
     oldScreen.setSwapped(true);
@@ -151,7 +152,7 @@ bool ComputerSetupModel::dropMimeData(
   return true;
 }
 
-void ComputerSetupModel::addComputer(const Screen &newComputer)
+void ComputerSetupModel::addComputer(const Computer &newComputer)
 {
   m_computers.addScreenByPriority(newComputer);
   Q_EMIT computersChanged();
@@ -159,6 +160,6 @@ void ComputerSetupModel::addComputer(const Screen &newComputer)
 
 bool ComputerSetupModel::isFull() const
 {
-  auto emptyScreen = std::ranges::find_if(m_computers, [](const Screen &item) { return item.isNull(); });
-  return (static_cast<QList<Screen>::const_iterator>(emptyScreen) == m_computers.cend());
+  auto emptyScreen = std::ranges::find_if(m_computers, [](const Computer &item) { return item.isNull(); });
+  return (static_cast<QList<Computer>::const_iterator>(emptyScreen) == m_computers.cend());
 }

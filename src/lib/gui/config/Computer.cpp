@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "Screen.h"
+#include "Computer.h"
 #include "config/ComputerConfig.h"
 #include <common/Settings.h>
 
@@ -14,12 +14,12 @@ using enum KeyboardModifier;
 using enum ComputerConfig::SwitchCorner;
 using enum ComputerConfig::Fix;
 
-Screen::Screen(const QString &name)
+Computer::Computer(const QString &name)
 {
   setName(name);
 }
 
-void Screen::loadSettings(QSettingsProxy &settings)
+void Computer::loadSettings(QSettingsProxy &settings)
 {
   const auto name = settings.value("name").toString();
   setName(name);
@@ -53,68 +53,68 @@ void Screen::loadSettings(QSettingsProxy &settings)
   m_Aliases = Settings::value(Settings::Computer::Aliases.arg(name)).toStringList();
 }
 
-void Screen::saveSettings(QSettingsProxy &settings) const
+void Computer::saveSettings(QSettingsProxy &settings) const
 {
-  const auto screenName = name();
-  settings.setValue("name", screenName);
+  const auto computerName = name();
+  settings.setValue("name", computerName);
 
-  if (screenName.isEmpty())
+  if (computerName.isEmpty())
     return;
 
-  Settings::setValue(Settings::Computer::Name.arg(screenName), screenName);
-  Settings::setValue(Settings::Computer::Aliases.arg(screenName), m_Aliases);
-  Settings::setValue(Settings::Computer::HalfDuplexCapsLock.arg(screenName), m_Fixes[static_cast<int>(CapsLock)]);
-  Settings::setValue(Settings::Computer::HalfDuplexNumLock.arg(screenName), m_Fixes[static_cast<int>(NumLock)]);
-  Settings::setValue(Settings::Computer::HalfDuplexScrollLock.arg(screenName), m_Fixes[static_cast<int>(ScrollLock)]);
-  Settings::setValue(Settings::Computer::XtestIsXineramaUnaware.arg(screenName), m_Fixes[static_cast<int>(XTest)]);
-  Settings::setValue(Settings::Computer::SwitchCornerSize.arg(screenName), switchCornerSize());
+  Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
+  Settings::setValue(Settings::Computer::Aliases.arg(computerName), m_Aliases);
+  Settings::setValue(Settings::Computer::HalfDuplexCapsLock.arg(computerName), m_Fixes[static_cast<int>(CapsLock)]);
+  Settings::setValue(Settings::Computer::HalfDuplexNumLock.arg(computerName), m_Fixes[static_cast<int>(NumLock)]);
+  Settings::setValue(Settings::Computer::HalfDuplexScrollLock.arg(computerName), m_Fixes[static_cast<int>(ScrollLock)]);
+  Settings::setValue(Settings::Computer::XtestIsXineramaUnaware.arg(computerName), m_Fixes[static_cast<int>(XTest)]);
+  Settings::setValue(Settings::Computer::SwitchCornerSize.arg(computerName), switchCornerSize());
   Settings::setValue(
-      Settings::Computer::SwitchCornerTopLeft.arg(screenName), m_SwitchCorners[static_cast<int>(TopLeft)]
+      Settings::Computer::SwitchCornerTopLeft.arg(computerName), m_SwitchCorners[static_cast<int>(TopLeft)]
   );
   Settings::setValue(
-      Settings::Computer::SwitchCornerTopRight.arg(screenName), m_SwitchCorners[static_cast<int>(TopRight)]
+      Settings::Computer::SwitchCornerTopRight.arg(computerName), m_SwitchCorners[static_cast<int>(TopRight)]
   );
   Settings::setValue(
-      Settings::Computer::SwitchCornerBottomLeft.arg(screenName), m_SwitchCorners[static_cast<int>(BottomLeft)]
+      Settings::Computer::SwitchCornerBottomLeft.arg(computerName), m_SwitchCorners[static_cast<int>(BottomLeft)]
   );
   Settings::setValue(
-      Settings::Computer::SwitchCornerBottomRight.arg(screenName), m_SwitchCorners[static_cast<int>(BottomRight)]
+      Settings::Computer::SwitchCornerBottomRight.arg(computerName), m_SwitchCorners[static_cast<int>(BottomRight)]
   );
 
   Settings::setValue(
-      Settings::Computer::ModifierAlt.arg(screenName),
+      Settings::Computer::ModifierAlt.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Alt)))
   );
   Settings::setValue(
-      Settings::Computer::ModifierAltGr.arg(screenName),
+      Settings::Computer::ModifierAltGr.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::AltGr)))
   );
   Settings::setValue(
-      Settings::Computer::ModifierCtrl.arg(screenName),
+      Settings::Computer::ModifierCtrl.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Ctrl)))
   );
   Settings::setValue(
-      Settings::Computer::ModifierMeta.arg(screenName),
+      Settings::Computer::ModifierMeta.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Meta)))
   );
   Settings::setValue(
-      Settings::Computer::ModifierShift.arg(screenName),
+      Settings::Computer::ModifierShift.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Shift)))
   );
   Settings::setValue(
-      Settings::Computer::ModifierSuper.arg(screenName),
+      Settings::Computer::ModifierSuper.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Super)))
   );
 }
 
-QString Screen::screensSection() const
+QString Computer::screensSection() const
 {
   return QStringLiteral("\t%1:\n").arg(name());
 }
 
-bool Screen::operator==(const Screen &screen) const
+bool Computer::operator==(const Computer &computer) const
 {
-  return m_Name == screen.m_Name && m_Aliases == screen.m_Aliases && m_Modifiers == screen.m_Modifiers &&
-         m_SwitchCorners == screen.m_SwitchCorners && m_SwitchCornerSize == screen.m_SwitchCornerSize &&
-         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped && m_isServer == screen.m_isServer;
+  return m_Name == computer.m_Name && m_Aliases == computer.m_Aliases && m_Modifiers == computer.m_Modifiers &&
+         m_SwitchCorners == computer.m_SwitchCorners && m_SwitchCornerSize == computer.m_SwitchCornerSize &&
+         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
 }
