@@ -45,14 +45,14 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
       continue;
     auto *newListItem = new QListWidgetItem(computer.name());
     newListItem->setCheckState(Qt::Checked);
-    if ((m_action.typeScreenNames().indexOf(computer.name()) == -1) &&
-        (m_action.haveScreens() && !m_action.typeScreenNames().isEmpty()))
+    if ((m_action.typeComputerNames().indexOf(computer.name()) == -1) &&
+        (m_action.haveComputers() && !m_action.typeComputerNames().isEmpty()))
       newListItem->setCheckState(Qt::Unchecked);
 
     ui->listComputers->addItem(newListItem);
 
     ui->comboSwitchToComputer->addItem(tr("Switch to %1").arg(computer.name()), computer.name());
-    if (computer.name() == m_action.switchScreenName())
+    if (computer.name() == m_action.switchComputerName())
       ui->comboSwitchToComputer->setCurrentIndex(ui->comboSwitchToComputer->count() - 1);
   }
 
@@ -74,25 +74,25 @@ void ActionDialog::accept()
   m_action.setKeySequence(ui->keySequenceWidget->keySequence());
   m_action.setType(ui->comboActionType->currentIndex());
 
-  m_action.clearScreens();
+  m_action.clearComputers();
 
-  int screenCount = ui->listComputers->count();
+  int computerCount = ui->listComputers->count();
 
   for (int i = 0; i < ui->listComputers->count(); i++) {
     const auto &item = ui->listComputers->item(i);
     m_action.addComputer(item->text());
     if (item->checkState() == Qt::Unchecked) {
-      screenCount--;
-      m_action.removeScreen(item->text());
+      computerCount--;
+      m_action.removeComputer(item->text());
     }
   }
 
-  if (screenCount == ui->listComputers->count())
-    m_action.clearScreens();
+  if (computerCount == ui->listComputers->count())
+    m_action.clearComputers();
 
-  m_action.setHaveScreens(screenCount);
+  m_action.setHaveComputers(computerCount);
 
-  m_action.setSwitchScreenName(ui->comboSwitchToComputer->currentData().toString());
+  m_action.setSwitchComputerName(ui->comboSwitchToComputer->currentData().toString());
   m_action.setSwitchDirection(ui->comboSwitchInDirection->currentIndex());
   m_action.setLockCursorMode(ui->comboLockCursorToComputer->currentIndex());
   m_action.setActiveOnRelease(ui->comboTriggerOn->currentIndex());

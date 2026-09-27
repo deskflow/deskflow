@@ -23,12 +23,12 @@ QString Action::text() const
     QString commandArgs = keySequence().toString();
 
     if (!keySequence().isMouseButton()) {
-      const QStringList &screens = typeScreenNames();
-      if (haveScreens() && !screens.isEmpty()) {
+      const QStringList &computers = typeComputerNames();
+      if (haveComputers() && !computers.isEmpty()) {
         QString computerList;
-        for (int i = 0; i < screens.size(); i++) {
-          computerList.append(screens[i]);
-          if (i != screens.size() - 1)
+        for (int i = 0; i < computers.size(); i++) {
+          computerList.append(computers[i]);
+          if (i != computers.size() - 1)
             computerList.append(QStringLiteral(":"));
         }
         commandArgs.append(QStringLiteral(",%1").arg(computerList));
@@ -38,15 +38,15 @@ QString Action::text() const
     text.append(m_commandTemplate.arg(commandArgs));
   } break;
 
-  case Type::switchToScreen:
-    text.append(m_commandTemplate.arg(m_switchScreenName));
+  case Type::switchToComputer:
+    text.append(m_commandTemplate.arg(m_switchComputerName));
     break;
 
   case Type::switchInDirection:
     text.append(m_commandTemplate.arg(m_switchDirectionNames.at(m_switchDirection)));
     break;
 
-  case Type::lockCursorToScreen:
+  case Type::lockCursorToComputer:
     text.append(m_commandTemplate.arg(m_lockCursorModeNames.at(m_lockCursorMode)));
     break;
 
@@ -67,19 +67,19 @@ void Action::loadSettings(QSettings &settings)
   m_keySequence.loadSettings(settings);
   setType(settings.value(SettingsKeys::ActionType, static_cast<int>(Type::keyDown)).toInt());
 
-  m_typeScreenNames.clear();
-  int numTypeScreens = settings.beginReadArray(SettingsKeys::ScreenNames);
-  for (int i = 0; i < numTypeScreens; i++) {
+  m_typeComputerNames.clear();
+  int numTypeComputers = settings.beginReadArray(SettingsKeys::ComputerNames);
+  for (int i = 0; i < numTypeComputers; i++) {
     settings.setArrayIndex(i);
-    m_typeScreenNames.append(settings.value(SettingsKeys::ScreenName).toString());
+    m_typeComputerNames.append(settings.value(SettingsKeys::ComputerName).toString());
   }
   settings.endArray();
 
-  setSwitchScreenName(settings.value(SettingsKeys::SwitchToScreen).toString());
+  setSwitchComputerName(settings.value(SettingsKeys::SwitchToComputer).toString());
   setSwitchDirection(settings.value(SettingsKeys::SwitchDirection, static_cast<int>(SwitchDirection::left)).toInt());
-  setLockCursorMode(settings.value(SettingsKeys::LockToScreen, static_cast<int>(LockCursorMode::toggle)).toInt());
+  setLockCursorMode(settings.value(SettingsKeys::LockToComputer, static_cast<int>(LockCursorMode::toggle)).toInt());
   setActiveOnRelease(settings.value(SettingsKeys::ActiveOnRelease, false).toBool());
-  setHaveScreens(settings.value(SettingsKeys::HasScreens, false).toBool());
+  setHaveComputers(settings.value(SettingsKeys::HasComputers, false).toBool());
   setRestartServer(settings.value(SettingsKeys::RestartServer, false).toBool());
 }
 
@@ -88,18 +88,18 @@ void Action::saveSettings(QSettings &settings) const
   keySequence().saveSettings(settings);
   settings.setValue(SettingsKeys::ActionType, type());
 
-  settings.beginWriteArray(SettingsKeys::ScreenNames);
-  for (int i = 0; i < m_typeScreenNames.size(); i++) {
+  settings.beginWriteArray(SettingsKeys::ComputerNames);
+  for (int i = 0; i < m_typeComputerNames.size(); i++) {
     settings.setArrayIndex(i);
-    settings.setValue(SettingsKeys::ScreenName, m_typeScreenNames[i]);
+    settings.setValue(SettingsKeys::ComputerName, m_typeComputerNames[i]);
   }
   settings.endArray();
 
-  settings.setValue(SettingsKeys::SwitchToScreen, m_switchScreenName);
+  settings.setValue(SettingsKeys::SwitchToComputer, m_switchComputerName);
   settings.setValue(SettingsKeys::SwitchDirection, m_switchDirection);
-  settings.setValue(SettingsKeys::LockToScreen, m_lockCursorMode);
+  settings.setValue(SettingsKeys::LockToComputer, m_lockCursorMode);
   settings.setValue(SettingsKeys::ActiveOnRelease, m_activeOnRelease);
-  settings.setValue(SettingsKeys::HasScreens, m_hasScreens);
+  settings.setValue(SettingsKeys::HasComputers, m_hasComputers);
   settings.setValue(SettingsKeys::RestartServer, m_restartServer);
 }
 
@@ -108,33 +108,33 @@ int Action::type() const
   return m_type;
 }
 
-QStringList Action::typeScreenNames() const
+QStringList Action::typeComputerNames() const
 {
-  return m_typeScreenNames;
+  return m_typeComputerNames;
 }
 
-void Action::clearScreens()
+void Action::clearComputers()
 {
-  m_typeScreenNames.clear();
+  m_typeComputerNames.clear();
 }
 
-void Action::addComputer(const QString &screen)
+void Action::addComputer(const QString &computer)
 {
-  if (m_typeScreenNames.contains(screen))
+  if (m_typeComputerNames.contains(computer))
     return;
-  m_typeScreenNames.append(screen);
+  m_typeComputerNames.append(computer);
 }
 
-void Action::removeScreen(const QString &screen)
+void Action::removeComputer(const QString &computer)
 {
-  if (!m_typeScreenNames.contains(screen))
+  if (!m_typeComputerNames.contains(computer))
     return;
-  m_typeScreenNames.removeAll(screen);
+  m_typeComputerNames.removeAll(computer);
 }
 
-const QString &Action::switchScreenName() const
+const QString &Action::switchComputerName() const
 {
-  return m_switchScreenName;
+  return m_switchComputerName;
 }
 
 int Action::switchDirection() const
@@ -152,9 +152,9 @@ bool Action::activeOnRelease() const
   return m_activeOnRelease;
 }
 
-bool Action::haveScreens() const
+bool Action::haveComputers() const
 {
-  return m_hasScreens;
+  return m_hasComputers;
 }
 
 bool Action::restartServer() const
@@ -172,9 +172,9 @@ void Action::setType(int t)
   m_type = t;
 }
 
-void Action::setSwitchScreenName(const QString &n)
+void Action::setSwitchComputerName(const QString &n)
 {
-  m_switchScreenName = n;
+  m_switchComputerName = n;
 }
 
 void Action::setSwitchDirection(int d)
@@ -192,9 +192,9 @@ void Action::setActiveOnRelease(bool b)
   m_activeOnRelease = b;
 }
 
-void Action::setHaveScreens(bool b)
+void Action::setHaveComputers(bool b)
 {
-  m_hasScreens = b;
+  m_hasComputers = b;
 }
 
 void Action::setRestartServer(bool b)
