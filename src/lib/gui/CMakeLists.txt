@@ -77,6 +77,8 @@ add_library(${target} STATIC
   ipc/CoreIpcClient.h
   validators/AliasValidator.cpp
   validators/AliasValidator.h
+  validators/ComputerDuplicationsValidator.cpp
+  validators/ComputerDuplicationsValidator.h
   validators/ComputerNameValidator.cpp
   validators/ComputerNameValidator.h
   validators/EmptyStringValidator.cpp
@@ -85,8 +87,6 @@ add_library(${target} STATIC
   validators/IStringValidator.h
   validators/LineEditValidator.cpp
   validators/LineEditValidator.h
-  validators/ScreenDuplicationsValidator.cpp
-  validators/ScreenDuplicationsValidator.h
   validators/ScreenNameValidator.cpp
   validators/ScreenNameValidator.h
   validators/SpacesValidator.cpp
