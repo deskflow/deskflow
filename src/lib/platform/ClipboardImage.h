@@ -8,12 +8,15 @@
 
 #include <QByteArray>
 
+class QIODevice;
+
 namespace deskflow {
 
 class ClipboardImage
 {
 public:
   static QByteArray dibToImage(const QByteArray &dib, const char *format);
+  static bool writeDibAsImage(const QByteArray &dib, const char *format, QIODevice *device);
   static QByteArray imageToDib(const QByteArray &encoded, const char *format);
 
 private:
@@ -23,6 +26,9 @@ private:
   static constexpr int kBmpSignatureSize = 2;
   static constexpr quint32 kBmpFileHeaderSize = 14;
   static constexpr quint32 kMinDibHeaderSize = 12;
+
+  // zlib level 1: much faster than qt's default for large images, at a similar size
+  static constexpr int kPngCompression = 20;
 };
 
 } // namespace deskflow

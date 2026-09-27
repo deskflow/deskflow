@@ -14,6 +14,8 @@
 
 #include <libportal/portal.h>
 
+class QIODevice;
+
 namespace deskflow {
 
 class EiClipboard;
@@ -51,7 +53,7 @@ public:
   static QByteArray formatMimeTypes(const char *const *mimeTypes);
   static const SupportedMime *findSupportedMime(const char *mime);
   static const SupportedMime *pickSupportedMime(const char *const *available);
-  static QByteArray encodeFormat(const SupportedMime &entry, const QByteArray &data);
+  static bool writeFormat(const SupportedMime &entry, const QByteArray &data, QIODevice *device);
   static QByteArray decodeFormat(const SupportedMime &entry, const QByteArray &bytes);
   static std::optional<QByteArray> readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
 
@@ -66,6 +68,9 @@ public:
   /// Returns true if any data was deposited.
   static bool
   readSelectionIntoCache(EiClipboard *cache, XdpSession *session, const char *const *mimeTypes, qint64 maxBytes);
+
+private:
+  class SelectionPipe;
 };
 
 } // namespace deskflow

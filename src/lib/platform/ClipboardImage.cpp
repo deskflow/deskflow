@@ -13,33 +13,41 @@
 #include <QBuffer>
 #include <QDataStream>
 #include <QImage>
+#include <QImageWriter>
 #include <QtEndian>
 
 namespace deskflow {
 
 QByteArray ClipboardImage::dibToImage(const QByteArray &dib, const char *format)
 {
+  QByteArray encoded;
+  QBuffer buf(&encoded);
+  buf.open(QIODevice::WriteOnly);
+  return writeDibAsImage(dib, format, &buf) ? encoded : QByteArray{};
+}
+
+bool ClipboardImage::writeDibAsImage(const QByteArray &dib, const char *format, QIODevice *device)
+{
   const auto bmpFile = dibToBmp(dib);
   if (bmpFile.isEmpty()) {
     LOG_WARN("clipboard bitmap data is malformed");
-    return {};
+    return false;
   }
 
   QImage image;
   if (!image.loadFromData(bmpFile, "BMP")) {
     LOG_WARN("failed to decode clipboard bitmap");
-    return {};
+    return false;
   }
 
-  QByteArray encoded;
-  QBuffer buf(&encoded);
-  buf.open(QIODevice::WriteOnly);
-  if (!image.save(&buf, format)) {
+  QImageWriter writer(device, format);
+  if (qstricmp(format, "PNG") == 0)
+    writer.setCompression(kPngCompression);
+
+  const bool written = writer.write(image);
+  if (!written)
     LOG_WARN("failed to encode clipboard image, format: %s", format);
-    return {};
-  }
-
-  return encoded;
+  return written;
 }
 
 QByteArray ClipboardImage::imageToDib(const QByteArray &encoded, const char *format)
