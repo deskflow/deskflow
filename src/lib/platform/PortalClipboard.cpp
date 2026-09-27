@@ -283,7 +283,8 @@ void PortalClipboard::serveSelectionTransfer(EiClipboard *cache, XdpSession *ses
   }
 
   xdp_session_selection_write_done(session, serial, true);
-  LOG_DEBUG("clipboard selection transfer complete, bytes: %lld", static_cast<long long>(written));
+  const auto size = IClipboard::formatSize(static_cast<size_t>(written));
+  LOG_DEBUG("clipboard selection transfer complete, size: %s", size.constData());
 }
 
 bool PortalClipboard::readSelectionIntoCache(

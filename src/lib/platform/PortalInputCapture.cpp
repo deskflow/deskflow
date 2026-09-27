@@ -282,7 +282,8 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   const qint64 maxBytes = static_cast<qint64>(m_computer->maximumClipboardSize()) * 1024;
-  LOG_DEBUG("clipboard read cap: %lld bytes", static_cast<long long>(maxBytes));
+  const auto cap = IClipboard::formatSize(static_cast<size_t>(maxBytes));
+  LOG_DEBUG("clipboard read cap: %s", cap.constData());
 
   const char **mimeTypes = xdp_session_get_selection_mime_types(session);
   if (!mimeTypes) {

@@ -12,6 +12,8 @@
 #include <assert.h>
 #include <vector>
 
+#include <QLocale>
+
 //
 // IClipboard
 //
@@ -164,4 +166,12 @@ void IClipboard::writeUInt32(std::string *buf, uint32_t v)
   *buf += static_cast<uint8_t>((v >> 16) & 0xff);
   *buf += static_cast<uint8_t>((v >> 8) & 0xff);
   *buf += static_cast<uint8_t>(v & 0xff);
+}
+
+QByteArray IClipboard::formatSize(size_t bytes)
+{
+  return QLocale::c()
+      .formattedDataSize(static_cast<qint64>(bytes), 1, QLocale::DataSizeTraditionalFormat)
+      .toLower()
+      .toUtf8();
 }

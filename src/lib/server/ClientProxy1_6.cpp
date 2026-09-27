@@ -52,15 +52,11 @@ bool ClientProxy1_6::recvClipboard()
 
   if (r == TransferState::Started) {
     size_t size = ClipboardChunk::getExpectedSize(m_clipboardChunkState);
-    LOG_DEBUG("receiving clipboard %d size=%zu", id, size);
     ipcSendToClient(
         QStringLiteral("clipboardReceiving"), QStringLiteral("%1,%2").arg(size).arg(QString::fromStdString(getName()))
     );
   } else if (r == TransferState::Finished) {
-    LOG(
-        (CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%zu", getName().c_str(), id, seq,
-         m_clipboardDataCached.size())
-    );
+    LOG_DEBUG("received clipboard %d from \"%s\", sequence: %u", id, getName().c_str(), seq);
     // save clipboard
     m_clipboard[id].m_clipboard.unmarshall(m_clipboardDataCached, 0);
     m_clipboard[id].m_sequenceNumber = seq;

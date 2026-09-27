@@ -11,6 +11,8 @@
 #include <cstdint>
 #include <string>
 
+#include <QByteArray>
+
 //! Clipboard interface
 /*!
 This interface defines the methods common to all clipboards.
@@ -151,6 +153,8 @@ public:
   timestamp to \c time.  Returns true iff the copy succeeded.
   */
   static bool copy(IClipboard *dst, const IClipboard *src, Time);
+
+  static QByteArray formatSize(size_t bytes);
 
   //@}
 

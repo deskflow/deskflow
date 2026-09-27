@@ -541,11 +541,8 @@ void ServerProxy::setClipboard()
 
   if (r == TransferState::Started) {
     size_t size = ClipboardChunk::getExpectedSize(m_clipboardChunkState);
-    LOG_DEBUG("receiving clipboard %d size=%zu", id, size);
     ipcSendToClient(QStringLiteral("clipboardReceiving"), QString::number(size));
   } else if (r == TransferState::Finished) {
-    LOG_DEBUG("received clipboard %d size=%zu", id, m_clipboardDataCached.size());
-
     // forward
     Clipboard clipboard;
     clipboard.unmarshall(m_clipboardDataCached, 0);

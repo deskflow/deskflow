@@ -7,13 +7,12 @@
 #include "deskflow/ClipboardChunk.h"
 
 #include "base/Log.h"
+#include "deskflow/IClipboard.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
 #include <cstring>
 #include <limits>
-
-#include <QLocale>
 
 namespace {
 
@@ -117,11 +116,14 @@ TransferState ClipboardChunk::assemble(
     state.sinceStart.start();
 
     if (isOversize()) {
-      LOG_WARN("not receiving clipboard data, exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
+      const auto size = IClipboard::formatSize(state.expectedSize);
+      const auto limit = IClipboard::formatSize(maxDataSize);
+      LOG_WARN("not receiving clipboard data, size: %s, limit: %s", size.constData(), limit.constData());
       return Oversize;
     }
 
-    LOG_DEBUG("start receiving clipboard data, expected size=%zu", state.expectedSize);
+    const auto size = IClipboard::formatSize(state.expectedSize);
+    LOG_DEBUG("receiving clipboard %d, size: %s", id, size.constData());
     return Started;
   } else if (mark == ChunkType::DataChunk) {
     if (!state.active) {
@@ -162,7 +164,9 @@ TransferState ClipboardChunk::assemble(
     state.active = false;
 
     if (state.expectedSize != dataCached.size()) {
-      LOG_ERR("corrupted clipboard data, expected size=%zu actual size=%zu", state.expectedSize, dataCached.size());
+      LOG_ERR(
+          "corrupted clipboard data, expected: %zu bytes, actual: %zu bytes", state.expectedSize, dataCached.size()
+      );
       reset();
       return Error;
     }
@@ -210,10 +214,8 @@ void ClipboardChunk::send(deskflow::IStream *stream, const ClipboardChunk &clipb
 
 QByteArray ClipboardChunk::describeTransfer(size_t bytes, qint64 elapsedMs)
 {
-  const auto size =
-      QLocale::c().formattedDataSize(static_cast<qint64>(bytes), 1, QLocale::DataSizeTraditionalFormat).toLower();
   const auto time = elapsedMs < 1000
                         ? QStringLiteral("%1 ms").arg(elapsedMs)
                         : QStringLiteral("%1 seconds").arg(static_cast<double>(elapsedMs) / 1000.0, 0, 'f', 2);
-  return QStringLiteral("%1 in %2").arg(size, time).toUtf8();
+  return IClipboard::formatSize(bytes) + " in " + time.toUtf8();
 }

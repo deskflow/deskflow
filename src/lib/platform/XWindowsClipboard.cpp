@@ -273,7 +273,8 @@ void XWindowsClipboard::add(Format format, const std::string &data)
   assert(m_open);
   assert(m_owner);
 
-  LOG_DEBUG("add %d bytes to clipboard %d format: %d", data.size(), m_id, format);
+  const auto size = formatSize(data.size());
+  LOG_DEBUG("adding to clipboard %d, format: %d, size: %s", m_id, format, size.constData());
 
   const auto formatID = static_cast<int>(format);
   m_data[formatID] = data;

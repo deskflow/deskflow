@@ -550,7 +550,8 @@ void EiComputer::setOptions(const OptionsList &options)
       if (it == options.end())
         break;
       m_maximumClipboardSize = *it;
-      LOG_DEBUG("computer received clipboard size limit: %zu KB", m_maximumClipboardSize);
+      const auto limit = IClipboard::formatSize(m_maximumClipboardSize * 1024);
+      LOG_DEBUG("computer received clipboard size limit: %s", limit.constData());
     }
   }
 }
