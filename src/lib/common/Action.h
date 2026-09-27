@@ -17,16 +17,17 @@
 class QSettings;
 class QTextStream;
 
+// Keys will be updated when moved to the general configuration
 struct SettingsKeys
 {
   inline static const QString ActionType = QStringLiteral("type");
-  inline static const QString ScreenNames = QStringLiteral("typeScreenNames");
-  inline static const QString ScreenName = QStringLiteral("typeScreenName");
-  inline static const QString SwitchToScreen = QStringLiteral("switchScreenName");
+  inline static const QString ComputerNames = QStringLiteral("typeScreenNames");
+  inline static const QString ComputerName = QStringLiteral("typeScreenName");
+  inline static const QString SwitchToComputer = QStringLiteral("switchScreenName");
   inline static const QString SwitchDirection = QStringLiteral("switchInDirection");
-  inline static const QString LockToScreen = QStringLiteral("lockCursorToScreen");
+  inline static const QString LockToComputer = QStringLiteral("lockCursorToScreen");
   inline static const QString ActiveOnRelease = QStringLiteral("activeOnRelease");
-  inline static const QString HasScreens = QStringLiteral("hasScreens");
+  inline static const QString HasComputers = QStringLiteral("hasScreens");
   inline static const QString RestartServer = QStringLiteral("restartServer");
 };
 
@@ -39,10 +40,10 @@ public:
     keyDown,
     keyUp,
     keystroke,
-    switchToScreen,
+    switchToComputer,
     switchInDirection,
-    switchToNextScreen,
-    lockCursorToScreen,
+    switchToNextComputer,
+    lockCursorToComputer,
     restartAllConnections,
     mouseDown,
     mouseUp,
@@ -76,13 +77,13 @@ public:
   int type() const;
   void setType(int t);
 
-  QStringList typeScreenNames() const;
-  void clearScreens();
-  void addComputer(const QString &screen);
-  void removeScreen(const QString &screen);
+  QStringList typeComputerNames() const;
+  void clearComputers();
+  void addComputer(const QString &comptuer);
+  void removeComputer(const QString &computer);
 
-  const QString &switchScreenName() const;
-  void setSwitchScreenName(const QString &n);
+  const QString &switchComputerName() const;
+  void setSwitchComputerName(const QString &n);
 
   int switchDirection() const;
   void setSwitchDirection(int d);
@@ -93,8 +94,8 @@ public:
   bool activeOnRelease() const;
   void setActiveOnRelease(bool b);
 
-  bool haveScreens() const;
-  void setHaveScreens(bool b);
+  bool haveComputers() const;
+  void setHaveComputers(bool b);
 
   bool restartServer() const;
   void setRestartServer(bool b);
@@ -104,12 +105,12 @@ public:
 private:
   KeySequence m_keySequence;
   int m_type = static_cast<int>(Type::keystroke);
-  QStringList m_typeScreenNames = QStringList();
-  QString m_switchScreenName = QString();
+  QStringList m_typeComputerNames = QStringList();
+  QString m_switchComputerName = QString();
   int m_switchDirection = static_cast<int>(SwitchDirection::left);
   int m_lockCursorMode = static_cast<int>(LockCursorMode::toggle);
   bool m_activeOnRelease = false;
-  bool m_hasScreens = false;
+  bool m_hasComputers = false;
   bool m_restartServer;
 
   inline static const QString m_commandTemplate = QStringLiteral("(%1)");
