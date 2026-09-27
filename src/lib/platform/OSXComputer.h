@@ -159,6 +159,8 @@ private:
   void handleConfirmSleep(const Event &event);
 
   bool checkAXPermissions();
+  void startClipboardPoll();
+  void stopClipboardPoll();
 
   // global hotkey operating mode
   static bool isGlobalHotKeyOperatingModeAvailable();
@@ -298,6 +300,8 @@ private:
   // global hotkey operating mode
   static bool s_testedForGHOM;
   static bool s_hasGHOM;
+
+  static constexpr double kClipboardPollSeconds = 0.1;
 
   // Quartz input event support
   CFMachPortRef m_eventTapPort;
