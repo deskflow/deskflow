@@ -920,12 +920,12 @@ void EiComputer::onMotionEvent(ei_event *event)
     m_bufferDY += dy;
     auto pixelDx = static_cast<std::int32_t>(m_bufferDX);
     auto pixelDy = static_cast<std::int32_t>(m_bufferDY);
-    if (pixelDx || pixelDy) {
-      LOG_VERBOSE("event: motion on secondary x=%d y=%d", pixelDx, pixelDy);
-      sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(pixelDx, pixelDy));
-      m_bufferDX -= pixelDx;
-      m_bufferDY -= pixelDy;
-    }
+    LOG_VERBOSE("event: motion on secondary x=%d y=%d", pixelDx, pixelDy);
+
+    // sent even when under a pixel, so the server knows a slow-moving mouse hasn't stopped
+    sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(pixelDx, pixelDy));
+    m_bufferDX -= pixelDx;
+    m_bufferDY -= pixelDy;
   }
 }
 
