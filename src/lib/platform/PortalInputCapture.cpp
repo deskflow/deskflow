@@ -278,7 +278,7 @@ void PortalInputCapture::claimClipboard() const
 #endif
 }
 
-void PortalInputCapture::readClipboardSelection(XdpSession *session) const
+bool PortalInputCapture::readClipboardSelection(XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   const qint64 maxBytes = static_cast<qint64>(m_computer->maximumClipboardSize()) * 1024;
@@ -288,13 +288,16 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
   const char **mimeTypes = xdp_session_get_selection_mime_types(session);
   if (!mimeTypes) {
     LOG_DEBUG("clipboard has no mime types available to read");
-    return;
+    return false;
   }
 
-  if (PortalClipboard::readSelectionIntoCache(m_clipboard, session, mimeTypes, maxBytes))
+  const bool cached = PortalClipboard::readSelectionIntoCache(m_clipboard, session, mimeTypes, maxBytes);
+  if (cached)
     m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+  return cached;
 #else
   (void)session;
+  return false;
 #endif
 }
 
@@ -769,15 +772,19 @@ void PortalInputCapture::handleActivated(
     XdpSession *session = xdp_input_capture_session_get_session(m_session);
     const char **mimeTypes = xdp_session_get_selection_mime_types(session);
 
+    bool offerCache = true;
     if (mimeTypes && mimeTypes[0]) {
       LOG_DEBUG("clipboard current selection mime types: %s", PortalClipboard::formatMimeTypes(mimeTypes).constData());
       if (!xdp_session_is_selection_owned_by_session(session))
-        readClipboardSelection(session);
+        offerCache = readClipboardSelection(session);
     } else {
       LOG_DEBUG("no current clipboard selection");
     }
 
-    claimClipboardOwnership(session);
+    if (offerCache)
+      claimClipboardOwnership(session);
+    else
+      LOG_DEBUG("leaving the local clipboard in place, it couldn't be read");
     LOG_DEBUG("activation clipboard handling complete");
   } else {
     LOG_WARN("input capture activated without a session, skipping clipboard read");

@@ -79,35 +79,39 @@ QByteArray PortalClipboard::decodeFormat(const SupportedMime &entry, const QByte
   return bytes;
 }
 
-QByteArray PortalClipboard::readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes)
+std::optional<QByteArray> PortalClipboard::readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes)
 {
   const int fd = xdp_session_selection_read(session, mime);
   if (fd < 0) {
     LOG_ERR("failed to read clipboard selection: invalid fd");
-    return {};
+    return QByteArray{};
   }
 
   QFile pipe;
   if (!pipe.open(fd, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle)) {
     LOG_WARN("failed to wrap clipboard pipe");
     ::close(fd);
-    return {};
+    return QByteArray{};
   }
 
   QByteArray contents;
   contents.reserve(std::min<qint64>(maxBytes, kChunkBytes));
-  while (contents.size() < maxBytes) {
+  bool timedOut = false;
+  while (contents.size() < maxBytes && !timedOut) {
     pollfd pfd{fd, POLLIN, 0};
-    if (poll(&pfd, 1, kReadTimeoutMs) <= 0)
-      break;
+    timedOut = poll(&pfd, 1, kReadTimeoutMs) <= 0;
+    if (!timedOut) {
+      const auto chunk = pipe.read(std::min<qint64>(kChunkBytes, maxBytes - contents.size()));
+      if (chunk.isEmpty())
+        break;
 
-    const auto chunk = pipe.read(std::min<qint64>(kChunkBytes, maxBytes - contents.size()));
-    if (chunk.isEmpty())
-      break;
-
-    contents.append(chunk);
+      contents.append(chunk);
+    }
   }
-  return contents;
+
+  if (timedOut)
+    LOG_WARN("clipboard read timed out, mime: %s, waited: %d ms", mime, kReadTimeoutMs);
+  return timedOut ? std::nullopt : std::make_optional(std::move(contents));
 }
 
 void PortalClipboard::claimOwnership(EiClipboard *cache, XdpSession *session)
@@ -230,7 +234,13 @@ bool PortalClipboard::readSelectionIntoCache(
     if (!g_strv_contains(mimeTypes, entry.mime))
       continue;
 
-    auto bytes = readSelectionBytes(session, entry.mime, maxBytes);
+    auto selection = readSelectionBytes(session, entry.mime, maxBytes);
+
+    // the source app is still busy with this request, and each further one would queue behind it
+    if (!selection)
+      break;
+
+    auto bytes = std::move(*selection);
     if (bytes.isEmpty()) {
       LOG_DEBUG("clipboard read returned no data for mime: %s", entry.mime);
       continue;

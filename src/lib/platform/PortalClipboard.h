@@ -8,6 +8,8 @@
 
 #include "deskflow/IClipboard.h"
 
+#include <optional>
+
 #include <QByteArray>
 
 #include <libportal/portal.h>
@@ -40,16 +42,18 @@ public:
       {"text/plain", IClipboard::Format::Text, nullptr, true},
   };
 
-  static constexpr int kReadTimeoutMs = 200;
   static constexpr int kWriteTimeoutMs = 200;
   static constexpr qint64 kChunkBytes = 64 * 1024;
+
+  // apps may only encode an image when it's pasted, which takes seconds for a large one
+  static constexpr int kReadTimeoutMs = 5000;
 
   static QByteArray formatMimeTypes(const char *const *mimeTypes);
   static const SupportedMime *findSupportedMime(const char *mime);
   static const SupportedMime *pickSupportedMime(const char *const *available);
   static QByteArray encodeFormat(const SupportedMime &entry, const QByteArray &data);
   static QByteArray decodeFormat(const SupportedMime &entry, const QByteArray &bytes);
-  static QByteArray readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
+  static std::optional<QByteArray> readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
 
   /// Advertise the cache's formats to the portal selection.
   static void claimOwnership(EiClipboard *cache, XdpSession *session);
