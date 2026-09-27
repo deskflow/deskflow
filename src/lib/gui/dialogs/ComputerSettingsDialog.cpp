@@ -8,7 +8,7 @@
 #include "ComputerSettingsDialog.h"
 #include "ui_ComputerSettingsDialog.h"
 
-#include "gui/config/Screen.h"
+#include "gui/config/Computer.h"
 #include "validators/AliasValidator.h"
 #include "validators/ScreenNameValidator.h"
 #include "validators/ValidationError.h"
@@ -22,16 +22,16 @@ using enum ComputerConfig::Fix;
 
 ComputerSettingsDialog::~ComputerSettingsDialog() = default;
 
-ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Screen *screen, const ScreenList *screens)
+ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *computer, const ScreenList *screens)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ComputerSettingsDialog>()},
-      m_screen(screen)
+      m_computer(computer)
 {
 
   ui->setupUi(this);
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setFocus();
 
-  ui->lineNameEdit->setText(m_screen->name());
+  ui->lineNameEdit->setText(m_computer->name());
 
   const auto valNameError = new validators::ValidationError(this, ui->lblNameError);
   const auto valName = new validators::ScreenNameValidator(ui->lineNameEdit, valNameError, screens);
@@ -41,28 +41,28 @@ ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Screen *screen, 
   const auto valAlias = new validators::AliasValidator(ui->lineAddAlias, valAliasError);
   ui->lineAddAlias->setValidator(valAlias);
 
-  for (int i = 0; i < m_screen->aliases().count(); i++)
-    new QListWidgetItem(m_screen->aliases()[i], ui->listAliases);
+  for (int i = 0; i < m_computer->aliases().count(); i++)
+    new QListWidgetItem(m_computer->aliases()[i], ui->listAliases);
 
-  ui->comboShift->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Shift)));
-  ui->comboCtrl->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Ctrl)));
-  ui->comboAlt->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Alt)));
-  ui->comboMeta->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Meta)));
-  ui->comboSuper->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::Super)));
-  ui->comboAltGr->setCurrentIndex(m_screen->modifier(static_cast<int>(KeyboardModifier::AltGr)));
+  ui->comboShift->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::Shift)));
+  ui->comboCtrl->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::Ctrl)));
+  ui->comboAlt->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::Alt)));
+  ui->comboMeta->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::Meta)));
+  ui->comboSuper->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::Super)));
+  ui->comboAltGr->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::AltGr)));
 
-  ui->chkDeadTopLeft->setChecked(m_screen->switchCorner(static_cast<int>(TopLeft)));
-  ui->chkDeadTopRight->setChecked(m_screen->switchCorner(static_cast<int>(TopRight)));
-  ui->chkDeadBottomLeft->setChecked(m_screen->switchCorner(static_cast<int>(BottomLeft)));
-  ui->chkDeadBottomRight->setChecked(m_screen->switchCorner(static_cast<int>(BottomRight)));
-  ui->sbSwitchCornerSize->setValue(m_screen->switchCornerSize());
+  ui->chkDeadTopLeft->setChecked(m_computer->switchCorner(static_cast<int>(TopLeft)));
+  ui->chkDeadTopRight->setChecked(m_computer->switchCorner(static_cast<int>(TopRight)));
+  ui->chkDeadBottomLeft->setChecked(m_computer->switchCorner(static_cast<int>(BottomLeft)));
+  ui->chkDeadBottomRight->setChecked(m_computer->switchCorner(static_cast<int>(BottomRight)));
+  ui->sbSwitchCornerSize->setValue(m_computer->switchCornerSize());
 
-  ui->chkWeakX11Focus->setChecked(Settings::value(Settings::Computer::WeakX11Focus.arg(m_screen->name())).toBool());
+  ui->chkWeakX11Focus->setChecked(Settings::value(Settings::Computer::WeakX11Focus.arg(m_computer->name())).toBool());
 
-  ui->chkFixCapsLock->setChecked(m_screen->fix(CapsLock));
-  ui->chkFixNumLock->setChecked(m_screen->fix(NumLock));
-  ui->chkFixScrollLock->setChecked(m_screen->fix(ScrollLock));
-  ui->chkFixXTest->setChecked(m_screen->fix(XTest));
+  ui->chkFixCapsLock->setChecked(m_computer->fix(CapsLock));
+  ui->chkFixNumLock->setChecked(m_computer->fix(NumLock));
+  ui->chkFixScrollLock->setChecked(m_computer->fix(ScrollLock));
+  ui->chkFixXTest->setChecked(m_computer->fix(XTest));
 
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ComputerSettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ComputerSettingsDialog::reject);
@@ -86,9 +86,9 @@ void ComputerSettingsDialog::accept()
     return;
   }
 
-  m_screen->setName(ui->lineNameEdit->text());
+  m_computer->setName(ui->lineNameEdit->text());
 
-  m_screen->aliases().clear();
+  m_computer->aliases().clear();
 
   for (int i = 0; i < ui->listAliases->count(); i++) {
     QString alias(ui->listAliases->item(i)->text());
@@ -100,29 +100,29 @@ void ComputerSettingsDialog::accept()
       );
       return;
     }
-    if (!m_screen->aliases().contains(alias))
-      m_screen->addAlias(alias);
+    if (!m_computer->aliases().contains(alias))
+      m_computer->addAlias(alias);
   }
 
-  m_screen->setModifier(KeyboardModifier::Shift, ui->comboShift->currentIndex());
-  m_screen->setModifier(KeyboardModifier::Ctrl, ui->comboCtrl->currentIndex());
-  m_screen->setModifier(KeyboardModifier::Alt, ui->comboAlt->currentIndex());
-  m_screen->setModifier(KeyboardModifier::Meta, ui->comboMeta->currentIndex());
-  m_screen->setModifier(KeyboardModifier::Super, ui->comboSuper->currentIndex());
-  m_screen->setModifier(KeyboardModifier::AltGr, ui->comboAltGr->currentIndex());
+  m_computer->setModifier(KeyboardModifier::Shift, ui->comboShift->currentIndex());
+  m_computer->setModifier(KeyboardModifier::Ctrl, ui->comboCtrl->currentIndex());
+  m_computer->setModifier(KeyboardModifier::Alt, ui->comboAlt->currentIndex());
+  m_computer->setModifier(KeyboardModifier::Meta, ui->comboMeta->currentIndex());
+  m_computer->setModifier(KeyboardModifier::Super, ui->comboSuper->currentIndex());
+  m_computer->setModifier(KeyboardModifier::AltGr, ui->comboAltGr->currentIndex());
 
-  m_screen->setSwitchCorner(TopLeft, ui->chkDeadTopLeft->isChecked());
-  m_screen->setSwitchCorner(TopRight, ui->chkDeadTopRight->isChecked());
-  m_screen->setSwitchCorner(BottomLeft, ui->chkDeadBottomLeft->isChecked());
-  m_screen->setSwitchCorner(BottomRight, ui->chkDeadBottomRight->isChecked());
-  m_screen->setSwitchCornerSize(ui->sbSwitchCornerSize->value());
+  m_computer->setSwitchCorner(TopLeft, ui->chkDeadTopLeft->isChecked());
+  m_computer->setSwitchCorner(TopRight, ui->chkDeadTopRight->isChecked());
+  m_computer->setSwitchCorner(BottomLeft, ui->chkDeadBottomLeft->isChecked());
+  m_computer->setSwitchCorner(BottomRight, ui->chkDeadBottomRight->isChecked());
+  m_computer->setSwitchCornerSize(ui->sbSwitchCornerSize->value());
 
-  m_screen->setFix(CapsLock, ui->chkFixCapsLock->isChecked());
-  m_screen->setFix(NumLock, ui->chkFixNumLock->isChecked());
-  m_screen->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
-  m_screen->setFix(XTest, ui->chkFixXTest->isChecked());
+  m_computer->setFix(CapsLock, ui->chkFixCapsLock->isChecked());
+  m_computer->setFix(NumLock, ui->chkFixNumLock->isChecked());
+  m_computer->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
+  m_computer->setFix(XTest, ui->chkFixXTest->isChecked());
 
-  Settings::setValue(Settings::Computer::WeakX11Focus.arg(m_screen->name()), ui->chkWeakX11Focus->isChecked());
+  Settings::setValue(Settings::Computer::WeakX11Focus.arg(m_computer->name()), ui->chkWeakX11Focus->isChecked());
 
   QDialog::accept();
 }

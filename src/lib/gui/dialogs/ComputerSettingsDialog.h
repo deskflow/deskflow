@@ -12,7 +12,7 @@
 class QWidget;
 class QString;
 
-class Screen;
+class Computer;
 class ScreenList;
 
 namespace Ui {
@@ -24,7 +24,7 @@ class ComputerSettingsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ComputerSettingsDialog(QWidget *parent, Screen *screen = nullptr, const ScreenList *screens = nullptr);
+  explicit ComputerSettingsDialog(QWidget *parent, Computer *screen = nullptr, const ScreenList *screens = nullptr);
   ~ComputerSettingsDialog() override;
 
 public Q_SLOTS:
@@ -38,5 +38,5 @@ private Q_SLOTS:
 
 private:
   std::unique_ptr<Ui::ComputerSettingsDialog> ui;
-  Screen *m_screen;
+  Computer *m_computer;
 };

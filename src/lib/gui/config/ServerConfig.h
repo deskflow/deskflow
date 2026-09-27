@@ -69,7 +69,7 @@ private:
   {
     m_Screens = screens;
   }
-  void addScreen(const Screen &screen)
+  void addScreen(const Computer &screen)
   {
     m_Screens.append(screen);
   }

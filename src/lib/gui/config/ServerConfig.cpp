@@ -69,7 +69,7 @@ void ServerConfig::setupScreens()
   // There must always be screen objects for each cell in the screens QList.
   // Unused screens are identified by having an empty name.
   for (int i = 0; i < m_columns * m_rows; i++)
-    addScreen(Screen());
+    addScreen(Computer());
 }
 
 void ServerConfig::commit()
@@ -187,7 +187,7 @@ int ServerConfig::numScreens() const
 {
   int rval = 0;
 
-  for (const Screen &s : screens()) {
+  for (const Computer &s : screens()) {
     if (!s.isNull())
       rval++;
   }
@@ -259,7 +259,7 @@ void ServerConfig::addClient(const QString &clientName)
     fixNoServer(screenName, serverIndex);
   }
 
-  m_Screens.addScreenByPriority(Screen(clientName));
+  m_Screens.addScreenByPriority(Computer(clientName));
 }
 
 void ServerConfig::setConfigFile(const QString &configFile) const

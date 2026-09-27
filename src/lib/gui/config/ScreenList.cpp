@@ -67,11 +67,11 @@ int getServerIndex(const ScreenList &screens)
 
 } // namespace
 
-ScreenList::ScreenList(int width) : QList<Screen>(), m_width(width)
+ScreenList::ScreenList(int width) : QList<Computer>(), m_width(width)
 {
 }
 
-void ScreenList::addScreenByPriority(const Screen &newScreen)
+void ScreenList::addScreenByPriority(const Computer &newScreen)
 {
   int serverIndex = getServerIndex(*this);
   auto indexes = getNeighborsIndexes(serverIndex, m_width, static_cast<int>(size()));
@@ -93,7 +93,7 @@ void ScreenList::addScreenByPriority(const Screen &newScreen)
   }
 }
 
-void ScreenList::addScreenToFirstEmpty(const Screen &newScreen)
+void ScreenList::addScreenToFirstEmpty(const Computer &newScreen)
 {
   for (int i = 0; i < size(); ++i) {
     auto &screen = operator[](i);

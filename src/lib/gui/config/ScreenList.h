@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "Screen.h"
+#include "Computer.h"
 
-class ScreenList : public QList<Screen>
+class ScreenList : public QList<Computer>
 {
   int m_width = 5;
 
@@ -26,13 +26,13 @@ public:
    * place
    * @param newScreen
    */
-  void addScreenByPriority(const Screen &newScreen);
+  void addScreenByPriority(const Computer &newScreen);
 
   /**
    * @brief addScreenToFirstEmpty adds screen into the first empty place
    * @param newScreen
    */
-  void addScreenToFirstEmpty(const Screen &newScreen);
+  void addScreenToFirstEmpty(const Computer &newScreen);
 
   /**
    * @brief Returns true if screens are equal

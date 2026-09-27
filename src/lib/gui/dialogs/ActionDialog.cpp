@@ -40,19 +40,19 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   ui->comboActionType->setCurrentIndex(m_action.type());
   ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
 
-  for (const Screen &screen : config.screens()) {
-    if (screen.isNull())
+  for (const Computer &computer : config.screens()) {
+    if (computer.isNull())
       continue;
-    auto *newListItem = new QListWidgetItem(screen.name());
+    auto *newListItem = new QListWidgetItem(computer.name());
     newListItem->setCheckState(Qt::Checked);
-    if ((m_action.typeScreenNames().indexOf(screen.name()) == -1) &&
+    if ((m_action.typeScreenNames().indexOf(computer.name()) == -1) &&
         (m_action.haveScreens() && !m_action.typeScreenNames().isEmpty()))
       newListItem->setCheckState(Qt::Unchecked);
 
     ui->listScreens->addItem(newListItem);
 
-    ui->comboSwitchToScreen->addItem(tr("Switch to %1").arg(screen.name()), screen.name());
-    if (screen.name() == m_action.switchScreenName())
+    ui->comboSwitchToScreen->addItem(tr("Switch to %1").arg(computer.name()), computer.name());
+    if (computer.name() == m_action.switchScreenName())
       ui->comboSwitchToScreen->setCurrentIndex(ui->comboSwitchToScreen->count() - 1);
   }
 

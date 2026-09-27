@@ -60,23 +60,23 @@ Q_SIGNALS:
 protected:
   bool
   dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
-  const Screen &computer(const QModelIndex &index) const
+  const Computer &computer(const QModelIndex &index) const
   {
     return computer(index.column(), index.row());
   }
-  Screen &computer(const QModelIndex &index)
+  Computer &computer(const QModelIndex &index)
   {
     return computer(index.column(), index.row());
   }
-  const Screen &computer(int column, int row) const
+  const Computer &computer(int column, int row) const
   {
     return m_computers[row * m_NumColumns + column];
   }
-  Screen &computer(int column, int row)
+  Computer &computer(int column, int row)
   {
     return m_computers[row * m_NumColumns + column];
   }
-  void addComputer(const Screen &newComputer);
+  void addComputer(const Computer &newComputer);
 
 private:
   static constexpr int kMaxGridSize = 100;
