@@ -15,6 +15,12 @@
 #include "platform/MSWindowsClipboardImageConverter.h"
 #include "platform/MSWindowsClipboardUTF16Converter.h"
 
+#include <algorithm>
+#include <iterator>
+
+#include <QByteArrayList>
+#include <QString>
+
 //
 // MSWindowsClipboard
 //
@@ -207,6 +213,28 @@ std::string MSWindowsClipboard::get(Format format) const
 
   // convert
   return converter->toIClipboard(win32Data);
+}
+
+void MSWindowsClipboard::logUnreadableFormats() const
+{
+  const bool readable = std::ranges::any_of(m_converters, [](const IMSWindowsClipboardConverter *converter) {
+    return IsClipboardFormatAvailable(converter->getWin32Format()) != 0;
+  });
+  if (readable || CountClipboardFormats() == 0) {
+    return;
+  }
+
+  QByteArrayList formats;
+  if (open(0)) {
+    UINT format = 0;
+    while ((format = EnumClipboardFormats(format)) != 0) {
+      wchar_t name[256];
+      const int length = GetClipboardFormatNameW(format, name, static_cast<int>(std::size(name)));
+      formats.append(length > 0 ? QString::fromWCharArray(name, length).toUtf8() : QByteArray::number(format));
+    }
+    close();
+  }
+  LOG_DEBUG("clipboard has no format we can read, formats: %s", formats.join(", ").constData());
 }
 
 void MSWindowsClipboard::clearConverters()

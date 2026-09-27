@@ -55,6 +55,7 @@ public:
   std::string get(Format) const override;
 
   void setFacade(IMSWindowsClipboardFacade &facade);
+  void logUnreadableFormats() const;
 
 private:
   void clearConverters();
