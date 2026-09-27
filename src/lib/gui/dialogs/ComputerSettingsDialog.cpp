@@ -17,8 +17,8 @@
 
 #include <common/Settings.h>
 
-using enum ScreenConfig::SwitchCorner;
-using enum ScreenConfig::Fix;
+using enum ComputerConfig::SwitchCorner;
+using enum ComputerConfig::Fix;
 
 ComputerSettingsDialog::~ComputerSettingsDialog() = default;
 

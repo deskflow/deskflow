@@ -14,8 +14,8 @@
 #include <QAbstractButton>
 #include <QPushButton>
 
-using enum ScreenConfig::SwitchCorner;
-using enum ScreenConfig::Fix;
+using enum ComputerConfig::SwitchCorner;
+using enum ComputerConfig::Fix;
 
 static const struct
 {

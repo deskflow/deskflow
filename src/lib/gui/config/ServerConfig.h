@@ -10,7 +10,7 @@
 
 #include "common/Constants.h"
 #include "common/Hotkey.h"
-#include "gui/config/ScreenConfig.h"
+#include "gui/config/ComputerConfig.h"
 #include "gui/config/ScreenList.h"
 
 #include <QList>
@@ -21,7 +21,7 @@ class QString;
 class QFile;
 class ServerConfigDialog;
 
-class ServerConfig : public ScreenConfig
+class ServerConfig : public ComputerConfig
 {
   friend class ServerConfigDialog;
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);

@@ -21,7 +21,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-using enum ScreenConfig::SwitchCorner;
+using enum ComputerConfig::SwitchCorner;
 
 ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "ScreenConfig.h"
+#include "ComputerConfig.h"
 
 #include "common/KeyboardModifier.h"
 #include "common/QSettingsProxy.h"
@@ -23,7 +23,7 @@ class QSettings;
 class QTextStream;
 class ComputerSettingsDialog;
 
-class Screen : public ScreenConfig
+class Screen : public ComputerConfig
 {
   friend class ComputerSettingsDialog;
   friend class ComputerSetupModel;

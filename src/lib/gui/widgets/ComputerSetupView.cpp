@@ -44,7 +44,7 @@ ComputerSetupModel *ComputerSetupView::model() const
   return qobject_cast<ComputerSetupModel *>(QTableView::model());
 }
 
-void ComputerSetupView::showScreenConfig(int col, int row)
+void ComputerSetupView::showComputerConfig(int col, int row)
 {
   ComputerSettingsDialog dlg(this, &model()->computer(col, row), &model()->m_computers);
   dlg.exec();
@@ -73,7 +73,7 @@ void ComputerSetupView::mouseDoubleClickEvent(QMouseEvent *event)
     int row = rowAt(event->pos().y());
 
     if (!model()->computer(col, row).isNull()) {
-      showScreenConfig(col, row);
+      showComputerConfig(col, row);
     }
   } else
     event->ignore();
