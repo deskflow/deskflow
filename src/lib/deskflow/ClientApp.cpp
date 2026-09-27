@@ -15,7 +15,7 @@
 #include "common/ExitCodes.h"
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
-#include "deskflow/Screen.h"
+#include "deskflow/Computer.h"
 #include "deskflow/ScreenException.h"
 #include "deskflow/ipc/CoreIpc.h"
 #include "net/NetworkAddress.h"
@@ -98,7 +98,7 @@ const char *ClientApp::daemonName() const
   return "deskflow-client";
 }
 
-deskflow::Screen *ClientApp::createScreen()
+deskflow::Computer *ClientApp::createComputer()
 {
 #if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
   const auto languageSync = Settings::value(Settings::Client::LanguageSync).toBool();
@@ -106,24 +106,24 @@ deskflow::Screen *ClientApp::createScreen()
 #endif
 
 #if defined(Q_OS_WIN)
-  return new deskflow::Screen(
+  return new deskflow::Computer(
       new MSWindowsScreen(false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(), languageSync),
       getEvents()
   );
 #elif defined(Q_OS_MACOS)
-  return new deskflow::Screen(new OSXScreen(getEvents(), false, languageSync), getEvents());
+  return new deskflow::Computer(new OSXScreen(getEvents(), false, languageSync), getEvents());
 #else
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("detected wayland platform");
-    return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true), getEvents());
+    return new deskflow::Computer(new deskflow::EiScreen(false, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif
   }
 #if WINAPI_XWINDOWS
   LOG_INFO("detected X11 platform");
-  return new deskflow::Screen(
+  return new deskflow::Computer(
       new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents()),
       getEvents()
   );
@@ -131,20 +131,20 @@ deskflow::Screen *ClientApp::createScreen()
 #endif // end os check
 }
 
-deskflow::Screen *ClientApp::openClientScreen()
+deskflow::Computer *ClientApp::openClientComputer()
 {
-  deskflow::Screen *screen = createScreen();
-  getEvents()->addHandler(EventTypes::ScreenError, screen->getEventTarget(), [this](const auto &) {
+  deskflow::Computer *computer = createComputer();
+  getEvents()->addHandler(EventTypes::ScreenError, computer->getEventTarget(), [this](const auto &) {
     handleScreenError();
   });
-  return screen;
+  return computer;
 }
 
-void ClientApp::closeClientScreen(deskflow::Screen *screen)
+void ClientApp::closeClientComputer(deskflow::Computer *computer)
 {
-  if (screen != nullptr) {
-    getEvents()->removeHandler(EventTypes::ScreenError, screen->getEventTarget());
-    delete screen;
+  if (computer != nullptr) {
+    getEvents()->removeHandler(EventTypes::ScreenError, computer->getEventTarget());
+    delete computer;
   }
 }
 
@@ -230,7 +230,7 @@ void ClientApp::handleClientDisconnected()
   }
 }
 
-Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen)
+Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Computer *screen)
 {
   auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen);
 
@@ -272,15 +272,15 @@ void ClientApp::closeClient(Client *client)
 
 bool ClientApp::startClient()
 {
-  deskflow::Screen *clientScreen = nullptr;
+  deskflow::Computer *clientComputer = nullptr;
   try {
-    if (m_clientScreen == nullptr) {
-      clientScreen = openClientScreen();
+    if (m_clientComputer == nullptr) {
+      clientComputer = openClientComputer();
       m_client = openClient(
           Settings::value(Settings::Core::ComputerName).toString().toStdString(), getCurrentServerAddress(),
-          clientScreen
+          clientComputer
       );
-      m_clientScreen = clientScreen;
+      m_clientComputer = clientComputer;
       LOG_INFO("started client");
     }
 
@@ -290,15 +290,15 @@ bool ClientApp::startClient()
     return true;
   } catch (ScreenUnavailableException &e) {
     LOG_WARN("secondary screen unavailable: %s", e.what());
-    closeClientScreen(clientScreen);
+    closeClientComputer(clientComputer);
   } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
-    closeClientScreen(clientScreen);
+    closeClientComputer(clientComputer);
     m_retryCount = 0;
     return false;
   } catch (BaseException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
-    closeClientScreen(clientScreen);
+    closeClientComputer(clientComputer);
     m_retryCount = 0;
     return false;
   }
@@ -310,9 +310,9 @@ bool ClientApp::startClient()
 void ClientApp::stopClient()
 {
   closeClient(m_client);
-  closeClientScreen(m_clientScreen);
+  closeClientComputer(m_clientComputer);
   m_client = nullptr;
-  m_clientScreen = nullptr;
+  m_clientComputer = nullptr;
   m_retryCount = 0;
 }
 

@@ -21,50 +21,50 @@ class IEventQueue;
 
 namespace deskflow {
 
-//! Platform independent screen
+//! Platform independent computer
 /*!
-This is a platform independent screen.  It can work as either a
-primary or secondary screen.
+This is a platform independent computer.  It can work as either a
+primary or secondary computer.
 */
-class Screen : public IComputer
+class Computer : public IComputer
 {
 public:
-  Screen(IPlatformScreen *platformScreen, IEventQueue *events);
-  Screen(Screen const &) = delete;
-  Screen(Screen &&) = delete;
-  ~Screen() override;
+  Computer(IPlatformScreen *platformScreen, IEventQueue *events);
+  Computer(Computer const &) = delete;
+  Computer(Computer &&) = delete;
+  ~Computer() override;
 
-  Screen &operator&(Screen const &) = delete;
-  Screen &operator&(Screen &&) = delete;
+  Computer &operator&(Computer const &) = delete;
+  Computer &operator&(Computer &&) = delete;
 
   //! @name manipulators
   //@{
 
-  //! Activate screen
+  //! Activate computer
   /*!
-  Activate the screen, preparing it to report system and user events.
-  For a secondary screen it also means disabling the screen saver if
+  Activate the computer, preparing it to report system and user events.
+  For a secondary computer it also means disabling the computer saver if
   synchronizing it and preparing to synthesize events.
   */
   void enable();
 
-  //! Deactivate screen
+  //! Deactivate computer
   /*!
   Undoes the operations in activate() and events are no longer
   reported.  It also releases keys that are logically pressed.
   */
   void disable();
 
-  //! Enter screen
+  //! Enter computer
   /*!
-  Called when the user navigates to this screen.  \p toggleMask has the
-  toggle keys that should be turned on on the secondary screen.
+  Called when the user navigates to this computer.  \p toggleMask has the
+  toggle keys that should be turned on on the secondary computer.
   */
   void enter(KeyModifierMask toggleMask);
 
-  //! Leave screen
+  //! Leave computer
   /*!
-  Called when the user navigates off this screen.
+  Called when the user navigates off this computer.
   */
   bool leave();
 
@@ -72,7 +72,7 @@ public:
   /*!
   This is called when the configuration has changed.  \c activeSides
   is a bitmask of DirectionMask indicating which sides of the
-  primary screen are linked to clients.
+  primary computer are linked to clients.
   */
   void reconfigure(uint32_t activeSides);
 
@@ -97,9 +97,9 @@ public:
   */
   void grabClipboard(ClipboardID);
 
-  //! Activate/deactivate screen saver
+  //! Activate/deactivate computer saver
   /*!
-  Forcibly activates the screen saver if \c activate is true otherwise
+  Forcibly activates the computer saver if \c activate is true otherwise
   forcibly deactivates it.
   */
   void screensaver(bool activate) const;
@@ -144,7 +144,7 @@ public:
   //! Notify of mouse motion
   /*!
   Synthesize mouse events to generate mouse motion to the absolute
-  screen position \c xAbs,yAbs.
+  computer position \c xAbs,yAbs.
   */
   void mouseMove(int32_t xAbs, int32_t yAbs);
 
@@ -196,16 +196,16 @@ public:
   */
   void unregisterHotKey(uint32_t id);
 
-  //! Prepare to synthesize input on primary screen
+  //! Prepare to synthesize input on primary computer
   /*!
-  Prepares the primary screen to receive synthesized input.  We do not
+  Prepares the primary computer to receive synthesized input.  We do not
   want to receive this synthesized input as user input so this method
   ensures that we ignore it.  Calls to \c fakeInputBegin() may not be
   nested.
   */
   void fakeInputBegin();
 
-  //! Done synthesizing input on primary screen
+  //! Done synthesizing input on primary computer
   /*!
   Undoes whatever \c fakeInputBegin() did.
   */
@@ -222,25 +222,25 @@ public:
   //! @name accessors
   //@{
 
-  //! Test if cursor on screen
+  //! Test if cursor on computer
   /*!
-  Returns true iff the cursor is on the screen.
+  Returns true iff the cursor is on the computer.
   */
-  bool isOnScreen() const;
+  bool isOnComputer() const;
 
-  //! Get screen lock state
+  //! Get computer lock state
   /*!
   Returns true if there's any reason that the user should not be
-  allowed to leave the screen (usually because a button or key is
+  allowed to leave the computer (usually because a button or key is
   pressed).  If this method returns true it logs a message as to
   why at the CLOG_DEBUG level.
   */
-  bool isLockedToScreen() const;
+  bool isLockedToComputer() const;
 
   //! Get jump zone size
   /*!
   Return the jump zone size, the size of the regions on the edges of
-  the screen that cause the cursor to jump to another screen.
+  the computer that cause the cursor to jump to another computer.
   */
   int32_t getJumpZoneSize() const;
 
@@ -248,7 +248,7 @@ public:
   /*!
   Return the cursor center position which is where we park the
   cursor to compute cursor motion deltas and should be far from
-  the edges of the screen, typically the center.
+  the edges of the computer, typically the center.
   */
   void getCursorCenter(int32_t &x, int32_t &y) const;
 
@@ -274,9 +274,9 @@ public:
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
   void getCursorPos(int32_t &x, int32_t &y) const override;
 
-  IPlatformScreen *getPlatformScreen()
+  IPlatformScreen *getPlatformComputer()
   {
-    return m_screen;
+    return m_computer;
   }
 
 protected:
@@ -291,23 +291,23 @@ protected:
   void leaveSecondary();
 
 private:
-  // our platform dependent screen
-  IPlatformScreen *m_screen = nullptr;
+  // our platform dependent computer
+  IPlatformScreen *m_computer = nullptr;
 
-  // true if screen is being used as a primary screen, false otherwise
+  // true if computer is being used as a primary computer, false otherwise
   bool m_isPrimary = false;
 
-  // true if screen is enabled
+  // true if computer is enabled
   bool m_enabled = false;
 
-  // true if the cursor is on this screen
+  // true if the cursor is on this computer
   bool m_entered = false;
 
   // note toggle keys that toggles on up/down (false) or on
   // transition (true)
   KeyModifierMask m_halfDuplex;
 
-  // true if we're faking input on a primary screen
+  // true if we're faking input on a primary computer
   bool m_fakeInput = false;
 
   IEventQueue *m_events = nullptr;

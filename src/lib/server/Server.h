@@ -27,7 +27,7 @@ class EventQueueTimer;
 class PrimaryClient;
 class InputFilter;
 namespace deskflow {
-class Screen;
+class Computer;
 }
 class IEventQueue;
 class Thread;
@@ -42,8 +42,8 @@ class Server
   using ServerConfig = deskflow::server::Config;
 
 public:
-  //! Lock cursor to screen data
-  class LockCursorToScreenInfo : public EventData
+  //! Lock cursor to computer data
+  class LockCursorToComputerInfo : public EventData
   {
   public:
     enum State
@@ -53,28 +53,28 @@ public:
       kToggle
     };
 
-    explicit LockCursorToScreenInfo(State state = kToggle) : m_state(state)
+    explicit LockCursorToComputerInfo(State state = kToggle) : m_state(state)
     {
       // do nothing
     }
-    ~LockCursorToScreenInfo() override = default; // do nothing
+    ~LockCursorToComputerInfo() override = default; // do nothing
 
   public:
     State m_state;
   };
 
-  //! Switch to screen data
-  class SwitchToScreenInfo : public EventData
+  //! Switch to computer data
+  class SwitchToComputerInfo : public EventData
   {
   public:
-    explicit SwitchToScreenInfo(const std::string &screen) : m_screen(screen)
+    explicit SwitchToComputerInfo(const std::string &computer) : m_computer(computer)
     {
       // do nothing
     }
-    ~SwitchToScreenInfo() override = default; // do nothing
+    ~SwitchToComputerInfo() override = default; // do nothing
 
   public:
-    std::string m_screen;
+    std::string m_computer;
   };
 
   //! Switch in direction data
@@ -91,17 +91,17 @@ public:
     Direction m_direction;
   };
 
-  //! Screen connected data
-  class ScreenConnectedInfo
+  //! Computer connected data
+  class ComputerConnectedInfo
   {
   public:
-    explicit ScreenConnectedInfo(std::string screen) : m_screen(screen)
+    explicit ComputerConnectedInfo(std::string computer) : m_computer(computer)
     {
       // do nothing
     }
 
   public:
-    std::string m_screen; // was char[1]
+    std::string m_computer; // was char[1]
   };
 
   //! Keyboard broadcast data
@@ -119,7 +119,7 @@ public:
     {
       // do nothing
     }
-    KeyboardBroadcastInfo(State state, const std::string &screens) : m_state(state), m_screens(screens)
+    KeyboardBroadcastInfo(State state, const std::string &computers) : m_state(state), m_computers(computers)
     {
       // do nothing
     }
@@ -127,15 +127,15 @@ public:
 
   public:
     State m_state;
-    std::string m_screens;
+    std::string m_computers;
   };
 
   /*!
   Start the server with the configuration \p config and the primary
-  client (local screen) \p primaryClient.  The client retains
+  client (local computer) \p primaryClient.  The client retains
   ownership of \p primaryClient.
   */
-  Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events);
+  Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Computer *computer, IEventQueue *events);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -206,26 +206,26 @@ private:
   // get canonical name of client
   std::string getName(const BaseClientProxy *) const;
 
-  // get the sides of the primary screen that have neighbors
+  // get the sides of the primary computer that have neighbors
   uint32_t getActivePrimarySides() const;
 
-  // returns true iff mouse should be locked to the current screen
+  // returns true iff mouse should be locked to the current computer
   // according to this object only, ignoring what the primary client
   // says.
-  bool isLockedToScreenServer() const;
+  bool isLockedToComputerServer() const;
 
-  // returns true iff mouse should be locked to the current screen
+  // returns true iff mouse should be locked to the current m_computer
   // according to this object or the primary client.
-  bool isLockedToScreen() const;
+  bool isLockedToComputer() const;
 
   // returns the jump zone of the client
   int32_t getJumpZoneSize(const BaseClientProxy *) const;
 
-  // change the active screen
-  void switchScreen(BaseClientProxy *, int32_t x, int32_t y, bool forScreenSaver);
+  // change the active m_computer
+  void switchComputer(BaseClientProxy *, int32_t x, int32_t y, bool forScreenSaver);
 
-  // jump to screen
-  void jumpToScreen(BaseClientProxy *);
+  // jump to computer
+  void jumpToComputer(BaseClientProxy *);
 
   // convert pixel position to fraction, using x or y depending on the
   // direction.
@@ -239,14 +239,14 @@ private:
   // indicated by the direction.
   bool hasAnyNeighbor(const BaseClientProxy *, Direction) const;
 
-  // lookup neighboring screen, mapping the coordinate independent of
+  // lookup neighboring computer, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
   BaseClientProxy *getNeighbor(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
-  // lookup neighboring screen.  given a position relative to the
-  // source screen, find the screen we should move onto and where.
+  // lookup neighboring computer.  given a position relative to the
+  // source computer, find the computer we should move onto and where.
   // if the position is sufficiently far from the source then we
-  // cross multiple screens.  if there is no suitable screen then
+  // cross multiple computers.  if there is no suitable computer then
   // return nullptr and x,y are not modified.
   BaseClientProxy *mapToNeighbor(BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
@@ -260,7 +260,7 @@ private:
   bool isSwitchOkay(BaseClientProxy *dst, Direction, int32_t x, int32_t y, int32_t xActive, int32_t yActive);
 
   // update switch state due to a mouse move at \p x, \p y that
-  // doesn't switch screens.
+  // doesn't switch computers.
   void noSwitch(int32_t x, int32_t y);
 
   // stop switch timers
@@ -290,14 +290,14 @@ private:
   // returns true iff the delay switch timer is started
   bool isSwitchWaitStarted() const;
 
-  // returns the corner (EScreenSwitchCornerMasks) where x,y is on the
+  // returns the corner (ScreenSwitchCornerMasks) where x,y is on the
   // given client.  corners have the given size.
   uint32_t getCorner(const BaseClientProxy *, int32_t x, int32_t y, int32_t size) const;
 
   // stop relative mouse moves
   void stopRelativeMoves();
 
-  // send screen options to \c client
+  // send computer options to \c client
   void sendOptions(BaseClientProxy *client) const;
 
   // process options from configuration
@@ -318,17 +318,17 @@ private:
   void handleSwitchWaitTimeout();
   void handleClientDisconnected(BaseClientProxy *client);
   void handleClientCloseTimeout(BaseClientProxy *client);
-  void handleSwitchToScreenEvent(const Event &event);
+  void handleSwitchToComputerEvent(const Event &event);
   void handleSwitchInDirectionEvent(const Event &event);
-  void handleToggleScreenEvent(const Event &);
+  void handleToggleComputerEvent(const Event &);
   void handleKeyboardBroadcastEvent(const Event &event);
-  void handleLockCursorToScreenEvent(const Event &event);
+  void handleLockCursorToComputerEvent(const Event &event);
 
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
   void onScreensaver(bool activated);
-  void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *screens);
-  void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *screens);
+  void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *computers);
+  void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *computers);
   void onKeyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const std::string &);
   void onMouseDown(ButtonID);
   void onMouseUp(ButtonID);
@@ -373,7 +373,7 @@ private:
   };
   // Order suggested by clang
 
-  // the Primary Screen Client
+  // the Primary Computer Client
   PrimaryClient *m_primaryClient = nullptr;
 
   // the client with focus
@@ -388,15 +388,15 @@ private:
   // state saved when screen saver activates
   BaseClientProxy *m_activeSaver = nullptr;
 
-  BaseClientProxy *m_switchScreen = nullptr;
+  BaseClientProxy *m_switchComputer = nullptr;
   double m_switchWaitDelay = 0.0;
   EventQueueTimer *m_switchWaitTimer = nullptr;
 
-  // delay for double-tap screen switching
+  // delay for double-tap computer switching
   double m_switchTwoTapDelay = 0.0;
 
-  // server screen
-  deskflow::Screen *m_screen;
+  // server computer
+  deskflow::Computer *m_computer;
 
   IEventQueue *m_events = nullptr;
   size_t m_maximumClipboardSize = INT_MAX;
@@ -463,7 +463,7 @@ private:
   bool m_keyboardBroadcasting = false;
 
   // screen locking (former scroll lock)
-  bool m_lockedToScreen = false;
+  bool m_lockedToComputer = false;
 
   bool m_defaultLockToScreenState = false;
   bool m_disableLockToScreen = false;

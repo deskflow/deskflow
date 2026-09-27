@@ -187,8 +187,8 @@ std::string InputFilter::ScreenConnectedCondition::format() const
 InputFilter::FilterStatus InputFilter::ScreenConnectedCondition::match(const Event &event)
 {
   if (event.getType() == EventTypes::ServerConnected) {
-    const auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
-    if (m_screen == info->m_screen || m_screen.empty()) {
+    const auto *info = static_cast<Server::ComputerConnectedInfo *>(event.getData());
+    if (m_screen == info->m_computer || m_screen.empty()) {
       return FilterStatus::Activate;
     }
   }
@@ -226,12 +226,13 @@ std::string InputFilter::LockCursorToScreenAction::format() const
 
 void InputFilter::LockCursorToScreenAction::perform(const Event &event)
 {
-  static const Server::LockCursorToScreenInfo::State s_state[] = {
-      Server::LockCursorToScreenInfo::kOff, Server::LockCursorToScreenInfo::kOn, Server::LockCursorToScreenInfo::kToggle
+  static const Server::LockCursorToComputerInfo::State s_state[] = {
+      Server::LockCursorToComputerInfo::kOff, Server::LockCursorToComputerInfo::kOn,
+      Server::LockCursorToComputerInfo::kToggle
   };
 
   // send event
-  auto *info = new Server::LockCursorToScreenInfo(s_state[m_mode]);
+  auto *info = new Server::LockCursorToComputerInfo(s_state[m_mode]);
   m_events->addEvent(
       Event(EventTypes::ServerLockCursorToScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
   );
@@ -293,12 +294,12 @@ void InputFilter::SwitchToScreenAction::perform(const Event &event)
   // event if it has one.
   std::string screen = m_screen;
   if (screen.empty() && event.getType() == EventTypes::ServerConnected) {
-    const auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
-    screen = info->m_screen;
+    const auto *info = static_cast<Server::ComputerConnectedInfo *>(event.getData());
+    screen = info->m_computer;
   }
 
   // send event
-  auto *info = new Server::SwitchToScreenInfo(screen);
+  auto *info = new Server::SwitchToComputerInfo(screen);
   m_events->addEvent(
       Event(EventTypes::ServerSwitchToScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
   );

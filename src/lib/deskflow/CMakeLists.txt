@@ -38,6 +38,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   Clipboard.h
   ClipboardChunk.cpp
   ClipboardChunk.h
+  Computer.cpp
+  Computer.h
   DeskflowException.cpp
   DeskflowException.h
   DisplayInvalidException.h
@@ -70,8 +72,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ProtocolTypes.h
   ProtocolUtil.cpp
   ProtocolUtil.h
-  Screen.cpp
-  Screen.h
   ScreenException.cpp
   ScreenException.h
   ServerApp.cpp

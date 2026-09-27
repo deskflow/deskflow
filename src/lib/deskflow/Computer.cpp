@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "deskflow/Screen.h"
+#include "deskflow/Computer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/IPlatformScreen.h"
@@ -21,7 +21,7 @@ namespace deskflow {
 
 namespace {
 
-bool runScreenCommand(const QString &commandLine)
+bool runComputerCommand(const QString &commandLine)
 {
 #ifdef Q_OS_WIN
   using deskflow::platform::MSWindowsProcess;
@@ -42,16 +42,16 @@ bool runScreenCommand(const QString &commandLine)
 } // namespace
 
 //
-// Screen
+// Computer
 //
 
-Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
-    : m_screen(platformScreen),
+Computer::Computer(IPlatformScreen *platformScreen, IEventQueue *events)
+    : m_computer(platformScreen),
       m_isPrimary(platformScreen->isPrimary()),
       m_entered(m_isPrimary),
       m_events(events)
 {
-  assert(m_screen != nullptr);
+  assert(m_computer != nullptr);
 
   // reset options
   resetOptions();
@@ -59,7 +59,7 @@ Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
   LOG_DEBUG("opened display");
 }
 
-Screen::~Screen()
+Computer::~Computer()
 {
 
   if (m_enabled) {
@@ -90,17 +90,17 @@ Screen::~Screen()
     }
   }
 
-  delete m_screen;
+  delete m_computer;
   LOG_DEBUG("closed display");
 }
 
-void Screen::enable()
+void Computer::enable()
 {
   assert(!m_enabled);
 
-  m_screen->updateKeyMap();
-  m_screen->updateKeyState();
-  m_screen->enable();
+  m_computer->updateKeyMap();
+  m_computer->updateKeyState();
+  m_computer->enable();
   if (m_isPrimary) {
     enablePrimary();
   } else {
@@ -111,7 +111,7 @@ void Screen::enable()
   m_enabled = true;
 }
 
-void Screen::disable()
+void Computer::disable()
 {
   assert(m_enabled);
 
@@ -120,7 +120,7 @@ void Screen::disable()
   } else if (m_isPrimary && !m_entered) {
     enter(0);
   }
-  m_screen->disable();
+  m_computer->disable();
   if (m_isPrimary) {
     disablePrimary();
   } else {
@@ -131,7 +131,7 @@ void Screen::disable()
   m_enabled = false;
 }
 
-void Screen::enter(KeyModifierMask toggleMask)
+void Computer::enter(KeyModifierMask toggleMask)
 {
   LOG_INFO("entering computer");
 
@@ -139,10 +139,10 @@ void Screen::enter(KeyModifierMask toggleMask)
     LOG_WARN("computer already entered");
   }
 
-  // now on screen
+  // now on computer
   m_entered = true;
 
-  m_screen->enter();
+  m_computer->enter();
   if (m_isPrimary) {
     enterPrimary();
   } else {
@@ -152,12 +152,12 @@ void Screen::enter(KeyModifierMask toggleMask)
   if (Settings::value(Settings::Core::EnableEnterCommand).toBool()) {
     const auto commandLine = Settings::value(Settings::Core::ComputerEnterCommand).toString();
     LOG_DEBUG("running computer enter command: %s", qPrintable(commandLine));
-    if (!runScreenCommand(commandLine))
+    if (!runComputerCommand(commandLine))
       LOG_ERR("failed to run computer enter command");
   }
 }
 
-bool Screen::leave()
+bool Computer::leave()
 {
   LOG_INFO("leaving computer");
 
@@ -165,7 +165,7 @@ bool Screen::leave()
     LOG_WARN("computer already left");
   }
 
-  if (!m_screen->canLeave()) {
+  if (!m_computer->canLeave()) {
     return false;
   }
 
@@ -175,111 +175,111 @@ bool Screen::leave()
     leaveSecondary();
   }
 
-  m_screen->leave();
+  m_computer->leave();
   if (Settings::value(Settings::Core::EnableExitCommand).toBool()) {
     const auto commandLine = Settings::value(Settings::Core::ComputerExitCommand).toString();
     LOG_DEBUG("running computer exit command: %s", qPrintable(commandLine));
-    if (!runScreenCommand(commandLine))
+    if (!runComputerCommand(commandLine))
       LOG_ERR("failed to run computer exit command");
   }
 
   // make sure our idea of clipboard ownership is correct
-  m_screen->checkClipboards();
+  m_computer->checkClipboards();
 
-  // now not on screen
+  // now not on computer
   m_entered = false;
 
   return true;
 }
 
-void Screen::reconfigure(uint32_t activeSides)
+void Computer::reconfigure(uint32_t activeSides)
 {
   assert(m_isPrimary);
-  m_screen->reconfigure(activeSides);
+  m_computer->reconfigure(activeSides);
 }
 
-void Screen::warpCursor(int32_t x, int32_t y)
+void Computer::warpCursor(int32_t x, int32_t y)
 {
   assert(m_isPrimary);
-  m_screen->warpCursor(x, y);
+  m_computer->warpCursor(x, y);
 }
 
-void Screen::setClipboard(ClipboardID id, const IClipboard *clipboard)
+void Computer::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  m_screen->setClipboard(id, clipboard);
+  m_computer->setClipboard(id, clipboard);
 }
 
-void Screen::grabClipboard(ClipboardID id)
+void Computer::grabClipboard(ClipboardID id)
 {
-  m_screen->setClipboard(id, nullptr);
+  m_computer->setClipboard(id, nullptr);
 }
 
-void Screen::screensaver(bool) const
+void Computer::screensaver(bool) const
 {
   // do nothing
 }
 
-void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
+void Computer::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   // check for ctrl+alt+del emulation
   if (id == kKeyDelete && (mask & (KeyModifierControl | KeyModifierAlt)) == (KeyModifierControl | KeyModifierAlt)) {
     LOG_DEBUG("emulating ctrl+alt+del press");
-    if (m_screen->fakeCtrlAltDel()) {
+    if (m_computer->fakeCtrlAltDel()) {
       return;
     }
   }
-  m_screen->fakeKeyDown(id, mask, button, lang);
+  m_computer->fakeKeyDown(id, mask, button, lang);
 }
 
-void Screen::keyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
+void Computer::keyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
 {
   assert(!m_isPrimary);
-  m_screen->fakeKeyRepeat(id, mask, count, button, lang);
+  m_computer->fakeKeyRepeat(id, mask, count, button, lang);
 }
 
-void Screen::keyUp(KeyID, KeyModifierMask, KeyButton button)
+void Computer::keyUp(KeyID, KeyModifierMask, KeyButton button)
 {
-  m_screen->fakeKeyUp(button);
+  m_computer->fakeKeyUp(button);
 }
 
-void Screen::mouseDown(ButtonID button)
+void Computer::mouseDown(ButtonID button)
 {
-  m_screen->fakeMouseButton(button, true);
+  m_computer->fakeMouseButton(button, true);
 }
 
-void Screen::mouseUp(ButtonID button)
+void Computer::mouseUp(ButtonID button)
 {
-  m_screen->fakeMouseButton(button, false);
+  m_computer->fakeMouseButton(button, false);
 }
 
-void Screen::mouseMove(int32_t x, int32_t y)
-{
-  assert(!m_isPrimary);
-  m_screen->fakeMouseMove(x, y);
-}
-
-void Screen::mouseRelativeMove(int32_t dx, int32_t dy) const
+void Computer::mouseMove(int32_t x, int32_t y)
 {
   assert(!m_isPrimary);
-  m_screen->fakeMouseRelativeMove(dx, dy);
+  m_computer->fakeMouseMove(x, y);
 }
 
-void Screen::mouseWheel(int32_t xDelta, int32_t yDelta) const
+void Computer::mouseRelativeMove(int32_t dx, int32_t dy) const
 {
   assert(!m_isPrimary);
-  m_screen->fakeMouseWheel({xDelta, yDelta});
+  m_computer->fakeMouseRelativeMove(dx, dy);
 }
 
-void Screen::resetOptions()
+void Computer::mouseWheel(int32_t xDelta, int32_t yDelta) const
+{
+  assert(!m_isPrimary);
+  m_computer->fakeMouseWheel({xDelta, yDelta});
+}
+
+void Computer::resetOptions()
 {
   // reset options
   m_halfDuplex = 0;
 
   // let screen handle its own options
-  m_screen->resetOptions();
+  m_computer->resetOptions();
 }
 
-void Screen::setOptions(const OptionsList &options)
+void Computer::setOptions(const OptionsList &options)
 {
   if (options.size() % 2 != 0) {
     LOG_ERR("options are the incorrect size, can not process them");
@@ -313,51 +313,51 @@ void Screen::setOptions(const OptionsList &options)
   }
 
   // update half-duplex options
-  m_screen->setHalfDuplexMask(m_halfDuplex);
+  m_computer->setHalfDuplexMask(m_halfDuplex);
 
   // let screen handle its own options
-  m_screen->setOptions(options);
+  m_computer->setOptions(options);
 }
 
-void Screen::setSequenceNumber(uint32_t seqNum)
+void Computer::setSequenceNumber(uint32_t seqNum)
 {
-  m_screen->setSequenceNumber(seqNum);
+  m_computer->setSequenceNumber(seqNum);
 }
 
-uint32_t Screen::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t Computer::registerHotKey(KeyID key, KeyModifierMask mask)
 {
-  return m_screen->registerHotKey(key, mask);
+  return m_computer->registerHotKey(key, mask);
 }
 
-void Screen::unregisterHotKey(uint32_t id)
+void Computer::unregisterHotKey(uint32_t id)
 {
-  m_screen->unregisterHotKey(id);
+  m_computer->unregisterHotKey(id);
 }
 
-void Screen::fakeInputBegin()
+void Computer::fakeInputBegin()
 {
   assert(!m_fakeInput);
 
   m_fakeInput = true;
-  m_screen->fakeInputBegin();
+  m_computer->fakeInputBegin();
 }
 
-void Screen::fakeInputEnd()
+void Computer::fakeInputEnd()
 {
   assert(m_fakeInput);
 
   m_fakeInput = false;
-  m_screen->fakeInputEnd();
+  m_computer->fakeInputEnd();
 }
 
-bool Screen::isOnScreen() const
+bool Computer::isOnComputer() const
 {
   return m_entered;
 }
 
-bool Screen::isLockedToScreen() const
+bool Computer::isLockedToComputer() const
 {
-  if (uint32_t buttonID = 0; m_screen->isAnyMouseButtonDown(buttonID)) {
+  if (uint32_t buttonID = 0; m_computer->isAnyMouseButtonDown(buttonID)) {
     LOG_DEBUG("locked by mouse buttonID: %d", buttonID);
     return true;
   }
@@ -365,60 +365,60 @@ bool Screen::isLockedToScreen() const
   return false;
 }
 
-int32_t Screen::getJumpZoneSize() const
+int32_t Computer::getJumpZoneSize() const
 {
   if (!m_isPrimary) {
     return 0;
   } else {
-    return m_screen->getJumpZoneSize();
+    return m_computer->getJumpZoneSize();
   }
 }
 
-void Screen::getCursorCenter(int32_t &x, int32_t &y) const
+void Computer::getCursorCenter(int32_t &x, int32_t &y) const
 {
-  m_screen->getCursorCenter(x, y);
+  m_computer->getCursorCenter(x, y);
 }
 
-KeyModifierMask Screen::getActiveModifiers() const
+KeyModifierMask Computer::getActiveModifiers() const
 {
-  return m_screen->getActiveModifiers();
+  return m_computer->getActiveModifiers();
 }
 
-KeyModifierMask Screen::pollActiveModifiers() const
+KeyModifierMask Computer::pollActiveModifiers() const
 {
-  return m_screen->pollActiveModifiers();
+  return m_computer->pollActiveModifiers();
 }
 
-void *Screen::getEventTarget() const
+void *Computer::getEventTarget() const
 {
-  return m_screen;
+  return m_computer;
 }
 
-bool Screen::getClipboard(ClipboardID id, IClipboard *clipboard) const
+bool Computer::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  return m_screen->getClipboard(id, clipboard);
+  return m_computer->getClipboard(id, clipboard);
 }
 
-void Screen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
+void Computer::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
 {
-  m_screen->getShape(x, y, w, h);
+  m_computer->getShape(x, y, w, h);
 }
 
-void Screen::getCursorPos(int32_t &x, int32_t &y) const
+void Computer::getCursorPos(int32_t &x, int32_t &y) const
 {
-  m_screen->getCursorPos(x, y);
+  m_computer->getCursorPos(x, y);
 }
 
-void Screen::enablePrimary()
+void Computer::enablePrimary()
 {
   // get notified of screen saver activation/deactivation
-  m_screen->openScreensaver(true);
+  m_computer->openScreensaver(true);
 
   // claim screen changed size
   m_events->addEvent(Event(EventTypes::ScreenShapeChanged, getEventTarget()));
 }
 
-void Screen::enableSecondary()
+void Computer::enableSecondary()
 {
   // assume primary has all clipboards
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -426,45 +426,45 @@ void Screen::enableSecondary()
   }
 }
 
-void Screen::disablePrimary()
+void Computer::disablePrimary()
 {
   // done with screen saver
-  m_screen->closeScreensaver();
+  m_computer->closeScreensaver();
 }
 
-void Screen::disableSecondary()
+void Computer::disableSecondary()
 {
   // done with screen saver
-  m_screen->closeScreensaver();
+  m_computer->closeScreensaver();
 }
 
-void Screen::enterPrimary() const
+void Computer::enterPrimary() const
 {
   // do nothing
 }
 
-void Screen::enterSecondary(KeyModifierMask) const
+void Computer::enterSecondary(KeyModifierMask) const
 {
   // do nothing
 }
 
-void Screen::leavePrimary()
+void Computer::leavePrimary()
 {
   // we don't track keys while on the primary screen so update our
   // idea of them now.  this is particularly to update the state of
   // the toggle modifiers.
-  m_screen->updateKeyState();
+  m_computer->updateKeyState();
 }
 
-void Screen::leaveSecondary()
+void Computer::leaveSecondary()
 {
   // release any keys we think are still down
-  m_screen->fakeAllKeysUp();
+  m_computer->fakeAllKeysUp();
 }
 
-std::string Screen::getSecureInputApp() const
+std::string Computer::getSecureInputApp() const
 {
-  return m_screen->getSecureInputApp();
+  return m_computer->getSecureInputApp();
 }
 
 } // namespace deskflow
