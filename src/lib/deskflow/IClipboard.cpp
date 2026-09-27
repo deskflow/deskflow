@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -9,6 +9,7 @@
 
 #include "base/Log.h"
 
+#include <algorithm>
 #include <assert.h>
 #include <vector>
 
@@ -173,4 +174,31 @@ QByteArray IClipboard::formatSize(size_t bytes)
       .formattedDataSize(static_cast<qint64>(bytes), 1, QLocale::DataSizeTraditionalFormat)
       .toLower()
       .toUtf8();
+}
+
+bool IClipboard::isImageFile(Format format)
+{
+  return std::ranges::find(kImageFiles, format) != std::end(kImageFiles);
+}
+
+bool IClipboard::isRedundantImage(Format format, const std::function<bool(Format)> &available)
+{
+  bool redundant = false;
+  if (format == Format::JPEG) {
+    redundant = available(Format::PNG);
+  } else if (format == Format::Bitmap) {
+    redundant = std::ranges::any_of(kImageFiles, available);
+  }
+  return redundant;
+}
+
+std::optional<IClipboard::Format> IClipboard::sourceToSend(Format format, const std::function<bool(Format)> &available)
+{
+  std::optional<Format> source;
+  if (format != Format::Bitmap && available(format) && !isRedundantImage(format, available)) {
+    source = format;
+  } else if (format == Format::PNG && available(Format::Bitmap) && !isRedundantImage(Format::Bitmap, available)) {
+    source = Format::Bitmap;
+  }
+  return source;
 }

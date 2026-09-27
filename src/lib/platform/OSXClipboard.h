@@ -38,6 +38,8 @@ public:
 
 private:
   void clearConverters();
+  IOSXClipboardConverter *findConverter(Format format) const;
+  std::string read(const IOSXClipboardConverter *converter) const;
 
 private:
   using ConverterList = std::vector<IOSXClipboardConverter *>;

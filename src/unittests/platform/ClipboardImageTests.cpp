@@ -71,6 +71,23 @@ void ClipboardImageTests::imageToDib_jpeg_returnsDibWithImageSize()
   QCOMPARE(qFromLittleEndian<qint32>(dib.constData() + 8), 7);
 }
 
+void ClipboardImageTests::toPng_jpeg_returnsPngWithImageSize()
+{
+  if (!QImageWriter::supportedImageFormats().contains("jpeg"))
+    QSKIP("qt jpeg plugin not installed");
+
+  QImage image(6, 7, QImage::Format_RGB32);
+  image.fill(Qt::green);
+  QByteArray jpeg;
+  QBuffer buffer(&jpeg);
+  buffer.open(QIODevice::WriteOnly);
+  QVERIFY(image.save(&buffer, "JPEG"));
+
+  const auto png = QImage::fromData(ClipboardImage::toPng(jpeg, "JPEG"), "PNG");
+
+  QCOMPARE(png.size(), QSize(6, 7));
+}
+
 void ClipboardImageTests::dibToImage_dibFromPng_keepsPixels()
 {
   QImage image(2, 2, QImage::Format_RGB32);

@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -17,6 +17,8 @@
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardUTF8Converter.h"
 
+#include <algorithm>
+
 //
 // OSXClipboard
 //
@@ -25,24 +27,25 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
 
-  // bitmaps are written as png, under the standard type and the one qt apps read; the rest read what apps copy
-  m_converters.push_back(new OSXClipboardImageConverter("public.png", kQtPngType));
-  m_converters.push_back(new OSXClipboardImageConverter("public.tiff"));
-  m_converters.push_back(new OSXClipboardImageConverter("public.jpeg"));
-  m_converters.push_back(new OSXClipboardImageConverter("public.heic"));
-  m_converters.push_back(new OSXClipboardImageConverter("org.webmproject.webp"));
-  m_converters.push_back(new OSXClipboardImageConverter(kQtPngType));
-  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--jpeg"));
-  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--tiff"));
-  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--webp"));
-  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--bmp"));
-  m_converters.push_back(new OSXClipboardBMPConverter);
-
-  // unchanged files go under both the standard type and the one qt apps read
+  // image files go under both the standard type and the one qt apps read
+  m_converters.push_back(new OSXClipboardRawConverter("public.png", IClipboard::Format::PNG));
+  m_converters.push_back(new OSXClipboardRawConverter(kQtPngType, IClipboard::Format::PNG));
+  m_converters.push_back(new OSXClipboardRawConverter("public.jpeg", IClipboard::Format::JPEG));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--jpeg", IClipboard::Format::JPEG));
   m_converters.push_back(new OSXClipboardRawConverter("com.compuserve.gif", IClipboard::Format::GIF));
   m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--gif", IClipboard::Format::GIF));
   m_converters.push_back(new OSXClipboardRawConverter("public.svg-image", IClipboard::Format::SVG));
   m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--svg+xml", IClipboard::Format::SVG));
+
+  // raw pixels: older peers' bitmaps are written as png, and the rest are read to send as png
+  m_converters.push_back(new OSXClipboardImageConverter("public.png", kQtPngType));
+  m_converters.push_back(new OSXClipboardImageConverter("public.tiff"));
+  m_converters.push_back(new OSXClipboardImageConverter("public.heic"));
+  m_converters.push_back(new OSXClipboardImageConverter("org.webmproject.webp"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--tiff"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--webp"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--bmp"));
+  m_converters.push_back(new OSXClipboardBMPConverter);
 
   m_converters.push_back(new OSXClipboardUTF8Converter);
   m_converters.push_back(new OSXClipboardUTF16Converter);
@@ -112,7 +115,7 @@ void OSXClipboard::add(Format format, const std::string &data)
   }
 
   // macos converts other flavours on demand, but native and qt apps look for unchanged files under different types
-  const bool writeEveryFlavour = format == IClipboard::Format::GIF || format == IClipboard::Format::SVG;
+  const bool writeEveryFlavour = isImageFile(format);
   bool added = false;
   for (ConverterList::const_iterator index = m_converters.begin();
        index != m_converters.end() && (!added || writeEveryFlavour); ++index) {
@@ -164,64 +167,58 @@ IClipboard::Time OSXClipboard::getTime() const
 
 bool OSXClipboard::has(Format format) const
 {
-  if (m_pboard == nullptr)
-    return false;
-
-  PasteboardItemID item;
-  PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
-
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    IOSXClipboardConverter *converter = *index;
-    if (converter->getFormat() == format) {
-      PasteboardFlavorFlags flags;
-      CFStringRef type = converter->getOSXFormat();
-
-      OSStatus res;
-
-      if ((res = PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags)) == noErr) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  const auto available = [this](Format candidate) { return findConverter(candidate) != nullptr; };
+  return m_pboard != nullptr && sourceToSend(format, available).has_value();
 }
 
 std::string OSXClipboard::get(Format format) const
 {
-  CFStringRef type;
-  PasteboardItemID item;
-  std::string result;
-
   if (m_pboard == nullptr)
-    return result;
+    return {};
 
+  const auto available = [this](Format candidate) { return findConverter(candidate) != nullptr; };
+  const auto source = sourceToSend(format, available);
+  std::string data;
+  if (source == Format::Bitmap) {
+    data = OSXClipboardImageConverter("public.png").fromIClipboard(read(findConverter(Format::Bitmap)));
+  } else if (source) {
+    data = read(findConverter(*source));
+  } else {
+    LOG_DEBUG("unable to find converter for data");
+  }
+  return data;
+}
+
+IOSXClipboardConverter *OSXClipboard::findConverter(Format format) const
+{
+  PasteboardItemID item;
   PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
 
-  // find the converter for the first clipboard format we can handle
-  IOSXClipboardConverter *converter = nullptr;
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    converter = *index;
+  // macos converts between image types on request, which would hide which image file was copied
+  const bool skipConverted = isImageFile(format);
+  const auto found = std::ranges::find_if(m_converters, [this, item, format, skipConverted](auto *converter) {
+    PasteboardFlavorFlags flags = kPasteboardFlavorNoFlags;
+    return converter->getFormat() == format &&
+           PasteboardGetItemFlavorFlags(m_pboard, item, converter->getOSXFormat(), &flags) == noErr &&
+           !(skipConverted && (flags & kPasteboardFlavorSystemTranslated));
+  });
+  return found != m_converters.end() ? *found : nullptr;
+}
 
-    PasteboardFlavorFlags flags;
-    type = converter->getOSXFormat();
-
-    if (converter->getFormat() == format && PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr) {
-      break;
-    }
-    converter = nullptr;
-  }
-
-  // if no converter then we don't recognize any formats
+std::string OSXClipboard::read(const IOSXClipboardConverter *converter) const
+{
   if (converter == nullptr) {
-    LOG_DEBUG("unable to find converter for data");
-    return result;
+    LOG_DEBUG("clipboard changed while reading it");
+    return {};
   }
 
-  // get the clipboard data.
+  PasteboardItemID item;
+  PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
+
+  std::string result;
   CFDataRef buffer = nullptr;
   try {
-    OSStatus err = PasteboardCopyItemFlavorData(m_pboard, item, type, &buffer);
+    OSStatus err = PasteboardCopyItemFlavorData(m_pboard, item, converter->getOSXFormat(), &buffer);
 
     if (err != noErr) {
       throw err;
@@ -229,9 +226,9 @@ std::string OSXClipboard::get(Format format) const
 
     result = std::string((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
   } catch (OSStatus err) {
-    LOG_DEBUG("exception thrown in OSXClipboard::get MacError (%d)", err);
+    LOG_DEBUG("failed to read clipboard flavour, error: %d", err);
   } catch (...) {
-    LOG_DEBUG("unknown exception in OSXClipboard::get");
+    LOG_DEBUG("unknown exception reading clipboard flavour");
     RETHROW_THREADEXCEPTION
   }
 

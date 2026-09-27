@@ -18,6 +18,7 @@ private Q_SLOTS:
   void formatConvert_png();
   void add_bitmap_offeredAsPng();
   void add_gif_offeredUnderStandardAndQtTypes();
+  void add_jpeg_sentAsJpegNotPng();
 
 private:
   Log m_log;

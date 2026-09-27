@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -9,7 +9,9 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <iterator>
+#include <optional>
 #include <string>
 
 #include <QByteArray>
@@ -49,8 +51,10 @@ public:
   HTML fragment (but not necessarily a complete HTML document).
   Newlines are LF.
 
-  \c kGIF and \c kSVG are image files passed through unchanged, keeping
-  animation and vectors.  Peers that don't know them skip them.
+  \c kGIF, \c kSVG, \c kPNG and \c kJPEG are image files passed through
+  unchanged.  Peers that don't know them skip them.  Raw pixels
+  (\c kBitmap) only come from older peers: an image the platform holds
+  only as pixels is sent as a PNG.
   */
   enum class Format
   {
@@ -59,6 +63,8 @@ public:
     Bitmap,      //!< Bitmap format, BMP 24/32bpp, BI_RGB
     GIF,         //!< GIF image file, unchanged
     SVG,         //!< SVG image file, unchanged
+    PNG,         //!< PNG image file, unchanged
+    JPEG,        //!< JPEG image file, unchanged
     TotalFormats //!< The number of clipboard formats supported
   };
 
@@ -162,6 +168,14 @@ public:
 
   static QByteArray formatSize(size_t bytes);
 
+  static bool isImageFile(Format format);
+
+  //! Whether an image adds nothing to the ones \p available: a jpeg beside a png, or raw pixels beside any image file
+  static bool isRedundantImage(Format format, const std::function<bool(Format)> &available);
+
+  //! Which \p available format to read to send \p format: raw pixels are only ever read to send a png
+  static std::optional<Format> sourceToSend(Format format, const std::function<bool(Format)> &available);
+
   //@}
 
 private:
@@ -169,6 +183,9 @@ private:
   static void writeUInt32(std::string *, uint32_t);
 
   // unchanged images go before the bitmap, so apps that take the first image type offered get the original
-  static constexpr Format kCopyOrder[] = {Format::Text, Format::HTML, Format::GIF, Format::SVG, Format::Bitmap};
+  static constexpr Format kCopyOrder[] = {Format::Text, Format::HTML, Format::GIF,   Format::SVG,
+                                          Format::PNG,  Format::JPEG, Format::Bitmap};
   static_assert(std::size(kCopyOrder) == static_cast<size_t>(Format::TotalFormats));
+
+  static constexpr Format kImageFiles[] = {Format::GIF, Format::SVG, Format::PNG, Format::JPEG};
 };

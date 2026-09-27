@@ -21,6 +21,7 @@ private Q_SLOTS:
   void imageToDib_bmp_returnsDibWithImageSize();
   void imageToDib_jpeg_returnsDibWithImageSize();
   void dibToImage_dibFromPng_keepsPixels();
+  void toPng_jpeg_returnsPngWithImageSize();
   void imageToDib_notAnImage_returnsEmpty();
 
 private:

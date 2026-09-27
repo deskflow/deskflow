@@ -249,4 +249,33 @@ void ClipboardTests::marshalGifAndSvg()
   copy.close();
 }
 
+void ClipboardTests::sourceToSend_pngAndJpeg_sendsOnlyPng()
+{
+  const auto available = [](IClipboard::Format format) {
+    return format == IClipboard::Format::PNG || format == IClipboard::Format::JPEG;
+  };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::PNG, available) == IClipboard::Format::PNG);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::JPEG, available));
+}
+
+void ClipboardTests::sourceToSend_bitmapOnly_sendsBitmapAsPng()
+{
+  const auto available = [](IClipboard::Format format) { return format == IClipboard::Format::Bitmap; };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::PNG, available) == IClipboard::Format::Bitmap);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::Bitmap, available));
+}
+
+void ClipboardTests::sourceToSend_bitmapBesideJpeg_sendsOnlyJpeg()
+{
+  const auto available = [](IClipboard::Format format) {
+    return format == IClipboard::Format::Bitmap || format == IClipboard::Format::JPEG;
+  };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::JPEG, available) == IClipboard::Format::JPEG);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::PNG, available));
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::Bitmap, available));
+}
+
 QTEST_MAIN(ClipboardTests)

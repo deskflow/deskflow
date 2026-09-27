@@ -13,6 +13,7 @@
 #include <QBuffer>
 #include <QDataStream>
 #include <QImage>
+#include <QImageReader>
 #include <QImageWriter>
 #include <QtEndian>
 
@@ -34,12 +35,44 @@ bool ClipboardImage::writeDibAsImage(const QByteArray &dib, const char *format, 
     return false;
   }
 
-  QImage image;
-  if (!image.loadFromData(bmpFile, "BMP")) {
-    LOG_WARN("failed to decode clipboard bitmap");
-    return false;
-  }
+  const auto image = decode(bmpFile, "BMP");
+  return !image.isNull() && write(image, format, device);
+}
 
+QByteArray ClipboardImage::imageToDib(const QByteArray &encoded, const char *format)
+{
+  const auto image = decode(encoded, format);
+  QByteArray bmp;
+  QBuffer buf(&bmp);
+  buf.open(QIODevice::WriteOnly);
+  return !image.isNull() && write(image, "BMP", &buf) ? bmpToDib(bmp) : QByteArray{};
+}
+
+QByteArray ClipboardImage::toPng(const QByteArray &encoded, const char *format)
+{
+  QByteArray png;
+  QBuffer buf(&png);
+  buf.open(QIODevice::WriteOnly);
+  return writeAsPng(encoded, format, &buf) ? png : QByteArray{};
+}
+
+bool ClipboardImage::writeAsPng(const QByteArray &encoded, const char *format, QIODevice *device)
+{
+  const auto image = decode(encoded, format);
+  return !image.isNull() && write(image, "PNG", device);
+}
+
+QImage ClipboardImage::decode(const QByteArray &encoded, const char *format)
+{
+  QImageReader::setAllocationLimit(kMaxDecodeMegabytes);
+  QImage image;
+  if (!image.loadFromData(encoded, format))
+    LOG_WARN("failed to decode clipboard image, format: %s", format);
+  return image;
+}
+
+bool ClipboardImage::write(const QImage &image, const char *format, QIODevice *device)
+{
   QImageWriter writer(device, format);
   if (qstricmp(format, "PNG") == 0)
     writer.setCompression(kPngCompression);
@@ -48,25 +81,6 @@ bool ClipboardImage::writeDibAsImage(const QByteArray &dib, const char *format, 
   if (!written)
     LOG_WARN("failed to encode clipboard image, format: %s", format);
   return written;
-}
-
-QByteArray ClipboardImage::imageToDib(const QByteArray &encoded, const char *format)
-{
-  QImage image;
-  if (!image.loadFromData(encoded, format)) {
-    LOG_WARN("failed to decode clipboard image, format: %s", format);
-    return {};
-  }
-
-  QByteArray bmp;
-  QBuffer buf(&bmp);
-  buf.open(QIODevice::WriteOnly);
-  if (!image.save(&buf, "BMP")) {
-    LOG_WARN("failed to encode clipboard image as bmp");
-    return {};
-  }
-
-  return bmpToDib(bmp);
 }
 
 QByteArray ClipboardImage::dibToBmp(const QByteArray &dib)

@@ -105,4 +105,17 @@ void OSXClipboardTests::add_gif_offeredUnderStandardAndQtTypes()
   QVERIFY(pasteboardHasFlavor(CFSTR("com.trolltech.anymime.image--gif")));
 }
 
+void OSXClipboardTests::add_jpeg_sentAsJpegNotPng()
+{
+  OSXClipboard clipboard;
+  QVERIFY(clipboard.empty());
+  clipboard.add(IClipboard::Format::JPEG, std::string("\xff\xd8\xff\xe0", 4));
+
+  QVERIFY(pasteboardHasFlavor(CFSTR("public.jpeg")));
+  QVERIFY(pasteboardHasFlavor(CFSTR("com.trolltech.anymime.image--jpeg")));
+  QVERIFY(clipboard.has(IClipboard::Format::JPEG));
+  QVERIFY(!clipboard.has(IClipboard::Format::PNG));
+  QVERIFY(!clipboard.has(IClipboard::Format::Bitmap));
+}
+
 QTEST_MAIN(OSXClipboardTests)

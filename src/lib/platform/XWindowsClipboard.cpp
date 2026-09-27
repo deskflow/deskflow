@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -11,6 +11,7 @@
 #include "platform/XWindowsClipboard.h"
 
 #include "base/Stopwatch.h"
+#include "platform/ClipboardImage.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardRawConverter.h"
@@ -65,6 +66,8 @@ XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardI
   m_converters.push_back(new XWindowsClipboardHTMLConverter(m_display, "application/x-moz-nativehtml"));
   m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/gif", IClipboard::Format::GIF));
   m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/svg+xml", IClipboard::Format::SVG));
+  m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/png", IClipboard::Format::PNG));
+  m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/jpeg", IClipboard::Format::JPEG));
   m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "text/plain;charset=UTF-8", true));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "text/plain;charset=utf-8", true));
@@ -453,6 +456,17 @@ void XWindowsClipboard::doFillCache()
   } else {
     icccmFillCache();
   }
+
+  const auto bitmapID = static_cast<int>(Format::Bitmap);
+  const auto pngID = static_cast<int>(Format::PNG);
+  const auto added = [this](Format format) { return m_added[static_cast<int>(format)]; };
+  if (IClipboard::sourceToSend(Format::PNG, added) == Format::Bitmap) {
+    const auto png = deskflow::ClipboardImage::dibToImage(QByteArray::fromStdString(m_data[bitmapID]), "PNG");
+    m_data[pngID] = png.toStdString();
+    m_added[pngID] = !png.isEmpty();
+  }
+  m_added[bitmapID] = false;
+  m_data[bitmapID].clear();
   m_checkCache = false;
   m_cached = true;
   m_cacheTime = m_timeOwned;
@@ -460,6 +474,7 @@ void XWindowsClipboard::doFillCache()
 
 void XWindowsClipboard::icccmFillCache()
 {
+  const auto added = [this](Format format) { return m_added[static_cast<int>(format)]; };
   LOG_DEBUG("icccm fill clipboard %d", m_id);
 
   // see if we can get the list of available formats from the selection.
@@ -487,7 +502,7 @@ void XWindowsClipboard::icccmFillCache()
     const auto formatID = static_cast<int>(converter->getFormat());
 
     // skip already handled targets
-    if (m_added[formatID]) {
+    if (m_added[formatID] || IClipboard::isRedundantImage(converter->getFormat(), added)) {
       continue;
     }
 
@@ -634,6 +649,7 @@ bool XWindowsClipboard::motifOwnsClipboard() const
 
 void XWindowsClipboard::motifFillCache()
 {
+  const auto added = [this](Format format) { return m_added[static_cast<int>(format)]; };
   LOG_DEBUG("motif fill clipboard %d", m_id);
 
   // get the Motif clipboard header property from the root window
@@ -719,7 +735,7 @@ void XWindowsClipboard::motifFillCache()
     const auto formatID = static_cast<int>(converter->getFormat());
 
     // skip already handled targets
-    if (m_added[formatID]) {
+    if (m_added[formatID] || IClipboard::isRedundantImage(converter->getFormat(), added)) {
       continue;
     }
 

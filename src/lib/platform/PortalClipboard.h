@@ -31,17 +31,22 @@ public:
     bool offered;
   };
 
-  // Listed in preference order: richer formats first. Bitmaps are offered as png but read from any image type.
+  // Listed in preference order. Other image types are only read, as raw pixels, and sent as a png.
   static constexpr SupportedMime kSupportedMimes[] = {
       {"image/gif", IClipboard::Format::GIF, nullptr, true},
       {"image/svg+xml", IClipboard::Format::SVG, nullptr, true},
-      {"image/png", IClipboard::Format::Bitmap, "PNG", true},
-      {"image/jpeg", IClipboard::Format::Bitmap, "JPEG", false},
+      {"image/png", IClipboard::Format::PNG, nullptr, true},
+      {"image/jpeg", IClipboard::Format::JPEG, nullptr, true},
       {"image/bmp", IClipboard::Format::Bitmap, "BMP", false},
       {"image/tiff", IClipboard::Format::Bitmap, "TIFF", false},
       {"image/webp", IClipboard::Format::Bitmap, "WEBP", false},
       {"text/plain;charset=utf-8", IClipboard::Format::Text, nullptr, true},
       {"text/plain", IClipboard::Format::Text, nullptr, true},
+  };
+
+  // apps that only take png get one converted from a jpeg or raw pixels
+  static constexpr IClipboard::Format kPngSources[] = {
+      IClipboard::Format::PNG, IClipboard::Format::JPEG, IClipboard::Format::Bitmap
   };
 
   static constexpr int kWriteTimeoutMs = 200;
@@ -53,9 +58,13 @@ public:
   static QByteArray formatMimeTypes(const char *const *mimeTypes);
   static const SupportedMime *findSupportedMime(const char *mime);
   static const SupportedMime *pickSupportedMime(const char *const *available);
-  static bool writeFormat(const SupportedMime &entry, const QByteArray &data, QIODevice *device);
+  static std::optional<IClipboard::Format> heldFormat(EiClipboard *cache, IClipboard::Format format);
+  static bool
+  writeFormat(IClipboard::Format format, IClipboard::Format held, const QByteArray &data, QIODevice *device);
   static QByteArray decodeFormat(const SupportedMime &entry, const QByteArray &bytes);
   static std::optional<QByteArray> readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
+  static std::optional<QByteArray>
+  readFormat(XdpSession *session, const char *const *mimeTypes, IClipboard::Format format, qint64 maxBytes);
 
   /// Advertise the cache's formats to the portal selection.
   static void claimOwnership(EiClipboard *cache, XdpSession *session);
