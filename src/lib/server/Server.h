@@ -403,8 +403,8 @@ private:
   ClientListener *m_clientListener = nullptr;
   Stopwatch m_switchTwoTapTimer;
 
-  // Name of screen broadcasting the keyboard events
-  std::string m_keyboardBroadcastingScreens;
+  // Name of computer broadcasting the keyboard events
+  std::string m_keyboardBroadcastingComputers;
 
   // all clients (including the primary client) indexed by name
   using ClientList = std::map<std::string, BaseClientProxy *>;
@@ -425,14 +425,14 @@ private:
   // the sequence number of enter messages
   uint32_t m_seqNum = 0;
 
-  // current mouse position (in absolute screen coordinates) on
-  // whichever screen is active
+  // current mouse position (in absolute computer coordinates) on
+  // whichever computer is active
   int32_t m_x;
   int32_t m_y;
 
   // last mouse deltas.  this is needed to smooth out double tap
   // on win32 which reports bogus mouse motion at the edge of
-  // the screen when using low level hooks, synthesizing motion
+  // the computer when using low level hooks, synthesizing motion
   // in the opposite direction the mouse actually moved.
   int32_t m_xDelta = 0;
   int32_t m_yDelta = 0;
@@ -442,14 +442,14 @@ private:
   int32_t m_xSaver;
   int32_t m_ySaver;
 
-  // state for delayed screen switching
+  // state for delayed computer switching
   int32_t m_switchWaitX;
   int32_t m_switchWaitY;
 
   int32_t m_switchTwoTapZone = 3;
 
-  // common state for screen switch tests.  all tests are always
-  // trying to reach the same screen in the same direction.
+  // common state for computer switch tests.  all tests are always
+  // trying to reach the same computer in the same direction.
   Direction m_switchDir = Direction::NoDirection;
 
   bool m_switchTwoTapEngaged = false;
@@ -458,14 +458,14 @@ private:
   // relative mouse move option
   bool m_relativeMoves = false;
 
-  // flag whether or not we have broadcasting enabled and the screens to
+  // flag whether or not we have broadcasting enabled and the computers to
   // which we should send broadcasted keys.
   bool m_keyboardBroadcasting = false;
 
-  // screen locking (former scroll lock)
+  // computer locking (former scroll lock)
   bool m_lockedToComputer = false;
 
-  bool m_defaultLockToScreenState = false;
-  bool m_disableLockToScreen = false;
+  bool m_defaultLockToComputerState = false;
+  bool m_disableLockToComputer = false;
   bool m_enableClipboard = true;
 };

@@ -134,8 +134,8 @@ deskflow::Computer *ClientApp::createComputer()
 deskflow::Computer *ClientApp::openClientComputer()
 {
   deskflow::Computer *computer = createComputer();
-  getEvents()->addHandler(EventTypes::ScreenError, computer->getEventTarget(), [this](const auto &) {
-    handleScreenError();
+  getEvents()->addHandler(EventTypes::ComputerError, computer->getEventTarget(), [this](const auto &) {
+    handleComputerError();
   });
   return computer;
 }
@@ -143,7 +143,7 @@ deskflow::Computer *ClientApp::openClientComputer()
 void ClientApp::closeClientComputer(deskflow::Computer *computer)
 {
   if (computer != nullptr) {
-    getEvents()->removeHandler(EventTypes::ScreenError, computer->getEventTarget());
+    getEvents()->removeHandler(EventTypes::ComputerError, computer->getEventTarget());
     delete computer;
   }
 }

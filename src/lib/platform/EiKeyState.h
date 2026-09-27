@@ -47,7 +47,7 @@ private:
   std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn, bool mapMod2ToNumLock = false) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
-  EiScreen *m_screen = nullptr;
+  EiScreen *m_computer = nullptr;
 
   xkb_context *m_xkb = nullptr;
   xkb_keymap *m_xkbKeymap = nullptr;

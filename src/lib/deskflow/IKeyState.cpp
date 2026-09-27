@@ -42,7 +42,7 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
   info->m_mask = mask;
   info->m_button = button;
   info->m_count = count;
-  info->m_screens = join(destinations);
+  info->m_computers = join(destinations);
   return info;
 }
 
@@ -54,22 +54,22 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(const KeyInfo &x)
   info->m_mask = x.m_mask;
   info->m_button = x.m_button;
   info->m_count = x.m_count;
-  info->m_screens = x.m_screens;
+  info->m_computers = x.m_computers;
   return info;
 }
 
-bool IKeyState::KeyInfo::isDefault(const char *screens)
+bool IKeyState::KeyInfo::isDefault(const char *computers)
 {
-  return (screens == nullptr || screens[0] == '\0');
+  return (computers == nullptr || computers[0] == '\0');
 }
 
-bool IKeyState::KeyInfo::contains(const char *screens, const std::string_view &name)
+bool IKeyState::KeyInfo::contains(const char *computers, const std::string_view &name)
 {
   // special cases
-  if (isDefault(screens)) {
+  if (isDefault(computers)) {
     return false;
   }
-  if (screens[0] == '*') {
+  if (computers[0] == '*') {
     return true;
   }
 
@@ -79,14 +79,14 @@ bool IKeyState::KeyInfo::contains(const char *screens, const std::string_view &n
   match += ":";
   match += name;
   match += ":";
-  return (strstr(screens, match.c_str()) != nullptr);
+  return (strstr(computers, match.c_str()) != nullptr);
 }
 
 bool IKeyState::KeyInfo::equal(const KeyInfo *a, const KeyInfo *b)
 {
   return (
       a->m_key == b->m_key && a->m_mask == b->m_mask && a->m_button == b->m_button && a->m_count == b->m_count &&
-      a->m_screens == b->m_screens
+      a->m_computers == b->m_computers
   );
 }
 
@@ -95,34 +95,34 @@ std::string IKeyState::KeyInfo::join(const std::set<std::string> &destinations)
   // collect destinations into a string.  names are surrounded by ':'
   // which makes searching easy.  the string is empty if there are no
   // destinations and "*" means all destinations.
-  std::string screens;
+  std::string computers;
   for (const auto &i : destinations) {
     if (i == "*") {
-      screens = "*";
+      computers = "*";
       break;
     } else {
-      if (screens.empty()) {
-        screens = ":";
+      if (computers.empty()) {
+        computers = ":";
       }
-      screens += i;
-      screens += ":";
+      computers += i;
+      computers += ":";
     }
   }
-  return screens;
+  return computers;
 }
 
-void IKeyState::KeyInfo::split(const char *screens, std::set<std::string> &dst)
+void IKeyState::KeyInfo::split(const char *computers, std::set<std::string> &dst)
 {
   dst.clear();
-  if (isDefault(screens)) {
+  if (isDefault(computers)) {
     return;
   }
-  if (screens[0] == '*') {
+  if (computers[0] == '*') {
     dst.emplace("*");
     return;
   }
 
-  const char *i = screens + 1;
+  const char *i = computers + 1;
   while (*i != '\0') {
     const char *j = strchr(i, ':');
     dst.emplace(i, j - i);

@@ -28,7 +28,7 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue *events, void *eventTarget)
       m_events(events)
 {
   m_autoReleasePool = screenSaverUtilCreatePool();
-  m_screenSaverController = screenSaverUtilCreateController();
+  m_computerSaverController = screenSaverUtilCreateController();
 
   // install launch/termination event handlers
   EventTypeSpec launchEventTypes[2];
@@ -43,52 +43,52 @@ OSXScreenSaver::OSXScreenSaver(IEventQueue *events, void *eventTarget)
   );
   DisposeEventHandlerUPP(launchTerminationEventHandler);
 
-  m_screenSaverPSN.highLongOfPSN = 0;
-  m_screenSaverPSN.lowLongOfPSN = 0;
+  m_computerSaverPSN.highLongOfPSN = 0;
+  m_computerSaverPSN.lowLongOfPSN = 0;
 
   if (isActive()) {
-    getProcessSerialNumber("ScreenSaverEngine", m_screenSaverPSN);
+    getProcessSerialNumber("ScreenSaverEngine", m_computerSaverPSN);
   }
 }
 
 OSXScreenSaver::~OSXScreenSaver()
 {
   RemoveEventHandler(m_launchTerminationEventHandlerRef);
-  //    screenSaverUtilReleaseController(m_screenSaverController);
+  //    screenSaverUtilReleaseController(m_computerSaverController);
   screenSaverUtilReleasePool(m_autoReleasePool);
 }
 
 void OSXScreenSaver::enable()
 {
   m_enabled = true;
-  screenSaverUtilEnable(m_screenSaverController);
+  screenSaverUtilEnable(m_computerSaverController);
 }
 
 void OSXScreenSaver::disable()
 {
   m_enabled = false;
-  screenSaverUtilDisable(m_screenSaverController);
+  screenSaverUtilDisable(m_computerSaverController);
 }
 
 void OSXScreenSaver::activate()
 {
-  screenSaverUtilActivate(m_screenSaverController);
+  screenSaverUtilActivate(m_computerSaverController);
 }
 
 void OSXScreenSaver::deactivate()
 {
-  screenSaverUtilDeactivate(m_screenSaverController, m_enabled);
+  screenSaverUtilDeactivate(m_computerSaverController, m_enabled);
 }
 
 bool OSXScreenSaver::isActive() const
 {
-  return (screenSaverUtilIsActive(m_screenSaverController) != 0);
+  return (screenSaverUtilIsActive(m_computerSaverController) != 0);
 }
 
 void OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 {
   if (isScreenSaverEngine(psn)) {
-    m_screenSaverPSN = psn;
+    m_computerSaverPSN = psn;
     LOG_VERBOSE("computer saver engine launched, enabled=%d", m_enabled);
     if (m_enabled) {
       m_events->addEvent(Event(EventTypes::PrimaryScreenSaverActivated, m_eventTarget));
@@ -98,14 +98,14 @@ void OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 
 void OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
 {
-  if (m_screenSaverPSN.highLongOfPSN == psn.highLongOfPSN && m_screenSaverPSN.lowLongOfPSN == psn.lowLongOfPSN) {
+  if (m_computerSaverPSN.highLongOfPSN == psn.highLongOfPSN && m_computerSaverPSN.lowLongOfPSN == psn.lowLongOfPSN) {
     LOG_VERBOSE("computer saver engine terminated, enabled=%d", m_enabled);
     if (m_enabled) {
       m_events->addEvent(Event(EventTypes::PrimaryScreenSaverDeactivated, m_eventTarget));
     }
 
-    m_screenSaverPSN.highLongOfPSN = 0;
-    m_screenSaverPSN.lowLongOfPSN = 0;
+    m_computerSaverPSN.highLongOfPSN = 0;
+    m_computerSaverPSN.lowLongOfPSN = 0;
   }
 }
 

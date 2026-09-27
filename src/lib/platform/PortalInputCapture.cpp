@@ -94,7 +94,7 @@ bool PortalInputCapture::getClosestReleaseBarrier(
     BarrierInfo &barrier
 ) const
 {
-  const auto activeSides = m_screen->activeSides();
+  const auto activeSides = m_computer->activeSides();
   using enum DirectionMask;
 
   auto side = BarrierSide::Left;
@@ -167,7 +167,7 @@ bool PortalInputCapture::getClosestReleaseBarrier(
 }
 
 PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
-    : m_screen{screen},
+    : m_computer{screen},
       m_events{events},
       m_portalVersion(0),
       m_portal{xdp_portal_new()}
@@ -257,7 +257,7 @@ void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *se
 void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  const qint64 maxBytes = static_cast<qint64>(m_screen->maximumClipboardSize()) * 1024;
+  const qint64 maxBytes = static_cast<qint64>(m_computer->maximumClipboardSize()) * 1024;
   LOG_DEBUG("clipboard read cap: %lld bytes", static_cast<long long>(maxBytes));
 
   const char **mimeTypes = xdp_session_get_selection_mime_types(session);
@@ -267,7 +267,7 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
   }
 
   if (PortalClipboard::readSelectionIntoCache(m_clipboard, session, mimeTypes, maxBytes))
-    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+    m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 #else
   (void)session;
 #endif
@@ -321,7 +321,7 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   }
 
   // Socket ownership is transferred to the EiScreen
-  m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+  m_events->addEvent(Event(EventTypes::EIConnected, m_computer->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
   using enum Signal;
   m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
@@ -432,7 +432,7 @@ PortalInputCapture::mapPortalActivationToScreenPosition(guint barrierId, double 
   std::int32_t screenY;
   std::int32_t screenW;
   std::int32_t screenH;
-  m_screen->getShape(screenX, screenY, screenW, screenH);
+  m_computer->getShape(screenX, screenY, screenW, screenH);
 
   if (Bounds portalBounds; getPortalBounds(portalBounds)) {
     x = scaleCoordinateBetweenRanges(rawX, portalBounds.left, portalBounds.right, screenX, screenX + screenW - 1);
@@ -469,13 +469,13 @@ std::pair<double, double> PortalInputCapture::mapPortalReleasePosition(double x,
   std::int32_t screenY;
   std::int32_t screenW;
   std::int32_t screenH;
-  m_screen->getShape(screenX, screenY, screenW, screenH);
+  m_computer->getShape(screenX, screenY, screenW, screenH);
 
   const auto screenLeft = screenX;
   const auto screenTop = screenY;
   const auto screenRight = screenX + screenW - 1;
   const auto screenBottom = screenY + screenH - 1;
-  const auto jumpZoneSize = m_screen->getJumpZoneSize();
+  const auto jumpZoneSize = m_computer->getJumpZoneSize();
   Bounds portalBounds;
   if (!getPortalBounds(portalBounds)) {
     return {x, y};
@@ -721,9 +721,9 @@ void PortalInputCapture::handleActivated(
         LOG_DEBUG("portal activation barrier id is zero, using raw cursor position");
       }
 
-      m_screen->warpCursor(warpX, warpY);
+      m_computer->warpCursor(warpX, warpY);
       m_events->addEvent(Event(
-          EventTypes::PrimaryScreenMotionOnPrimary, m_screen->getEventTarget(),
+          EventTypes::PrimaryComputerMotionOnPrimary, m_computer->getEventTarget(),
           IPrimaryComputer::MotionInfo::alloc(warpX, warpY)
       ));
     } else {
@@ -738,7 +738,7 @@ void PortalInputCapture::handleActivated(
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (m_session) {
     LOG_DEBUG("reading clipboard selection on activation");
-    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+    m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 
     XdpSession *session = xdp_input_capture_session_get_session(m_session);
     const char **mimeTypes = xdp_session_get_selection_mime_types(session);
@@ -774,7 +774,7 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   m_barriers.clear();
   m_barrierInfo.clear();
 
-  const auto activeSides = m_screen->activeSides();
+  const auto activeSides = m_computer->activeSides();
   using enum DirectionMask;
 
   auto zones = xdp_input_capture_session_get_zones(session);

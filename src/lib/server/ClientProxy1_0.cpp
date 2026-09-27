@@ -167,7 +167,7 @@ bool ClientProxy1_0::parseMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgDInfo, 4) == 0) {
     if (recvInfo()) {
-      m_events->addEvent(Event(EventTypes::ScreenShapeChanged, getEventTarget()));
+      m_events->addEvent(Event(EventTypes::ComputerShapeChanged, getEventTarget()));
       return true;
     }
     return false;

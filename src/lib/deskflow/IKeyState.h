@@ -34,18 +34,18 @@ public:
     static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, int32_t count, const std::set<std::string> &destinations);
     static KeyInfo *alloc(const KeyInfo &);
 
-    static bool isDefault(const char *screens);
-    static bool contains(const char *screens, const std::string_view &name);
+    static bool isDefault(const char *computers);
+    static bool contains(const char *computers, const std::string_view &name);
     static bool equal(const KeyInfo *, const KeyInfo *);
     static std::string join(const std::set<std::string> &destinations);
-    static void split(const char *screens, std::set<std::string> &);
+    static void split(const char *computers, std::set<std::string> &);
 
   public:
     KeyID m_key;
     KeyModifierMask m_mask;
     KeyButton m_button;
     int32_t m_count;
-    std::string m_screens;
+    std::string m_computers;
   };
 
   using KeyButtonSet = std::set<KeyButton>;

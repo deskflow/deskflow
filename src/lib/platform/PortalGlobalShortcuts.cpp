@@ -17,7 +17,7 @@
 namespace deskflow {
 
 PortalGlobalShortcuts::PortalGlobalShortcuts(EiScreen *screen, IEventQueue *events)
-    : m_screen{screen},
+    : m_computer{screen},
       m_events{events},
       m_portal{xdp_portal_new()}
 {
@@ -323,7 +323,7 @@ void PortalGlobalShortcuts::handleActivated(
 
   LOG_DEBUG("global shortcut activated: %s timestamp=%" PRIu64, shortcutId, timestamp);
   m_events->addEvent(Event(
-      EventTypes::PrimaryScreenHotkeyDown, m_screen->getEventTarget(), IPrimaryComputer::HotKeyInfo::alloc(hotKeyId)
+      EventTypes::PrimaryComputerHotkeyDown, m_computer->getEventTarget(), IPrimaryComputer::HotKeyInfo::alloc(hotKeyId)
   ));
 }
 
@@ -343,7 +343,7 @@ void PortalGlobalShortcuts::handleDeactivated(
 
   LOG_DEBUG("global shortcut deactivated: %s timestamp=%" PRIu64, shortcutId, timestamp);
   m_events->addEvent(Event(
-      EventTypes::PrimaryScreenHotkeyUp, m_screen->getEventTarget(), IPrimaryComputer::HotKeyInfo::alloc(hotKeyId)
+      EventTypes::PrimaryComputerHotkeyUp, m_computer->getEventTarget(), IPrimaryComputer::HotKeyInfo::alloc(hotKeyId)
   ));
 }
 

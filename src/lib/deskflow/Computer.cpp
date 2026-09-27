@@ -415,7 +415,7 @@ void Computer::enablePrimary()
   m_computer->openScreensaver(true);
 
   // claim screen changed size
-  m_events->addEvent(Event(EventTypes::ScreenShapeChanged, getEventTarget()));
+  m_events->addEvent(Event(EventTypes::ComputerShapeChanged, getEventTarget()));
 }
 
 void Computer::enableSecondary()

@@ -103,7 +103,7 @@ XWindowsScreen::XWindowsScreen(const char *displayName, bool isPrimary, IEventQu
     m_root = DefaultRootWindow(m_display);
     saveShape();
     m_window = openWindow();
-    m_screensaver = new XWindowsScreenSaver(m_display, m_window, getEventTarget(), events);
+    m_computersaver = new XWindowsScreenSaver(m_display, m_window, getEventTarget(), events);
     m_keyState = new XWindowsKeyState(m_display, m_xkb, events, m_keyMap);
     LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : "");
     LOG_DEBUG("window is 0x%08x", m_window);
@@ -164,9 +164,9 @@ XWindowsScreen::~XWindowsScreen()
     delete clipboard;
   }
   delete m_keyState;
-  delete m_screensaver;
+  delete m_computersaver;
   m_keyState = nullptr;
-  m_screensaver = nullptr;
+  m_computersaver = nullptr;
   if (m_display != nullptr) {
     // FIXME -- is it safe to clean up the IC and IM without a display?
     if (m_ic != nullptr) {
@@ -370,25 +370,25 @@ void XWindowsScreen::checkClipboards()
 
 void XWindowsScreen::openScreensaver(bool notify)
 {
-  m_screensaverNotify = notify;
-  if (!m_screensaverNotify) {
-    m_screensaver->disable();
+  m_computersaverNotify = notify;
+  if (!m_computersaverNotify) {
+    m_computersaver->disable();
   }
 }
 
 void XWindowsScreen::closeScreensaver()
 {
-  if (!m_screensaverNotify) {
-    m_screensaver->enable();
+  if (!m_computersaverNotify) {
+    m_computersaver->enable();
   }
 }
 
 void XWindowsScreen::screensaver(bool activate)
 {
   if (activate) {
-    m_screensaver->activate();
+    m_computersaver->activate();
   } else {
-    m_screensaver->deactivate();
+    m_computersaver->deactivate();
   }
 }
 
@@ -1157,7 +1157,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
   }
 
   // let screen saver have a go
-  if (m_screensaver->handleXEvent(xevent)) {
+  if (m_computersaver->handleXEvent(xevent)) {
     // screen saver handled it
     return;
   }
@@ -1289,7 +1289,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
   case ConfigureNotify:
     if (!m_isPrimary && xevent->xconfigure.window == m_root) {
       setShape(xevent->xconfigure.width, xevent->xconfigure.height);
-      sendEvent(EventTypes::ScreenShapeChanged);
+      sendEvent(EventTypes::ComputerShapeChanged);
     }
     return;
 
@@ -1336,7 +1336,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
           XResizeWindow(m_display, m_window, m_w, m_h);
         }
 
-        sendEvent(EventTypes::ScreenShapeChanged);
+        sendEvent(EventTypes::ComputerShapeChanged);
       }
     }
 #endif
@@ -1426,9 +1426,9 @@ bool XWindowsScreen::onHotKey(const XKeyEvent &xkey, bool isRepeat)
   // find what kind of event
   EventTypes type;
   if (xkey.type == KeyPress) {
-    type = EventTypes::PrimaryScreenHotkeyDown;
+    type = EventTypes::PrimaryComputerHotkeyDown;
   } else if (xkey.type == KeyRelease) {
-    type = EventTypes::PrimaryScreenHotkeyUp;
+    type = EventTypes::PrimaryComputerHotkeyUp;
   } else {
     return false;
   }
@@ -1446,7 +1446,7 @@ void XWindowsScreen::onMousePress(const XButtonEvent &xbutton)
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
-    sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
+    sendEvent(EventTypes::PrimaryComputerButtonDown, ButtonInfo::alloc(button, mask));
   }
 }
 
@@ -1457,19 +1457,19 @@ void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton)
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
-    sendEvent(PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
+    sendEvent(PrimaryComputerButtonUp, ButtonInfo::alloc(button, mask));
   } else if (xbutton.button == 4) {
     // wheel forward (away from user)
-    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(0, s_scrollDelta));
+    sendEvent(PrimaryComputerWheel, WheelInfo::alloc(0, s_scrollDelta));
   } else if (xbutton.button == 5) {
     // wheel backward (toward user)
-    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(0, -s_scrollDelta));
+    sendEvent(PrimaryComputerWheel, WheelInfo::alloc(0, -s_scrollDelta));
   } else if (xbutton.button == 6) {
     // wheel tilt left
-    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(-s_scrollDelta, 0));
+    sendEvent(PrimaryComputerWheel, WheelInfo::alloc(-s_scrollDelta, 0));
   } else if (xbutton.button == 7) {
     // wheel tilt right
-    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(s_scrollDelta, 0));
+    sendEvent(PrimaryComputerWheel, WheelInfo::alloc(s_scrollDelta, 0));
   }
 }
 
@@ -1504,7 +1504,7 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
     cntr = 0;
   } else if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
     // motion on secondary screen.  warp mouse back to
     // center.
@@ -1531,7 +1531,7 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
     // warping to the primary screen's enter position,
     // effectively overriding it.
     if (x != 0 || y != 0) {
-      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(x, y));
+      sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(x, y));
     }
   }
 }
@@ -1607,12 +1607,12 @@ void XWindowsScreen::onError()
 {
   // prevent further access to the X display
   m_events->adoptBuffer(nullptr);
-  m_screensaver->destroy();
-  m_screensaver = nullptr;
+  m_computersaver->destroy();
+  m_computersaver = nullptr;
   m_display = nullptr;
 
   // notify of failure
-  sendEvent(EventTypes::ScreenError, nullptr);
+  sendEvent(EventTypes::ComputerError, nullptr);
 
   // FIXME -- should ensure that we ignore operations that involve
   // m_display from now on.  however, Xlib will simply exit the

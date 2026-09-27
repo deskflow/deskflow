@@ -78,7 +78,7 @@ public:
 
   QStringList typeScreenNames() const;
   void clearScreens();
-  void addScreen(const QString &screen);
+  void addComputer(const QString &screen);
   void removeScreen(const QString &screen);
 
   const QString &switchScreenName() const;

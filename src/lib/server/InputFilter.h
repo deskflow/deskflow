@@ -107,7 +107,7 @@ public:
     FilterStatus match(const Event &) override;
 
   private:
-    std::string m_screen;
+    std::string m_computer;
     IEventQueue *m_events;
   };
 
@@ -187,7 +187,7 @@ public:
     void perform(const Event &) override;
 
   private:
-    std::string m_screen;
+    std::string m_computer;
     IEventQueue *m_events;
   };
 
@@ -248,7 +248,7 @@ public:
 
   private:
     Mode m_mode;
-    std::string m_screens;
+    std::string m_computers;
     IEventQueue *m_events;
   };
 

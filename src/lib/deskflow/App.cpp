@@ -162,7 +162,7 @@ void App::initApp()
   loadConfig();
 }
 
-void App::handleScreenError() const
+void App::handleComputerError() const
 {
   LOG_CRIT("error on computer");
   getEvents()->addEvent(Event(EventTypes::Quit));

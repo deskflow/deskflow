@@ -209,8 +209,8 @@ private:
   uint32_t m_sequenceNumber = 0;
 
   // screen saver stuff
-  XWindowsScreenSaver *m_screensaver = nullptr;
-  bool m_screensaverNotify = false;
+  XWindowsScreenSaver *m_computersaver = nullptr;
+  bool m_computersaverNotify = false;
 
   // logical to physical button mapping.  m_buttons[i] gives the
   // physical button for logical button i+1.
