@@ -38,6 +38,7 @@ public:
   void disable();
   void release();
   void release(double x, double y);
+  void claimClipboard() const;
   bool isActive() const
   {
     return m_isActive;

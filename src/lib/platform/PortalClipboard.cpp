@@ -228,6 +228,18 @@ void PortalClipboard::serveSelectionTransfer(EiClipboard *cache, XdpSession *ses
     raw = QByteArray::fromStdString(cache->get(requested->format));
   cache->close();
 
+  // the portal can't withdraw an offer once made, so answer with nothing rather than make the app time out
+  if (!hasFormat) {
+    LOG_DEBUG("clipboard has no data for mime, serving nothing: %s", mime);
+    const int fd = xdp_session_selection_write(session, serial);
+    if (fd < 0)
+      LOG_WARN("failed to open clipboard selection write fd");
+    else
+      ::close(fd);
+    xdp_session_selection_write_done(session, serial, fd >= 0);
+    return;
+  }
+
   const auto data = encodeFormat(requested->format, raw);
   if (data.isEmpty()) {
     LOG_DEBUG("clipboard has no data for mime: %s", mime);

@@ -491,7 +491,13 @@ bool EiComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
     if (!targetClipboard) {
       return false;
     }
-    return IClipboard::copy(targetClipboard, clipboard);
+
+    // re-offer, so local apps see the new formats instead of the ones claimed at the last activation
+    const bool ok = IClipboard::copy(targetClipboard, clipboard);
+    if (ok) {
+      m_portalInputCapture->claimClipboard();
+    }
+    return ok;
   }
 
   // Otherwise use our own clipboard
