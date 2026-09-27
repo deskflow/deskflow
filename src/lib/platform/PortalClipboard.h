@@ -54,10 +54,6 @@ public:
   /// Returns true if any data was deposited.
   static bool
   readSelectionIntoCache(EiClipboard *cache, XdpSession *session, const char *const *mimeTypes, qint64 maxBytes);
-
-private:
-  static QByteArray dibToBmp(const QByteArray &dib);
-  static QByteArray bmpToDib(const QByteArray &bmp);
 };
 
 } // namespace deskflow

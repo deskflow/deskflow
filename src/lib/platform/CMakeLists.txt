@@ -24,6 +24,8 @@ endif()
 
 if(WIN32)
   set(PLATFORM_SOURCES
+    ClipboardImage.cpp
+    ClipboardImage.h
     IMSWindowsClipboardFacade.h
     MSWindowsClipboard.cpp
     MSWindowsClipboard.h
@@ -35,6 +37,8 @@ if(WIN32)
     MSWindowsClipboardFacade.h
     MSWindowsClipboardHTMLConverter.cpp
     MSWindowsClipboardHTMLConverter.h
+    MSWindowsClipboardImageConverter.cpp
+    MSWindowsClipboardImageConverter.h
     MSWindowsClipboardUTF16Converter.cpp
     MSWindowsClipboardUTF16Converter.h
     MSWindowsComputer.cpp
@@ -105,6 +109,8 @@ elseif(APPLE)
   )
 elseif(UNIX)
   set(PLATFORM_SOURCES
+    ClipboardImage.cpp
+    ClipboardImage.h
     XDGPortalRegistry.h
     XDGPowerManager.cpp
     XDGPowerManager.h
@@ -181,6 +187,10 @@ endif()
 add_library(platform STATIC ${PLATFORM_SOURCES})
 
 target_link_libraries(platform PUBLIC client ${libs})
+
+if(WIN32)
+  target_link_libraries(platform PRIVATE Qt6::Gui)
+endif()
 
 if(UNIX)
   target_link_libraries(platform PRIVATE net app)

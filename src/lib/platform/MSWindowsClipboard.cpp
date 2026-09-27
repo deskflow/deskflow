@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -12,6 +12,7 @@
 #include "platform/MSWindowsClipboardBitmapConverter.h"
 #include "platform/MSWindowsClipboardFacade.h"
 #include "platform/MSWindowsClipboardHTMLConverter.h"
+#include "platform/MSWindowsClipboardImageConverter.h"
 #include "platform/MSWindowsClipboardUTF16Converter.h"
 
 //
@@ -29,6 +30,16 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window)
   // add converters, most desired first
   m_converters.push_back(new MSWindowsClipboardUTF16Converter);
   m_converters.push_back(new MSWindowsClipboardBitmapConverter);
+
+  // apps use the standard names, but qt apps that copy raw image bytes register them under the mime type
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"PNG", "PNG"));
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/png", "PNG"));
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"JFIF", "JPEG"));
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/jpeg", "JPEG"));
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/bmp", "BMP"));
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/tiff", "TIFF"));
+  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/webp", "WEBP"));
+
   m_converters.push_back(new MSWindowsClipboardHTMLConverter);
 }
 
@@ -168,12 +179,12 @@ bool MSWindowsClipboard::has(Format format) const
 
 std::string MSWindowsClipboard::get(Format format) const
 {
-  // find the converter for the first clipboard format we can handle
+  // several converters can serve one format (a png or a dib for a bitmap), so use the first one on the clipboard
   IMSWindowsClipboardConverter *converter = nullptr;
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
 
     converter = *index;
-    if (converter->getFormat() == format) {
+    if (converter->getFormat() == format && IsClipboardFormatAvailable(converter->getWin32Format())) {
       break;
     }
     converter = nullptr;
