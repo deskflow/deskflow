@@ -27,10 +27,10 @@
 #include "platform/MSWindowsComputer.h"
 #endif
 
-#include <QFileInfo> // Must include before XWindowsScreen to avoid conflicts with xlib.h
+#include <QFileInfo> // Must include before XWindowsComputer to avoid conflicts with xlib.h
 
 #if WINAPI_XWINDOWS
-#include "platform/XWindowsScreen.h"
+#include "platform/XWindowsComputer.h"
 #endif
 
 #if WINAPI_LIBEI
@@ -124,7 +124,7 @@ deskflow::Computer *ClientApp::createComputer()
 #if WINAPI_XWINDOWS
   LOG_INFO("detected X11 platform");
   return new deskflow::Computer(
-      new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents()),
+      new XWindowsComputer(qPrintable(Settings::value(Settings::Core::Display).toString()), false, getEvents()),
       getEvents()
   );
 #endif

@@ -128,12 +128,12 @@ elseif(UNIX)
       XWindowsClipboardUCS2Converter.h
       XWindowsClipboardUTF8Converter.cpp
       XWindowsClipboardUTF8Converter.h
+      XWindowsComputer.cpp
+      XWindowsComputer.h
       XWindowsEventQueueBuffer.cpp
       XWindowsEventQueueBuffer.h
       XWindowsKeyState.cpp
       XWindowsKeyState.h
-      XWindowsScreen.cpp
-      XWindowsScreen.h
       XWindowsScreenSaver.cpp
       XWindowsScreenSaver.h
       XWindowsUtil.cpp
