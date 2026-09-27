@@ -181,7 +181,7 @@ Each computer will have a section where its configuration will be stored, if the
 | switchCornerBottomLeft | `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
 | switchCornerBottomRight| `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
 | xtestIsXineramaUnaware | `true` or `false` | This option works around a bug in the XTest extension when used in combination with Xinerama. It affects X11 clients only. Not all versions of the XTest extension are aware of the Xinerama extension. As a result, they do not move the mouse correctly when using multiple Xinerama screens. This option is currently ''true'' by default. If you know your XTest extension is Xinerama aware then set this option to ''false''.|
-| weakX11Focus           | `true` or `false` | This X11 Client will not gain focus until an input event has been processed its screen |
+| weakX11Focus           | `true` or `false` | This X11 Client will not gain focus until an input event has been processed its any of its screens |
 
 ### InternalConfig
 

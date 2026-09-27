@@ -9,7 +9,7 @@
 
 #include "server/Server.h"
 
-void ServerTests::SwitchToScreenInfo_alloc_screen()
+void ServerTests::SwitchToComputerInfo_alloc_screen()
 {
   auto actual = new Server::SwitchToComputerInfo("test");
   QCOMPARE(actual->m_computer, "test");
