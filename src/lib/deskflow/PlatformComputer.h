@@ -10,17 +10,17 @@
 
 #include "deskflow/IPlatformComputer.h"
 
-//! Base screen implementation
+//! Base computer implementation
 /*!
-This screen implementation is the superclass of all other screen
+This computer implementation is the superclass of all other computer
 implementations.  It implements a handful of methods and requires
 subclasses to implement the rest.
 */
-class PlatformScreen : public IPlatformComputer
+class PlatformComputer : public IPlatformComputer
 {
 public:
-  explicit PlatformScreen(IEventQueue *events);
-  ~PlatformScreen() override = default;
+  explicit PlatformComputer(IEventQueue *events);
+  ~PlatformComputer() override = default;
 
   // IComputer overrides
   void *getEventTarget() const override = 0;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "deskflow/PlatformScreen.h"
+#include "deskflow/PlatformComputer.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
 
@@ -42,7 +42,7 @@ class IEventQueue;
 class Mutex;
 
 //! Implementation of IPlatformComputer for OS X
-class OSXScreen : public PlatformScreen
+class OSXScreen : public PlatformComputer
 {
 public:
   OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false);

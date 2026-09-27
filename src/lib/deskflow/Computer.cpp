@@ -45,9 +45,9 @@ bool runComputerCommand(const QString &commandLine)
 // Computer
 //
 
-Computer::Computer(IPlatformComputer *platformScreen, IEventQueue *events)
-    : m_computer(platformScreen),
-      m_isPrimary(platformScreen->isPrimary()),
+Computer::Computer(IPlatformComputer *platformComputer, IEventQueue *events)
+    : m_computer(platformComputer),
+      m_isPrimary(platformComputer->isPrimary()),
       m_entered(m_isPrimary),
       m_events(events)
 {
