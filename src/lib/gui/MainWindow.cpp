@@ -778,7 +778,7 @@ void MainWindow::handleUnrecognisedClient(const QString &clientName)
   if (Settings::value(Settings::Server::ExternalConfig).toBool())
     return;
 
-  if (m_serverConfig.isFull() || m_serverConfig.screenExists(clientName))
+  if (m_serverConfig.isFull() || m_serverConfig.computerExists(clientName))
     return;
 
   m_newClientPromptShowing = true;
@@ -1145,24 +1145,24 @@ void MainWindow::setHostName()
   toggleCanRunCore(canRunCore());
 
   QString text = ui->lineEditName->text();
-  const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
+  const auto computerName = Settings::value(Settings::Core::ComputerName).toString();
 
-  if (text == screenName)
+  if (text == computerName)
     return;
 
   const bool isServer = ui->rbModeServer->isChecked();
-  bool existingScreen = false;
+  bool existingComputer = false;
   if (isServer)
-    existingScreen = serverConfig().screenExists(text);
+    existingComputer = serverConfig().computerExists(text);
 
-  if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingScreen) {
+  if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingComputer) {
     blockSignals(true);
-    ui->lineEditName->setText(screenName);
+    ui->lineEditName->setText(computerName);
     blockSignals(false);
 
     const auto title = tr("Invalid Computer Name");
     QString body;
-    if (existingScreen) {
+    if (existingComputer) {
       body = tr("Computer name already exists");
     } else {
       body =

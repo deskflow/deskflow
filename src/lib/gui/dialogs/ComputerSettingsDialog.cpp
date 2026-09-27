@@ -22,7 +22,7 @@ using enum ComputerConfig::Fix;
 
 ComputerSettingsDialog::~ComputerSettingsDialog() = default;
 
-ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *computer, const ScreenList *screens)
+ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *computer, const ComputerList *screens)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ComputerSettingsDialog>()},
       m_computer(computer)

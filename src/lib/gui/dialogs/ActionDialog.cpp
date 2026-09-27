@@ -40,7 +40,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   ui->comboActionType->setCurrentIndex(m_action.type());
   ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
 
-  for (const Computer &computer : config.screens()) {
+  for (const Computer &computer : config.computers()) {
     if (computer.isNull())
       continue;
     auto *newListItem = new QListWidgetItem(computer.name());

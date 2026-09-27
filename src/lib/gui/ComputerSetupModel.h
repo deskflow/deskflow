@@ -12,7 +12,7 @@
 #include <QString>
 #include <QStringList>
 
-#include "gui/config/ScreenList.h"
+#include "gui/config/ComputerList.h"
 
 class ComputerSetupView;
 class ServerConfigDialog;
@@ -25,7 +25,7 @@ class ComputerSetupModel : public QAbstractTableModel
   friend class ServerConfigDialog;
 
 public:
-  ComputerSetupModel(ScreenList &screens, int numColumns, int numRows);
+  ComputerSetupModel(ComputerList &screens, int numColumns, int numRows);
 
   static const QString &mimeType()
   {
@@ -81,7 +81,7 @@ protected:
 private:
   static constexpr int kMaxGridSize = 100;
 
-  ScreenList &m_computers;
+  ComputerList &m_computers;
   int m_NumColumns;
   int m_NumRows;
 

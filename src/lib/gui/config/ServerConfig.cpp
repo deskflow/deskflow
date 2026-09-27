@@ -32,7 +32,7 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_columns(columns), m_rows(rows)
+ServerConfig::ServerConfig(int columns, int rows) : m_computers(columns), m_columns(columns), m_rows(rows)
 {
   recall();
 }
@@ -51,8 +51,8 @@ bool ServerConfig::save(const QString &fileName) const
 
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
-  return m_Screens == sc.m_Screens && //
-         m_Hotkeys == sc.m_Hotkeys;   //
+  return m_computers == sc.m_computers && //
+         m_Hotkeys == sc.m_Hotkeys;       //
 }
 
 void ServerConfig::save(QFile &file) const
@@ -61,15 +61,15 @@ void ServerConfig::save(QFile &file) const
   outStream << *this;
 }
 
-void ServerConfig::setupScreens()
+void ServerConfig::setupComputers()
 {
-  screens().clear();
+  computers().clear();
   hotkeys().clear();
 
   // There must always be screen objects for each cell in the screens QList.
-  // Unused screens are identified by having an empty name.
+  // Unused computerss are identified by having an empty name.
   for (int i = 0; i < m_columns * m_rows; i++)
-    addScreen(Computer());
+    addComputer(Computer());
 }
 
 void ServerConfig::commit()
@@ -80,13 +80,13 @@ void ServerConfig::commit()
   settings().remove("");
 
   settings().beginWriteArray("screens");
-  for (int i = 0; i < screens().size(); i++) {
+  for (int i = 0; i < computers().size(); i++) {
     settings().setArrayIndex(i);
-    const auto &screen = screens()[i];
-    screen.saveSettings(settings());
-    auto screenName = Settings::value(Settings::Core::ComputerName).toString();
-    if (screen.isServer() && screenName != screen.name()) {
-      Settings::setValue(Settings::Core::ComputerName, screen.name());
+    const auto &computer = computers()[i];
+    computer.saveSettings(settings());
+    auto computerName = Settings::value(Settings::Core::ComputerName).toString();
+    if (computer.isServer() && computerName != computer.name()) {
+      Settings::setValue(Settings::Core::ComputerName, computer.name());
     }
   }
   settings().endArray();
@@ -112,15 +112,15 @@ void ServerConfig::recall()
 
   // we need to know the number of columns and rows before we can set up
   // ourselves
-  setupScreens();
+  setupComputers();
 
-  int numScreens = settings().beginReadArray("screens");
-  Q_ASSERT(numScreens <= screens().size());
-  for (int i = 0; i < numScreens; i++) {
+  int numComputers = settings().beginReadArray("screens");
+  Q_ASSERT(numComputers <= computers().size());
+  for (int i = 0; i < numComputers; i++) {
     settings().setArrayIndex(i);
-    screens()[i].loadSettings(settings());
-    if (getServerName() == screens()[i].name()) {
-      screens()[i].markAsServer();
+    computers()[i].loadSettings(settings());
+    if (getServerName() == computers()[i].name()) {
+      computers()[i].markAsServer();
     }
   }
   settings().endArray();
@@ -137,9 +137,9 @@ void ServerConfig::recall()
   settings().endGroup();
 }
 
-int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const
+int ServerConfig::adjacentComputerIndex(int idx, int deltaColumn, int deltaRow) const
 {
-  if (screens()[idx].isNull())
+  if (computers()[idx].isNull())
     return -1;
 
   // if we're at the left or right end of the table, don't find results going
@@ -149,7 +149,7 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
   int arrayPos = idx + deltaColumn + deltaRow * m_columns;
 
-  if (arrayPos >= screens().size() || arrayPos < 0)
+  if (arrayPos >= computers().size() || arrayPos < 0)
     return -1;
 
   return arrayPos;
@@ -159,13 +159,13 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 {
   outStream << "section: links" << Qt::endl;
 
-  for (int i = 0; const auto &screen : config.screens()) {
-    if (!screen.isNull()) {
-      outStream << "\t" << screen.name() << ":\n";
+  for (int i = 0; const auto &computer : config.computers()) {
+    if (!computer.isNull()) {
+      outStream << "\t" << computer.name() << ":\n";
       for (const auto &neighbour : std::as_const(neighbourDirs)) {
-        int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
-        if (idx != -1 && !config.screens()[idx].isNull())
-          outStream << "\t\t" << neighbour.name << " = " << config.screens()[idx].name() << Qt::endl;
+        int idx = config.adjacentComputerIndex(i, neighbour.x, neighbour.y);
+        if (idx != -1 && !config.computers()[idx].isNull())
+          outStream << "\t\t" << neighbour.name << " = " << config.computers()[idx].name() << Qt::endl;
       }
     }
     i++;
@@ -183,11 +183,11 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   return outStream;
 }
 
-int ServerConfig::numScreens() const
+int ServerConfig::numComputers() const
 {
   int rval = 0;
 
-  for (const Computer &s : screens()) {
+  for (const Computer &s : computers()) {
     if (!s.isNull())
       rval++;
   }
@@ -202,9 +202,9 @@ QString ServerConfig::getServerName() const
 
 void ServerConfig::updateServerName()
 {
-  for (auto &screen : screens()) {
-    if (screen.isServer()) {
-      screen.setName(Settings::value(Settings::Core::ComputerName).toString());
+  for (auto &computer : computers()) {
+    if (computer.isServer()) {
+      computer.setName(Settings::value(Settings::Core::ComputerName).toString());
       break;
     }
   }
@@ -224,8 +224,8 @@ bool ServerConfig::isFull() const
 {
   bool isFull = true;
 
-  for (const auto &screen : screens()) {
-    if (screen.isNull()) {
+  for (const auto &computer : computers()) {
+    if (computer.isNull()) {
       isFull = false;
       break;
     }
@@ -234,12 +234,12 @@ bool ServerConfig::isFull() const
   return isFull;
 }
 
-bool ServerConfig::screenExists(const QString &screenName) const
+bool ServerConfig::computerExists(const QString &computerName) const
 {
   bool isExists = false;
 
-  for (const auto &screen : screens()) {
-    if (!screen.isNull() && screen.name() == screenName) {
+  for (const auto &computer : computers()) {
+    if (!computer.isNull() && computer.name() == computerName) {
       isExists = true;
       break;
     }
@@ -251,15 +251,15 @@ bool ServerConfig::screenExists(const QString &screenName) const
 void ServerConfig::addClient(const QString &clientName)
 {
   int serverIndex = -1;
-  const auto screenName = Settings::value(Settings::Core::ComputerName).toString();
+  const auto computerName = Settings::value(Settings::Core::ComputerName).toString();
 
-  if (findScreenName(screenName, serverIndex)) {
-    m_Screens[serverIndex].markAsServer();
+  if (findComputerName(computerName, serverIndex)) {
+    m_computers[serverIndex].markAsServer();
   } else {
-    fixNoServer(screenName, serverIndex);
+    fixNoServer(computerName, serverIndex);
   }
 
-  m_Screens.addScreenByPriority(Computer(clientName));
+  m_computers.addComputerByPriority(Computer(clientName));
 }
 
 void ServerConfig::setConfigFile(const QString &configFile) const
@@ -272,11 +272,11 @@ void ServerConfig::setUseExternalConfig(bool useExternalConfig) const
   Settings::setValue(Settings::Server::ExternalConfig, useExternalConfig);
 }
 
-bool ServerConfig::findScreenName(const QString &name, int &index)
+bool ServerConfig::findComputerName(const QString &name, int &index)
 {
   bool found = false;
-  for (int i = 0; i < screens().size(); i++) {
-    if (!screens()[i].isNull() && screens()[i].name().compare(name) == 0) {
+  for (int i = 0; i < computers().size(); i++) {
+    if (!computers()[i].isNull() && computers()[i].name().compare(name) == 0) {
       index = i;
       found = true;
       break;
@@ -288,9 +288,9 @@ bool ServerConfig::findScreenName(const QString &name, int &index)
 bool ServerConfig::fixNoServer(const QString &name, int &index)
 {
   bool fixed = false;
-  if (screens()[serverDefaultIndex].isNull()) {
-    m_Screens[serverDefaultIndex].setName(name);
-    m_Screens[serverDefaultIndex].markAsServer();
+  if (computers()[serverDefaultIndex].isNull()) {
+    m_computers[serverDefaultIndex].setName(name);
+    m_computers[serverDefaultIndex].markAsServer();
     index = serverDefaultIndex;
     fixed = true;
   }

@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "ScreenList.h"
+#include "ComputerList.h"
 
 #include <array>
 
@@ -51,7 +51,7 @@ std::array<int, 8> getNeighborsIndexes(int serverIndex, int width, int size)
  * @param screens list to find server
  * @return server index
  */
-int getServerIndex(const ScreenList &screens)
+int getServerIndex(const ComputerList &screens)
 {
   int serverIndex = -1;
 
@@ -67,11 +67,11 @@ int getServerIndex(const ScreenList &screens)
 
 } // namespace
 
-ScreenList::ScreenList(int width) : QList<Computer>(), m_width(width)
+ComputerList::ComputerList(int width) : QList<Computer>(), m_width(width)
 {
 }
 
-void ScreenList::addScreenByPriority(const Computer &newScreen)
+void ComputerList::addComputerByPriority(const Computer &newComputer)
 {
   int serverIndex = getServerIndex(*this);
   auto indexes = getNeighborsIndexes(serverIndex, m_width, static_cast<int>(size()));
@@ -79,9 +79,9 @@ void ScreenList::addScreenByPriority(const Computer &newScreen)
   bool isAdded = false;
   for (const auto &index : indexes) {
     if (index >= 0 && index < size()) {
-      auto &screen = operator[](index);
-      if (screen.isNull()) {
-        screen = newScreen;
+      auto &computer = operator[](index);
+      if (computer.isNull()) {
+        computer = newComputer;
         isAdded = true;
         break;
       }
@@ -89,22 +89,22 @@ void ScreenList::addScreenByPriority(const Computer &newScreen)
   }
 
   if (!isAdded) {
-    addScreenToFirstEmpty(newScreen);
+    addComputerToFirstEmpty(newComputer);
   }
 }
 
-void ScreenList::addScreenToFirstEmpty(const Computer &newScreen)
+void ComputerList::addComputerToFirstEmpty(const Computer &newComputer)
 {
   for (int i = 0; i < size(); ++i) {
-    auto &screen = operator[](i);
-    if (screen.isNull()) {
-      screen = newScreen;
+    auto &computer = operator[](i);
+    if (computer.isNull()) {
+      computer = newComputer;
       break;
     }
   }
 }
 
-bool ScreenList::operator==(const ScreenList &sc) const
+bool ComputerList::operator==(const ComputerList &sc) const
 {
   return m_width == sc.m_width && QList::operator==(sc);
 }
