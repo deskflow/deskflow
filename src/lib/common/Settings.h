@@ -59,9 +59,9 @@ public:
     inline static const auto UseHooks = QStringLiteral("core/useHooks");
     inline static const auto Language = QStringLiteral("core/language");
     inline static const auto EnableEnterCommand = QStringLiteral("core/enableEnterCommand");
-    inline static const auto ScreenEnterCommand = QStringLiteral("core/enterCommand");
+    inline static const auto ComputerEnterCommand = QStringLiteral("core/enterCommand");
     inline static const auto EnableExitCommand = QStringLiteral("core/enableExitCommand");
-    inline static const auto ScreenExitCommand = QStringLiteral("core/exitCommand");
+    inline static const auto ComputerExitCommand = QStringLiteral("core/exitCommand");
   };
   struct Daemon
   {
@@ -288,8 +288,8 @@ private:
     , Core::ProcessMode
     , Core::EnableEnterCommand
     , Core::EnableExitCommand
-    , Core::ScreenEnterCommand
-    , Core::ScreenExitCommand
+    , Core::ComputerEnterCommand
+    , Core::ComputerExitCommand
     , Core::ComputerName
     , Core::Display
     , Core::UseHooks
