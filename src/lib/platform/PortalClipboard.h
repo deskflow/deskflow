@@ -56,7 +56,8 @@ public:
   static constexpr int kWriteTimeoutMs = 200;
   static constexpr qint64 kChunkBytes = 64 * 1024;
 
-  // apps may only encode an image when it's pasted, which takes seconds for a large one
+  // apps may only encode an image when it's pasted and send nothing until done, which takes seconds for a large one
+  static constexpr int kFirstByteTimeoutMs = 30000;
   static constexpr int kReadTimeoutMs = 5000;
 
   static QByteArray formatMimeTypes(const char *const *mimeTypes);

@@ -181,9 +181,11 @@ std::optional<QByteArray> PortalClipboard::readSelectionBytes(XdpSession *sessio
   QByteArray contents;
   contents.reserve(std::min<qint64>(maxBytes, kChunkBytes));
   bool timedOut = false;
+  int timeoutMs = kFirstByteTimeoutMs;
   while (contents.size() < maxBytes && !timedOut) {
     pollfd pfd{fd, POLLIN, 0};
-    timedOut = poll(&pfd, 1, kReadTimeoutMs) <= 0;
+    timeoutMs = contents.isEmpty() ? kFirstByteTimeoutMs : kReadTimeoutMs;
+    timedOut = poll(&pfd, 1, timeoutMs) <= 0;
     if (!timedOut) {
       const auto chunk = pipe.read(std::min<qint64>(kChunkBytes, maxBytes - contents.size()));
       if (chunk.isEmpty())
@@ -194,7 +196,7 @@ std::optional<QByteArray> PortalClipboard::readSelectionBytes(XdpSession *sessio
   }
 
   if (timedOut)
-    LOG_WARN("clipboard read timed out, mime: %s, waited: %d ms", mime, kReadTimeoutMs);
+    LOG_WARN("clipboard read timed out, mime: %s, waited: %d ms", mime, timeoutMs);
   return timedOut ? std::nullopt : std::make_optional(std::move(contents));
 }
 
