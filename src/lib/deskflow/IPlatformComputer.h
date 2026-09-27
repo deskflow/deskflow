@@ -12,7 +12,7 @@
 #include "deskflow/IComputer.h"
 #include "deskflow/IKeyState.h"
 #include "deskflow/IPrimaryComputer.h"
-#include "deskflow/ISecondaryScreen.h"
+#include "deskflow/ISecondaryComputer.h"
 #include "deskflow/OptionTypes.h"
 
 class IClipboard;
@@ -23,7 +23,7 @@ This interface defines the methods common to all platform dependent
 comptuer implementations that are used by both primary and secondary
 comptuers.
 */
-class IPlatformComputer : public IComputer, public IPrimaryComputer, public ISecondaryScreen, public IKeyState
+class IPlatformComputer : public IComputer, public IPrimaryComputer, public ISecondaryComputer, public IKeyState
 {
 public:
   //! @name manipulators

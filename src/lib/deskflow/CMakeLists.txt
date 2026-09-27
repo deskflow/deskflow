@@ -54,7 +54,7 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   IPrimaryComputer.cpp
   IPrimaryComputer.h
   IScreenSaver.h
-  ISecondaryScreen.h
+  ISecondaryComputer.h
   KeyTypes.cpp
   KeyTypes.h
   KeyMap.cpp

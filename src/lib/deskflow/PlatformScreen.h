@@ -40,7 +40,7 @@ public:
   bool isAnyMouseButtonDown(uint32_t &buttonID) const override = 0;
   void getCursorCenter(int32_t &x, int32_t &y) const override = 0;
 
-  // ISecondaryScreen overrides
+  // ISecondaryComputer overrides
   void fakeMouseButton(ButtonID id, bool press) override = 0;
   void fakeMouseMove(int32_t x, int32_t y) override = 0;
   void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override = 0;

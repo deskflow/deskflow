@@ -12,15 +12,15 @@
 #include "common/Settings.h"
 #include "deskflow/MouseTypes.h"
 
-//! Secondary screen interface
+//! Secondary comptuer interface
 /*!
 This interface defines the methods common to all platform dependent
-secondary screen implementations.
+secondary comptuer implementations.
 */
-class ISecondaryScreen
+class ISecondaryComputer
 {
 public:
-  ISecondaryScreen()
+  ISecondaryComputer()
   {
     m_invertYScroll = Settings::value(Settings::Client::InvertYScroll).toBool();
     m_yScrollScale = std::clamp(Settings::value(Settings::Client::YScrollScale).toDouble(), 0.1, 10.0);
@@ -28,7 +28,7 @@ public:
     m_xScrollScale = std::clamp(Settings::value(Settings::Client::XScrollScale).toDouble(), 0.1, 10.0);
   }
 
-  virtual ~ISecondaryScreen() = default;
+  virtual ~ISecondaryComputer() = default;
   //! @name accessors
   //@{
 
