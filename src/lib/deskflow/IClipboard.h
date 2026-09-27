@@ -51,10 +51,10 @@ public:
   HTML fragment (but not necessarily a complete HTML document).
   Newlines are LF.
 
-  \c kGIF, \c kSVG, \c kPNG and \c kJPEG are image files passed through
-  unchanged.  Peers that don't know them skip them.  Raw pixels
-  (\c kBitmap) only come from older peers: an image the platform holds
-  only as pixels is sent as a PNG.
+  \c kGIF, \c kSVG, \c kPNG, \c kJPEG, \c kWebP and \c kTIFF are image files, and
+  \c kRTF a document, all passed through unchanged.  Peers that don't
+  know them skip them.  Raw pixels (\c kBitmap) only come from older
+  peers: an image the platform holds only as pixels is sent as a PNG.
   */
   enum class Format
   {
@@ -65,6 +65,9 @@ public:
     SVG,         //!< SVG image file, unchanged
     PNG,         //!< PNG image file, unchanged
     JPEG,        //!< JPEG image file, unchanged
+    RTF,         //!< RTF document, unchanged
+    WebP,        //!< WebP image file, unchanged
+    TIFF,        //!< TIFF image file, unchanged
     TotalFormats //!< The number of clipboard formats supported
   };
 
@@ -170,7 +173,10 @@ public:
 
   static bool isImageFile(Format format);
 
-  //! Whether an image adds nothing to the ones \p available: a jpeg beside a png, or raw pixels beside any image file
+  //! Whether the data is a file passed through unchanged, which platforms write under every name apps look for
+  static bool isFile(Format format);
+
+  //! Whether an image adds nothing to the ones \p available: a less preferred still, or pixels beside an image file
   static bool isRedundantImage(Format format, const std::function<bool(Format)> &available);
 
   //! Which \p available format to read to send \p format: raw pixels are only ever read to send a png
@@ -183,9 +189,13 @@ private:
   static void writeUInt32(std::string *, uint32_t);
 
   // unchanged images go before the bitmap, so apps that take the first image type offered get the original
-  static constexpr Format kCopyOrder[] = {Format::Text, Format::HTML, Format::GIF,   Format::SVG,
-                                          Format::PNG,  Format::JPEG, Format::Bitmap};
+  static constexpr Format kCopyOrder[] = {Format::Text, Format::HTML, Format::RTF,  Format::GIF,  Format::SVG,
+                                          Format::PNG,  Format::JPEG, Format::WebP, Format::TIFF, Format::Bitmap};
   static_assert(std::size(kCopyOrder) == static_cast<size_t>(Format::TotalFormats));
 
-  static constexpr Format kImageFiles[] = {Format::GIF, Format::SVG, Format::PNG, Format::JPEG};
+  static constexpr Format kImageFiles[] = {Format::GIF,  Format::SVG,  Format::PNG,
+                                           Format::JPEG, Format::WebP, Format::TIFF};
+
+  // a copy is sent as one still image, the first of these it has: a qt native copy offers every type
+  static constexpr Format kStillImages[] = {Format::PNG, Format::JPEG, Format::WebP, Format::TIFF};
 };

@@ -37,17 +37,20 @@ public:
       {"image/svg+xml", IClipboard::Format::SVG, nullptr, true},
       {"image/png", IClipboard::Format::PNG, nullptr, true},
       {"image/jpeg", IClipboard::Format::JPEG, nullptr, true},
+      {"image/webp", IClipboard::Format::WebP, nullptr, true},
+      {"image/tiff", IClipboard::Format::TIFF, nullptr, true},
       {"image/bmp", IClipboard::Format::Bitmap, "BMP", false},
-      {"image/tiff", IClipboard::Format::Bitmap, "TIFF", false},
-      {"image/webp", IClipboard::Format::Bitmap, "WEBP", false},
       {"text/html", IClipboard::Format::HTML, nullptr, true},
+      {"text/rtf", IClipboard::Format::RTF, nullptr, true},
+      {"application/rtf", IClipboard::Format::RTF, nullptr, true},
       {"text/plain;charset=utf-8", IClipboard::Format::Text, nullptr, true},
       {"text/plain", IClipboard::Format::Text, nullptr, true},
   };
 
-  // apps that only take png get one converted from a jpeg or raw pixels
+  // apps that only take png get one converted from another image or raw pixels
   static constexpr IClipboard::Format kPngSources[] = {
-      IClipboard::Format::PNG, IClipboard::Format::JPEG, IClipboard::Format::Bitmap
+      IClipboard::Format::PNG, IClipboard::Format::JPEG, IClipboard::Format::WebP, IClipboard::Format::TIFF,
+      IClipboard::Format::Bitmap
   };
 
   static constexpr int kWriteTimeoutMs = 200;

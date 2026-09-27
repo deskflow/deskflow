@@ -181,13 +181,18 @@ bool IClipboard::isImageFile(Format format)
   return std::ranges::find(kImageFiles, format) != std::end(kImageFiles);
 }
 
+bool IClipboard::isFile(Format format)
+{
+  return isImageFile(format) || format == Format::RTF;
+}
+
 bool IClipboard::isRedundantImage(Format format, const std::function<bool(Format)> &available)
 {
   bool redundant = false;
-  if (format == Format::JPEG) {
-    redundant = available(Format::PNG);
-  } else if (format == Format::Bitmap) {
+  if (format == Format::Bitmap) {
     redundant = std::ranges::any_of(kImageFiles, available);
+  } else if (const auto still = std::ranges::find(kStillImages, format); still != std::end(kStillImages)) {
+    redundant = std::any_of(std::begin(kStillImages), still, available);
   }
   return redundant;
 }

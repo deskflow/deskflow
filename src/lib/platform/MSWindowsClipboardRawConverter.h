@@ -12,6 +12,7 @@ class MSWindowsClipboardRawConverter : public IMSWindowsClipboardConverter
 {
 public:
   MSWindowsClipboardRawConverter(const wchar_t *formatName, IClipboard::Format format);
+  MSWindowsClipboardRawConverter(UINT win32Format, IClipboard::Format format);
   ~MSWindowsClipboardRawConverter() override = default;
 
   IClipboard::Format getFormat() const override;

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "deskflow/IClipboard.h"
+
 #include <QByteArray>
 #include <QImage>
 
@@ -21,6 +23,7 @@ public:
   static QByteArray imageToDib(const QByteArray &encoded, const char *format);
   static QByteArray toPng(const QByteArray &encoded, const char *format);
   static bool writeAsPng(const QByteArray &encoded, const char *format, QIODevice *device);
+  static const char *qtFormat(IClipboard::Format format);
 
 private:
   static QImage decode(const QByteArray &encoded, const char *format);

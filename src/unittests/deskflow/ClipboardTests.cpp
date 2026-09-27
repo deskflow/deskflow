@@ -278,4 +278,14 @@ void ClipboardTests::sourceToSend_bitmapBesideJpeg_sendsOnlyJpeg()
   QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::Bitmap, available));
 }
 
+void ClipboardTests::sourceToSend_webpBesidePng_sendsOnlyPng()
+{
+  const auto available = [](IClipboard::Format format) {
+    return format == IClipboard::Format::PNG || format == IClipboard::Format::WebP;
+  };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::PNG, available) == IClipboard::Format::PNG);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::WebP, available));
+}
+
 QTEST_MAIN(ClipboardTests)

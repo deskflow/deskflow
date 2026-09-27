@@ -44,6 +44,9 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window)
   m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/png", IClipboard::Format::PNG));
   m_converters.push_back(new MSWindowsClipboardRawConverter(L"JFIF", IClipboard::Format::JPEG));
   m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/jpeg", IClipboard::Format::JPEG));
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/webp", IClipboard::Format::WebP));
+  m_converters.push_back(new MSWindowsClipboardRawConverter(CF_TIFF, IClipboard::Format::TIFF));
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/tiff", IClipboard::Format::TIFF));
   m_converters.push_back(new MSWindowsClipboardRawConverter(L"GIF", IClipboard::Format::GIF));
   m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/gif", IClipboard::Format::GIF));
   m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/svg+xml", IClipboard::Format::SVG));
@@ -51,10 +54,10 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window)
   // raw pixels: the bitmap is written for apps that only paste bitmaps, and all of these are read to send as png
   m_converters.push_back(new MSWindowsClipboardBitmapConverter);
   m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/bmp", "BMP"));
-  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/tiff", "TIFF"));
-  m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/webp", "WEBP"));
 
   m_converters.push_back(new MSWindowsClipboardHTMLConverter);
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"Rich Text Format", IClipboard::Format::RTF));
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"text/rtf", IClipboard::Format::RTF));
 }
 
 MSWindowsClipboard::~MSWindowsClipboard()
@@ -115,8 +118,8 @@ void MSWindowsClipboard::add(Format format, const std::string &data)
     return;
   }
 
-  // apps look for an image file under different names, so it goes under all of them
-  const bool writeEveryConverter = isImageFile(format);
+  // apps look for a file under different names, so it goes under all of them
+  const bool writeEveryConverter = isFile(format);
   bool isSucceeded = false;
   for (auto *converter : m_converters) {
     if (converter->getFormat() == format && (!isSucceeded || writeEveryConverter)) {
@@ -137,8 +140,8 @@ void MSWindowsClipboard::add(Format format, const std::string &data)
   }
 
   // paint and office only paste bitmaps
-  if (isSucceeded && (format == Format::PNG || format == Format::JPEG) && !IsClipboardFormatAvailable(CF_DIB)) {
-    const auto imageFormat = format == Format::PNG ? "PNG" : "JPEG";
+  const auto *imageFormat = deskflow::ClipboardImage::qtFormat(format);
+  if (isSucceeded && imageFormat != nullptr && !IsClipboardFormatAvailable(CF_DIB)) {
     const auto dib = deskflow::ClipboardImage::imageToDib(QByteArray::fromStdString(data), imageFormat);
     if (!dib.isEmpty())
       add(Format::Bitmap, dib.toStdString());

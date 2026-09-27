@@ -62,6 +62,20 @@ bool ClipboardImage::writeAsPng(const QByteArray &encoded, const char *format, Q
   return !image.isNull() && write(image, "PNG", device);
 }
 
+const char *ClipboardImage::qtFormat(IClipboard::Format format)
+{
+  const char *name = nullptr;
+  if (format == IClipboard::Format::PNG)
+    name = "PNG";
+  else if (format == IClipboard::Format::JPEG)
+    name = "JPEG";
+  else if (format == IClipboard::Format::WebP)
+    name = "WEBP";
+  else if (format == IClipboard::Format::TIFF)
+    name = "TIFF";
+  return name;
+}
+
 QImage ClipboardImage::decode(const QByteArray &encoded, const char *format)
 {
   QImageReader::setAllocationLimit(kMaxDecodeMegabytes);

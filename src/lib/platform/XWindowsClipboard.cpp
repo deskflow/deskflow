@@ -68,6 +68,10 @@ XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardI
   m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/svg+xml", IClipboard::Format::SVG));
   m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/png", IClipboard::Format::PNG));
   m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/jpeg", IClipboard::Format::JPEG));
+  m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/webp", IClipboard::Format::WebP));
+  m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "image/tiff", IClipboard::Format::TIFF));
+  m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "text/rtf", IClipboard::Format::RTF));
+  m_converters.push_back(new XWindowsClipboardRawConverter(m_display, "application/rtf", IClipboard::Format::RTF));
   m_converters.push_back(new XWindowsClipboardBMPConverter(m_display));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "text/plain;charset=UTF-8", true));
   m_converters.push_back(new XWindowsClipboardUTF8Converter(m_display, "text/plain;charset=utf-8", true));

@@ -32,6 +32,10 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
   m_converters.push_back(new OSXClipboardRawConverter(kQtPngType, IClipboard::Format::PNG));
   m_converters.push_back(new OSXClipboardRawConverter("public.jpeg", IClipboard::Format::JPEG));
   m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--jpeg", IClipboard::Format::JPEG));
+  m_converters.push_back(new OSXClipboardRawConverter("org.webmproject.webp", IClipboard::Format::WebP));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--webp", IClipboard::Format::WebP));
+  m_converters.push_back(new OSXClipboardRawConverter("public.tiff", IClipboard::Format::TIFF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--tiff", IClipboard::Format::TIFF));
   m_converters.push_back(new OSXClipboardRawConverter("com.compuserve.gif", IClipboard::Format::GIF));
   m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--gif", IClipboard::Format::GIF));
   m_converters.push_back(new OSXClipboardRawConverter("public.svg-image", IClipboard::Format::SVG));
@@ -39,13 +43,12 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 
   // raw pixels: older peers' bitmaps are written as png, and the rest are read to send as png
   m_converters.push_back(new OSXClipboardImageConverter("public.png", kQtPngType));
-  m_converters.push_back(new OSXClipboardImageConverter("public.tiff"));
   m_converters.push_back(new OSXClipboardImageConverter("public.heic"));
-  m_converters.push_back(new OSXClipboardImageConverter("org.webmproject.webp"));
-  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--tiff"));
-  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--webp"));
   m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--bmp"));
   m_converters.push_back(new OSXClipboardBMPConverter);
+
+  m_converters.push_back(new OSXClipboardRawConverter("public.rtf", IClipboard::Format::RTF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.text--rtf", IClipboard::Format::RTF));
 
   m_converters.push_back(new OSXClipboardUTF8Converter);
   m_converters.push_back(new OSXClipboardUTF16Converter);
@@ -117,7 +120,7 @@ void OSXClipboard::add(Format format, const std::string &data)
   }
 
   // macos converts other flavours on demand, but native and qt apps look for unchanged files under different types
-  const bool writeEveryFlavour = isImageFile(format);
+  const bool writeEveryFlavour = isFile(format);
   bool added = false;
   for (ConverterList::const_iterator index = m_converters.begin();
        index != m_converters.end() && (!added || writeEveryFlavour); ++index) {
@@ -206,8 +209,8 @@ IOSXClipboardConverter *OSXClipboard::findConverter(Format format) const
       LOG_DEBUG("failed to list clipboard flavours");
   }
 
-  // macos converts between image types on request, which would hide which image file was copied
-  const bool skipConverted = isImageFile(format);
+  // macos converts between types on request, which would hide which file was copied
+  const bool skipConverted = isFile(format);
   const auto found = std::ranges::find_if(m_converters, [this, item, format, skipConverted](auto *converter) {
     const auto type = converter->getOSXFormat();
     PasteboardFlavorFlags flags = kPasteboardFlavorNoFlags;

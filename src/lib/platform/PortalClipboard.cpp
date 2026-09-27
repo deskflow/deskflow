@@ -142,7 +142,7 @@ bool PortalClipboard::writeFormat(
   else if (held == IClipboard::Format::Bitmap)
     written = ClipboardImage::writeDibAsImage(data, "PNG", device);
   else
-    written = ClipboardImage::writeAsPng(data, "JPEG", device);
+    written = ClipboardImage::writeAsPng(data, ClipboardImage::qtFormat(held), device);
   return written;
 }
 

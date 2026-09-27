@@ -16,6 +16,12 @@ MSWindowsClipboardRawConverter::MSWindowsClipboardRawConverter(const wchar_t *fo
 {
 }
 
+MSWindowsClipboardRawConverter::MSWindowsClipboardRawConverter(UINT win32Format, IClipboard::Format format)
+    : m_win32Format(win32Format),
+      m_format(format)
+{
+}
+
 IClipboard::Format MSWindowsClipboardRawConverter::getFormat() const
 {
   return m_format;
