@@ -22,7 +22,7 @@ using enum ComputerConfig::Fix;
 
 ComputerSettingsDialog::~ComputerSettingsDialog() = default;
 
-ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *computer, const ComputerList *screens)
+ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *computer, const ComputerList *computers)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ComputerSettingsDialog>()},
       m_computer(computer)
@@ -34,7 +34,7 @@ ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *comput
   ui->lineNameEdit->setText(m_computer->name());
 
   const auto valNameError = new validators::ValidationError(this, ui->lblNameError);
-  const auto valName = new validators::ScreenNameValidator(ui->lineNameEdit, valNameError, screens);
+  const auto valName = new validators::ScreenNameValidator(ui->lineNameEdit, valNameError, computers);
   ui->lineNameEdit->setValidator(valName);
 
   const auto valAliasError = new validators::ValidationError(this, ui->lblAliasError);

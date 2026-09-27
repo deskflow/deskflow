@@ -90,8 +90,8 @@ bool PortalInputCapture::getPortalBounds(Bounds &bounds) const
 }
 
 bool PortalInputCapture::getClosestReleaseBarrier(
-    double x, double y, int screenLeft, int screenTop, int screenRight, int screenBottom, const Bounds &portalBounds,
-    BarrierInfo &barrier
+    double x, double y, int computerLeft, int computerTop, int computerRight, int computerBottom,
+    const Bounds &portalBounds, BarrierInfo &barrier
 ) const
 {
   const auto activeSides = m_computer->activeSides();
@@ -107,23 +107,25 @@ bool PortalInputCapture::getClosestReleaseBarrier(
   };
 
   if (activeSides & static_cast<int>(LeftMask)) {
-    considerSide(BarrierSide::Left, std::abs(x - screenLeft));
+    considerSide(BarrierSide::Left, std::abs(x - computerLeft));
   }
   if (activeSides & static_cast<int>(RightMask)) {
-    considerSide(BarrierSide::Right, std::abs(x - screenRight));
+    considerSide(BarrierSide::Right, std::abs(x - computerRight));
   }
   if (activeSides & static_cast<int>(TopMask)) {
-    considerSide(BarrierSide::Top, std::abs(y - screenTop));
+    considerSide(BarrierSide::Top, std::abs(y - computerTop));
   }
   if (activeSides & static_cast<int>(BottomMask)) {
-    considerSide(BarrierSide::Bottom, std::abs(y - screenBottom));
+    considerSide(BarrierSide::Bottom, std::abs(y - computerBottom));
   }
   if (sideDistance == std::numeric_limits<double>::max()) {
     return false;
   }
 
-  const auto portalX = scaleCoordinateBetweenRanges(x, screenLeft, screenRight, portalBounds.left, portalBounds.right);
-  const auto portalY = scaleCoordinateBetweenRanges(y, screenTop, screenBottom, portalBounds.top, portalBounds.bottom);
+  const auto portalX =
+      scaleCoordinateBetweenRanges(x, computerLeft, computerRight, portalBounds.left, portalBounds.right);
+  const auto portalY =
+      scaleCoordinateBetweenRanges(y, computerTop, computerBottom, portalBounds.top, portalBounds.bottom);
 
   auto bestDistance = std::numeric_limits<int>::max();
   for (const auto &info : m_barrierInfo) {
@@ -166,8 +168,8 @@ bool PortalInputCapture::getClosestReleaseBarrier(
   return bestDistance != std::numeric_limits<int>::max();
 }
 
-PortalInputCapture::PortalInputCapture(EiComputer *screen, IEventQueue *events)
-    : m_computer{screen},
+PortalInputCapture::PortalInputCapture(EiComputer *computer, IEventQueue *events)
+    : m_computer{computer},
       m_events{events},
       m_portalVersion(0),
       m_portal{xdp_portal_new()}
@@ -413,7 +415,7 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
 }
 
 std::pair<int, int>
-PortalInputCapture::mapPortalActivationToScreenPosition(guint barrierId, double rawX, double rawY) const
+PortalInputCapture::mapPortalActivationToComputerPosition(guint barrierId, double rawX, double rawY) const
 {
   auto x = static_cast<int>(rawX);
   auto y = static_cast<int>(rawY);
@@ -429,35 +431,35 @@ PortalInputCapture::mapPortalActivationToScreenPosition(guint barrierId, double 
   const auto zoneRight = it->x + static_cast<gint>(it->width) - 1;
   const auto zoneBottom = it->y + static_cast<gint>(it->height) - 1;
 
-  std::int32_t screenX;
-  std::int32_t screenY;
-  std::int32_t screenW;
-  std::int32_t screenH;
-  m_computer->getShape(screenX, screenY, screenW, screenH);
+  std::int32_t computerX;
+  std::int32_t computerY;
+  std::int32_t computerW;
+  std::int32_t computerH;
+  m_computer->getShape(computerX, computerY, computerW, computerH);
 
   if (Bounds portalBounds; getPortalBounds(portalBounds)) {
-    x = scaleCoordinateBetweenRanges(rawX, portalBounds.left, portalBounds.right, screenX, screenX + screenW - 1);
-    y = scaleCoordinateBetweenRanges(rawY, portalBounds.top, portalBounds.bottom, screenY, screenY + screenH - 1);
+    x = scaleCoordinateBetweenRanges(rawX, portalBounds.left, portalBounds.right, computerX, computerX + computerW - 1);
+    y = scaleCoordinateBetweenRanges(rawY, portalBounds.top, portalBounds.bottom, computerY, computerY + computerH - 1);
   } else {
     x = std::clamp(x, zoneLeft, zoneRight);
     y = std::clamp(y, zoneTop, zoneBottom);
   }
 
-  // The portal reports per-output zones, while Deskflow models the whole computer as one screen.
+  // The portal reports per-output zones, while Deskflow models the whole computer as one computer.
   // Use the activated barrier to preserve the intended switch direction in Deskflow's aggregate coordinates.
   using enum BarrierSide;
   switch (it->side) {
   case Left:
-    x = screenX;
+    x = computerX;
     break;
   case Right:
-    x = screenX + screenW - 1;
+    x = computerX + computerW - 1;
     break;
   case Top:
-    y = screenY;
+    y = computerY;
     break;
   case Bottom:
-    y = screenY + screenH - 1;
+    y = computerY + computerH - 1;
     break;
   }
 
@@ -466,16 +468,16 @@ PortalInputCapture::mapPortalActivationToScreenPosition(guint barrierId, double 
 
 std::pair<double, double> PortalInputCapture::mapPortalReleasePosition(double x, double y) const
 {
-  std::int32_t screenX;
-  std::int32_t screenY;
-  std::int32_t screenW;
-  std::int32_t screenH;
-  m_computer->getShape(screenX, screenY, screenW, screenH);
+  std::int32_t computerX;
+  std::int32_t computerY;
+  std::int32_t computerW;
+  std::int32_t computerH;
+  m_computer->getShape(computerX, computerY, computerW, computerH);
 
-  const auto screenLeft = screenX;
-  const auto screenTop = screenY;
-  const auto screenRight = screenX + screenW - 1;
-  const auto screenBottom = screenY + screenH - 1;
+  const auto computerLeft = computerX;
+  const auto computerTop = computerY;
+  const auto computerRight = computerX + computerW - 1;
+  const auto computerBottom = computerY + computerH - 1;
   const auto jumpZoneSize = m_computer->getJumpZoneSize();
   Bounds portalBounds;
   if (!getPortalBounds(portalBounds)) {
@@ -485,8 +487,9 @@ std::pair<double, double> PortalInputCapture::mapPortalReleasePosition(double x,
   auto mappedX = static_cast<std::int32_t>(std::lround(x));
   auto mappedY = static_cast<std::int32_t>(std::lround(y));
 
-  if (BarrierInfo releaseBarrier;
-      getClosestReleaseBarrier(x, y, screenLeft, screenTop, screenRight, screenBottom, portalBounds, releaseBarrier)) {
+  if (BarrierInfo releaseBarrier; getClosestReleaseBarrier(
+          x, y, computerLeft, computerTop, computerRight, computerBottom, portalBounds, releaseBarrier
+      )) {
     const Bounds releaseBounds = {
         releaseBarrier.x, releaseBarrier.y, releaseBarrier.x + static_cast<gint>(releaseBarrier.width) - 1,
         releaseBarrier.y + static_cast<gint>(releaseBarrier.height) - 1
@@ -713,7 +716,7 @@ void PortalInputCapture::handleActivated(
 
       if (const bool hasBarrierId = g_variant_lookup(options, "barrier_id", "u", &barrierId);
           hasBarrierId && barrierId > 0) {
-        auto [mappedX, mappedY] = mapPortalActivationToScreenPosition(barrierId, x, y);
+        auto [mappedX, mappedY] = mapPortalActivationToComputerPosition(barrierId, x, y);
         warpX = mappedX;
         warpY = mappedY;
       } else if (!hasBarrierId) {

@@ -18,8 +18,8 @@
 
 namespace deskflow {
 
-PortalRemoteDesktop::PortalRemoteDesktop(EiComputer *screen, IEventQueue *events)
-    : m_computer{screen},
+PortalRemoteDesktop::PortalRemoteDesktop(EiComputer *computer, IEventQueue *events)
+    : m_computer{computer},
       m_events{events},
       m_portal{xdp_portal_new()}
 {

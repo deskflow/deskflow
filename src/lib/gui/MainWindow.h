@@ -126,7 +126,7 @@ private:
   void connectSlots();
   void handleLogLine(const QString &line);
   void updateFingerprintButton();
-  void updateScreenName();
+  void updateComputerName();
   void saveSettings() const;
   void showConfigureServer(const QString &message);
   void showConfigureClient();

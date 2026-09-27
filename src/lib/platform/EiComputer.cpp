@@ -45,7 +45,7 @@ EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
       m_events{events},
       m_w{1},
       m_h{1},
-      m_isOnScreen{isPrimary}
+      m_isOnComputer{isPrimary}
 {
   initEi();
   m_keyState = new EiKeyState(this, events);
@@ -69,7 +69,7 @@ EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
         handlePortalSessionClosed();
       });
       m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
-      // Create clipboard for remote desktop (secondary screen)
+      // Create clipboard for remote desktop (secondary computer)
       m_clipboard = new EiClipboard(kClipboardClipboard);
     }
   } else {
@@ -341,7 +341,7 @@ void EiComputer::fakeMouseButton(ButtonID button, bool press)
 void EiComputer::fakeMouseMove(int32_t x, int32_t y)
 {
   // We get one motion event before enter() with the target position
-  if (!m_isOnScreen) {
+  if (!m_isOnComputer) {
     m_cursorX = x;
     m_cursorY = y;
     return;
@@ -413,7 +413,7 @@ void EiComputer::cancelIdleEmulationTimer() const
 
 void EiComputer::ensureEmulating() const
 {
-  if (m_isPrimary || !m_isOnScreen)
+  if (m_isPrimary || !m_isOnComputer)
     return;
 
   if (!m_isEmulating) {
@@ -451,10 +451,10 @@ void EiComputer::stopEmulating() const
 
 void EiComputer::enter()
 {
-  m_isOnScreen = true;
+  m_isOnComputer = true;
   if (!m_isPrimary && m_eiAbs) {
     // Emulation is started lazily by ensureEmulating() on the first injected
-    // input and released again after a short idle, so this screen can DPMS-sleep
+    // input and released again after a short idle, so this computer can DPMS-sleep
     // while the cursor sits here with no relayed activity.
     fakeMouseMove(m_cursorX, m_cursorY);
   } else if (m_isPrimary) {
@@ -476,7 +476,7 @@ void EiComputer::leave()
     stopEmulating();
   }
 
-  m_isOnScreen = false;
+  m_isOnComputer = false;
 }
 
 bool EiComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
@@ -902,7 +902,7 @@ void EiComputer::onMotionEvent(ei_event *event)
     return;
   }
 
-  if (m_isOnScreen) {
+  if (m_isOnComputer) {
     LOG_DEBUG("event: motion on primary x=%i y=%i", m_cursorX, m_cursorY);
     sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_cursorX, m_cursorY));
     if (m_portalInputCapture->isActive()) {
@@ -1020,7 +1020,7 @@ void EiComputer::handleSystemEvent(const Event &)
       break;
     case EI_EVENT_DEVICE_RESUMED:
       LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
-      if (!m_isPrimary && m_isOnScreen) {
+      if (!m_isPrimary && m_isOnComputer) {
         ensureEmulating();
       }
       break;

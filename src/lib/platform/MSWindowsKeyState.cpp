@@ -845,7 +845,7 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
 void MSWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   BYTE keyState[256];
-  // The caller's GetKeyboardState queue can lag the low-level hook during a screen switch.
+  // The caller's GetKeyboardState queue can lag the low-level hook during a computer switch.
   if (!MSWindowsHook::getPhysicalKeyState(keyState) && !GetKeyboardState(keyState)) {
     LOG_WARN("keyboard state is unexpected");
     LOG_DEBUG("function 'GetKeyboardState' returned false on 'pollPressedKeys'");

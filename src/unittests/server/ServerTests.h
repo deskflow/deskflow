@@ -10,6 +10,6 @@ class ServerTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
-  void SwitchToComputerInfo_alloc_screen();
-  void KeyboardBroadcastInfo_alloc_stateAndSceens();
+  void SwitchToComputerInfo_alloc_computer();
+  void KeyboardBroadcastInfo_alloc_stateAndComputers();
 };

@@ -24,7 +24,9 @@ class ComputerSettingsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ComputerSettingsDialog(QWidget *parent, Computer *screen = nullptr, const ComputerList *screens = nullptr);
+  explicit ComputerSettingsDialog(
+      QWidget *parent, Computer *computer = nullptr, const ComputerList *computers = nullptr
+  );
   ~ComputerSettingsDialog() override;
 
 public Q_SLOTS:

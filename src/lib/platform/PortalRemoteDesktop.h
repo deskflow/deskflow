@@ -20,7 +20,7 @@ namespace deskflow {
 class PortalRemoteDesktop
 {
 public:
-  PortalRemoteDesktop(EiComputer *screen, IEventQueue *events);
+  PortalRemoteDesktop(EiComputer *computer, IEventQueue *events);
   ~PortalRemoteDesktop();
 
   void claimClipboard() const;

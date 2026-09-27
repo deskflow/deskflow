@@ -26,20 +26,20 @@ public:
   //! @name manipulators
   //@{
 
-  //! Enter screen
+  //! Enter computer
   /*!
-  Enter the screen.  The cursor should be warped to \p xAbs,yAbs.
+  Enter the computer.  The cursor should be warped to \p xAbs,yAbs.
   \p mask is the expected toggle button state and the client should
   update its state to match.  \p forScreensaver is true iff the
-  screen is being entered because the screen saver is starting.
+  computer is being entered because the screen saver is starting.
   Subsequent clipboard events should report \p seqNum.
   */
   virtual void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
 
-  //! Leave screen
+  //! Leave computer
   /*!
-  Leave the screen.  Return false iff the user may not leave the
-  client's screen (because, for example, a button is down).
+  Leave the computer.  Return false iff the user may not leave the
+  client's computer (because, for example, a button is down).
   */
   virtual bool leave() = 0;
 
@@ -107,7 +107,7 @@ public:
   //! Notify of mouse motion
   /*!
   Synthesize mouse events to generate mouse motion to the absolute
-  screen position \c xAbs,yAbs.
+  computer position \c xAbs,yAbs.
   */
   virtual void mouseMove(int32_t xAbs, int32_t yAbs) = 0;
 

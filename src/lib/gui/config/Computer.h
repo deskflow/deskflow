@@ -29,16 +29,16 @@ class Computer : public ComputerConfig
   friend class ComputerSetupModel;
   friend class ComputerSetupView;
 
-  friend QDataStream &operator<<(QDataStream &outStream, const Computer &screen)
+  friend QDataStream &operator<<(QDataStream &outStream, const Computer &computer)
   {
-    return outStream << screen.name() << screen.switchCornerSize() << screen.aliases() << screen.modifiers()
-                     << screen.switchCorners() << screen.fixes() << screen.isServer();
+    return outStream << computer.name() << computer.switchCornerSize() << computer.aliases() << computer.modifiers()
+                     << computer.switchCorners() << computer.fixes() << computer.isServer();
   }
 
-  friend QDataStream &operator>>(QDataStream &inStream, Computer &screen)
+  friend QDataStream &operator>>(QDataStream &inStream, Computer &computer)
   {
-    return inStream >> screen.m_Name >> screen.m_SwitchCornerSize >> screen.m_Aliases >> screen.m_Modifiers >>
-           screen.m_SwitchCorners >> screen.m_Fixes >> screen.m_isServer;
+    return inStream >> computer.m_Name >> computer.m_SwitchCornerSize >> computer.m_Aliases >> computer.m_Modifiers >>
+           computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer;
   }
 
 public:
@@ -93,7 +93,6 @@ public:
   void loadSettings(QSettingsProxy &settings);
   void saveSettings(QSettingsProxy &settings) const;
   [[nodiscard]] QString screensSection() const;
-  [[nodiscard]] QString aliasesSection() const;
 
   [[nodiscard]] bool swapped() const
   {
@@ -113,7 +112,7 @@ public:
     m_isServer = true;
   }
 
-  bool operator==(const Computer &screen) const;
+  bool operator==(const Computer &computer) const;
 
 protected:
   QStringList &aliases()

@@ -25,7 +25,7 @@ class ComputerSetupModel : public QAbstractTableModel
   friend class ServerConfigDialog;
 
 public:
-  ComputerSetupModel(ComputerList &screens, int numColumns, int numRows);
+  ComputerSetupModel(ComputerList &computers, int numColumns, int numRows);
 
   static const QString &mimeType()
   {

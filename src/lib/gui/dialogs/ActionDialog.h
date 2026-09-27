@@ -32,7 +32,7 @@ public:
     inline static const auto ToggleKey = 2;
     inline static const auto SwitchTo = 3;
     inline static const auto SwitchInDirection = 4;
-    inline static const auto SwitchToNextScreen = 5;
+    inline static const auto SwitchToNextComputer = 5;
     inline static const auto ModifyCursorLock = 6;
     inline static const auto RestartServer = 7;
   };

@@ -77,17 +77,17 @@ void SettingsTests::checkValidSettings()
   }
 }
 
-void SettingsTests::checkCleanScreenName()
+void SettingsTests::checkCleanComputerName()
 {
-  const auto input = QStringLiteral("--!_ _-S@c#r$e%e^&*(n)= +Name\n[1]2|3?4--5>6<,7`~/8*90\\.lan--..    ..");
-  const auto expected = QStringLiteral("Screen_Name_1234--567890.lan");
+  const auto input = QStringLiteral("--!_ _-C@o#mpu$t%e^&*(r)= +Name\n[1]2|3?4--5>6<,7`~/8*90\\.lan--..    ..");
+  const auto expected = QStringLiteral("Computer_Name_1234--567890.lan");
 
   Settings::setValue(Settings::Core::ComputerName, input);
 
   QCOMPARE(Settings::value(Settings::Core::ComputerName).toString(), expected);
 }
 
-void SettingsTests::checkCleanScreenName_LongName()
+void SettingsTests::checkCleanComputerName_LongName()
 {
   QString input;
   input.fill('f', 300);

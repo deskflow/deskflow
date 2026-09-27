@@ -14,7 +14,7 @@
 #include <QList>
 
 namespace deskflow {
-class Screen;
+class Computer;
 class ClientArgs;
 } // namespace deskflow
 
@@ -60,7 +60,7 @@ public:
   void handleClientFailed(const Event &e);
   void handleClientRefused(const Event &e);
   void handleClientDisconnected();
-  Client *openClient(const std::string &name, const NetworkAddress &address, deskflow::Computer *screen);
+  Client *openClient(const std::string &name, const NetworkAddress &address, deskflow::Computer *computer);
   void closeClient(Client *client);
   bool startClient();
   void stopClient();

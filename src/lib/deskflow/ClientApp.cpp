@@ -230,9 +230,9 @@ void ClientApp::handleClientDisconnected()
   }
 }
 
-Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Computer *screen)
+Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Computer *computer)
 {
-  auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen);
+  auto *client = new Client(getEvents(), name, address, getSocketFactory(), computer);
 
   try {
     getEvents()->addHandler(EventTypes::ClientConnected, client->getEventTarget(), [this](const auto &) {
@@ -288,10 +288,10 @@ bool ClientApp::startClient()
     m_client->connect(m_lastServerAddressIndex);
 
     return true;
-  } catch (ScreenUnavailableException &e) {
-    LOG_WARN("secondary screen unavailable: %s", e.what());
+  } catch (X11DisplayUnavailableException &e) {
+    LOG_WARN("secondary computer unavailable: %s", e.what());
     closeClientComputer(clientComputer);
-  } catch (ScreenOpenFailureException &e) {
+  } catch (DisplayOpenFailureException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientComputer(clientComputer);
     m_retryCount = 0;

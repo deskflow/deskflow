@@ -65,7 +65,7 @@ private:
   {
     return m_computers;
   }
-  void setScreens(const ComputerList &computers)
+  void setComputers(const ComputerList &computers)
   {
     m_computers = computers;
   }

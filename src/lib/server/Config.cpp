@@ -67,9 +67,11 @@ bool Config::addComputer(const std::string &name)
       Settings::value(Settings::Computer::XtestIsXineramaUnaware.arg(computer)).toBool()
   );
   addOption(
-      name, kOptionScreenSwitchCornerSize, Settings::value(Settings::Computer::SwitchCornerSize.arg(computer)).toInt()
+      name, kOptionComputerSwitchCornerSize, Settings::value(Settings::Computer::SwitchCornerSize.arg(computer)).toInt()
   );
-  addOption(name, kOptionScreenX11WeakFocus, Settings::value(Settings::Computer::WeakX11Focus.arg(computer)).toBool());
+  addOption(
+      name, kOptionComputerX11WeakFocus, Settings::value(Settings::Computer::WeakX11Focus.arg(computer)).toBool()
+  );
 
   OptionValue cornerValue = s_noCornerMask;
   if (Settings::value(Settings::Computer::SwitchCornerTopLeft.arg(computer)).toBool()) {
@@ -84,7 +86,7 @@ bool Config::addComputer(const std::string &name)
   if (Settings::value(Settings::Computer::SwitchCornerBottomRight.arg(computer)).toBool()) {
     cornerValue = cornerValue | s_bottomRightCornerMask;
   }
-  addOption(name, kOptionScreenSwitchCorners, cornerValue);
+  addOption(name, kOptionComputerSwitchCorners, cornerValue);
 
   auto altModifier = Settings::value(Settings::Computer::ModifierAlt.arg(computer)).toString();
   if (altModifier.isEmpty())
@@ -537,17 +539,17 @@ void Config::readSectionOptions(ConfigReadContext &s)
   }
 
   if (Settings::value(Settings::Server::EnableSwitchDelay).toBool()) {
-    addOption("", kOptionScreenSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
+    addOption("", kOptionComputerSwitchDelay, Settings::value(Settings::Server::SwitchDelay).toInt());
   }
 
   if (Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool()) {
-    addOption("", kOptionScreenSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
+    addOption("", kOptionComputerSwitchTwoTap, Settings::value(Settings::Server::SwitchDoubleTap).toInt());
   }
 
   addOption(
-      "", kOptionDefaultLockToScreenState, Settings::value(Settings::Server::DefaultLockToComputerState).toBool()
+      "", kOptionDefaultLockToComputerState, Settings::value(Settings::Server::DefaultLockToComputerState).toBool()
   );
-  addOption("", kOptionDisableLockToScreen, Settings::value(Settings::Server::DisableLockToComputer).toBool());
+  addOption("", kOptionDisableLockToComputer, Settings::value(Settings::Server::DisableLockToComputer).toBool());
   addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toBool());
   addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toBool());
   addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());

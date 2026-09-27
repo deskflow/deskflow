@@ -86,14 +86,14 @@ bool OSXComputer::s_hasGHOM = false;
 OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSync)
     : PlatformComputer(events),
       m_isPrimary(isPrimary),
-      m_isOnScreen(m_isPrimary),
+      m_isOnComputer(m_isPrimary),
       m_cursorPosValid(false),
       MouseButtonEventMap(NumButtonIDs),
       m_cursorHidden(false),
       m_keyState(nullptr),
       m_sequenceNumber(0),
-      m_computersaver(nullptr),
-      m_computersaverNotify(false),
+      m_screensaver(nullptr),
+      m_screensaverNotify(false),
       m_ownClipboard(false),
       m_clipboardTimer(nullptr),
       m_axTimer(nullptr),
@@ -116,12 +116,12 @@ OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSyn
       m_impl(nullptr)
 {
   m_displayID = CGMainDisplayID();
-  if (!updateScreenShape(m_displayID, 0)) {
+  if (!updateComputerShape(m_displayID, 0)) {
     throw DisplayInvalidException("failed to initialize computer shape");
   }
 
   try {
-    m_computersaver = new OSXScreenSaver(m_events, getEventTarget());
+    m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
     m_keyState = new OSXKeyState(m_events, AppUtil::instance().getKeyboardLayoutList(), enableLangSync);
 
     if (Settings::value(Settings::Core::PreventSleep).toBool()) {
@@ -171,7 +171,7 @@ OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSyn
     CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
     delete m_keyState;
-    delete m_computersaver;
+    delete m_screensaver;
     throw;
   }
 
@@ -217,7 +217,7 @@ OSXComputer::~OSXComputer()
   CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
   delete m_keyState;
-  delete m_computersaver;
+  delete m_screensaver;
 
   delete m_carbonLoopMutex;
   delete m_carbonLoopReady;
@@ -786,12 +786,12 @@ void OSXComputer::disable()
     m_axTimer = nullptr;
   }
 
-  m_isOnScreen = m_isPrimary;
+  m_isOnComputer = m_isPrimary;
 }
 
 void OSXComputer::enter()
 {
-  m_isOnScreen = true;
+  m_isOnComputer = true;
   showCursor();
 
   if (m_isPrimary) {
@@ -831,8 +831,8 @@ void OSXComputer::leave()
     CGAssociateMouseAndMouseCursorPosition(false);
   }
 
-  // now off screen
-  m_isOnScreen = false;
+  // now off computer
+  m_isOnComputer = false;
 }
 
 bool OSXComputer::setClipboard(ClipboardID, const IClipboard *src)
@@ -856,25 +856,25 @@ void OSXComputer::checkClipboards()
 
 void OSXComputer::openScreensaver(bool notify)
 {
-  m_computersaverNotify = notify;
-  if (!m_computersaverNotify) {
-    m_computersaver->disable();
+  m_screensaverNotify = notify;
+  if (!m_screensaverNotify) {
+    m_screensaver->disable();
   }
 }
 
 void OSXComputer::closeScreensaver()
 {
-  if (!m_computersaverNotify) {
-    m_computersaver->enable();
+  if (!m_screensaverNotify) {
+    m_screensaver->enable();
   }
 }
 
 void OSXComputer::screensaver(bool activate)
 {
   if (activate) {
-    m_computersaver->activate();
+    m_screensaver->activate();
   } else {
-    m_computersaver->deactivate();
+    m_screensaver->deactivate();
   }
 }
 
@@ -989,8 +989,8 @@ void OSXComputer::handleSystemEvent(const Event &event)
 
 bool OSXComputer::onMouseMove(CGEventRef event)
 {
-  if (m_isOnScreen) {
-    // motion on primary screen.  the event may have been queued a while, so
+  if (m_isOnComputer) {
+    // motion on primary computer.  the event may have been queued a while, so
     // query the live cursor position rather than the stale event position.
     CGEventRef posEvent = CGEventCreate(NULL);
     CGPoint pos = CGEventGetLocation(posEvent);
@@ -1012,7 +1012,7 @@ bool OSXComputer::onMouseMove(CGEventRef event)
 
     sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
-    // motion on secondary screen.  the cursor is frozen (see leave()), so read
+    // motion on secondary computer.  the cursor is frozen (see leave()), so read
     // raw deltas from the event instead of diffing position.
     int32_t dx = (int32_t)CGEventGetIntegerValueField(event, kCGMouseEventDeltaX);
     int32_t dy = (int32_t)CGEventGetIntegerValueField(event, kCGMouseEventDeltaY);
@@ -1060,7 +1060,7 @@ void OSXComputer::displayReconfigurationCallback(
     CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void *inUserData
 )
 {
-  OSXComputer *screen = (OSXComputer *)inUserData;
+  OSXComputer *computer = (OSXComputer *)inUserData;
 
   // Closing or opening the lid when an external monitor is
   // connected causes an kCGDisplayBeginConfigurationFlag event
@@ -1073,7 +1073,7 @@ void OSXComputer::displayReconfigurationCallback(
 
   if (flags & mask) { /* Something actually did change */
     LOG_VERBOSE("event: computer changed shape; refreshing dimensions");
-    if (!screen->updateScreenShape(displayID, flags)) {
+    if (!computer->updateComputerShape(displayID, flags)) {
       LOG_ERR("failed to update computer shape during display reconfiguration");
     }
   }
@@ -1305,12 +1305,12 @@ IKeyState *OSXComputer::getKeyState() const
   return m_keyState;
 }
 
-bool OSXComputer::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
+bool OSXComputer::updateComputerShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
-  return updateScreenShape();
+  return updateComputerShape();
 }
 
-bool OSXComputer::updateScreenShape()
+bool OSXComputer::updateComputerShape()
 {
   // get info for each display
   CGDisplayCount displayCount = 0;
@@ -1340,20 +1340,20 @@ bool OSXComputer::updateScreenShape()
     totalBounds = CGRectUnion(totalBounds, bounds);
   }
 
-  // get shape of default screen
+  // get shape of default computer
   m_x = (int32_t)totalBounds.origin.x;
   m_y = (int32_t)totalBounds.origin.y;
   m_w = (int32_t)totalBounds.size.width;
   m_h = (int32_t)totalBounds.size.height;
 
-  // get center of default screen
+  // get center of default computer
   CGDirectDisplayID main = CGMainDisplayID();
   const CGRect rect = CGDisplayBounds(main);
   m_xCenter = (rect.origin.x + rect.size.width) / 2;
   m_yCenter = (rect.origin.y + rect.size.height) / 2;
 
   delete[] displays;
-  // We want to notify the peer screen whether we are primary screen or not
+  // We want to notify the peer computer whether we are primary computer or not
   sendEvent(EventTypes::ComputerShapeChanged);
 
   LOG_DEBUG(
@@ -1376,16 +1376,16 @@ bool OSXComputer::updateScreenShape()
 
 pascal OSStatus OSXComputer::userSwitchCallback(EventHandlerCallRef nextHandler, EventRef theEvent, void *inUserData)
 {
-  OSXComputer *screen = (OSXComputer *)inUserData;
+  OSXComputer *computer = (OSXComputer *)inUserData;
   uint32_t kind = GetEventKind(theEvent);
-  IEventQueue *events = screen->getEvents();
+  IEventQueue *events = computer->getEvents();
 
   if (kind == kEventSystemUserSessionDeactivated) {
     LOG_DEBUG("user session deactivated");
-    events->addEvent(Event(EventTypes::ComputerSuspend, screen->getEventTarget()));
+    events->addEvent(Event(EventTypes::ComputerSuspend, computer->getEventTarget()));
   } else if (kind == kEventSystemUserSessionActivated) {
     LOG_DEBUG("user session activated");
-    events->addEvent(Event(EventTypes::ComputerResume, screen->getEventTarget()));
+    events->addEvent(Event(EventTypes::ComputerResume, computer->getEventTarget()));
   }
   return (CallNextEventHandler(nextHandler, theEvent));
 }
@@ -1654,7 +1654,7 @@ bool OSXComputer::HotKeyItem::operator<(const HotKeyItem &x) const
 
 // Quartz event tap support for the secondary display. This makes sure that we
 // will show the cursor if a local event comes in while deskflow has the cursor
-// off the screen.
+// off the computer.
 CGEventRef
 OSXComputer::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
@@ -1662,14 +1662,14 @@ OSXComputer::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type
   // should be tested better before reintroducing.
   return event;
 
-  OSXComputer *screen = (OSXComputer *)refcon;
-  if (screen->m_cursorHidden && type == kCGEventMouseMoved) {
+  OSXComputer *computer = (OSXComputer *)refcon;
+  if (computer->m_cursorHidden && type == kCGEventMouseMoved) {
 
     CGPoint pos = CGEventGetLocation(event);
-    if (pos.x != screen->m_xCenter || pos.y != screen->m_yCenter) {
+    if (pos.x != computer->m_xCenter || pos.y != computer->m_yCenter) {
 
       LOG_DEBUG("show cursor on secondary, type=%d pos=%d,%d", type, pos.x, pos.y);
-      screen->showCursor();
+      computer->showCursor();
     }
   }
   return event;
@@ -1678,42 +1678,42 @@ OSXComputer::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type
 // Quartz event tap support
 CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
-  OSXComputer *screen = (OSXComputer *)refcon;
+  OSXComputer *computer = (OSXComputer *)refcon;
 
   switch (type) {
   case kCGEventLeftMouseDown:
   case kCGEventRightMouseDown:
   case kCGEventOtherMouseDown:
-    screen->onMouseButton(true, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
+    computer->onMouseButton(true, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
     break;
   case kCGEventLeftMouseUp:
   case kCGEventRightMouseUp:
   case kCGEventOtherMouseUp:
-    screen->onMouseButton(false, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
+    computer->onMouseButton(false, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
     break;
   case kCGEventLeftMouseDragged:
   case kCGEventRightMouseDragged:
   case kCGEventOtherMouseDragged:
   case kCGEventMouseMoved:
-    // off-screen the cursor is frozen (see leave()), so fall through to consume
+    // off-computer the cursor is frozen (see leave()), so fall through to consume
     // the move below instead of returning (leaking) it to local apps.
-    screen->onMouseMove(event);
+    computer->onMouseMove(event);
     break;
   case kCGEventScrollWheel:
-    screen->onMouseWheel(
-        screen->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
-        screen->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1))
+    computer->onMouseWheel(
+        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
+        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1))
     );
     break;
   case kCGEventKeyDown:
   case kCGEventKeyUp:
   case kCGEventFlagsChanged:
-    screen->onKey(event);
+    computer->onKey(event);
     break;
   case kCGEventTapDisabledByTimeout:
     // Re-enable our event-tap if we still have accessibility permissions
-    if (screen->checkAXPermissions()) {
-      CGEventTapEnable(screen->m_eventTapPort, true);
+    if (computer->checkAXPermissions()) {
+      CGEventTapEnable(computer->m_eventTapPort, true);
       LOG_INFO("quartz event tap was disabled by timeout, re-enabling");
     }
     break;
@@ -1726,7 +1726,7 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
     if (type == NX_SYSDEFINED) {
       if (isMediaKeyEvent(event)) {
         LOG_VERBOSE("detected media key event");
-        screen->onMediaKey(event);
+        computer->onMediaKey(event);
       } else {
         LOG_VERBOSE("ignoring unknown system defined event");
         return event;
@@ -1737,7 +1737,7 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
     LOG_VERBOSE("unknown quartz event type: 0x%02x", type);
   }
 
-  if (screen->m_isOnScreen) {
+  if (computer->m_isOnComputer) {
     return event;
   } else {
     return nullptr;
@@ -1928,9 +1928,9 @@ void logCursorVisibility()
 
 void avoidHesitatingCursor()
 {
-  // This used to be necessary to get smooth mouse motion on other screens,
+  // This used to be necessary to get smooth mouse motion on other computers,
   // but now is just to avoid a hesitating cursor when transitioning to
-  // the primary (this) screen.
+  // the primary (this) computer.
   CGSetLocalEventsSuppressionInterval(0.0001);
 }
 

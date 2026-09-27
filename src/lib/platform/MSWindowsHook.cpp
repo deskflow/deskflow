@@ -28,10 +28,10 @@ static bool g_screenSaver = false;
 static EHookMode g_mode = kHOOK_DISABLE;
 static uint32_t g_zoneSides = 0;
 static int32_t g_zoneSize = 0;
-static int32_t g_xScreen = 0;
-static int32_t g_yScreen = 0;
-static int32_t g_wScreen = 0;
-static int32_t g_hScreen = 0;
+static int32_t g_xComputer = 0;
+static int32_t g_yComputer = 0;
+static int32_t g_wComputer = 0;
+static int32_t g_hComputer = 0;
 static WPARAM g_deadVirtKey = 0;
 static WPARAM g_deadRelease = 0;
 static LPARAM g_deadLParam = 0;
@@ -64,7 +64,7 @@ void MSWindowsHook::loadLibrary()
   if (init(GetCurrentThreadId()) == 0) {
     LOG_ERR("failed to init %s.dll, another program may be using it", g_name);
     LOG_INFO("restarting your computer may solve this error");
-    throw ScreenOpenFailureException();
+    throw DisplayOpenFailureException();
   }
 }
 
@@ -102,10 +102,10 @@ int MSWindowsHook::init(DWORD threadID)
   g_mode = kHOOK_DISABLE;
   g_zoneSides = 0;
   g_zoneSize = 0;
-  g_xScreen = 0;
-  g_yScreen = 0;
-  g_wScreen = 0;
-  g_hScreen = 0;
+  g_xComputer = 0;
+  g_yComputer = 0;
+  g_wComputer = 0;
+  g_hComputer = 0;
 
   return 1;
 }
@@ -132,10 +132,10 @@ uint32_t MSWindowsHook::getSides()
 void MSWindowsHook::setZone(int32_t x, int32_t y, int32_t w, int32_t h, int32_t jumpZoneSize)
 {
   g_zoneSize = jumpZoneSize;
-  g_xScreen = x;
-  g_yScreen = y;
-  g_wScreen = w;
-  g_hScreen = h;
+  g_xComputer = x;
+  g_yComputer = y;
+  g_wComputer = w;
+  g_hComputer = h;
 }
 
 void MSWindowsHook::setMode(EHookMode mode)
@@ -296,9 +296,9 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   if ((menu & 0x80) != 0)
     flags |= 1;
 
-  // if we're on the server screen then just pass numpad keys with alt
+  // if we're on the server computer then just pass numpad keys with alt
   // key down as-is.  we won't pick up the resulting character but the
-  // local app will.  if on a client screen then grab keys as usual;
+  // local app will.  if on a client computer then grab keys as usual;
   // if the client is a windows system it'll synthesize the expected
   // character.  if not then it'll probably just do nothing.
   if (g_mode != kHOOK_RELAY_EVENTS) {
@@ -541,27 +541,27 @@ static bool mouseHookHandler(WPARAM wParam, int32_t x, int32_t y, int32_t data)
       return true;
     } else if (g_mode == kHOOK_WATCH_JUMP_ZONE) {
       // low level hooks can report bogus mouse positions that are
-      // outside of the screen.  jeez.  naturally we end up getting
+      // outside of the computer.  jeez.  naturally we end up getting
       // fake motion in the other direction to get the position back
-      // on the screen, which plays havoc with switch on double tap.
+      // on the computer, which plays havoc with switch on double tap.
       // Server deals with that.  we'll clamp positions onto the
-      // screen.  also, if we discard events for positions outside
-      // of the screen then the mouse appears to get a bit jerky
+      // computer.  also, if we discard events for positions outside
+      // of the computer then the mouse appears to get a bit jerky
       // near the edge.  we can either accept that or pass the bogus
       // events.  we'll try passing the events.
       bool bogus = false;
-      if (x < g_xScreen) {
-        x = g_xScreen;
+      if (x < g_xComputer) {
+        x = g_xComputer;
         bogus = true;
-      } else if (x >= g_xScreen + g_wScreen) {
-        x = g_xScreen + g_wScreen - 1;
+      } else if (x >= g_xComputer + g_wComputer) {
+        x = g_xComputer + g_wComputer - 1;
         bogus = true;
       }
-      if (y < g_yScreen) {
-        y = g_yScreen;
+      if (y < g_yComputer) {
+        y = g_yComputer;
         bogus = true;
-      } else if (y >= g_yScreen + g_hScreen) {
-        y = g_yScreen + g_hScreen - 1;
+      } else if (y >= g_yComputer + g_hComputer) {
+        y = g_yComputer + g_hComputer - 1;
         bogus = true;
       }
 
@@ -569,16 +569,16 @@ static bool mouseHookHandler(WPARAM wParam, int32_t x, int32_t y, int32_t data)
       bool inside = false;
       using enum DirectionMask;
       if (!inside && (g_zoneSides & static_cast<int>(LeftMask)) != 0) {
-        inside = (x < g_xScreen + g_zoneSize);
+        inside = (x < g_xComputer + g_zoneSize);
       }
       if (!inside && (g_zoneSides & static_cast<int>(RightMask)) != 0) {
-        inside = (x >= g_xScreen + g_wScreen - g_zoneSize);
+        inside = (x >= g_xComputer + g_wComputer - g_zoneSize);
       }
       if (!inside && (g_zoneSides & static_cast<int>(TopMask)) != 0) {
-        inside = (y < g_yScreen + g_zoneSize);
+        inside = (y < g_yComputer + g_zoneSize);
       }
       if (!inside && (g_zoneSides & static_cast<int>(BottomMask)) != 0) {
-        inside = (y >= g_yScreen + g_hScreen - g_zoneSize);
+        inside = (y >= g_yComputer + g_hComputer - g_zoneSize);
       }
 
       // relay the event

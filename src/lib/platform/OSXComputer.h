@@ -104,8 +104,8 @@ protected:
   IKeyState *getKeyState() const override;
 
 private:
-  bool updateScreenShape();
-  bool updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
+  bool updateComputerShape();
+  bool updateComputerShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
 
   // convenience function to send events
@@ -222,7 +222,7 @@ private:
   bool m_isPrimary;
 
   // true if mouse has entered the screen
-  bool m_isOnScreen;
+  bool m_isOnComputer;
 
   // the display
   CGDirectDisplayID m_displayID;
@@ -260,8 +260,8 @@ private:
   uint32_t m_sequenceNumber;
 
   // screen saver stuff
-  OSXScreenSaver *m_computersaver;
-  bool m_computersaverNotify;
+  OSXScreenSaver *m_screensaver;
+  bool m_screensaverNotify;
 
   // clipboard stuff
   bool m_ownClipboard;

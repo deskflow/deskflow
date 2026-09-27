@@ -310,11 +310,11 @@ bool ServerApp::initServer()
     m_primaryClient = primaryClient;
     m_serverState = Initialized;
     return true;
-  } catch (ScreenUnavailableException &e) {
+  } catch (X11DisplayUnavailableException &e) {
     LOG_WARN("primary computer unavailable: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerComputer(serverComputer);
-  } catch (ScreenOpenFailureException &e) {
+  } catch (DisplayOpenFailureException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerComputer(serverComputer);

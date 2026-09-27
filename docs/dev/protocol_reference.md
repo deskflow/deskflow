@@ -1,6 +1,7 @@
 # Protocol Reference {#protocol_reference}
 
 This document provides a comprehensive reference for the Deskflow network protocol. It is the primary source of information for developers implementing Deskflow clients or extending the protocol.
+ 
 
 ## Protocol Overview
 
@@ -22,7 +23,7 @@ Throughout the documentation, message direction is often described using the Pri
 
 - **[ProtocolTypes.h](@ref ProtocolTypes.h)** – Complete protocol specification
 - **[ProtocolUtil.h](@ref ProtocolUtil.h)** – Message formatting utilities
-- **[ClientInfo](@ref ClientInfo)** – Screen information structure
+- **[ClientInfo](@ref ClientInfo)** – Computer information structure
 
 The protocol is designed to be:
 - Lightweight and efficient
@@ -113,7 +114,7 @@ The client's connection lifecycle is defined by five primary states:
    - If TCP connection fails (timeout, RST packet), returns to `Disconnected`.
 3. **Handshake**: Protocol version negotiation and authentication.
    - @ref Server sends @ref kMsgHello with protocol version information.
-   - @ref Client responds with @ref kMsgHelloBack including version and screen name.
+   - @ref Client responds with @ref kMsgHelloBack including version and computer name.
    - @ref Server validates the client's message.
    - Success transitions to `Connected`, failure sends @ref kMsgEIncompatible error.
 4. **Connected**: Authenticated but not receiving input events.
@@ -131,7 +132,7 @@ The protocol organizes messages into logical categories:
 | Category | Prefix | Purpose | Examples |
 |----------|---------|----------|-----------|
 | **[Handshake](@ref protocol_handshake)** | None | Connection setup | @ref kMsgHello, @ref kMsgHelloBack |
-| **[Commands](@ref protocol_commands)** | `C` | Screen control | @ref kMsgCEnter, @ref kMsgCLeave, @ref kMsgCKeepAlive |
+| **[Commands](@ref protocol_commands)** | `C` | Computer control | @ref kMsgCEnter, @ref kMsgCLeave, @ref kMsgCKeepAlive |
 | **[Data](@ref protocol_data)** | `D` | Input events | @ref kMsgDKeyDown, @ref kMsgDMouseMove, @ref kMsgCClipboard, @ref kMsgDClipboard |
 | **[Queries](@ref protocol_queries)** | `Q` | Information requests | @ref kMsgQInfo |
 | **[Errors](@ref protocol_errors)** | `E` | Error notifications | @ref kMsgEIncompatible, @ref kMsgEBusy |
@@ -146,15 +147,15 @@ This table lists all protocol messages in alphabetical order. For a typical sequ
 | [**CBYE**](@ref kMsgCClose) | @ref kMsgCClose | Command | Server→Client | Close connection | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**CCLP**](@ref kMsgCClipboard) | @ref kMsgCClipboard | Command | Both | Clipboard ownership notification | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**CIAK**](@ref kMsgCInfoAck) | @ref kMsgCInfoAck | Command | Server→Client | Acknowledge info message | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
-| [**CINN**](@ref kMsgCEnter) | @ref kMsgCEnter | Command | Server→Client | Enter screen | [MsgSize](#constraint-protocol-max-message-length), [ScreenEntrySync](#constraint-screen-entry-sync) | 1.0+ |
+| [**CINN**](@ref kMsgCEnter) | @ref kMsgCEnter | Command | Server→Client | Enter computer | [MsgSize](#constraint-protocol-max-message-length), [ComputerEntrySync](#constraint-computer-entry-sync) | 1.0+ |
 | [**CNOP**](@ref kMsgCNoop) | @ref kMsgCNoop | Command | Both | No operation | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
-| [**COUT**](@ref kMsgCLeave) | @ref kMsgCLeave | Command | Server→Client | Leave screen | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
+| [**COUT**](@ref kMsgCLeave) | @ref kMsgCLeave | Command | Server→Client | Leave computer | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**CROP**](@ref kMsgCResetOptions) | @ref kMsgCResetOptions | Command | Server→Client | Reset options to defaults | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**CSEC**](@ref kMsgCScreenSaver) | @ref kMsgCScreenSaver | Command | Server→Client | Screen saver control | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**DCLP**](@ref kMsgDClipboard) | @ref kMsgDClipboard | Data | Both | Clipboard data | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**DDRG**](@ref kMsgDDragInfo) | @ref kMsgDDragInfo | Data | Server→Client | Drag file info | [MsgSize](#constraint-protocol-max-message-length), [ListSize](#constraint-max-list) | 1.5+ |
 | [**DFTR**](@ref kMsgDFileTransfer) | @ref kMsgDFileTransfer | Data | Both | File transfer data | [MsgSize](#constraint-protocol-max-message-length) | 1.5+ |
-| [**DINF**](@ref kMsgDInfo) | @ref kMsgDInfo | Data | Client→Server | Screen information | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
+| [**DINF**](@ref kMsgDInfo) | @ref kMsgDInfo | Data | Client→Server | Computer information | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**DKDL**](@ref kMsgDKeyDown) | @ref kMsgDKeyDown | Data | Server→Client | Key down with language | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.8+ |
 | [**DKDN**](@ref kMsgDKeyDown1_1) | @ref kMsgDKeyDown1_1 | Data | Server→Client | Key down | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.1+ |
 | [**DKDN**](@ref kMsgDKeyDown1_0) | @ref kMsgDKeyDown1_0 | Data | Server→Client | Key down (legacy) | [MsgSize](#constraint-protocol-max-message-length), [KeyMap](#constraint-keymap) | 1.0 |
@@ -179,7 +180,7 @@ This table lists all protocol messages in alphabetical order. For a typical sequ
 | [**HelloBack**](@ref kMsgHelloBack) | @ref kMsgHelloBack | Handshake | Client→Server | Client identification | [HelloSize](#constraint-max-hello), [MsgSize](#constraint-protocol-max-message-length), [HandshakeTimeout](#constraint-handshake-timeout) | 1.0+ |
 | [**HelloBackArgs**](@ref kMsgHelloBackArgs) | @ref kMsgHelloBackArgs | Handshake | Internal | HelloBack message construction | [HelloSize](#constraint-max-hello), [MsgSize](#constraint-protocol-max-message-length), [HandshakeTimeout](#constraint-handshake-timeout) | 1.0+ |
 | [**LSYN**](@ref kMsgDLanguageSynchronisation) | @ref kMsgDLanguageSynchronisation | Data | Server→Client | Language synchronization | [MsgSize](#constraint-protocol-max-message-length) | 1.8+ |
-| [**QINF**](@ref kMsgQInfo) | @ref kMsgQInfo | Query | Server→Client | Request screen info | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
+| [**QINF**](@ref kMsgQInfo) | @ref kMsgQInfo | Query | Server→Client | Request computer info | [MsgSize](#constraint-protocol-max-message-length) | 1.0+ |
 | [**SECN**](@ref kMsgDSecureInputNotification) | @ref kMsgDSecureInputNotification | Data | Server→Client | Secure input notification | [MsgSize](#constraint-protocol-max-message-length) | 1.7+ |
 
 ## Typical Control Flow
@@ -190,9 +191,9 @@ A typical control flow is as follows:
 2.  **Information Exchange**: The server requests client information with `QINF`, and the client responds with `DINF`.
 3.  **Options**: The server sends `DSOP` to configure client options.
 4.  **Keep-Alive**: The server and client periodically exchange `CALV` messages to maintain the connection.
-5.  **Screen Entry**: The server sends `CINN` to grant control to the client.
+5.  **Computer Entry**: The server sends `CINN` to grant control to the client.
 6.  **Input Events**: The server sends a stream of input event messages (e.g., `DMMV`, `DMDN`, `DKDN`).
-7.  **Screen Leave**: The server sends `COUT` to revoke control from the client.
+7.  **Computer Leave**: The server sends `COUT` to revoke control from the client.
 8.  **Connection Close**: The server sends `CCLOSE` to terminate the connection.
 
 ## Protocol Constraints
@@ -263,10 +264,10 @@ A modifier (modifier mask) represents the state of modifier keys (like Shift, Co
 - If no message is received for 9.0 seconds (3 × @ref kKeepAliveRate), client must disconnect
 - This is handled by the  (private) ServerProxy::handleKeepAliveAlarm method
 
-<a id="constraint-screen-entry-sync"></a>
-### Synchronization on Screen Entry
+<a id="constraint-computer-entry-sync"></a>
+### Synchronization on Computer Entry
 
-- The @ref kMsgCEnter (Enter Screen) message includes the current modifier state
+- The @ref kMsgCEnter (Enter Computer) message includes the current modifier state
 - Client must synchronize their local modifier state with this mask
 
 <a id="constraint-handshake-timeout"></a>
@@ -333,7 +334,7 @@ while (connected) {
 ```cpp
 void handle_message(const Message& msg) {
     switch (msg.type) {
-        case "CINN": // Enter screen
+        case "CINN": // Enter computer
             handle_enter(msg.x, msg.y, msg.sequence, msg.modifiers);
             break;
         case "DKDN": // Key down
@@ -375,10 +376,10 @@ Client                                 Server
   | ───────────────────────────────────► | HelloBack message
   |                                      |
   | ◄─────────────────────────────────── |
-  | "QINF"                               | Query screen info
+  | "QINF"                               | Query computer info
   |                                      |
-  | "DINF" + screen dimensions           |
-  | ───────────────────────────────────► | Report screen info
+  | "DINF" + computer dimensions         |
+  | ───────────────────────────────────► | Report computer info
   |                                      |
   | ◄─────────────────────────────────── |
   | "DSOP" + options                     | Set options
@@ -390,7 +391,7 @@ Client                                 Server
   | ───────────────────────────────────► | Keep-alive response
   |                                      |
   | ◄─────────────────────────────────── |
-  | "CINN" + x + y + seq + mask          | Enter screen
+  | "CINN" + x + y + seq + mask          | Enter computer
   |                                      |
   | ◄─────────────────────────────────── |
   | "DMMV" + x + y                       | Mouse move
@@ -408,7 +409,7 @@ Client                                 Server
   | "DKUP" + key + mask + button         | Key up
   |                                      |
   | ◄─────────────────────────────────── |
-  | "COUT"                               | Leave screen
+  | "COUT"                               | Leave computer
   |                                      |
   | ◄─────────────────────────────────── |
   | "CCLOSE"                             | Close connection
@@ -425,17 +426,17 @@ Client                                 Server
 
 - Hello message: @ref kMsgHello
 - HelloBack message: @ref kMsgHelloBack
-- Query screen info: @ref kMsgQInfo
-- Report screen info: @ref kMsgDInfo
+- Query computer info: @ref kMsgQInfo
+- Report computer info: @ref kMsgDInfo
 - Set options: @ref kMsgDSetOptions
 - Keep-alive: @ref kMsgCKeepAlive
-- Enter screen: @ref kMsgCEnter
+- Enter computer: @ref kMsgCEnter
 - Mouse move: @ref kMsgDMouseMove
 - Mouse down: @ref kMsgDMouseDown
 - Mouse up: @ref kMsgDMouseUp
 - Key down: @ref kMsgDKeyDown
 - Key up: @ref kMsgDKeyUp
-- Leave screen: @ref kMsgCLeave
+- Leave computer: @ref kMsgCLeave
 - Close connection: @ref kMsgCClose
 
 ## Debugging and Troubleshooting
@@ -446,7 +447,7 @@ Client                                 Server
 2. **Message Format**: Validate message structure and parameters
 3. **Byte Order**: Ensure network byte order for multi-byte integers
 4. **Keep-Alive**: Implement proper keep-alive response
-5. **Screen Info**: Send accurate screen dimensions and mouse position
+5. **Computer Info**: Send accurate computer dimensions and mouse position
 
 ### Debug Tools
 
@@ -476,8 +477,8 @@ For platform-specific implementation details, refer to:
   - Input event processing (keyboard/mouse)
   - Error handling and recovery
 
-- **Screen Management**
-  - Screen information reporting (DINF)
+- **Computer Management**
+  - Computer information reporting (DINF)
   - Resolution change detection
   - Mouse cursor positioning
 
