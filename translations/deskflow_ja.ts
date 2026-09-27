@@ -1417,22 +1417,22 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
 </context>
 <context>
-    <name>validators::ScreenNameValidator</name>
+    <name>validators::ComputerLineNameValidator</name>
     <message>
         <source>Computer name cannot be empty</source>
-        <translation>コンピュータ名を空にすることはできません</translation>
+        <translation type="unfinished">コンピュータ名を空にすることはできません</translation>
     </message>
     <message>
         <source>Computer name cannot contain spaces</source>
-        <translation>コンピューター名に空白を含めることはできません</translation>
+        <translation type="unfinished">コンピューター名に空白を含めることはできません</translation>
     </message>
     <message>
         <source>Contains invalid characters or is too long</source>
-        <translation>無効な文字が含まれているか長すぎます</translation>
+        <translation type="unfinished">無効な文字が含まれているか長すぎます</translation>
     </message>
     <message>
         <source>A computer with this name already exists</source>
-        <translation>この名前のコンピューターはすでに存在します</translation>
+        <translation type="unfinished">この名前のコンピューターはすでに存在します</translation>
     </message>
 </context>
 </TS>

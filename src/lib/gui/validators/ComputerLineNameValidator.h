@@ -13,12 +13,12 @@ class ComputerList;
 namespace validators {
 class ValidationError;
 
-class ScreenNameValidator : public LineEditValidator
+class ComputerLineNameValidator : public LineEditValidator
 {
   Q_OBJECT
 public:
-  explicit ScreenNameValidator(
-      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr, const ComputerList *pScreens = nullptr
+  explicit ComputerLineNameValidator(
+      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr, const ComputerList *pComputers = nullptr
   );
 };
 

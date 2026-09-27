@@ -1417,22 +1417,22 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
 </context>
 <context>
-    <name>validators::ScreenNameValidator</name>
+    <name>validators::ComputerLineNameValidator</name>
     <message>
         <source>Computer name cannot be empty</source>
-        <translation>计算机名称不能为空</translation>
+        <translation type="unfinished">计算机名称不能为空</translation>
     </message>
     <message>
         <source>Computer name cannot contain spaces</source>
-        <translation>计算机名称不能包含空格</translation>
+        <translation type="unfinished">计算机名称不能包含空格</translation>
     </message>
     <message>
         <source>Contains invalid characters or is too long</source>
-        <translation>包含无效字符或过长</translation>
+        <translation type="unfinished">包含无效字符或过长</translation>
     </message>
     <message>
         <source>A computer with this name already exists</source>
-        <translation>一台同名的计算机已经存在</translation>
+        <translation type="unfinished">一台同名的计算机已经存在</translation>
     </message>
 </context>
 </TS>
