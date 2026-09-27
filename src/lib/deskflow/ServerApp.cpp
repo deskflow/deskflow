@@ -36,7 +36,7 @@
 #endif
 
 #if WINAPI_XWINDOWS
-#include "platform/XWindowsScreen.h"
+#include "platform/XWindowsComputer.h"
 #endif
 
 #if WINAPI_LIBEI
@@ -409,7 +409,7 @@ deskflow::Computer *ServerApp::createComputer()
 #if WINAPI_XWINDOWS
   LOG_INFO("detected X11 platform");
   return new deskflow::Computer(
-      new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
+      new XWindowsComputer(qPrintable(Settings::value(Settings::Core::Display).toString()), true, getEvents()),
       getEvents()
   );
 #endif

@@ -25,11 +25,11 @@ class XWindowsKeyState;
 class XWindowsScreenSaver;
 
 //! Implementation of IPlatformComputer for X11
-class XWindowsScreen : public PlatformComputer
+class XWindowsComputer : public PlatformComputer
 {
 public:
-  XWindowsScreen(const char *displayName, bool isPrimary, IEventQueue *events);
-  ~XWindowsScreen() override;
+  XWindowsComputer(const char *displayName, bool isPrimary, IEventQueue *events);
+  ~XWindowsComputer() override;
 
   //! @name manipulators
   //@{
@@ -245,6 +245,6 @@ private:
 
   // pointer to (singleton) screen.  this is only needed by
   // ioErrorHandler().
-  static XWindowsScreen *s_screen;
+  static XWindowsComputer *s_screen;
   [[no_unique_address]] XDGPowerManager m_powerManager;
 };
