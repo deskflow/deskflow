@@ -1482,6 +1482,9 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   // send the new clipboard to the active computer
   m_active->setClipboard(id, &clipboard.m_clipboard);
+
+  // a wayland server can only offer a clipboard while the pointer is away, so update it now rather than on return
+  m_primaryClient->setClipboard(id, &clipboard.m_clipboard);
 }
 
 void Server::onScreensaver(bool activated)
