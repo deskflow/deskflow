@@ -33,9 +33,9 @@ add_library(${target} STATIC
   TlsUtility.h
   VersionChecker.cpp
   VersionChecker.h
+  config/ComputerConfig.h
   config/Screen.cpp
   config/Screen.h
-  config/ScreenConfig.h
   config/ScreenList.cpp
   config/ScreenList.h
   config/ServerConfig.cpp

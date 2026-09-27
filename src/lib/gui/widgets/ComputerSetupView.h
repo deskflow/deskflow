@@ -26,7 +26,7 @@ public:
   ComputerSetupModel *model() const;
 
 private:
-  void showScreenConfig(int col, int row);
+  void showComputerConfig(int col, int row);
 
 protected:
   void mouseDoubleClickEvent(QMouseEvent *) override;

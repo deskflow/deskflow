@@ -7,12 +7,12 @@
  */
 
 #include "Screen.h"
-#include "config/ScreenConfig.h"
+#include "config/ComputerConfig.h"
 #include <common/Settings.h>
 
 using enum KeyboardModifier;
-using enum ScreenConfig::SwitchCorner;
-using enum ScreenConfig::Fix;
+using enum ComputerConfig::SwitchCorner;
+using enum ComputerConfig::Fix;
 
 Screen::Screen(const QString &name)
 {

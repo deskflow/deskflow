@@ -13,8 +13,8 @@
 
 #include "common/QSettingsProxy.h"
 
-/// @brief Screen configuration base class
-class ScreenConfig
+/// @brief Computer configuration base class
+class ComputerConfig
 {
 
 public:
@@ -34,8 +34,8 @@ public:
   };
 
 protected:
-  explicit ScreenConfig() = default;
-  ~ScreenConfig() = default;
+  explicit ComputerConfig() = default;
+  ~ComputerConfig() = default;
 
   template <typename T1, typename T2>
   void readSettings(QSettingsProxy &settings, T1 &array, const QString &arrayName, const T2 &defaultValue)
