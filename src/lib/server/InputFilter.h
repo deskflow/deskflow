@@ -9,7 +9,7 @@
 #pragma once
 
 #include "base/DirectionTypes.h"
-#include "deskflow/IPlatformScreen.h"
+#include "deskflow/IPlatformComputer.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 
@@ -51,7 +51,7 @@ public:
   class KeystrokeCondition : public Condition
   {
   public:
-    KeystrokeCondition(IEventQueue *events, IPlatformScreen::KeyInfo *);
+    KeystrokeCondition(IEventQueue *events, IPlatformComputer::KeyInfo *);
     KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask);
     ~KeystrokeCondition() override = default;
 
@@ -76,7 +76,7 @@ public:
   class MouseButtonCondition : public Condition
   {
   public:
-    MouseButtonCondition(IEventQueue *events, const IPlatformScreen::ButtonInfo &);
+    MouseButtonCondition(IEventQueue *events, const IPlatformComputer::ButtonInfo &);
     MouseButtonCondition(IEventQueue *events, ButtonID, KeyModifierMask mask);
     ~MouseButtonCondition() override = default;
 
@@ -256,7 +256,7 @@ public:
   class KeystrokeAction : public Action
   {
   public:
-    KeystrokeAction(IEventQueue *events, IPlatformScreen::KeyInfo *adoptedInfo, bool press);
+    KeystrokeAction(IEventQueue *events, IPlatformComputer::KeyInfo *adoptedInfo, bool press);
     KeystrokeAction(KeystrokeAction const &) = delete;
     KeystrokeAction(KeystrokeAction &&) = delete;
     ~KeystrokeAction() override;
@@ -264,8 +264,8 @@ public:
     KeystrokeAction &operator=(KeystrokeAction const &) = delete;
     KeystrokeAction &operator=(KeystrokeAction &&) = delete;
 
-    void adoptInfo(IPlatformScreen::KeyInfo *);
-    const IPlatformScreen::KeyInfo *getInfo() const;
+    void adoptInfo(IPlatformComputer::KeyInfo *);
+    const IPlatformComputer::KeyInfo *getInfo() const;
     bool isOnPress() const;
 
     // Action overrides
@@ -277,7 +277,7 @@ public:
     virtual const char *formatName() const;
 
   private:
-    IPlatformScreen::KeyInfo *m_keyInfo;
+    IPlatformComputer::KeyInfo *m_keyInfo;
     bool m_press;
     IEventQueue *m_events;
   };
@@ -286,7 +286,7 @@ public:
   class MouseButtonAction : public Action
   {
   public:
-    MouseButtonAction(IEventQueue *events, const IPlatformScreen::ButtonInfo &adoptedInfo, bool press);
+    MouseButtonAction(IEventQueue *events, const IPlatformComputer::ButtonInfo &adoptedInfo, bool press);
     MouseButtonAction(MouseButtonAction const &) = delete;
     MouseButtonAction(MouseButtonAction &&) = delete;
     ~MouseButtonAction() override = default;
@@ -294,7 +294,7 @@ public:
     MouseButtonAction &operator=(MouseButtonAction const &) = delete;
     MouseButtonAction &operator=(MouseButtonAction &&) = delete;
 
-    const IPlatformScreen::ButtonInfo &getInfo() const;
+    const IPlatformComputer::ButtonInfo &getInfo() const;
     bool isOnPress() const;
 
     // Action overrides
@@ -306,7 +306,7 @@ public:
     virtual const char *formatName() const;
 
   private:
-    IPlatformScreen::ButtonInfo m_buttonInfo;
+    IPlatformComputer::ButtonInfo m_buttonInfo;
     bool m_press;
     IEventQueue *m_events;
   };

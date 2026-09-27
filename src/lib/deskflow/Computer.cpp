@@ -8,7 +8,7 @@
 #include "deskflow/Computer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "deskflow/IPlatformScreen.h"
+#include "deskflow/IPlatformComputer.h"
 
 #include <QProcess>
 
@@ -45,7 +45,7 @@ bool runComputerCommand(const QString &commandLine)
 // Computer
 //
 
-Computer::Computer(IPlatformScreen *platformScreen, IEventQueue *events)
+Computer::Computer(IPlatformComputer *platformScreen, IEventQueue *events)
     : m_computer(platformScreen),
       m_isPrimary(platformScreen->isPrimary()),
       m_entered(m_isPrimary),

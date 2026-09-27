@@ -732,7 +732,7 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
       throw ServerConfigReadException(s, "syntax for condition: keystroke(modifiers+key)");
     }
 
-    IPlatformScreen::KeyInfo *keyInfo = s.parseKeystroke(args[0]);
+    IPlatformComputer::KeyInfo *keyInfo = s.parseKeystroke(args[0]);
 
     return new InputFilter::KeystrokeCondition(m_events, keyInfo);
   }
@@ -777,7 +777,7 @@ void Config::parseAction(
       throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,computers])");
     }
 
-    IPlatformScreen::KeyInfo *keyInfo;
+    IPlatformComputer::KeyInfo *keyInfo;
     if (args.size() == 1) {
       keyInfo = s.parseKeystroke(args[0]);
     } else {
@@ -787,7 +787,7 @@ void Config::parseAction(
     }
 
     if (name == "keystroke") {
-      IPlatformScreen::KeyInfo *keyInfo2 = IKeyState::KeyInfo::alloc(*keyInfo);
+      IPlatformComputer::KeyInfo *keyInfo2 = IKeyState::KeyInfo::alloc(*keyInfo);
       action = new InputFilter::KeystrokeAction(m_events, keyInfo2, true);
       rule.adoptAction(action, true);
       action = new InputFilter::KeystrokeAction(m_events, keyInfo, false);
@@ -1465,12 +1465,12 @@ void ConfigReadContext::parseNameWithArgs(
   return;
 }
 
-IPlatformScreen::KeyInfo *ConfigReadContext::parseKeystroke(const std::string &keystroke) const
+IPlatformComputer::KeyInfo *ConfigReadContext::parseKeystroke(const std::string &keystroke) const
 {
   return parseKeystroke(keystroke, std::set<std::string>());
 }
 
-IPlatformScreen::KeyInfo *
+IPlatformComputer::KeyInfo *
 ConfigReadContext::parseKeystroke(const std::string &keystroke, const std::set<std::string> &screens) const
 {
   std::string s = keystroke;
@@ -1489,10 +1489,10 @@ ConfigReadContext::parseKeystroke(const std::string &keystroke, const std::set<s
     throw ServerConfigReadException(*this, "missing key and/or modifiers in keystroke");
   }
 
-  return IPlatformScreen::KeyInfo::alloc(key, mask, 0, 0, screens);
+  return IPlatformComputer::KeyInfo::alloc(key, mask, 0, 0, screens);
 }
 
-IPlatformScreen::ButtonInfo ConfigReadContext::parseMouse(const std::string &mouse) const
+IPlatformComputer::ButtonInfo ConfigReadContext::parseMouse(const std::string &mouse) const
 {
   std::string s = mouse;
 
@@ -1510,7 +1510,7 @@ IPlatformScreen::ButtonInfo ConfigReadContext::parseMouse(const std::string &mou
     throw ServerConfigReadException(*this, "invalid button");
   }
 
-  return IPlatformScreen::ButtonInfo{button, mask};
+  return IPlatformComputer::ButtonInfo{button, mask};
 }
 
 KeyModifierMask ConfigReadContext::parseModifier(const std::string &modifiers) const

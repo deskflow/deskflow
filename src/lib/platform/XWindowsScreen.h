@@ -24,7 +24,7 @@ class XWindowsClipboard;
 class XWindowsKeyState;
 class XWindowsScreenSaver;
 
-//! Implementation of IPlatformScreen for X11
+//! Implementation of IPlatformComputer for X11
 class XWindowsScreen : public PlatformScreen
 {
 public:
@@ -60,7 +60,7 @@ public:
   void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override;
   void fakeMouseWheel(ScrollDelta delta) const override;
 
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void enable() override;
   void disable() override;
   void enter() override;
@@ -78,7 +78,7 @@ public:
   std::string getSecureInputApp() const override;
 
 protected:
-  // IPlatformScreen overrides
+  // IPlatformComputer overrides
   void handleSystemEvent(const Event &event) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;

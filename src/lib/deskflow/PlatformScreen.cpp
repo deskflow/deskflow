@@ -10,7 +10,7 @@
 #include "base/DirectionTypes.h"
 #include "deskflow/App.h"
 
-PlatformScreen::PlatformScreen(IEventQueue *events) : IPlatformScreen(events)
+PlatformScreen::PlatformScreen(IEventQueue *events) : IPlatformComputer(events)
 {
   // do nothing
 }

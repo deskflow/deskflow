@@ -23,50 +23,50 @@ This interface defines the methods common to all platform dependent
 screen implementations that are used by both primary and secondary
 screens.
 */
-class IPlatformScreen : public IComputer, public IPrimaryScreen, public ISecondaryScreen, public IKeyState
+class IPlatformComputer : public IComputer, public IPrimaryScreen, public ISecondaryScreen, public IKeyState
 {
 public:
   //! @name manipulators
   //@{
 
-  explicit IPlatformScreen(const IEventQueue *events) : IKeyState(events)
+  explicit IPlatformComputer(const IEventQueue *events) : IKeyState(events)
   {
     // do nothing
   }
 
-  //! Enable screen
+  //! Enable computer
   /*!
-  Enable the screen, preparing it to report system and user events.
-  For a secondary screen it also means preparing to synthesize events
+  Enable the computer, preparing it to report system and user events.
+  For a secondary computer it also means preparing to synthesize events
   and hiding the cursor.
   */
   virtual void enable() = 0;
 
-  //! Disable screen
+  //! Disable computer
   /*!
   Undoes the operations in enable() and events should no longer
   be reported.
   */
   virtual void disable() = 0;
 
-  //! Enter screen
+  //! Enter computer
   /*!
-  Called when the user navigates to this screen.
+  Called when the user navigates to this computer.
   */
   virtual void enter() = 0;
 
-  //! Leave screen
+  //! Leave computer
   /*!
-  Called when the user navigates off the screen.  Returns true if
+  Called when the user navigates off the computer.  Returns true if
   the leave can proceed.  A typical reason for failure is being
   unable to install the keyboard and mouse snoopers on a primary
-  screen.  Secondary screens should not fail.
+  computer.  Secondary computers should not fail.
   */
   virtual bool canLeave() = 0;
 
-  //! Leave screen
+  //! Leave computer
   /*!
-  Called when the user navigates off the screen.  Should be gated
+  Called when the user navigates off the computer.  Should be gated
   by canLeave().
   */
   virtual void leave() = 0;
@@ -139,9 +139,9 @@ public:
   //! @name accessors
   //@{
 
-  //! Test if is primary screen
+  //! Test if is primary comptuer
   /*!
-  Return true iff this screen is a primary screen.
+  Return true iff this comptuer is a primary comptuer.
   */
   virtual bool isPrimary() const = 0;
 
@@ -150,12 +150,12 @@ public:
   void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override = 0;
   bool
   fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override = 0;
-  bool fakeMediaKey(KeyID) override;
+  bool fakeMediaKey(KeyID) override { return false; }
 
 protected:
   //! Handle system event
   /*!
-  A platform screen is expected to install a handler for system
+  A platform comptuer is expected to install a handler for system
   events in its c'tor like so:
   \code
   m_events->addHandler(EventTypes::System,
@@ -166,8 +166,8 @@ protected:
   \c handleSystemEvent() method to process system events.
   It should post the events \c IComputer as appropriate.
 
-  A primary screen has further responsibilities.  It should post
-  the events in \c IPrimaryScreen as appropriate.  It should also
+  A primary comptuer has further responsibilities.  It should post
+  the events in \c IPrimaryComptuer as appropriate.  It should also
   call \c onKey() on its \c KeyState whenever a key is pressed
   or released (but not for key repeats).  And it should call
   \c updateKeyMap() on its \c KeyState if necessary when the keyboard
