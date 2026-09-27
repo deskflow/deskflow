@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -21,6 +21,8 @@
 #include <map>
 #include <set>
 #include <vector>
+
+#include <QElapsedTimer>
 
 class BaseClientProxy;
 class EventQueueTimer;
@@ -326,6 +328,9 @@ private:
 
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
+  void syncClipboardsWhenMouseIdle();
+  void syncClipboards();
+  qint64 msUntilMouseIdle() const;
   void onScreensaver(bool activated);
   void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *computers);
   void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *computers);
@@ -468,4 +473,9 @@ private:
   bool m_defaultLockToComputerState = false;
   bool m_disableLockToComputer = false;
   bool m_enableClipboard = true;
+  bool m_primaryClipboardStale = false;
+  EventQueueTimer *m_clipboardSyncTimer = nullptr;
+  QElapsedTimer m_sinceMouseActivity;
+
+  static constexpr qint64 kMouseIdleMs = 50;
 };

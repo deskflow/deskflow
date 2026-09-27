@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.
- * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -24,8 +24,8 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 
-#ifdef _WIN32
 #include <algorithm>
+#ifdef _WIN32
 #include <array>
 #endif
 #include <cmath>
@@ -167,6 +167,10 @@ Server::~Server()
   m_events->removeHandler(PrimaryComputerFakeInputEnd, m_inputFilter);
   m_events->removeHandler(Timer, this);
   stopSwitch();
+  if (m_clipboardSyncTimer != nullptr) {
+    m_events->removeHandler(Timer, m_clipboardSyncTimer);
+    m_events->deleteTimer(m_clipboardSyncTimer);
+  }
 
   try {
     // force immediate disconnection of secondary clients
@@ -459,15 +463,8 @@ void Server::switchComputer(BaseClientProxy *dst, int32_t x, int32_t y, bool for
       return;
     }
 
-    // update the primary client's clipboards if we're leaving the
-    // primary computer.
-    if (m_active == m_primaryClient && m_enableClipboard) {
-      for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        const ClipboardInfo &clipboard = m_clipboards[id];
-        if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
-          onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
-        }
-      }
+    if (m_active == m_primaryClient) {
+      m_primaryClipboardStale = true;
     }
 
 #if defined(__APPLE__)
@@ -492,14 +489,7 @@ void Server::switchComputer(BaseClientProxy *dst, int32_t x, int32_t y, bool for
     m_active->enter(x, y, m_seqNum, m_primaryClient->getToggleMask(), forScreensaver);
 
     if (m_enableClipboard) {
-      // send the clipboard data to new active computer
-      for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        // Hackity hackity hack
-        if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
-          continue;
-        }
-        m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
-      }
+      syncClipboardsWhenMouseIdle();
     }
 
     auto *info = new Server::SwitchToComputerInfo(m_active->getName());
@@ -1208,7 +1198,8 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
 
   if (grabber == m_primaryClient && m_active != m_primaryClient) {
     LOG_DEBUG("clipboard grabbed while active computer was changed, resending clipboard data");
-    onClipboardChanged(m_primaryClient, info->m_id, clipboard.m_clipboardSeqNum);
+    m_primaryClipboardStale = true;
+    syncClipboardsWhenMouseIdle();
   }
 }
 
@@ -1220,6 +1211,7 @@ void Server::handleClipboardChanged(const Event &event, BaseClientProxy *client)
   }
   const auto *info = static_cast<const IComputer::ClipboardInfo *>(event.getData());
   onClipboardChanged(client, info->m_id, info->m_sequenceNumber);
+  syncClipboardsWhenMouseIdle();
 }
 
 void Server::handleKeyDownEvent(const Event &event)
@@ -1480,11 +1472,56 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
     client->setClipboardDirty(id, client != sender);
   }
 
-  // send the new clipboard to the active computer
-  m_active->setClipboard(id, &clipboard.m_clipboard);
-
   // a wayland server can only offer a clipboard while the pointer is away, so update it now rather than on return
   m_primaryClient->setClipboard(id, &clipboard.m_clipboard);
+}
+
+void Server::syncClipboardsWhenMouseIdle()
+{
+  if (m_clipboardSyncTimer != nullptr) {
+    return;
+  }
+
+  // copying and sending a large clipboard stalls input, so only start once the mouse rests
+  if (const auto waitMs = msUntilMouseIdle(); waitMs > 0) {
+    m_clipboardSyncTimer = m_events->newOneShotTimer(static_cast<double>(waitMs) / 1000.0, nullptr);
+    m_events->addHandler(EventTypes::Timer, m_clipboardSyncTimer, [this](const auto &) {
+      m_events->removeHandler(EventTypes::Timer, m_clipboardSyncTimer);
+      m_events->deleteTimer(m_clipboardSyncTimer);
+      m_clipboardSyncTimer = nullptr;
+      syncClipboardsWhenMouseIdle();
+    });
+  } else {
+    syncClipboards();
+  }
+}
+
+void Server::syncClipboards()
+{
+  LOG_DEBUG("mouse at rest, syncing clipboards with screen: %s", getName(m_active).c_str());
+
+  if (m_primaryClipboardStale) {
+    m_primaryClipboardStale = false;
+    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+      const ClipboardInfo &clipboard = m_clipboards[id];
+      if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
+        onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
+      }
+    }
+  }
+
+  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+    if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
+      continue;
+    }
+    m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
+  }
+}
+
+qint64 Server::msUntilMouseIdle() const
+{
+  const auto sinceMouseMs = m_sinceMouseActivity.isValid() ? m_sinceMouseActivity.elapsed() : kMouseIdleMs;
+  return std::max(kMouseIdleMs - sinceMouseMs, qint64{0});
 }
 
 void Server::onScreensaver(bool activated)
@@ -1601,6 +1638,7 @@ void Server::onKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButto
 void Server::onMouseDown(ButtonID id)
 {
   LOG_VERBOSE("onMouseDown id=%d", id);
+  m_sinceMouseActivity.start();
   assert(m_active != nullptr);
 
   // relay
@@ -1610,6 +1648,7 @@ void Server::onMouseDown(ButtonID id)
 void Server::onMouseUp(ButtonID id)
 {
   LOG_VERBOSE("onMouseUp id=%d", id);
+  m_sinceMouseActivity.start();
   assert(m_active != nullptr);
 
   // relay
@@ -1619,6 +1658,7 @@ void Server::onMouseUp(ButtonID id)
 bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 {
   LOG_VERBOSE("onMouseMovePrimary %d,%d", x, y);
+  m_sinceMouseActivity.start();
 
   // mouse move on primary (server's) computer
   if (m_active != m_primaryClient) {
@@ -1716,6 +1756,7 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
   LOG_VERBOSE("mouse move on secondary: %+d,%+d", dx, dy);
+  m_sinceMouseActivity.start();
 
   // TODO: move this to client side and use a qt setting or cli arg instead of env var.
   const static auto adjustEnv = "DESKFLOW_MOUSE_ADJUSTMENT";
@@ -1888,6 +1929,7 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 void Server::onMouseWheel(int32_t xDelta, int32_t yDelta)
 {
   LOG_VERBOSE("onMouseWheel %+d,%+d", xDelta, yDelta);
+  m_sinceMouseActivity.start();
   assert(m_active != nullptr);
 
   // relay
