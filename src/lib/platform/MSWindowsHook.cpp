@@ -599,8 +599,9 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
     // decode the message
     MSLLHOOKSTRUCT *info = reinterpret_cast<MSLLHOOKSTRUCT *>(lParam);
 
+    // Injected input is input that is not generated from deskflow but another remote control tool
     bool const injected = info->flags & LLMHF_INJECTED;
-    if (!g_isPrimary && injected) {
+    if (injected && !g_fakeServerInput) {
       return CallNextHookEx(g_mouseLL, code, wParam, lParam);
     }
 
