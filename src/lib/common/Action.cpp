@@ -118,7 +118,7 @@ void Action::clearScreens()
   m_typeScreenNames.clear();
 }
 
-void Action::addScreen(const QString &screen)
+void Action::addComputer(const QString &screen)
 {
   if (m_typeScreenNames.contains(screen))
     return;

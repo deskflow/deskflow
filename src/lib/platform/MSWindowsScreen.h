@@ -294,9 +294,9 @@ private:
   HKL m_keyLayout = nullptr;
 
   // screen saver stuff
-  MSWindowsScreenSaver *m_screensaver = nullptr;
-  bool m_screensaverNotify = false;
-  bool m_screensaverActive = false;
+  MSWindowsScreenSaver *m_computersaver = nullptr;
+  bool m_computersaverNotify = false;
+  bool m_computersaverActive = false;
 
   // clipboard stuff.  our window is used mainly as a clipboard
   // owner and as a link in the clipboard viewer chain.

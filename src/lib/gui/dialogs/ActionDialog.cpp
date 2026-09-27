@@ -80,7 +80,7 @@ void ActionDialog::accept()
 
   for (int i = 0; i < ui->listScreens->count(); i++) {
     const auto &item = ui->listScreens->item(i);
-    m_action.addScreen(item->text());
+    m_action.addComputer(item->text());
     if (item->checkState() == Qt::Unchecked) {
       screenCount--;
       m_action.removeScreen(item->text());

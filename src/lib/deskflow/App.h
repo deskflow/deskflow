@@ -27,7 +27,7 @@
 #include <stdexcept>
 
 namespace deskflow {
-class Screen;
+class Computer;
 }
 
 class FileLogOutputter;
@@ -107,7 +107,7 @@ public:
     return m_pname;
   }
 
-  void handleScreenError() const;
+  void handleComputerError() const;
 
   void updateExitCode(int errorCode)
   {

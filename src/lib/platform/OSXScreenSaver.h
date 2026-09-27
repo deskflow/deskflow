@@ -38,9 +38,9 @@ private:
   void *m_eventTarget;
 
   bool m_enabled;
-  void *m_screenSaverController;
+  void *m_computerSaverController;
   void *m_autoReleasePool;
   EventHandlerRef m_launchTerminationEventHandlerRef;
-  ProcessSerialNumber m_screenSaverPSN;
+  ProcessSerialNumber m_computerSaverPSN;
   IEventQueue *m_events;
 };

@@ -67,17 +67,17 @@ Client::Client(
   assert(m_computer != nullptr);
 
   // register suspend/resume event handlers
-  m_events->addHandler(EventTypes::ScreenSuspend, getEventTarget(), [this](const auto &) { handleSuspend(); });
-  m_events->addHandler(EventTypes::ScreenResume, getEventTarget(), [this](const auto &) { handleResume(); });
+  m_events->addHandler(EventTypes::ComputerSuspend, getEventTarget(), [this](const auto &) { handleSuspend(); });
+  m_events->addHandler(EventTypes::ComputerResume, getEventTarget(), [this](const auto &) { handleResume(); });
 }
 
 Client::~Client()
 {
-  m_events->removeHandler(EventTypes::ScreenSuspend, getEventTarget());
-  m_events->removeHandler(EventTypes::ScreenResume, getEventTarget());
+  m_events->removeHandler(EventTypes::ComputerSuspend, getEventTarget());
+  m_events->removeHandler(EventTypes::ComputerResume, getEventTarget());
 
   cleanupTimer();
-  cleanupScreen();
+  cleanupComputer();
   cleanupConnecting();
   cleanupConnection();
   delete m_socketFactory;
@@ -380,8 +380,8 @@ void Client::sendClipboard(ClipboardID id)
   assert(m_server != nullptr);
 
   // get clipboard data.  set the clipboard time to the last
-  // clipboard time before getting the data from the screen
-  // as the screen may detect an unchanged clipboard and
+  // clipboard time before getting the data from the computer
+  // as the computer may detect an unchanged clipboard and
   // avoid copying the data.
   Clipboard clipboard;
   if (clipboard.open(m_timeClipboard[id])) {
@@ -464,7 +464,7 @@ void Client::setupConnection()
   });
 }
 
-bool Client::setupScreen(int16_t protocolMinor)
+bool Client::setupComputer(int16_t protocolMinor)
 {
   assert(m_server == nullptr);
 
@@ -488,7 +488,7 @@ bool Client::setupScreen(int16_t protocolMinor)
   }
 
   if (m_server != nullptr) {
-    m_events->addHandler(EventTypes::ScreenShapeChanged, getEventTarget(), [this](const auto &) {
+    m_events->addHandler(EventTypes::ComputerShapeChanged, getEventTarget(), [this](const auto &) {
       handleShapeChanged();
     });
     m_events->addHandler(EventTypes::ClipboardGrabbed, getEventTarget(), [this](const auto &e) {
@@ -509,7 +509,7 @@ void Client::cleanup()
 {
   m_connectOnResume = false;
   cleanupTimer();
-  cleanupScreen();
+  cleanupComputer();
   cleanupConnecting();
   cleanupConnection();
 }
@@ -537,14 +537,14 @@ void Client::cleanupConnection()
   }
 }
 
-void Client::cleanupScreen()
+void Client::cleanupComputer()
 {
   if (m_server != nullptr) {
     if (m_ready) {
       m_computer->disable();
       m_ready = false;
     }
-    m_events->removeHandler(EventTypes::ScreenShapeChanged, getEventTarget());
+    m_events->removeHandler(EventTypes::ComputerShapeChanged, getEventTarget());
     m_events->removeHandler(EventTypes::ClipboardGrabbed, getEventTarget());
     delete m_server;
     m_server = nullptr;
@@ -605,7 +605,7 @@ void Client::handleConnectTimeout()
 void Client::handleOutputError()
 {
   cleanupTimer();
-  cleanupScreen();
+  cleanupComputer();
   cleanupConnection();
   LOG_WARN("error sending to server");
   sendEvent(EventTypes::ClientDisconnected);
@@ -614,7 +614,7 @@ void Client::handleOutputError()
 void Client::handleDisconnected()
 {
   cleanupTimer();
-  cleanupScreen();
+  cleanupComputer();
   cleanupConnection();
   LOG_VERBOSE("disconnected");
   sendEvent(EventTypes::ClientDisconnected);
@@ -657,7 +657,7 @@ void Client::handleClipboardGrabbed(const Event &event)
   m_sentClipboard[info->m_id] = false;
   m_timeClipboard[info->m_id] = 0;
 
-  // if we're not the active screen then send the clipboard now,
+  // if we're not the active computer then send the clipboard now,
   // otherwise we'll wait until we leave.
   if (!m_active) {
     sendClipboard(info->m_id);
@@ -705,7 +705,7 @@ void Client::handleHello()
   // no proxy speaks the negotiated version, so hang up as incompatible rather than
   // talk a version the client does not implement, the same rule the server applies
   // when it picks a client proxy
-  if (!setupScreen(helloBackMinor)) {
+  if (!setupComputer(helloBackMinor)) {
     LOG_WARN("server protocol version not supported: %d.%d", serverMajor, serverMinor);
     sendConnectionFailedEvent(IncompatibleClientException(serverMajor, serverMinor).what());
     cleanupTimer();

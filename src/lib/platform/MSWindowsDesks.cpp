@@ -116,7 +116,7 @@ MSWindowsDesks::MSWindowsDesks(
     : m_isPrimary(isPrimary),
       m_useHooks(useHooks),
       m_isOnScreen(m_isPrimary),
-      m_screensaver(screensaver),
+      m_computersaver(screensaver),
       m_deskReady(&m_mutex, false),
       m_updateKeys(updateKeys),
       m_events(events)
@@ -219,8 +219,8 @@ void MSWindowsDesks::setShape(
 
 void MSWindowsDesks::installScreensaverHooks(bool install)
 {
-  if (m_isPrimary && m_screensaverNotify != install) {
-    m_screensaverNotify = install;
+  if (m_isPrimary && m_computersaverNotify != install) {
+    m_computersaverNotify = install;
     sendMessage(DESKFLOW_MSG_SCREENSAVER, install, 0);
   }
 }
@@ -686,7 +686,7 @@ void MSWindowsDesks::deskThread(const void *vdesk)
     case DESKFLOW_MSG_SWITCH:
       if (m_useHooks) {
         MSWindowsHook::uninstall();
-        if (m_screensaverNotify) {
+        if (m_computersaverNotify) {
           MSWindowsHook::uninstallScreenSaver();
           MSWindowsHook::installScreenSaver();
         }
@@ -845,7 +845,7 @@ void MSWindowsDesks::checkDesk()
   // active becaue we'd most likely switch to the screensaver desktop
   // which would have the side effect of forcing the screensaver to
   // stop.
-  if (name != m_activeDeskName && !m_screensaver->isActive()) {
+  if (name != m_activeDeskName && !m_computersaver->isActive()) {
     // show cursor on previous desk
     bool wasOnScreen = m_isOnScreen;
     if (!wasOnScreen) {

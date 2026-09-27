@@ -42,11 +42,11 @@ namespace deskflow::server {
 //! Server configuration
 /*!
 This class holds server configuration information.  That includes
-the names of screens and their aliases, the links between them,
+the names of computers and their aliases, the links between them,
 and network addresses.
 
-Note that case is preserved in screen names but is ignored when
-comparing names.  Screen names and their aliases share a
+Note that case is preserved in computer names but is ignored when
+comparing names.  computer names and their aliases share a
 namespace and must be unique.
 */
 class Config
@@ -198,33 +198,33 @@ public:
   //! @name manipulators
   //@{
 
-  //! Add screen
+  //! Add computer
   /*!
-  Adds a screen, returning true if successful.  If a screen or
+  Adds a computer, returning true if successful.  If a computer or
   alias with the given name exists then it fails.
   */
-  bool addScreen(const std::string &name);
+  bool addComputer(const std::string &name);
 
   //! Add alias
   /*!
-  Adds an alias for a screen name.  An alias can be used
-  any place the canonical screen name can (except addScreen()).
+  Adds an alias for a computer name.  An alias can be used
+  any place the canonical computer name can (except addComputer()).
   Returns false if the alias name already exists or the canonical
   name is unknown, otherwise returns true.
   */
   bool addAlias(const std::string &canonical, const std::string &alias);
 
-  //! Connect screens
+  //! Connect computers
   /*!
   Establishes a one-way connection between portions of opposite edges
-  of two screens.  Each portion is described by an interval defined
+  of two computers.  Each portion is described by an interval defined
   by two numbers, the start and end of the interval half-open on the
   end.  The numbers range from 0 to 1, inclusive, for the left/top
   to the right/bottom.  The user will be able to jump from the
-  \c srcStart to \c srcSend interval of \c srcSide of screen
-  \c srcName to the opposite side of screen \c dstName in the interval
-  \c dstStart and \c dstEnd when both screens are connected to the
-  server and the user isn't locked to a screen.  Returns false if
+  \c srcStart to \c srcSend interval of \c srcSide of computer
+  \c srcName to the opposite side of computer \c dstName in the interval
+  \c dstStart and \c dstEnd when both computers are connected to the
+  server and the user isn't locked to a computer.  Returns false if
   \c srcName is unknown.  \c srcStart must be less than or equal to
   \c srcEnd and \c dstStart must be less then or equal to \c dstEnd
   and all of \c srcStart, \c srcEnd, \c dstStart, or \c dstEnd must
@@ -235,14 +235,14 @@ public:
       float dstStart, float dstEnd
   );
 
-  //! Disconnect screens
+  //! Disconnect computers
   /*!
   Removes all connections created by connect() on side \c srcSide.
   Returns false if \c srcName is unknown.
   */
   bool disconnect(const std::string &srcName, Direction srcSide);
 
-  //! Disconnect screens
+  //! Disconnect computers
   /*!
   Removes the connections created by connect() on side \c srcSide
   covering position \c position.  Returns false if \c srcName is
@@ -257,11 +257,11 @@ public:
   */
   void setDeskflowAddress(const NetworkAddress &);
 
-  //! Add a screen option
+  //! Add a computer option
   /*!
-  Adds an option and its value to the named screen.  Replaces the
+  Adds an option and its value to the named computer.  Replaces the
   existing option's value if there is one.  Returns true iff \c name
-  is a known screen.
+  is a known computer.
   */
   bool addOption(const std::string &name, OptionID option, OptionValue value);
 
@@ -276,44 +276,44 @@ public:
   //! @name accessors
   //@{
 
-  //! Test screen name validity
+  //! Test computer name validity
   /*!
-  Returns true iff \c name is a valid screen name.
+  Returns true iff \c name is a valid computer name.
   */
-  bool isValidScreenName(const std::string &name) const;
+  bool isValidComputerName(const std::string &name) const;
 
-  //! Get beginning (canonical) screen name iterator
+  //! Get beginning (canonical) computer name iterator
   const_iterator begin() const;
-  //! Get ending (canonical) screen name iterator
+  //! Get ending (canonical) computer name iterator
   const_iterator end() const;
 
-  //! Get beginning screen name iterator
+  //! Get beginning computer name iterator
   all_const_iterator beginAll() const;
-  //! Get ending screen name iterator
+  //! Get ending computer name iterator
   all_const_iterator endAll() const;
 
-  //! Test for screen name
+  //! Test for computer name
   /*!
-  Returns true iff \c name names a screen.
+  Returns true iff \c name names a computer.
   */
-  virtual bool isScreen(const std::string &name) const;
+  virtual bool isComputer(const std::string &name) const;
 
-  //! Test for canonical screen name
+  //! Test for canonical computer name
   /*!
-  Returns true iff \c name is the canonical name of a screen.
+  Returns true iff \c name is the canonical name of a computer.
   */
   bool isCanonicalName(const std::string &name) const;
 
   //! Get canonical name
   /*!
-  Returns the canonical name of a screen or the empty string if
+  Returns the canonical name of a computer or the empty string if
   the name is unknown.  Returns the canonical name if one is given.
   */
   std::string getCanonicalName(const std::string &name) const;
 
   //! Get neighbor
   /*!
-  Returns the canonical screen name of the neighbor in the given
+  Returns the canonical computer name of the neighbor in the given
   direction (set through connect()) at position \c position.  Returns
   the empty string if there is no neighbor in that direction, otherwise
   saves the position on the neighbor in \c positionOut if it's not
@@ -323,14 +323,14 @@ public:
 
   //! Check for neighbor
   /*!
-  Returns \c true if the screen has a neighbor anywhere along the edge
+  Returns \c true if the computer has a neighbor anywhere along the edge
   given by the direction.
   */
   bool hasNeighbor(const std::string &, Direction) const;
 
   //! Check for neighbor
   /*!
-  Returns \c true if the screen has a neighbor in the given range along
+  Returns \c true if the computer has a neighbor in the given range along
   the edge given by the direction.
   */
   bool hasNeighbor(const std::string &, Direction, float start, float end) const;
@@ -343,20 +343,20 @@ public:
   //! Get the server address
   const NetworkAddress &getDeskflowAddress() const;
 
-  //! Get the screen options
+  //! Get the computer options
   /*!
-  Returns all the added options for the named screen.  Returns nullptr
-  if the screen is unknown and an empty collection if there are no
+  Returns all the added options for the named computer.  Returns nullptr
+  if the computer is unknown and an empty collection if there are no
   options.
   */
   const ScreenOptions *getOptions(const std::string &name) const;
 
-  //! Check for lock to screen action
+  //! Check for lock to computer action
   /*!
-  Returns \c true if this configuration has a lock to screen action.
+  Returns \c true if this configuration has a lock to computer action.
   This is for backwards compatible support of ScrollLock locking.
   */
-  bool hasLockToScreenAction() const;
+  bool hasLockToComputerAction() const;
 
   //! Compare configurations
   bool operator==(const Config &) const;
@@ -407,7 +407,7 @@ private:
       bool activate
   );
 
-  void parseScreens(const ConfigReadContext &, const std::string_view &, std::set<std::string> &screens) const;
+  void parseComputers(const ConfigReadContext &, const std::string_view &, std::set<std::string> &computers) const;
 
 private:
   CellMap m_map;
@@ -415,7 +415,7 @@ private:
   NetworkAddress m_deskflowAddress;
   ScreenOptions m_globalOptions;
   InputFilter m_inputFilter;
-  bool m_hasLockToScreenAction = false;
+  bool m_hasLockToComputerAction = false;
   IEventQueue *m_events;
 };
 
@@ -442,7 +442,8 @@ public:
       std::string &name, ArgList &args
   ) const;
   IPlatformComputer::KeyInfo *parseKeystroke(const std::string &keystroke) const;
-  IPlatformComputer::KeyInfo *parseKeystroke(const std::string &keystroke, const std::set<std::string> &screens) const;
+  IPlatformComputer::KeyInfo *
+  parseKeystroke(const std::string &keystroke, const std::set<std::string> &computers) const;
   IPlatformComputer::ButtonInfo parseMouse(const std::string &mouse) const;
   KeyModifierMask parseModifier(const std::string &modifiers) const;
   std::istream &getStream() const

@@ -92,8 +92,8 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
       m_cursorHidden(false),
       m_keyState(nullptr),
       m_sequenceNumber(0),
-      m_screensaver(nullptr),
-      m_screensaverNotify(false),
+      m_computersaver(nullptr),
+      m_computersaverNotify(false),
       m_ownClipboard(false),
       m_clipboardTimer(nullptr),
       m_axTimer(nullptr),
@@ -121,7 +121,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
   }
 
   try {
-    m_screensaver = new OSXScreenSaver(m_events, getEventTarget());
+    m_computersaver = new OSXScreenSaver(m_events, getEventTarget());
     m_keyState = new OSXKeyState(m_events, AppUtil::instance().getKeyboardLayoutList(), enableLangSync);
 
     if (Settings::value(Settings::Core::PreventSleep).toBool()) {
@@ -152,7 +152,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
     constructMouseButtonEventMap();
 
     // watch for requests to sleep
-    m_events->addHandler(EventTypes::OsxScreenConfirmSleep, getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(EventTypes::OsxComputerConfirmSleep, getEventTarget(), [this](const auto &e) {
       handleConfirmSleep(e);
     });
 
@@ -163,7 +163,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
     LOG_DEBUG("starting watchSystemPowerThread");
     m_pmWatchThread = new Thread(new TMethodJob<OSXScreen>(this, &OSXScreen::watchSystemPowerThread));
   } catch (...) {
-    m_events->removeHandler(EventTypes::OsxScreenConfirmSleep, getEventTarget());
+    m_events->removeHandler(EventTypes::OsxComputerConfirmSleep, getEventTarget());
     if (m_switchEventHandlerRef != 0) {
       RemoveEventHandler(m_switchEventHandlerRef);
     }
@@ -171,7 +171,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
     CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
     delete m_keyState;
-    delete m_screensaver;
+    delete m_computersaver;
     throw;
   }
 
@@ -210,14 +210,14 @@ OSXScreen::~OSXScreen()
   delete m_pmThreadReady;
   delete m_pmMutex;
 
-  m_events->removeHandler(EventTypes::OsxScreenConfirmSleep, getEventTarget());
+  m_events->removeHandler(EventTypes::OsxComputerConfirmSleep, getEventTarget());
 
   RemoveEventHandler(m_switchEventHandlerRef);
 
   CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
   delete m_keyState;
-  delete m_screensaver;
+  delete m_computersaver;
 
   delete m_carbonLoopMutex;
   delete m_carbonLoopReady;
@@ -856,25 +856,25 @@ void OSXScreen::checkClipboards()
 
 void OSXScreen::openScreensaver(bool notify)
 {
-  m_screensaverNotify = notify;
-  if (!m_screensaverNotify) {
-    m_screensaver->disable();
+  m_computersaverNotify = notify;
+  if (!m_computersaverNotify) {
+    m_computersaver->disable();
   }
 }
 
 void OSXScreen::closeScreensaver()
 {
-  if (!m_screensaverNotify) {
-    m_screensaver->enable();
+  if (!m_computersaverNotify) {
+    m_computersaver->enable();
   }
 }
 
 void OSXScreen::screensaver(bool activate)
 {
   if (activate) {
-    m_screensaver->activate();
+    m_computersaver->activate();
   } else {
-    m_screensaver->deactivate();
+    m_computersaver->deactivate();
   }
 }
 
@@ -1010,7 +1010,7 @@ bool OSXScreen::onMouseMove(CGEventRef event)
     m_xCursor = (int32_t)mx;
     m_yCursor = (int32_t)my;
 
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
     // motion on secondary screen.  the cursor is frozen (see leave()), so read
     // raw deltas from the event instead of diffing position.
@@ -1020,7 +1020,7 @@ bool OSXScreen::onMouseMove(CGEventRef event)
     LOG_VERBOSE("mouse delta %+d,%+d", dx, dy);
 
     if (dx != 0 || dy != 0) {
-      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(dx, dy));
+      sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(dx, dy));
     }
   }
 
@@ -1036,13 +1036,13 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
     LOG_VERBOSE("event: button press button=%d", button);
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
-      sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
+      sendEvent(EventTypes::PrimaryComputerButtonDown, ButtonInfo::alloc(button, mask));
     }
   } else {
     LOG_VERBOSE("event: button release button=%d", button);
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
-      sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
+      sendEvent(EventTypes::PrimaryComputerButtonUp, ButtonInfo::alloc(button, mask));
     }
   }
 
@@ -1052,7 +1052,7 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
 bool OSXScreen::onMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
   LOG_VERBOSE("event: button wheel delta=%+d,%+d", xDelta, yDelta);
-  sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
+  sendEvent(EventTypes::PrimaryComputerWheel, WheelInfo::alloc(xDelta, yDelta));
   return true;
 }
 
@@ -1102,7 +1102,7 @@ bool OSXScreen::onKey(CGEventRef event)
         m_activeModifierHotKey = m_modifierHotKeys[newMask];
         m_activeModifierHotKeyMask = newMask;
         m_events->addEvent(
-            Event(EventTypes::PrimaryScreenHotkeyDown, getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
+            Event(EventTypes::PrimaryComputerHotkeyDown, getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
         );
       }
     }
@@ -1113,7 +1113,7 @@ bool OSXScreen::onKey(CGEventRef event)
       KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
       if (mask != m_activeModifierHotKeyMask) {
         m_events->addEvent(
-            Event(EventTypes::PrimaryScreenHotkeyUp, getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
+            Event(EventTypes::PrimaryComputerHotkeyUp, getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
         );
         m_activeModifierHotKey = 0;
         m_activeModifierHotKeyMask = 0;
@@ -1132,9 +1132,9 @@ bool OSXScreen::onKey(CGEventRef event)
     // determine event type
     EventTypes type;
     if (eventKind == kCGEventKeyDown) {
-      type = EventTypes::PrimaryScreenHotkeyDown;
+      type = EventTypes::PrimaryComputerHotkeyDown;
     } else if (eventKind == kCGEventKeyUp) {
-      type = EventTypes::PrimaryScreenHotkeyUp;
+      type = EventTypes::PrimaryComputerHotkeyUp;
     } else {
       return false;
     }
@@ -1214,9 +1214,9 @@ bool OSXScreen::onHotKey(EventRef event) const
   EventTypes type;
   uint32_t eventKind = GetEventKind(event);
   if (eventKind == kEventHotKeyPressed) {
-    type = EventTypes::PrimaryScreenHotkeyDown;
+    type = EventTypes::PrimaryComputerHotkeyDown;
   } else if (eventKind == kEventHotKeyReleased) {
-    type = EventTypes::PrimaryScreenHotkeyUp;
+    type = EventTypes::PrimaryComputerHotkeyUp;
   } else {
     return false;
   }
@@ -1354,7 +1354,7 @@ bool OSXScreen::updateScreenShape()
 
   delete[] displays;
   // We want to notify the peer screen whether we are primary screen or not
-  sendEvent(EventTypes::ScreenShapeChanged);
+  sendEvent(EventTypes::ComputerShapeChanged);
 
   LOG_DEBUG(
       "computer shape: center=%d,%d size=%dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount,
@@ -1382,10 +1382,10 @@ pascal OSStatus OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler, E
 
   if (kind == kEventSystemUserSessionDeactivated) {
     LOG_DEBUG("user session deactivated");
-    events->addEvent(Event(EventTypes::ScreenSuspend, screen->getEventTarget()));
+    events->addEvent(Event(EventTypes::ComputerSuspend, screen->getEventTarget()));
   } else if (kind == kEventSystemUserSessionActivated) {
     LOG_DEBUG("user session activated");
-    events->addEvent(Event(EventTypes::ScreenResume, screen->getEventTarget()));
+    events->addEvent(Event(EventTypes::ComputerResume, screen->getEventTarget()));
   }
   return (CallNextEventHandler(nextHandler, theEvent));
 }
@@ -1481,13 +1481,13 @@ void OSXScreen::handlePowerChangeRequest(natural_t messageType, void *messageArg
     // queue a confirm sleep event here.  we actually don't allow the
     // system to sleep until the event is handled.
     m_events->addEvent(
-        Event(EventTypes::OsxScreenConfirmSleep, getEventTarget(), messageArg, Event::EventFlags::DontFreeData)
+        Event(EventTypes::OsxComputerConfirmSleep, getEventTarget(), messageArg, Event::EventFlags::DontFreeData)
     );
     return;
 
   case kIOMessageSystemHasPoweredOn:
     LOG_DEBUG("system wakeup");
-    m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget()));
+    m_events->addEvent(Event(EventTypes::ComputerResume, getEventTarget()));
     break;
 
   default:
@@ -1508,7 +1508,7 @@ void OSXScreen::handleConfirmSleep(const Event &event)
     if (m_pmRootPort != 0) {
       // deliver suspend event immediately.
       m_events->addEvent(
-          Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+          Event(EventTypes::ComputerSuspend, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
       );
 
       LOG_DEBUG("system will sleep");

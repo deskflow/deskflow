@@ -52,7 +52,7 @@ private:
   }
 
 private:
-  EiScreen *m_screen;
+  EiScreen *m_computer;
   IEventQueue *m_events;
 
   Thread *m_glibThread;

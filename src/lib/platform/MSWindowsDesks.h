@@ -263,8 +263,8 @@ private:
 
   // screen saver stuff
   DWORD m_threadID;
-  const IScreenSaver *m_screensaver;
-  bool m_screensaverNotify = false;
+  const IScreenSaver *m_computersaver;
+  bool m_computersaverNotify = false;
 
   // the current desk and it's name
   Desk *m_activeDesk = nullptr;

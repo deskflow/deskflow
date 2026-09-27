@@ -19,7 +19,7 @@
 namespace deskflow {
 
 PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
-    : m_screen{screen},
+    : m_computer{screen},
       m_events{events},
       m_portal{xdp_portal_new()}
 {
@@ -79,7 +79,7 @@ void PortalRemoteDesktop::handleSessionClosed(XdpSession *session)
   LOG_ERR("portal remote desktop session was closed, reconnecting");
   g_signal_handler_disconnect(session, m_sessionSignalId);
   m_sessionSignalId = 0;
-  m_events->addEvent(Event(EventTypes::EISessionClosed, m_screen->getEventTarget()));
+  m_events->addEvent(Event(EventTypes::EISessionClosed, m_computer->getEventTarget()));
 
   // gcc warning "Suspicious usage of 'sizeof(A*)'" can be ignored
   g_clear_object(&m_session);
@@ -146,7 +146,7 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   }
 
   // Socket ownership is transferred to the EiScreen
-  m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+  m_events->addEvent(Event(EventTypes::EIConnected, m_computer->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 }
 
 void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
@@ -237,14 +237,14 @@ void PortalRemoteDesktop::claimClipboard() const
     LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
     return;
   }
-  PortalClipboard::claimOwnership(m_screen->getClipboardCache(), m_session);
+  PortalClipboard::claimOwnership(m_computer->getClipboardCache(), m_session);
 #endif
 }
 
 void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  PortalClipboard::serveSelectionTransfer(m_screen->getClipboardCache(), session, mimeType, serial);
+  PortalClipboard::serveSelectionTransfer(m_computer->getClipboardCache(), session, mimeType, serial);
 #else
   (void)session;
   (void)mimeType;
@@ -260,9 +260,9 @@ void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char 
     return;
   }
 
-  const qint64 maxBytes = static_cast<qint64>(m_screen->maximumClipboardSize()) * 1024;
-  if (PortalClipboard::readSelectionIntoCache(m_screen->getClipboardCache(), session, mimeTypes, maxBytes))
-    m_screen->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+  const qint64 maxBytes = static_cast<qint64>(m_computer->maximumClipboardSize()) * 1024;
+  if (PortalClipboard::readSelectionIntoCache(m_computer->getClipboardCache(), session, mimeTypes, maxBytes))
+    m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 #else
   (void)session;
   (void)mimeTypes;

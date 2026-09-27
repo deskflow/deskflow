@@ -260,8 +260,8 @@ private:
   uint32_t m_sequenceNumber;
 
   // screen saver stuff
-  OSXScreenSaver *m_screensaver;
-  bool m_screensaverNotify;
+  OSXScreenSaver *m_computersaver;
+  bool m_computersaverNotify;
 
   // clipboard stuff
   bool m_ownClipboard;

@@ -98,9 +98,9 @@ MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *eve
       m_hook.loadLibrary();
     }
 
-    m_screensaver = new MSWindowsScreenSaver();
+    m_computersaver = new MSWindowsScreenSaver();
     m_desks = new MSWindowsDesks(
-        m_isPrimary, m_useHooks, m_screensaver, m_events,
+        m_isPrimary, m_useHooks, m_computersaver, m_events,
         new TMethodJob<MSWindowsScreen>(this, &MSWindowsScreen::updateKeysCB)
     );
     m_keyState = new MSWindowsKeyState(
@@ -122,7 +122,7 @@ MSWindowsScreen::MSWindowsScreen(bool isPrimary, bool useHooks, IEventQueue *eve
   } catch (...) {
     delete m_keyState;
     delete m_desks;
-    delete m_screensaver;
+    delete m_computersaver;
     destroyWindow(m_window);
     destroyClass(m_class);
     s_screen = nullptr;
@@ -149,7 +149,7 @@ MSWindowsScreen::~MSWindowsScreen()
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
   delete m_keyState;
   delete m_desks;
-  delete m_screensaver;
+  delete m_computersaver;
   destroyWindow(m_window);
   destroyClass(m_class);
 
@@ -253,9 +253,9 @@ void MSWindowsScreen::enter()
     // and that the screen is not in powersave mode.
     ArchMiscWindows::wakeupDisplay();
 
-    if (m_screensaver != nullptr && m_screensaverActive) {
-      m_screensaver->deactivate();
-      m_screensaverActive = 0;
+    if (m_computersaver != nullptr && m_computersaverActive) {
+      m_computersaver->deactivate();
+      m_computersaverActive = 0;
     }
   }
 
@@ -358,38 +358,38 @@ void MSWindowsScreen::checkClipboards()
 
 void MSWindowsScreen::openScreensaver(bool notify)
 {
-  assert(m_screensaver != nullptr);
+  assert(m_computersaver != nullptr);
 
-  m_screensaverNotify = notify;
-  if (m_screensaverNotify) {
+  m_computersaverNotify = notify;
+  if (m_computersaverNotify) {
     m_desks->installScreensaverHooks(true);
-  } else if (m_screensaver) {
-    m_screensaver->disable();
+  } else if (m_computersaver) {
+    m_computersaver->disable();
   }
 }
 
 void MSWindowsScreen::closeScreensaver()
 {
-  if (m_screensaver != nullptr) {
-    if (m_screensaverNotify) {
+  if (m_computersaver != nullptr) {
+    if (m_computersaverNotify) {
       m_desks->installScreensaverHooks(false);
     } else {
-      m_screensaver->enable();
+      m_computersaver->enable();
     }
   }
-  m_screensaverNotify = false;
+  m_computersaverNotify = false;
 }
 
 void MSWindowsScreen::screensaver(bool activate)
 {
-  assert(m_screensaver != nullptr);
-  if (m_screensaver == nullptr)
+  assert(m_computersaver != nullptr);
+  if (m_computersaver == nullptr)
     return;
 
   if (activate) {
-    m_screensaver->activate();
+    m_computersaver->activate();
   } else {
-    m_screensaver->deactivate();
+    m_computersaver->deactivate();
   }
 }
 
@@ -954,7 +954,7 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
    We receive only WM_TIMECHANGE hence this message is used to resume.*/
   case WM_TIMECHANGE:
     m_events->addEvent( //
-        Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+        Event(EventTypes::ComputerResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
     );
     break;
 
@@ -964,13 +964,13 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
     case PBT_APMRESUMECRITICAL:
     case PBT_APMRESUMESUSPEND:
       m_events->addEvent(
-          Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+          Event(EventTypes::ComputerResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
       );
       break;
 
     case PBT_APMSUSPEND:
       m_events->addEvent(
-          Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+          Event(EventTypes::ComputerSuspend, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
       );
       break;
     }
@@ -1174,9 +1174,9 @@ bool MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
       // ignore key repeats but it counts as a hot key
       return true;
     }
-    type = EventTypes::PrimaryScreenHotkeyDown;
+    type = EventTypes::PrimaryComputerHotkeyDown;
   } else {
-    type = EventTypes::PrimaryScreenHotkeyUp;
+    type = EventTypes::PrimaryComputerHotkeyUp;
   }
 
   // generate event
@@ -1202,12 +1202,12 @@ bool MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
     if (pressed) {
       LOG_VERBOSE("event: button press button=%d", button);
       if (button != kButtonNone) {
-        sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
+        sendEvent(EventTypes::PrimaryComputerButtonDown, ButtonInfo::alloc(button, mask));
       }
     } else {
       LOG_VERBOSE("event: button release button=%d", button);
       if (button != kButtonNone) {
-        sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
+        sendEvent(EventTypes::PrimaryComputerButtonUp, ButtonInfo::alloc(button, mask));
       }
     }
   }
@@ -1245,7 +1245,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
 
   if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
   } else {
     // the motion is on the secondary screen, so we warp mouse back to
     // center on the server screen. if we don't do this, then the mouse
@@ -1266,7 +1266,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
       LOG_DEBUG("dropped bogus delta motion: %+d,%+d", x, y);
     } else {
       // send motion
-      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(x, y));
+      sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(x, y));
     }
   }
 
@@ -1278,7 +1278,7 @@ bool MSWindowsScreen::onMouseWheel(int32_t xDelta, int32_t yDelta)
   // ignore message if posted prior to last mark change
   if (!ignore()) {
     LOG_VERBOSE("event: button wheel delta=%+d,%+d", xDelta, yDelta);
-    sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
+    sendEvent(EventTypes::PrimaryComputerWheel, WheelInfo::alloc(xDelta, yDelta));
   }
   return true;
 }
@@ -1299,13 +1299,13 @@ bool MSWindowsScreen::onScreensaver(bool activated)
   }
 
   if (activated) {
-    if (!m_screensaverActive && m_screensaver->checkStarted(DESKFLOW_MSG_SCREEN_SAVER, FALSE, 0)) {
-      m_screensaverActive = true;
+    if (!m_computersaverActive && m_computersaver->checkStarted(DESKFLOW_MSG_SCREEN_SAVER, FALSE, 0)) {
+      m_computersaverActive = true;
       sendEvent(EventTypes::PrimaryScreenSaverActivated);
     }
   } else {
-    if (m_screensaverActive) {
-      m_screensaverActive = false;
+    if (m_computersaverActive) {
+      m_computersaverActive = false;
       sendEvent(EventTypes::PrimaryScreenSaverDeactivated);
     }
   }
@@ -1336,7 +1336,7 @@ bool MSWindowsScreen::onDisplayChange()
     }
 
     // send new screen info
-    sendEvent(EventTypes::ScreenShapeChanged);
+    sendEvent(EventTypes::ComputerShapeChanged);
 
     LOG_DEBUG("computer shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
   }

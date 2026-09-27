@@ -73,9 +73,9 @@ InputFilter::FilterStatus InputFilter::KeystrokeCondition::match(const Event &ev
   FilterStatus status;
 
   // check for hotkey events
-  if (EventTypes type = event.getType(); type == EventTypes::PrimaryScreenHotkeyDown) {
+  if (EventTypes type = event.getType(); type == EventTypes::PrimaryComputerHotkeyDown) {
     status = Activate;
-  } else if (type == EventTypes::PrimaryScreenHotkeyUp) {
+  } else if (type == EventTypes::PrimaryComputerHotkeyUp) {
     status = Deactivate;
   } else {
     return NoMatch;
@@ -149,9 +149,9 @@ InputFilter::FilterStatus InputFilter::MouseButtonCondition::match(const Event &
 
   using enum FilterStatus;
   // check for hotkey events
-  if (EventTypes type = event.getType(); type == EventTypes::PrimaryScreenButtonDown) {
+  if (EventTypes type = event.getType(); type == EventTypes::PrimaryComputerButtonDown) {
     status = Activate;
-  } else if (type == EventTypes::PrimaryScreenButtonUp) {
+  } else if (type == EventTypes::PrimaryComputerButtonUp) {
     status = Deactivate;
   } else {
     return NoMatch;
@@ -168,7 +168,7 @@ InputFilter::FilterStatus InputFilter::MouseButtonCondition::match(const Event &
 }
 
 InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(IEventQueue *events, const std::string &screen)
-    : m_screen(screen),
+    : m_computer(screen),
       m_events(events)
 {
   // do nothing
@@ -176,19 +176,19 @@ InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(IEventQueue *eve
 
 InputFilter::Condition *InputFilter::ScreenConnectedCondition::clone() const
 {
-  return new ScreenConnectedCondition(m_events, m_screen);
+  return new ScreenConnectedCondition(m_events, m_computer);
 }
 
 std::string InputFilter::ScreenConnectedCondition::format() const
 {
-  return deskflow::string::sprintf("connect(%s)", m_screen.c_str());
+  return deskflow::string::sprintf("connect(%s)", m_computer.c_str());
 }
 
 InputFilter::FilterStatus InputFilter::ScreenConnectedCondition::match(const Event &event)
 {
   if (event.getType() == EventTypes::ServerConnected) {
     const auto *info = static_cast<Server::ComputerConnectedInfo *>(event.getData());
-    if (m_screen == info->m_computer || m_screen.empty()) {
+    if (m_computer == info->m_computer || m_computer.empty()) {
       return FilterStatus::Activate;
     }
   }
@@ -234,7 +234,7 @@ void InputFilter::LockCursorToScreenAction::perform(const Event &event)
   // send event
   auto *info = new Server::LockCursorToComputerInfo(s_state[m_mode]);
   m_events->addEvent(
-      Event(EventTypes::ServerLockCursorToScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+      Event(EventTypes::ServerLockCursorToComputer, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
   );
 }
 
@@ -267,7 +267,7 @@ void InputFilter::RestartServer::perform(const Event &)
 }
 
 InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue *events, const std::string &screen)
-    : m_screen(screen),
+    : m_computer(screen),
       m_events(events)
 {
   // do nothing
@@ -275,7 +275,7 @@ InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue *events, con
 
 std::string InputFilter::SwitchToScreenAction::getScreen() const
 {
-  return m_screen;
+  return m_computer;
 }
 
 InputFilter::Action *InputFilter::SwitchToScreenAction::clone() const
@@ -285,14 +285,14 @@ InputFilter::Action *InputFilter::SwitchToScreenAction::clone() const
 
 std::string InputFilter::SwitchToScreenAction::format() const
 {
-  return deskflow::string::sprintf("switchToScreen(%s)", m_screen.c_str());
+  return deskflow::string::sprintf("switchToScreen(%s)", m_computer.c_str());
 }
 
 void InputFilter::SwitchToScreenAction::perform(const Event &event)
 {
-  // pick screen name.  if m_screen is empty then use the screen from
+  // pick screen name.  if m_computer is empty then use the screen from
   // event if it has one.
-  std::string screen = m_screen;
+  std::string screen = m_computer;
   if (screen.empty() && event.getType() == EventTypes::ServerConnected) {
     const auto *info = static_cast<Server::ComputerConnectedInfo *>(event.getData());
     screen = info->m_computer;
@@ -301,7 +301,7 @@ void InputFilter::SwitchToScreenAction::perform(const Event &event)
   // send event
   auto *info = new Server::SwitchToComputerInfo(screen);
   m_events->addEvent(
-      Event(EventTypes::ServerSwitchToScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+      Event(EventTypes::ServerSwitchToComputer, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
   );
 }
 
@@ -355,7 +355,7 @@ std::string InputFilter::SwitchToNextScreenAction::format() const
 void InputFilter::SwitchToNextScreenAction::perform(const Event &event)
 {
   m_events->addEvent(
-      Event(EventTypes::ServerToggleScreen, event.getTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+      Event(EventTypes::ServerToggleComputer, event.getTarget(), nullptr, Event::EventFlags::DeliverImmediately)
   );
 }
 
@@ -370,7 +370,7 @@ InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
     IEventQueue *events, Mode mode, const std::set<std::string> &screens
 )
     : m_mode(mode),
-      m_screens(IKeyState::KeyInfo::join(screens)),
+      m_computers(IKeyState::KeyInfo::join(screens)),
       m_events(events)
 {
   // do nothing
@@ -384,7 +384,7 @@ InputFilter::KeyboardBroadcastAction::Mode InputFilter::KeyboardBroadcastAction:
 std::set<std::string> InputFilter::KeyboardBroadcastAction::getScreens() const
 {
   std::set<std::string> screens;
-  IKeyState::KeyInfo::split(m_screens.c_str(), screens);
+  IKeyState::KeyInfo::split(m_computers.c_str(), screens);
   return screens;
 }
 
@@ -398,12 +398,12 @@ std::string InputFilter::KeyboardBroadcastAction::format() const
   static const char *s_mode[] = {"off", "on", "toggle"};
   static const char *s_name = "keyboardBroadcast";
 
-  if (m_screens.empty() || m_screens[0] == '*') {
+  if (m_computers.empty() || m_computers[0] == '*') {
     return deskflow::string::sprintf("%s(%s)", s_name, s_mode[m_mode]);
   } else {
     return deskflow::string::sprintf(
-        "%s(%s,%.*s)", s_name, s_mode[m_mode], static_cast<int>(m_screens.size() >= 2 ? m_screens.size() - 2 : 0),
-        m_screens.c_str() + 1
+        "%s(%s,%.*s)", s_name, s_mode[m_mode], static_cast<int>(m_computers.size() >= 2 ? m_computers.size() - 2 : 0),
+        m_computers.c_str() + 1
     );
   }
 }
@@ -415,7 +415,7 @@ void InputFilter::KeyboardBroadcastAction::perform(const Event &event)
   };
 
   // send event
-  auto *info = new Server::KeyboardBroadcastInfo(s_state[m_mode], m_screens);
+  auto *info = new Server::KeyboardBroadcastInfo(s_state[m_mode], m_computers);
   m_events->addEvent(
       Event(EventTypes::ServerKeyboardBroadcast, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
   );
@@ -460,18 +460,18 @@ std::string InputFilter::KeystrokeAction::format() const
 {
   const char *type = formatName();
 
-  if (m_keyInfo->m_screens[0] == '\0') {
+  if (m_keyInfo->m_computers[0] == '\0') {
     return deskflow::string::sprintf(
         "%s(%s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str()
     );
-  } else if (m_keyInfo->m_screens[0] == '*') {
+  } else if (m_keyInfo->m_computers[0] == '*') {
     return deskflow::string::sprintf(
         "%s(%s,*)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str()
     );
   } else {
     return deskflow::string::sprintf(
         "%s(%s,%s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
-        m_keyInfo->m_screens.c_str()
+        m_keyInfo->m_computers.c_str()
     );
   }
 }
@@ -483,9 +483,9 @@ void InputFilter::KeystrokeAction::perform(const Event &event)
 
   EventTypes type = m_press ? KeyStateKeyDown : KeyStateKeyUp;
 
-  m_events->addEvent(Event(PrimaryScreenFakeInputBegin, event.getTarget(), nullptr, Flags::DeliverImmediately));
+  m_events->addEvent(Event(PrimaryComputerFakeInputBegin, event.getTarget(), nullptr, Flags::DeliverImmediately));
   m_events->addEvent(Event(type, event.getTarget(), m_keyInfo, Flags::DeliverImmediately | Flags::DontFreeData));
-  m_events->addEvent(Event(PrimaryScreenFakeInputEnd, event.getTarget(), nullptr, Flags::DeliverImmediately));
+  m_events->addEvent(Event(PrimaryComputerFakeInputEnd, event.getTarget(), nullptr, Flags::DeliverImmediately));
 }
 
 const char *InputFilter::KeystrokeAction::formatName() const
@@ -539,7 +539,7 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
   }
 
   // send button
-  EventTypes type = m_press ? PrimaryScreenButtonDown : PrimaryScreenButtonUp;
+  EventTypes type = m_press ? PrimaryComputerButtonDown : PrimaryComputerButtonUp;
   m_events->addEvent(Event(
       type, event.getTarget(), &m_buttonInfo, Event::EventFlags::DeliverImmediately | Event::EventFlags::DontFreeData
   ));
@@ -812,10 +812,10 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
     m_events->removeHandler(KeyStateKeyDown, m_primaryClient->getEventTarget());
     m_events->removeHandler(KeyStateKeyUp, m_primaryClient->getEventTarget());
     m_events->removeHandler(KeyStateKeyRepeat, m_primaryClient->getEventTarget());
-    m_events->removeHandler(PrimaryScreenButtonDown, m_primaryClient->getEventTarget());
-    m_events->removeHandler(PrimaryScreenButtonUp, m_primaryClient->getEventTarget());
-    m_events->removeHandler(PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget());
-    m_events->removeHandler(PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryComputerButtonDown, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryComputerButtonUp, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryComputerHotkeyDown, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryComputerHotkeyUp, m_primaryClient->getEventTarget());
     m_events->removeHandler(ServerConnected, m_primaryClient->getEventTarget());
   }
 
@@ -827,16 +827,16 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
     m_events->addHandler(KeyStateKeyRepeat, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(PrimaryScreenButtonDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryComputerButtonDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(PrimaryScreenButtonUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryComputerButtonUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryComputerHotkeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryComputerHotkeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
     m_events->addHandler(ServerConnected, m_primaryClient->getEventTarget(), [this](const auto &e) { handleEvent(e); });

@@ -147,7 +147,7 @@ private:
   std::pair<double, double> mapPortalReleasePosition(double x, double y) const;
   void addBarrier(guint id, BarrierSide side, gint zoneX, gint zoneY, guint zoneWidth, guint zoneHeight);
 
-  EiScreen *m_screen = nullptr;
+  EiScreen *m_computer = nullptr;
   IEventQueue *m_events = nullptr;
   int m_portalVersion = 0;
 

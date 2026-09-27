@@ -23,7 +23,7 @@ EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
     : KeyState(
           events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
       ),
-      m_screen{screen}
+      m_computer{screen}
 {
   m_xkb = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
@@ -310,7 +310,7 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
       "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
       keystroke.m_data.m_button.m_press ? "down" : "up"
   );
-  m_screen->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
+  m_computer->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
 }
 
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const

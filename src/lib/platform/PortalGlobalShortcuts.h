@@ -114,7 +114,7 @@ private:
   std::vector<Binding> bindingsSnapshot() const;
   static std::string makeShortcutId(KeyID key, KeyModifierMask mask);
 
-  EiScreen *m_screen = nullptr;
+  EiScreen *m_computer = nullptr;
   IEventQueue *m_events = nullptr;
 
   Thread *m_glibThread = nullptr;
