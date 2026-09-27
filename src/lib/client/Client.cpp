@@ -647,7 +647,7 @@ void Client::handleClipboardGrabbed(const Event &event)
     return;
   }
 
-  const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
+  const auto *info = static_cast<const IComputer::ClipboardInfo *>(event.getData());
 
   // grab ownership
   m_server->onGrabClipboard(info->m_id);

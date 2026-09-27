@@ -16,10 +16,10 @@ class IClipboard;
 /*!
 This interface defines the methods common to all screens.
 */
-class IScreen
+class IComputer
 {
 public:
-  virtual ~IScreen() = default;
+  virtual ~IComputer() = default;
   struct ClipboardInfo
   {
   public:

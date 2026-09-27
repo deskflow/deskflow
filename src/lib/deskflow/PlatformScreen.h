@@ -22,7 +22,7 @@ public:
   explicit PlatformScreen(IEventQueue *events);
   ~PlatformScreen() override = default;
 
-  // IScreen overrides
+  // IComputer overrides
   void *getEventTarget() const override = 0;
   bool getClipboard(ClipboardID id, IClipboard *) const override = 0;
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override = 0;

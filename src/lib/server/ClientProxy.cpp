@@ -41,5 +41,5 @@ deskflow::IStream *ClientProxy::getStream() const
 
 void *ClientProxy::getEventTarget() const
 {
-  return static_cast<IScreen *>(const_cast<ClientProxy *>(this));
+  return static_cast<IComputer *>(const_cast<ClientProxy *>(this));
 }

@@ -98,11 +98,11 @@ public:
 
   //@}
 
-  // FIXME -- these probably belong on IScreen
+  // FIXME -- these probably belong on IComputer
   virtual void enable();
   virtual void disable();
 
-  // IScreen overrides
+  // IComputer overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;

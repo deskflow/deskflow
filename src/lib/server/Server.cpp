@@ -1171,7 +1171,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
   if (!m_clientSet.contains(grabber)) {
     return;
   }
-  const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
+  const auto *info = static_cast<const IComputer::ClipboardInfo *>(event.getData());
 
   // ignore grab if sequence number is old.  always allow primary
   // screen to grab.
@@ -1219,7 +1219,7 @@ void Server::handleClipboardChanged(const Event &event, BaseClientProxy *client)
   if (!m_clientSet.contains(client)) {
     return;
   }
-  const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
+  const auto *info = static_cast<const IComputer::ClipboardInfo *>(event.getData());
   onClipboardChanged(client, info->m_id, info->m_sequenceNumber);
 }
 
