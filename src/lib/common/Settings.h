@@ -62,9 +62,6 @@ public:
     inline static const auto ScreenEnterCommand = QStringLiteral("core/enterCommand");
     inline static const auto EnableExitCommand = QStringLiteral("core/enableExitCommand");
     inline static const auto ScreenExitCommand = QStringLiteral("core/exitCommand");
-
-    // TODO: REMOVE In 2.0
-    inline static const auto ScreenName = QStringLiteral("core/screenName"); // Replaced By ComputerName
   };
   struct Daemon
   {
@@ -293,7 +290,6 @@ private:
     , Core::EnableExitCommand
     , Core::ScreenEnterCommand
     , Core::ScreenExitCommand
-    , Core::ScreenName
     , Core::ComputerName
     , Core::Display
     , Core::UseHooks
@@ -394,7 +390,7 @@ private:
   // Contains settings keys to be upgraded.
   inline static const QMap<QString, QString> m_upgradedMap = {
     /*             OLD KEY                        NEW KEY          */
-      {Core::ScreenName, Core::ComputerName}
+      {QStringLiteral("core/screenName"), Core::ComputerName}
     , {InternalConfig::NumColumns, Server::GridWidth}
     , {InternalConfig::NumRows, Server::GridHeight}
     , {InternalConfig::Heartbeat, Server::Heartbeat}
