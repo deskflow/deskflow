@@ -45,6 +45,8 @@ private:
   mutable Time m_time;
   ConverterList m_converters;
   PasteboardRef m_pboard;
+
+  static constexpr const char *kQtPngType = "com.trolltech.anymime.image--png";
 };
 
 //! Clipboard format converter interface
@@ -82,6 +84,12 @@ public:
   (i.e., the reverse of fromIClipboard()).
   */
   virtual std::string toIClipboard(const std::string &) const = 0;
+
+  //! returns another flavor type the same data is also written under, or null
+  virtual CFStringRef getAliasOSXFormat() const
+  {
+    return nullptr;
+  }
 
   //@}
 };

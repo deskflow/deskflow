@@ -81,6 +81,8 @@ elseif(APPLE)
     OSXClipboardBMPConverter.h
     OSXClipboardHTMLConverter.cpp
     OSXClipboardHTMLConverter.h
+    OSXClipboardImageConverter.cpp
+    OSXClipboardImageConverter.h
     OSXClipboardRawConverter.cpp
     OSXClipboardRawConverter.h
     OSXClipboardTextConverter.cpp

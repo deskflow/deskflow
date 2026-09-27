@@ -15,6 +15,8 @@ private Q_SLOTS:
   void open();
   void singleFormat();
   void formatConvert_UTF8();
+  void formatConvert_png();
+  void add_bitmap_offeredAsPng();
   void add_gif_offeredUnderStandardAndQtTypes();
 
 private:

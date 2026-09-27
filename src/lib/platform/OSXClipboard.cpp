@@ -11,6 +11,7 @@
 #include "base/Log.h"
 #include "platform/OSXClipboardBMPConverter.h"
 #include "platform/OSXClipboardHTMLConverter.h"
+#include "platform/OSXClipboardImageConverter.h"
 #include "platform/OSXClipboardRawConverter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardUTF16Converter.h"
@@ -23,6 +24,18 @@
 OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
+
+  // bitmaps are written as png, under the standard type and the one qt apps read; the rest read what apps copy
+  m_converters.push_back(new OSXClipboardImageConverter("public.png", kQtPngType));
+  m_converters.push_back(new OSXClipboardImageConverter("public.tiff"));
+  m_converters.push_back(new OSXClipboardImageConverter("public.jpeg"));
+  m_converters.push_back(new OSXClipboardImageConverter("public.heic"));
+  m_converters.push_back(new OSXClipboardImageConverter("org.webmproject.webp"));
+  m_converters.push_back(new OSXClipboardImageConverter(kQtPngType));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--jpeg"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--tiff"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--webp"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--bmp"));
   m_converters.push_back(new OSXClipboardBMPConverter);
 
   // unchanged files go under both the standard type and the one qt apps read
@@ -106,12 +119,19 @@ void OSXClipboard::add(Format format, const std::string &data)
     IOSXClipboardConverter *converter = *index;
     if (converter->getFormat() == format) {
       std::string osXData = converter->fromIClipboard(data);
+      if (osXData.empty()) {
+        continue;
+      }
+
       CFStringRef flavorType = converter->getOSXFormat();
       CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (uint8_t *)osXData.data(), osXData.size());
       PasteboardItemID itemID = 0;
 
       if (dataRef) {
         PasteboardPutItemFlavor(m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
+        if (CFStringRef alias = converter->getAliasOSXFormat(); alias != nullptr) {
+          PasteboardPutItemFlavor(m_pboard, itemID, alias, dataRef, kPasteboardFlavorNoFlags);
+        }
 
         CFRelease(dataRef);
         LOG_DEBUG("added to clipboard, format: %d, size: %s", format, size.constData());

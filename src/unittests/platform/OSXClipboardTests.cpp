@@ -9,7 +9,24 @@
 #include "OSXClipboardTests.h"
 
 #include "platform/OSXClipboard.h"
+#include "platform/OSXClipboardImageConverter.h"
 #include "platform/OSXClipboardUTF8Converter.h"
+
+#include <cstdlib>
+
+#include <QDataStream>
+#include <QtEndian>
+
+static std::string twoPixelDib()
+{
+  QByteArray dib;
+  QDataStream stream(&dib, QIODevice::WriteOnly);
+  stream.setByteOrder(QDataStream::LittleEndian);
+  stream << quint32(40) << qint32(2) << qint32(1) << quint16(1) << quint16(32) << quint32(0) << quint32(8) << qint32(0)
+         << qint32(0) << quint32(0) << quint32(0);
+  stream << quint32(0xFFFF0000) << quint32(0xFF0000FF);
+  return dib.toStdString();
+}
 
 static bool pasteboardHasFlavor(CFStringRef flavor)
 {
@@ -51,6 +68,31 @@ void OSXClipboardTests::formatConvert_UTF8()
   QCOMPARE(converter.getOSXFormat(), CFSTR("public.utf8-plain-text"));
   QCOMPARE(converter.fromIClipboard("test data\n"), "test data\n");
   QCOMPARE(converter.toIClipboard("test data\r"), "test data\n");
+}
+
+void OSXClipboardTests::formatConvert_png()
+{
+  OSXClipboardImageConverter converter("public.png");
+  QCOMPARE(converter.getFormat(), IClipboard::Format::Bitmap);
+  QCOMPARE(CFStringCompare(converter.getOSXFormat(), CFSTR("public.png"), 0), kCFCompareEqualTo);
+
+  const auto png = converter.fromIClipboard(twoPixelDib());
+  QVERIFY(png.starts_with("\x89PNG"));
+
+  const auto dib = converter.toIClipboard(png);
+  QVERIFY(dib.size() >= 40);
+  QCOMPARE(qFromLittleEndian<qint32>(dib.data() + 4), 2);
+  QCOMPARE(std::abs(qFromLittleEndian<qint32>(dib.data() + 8)), 1);
+}
+
+void OSXClipboardTests::add_bitmap_offeredAsPng()
+{
+  OSXClipboard clipboard;
+  QVERIFY(clipboard.empty());
+  clipboard.add(IClipboard::Format::Bitmap, twoPixelDib());
+
+  QVERIFY(pasteboardHasFlavor(CFSTR("public.png")));
+  QVERIFY(pasteboardHasFlavor(CFSTR("com.trolltech.anymime.image--png")));
 }
 
 void OSXClipboardTests::add_gif_offeredUnderStandardAndQtTypes()
