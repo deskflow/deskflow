@@ -8,7 +8,7 @@
 #pragma once
 
 #include "base/IEventQueueBuffer.h"
-#include "platform/EiScreen.h"
+#include "platform/EiComputer.h"
 
 #include <libei.h>
 #include <mutex>

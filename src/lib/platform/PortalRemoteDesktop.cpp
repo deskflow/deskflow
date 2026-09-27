@@ -18,7 +18,7 @@
 
 namespace deskflow {
 
-PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
+PortalRemoteDesktop::PortalRemoteDesktop(EiComputer *screen, IEventQueue *events)
     : m_computer{screen},
       m_events{events},
       m_portal{xdp_portal_new()}
@@ -145,8 +145,9 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
     return;
   }
 
-  // Socket ownership is transferred to the EiScreen
-  m_events->addEvent(Event(EventTypes::EIConnected, m_computer->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+  // Socket ownership is transferred to the EiComputer
+  m_events->addEvent(Event(EventTypes::EIConnected, m_computer->getEventTarget(), EiComputer::EiConnectInfo::alloc(fd))
+  );
 }
 
 void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)

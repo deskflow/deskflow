@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mt/Thread.h"
-#include "platform/EiScreen.h"
+#include "platform/EiComputer.h"
 
 #include <QByteArray>
 
@@ -29,7 +29,7 @@ class EiClipboard;
 class PortalInputCapture
 {
 public:
-  PortalInputCapture(EiScreen *screen, IEventQueue *events);
+  PortalInputCapture(EiComputer *screen, IEventQueue *events);
   ~PortalInputCapture();
 
   // Get the clipboard for the specified ID
@@ -147,7 +147,7 @@ private:
   std::pair<double, double> mapPortalReleasePosition(double x, double y) const;
   void addBarrier(guint id, BarrierSide side, gint zoneX, gint zoneY, guint zoneWidth, guint zoneHeight);
 
-  EiScreen *m_computer = nullptr;
+  EiComputer *m_computer = nullptr;
   IEventQueue *m_events = nullptr;
   int m_portalVersion = 0;
 
