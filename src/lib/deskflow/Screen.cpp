@@ -150,7 +150,7 @@ void Screen::enter(KeyModifierMask toggleMask)
   }
 
   if (Settings::value(Settings::Core::EnableEnterCommand).toBool()) {
-    const auto commandLine = Settings::value(Settings::Core::ScreenEnterCommand).toString();
+    const auto commandLine = Settings::value(Settings::Core::ComputerEnterCommand).toString();
     LOG_DEBUG("running screen enter command: %s", qPrintable(commandLine));
     if (!runScreenCommand(commandLine))
       LOG_ERR("failed to run screen enter command");
@@ -177,7 +177,7 @@ bool Screen::leave()
 
   m_screen->leave();
   if (Settings::value(Settings::Core::EnableExitCommand).toBool()) {
-    const auto commandLine = Settings::value(Settings::Core::ScreenExitCommand).toString();
+    const auto commandLine = Settings::value(Settings::Core::ComputerExitCommand).toString();
     LOG_DEBUG("running screen exit command: %s", qPrintable(commandLine));
     if (!runScreenCommand(commandLine))
       LOG_ERR("failed to run screen exit command");
