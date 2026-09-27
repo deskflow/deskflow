@@ -7,7 +7,7 @@
 #include "platform/PortalGlobalShortcuts.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
-#include "platform/EiScreen.h"
+#include "platform/EiComputer.h"
 #include <inttypes.h>
 
 #include <algorithm> // std::find_if, std::ranges::all_of
@@ -16,7 +16,7 @@
 
 namespace deskflow {
 
-PortalGlobalShortcuts::PortalGlobalShortcuts(EiScreen *screen, IEventQueue *events)
+PortalGlobalShortcuts::PortalGlobalShortcuts(EiComputer *screen, IEventQueue *events)
     : m_computer{screen},
       m_events{events},
       m_portal{xdp_portal_new()}
@@ -296,7 +296,7 @@ void PortalGlobalShortcuts::bindShortcutsDone(GObject *object, GAsyncResult *res
         xdp_global_shortcut_assigned_get_trigger_description(shortcut)
     );
   }
-  // EiScreen can't be notified about the change, because triggerDescription is only a
+  // EiComputer can't be notified about the change, because triggerDescription is only a
   // human-readable string and not a preferred trigger string
 }
 
@@ -370,7 +370,7 @@ void PortalGlobalShortcuts::handleShortcutsChanged(XdpGlobalShortcutsSession *se
     triggerDescription = xdp_global_shortcut_assigned_get_trigger_description(shortcut);
     LOG_DEBUG("global shortcut %s changed to %s", shortcutId, triggerDescription);
 
-    // EiScreen can't be notified about the change, because triggerDescription is only a
+    // EiComputer can't be notified about the change, because triggerDescription is only a
     // human-readable string and not a preferred trigger string
   }
 }

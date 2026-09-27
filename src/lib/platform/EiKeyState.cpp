@@ -19,7 +19,7 @@
 
 namespace deskflow {
 
-EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
+EiKeyState::EiKeyState(EiComputer *screen, IEventQueue *events)
     : KeyState(
           events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
       ),

@@ -166,7 +166,7 @@ bool PortalInputCapture::getClosestReleaseBarrier(
   return bestDistance != std::numeric_limits<int>::max();
 }
 
-PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
+PortalInputCapture::PortalInputCapture(EiComputer *screen, IEventQueue *events)
     : m_computer{screen},
       m_events{events},
       m_portalVersion(0),
@@ -320,8 +320,9 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
     return;
   }
 
-  // Socket ownership is transferred to the EiScreen
-  m_events->addEvent(Event(EventTypes::EIConnected, m_computer->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+  // Socket ownership is transferred to the EiComputer
+  m_events->addEvent(Event(EventTypes::EIConnected, m_computer->getEventTarget(), EiComputer::EiConnectInfo::alloc(fd))
+  );
 
   using enum Signal;
   m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);

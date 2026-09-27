@@ -40,7 +40,7 @@
 #endif
 
 #if WINAPI_LIBEI
-#include "platform/EiScreen.h"
+#include "platform/EiComputer.h"
 #endif
 
 #if defined(Q_OS_MACOS)
@@ -401,7 +401,7 @@ deskflow::Computer *ServerApp::createComputer()
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("detected wayland platform");
-    return new deskflow::Computer(new deskflow::EiScreen(true, getEvents(), true), getEvents());
+    return new deskflow::Computer(new deskflow::EiComputer(true, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif

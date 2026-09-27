@@ -8,7 +8,7 @@
 #pragma once
 
 #include "deskflow/KeyState.h"
-#include "platform/EiScreen.h"
+#include "platform/EiComputer.h"
 
 #include <xkbcommon/xkbcommon.h>
 
@@ -22,7 +22,7 @@ namespace deskflow {
 class EiKeyState : public KeyState
 {
 public:
-  EiKeyState(EiScreen *screen, IEventQueue *events);
+  EiKeyState(EiComputer *screen, IEventQueue *events);
   ~EiKeyState() override;
 
   void init(int fd, std::size_t len);
@@ -47,7 +47,7 @@ private:
   std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn, bool mapMod2ToNumLock = false) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
-  EiScreen *m_computer = nullptr;
+  EiComputer *m_computer = nullptr;
 
   xkb_context *m_xkb = nullptr;
   xkb_keymap *m_xkbKeymap = nullptr;

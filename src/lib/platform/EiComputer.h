@@ -39,11 +39,11 @@ class EiClipboard;
 using ClipboardInfo = IComputer::ClipboardInfo;
 
 //! Implementation of IPlatformComputer for X11
-class EiScreen : public PlatformComputer
+class EiComputer : public PlatformComputer
 {
 public:
-  EiScreen(bool isPrimary, IEventQueue *events, bool usePortal);
-  ~EiScreen() override;
+  EiComputer(bool isPrimary, IEventQueue *events, bool usePortal);
+  ~EiComputer() override;
 
   // IComputer overrides
   void *getEventTarget() const final;
@@ -136,7 +136,7 @@ private:
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
-    auto screen = static_cast<EiScreen *>(ei_get_user_data(ei));
+    auto screen = static_cast<EiComputer *>(ei_get_user_data(ei));
     screen->eiLogEvent(priority, message);
   }
 

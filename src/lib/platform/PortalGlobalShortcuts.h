@@ -23,12 +23,12 @@
 
 namespace deskflow {
 
-class EiScreen;
+class EiComputer;
 
 class PortalGlobalShortcuts
 {
 public:
-  PortalGlobalShortcuts(EiScreen *screen, IEventQueue *events);
+  PortalGlobalShortcuts(EiComputer *screen, IEventQueue *events);
   ~PortalGlobalShortcuts();
   struct HotKey
   {
@@ -114,7 +114,7 @@ private:
   std::vector<Binding> bindingsSnapshot() const;
   static std::string makeShortcutId(KeyID key, KeyModifierMask mask);
 
-  EiScreen *m_computer = nullptr;
+  EiComputer *m_computer = nullptr;
   IEventQueue *m_events = nullptr;
 
   Thread *m_glibThread = nullptr;
@@ -133,7 +133,7 @@ private:
 
   mutable std::mutex m_bindingsMutex;
   guint m_pendingIdleSource = 0; // guarded by m_bindingsMutex
-  // Snapshot derived from EiScreen::m_hotkeys. This is portal-facing state
+  // Snapshot derived from EiComputer::m_hotkeys. This is portal-facing state
   std::vector<Binding> m_bindings;
 };
 
