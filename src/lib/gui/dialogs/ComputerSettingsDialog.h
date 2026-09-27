@@ -13,7 +13,7 @@ class QWidget;
 class QString;
 
 class Computer;
-class ScreenList;
+class ComputerList;
 
 namespace Ui {
 class ComputerSettingsDialog;
@@ -24,7 +24,7 @@ class ComputerSettingsDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit ComputerSettingsDialog(QWidget *parent, Computer *screen = nullptr, const ScreenList *screens = nullptr);
+  explicit ComputerSettingsDialog(QWidget *parent, Computer *screen = nullptr, const ComputerList *screens = nullptr);
   ~ComputerSettingsDialog() override;
 
 public Q_SLOTS:

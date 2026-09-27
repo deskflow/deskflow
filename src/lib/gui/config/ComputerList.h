@@ -8,15 +8,15 @@
 
 #include "Computer.h"
 
-class ScreenList : public QList<Computer>
+class ComputerList : public QList<Computer>
 {
   int m_width = 5;
 
 public:
-  explicit ScreenList(int width = 5);
+  explicit ComputerList(int width = 5);
 
   /**
-   * @brief addScreenByPriority adds a new screen according to the following
+   * @brief addComputerByPriority adds a new computer according to the following
    * priority: 1.left side of the server 2.right side of the server 3.top 4.down
    * 5.top left-hand diagonally
    * 6.top right-hand diagonally
@@ -24,19 +24,19 @@ public:
    * 8.bottom left-hand diagonally
    * 9.In case all places from the list have already booked, place in any spare
    * place
-   * @param newScreen
+   * @param newComputer
    */
-  void addScreenByPriority(const Computer &newScreen);
+  void addComputerByPriority(const Computer &newComputer);
 
   /**
-   * @brief addScreenToFirstEmpty adds screen into the first empty place
-   * @param newScreen
+   * @brief addComputerToFirstEmpty adds computer into the first empty place
+   * @param newComputer
    */
-  void addScreenToFirstEmpty(const Computer &newScreen);
+  void addComputerToFirstEmpty(const Computer &newComputer);
 
   /**
-   * @brief Returns true if screens are equal
+   * @brief Returns true if computers are equal
    * @param sc
    */
-  bool operator==(const ScreenList &sc) const;
+  bool operator==(const ComputerList &sc) const;
 };

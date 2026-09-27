@@ -32,7 +32,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_originalServerConfigIsExternal(config.useExternalConfig()),
       m_originalServerConfigUsesExternalFile(config.configFile()),
       m_serverConfig(config),
-      m_computerSetupModel(m_serverConfig.screens(), m_columns, m_rows),
+      m_computerSetupModel(m_serverConfig.computers(), m_columns, m_rows),
       m_buttonBox{new SettingsDialogButtonBox(this)}
 {
   ui->setupUi(this);
@@ -410,12 +410,12 @@ void ServerConfigDialog::loadFromConfig()
 
   ui->computerSetupView->setModel(&m_computerSetupModel);
 
-  auto &screens = serverConfig().screens();
-  auto server = std::ranges::find_if(screens, [this](const Computer &computer) {
+  auto &computers = serverConfig().computers();
+  auto server = std::ranges::find_if(computers, [this](const Computer &computer) {
     return (computer.name() == serverConfig().getServerName());
   });
 
-  if (server == screens.end()) {
+  if (server == computers.end()) {
     Computer serverComputer(serverConfig().getServerName());
     serverComputer.markAsServer();
     model().computer(m_columns / 2, m_rows / 2) = serverComputer;

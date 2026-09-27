@@ -25,13 +25,13 @@ QString Action::text() const
     if (!keySequence().isMouseButton()) {
       const QStringList &screens = typeScreenNames();
       if (haveScreens() && !screens.isEmpty()) {
-        QString screenList;
+        QString computerList;
         for (int i = 0; i < screens.size(); i++) {
-          screenList.append(screens[i]);
+          computerList.append(screens[i]);
           if (i != screens.size() - 1)
-            screenList.append(QStringLiteral(":"));
+            computerList.append(QStringLiteral(":"));
         }
-        commandArgs.append(QStringLiteral(",%1").arg(screenList));
+        commandArgs.append(QStringLiteral(",%1").arg(computerList));
       } else
         commandArgs.append(QStringLiteral(",*"));
     }

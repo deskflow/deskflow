@@ -17,7 +17,7 @@
 
 const QString ComputerSetupModel::m_MimeType = "application/x-deskflow-screen";
 
-ComputerSetupModel::ComputerSetupModel(ScreenList &screens, int numColumns, int numRows)
+ComputerSetupModel::ComputerSetupModel(ComputerList &screens, int numColumns, int numRows)
     : QAbstractTableModel(nullptr),
       m_computers(screens),
       m_NumColumns(numColumns),
@@ -130,22 +130,22 @@ bool ComputerSetupModel::dropMimeData(
   const auto pColumn = parent.column();
   const auto pRow = parent.row();
 
-  // don't drop screen onto itself
+  // don't drop computer onto itself
   if (sourceColumn == pColumn && sourceRow == pRow)
     return false;
 
-  Computer droppedScreen;
-  stream >> droppedScreen;
+  Computer droppedComputer;
+  stream >> droppedComputer;
 
-  if (auto oldScreen = Computer(computer(pColumn, pRow));
-      !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
-    // mark the screen so it isn't deleted after the dragndrop succeeded
+  if (auto oldComputer = Computer(computer(pColumn, pRow));
+      !oldComputer.isNull() && sourceColumn != -1 && sourceRow != -1) {
+    // mark the computer so it isn't deleted after the dragndrop succeeded
     // see ComputerSetupView::startDrag()
-    oldScreen.setSwapped(true);
-    computer(sourceColumn, sourceRow) = oldScreen;
+    oldComputer.setSwapped(true);
+    computer(sourceColumn, sourceRow) = oldComputer;
   }
 
-  computer(pColumn, pRow) = droppedScreen;
+  computer(pColumn, pRow) = droppedComputer;
 
   Q_EMIT computersChanged();
 
@@ -154,12 +154,12 @@ bool ComputerSetupModel::dropMimeData(
 
 void ComputerSetupModel::addComputer(const Computer &newComputer)
 {
-  m_computers.addScreenByPriority(newComputer);
+  m_computers.addComputerByPriority(newComputer);
   Q_EMIT computersChanged();
 }
 
 bool ComputerSetupModel::isFull() const
 {
-  auto emptyScreen = std::ranges::find_if(m_computers, [](const Computer &item) { return item.isNull(); });
-  return (static_cast<QList<Computer>::const_iterator>(emptyScreen) == m_computers.cend());
+  auto emptyComputer = std::ranges::find_if(m_computers, [](const Computer &item) { return item.isNull(); });
+  return (static_cast<QList<Computer>::const_iterator>(emptyComputer) == m_computers.cend());
 }

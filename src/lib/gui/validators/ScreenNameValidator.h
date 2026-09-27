@@ -8,7 +8,7 @@
 
 #include "LineEditValidator.h"
 
-class ScreenList;
+class ComputerList;
 
 namespace validators {
 class ValidationError;
@@ -18,7 +18,7 @@ class ScreenNameValidator : public LineEditValidator
   Q_OBJECT
 public:
   explicit ScreenNameValidator(
-      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr, const ScreenList *pScreens = nullptr
+      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr, const ComputerList *pScreens = nullptr
   );
 };
 
