@@ -11,6 +11,7 @@
 #include "base/Log.h"
 #include "platform/OSXClipboardBMPConverter.h"
 #include "platform/OSXClipboardHTMLConverter.h"
+#include "platform/OSXClipboardRawConverter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardUTF8Converter.h"
@@ -23,6 +24,13 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
   m_converters.push_back(new OSXClipboardBMPConverter);
+
+  // unchanged files go under both the standard type and the one qt apps read
+  m_converters.push_back(new OSXClipboardRawConverter("com.compuserve.gif", IClipboard::Format::GIF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--gif", IClipboard::Format::GIF));
+  m_converters.push_back(new OSXClipboardRawConverter("public.svg-image", IClipboard::Format::SVG));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--svg+xml", IClipboard::Format::SVG));
+
   m_converters.push_back(new OSXClipboardUTF8Converter);
   m_converters.push_back(new OSXClipboardUTF16Converter);
   m_converters.push_back(new OSXClipboardTextConverter);
@@ -90,9 +98,11 @@ void OSXClipboard::add(Format format, const std::string &data)
     LOG_DEBUG("format of data to be added to clipboard was kHTML");
   }
 
-  // only the first flavour per format is written, the rest are for reading since macos converts text on demand
+  // macos converts other flavours on demand, but native and qt apps look for unchanged files under different types
+  const bool writeEveryFlavour = format == IClipboard::Format::GIF || format == IClipboard::Format::SVG;
   bool added = false;
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end() && !added; ++index) {
+  for (ConverterList::const_iterator index = m_converters.begin();
+       index != m_converters.end() && (!added || writeEveryFlavour); ++index) {
     IOSXClipboardConverter *converter = *index;
     if (converter->getFormat() == format) {
       std::string osXData = converter->fromIClipboard(data);

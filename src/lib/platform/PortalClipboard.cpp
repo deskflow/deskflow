@@ -236,7 +236,7 @@ bool PortalClipboard::readSelectionIntoCache(
       continue;
     }
 
-    if (entry.format != IClipboard::Format::Bitmap) {
+    if (entry.format == IClipboard::Format::Text || entry.format == IClipboard::Format::HTML) {
       while (bytes.endsWith('\0'))
         bytes.chop(1);
       bytes.replace("\r\n", "\n");

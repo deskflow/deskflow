@@ -230,4 +230,23 @@ void ClipboardTests::equalClipboards()
   clipboard2.close();
 }
 
+void ClipboardTests::marshalGifAndSvg()
+{
+  const std::string gif("GIF89a\0\x01\x02", 9);
+  const std::string svg = R"(<svg xmlns="http://www.w3.org/2000/svg"/>)";
+  Clipboard source;
+  source.open(0);
+  source.add(IClipboard::Format::GIF, gif);
+  source.add(IClipboard::Format::SVG, svg);
+  source.close();
+
+  Clipboard copy;
+  copy.unmarshall(source.marshall(), 0);
+
+  copy.open(0);
+  QCOMPARE(copy.get(IClipboard::Format::GIF), gif);
+  QCOMPARE(copy.get(IClipboard::Format::SVG), svg);
+  copy.close();
+}
+
 QTEST_MAIN(ClipboardTests)

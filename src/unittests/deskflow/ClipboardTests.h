@@ -23,6 +23,7 @@ private Q_SLOTS:
   void unMarshalText();
   void unMarshalLongerText();
   void unMarshalTextAndHtml();
+  void marshalGifAndSvg();
   void equalClipboards();
 
 private:

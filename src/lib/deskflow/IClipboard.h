@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iterator>
 #include <string>
 
 #include <QByteArray>
@@ -47,12 +48,17 @@ public:
   \c kHTML is a text format encoded in UTF-8 and containing a valid
   HTML fragment (but not necessarily a complete HTML document).
   Newlines are LF.
+
+  \c kGIF and \c kSVG are image files passed through unchanged, keeping
+  animation and vectors.  Peers that don't know them skip them.
   */
   enum class Format
   {
     Text,        //!< Text format, UTF-8, newline is LF
     HTML,        //!< HTML format, HTML fragment, UTF-8, newline is LF
     Bitmap,      //!< Bitmap format, BMP 24/32bpp, BI_RGB
+    GIF,         //!< GIF image file, unchanged
+    SVG,         //!< SVG image file, unchanged
     TotalFormats //!< The number of clipboard formats supported
   };
 
@@ -161,4 +167,8 @@ public:
 private:
   static uint32_t readUInt32(const char *);
   static void writeUInt32(std::string *, uint32_t);
+
+  // unchanged images go before the bitmap, so apps that take the first image type offered get the original
+  static constexpr Format kCopyOrder[] = {Format::Text, Format::HTML, Format::GIF, Format::SVG, Format::Bitmap};
+  static_assert(std::size(kCopyOrder) == static_cast<size_t>(Format::TotalFormats));
 };

@@ -13,6 +13,7 @@
 #include "platform/MSWindowsClipboardFacade.h"
 #include "platform/MSWindowsClipboardHTMLConverter.h"
 #include "platform/MSWindowsClipboardImageConverter.h"
+#include "platform/MSWindowsClipboardRawConverter.h"
 #include "platform/MSWindowsClipboardUTF16Converter.h"
 
 #include <algorithm>
@@ -45,6 +46,11 @@ MSWindowsClipboard::MSWindowsClipboard(HWND window)
   m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/bmp", "BMP"));
   m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/tiff", "TIFF"));
   m_converters.push_back(new MSWindowsClipboardImageConverter(L"image/webp", "WEBP"));
+
+  // written under the mime type qt apps read; the standard gif name is read too
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/gif", IClipboard::Format::GIF));
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"GIF", IClipboard::Format::GIF));
+  m_converters.push_back(new MSWindowsClipboardRawConverter(L"image/svg+xml", IClipboard::Format::SVG));
 
   m_converters.push_back(new MSWindowsClipboardHTMLConverter);
 }
