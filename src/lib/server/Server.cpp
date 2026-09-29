@@ -221,12 +221,12 @@ bool Server::setConfig(const ServerConfig &config)
   // the user configurable hotkey mechanism.  if the user has already
   // registered ScrollLock for something else then that will win but
   // we will unfortunately generate a warning.  if the user has
-  // configured a LockCursorToScreenAction then we don't add
+  // configured a LockCursorToComputerAction then we don't add
   // ScrollLock as a hotkey.
   if (!m_disableLockToComputer && !m_config->hasLockToComputerAction()) {
     IPlatformComputer::KeyInfo *key = IPlatformComputer::KeyInfo::alloc(kKeyScrollLock, 0, 0, 0);
     InputFilter::Rule rule(new InputFilter::KeystrokeCondition(m_events, key));
-    rule.adoptAction(new InputFilter::LockCursorToScreenAction(m_events), true);
+    rule.adoptAction(new InputFilter::LockCursorToComputerAction(m_events), true);
     m_inputFilter->addFilterRule(rule);
   }
 

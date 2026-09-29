@@ -167,24 +167,24 @@ InputFilter::FilterStatus InputFilter::MouseButtonCondition::match(const Event &
   return status;
 }
 
-InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(IEventQueue *events, const std::string &screen)
-    : m_computer(screen),
+InputFilter::ComputerConnectedCondition::ComputerConnectedCondition(IEventQueue *events, const std::string &computer)
+    : m_computer(computer),
       m_events(events)
 {
   // do nothing
 }
 
-InputFilter::Condition *InputFilter::ScreenConnectedCondition::clone() const
+InputFilter::Condition *InputFilter::ComputerConnectedCondition::clone() const
 {
-  return new ScreenConnectedCondition(m_events, m_computer);
+  return new ComputerConnectedCondition(m_events, m_computer);
 }
 
-std::string InputFilter::ScreenConnectedCondition::format() const
+std::string InputFilter::ComputerConnectedCondition::format() const
 {
   return deskflow::string::sprintf("connect(%s)", m_computer.c_str());
 }
 
-InputFilter::FilterStatus InputFilter::ScreenConnectedCondition::match(const Event &event)
+InputFilter::FilterStatus InputFilter::ComputerConnectedCondition::match(const Event &event)
 {
   if (event.getType() == EventTypes::ServerConnected) {
     const auto *info = static_cast<Server::ComputerConnectedInfo *>(event.getData());
@@ -200,31 +200,31 @@ InputFilter::FilterStatus InputFilter::ScreenConnectedCondition::match(const Eve
 // Input Filter Action Classes
 // -----------------------------------------------------------------------------
 
-InputFilter::LockCursorToScreenAction::LockCursorToScreenAction(IEventQueue *events, Mode mode)
+InputFilter::LockCursorToComputerAction::LockCursorToComputerAction(IEventQueue *events, Mode mode)
     : m_mode(mode),
       m_events(events)
 {
   // do nothing
 }
 
-InputFilter::LockCursorToScreenAction::Mode InputFilter::LockCursorToScreenAction::getMode() const
+InputFilter::LockCursorToComputerAction::Mode InputFilter::LockCursorToComputerAction::getMode() const
 {
   return m_mode;
 }
 
-InputFilter::Action *InputFilter::LockCursorToScreenAction::clone() const
+InputFilter::Action *InputFilter::LockCursorToComputerAction::clone() const
 {
-  return new LockCursorToScreenAction(*this);
+  return new LockCursorToComputerAction(*this);
 }
 
-std::string InputFilter::LockCursorToScreenAction::format() const
+std::string InputFilter::LockCursorToComputerAction::format() const
 {
   static const char *s_mode[] = {"off", "on", "toggle"};
 
   return deskflow::string::sprintf("lockCursorToScreen(%s)", s_mode[m_mode]);
 }
 
-void InputFilter::LockCursorToScreenAction::perform(const Event &event)
+void InputFilter::LockCursorToComputerAction::perform(const Event &event)
 {
   static const Server::LockCursorToComputerInfo::State s_state[] = {
       Server::LockCursorToComputerInfo::kOff, Server::LockCursorToComputerInfo::kOn,
@@ -266,40 +266,40 @@ void InputFilter::RestartServer::perform(const Event &)
   exit(0);
 }
 
-InputFilter::SwitchToScreenAction::SwitchToScreenAction(IEventQueue *events, const std::string &screen)
-    : m_computer(screen),
+InputFilter::SwitchToComputerAction::SwitchToComputerAction(IEventQueue *events, const std::string &computer)
+    : m_computer(computer),
       m_events(events)
 {
   // do nothing
 }
 
-std::string InputFilter::SwitchToScreenAction::getScreen() const
+std::string InputFilter::SwitchToComputerAction::getComputer() const
 {
   return m_computer;
 }
 
-InputFilter::Action *InputFilter::SwitchToScreenAction::clone() const
+InputFilter::Action *InputFilter::SwitchToComputerAction::clone() const
 {
-  return new SwitchToScreenAction(*this);
+  return new SwitchToComputerAction(*this);
 }
 
-std::string InputFilter::SwitchToScreenAction::format() const
+std::string InputFilter::SwitchToComputerAction::format() const
 {
   return deskflow::string::sprintf("switchToScreen(%s)", m_computer.c_str());
 }
 
-void InputFilter::SwitchToScreenAction::perform(const Event &event)
+void InputFilter::SwitchToComputerAction::perform(const Event &event)
 {
-  // pick screen name.  if m_computer is empty then use the screen from
+  // pick computer name.  if m_computer is empty then use the computer from
   // event if it has one.
-  std::string screen = m_computer;
-  if (screen.empty() && event.getType() == EventTypes::ServerConnected) {
+  std::string computer = m_computer;
+  if (computer.empty() && event.getType() == EventTypes::ServerConnected) {
     const auto *info = static_cast<Server::ComputerConnectedInfo *>(event.getData());
-    screen = info->m_computer;
+    computer = info->m_computer;
   }
 
   // send event
-  auto *info = new Server::SwitchToComputerInfo(screen);
+  auto *info = new Server::SwitchToComputerInfo(computer);
   m_events->addEvent(
       Event(EventTypes::ServerSwitchToComputer, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
   );
@@ -337,22 +337,22 @@ void InputFilter::SwitchInDirectionAction::perform(const Event &event)
   );
 }
 
-InputFilter::SwitchToNextScreenAction::SwitchToNextScreenAction(IEventQueue *events) : m_events(events)
+InputFilter::SwitchToNextComputerAction::SwitchToNextComputerAction(IEventQueue *events) : m_events(events)
 {
   // do nothing
 }
 
-InputFilter::Action *InputFilter::SwitchToNextScreenAction::clone() const
+InputFilter::Action *InputFilter::SwitchToNextComputerAction::clone() const
 {
-  return new SwitchToNextScreenAction(*this);
+  return new SwitchToNextComputerAction(*this);
 }
 
-std::string InputFilter::SwitchToNextScreenAction::format() const
+std::string InputFilter::SwitchToNextComputerAction::format() const
 {
   return "switchToNextScreen()";
 }
 
-void InputFilter::SwitchToNextScreenAction::perform(const Event &event)
+void InputFilter::SwitchToNextComputerAction::perform(const Event &event)
 {
   m_events->addEvent(
       Event(EventTypes::ServerToggleComputer, event.getTarget(), nullptr, Event::EventFlags::DeliverImmediately)
@@ -367,10 +367,10 @@ InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(IEventQueue *event
 }
 
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(
-    IEventQueue *events, Mode mode, const std::set<std::string> &screens
+    IEventQueue *events, Mode mode, const std::set<std::string> &computers
 )
     : m_mode(mode),
-      m_computers(IKeyState::KeyInfo::join(screens)),
+      m_computers(IKeyState::KeyInfo::join(computers)),
       m_events(events)
 {
   // do nothing
@@ -381,11 +381,11 @@ InputFilter::KeyboardBroadcastAction::Mode InputFilter::KeyboardBroadcastAction:
   return m_mode;
 }
 
-std::set<std::string> InputFilter::KeyboardBroadcastAction::getScreens() const
+std::set<std::string> InputFilter::KeyboardBroadcastAction::getComputers() const
 {
-  std::set<std::string> screens;
-  IKeyState::KeyInfo::split(m_computers.c_str(), screens);
-  return screens;
+  std::set<std::string> computers;
+  IKeyState::KeyInfo::split(m_computers.c_str(), computers);
+  return computers;
 }
 
 InputFilter::Action *InputFilter::KeyboardBroadcastAction::clone() const
