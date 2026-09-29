@@ -239,7 +239,7 @@ Comments are introduced by ''#'' and continue to the end of the line. ''name'' m
 * ''links''
 * ''options''
 
-The file is parsed top to bottom and names cannot be used before they've been defined in the `screens` or as an alias in the general config. So the `links` must appear after the `screens`.
+The file is parsed top to bottom and names cannot be used before they've been defined in the general config or as an alias in the general config.
 
 ### links secion
 
@@ -502,15 +502,6 @@ This example comes from doc/deskflow-basic.conf
 # |       |  |        | |         |
 # +-------+  +--------+ +---------+
 
-section: screens
-	# three hosts named:  Laptop, Desktop1, and iMac
-	# These are the nice names of the hosts to make it easy to write the config file
-	# The aliases section below contain the "actual" names of the hosts (their hostnames)
-	Laptop:
-	Desktop1:
-	iMac:
-end
-
 section: links
 	# iMac is to the right of Desktop1
 	# Laptop is to the left of Desktop1
@@ -545,10 +536,6 @@ The text config allows computers to be wrapped around. For example, with two mac
 #  |          |          |
 #  +----------+----------+ 
  
-section: screens
-	syn-serv:
-	syn-cli:
-end
 section: links
 	syn-serv:
 		left = syn-cli     # "wrapping" arrangement
@@ -563,15 +550,6 @@ section: options
 end
 ```
 
-### AltGr key
-
-The following screen config allows the mapping for ''Alt'' to ''AltGr''. Although this may not work, see [https://github.com/deskflow/deskflow-core/issues/4411 bug #4411].
-```
-section: screens
-	client1:
-		altgr = alt          # mapping to fix AltGr key not working on windows clients (e.g. @-Symbol etc.).
-end
-```
 
 See also: the man page for ''deskflow-core''.
 
@@ -589,13 +567,6 @@ Stack one computer on top of another's.
 # |       | |       |
 # +-------+ +-------+
 
-section: screens
-	# three hosts named: moe, larry, and curly
-	moe:
-	larry:
-	curly:
-end
-
 section: links
 	# larry is to the right of moe and curly is above moe.
 	moe:
@@ -612,11 +583,6 @@ section: links
 		down  = larry
 end
 
-section: aliases
-	# curly is also known as shemp
-	curly:
-		shemp
-end
 ```
 
 ### Horizontal Example
@@ -628,13 +594,6 @@ Align all computers horizontally.
 # | moe   | | larry | | curly |
 # |       | |       | |       |
 # +-------+ +-------+ +-------+
-
-section: screens
-	# three hosts named: moe, larry, and curly
-	moe:
-	larry:
-	curly:
-end
 
 section: links
 	# curly is to the right of larry and moe is to the left of larry.
@@ -666,13 +625,6 @@ Span one computer across the two other computers.
 # | moe   | | larry |
 # |       | |       |
 # +-------+ +-------+
-
-section: screens
-	# three hosts named: moe, larry, and curly
-	moe:
-	larry:
-	curly:
-end
 
 section: links
 	# larry is to the right of moe and curly is above moe.
