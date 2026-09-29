@@ -22,6 +22,9 @@ public:
   virtual uint32_t getTableForModifier(uint32_t mask) const = 0;
   virtual KeyID getKey(uint32_t table, uint32_t button) const = 0;
 
+  //! Return the spacing character produced by a dead key followed by space.
+  virtual KeyID getDeadKeyOutput(uint32_t table, uint32_t button) const = 0;
+
   // Convert a character in the current script to the equivalent KeyID
   static KeyID getKeyID(uint8_t);
 

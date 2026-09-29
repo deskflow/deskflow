@@ -159,6 +159,14 @@ public:
   */
   bool addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, uint32_t numKeys);
 
+  //! Add a resolved key sequence entry
+  /*!
+  Adds the already-resolved sequence in \p items to synthesize key \p id
+  in group \p group.  If \p id is already in the map or \p items is empty,
+  nothing is added and this returns \c false.
+  */
+  bool addKeyCombinationEntry(KeyID id, int32_t group, const KeyItemList &items);
+
   //! Enable composition across groups
   /*!
   If called then the keyboard map will allow switching between groups
