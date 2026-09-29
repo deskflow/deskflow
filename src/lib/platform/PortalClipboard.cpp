@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -29,6 +30,25 @@ namespace deskflow {
 static constexpr int kBmpSignatureSize = 2;
 static constexpr quint32 kBmpFileHeaderSize = 14;
 static constexpr quint32 kMinDibHeaderSize = 12;
+
+bool PortalClipboardClaimTracker::shouldPublish(const IClipboard *clipboard)
+{
+  const auto payload = QByteArray::fromStdString(IClipboard::marshall(clipboard));
+  std::scoped_lock lock{m_mutex};
+  if (m_hasPublished && payload == m_lastPayload)
+    return false;
+
+  m_lastPayload = payload;
+  m_hasPublished = true;
+  return true;
+}
+
+void PortalClipboardClaimTracker::reset()
+{
+  std::scoped_lock lock{m_mutex};
+  m_lastPayload.clear();
+  m_hasPublished = false;
+}
 
 QByteArray PortalClipboard::formatMimeTypes(const char *const *mimeTypes)
 {

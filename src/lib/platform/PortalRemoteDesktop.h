@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -9,6 +10,9 @@
 
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include "platform/PortalClipboard.h"
+#endif
 
 #include <glib.h>
 #include <libportal/portal.h>
@@ -65,6 +69,10 @@ private:
   guint m_sessionSignalId = 0;
   guint m_selectionTransferSignalId = 0;
   guint m_selectionOwnerChangedSignalId = 0;
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  mutable PortalClipboardClaimTracker m_clipboardClaimTracker;
+#endif
 
   /// The number of successful sessions we've had already
   guint m_sessionIteration = 0;

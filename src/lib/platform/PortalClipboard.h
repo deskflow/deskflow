@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -12,9 +13,26 @@
 
 #include <libportal/portal.h>
 
+#include <mutex>
+
 namespace deskflow {
 
 class EiClipboard;
+
+/// Suppresses repeated portal selection publications for identical clipboard
+/// contents. A new portal session must reset the tracker so the current
+/// clipboard can be advertised again.
+class PortalClipboardClaimTracker
+{
+public:
+  bool shouldPublish(const IClipboard *clipboard);
+  void reset();
+
+private:
+  std::mutex m_mutex;
+  QByteArray m_lastPayload;
+  bool m_hasPublished = false;
+};
 
 class PortalClipboard
 {
