@@ -762,7 +762,7 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
       throw ServerConfigReadException(s, "unknown computer name \"%{1}\" in connect", computer);
     }
 
-    return new InputFilter::ScreenConnectedCondition(m_events, computer);
+    return new InputFilter::ComputerConnectedCondition(m_events, computer);
   }
 
   throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
@@ -846,7 +846,7 @@ void Config::parseAction(
       throw ServerConfigReadException(s, "unknown computer name in switchToScreen");
     }
 
-    action = new InputFilter::SwitchToScreenAction(m_events, computer);
+    action = new InputFilter::SwitchToComputerAction(m_events, computer);
   }
 
   else if (name == "switchInDirection") {
@@ -876,7 +876,7 @@ void Config::parseAction(
       throw ServerConfigReadException(s, "syntax for action: switchToNextScreen");
     }
 
-    action = new InputFilter::SwitchToNextScreenAction(m_events);
+    action = new InputFilter::SwitchToNextComputerAction(m_events);
   }
 
   else if (name == "lockCursorToScreen") {
@@ -884,24 +884,24 @@ void Config::parseAction(
       throw ServerConfigReadException(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
     }
 
-    InputFilter::LockCursorToScreenAction::Mode mode = InputFilter::LockCursorToScreenAction::kToggle;
+    InputFilter::LockCursorToComputerAction::Mode mode = InputFilter::LockCursorToComputerAction::kToggle;
     if (args.size() == 1) {
       if (args[0] == "off") {
-        mode = InputFilter::LockCursorToScreenAction::kOff;
+        mode = InputFilter::LockCursorToComputerAction::kOff;
       } else if (args[0] == "on") {
-        mode = InputFilter::LockCursorToScreenAction::kOn;
+        mode = InputFilter::LockCursorToComputerAction::kOn;
       } else if (args[0] == "toggle") {
-        mode = InputFilter::LockCursorToScreenAction::kToggle;
+        mode = InputFilter::LockCursorToComputerAction::kToggle;
       } else {
         throw ServerConfigReadException(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
       }
     }
 
-    if (mode != InputFilter::LockCursorToScreenAction::kOff) {
+    if (mode != InputFilter::LockCursorToComputerAction::kOff) {
       m_hasLockToComputerAction = true;
     }
 
-    action = new InputFilter::LockCursorToScreenAction(m_events, mode);
+    action = new InputFilter::LockCursorToComputerAction(m_events, mode);
   }
 
   else if (name == "restartServer") {

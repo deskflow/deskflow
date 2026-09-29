@@ -94,12 +94,12 @@ public:
     IEventQueue *m_events;
   };
 
-  // ScreenConnectedCondition
-  class ScreenConnectedCondition : public Condition
+  // ComputerConnectedCondition
+  class ComputerConnectedCondition : public Condition
   {
   public:
-    ScreenConnectedCondition(IEventQueue *events, const std::string &screen);
-    ~ScreenConnectedCondition() override = default;
+    ComputerConnectedCondition(IEventQueue *events, const std::string &computer);
+    ~ComputerConnectedCondition() override = default;
 
     // Condition overrides
     Condition *clone() const override;
@@ -127,8 +127,8 @@ public:
     virtual void perform(const Event &) = 0;
   };
 
-  // LockCursorToScreenAction
-  class LockCursorToScreenAction : public Action
+  // LockCursorToComputerAction
+  class LockCursorToComputerAction : public Action
   {
   public:
     enum Mode
@@ -138,7 +138,7 @@ public:
       kToggle
     };
 
-    explicit LockCursorToScreenAction(IEventQueue *events, Mode = kToggle);
+    explicit LockCursorToComputerAction(IEventQueue *events, Mode = kToggle);
 
     Mode getMode() const;
 
@@ -173,13 +173,13 @@ public:
     Mode m_mode;
   };
 
-  // SwitchToScreenAction
-  class SwitchToScreenAction : public Action
+  // SwitchToComputerAction
+  class SwitchToComputerAction : public Action
   {
   public:
-    SwitchToScreenAction(IEventQueue *events, const std::string &screen);
+    SwitchToComputerAction(IEventQueue *events, const std::string &computer);
 
-    std::string getScreen() const;
+    std::string getComputer() const;
 
     // Action overrides
     Action *clone() const override;
@@ -209,11 +209,11 @@ public:
     IEventQueue *m_events;
   };
 
-  // SwitchToNextScreenAction
-  class SwitchToNextScreenAction : public Action
+  // SwitchToNextComputerAction
+  class SwitchToNextComputerAction : public Action
   {
   public:
-    explicit SwitchToNextScreenAction(IEventQueue *events);
+    explicit SwitchToNextComputerAction(IEventQueue *events);
 
     // Action overrides
     Action *clone() const override;
@@ -239,7 +239,7 @@ public:
     explicit KeyboardBroadcastAction(IEventQueue *events, Mode, const std::set<std::string> &screens);
 
     Mode getMode() const;
-    std::set<std::string> getScreens() const;
+    std::set<std::string> getComputers() const;
 
     // Action overrides
     Action *clone() const override;
