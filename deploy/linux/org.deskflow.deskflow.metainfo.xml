@@ -74,6 +74,22 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.27.0" date="2026-10-01" urgency="high">
+			<description>
+				<p>This stable release has alot of changes the highlights are below, For the full changelog, see the release page.</p>
+				<ul>
+					<li>Wayland clipboard backend uses xdg portals and removes wl-clipboard support</li>
+					<li>Support for global hotkeys via xdg-portals</li>
+					<li>Computer entry and exit commands allow you to run a script when computer is entered or exited</li>
+					<li>Allow AltGr to be remapped as a modifier</li>
+					<li>Show Ipv6 addresses as suggestions</li>
+					<li>Use Ipc to communicate between core and gui</li>
+					<li>Fixed a bug causing some older clients to crash if key was held</li>
+					<li>Lots more check the release page</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.27.0</url>
+		</release>
 		<release version="1.26.0" date="2026-02-16" urgency="high">
 			<description>
 				<p>This stable release fixes known issues and adds a few new features, For the full changelog, see the release page.</p>
