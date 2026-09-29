@@ -12,8 +12,10 @@
 #include <QIcon>
 #include <QPalette>
 #include <QStyleHints>
+#include <QWidget>
 
 #include "common/Constants.h"
+#include "common/Settings.h"
 
 namespace deskflow::gui {
 
@@ -48,6 +50,28 @@ inline void updateIconTheme()
   else
     QIcon::setFallbackThemeName(themeName);
   QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
+}
+
+/**
+ * @brief Disables any child widget of @p root bound to an administrator managed setting.
+ *
+ * A widget declares which setting it edits through a dynamic property named
+ * "managedSetting" holding the settings key. Widgets whose key returns true from
+ * Settings::isManaged() are disabled and given @p tooltip to explain why.
+ *
+ * @param root The widget whose children should be checked.
+ * @param tooltip Text shown on any widget that gets locked.
+ */
+inline void applyManagedLocks(QWidget *root, const QString &tooltip)
+{
+  const auto widgets = root->findChildren<QWidget *>();
+  for (QWidget *widget : widgets) {
+    const auto key = widget->property("managedSetting").toString();
+    if (!key.isEmpty() && Settings::isManaged(key)) {
+      widget->setEnabled(false);
+      widget->setToolTip(tooltip);
+    }
+  }
 }
 } // namespace deskflow::gui
 
