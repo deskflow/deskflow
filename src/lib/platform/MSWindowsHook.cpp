@@ -37,6 +37,8 @@ static WPARAM g_deadRelease = 0;
 static LPARAM g_deadLParam = 0;
 static BYTE g_deadKeyState[256] = {0};
 static BYTE g_keyState[256] = {0};
+static WCHAR g_lastChars[256] = {0};
+static BYTE g_lastNoAltGr[256] = {0};
 static bool g_keyStateValid = false;
 static std::mutex g_keyStateMutex;
 static DWORD g_hookThread = 0;
@@ -225,6 +227,8 @@ static void setDeadKey(WCHAR wc[], int size, UINT flags)
 
 static WPARAM mapKeyDown(WPARAM wParam, LPARAM lParam, BYTE (&keys)[256], UINT control, UINT menu, UINT flags)
 {
+  DWORD vkCode = static_cast<DWORD>(wParam);
+
   // map the key event to a character.  we have to put the dead
   // key back first and this has the side effect of removing it.
   WCHAR wc[] = {0, 0};
@@ -267,15 +271,6 @@ static WPARAM mapKeyDown(WPARAM wParam, LPARAM lParam, BYTE (&keys)[256], UINT c
   switch (n) {
   default:
     // key is a dead key
-
-    if (lParam & 0x80000000u)
-      // This handles the obscure situation where a key has been
-      // pressed which is both a dead key and a normal character
-      // depending on which modifiers have been pressed. We
-      // break here to prevent it from being considered a dead
-      // key.
-      break;
-
     g_deadVirtKey = wParam;
     g_deadLParam = lParam;
     for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
@@ -287,12 +282,25 @@ static WPARAM mapKeyDown(WPARAM wParam, LPARAM lParam, BYTE (&keys)[256], UINT c
     // key doesn't map to a character.  this can happen if
     // non-character keys are pressed after a dead key.
     charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    if (vkCode < 256) {
+      g_lastChars[vkCode] = 0;
+      g_lastNoAltGr[vkCode] = 0;
+    }
     break;
 
   case 1:
     // key maps to a character composed with dead key
     charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
     clearDeadKey = true;
+
+    // the dead key is cleared below, so its release would otherwise go through as a normal key-up
+    if (g_deadVirtKey != 0) {
+      g_deadRelease = g_deadVirtKey;
+    }
+    if (vkCode < 256) {
+      g_lastChars[vkCode] = wc[0];
+      g_lastNoAltGr[vkCode] = noAltGr ? 1 : 0;
+    }
     break;
 
   case 2: {
@@ -305,13 +313,12 @@ static WPARAM mapKeyDown(WPARAM wParam, LPARAM lParam, BYTE (&keys)[256], UINT c
     // use uncomposed character
     charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
     clearDeadKey = true;
+    if (vkCode < 256) {
+      g_lastChars[vkCode] = wc[1];
+      g_lastNoAltGr[vkCode] = noAltGr ? 1 : 0;
+    }
     break;
   }
-  }
-
-  // put back the dead key, if any, for the application to use
-  if (g_deadVirtKey != 0) {
-    ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState, wc, 2, flags);
   }
 
   // clear out old dead key state
@@ -417,7 +424,15 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     return false;
   }
 
-  WPARAM charAndVirtKey = mapKeyDown(wParam, lParam, keys, control, menu, flags);
+  // calling ToUnicode on key-up flushes a pending dead key as a spacing character
+  WPARAM charAndVirtKey = 0;
+  if (kf_up) {
+    WCHAR prev = (vkCode < 256) ? g_lastChars[vkCode] : 0;
+    bool noAltGr = (vkCode < 256) && (g_lastNoAltGr[vkCode] != 0);
+    charAndVirtKey = makeKeyMsg((UINT)wParam, prev, noAltGr);
+  } else {
+    charAndVirtKey = mapKeyDown(wParam, lParam, keys, control, menu, flags);
+  }
 
   // forward message to our window.  do this whether or not we're
   // forwarding events to clients because this'll keep our thread's
@@ -642,6 +657,9 @@ EHookResult MSWindowsHook::install()
   // discard old dead keys
   g_deadVirtKey = 0;
   g_deadLParam = 0;
+  g_deadRelease = 0;
+  std::memset(g_lastChars, 0, sizeof(g_lastChars));
+  std::memset(g_lastNoAltGr, 0, sizeof(g_lastNoAltGr));
 
   // reset fake input flag
   g_fakeServerInput = false;
@@ -686,6 +704,9 @@ int MSWindowsHook::uninstall()
   // discard old dead keys
   g_deadVirtKey = 0;
   g_deadLParam = 0;
+  g_deadRelease = 0;
+  std::memset(g_lastChars, 0, sizeof(g_lastChars));
+  std::memset(g_lastNoAltGr, 0, sizeof(g_lastNoAltGr));
 
   // uninstall hooks
   if (g_keyboardLL != nullptr) {
