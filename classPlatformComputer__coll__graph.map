@@ -1,0 +1,13 @@
+<map id="PlatformComputer" name="PlatformComputer">
+<area shape="rect" id="Node000001" title="Base computer implementation." alt="" coords="192,151,320,175"/>
+<area shape="rect" id="Node000002" href="$classIPlatformComputer.html" title="Computer interface." alt="" coords="190,78,322,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="258,117,258,152,254,149,254,120"/>
+<area shape="rect" id="Node000003" href="$classIComputer.html" title="Computer interface." alt="" coords="5,5,88,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,33,223,76,219,79,95,38"/>
+<area shape="rect" id="Node000004" href="$classIPrimaryComputer.html" title="Primary comptuer interface." alt="" coords="112,5,240,30"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="201,38,246,77,240,78,200,43"/>
+<area shape="rect" id="Node000005" href="$classISecondaryComputer.html" title="Secondary comptuer interface." alt="" coords="264,5,410,30"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="315,39,270,80,268,75,310,42"/>
+<area shape="rect" id="Node000006" href="$classIKeyState.html" title="Key state interface." alt="" coords="434,5,512,30"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="420,36,293,80,291,75,425,34"/>
+</map>

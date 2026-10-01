@@ -1,0 +1,42 @@
+<map id="src/lib/platform/OSXScreenSaver.cpp" name="src/lib/platform/OSXScreenSaver.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="680,5,860,44"/>
+<area shape="rect" id="Node000002" href="$OSXScreenSaver_8h.html" title=" " alt="" coords="164,92,349,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="677,42,350,92,349,87,681,38"/>
+<area shape="rect" id="Node000005" href="$IEventQueue_8h.html" title=" " alt="" coords="430,92,569,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="702,46,556,90,554,85,707,44"/>
+<area shape="rect" id="Node000012" href="$Log_8h.html" title=" " alt="" coords="643,92,728,117"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="752,43,711,84,708,79,747,46"/>
+<area shape="rect" id="Node000018" href="$OSXScreenSaverUtil_8h.html" title=" " alt="" coords="752,92,958,117"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="791,42,834,82,829,81,790,47"/>
+<area shape="rect" id="Node000019" title=" " alt="" coords="982,92,1046,117"/>
+<area shape="poly" id="edge19_Node000001_Node000019" title=" " alt="" coords="829,42,970,88,964,88,829,47"/>
+<area shape="rect" id="Node000020" title=" " alt="" coords="1070,92,1158,117"/>
+<area shape="poly" id="edge20_Node000001_Node000020" title=" " alt="" coords="853,42,1057,89,1052,90,853,47"/>
+<area shape="rect" id="Node000003" href="$IScreenSaver_8h.html" title=" " alt="" coords="5,165,172,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="227,119,132,160,129,156,230,115"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="196,165,317,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="258,115,259,150,254,148,255,120"/>
+<area shape="rect" id="Node000006" href="$Event_8h.html" title=" " alt="" coords="340,165,437,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="483,116,421,158,418,154,479,118"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="460,165,538,189"/>
+<area shape="poly" id="edge10_Node000005_Node000011" title=" " alt="" coords="501,115,501,151,497,148,498,119"/>
+<area shape="rect" id="Node000007" href="$EventTypes_8h.html" title=" " alt="" coords="230,237,331,262"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="373,189,312,231,309,226,368,191"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="354,237,423,262"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="390,188,391,223,386,220,387,192"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="447,237,506,262"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="404,187,453,228,448,227,402,192"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="249,310,312,335"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="282,261,283,296,278,293,279,264"/>
+<area shape="rect" id="Node000013" href="$LogLevel_8h.html" title=" " alt="" coords="562,165,700,189"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="679,116,651,155,648,150,675,119"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="697,237,762,262"/>
+<area shape="poly" id="edge17_Node000012_Node000015" title=" " alt="" coords="693,115,715,164,728,223,724,220,710,166,691,119"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="775,165,813,189"/>
+<area shape="poly" id="edge15_Node000012_Node000016" title=" " alt="" coords="704,115,766,156,761,156,703,120"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="837,165,894,189"/>
+<area shape="poly" id="edge16_Node000012_Node000017" title=" " alt="" coords="716,115,825,159,820,159,715,120"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="596,237,666,262"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="633,188,633,223,629,220,629,192"/>
+<area shape="poly" id="edge14_Node000013_Node000015" title=" " alt="" coords="648,187,704,228,699,228,647,192"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="PlatformComputer" name="PlatformComputer">
+<area shape="rect" id="Node000001" title="Base computer implementation." alt="" coords="244,151,372,175"/>
+<area shape="rect" id="Node000007" href="$classMSWindowsComputer.html" title="Implementation of IPlatformComputer for Microsoft Windows." alt="" coords="5,223,158,248"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="257,183,120,225,118,220,255,178"/>
+<area shape="rect" id="Node000008" href="$classOSXComputer.html" title="Implementation of IPlatformComputer for OS X." alt="" coords="182,223,288,248"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="288,185,248,225,245,221,283,187"/>
+<area shape="rect" id="Node000009" href="$classXWindowsComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="312,223,454,248"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="332,184,373,224,368,222,330,189"/>
+<area shape="rect" id="Node000010" href="$classdeskflow_1_1EiComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="478,223,627,248"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="363,177,514,222,509,223,363,183"/>
+<area shape="rect" id="Node000002" href="$classIPlatformComputer.html" title="Computer interface." alt="" coords="242,78,374,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="310,116,310,152,306,149,306,121"/>
+<area shape="rect" id="Node000003" href="$classIComputer.html" title="Computer interface." alt="" coords="58,5,140,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="148,33,276,76,271,79,148,38"/>
+<area shape="rect" id="Node000004" href="$classIPrimaryComputer.html" title="Primary comptuer interface." alt="" coords="164,5,292,30"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="253,38,298,77,293,78,252,43"/>
+<area shape="rect" id="Node000005" href="$classISecondaryComputer.html" title="Secondary comptuer interface." alt="" coords="317,5,462,30"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="367,39,323,80,320,75,362,42"/>
+<area shape="rect" id="Node000006" href="$classIKeyState.html" title="Key state interface." alt="" coords="486,5,565,30"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="473,36,345,80,343,75,477,34"/>
+</map>

@@ -1,0 +1,23 @@
+<map id="src/lib/deskflow/IScreenSaver.h" name="src/lib/deskflow/IScreenSaver.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="351,5,512,44"/>
+<area shape="rect" id="Node000002" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="16,92,201,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="343,51,181,94,179,89,347,46"/>
+<area shape="rect" id="Node000003" href="$MSWindowsScreenSaver_8h.html" title=" " alt="" coords="225,92,411,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="396,52,344,94,342,89,392,55"/>
+<area shape="rect" id="Node000006" href="$OSXScreenSaver_8h.html" title=" " alt="" coords="445,92,626,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="467,51,515,92,510,91,465,57"/>
+<area shape="rect" id="Node000009" href="$XWindowsScreenSaver_8h.html" title=" " alt="" coords="875,92,1049,131"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="527,39,877,95,872,97,527,44"/>
+<area shape="rect" id="Node000004" href="$MSWindowsComputer_8cpp.html" title=" " alt="" coords="5,179,191,217"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="258,136,148,181,146,176,252,137"/>
+<area shape="rect" id="Node000005" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="215,179,400,217"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="316,144,312,180,308,176,312,148"/>
+<area shape="rect" id="Node000007" href="$OSXComputer_8mm.html" title=" " alt="" coords="425,186,646,210"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="537,145,537,187,533,183,533,148"/>
+<area shape="rect" id="Node000008" href="$OSXScreenSaver_8cpp.html" title=" " alt="" coords="670,179,851,217"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="600,134,713,178,708,178,599,139"/>
+<area shape="rect" id="Node000010" href="$XWindowsComputer_8cpp.html" title=" " alt="" coords="875,179,1049,217"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="964,145,964,180,960,176,960,149"/>
+<area shape="rect" id="Node000011" href="$XWindowsScreenSaver_8cpp.html" title=" " alt="" coords="1074,179,1248,217"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="1021,135,1119,178,1114,178,1020,140"/>
+</map>

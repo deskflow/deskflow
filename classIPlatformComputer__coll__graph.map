@@ -1,0 +1,11 @@
+<map id="IPlatformComputer" name="IPlatformComputer">
+<area shape="rect" id="Node000001" title="Computer interface." alt="" coords="190,78,322,103"/>
+<area shape="rect" id="Node000002" href="$classIComputer.html" title="Computer interface." alt="" coords="5,5,88,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,33,223,76,219,79,95,38"/>
+<area shape="rect" id="Node000003" href="$classIPrimaryComputer.html" title="Primary comptuer interface." alt="" coords="112,5,240,30"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,38,246,78,240,77,199,43"/>
+<area shape="rect" id="Node000004" href="$classISecondaryComputer.html" title="Secondary comptuer interface." alt="" coords="264,5,410,30"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="315,40,270,80,268,75,310,41"/>
+<area shape="rect" id="Node000005" href="$classIKeyState.html" title="Key state interface." alt="" coords="434,5,512,30"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="425,35,292,80,291,75,420,36"/>
+</map>

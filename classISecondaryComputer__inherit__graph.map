@@ -1,0 +1,15 @@
+<map id="ISecondaryComputer" name="ISecondaryComputer">
+<area shape="rect" id="Node000001" title="Secondary comptuer interface." alt="" coords="236,5,381,30"/>
+<area shape="rect" id="Node000002" href="$classIPlatformComputer.html" title="Computer interface." alt="" coords="242,78,374,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="310,44,311,79,306,76,307,48"/>
+<area shape="rect" id="Node000003" href="$classPlatformComputer.html" title="Base computer implementation." alt="" coords="244,151,372,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,116,310,152,306,149,306,121"/>
+<area shape="rect" id="Node000004" href="$classMSWindowsComputer.html" title="Implementation of IPlatformComputer for Microsoft Windows." alt="" coords="5,223,158,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="257,183,120,225,118,220,255,178"/>
+<area shape="rect" id="Node000005" href="$classOSXComputer.html" title="Implementation of IPlatformComputer for OS X." alt="" coords="182,223,288,248"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="288,185,248,225,245,221,283,187"/>
+<area shape="rect" id="Node000006" href="$classXWindowsComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="312,223,454,248"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="332,184,373,224,368,222,330,189"/>
+<area shape="rect" id="Node000007" href="$classdeskflow_1_1EiComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="478,223,627,248"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="363,177,514,222,509,223,363,183"/>
+</map>
