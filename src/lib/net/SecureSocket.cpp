@@ -142,7 +142,8 @@ TCPSocket::JobResult SecureSocket::doRead()
     do {
       m_inputBuffer.write(buffer, bytesRead);
 
-      if (m_inputBuffer.getSize() > s_maxInputBufferSize) {
+      // winsock only re-signals readable after a recv, so stopping with decrypted data left in openssl stalls reads
+      if (m_inputBuffer.getSize() > s_maxInputBufferSize && !hasPendingSecureData()) {
         break;
       }
 
@@ -246,6 +247,12 @@ int SecureSocket::secureRead(void *buffer, int size, int &read)
   // not have an error code from SSL_get_error(). If this happens, it is
   // itself an error. Let the parent handle the case
   return read;
+}
+
+bool SecureSocket::hasPendingSecureData()
+{
+  std::scoped_lock ssl_lock{ssl_mutex_};
+  return m_ssl->m_ssl != nullptr && SSL_pending(m_ssl->m_ssl) > 0;
 }
 
 int SecureSocket::secureWrite(const void *buffer, int size, int &wrote)

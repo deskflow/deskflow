@@ -7,7 +7,7 @@
 
 #include "platform/MSWindowsClipboardUTF16Converter.h"
 
-#include "base/Unicode.h"
+#include <QString>
 
 //
 // MSWindowsClipboardUTF16Converter
@@ -20,17 +20,18 @@ UINT MSWindowsClipboardUTF16Converter::getWin32Format() const
 
 std::string MSWindowsClipboardUTF16Converter::doFromIClipboard(const std::string &data) const
 {
-  // convert and add nul terminator
-  return Unicode::UTF8ToUTF16(data).append(sizeof(wchar_t), 0);
+  const auto text = QString::fromUtf8(data.data(), static_cast<qsizetype>(data.size()));
+  return std::string(reinterpret_cast<const char *>(text.utf16()), (text.size() + 1) * sizeof(char16_t));
 }
 
 std::string MSWindowsClipboardUTF16Converter::doToIClipboard(const std::string &data) const
 {
-  // convert and strip nul terminator
-  std::string dst = Unicode::UTF16ToUTF8(data);
-  std::string::size_type n = dst.find('\0');
-  if (n != std::string::npos) {
-    dst.erase(n);
+  auto text = QStringView(reinterpret_cast<const char16_t *>(data.data()), data.size() / sizeof(char16_t));
+  if (const auto nul = text.indexOf(QChar(u'\0')); nul >= 0) {
+    text.truncate(nul);
   }
-  return dst;
+  if (text.startsWith(QChar(QChar::ByteOrderMark))) {
+    text = text.sliced(1);
+  }
+  return text.toUtf8().toStdString();
 }

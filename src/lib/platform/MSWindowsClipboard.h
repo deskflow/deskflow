@@ -55,9 +55,12 @@ public:
   std::string get(Format) const override;
 
   void setFacade(IMSWindowsClipboardFacade &facade);
+  void logUnreadableFormats() const;
 
 private:
   void clearConverters();
+  bool isAvailable(Format) const;
+  std::string read(Format) const;
 
   UINT convertFormatToWin32(Format) const;
   HANDLE convertTextToWin32(const std::string &data) const;

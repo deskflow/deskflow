@@ -7,7 +7,6 @@
 #include "server/ClientProxy1_5.h"
 
 #include "deskflow/ProtocolUtil.h"
-#include "deskflow/StreamChunker.h"
 #include "io/IStream.h"
 #include "server/Server.h"
 
