@@ -37,6 +37,10 @@
 #include "platform/EiComputer.h"
 #endif
 
+#if HAVE_WLR_COMPUTER
+#include "platform/WlrComputer.h"
+#endif
+
 #if defined(Q_OS_MACOS)
 #include "platform/OSXComputer.h"
 #endif
@@ -114,6 +118,13 @@ deskflow::Computer *ClientApp::createComputer()
   return new deskflow::Computer(new OSXComputer(getEvents(), false, languageSync), getEvents());
 #else
   if (deskflow::platform::isWayland()) {
+#if HAVE_WLR_COMPUTER
+    // wlroots compositors have no InputCapture/RemoteDesktop portal for the ei computer
+    if (deskflow::WlrComputer::isSupported(false)) {
+      LOG_INFO("using wlroots for wayland");
+      return new deskflow::Computer(new deskflow::WlrComputer(false, getEvents()), getEvents());
+    }
+#endif
 #if WINAPI_LIBEI
     LOG_INFO("detected wayland platform");
     return new deskflow::Computer(new deskflow::EiComputer(false, getEvents(), true), getEvents());

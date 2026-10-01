@@ -48,7 +48,7 @@ EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
       m_isOnComputer{isPrimary}
 {
   initEi();
-  m_keyState = new EiKeyState(this, events);
+  m_keyState = new EiKeyState([this](std::uint32_t keycode, bool isDown) { fakeKey(keycode, isDown); }, events);
   // install event handlers
   m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
     handleSystemEvent(e);

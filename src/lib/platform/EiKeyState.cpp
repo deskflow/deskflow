@@ -14,16 +14,17 @@
 #include "platform/XDGKeyUtil.h"
 
 #include <cstddef>
+#include <cstdlib>
 #include <memory>
 #include <unistd.h>
 
 namespace deskflow {
 
-EiKeyState::EiKeyState(EiComputer *computer, IEventQueue *events)
+EiKeyState::EiKeyState(FakeKeyFn fakeKey, IEventQueue *events)
     : KeyState(
           events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
       ),
-      m_computer{computer}
+      m_fakeKey{std::move(fakeKey)}
 {
   m_xkb = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
@@ -310,7 +311,8 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
       "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
       keystroke.m_data.m_button.m_press ? "down" : "up"
   );
-  m_computer->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
+  if (m_fakeKey)
+    m_fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
 }
 
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
@@ -373,5 +375,28 @@ void EiKeyState::clearStaleModifiers()
   }
   m_xkbState = xkb_state_new(m_xkbKeymap);
   xkb_state_update_mask(m_xkbState, 0, 0, lockedMods, 0, 0, lockedLayout);
+}
+
+std::string EiKeyState::keymapAsString() const
+{
+  char *keymap = xkb_keymap_get_as_string(m_xkbKeymap, XKB_KEYMAP_FORMAT_TEXT_V1);
+  std::string result = keymap ? keymap : "";
+  free(keymap);
+  return result;
+}
+
+bool EiKeyState::keyRepeats(std::uint32_t keyval) const
+{
+  return xkb_keymap_key_repeats(m_xkbKeymap, keyval);
+}
+
+void EiKeyState::serializeModifiers(
+    std::uint32_t &depressed, std::uint32_t &latched, std::uint32_t &locked, std::uint32_t &group
+) const
+{
+  depressed = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_DEPRESSED);
+  latched = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_LATCHED);
+  locked = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_LOCKED);
+  group = xkb_state_serialize_layout(m_xkbState, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 } // namespace deskflow
