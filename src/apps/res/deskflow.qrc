@@ -165,5 +165,6 @@
         <file>icons/deskflow-light/status/64/security-low.svg</file>
         <file>icons/deskflow-light/status/64/security-medium.svg</file>
         <file>icons/deskflow-light/index.theme</file>
+        <file>theme.qss</file>
     </qresource>
 </RCC>

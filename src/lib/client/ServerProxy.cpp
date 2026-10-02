@@ -14,6 +14,7 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/DeskflowException.h"
+#include "deskflow/DragInformation.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
@@ -300,6 +301,14 @@ ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
     setClipboard();
   }
 
+  else if (memcmp(code, kMsgDFileTransfer, 4) == 0) {
+    fileChunkReceived();
+  }
+
+  else if (memcmp(code, kMsgDDragInfo, 4) == 0) {
+    dragInfoReceived();
+  }
+
   else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
     resetOptions();
   }
@@ -554,6 +563,36 @@ void ServerProxy::setClipboard()
     LOG_INFO("clipboard was updated");
   } else if (r == TransferState::Error) {
     requestDisconnect("invalid clipboard data from server");
+  }
+}
+
+void ServerProxy::dragInfoReceived()
+{
+  // parse
+  uint32_t fileNum = 0;
+  std::string content;
+  ProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
+
+  DragFileList list;
+  DragInformation::parseDragInfo(list, fileNum, content);
+  m_dragFilename = list.empty() ? "" : list.at(0).getFilename();
+
+  m_client->dragInfoReceived(fileNum, content);
+}
+
+void ServerProxy::fileChunkReceived()
+{
+  auto r = FileChunk::assemble(m_stream, m_fileDataCached, m_fileExpectedSize, m_fileChunkState);
+
+  if (r == TransferState::Started) {
+    LOG_DEBUG("receiving file, expected size=%zu", m_fileExpectedSize);
+  } else if (r == TransferState::Finished) {
+    LOG_DEBUG("received file, size=%zu", m_fileDataCached.size());
+    m_client->writeDroppedFile(m_fileDataCached, m_dragFilename);
+    m_fileDataCached.clear();
+    m_fileDataCached.shrink_to_fit();
+  } else if (r == TransferState::Error) {
+    requestDisconnect("invalid file transfer data from server");
   }
 }
 

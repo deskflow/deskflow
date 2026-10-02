@@ -13,6 +13,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "common/Enums.h"
+#include "deskflow/DragInformation.h"
 #include "deskflow/IClipboard.h"
 #include "net/NetworkAddress.h"
 
@@ -188,6 +189,10 @@ public:
   void screensaver(bool activate) override;
   void resetOptions() override;
   void setOptions(const OptionsList &options) override;
+  void dragInfoReceived(uint32_t fileNum, const std::string &content) override;
+  void fileChunkReceived() override;
+  // DDRG: the reassembled file content (from ServerProxy) is written to disk.
+  void writeDroppedFile(const std::string &data, const std::string &filename);
   std::string getName() const override;
 
 private:
@@ -244,4 +249,7 @@ private:
   int32_t m_relativeRestoreY = 0;
   size_t m_maximumClipboardSize = INT_MAX;
   size_t m_resolvedAddressesCount = 0;
+  std::string m_dropDirectory;
+  DragFileList m_dragFileList;
+  std::string m_fileDataCached;
 };

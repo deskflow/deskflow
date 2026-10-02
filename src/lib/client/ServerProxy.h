@@ -11,6 +11,7 @@
 #include "common/Enums.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ClipboardTypes.h"
+#include "deskflow/FileChunk.h"
 #include "deskflow/KeyTypes.h"
 
 class Client;
@@ -96,6 +97,8 @@ private:
   void leave();
   void setClipboard();
   void grabClipboard();
+  void dragInfoReceived();
+  void fileChunkReceived();
   void keyUp();
   void mouseDown();
   void mouseUp();
@@ -134,4 +137,8 @@ private:
   IEventQueue *m_events = nullptr;
   std::string m_clipboardDataCached;
   ClipboardChunkAssemblyState m_clipboardChunkState;
+  std::string m_fileDataCached;
+  size_t m_fileExpectedSize = 0;
+  FileChunkAssemblyState m_fileChunkState;
+  std::string m_dragFilename;
 };

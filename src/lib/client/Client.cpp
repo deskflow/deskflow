@@ -19,6 +19,7 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/Computer.h"
 #include "deskflow/DeskflowException.h"
+#include "deskflow/DropHelper.h"
 #include "deskflow/IPlatformComputer.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
@@ -30,6 +31,7 @@
 #include "net/SecureSocket.h"
 #include "net/TCPSocket.h"
 
+#include <QDir>
 #include <QMetaEnum>
 
 #include <cstdlib>
@@ -766,4 +768,40 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
   bindAddress.resolve();
 
   socket->bind(bindAddress);
+}
+
+void Client::dragInfoReceived(uint32_t fileNum, const std::string &content)
+{
+  m_dragFileList.clear();
+  DragInformation::parseDragInfo(m_dragFileList, fileNum, content);
+  m_fileDataCached.clear();
+
+  LOG_INFO("received drag info, files=%zu", m_dragFileList.size());
+}
+
+void Client::fileChunkReceived()
+{
+  // The full file content is assembled by ServerProxy and delivered via
+  // writeDroppedFile(); nothing to do here (kept for interface symmetry).
+  LOG_DEBUG("file chunk received");
+}
+
+void Client::writeDroppedFile(const std::string &data, const std::string &filename)
+{
+  if (filename.empty()) {
+    LOG_ERR("drop file failed: empty filename");
+    return;
+  }
+
+  DragInformation di;
+  di.setFilename(const_cast<std::string &>(filename));
+  DragFileList single;
+  single.push_back(di);
+
+  // Default drop target: user Downloads. A per-user setting can be added
+  // later (Settings::Server::DropDir) if needed.
+  std::string target = QDir::homePath().toStdString() + "/Downloads";
+
+  std::string content(data);
+  DropHelper::writeToDir(target, single, content);
 }

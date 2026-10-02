@@ -42,6 +42,12 @@ public:
   */
   void getJumpCursorPos(int32_t &x, int32_t &y) const;
 
+  //! Notify of drag and drop info (DDRG) — default no-op.
+  void dragInfoReceived(uint32_t fileNum, const std::string &content) override;
+
+  //! Notify of file chunk (DFTR) — default no-op.
+  void fileChunkReceived() override;
+
   //! Get cursor position
   /*!
   Return if this proxy is for client or primary.

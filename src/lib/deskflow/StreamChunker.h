@@ -19,4 +19,8 @@ public:
       const std::string_view &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events,
       void *eventTarget
   );
+
+  static void sendFile(const std::string &filename, IEventQueue *events, void *eventTarget);
+
+  static void sendDragInfo(const std::string &info, uint32_t fileCount, IEventQueue *events, void *eventTarget);
 };

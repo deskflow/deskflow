@@ -32,3 +32,13 @@ std::string BaseClientProxy::getName() const
 {
   return m_name;
 }
+
+void BaseClientProxy::dragInfoReceived(uint32_t, const std::string &)
+{
+  // default no-op: a client dragging files is handled by Server override
+}
+
+void BaseClientProxy::fileChunkReceived()
+{
+  // default no-op: a client sending file chunks is handled by Server override
+}

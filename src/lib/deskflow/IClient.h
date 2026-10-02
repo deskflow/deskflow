@@ -143,6 +143,21 @@ public:
   */
   virtual void setOptions(const OptionsList &options) = 0;
 
+  //! Notify of drag and drop info (DDRG)
+  /*!
+  The server started a drag-and-drop operation of \p fileNum files;
+  \p content holds the serialized file list (filename,filesize,...).
+  The client should prepare to receive the files via fileChunkReceived().
+  */
+  virtual void dragInfoReceived(uint32_t fileNum, const std::string &content) = 0;
+
+  //! Notify of file chunk (DFTR)
+  /*!
+  The server is transferring a file's content as a series of chunks
+  (start / data / end). The client reassembles and writes the file.
+  */
+  virtual void fileChunkReceived() = 0;
+
   //@}
   //! @name accessors
   //@{

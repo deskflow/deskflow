@@ -108,12 +108,21 @@ private:
   bool updateComputerShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
 
+  // DDRG: detect a file drag on the primary computer via the pasteboard.
+  bool isDraggingStarted() const;
+  std::string getDraggingFilename() const;
+
   // convenience function to send events
   void sendEvent(EventTypes type, void * = nullptr) const;
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
   // message handlers
   bool onMouseMove(CGEventRef event);
+  // DDRG: timer that keeps feeding motion while a file drag is active
+  // (macOS holds the cursor at the screen edge during a Finder drag, so a
+  // normal leave() is never reached). Ported from Barrier's handleDrag.
+  void enableDragTimer(bool enable);
+  void handleDrag();
   // mouse button handler.  pressed is true if this is a mousedown
   // event, false if it is a mouseup event.  macButton is the index
   // of the button pressed using the mac button mapping.
@@ -266,6 +275,12 @@ private:
   // clipboard stuff
   bool m_ownClipboard;
   EventQueueTimer *m_clipboardTimer;
+  EventQueueTimer *m_dragTimer;
+  CGFloat m_dragLastX = 0;
+  CGFloat m_dragLastY = 0;
+  int32_t m_dragEdgeOffset = 0;
+  bool m_draggingStarted = false;
+  std::string m_draggingFilename;
 
   EventQueueTimer *m_axTimer;
 

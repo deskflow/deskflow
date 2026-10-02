@@ -4,18 +4,41 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "ClientProxy1_8.h"
+
+#include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "deskflow/DragInformation.h"
 #include "deskflow/KeyboardLayoutManager.h"
 #include "deskflow/ProtocolUtil.h"
-
-#include "ClientProxy1_8.h"
 
 ClientProxy1_8::ClientProxy1_8(
     const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events
 )
-    : ClientProxy1_7(name, adoptedStream, server, events)
+    : ClientProxy1_7(name, adoptedStream, server, events),
+      m_events(events)
 {
   synchronizeLanguages();
+
+  m_events->addHandler(EventTypes::FileChunkSending, this, [this](const auto &e) {
+    FileChunk::send(getStream(), e.getDataObject());
+  });
+  m_events->addHandler(EventTypes::DragInfoSending, this, [this](const auto &e) {
+    const auto *data = dynamic_cast<const DragInfoEventData *>(e.getDataObject());
+    if (data) {
+      ProtocolUtil::writef(getStream(), kMsgDDragInfo, data->fileCount, &data->info);
+    } else {
+      LOG_ERR("DragInfoSending without DragInfoEventData");
+    }
+  });
+}
+
+ClientProxy1_8::~ClientProxy1_8()
+{
+  if (m_events) {
+    m_events->removeHandler(EventTypes::FileChunkSending, this);
+    m_events->removeHandler(EventTypes::DragInfoSending, this);
+  }
 }
 
 void ClientProxy1_8::synchronizeLanguages() const

@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QFile>
 #include <QLocalSocket>
 #include <QMessageBox>
 #include <QSharedMemory>
@@ -63,6 +64,13 @@ int main(int argc, char *argv[])
   QGuiApplication::setDesktopFileName(kRevFqdnName);
 
   QApplication app(argc, argv);
+
+  // Apply the modern dark theme (embedded in deskflow.qrc).
+  QFile themeFile(QStringLiteral(":/theme.qss"));
+  if (themeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    app.setStyleSheet(QString::fromUtf8(themeFile.readAll()));
+    themeFile.close();
+  }
 
   // Ensure the I18N object is made before strings
   QTextStream(stdout) << "initial language: " << I18N::currentLanguage() << '\n';

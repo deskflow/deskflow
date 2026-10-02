@@ -21,7 +21,9 @@
 #include "deskflow/ClientApp.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/DisplayInvalidException.h"
+#include "deskflow/DragInformation.h"
 #include "deskflow/KeyMap.h"
+#include "deskflow/StreamChunker.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
@@ -825,6 +827,26 @@ void OSXComputer::leave()
   if (m_isPrimary) {
     avoidHesitatingCursor();
 
+    // DDRG: if the user is dragging a file across the screen edge, ship it
+    // to the active client. Detection relies on the drag pasteboard that
+    // Finder populates while a file is being dragged.
+    if (isDraggingStarted()) {
+      std::string fileList = getDraggingFilename();
+      if (!fileList.empty()) {
+        DragInformation di;
+        di.setFilename(fileList);
+        DragFileList dragFileList;
+        dragFileList.push_back(di);
+
+        std::string info;
+        uint32_t fileCount = DragInformation::setupDragInfo(dragFileList, info);
+        LOG_DEBUG("send dragging file to client (DDRG), files=%u", fileCount);
+
+        StreamChunker::sendDragInfo(info, fileCount, m_events, getEventTarget());
+        StreamChunker::sendFile(fileList.c_str(), m_events, getEventTarget());
+      }
+    }
+
     // capture the mouse: freeze the cursor so no local app sees motion while on
     // a client (onMouseMove reads raw deltas instead). must follow hideCursor(),
     // which re-associates. re-coupled in enter()/disable().
@@ -833,6 +855,57 @@ void OSXComputer::leave()
 
   // now off computer
   m_isOnComputer = false;
+}
+
+bool OSXComputer::isDraggingStarted() const
+{
+  if (!m_isPrimary) {
+    LOG_INFO("DDRG drag check: not primary");
+    return false;
+  }
+
+  // The drag pasteboard is populated by Finder/other apps while dragging.
+  // Only treat it as an active drag when the left mouse button is held.
+  uint32_t dummy = 0;
+  bool mouseDown = isAnyMouseButtonDown(dummy);
+  if (!mouseDown) {
+    LOG_INFO("DDRG drag check: mouse NOT down");
+    return false;
+  }
+
+  CFStringRef url = getDraggedFileURL();
+  if (url == nullptr) {
+    LOG_INFO("DDRG drag check: pasteboard url null");
+    return false;
+  }
+
+  const char *c = CFStringGetCStringPtr(url, kCFStringEncodingUTF8);
+  bool hasFile = c != nullptr && c[0] != '\0';
+  LOG_INFO("DDRG drag check: mouseDown=1 pasteboardHasFile=%d", hasFile ? 1 : 0);
+  CFRelease(url);
+  return hasFile;
+}
+
+std::string OSXComputer::getDraggingFilename() const
+{
+  CFStringRef url = getDraggedFileURL();
+  if (url == nullptr) {
+    return "";
+  }
+
+  std::string result;
+  const char *c = CFStringGetCStringPtr(url, kCFStringEncodingUTF8);
+  if (c != nullptr) {
+    result = c;
+    // The pasteboard is null-terminated per file; take the first path.
+    size_t term = result.find('\0');
+    if (term != std::string::npos) {
+      result = result.substr(0, term);
+    }
+  }
+
+  CFRelease(url);
+  return result;
 }
 
 bool OSXComputer::setClipboard(ClipboardID, const IClipboard *src)
@@ -1027,6 +1100,61 @@ bool OSXComputer::onMouseMove(CGEventRef event)
   return true;
 }
 
+void OSXComputer::enableDragTimer(bool enable)
+{
+  if (enable && m_dragTimer == nullptr) {
+    m_dragTimer = m_events->newTimer(0.01, nullptr);
+    m_events->addHandler(EventTypes::Timer, m_dragTimer, [this](const auto &) { handleDrag(); });
+    CGEventRef event = CGEventCreate(nullptr);
+    CGPoint mouse = CGEventGetLocation(event);
+    m_dragLastX = (CGFloat)mouse.x;
+    m_dragLastY = (CGFloat)mouse.y;
+    CFRelease(event);
+  } else if (!enable && m_dragTimer != nullptr) {
+    m_events->removeHandler(EventTypes::Timer, m_dragTimer);
+    m_events->deleteTimer(m_dragTimer);
+    m_dragTimer = nullptr;
+  }
+}
+
+void OSXComputer::handleDrag()
+{
+  // Query the live cursor position; if it moved, feed it to the Server so it
+  // can cross the screen edge even while a Finder file drag holds the cursor
+  // (a plain leave() never fires in that state).
+  CGEventRef event = CGEventCreate(nullptr);
+  CGPoint p = CGEventGetLocation(event);
+  CFRelease(event);
+
+  LOG_INFO("DDRG handleDrag x=%.0f y=%.0f (last=%.0f,%.0f)", p.x, p.y, m_dragLastX, m_dragLastY);
+
+  if (!isDraggingStarted()) {
+    // no file drag in progress; stop the timer feed.
+    enableDragTimer(false);
+    return;
+  }
+
+  if (m_isOnComputer) {
+    // During a file drag the cursor is pinned at the screen edge by Finder.
+    // Always resend the motion so the Server can cross; if the position
+    // hasn't changed, accumulate an offset past the edge so the switch
+    // decision keeps firing (the real cursor stays pinned at the border).
+    if ((short)p.x == m_dragLastX && (short)p.y == m_dragLastY) {
+      m_dragEdgeOffset += 2;
+      p.x = p.x + m_dragEdgeOffset;
+      LOG_INFO("DDRG push past edge to x=%.0f", p.x);
+    } else {
+      m_dragEdgeOffset = 0;
+    }
+    m_dragLastX = (CGFloat)p.x;
+    m_dragLastY = (CGFloat)p.y;
+    sendEvent(EventTypes::PrimaryComputerMotionOnPrimary, MotionInfo::alloc((int32_t)p.x, (int32_t)p.y));
+  } else {
+    // on a client: keep the motion flowing so the cursor can be warped back.
+    sendEvent(EventTypes::PrimaryComputerMotionOnSecondary, MotionInfo::alloc(0, 0));
+  }
+}
+
 bool OSXComputer::onMouseButton(bool pressed, uint16_t macButton)
 {
   // Buttons 2 and 3 are inverted on the mac
@@ -1038,11 +1166,19 @@ bool OSXComputer::onMouseButton(bool pressed, uint16_t macButton)
       KeyModifierMask mask = m_keyState->getActiveModifiers();
       sendEvent(EventTypes::PrimaryComputerButtonDown, ButtonInfo::alloc(button, mask));
     }
+    // DDRG: start feeding motion so a file drag can cross the screen edge.
+    // macButton is 1 for the left button (kCGMouseEventButtonNumber + 1).
+    if (macButton == 1 && m_isPrimary) {
+      enableDragTimer(true);
+    }
   } else {
     LOG_VERBOSE("event: button release button=%d", button);
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
       sendEvent(EventTypes::PrimaryComputerButtonUp, ButtonInfo::alloc(button, mask));
+    }
+    if (macButton == 1) {
+      enableDragTimer(false);
     }
   }
 
