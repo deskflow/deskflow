@@ -83,6 +83,9 @@ public:
   KeyModifierMask pollActiveModifiers() const override;
   int32_t pollActiveGroup() const override;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
+  void sendKeyEvent(
+      void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, int32_t count, KeyButton button
+  ) override;
 
   CGEventFlags getModifierStateAsOSXFlags() const;
 
@@ -150,7 +153,14 @@ private:
     KeyButtonOffset = 1
   };
 
-  using GroupMap = std::map<CFDataRef, int32_t>;
+  struct InputSourceIDLess
+  {
+    bool operator()(CFStringRef left, CFStringRef right) const
+    {
+      return CFStringCompare(left, right, 0) == kCFCompareLessThan;
+    }
+  };
+  using GroupMap = std::map<CFStringRef, int32_t, InputSourceIDLess>;
   using VirtualKeyMap = std::map<uint32_t, KeyID>;
 
   VirtualKeyMap m_virtualKeyMap;

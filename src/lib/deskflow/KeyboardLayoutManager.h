@@ -17,6 +17,9 @@ class KeyboardLayoutManager
   std::vector<std::string> m_localLayouts;
 
 public:
+  //! Convert an input-source language tag (e.g. zh-Hans) to the two-letter protocol language.
+  static std::string normalizeLanguageCode(std::string_view language);
+
   explicit KeyboardLayoutManager(
       const std::vector<std::string> &localLayouts = AppUtil::instance().getKeyboardLayoutList()
   );
