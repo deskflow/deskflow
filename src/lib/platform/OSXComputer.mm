@@ -880,12 +880,16 @@ void OSXComputer::screensaver(bool activate)
 
 void OSXComputer::resetOptions()
 {
-  // no options
+  m_keyState->setMacCapsLockSync(false);
 }
 
-void OSXComputer::setOptions(const OptionsList &)
+void OSXComputer::setOptions(const OptionsList &options)
 {
-  // no options
+  for (size_t i = 0; i + 1 < options.size(); i += 2) {
+    if (options[i] == kOptionMacCapsLockSync) {
+      m_keyState->setMacCapsLockSync(m_isPrimary && options[i + 1] != 0);
+    }
+  }
 }
 
 void OSXComputer::setSequenceNumber(uint32_t seqNum)
@@ -1709,6 +1713,13 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
   case kCGEventKeyUp:
   case kCGEventFlagsChanged:
     computer->onKey(event);
+    // Let macOS handle Caps Lock's native input-source switch even while the
+    // pointer is on a secondary computer. Its physical key is not forwarded;
+    // subsequent keys carry the resulting language and capitalization state.
+    if (computer->m_keyState->isMacCapsLockSyncEnabled() &&
+        CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode) == kVK_CapsLock) {
+      return event;
+    }
     break;
   case kCGEventTapDisabledByTimeout:
     // Re-enable our event-tap if we still have accessibility permissions

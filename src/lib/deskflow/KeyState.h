@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <atomic>
+
 #include "deskflow/IKeyState.h"
 #include "deskflow/KeyMap.h"
 
@@ -77,6 +79,15 @@ public:
     return m_keys[keyButton];
   }
 
+  virtual void setMacCapsLockSync(bool enabled)
+  {
+    m_macCapsLockSync.store(enabled);
+  }
+  bool isMacCapsLockSyncEnabled() const
+  {
+    return m_macCapsLockSync.load();
+  }
+
 protected:
   using Keystroke = deskflow::KeyMap::Keystroke;
 
@@ -94,6 +105,14 @@ protected:
   Synthesize an event for \p keystroke.
   */
   virtual void fakeKey(const Keystroke &keystroke) = 0;
+
+  //! Synchronize platform input-method mode after a layout change and before a key press.
+  virtual void synchronizeInputMethod(const std::string &)
+  {
+  }
+
+  //! Align Caps Lock with the source mask without changing other modifiers.
+  void synchronizeCapsLock(KeyModifierMask mask);
 
   //! Get the active modifiers
   /*!
@@ -180,7 +199,7 @@ private:
   void addCombinationEntries();
 
   // synthesize key events.  synthesize auto-repeat events count times.
-  void fakeKeys(const Keystrokes &, uint32_t count);
+  void fakeKeys(const Keystrokes &, uint32_t count, const std::string &lang = {});
 
   // update key state to match changes to modifiers
   void updateModifierKeyState(KeyButton button, const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers);
@@ -222,4 +241,5 @@ private:
   IEventQueue *m_events;
 
   bool m_isLangSyncEnabled;
+  std::atomic<bool> m_macCapsLockSync{false};
 };
