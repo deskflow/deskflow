@@ -7,6 +7,7 @@
  */
 
 #include "deskflow/win32/AppUtilWindows.h"
+#include "deskflow/KeyboardLayoutManager.h"
 
 #include "arch/Arch.h"
 #include "arch/win32/ArchDaemonWindows.h"
@@ -135,12 +136,13 @@ std::vector<std::string> AppUtilWindows::getKeyboardLayoutList()
     uLayouts = GetKeyboardLayoutList(uLayouts, lpList);
 
     for (int i = 0; i < uLayouts; ++i) {
-      std::string code("", 2);
+      // GetLocaleInfoA includes the terminating NUL in its required buffer size.
+      char code[9] = {};
       GetLocaleInfoA(
           MAKELCID(((ULONG_PTR)lpList[i] & 0xffffffff), SORT_DEFAULT), LOCALE_SISO639LANGNAME, &code[0],
-          static_cast<int>(code.size())
+          static_cast<int>(sizeof(code))
       );
-      layoutLangCodes.push_back(code);
+      layoutLangCodes.push_back(deskflow::KeyboardLayoutManager::normalizeLanguageCode(code));
     }
 
     if (lpList) {
@@ -152,15 +154,15 @@ std::vector<std::string> AppUtilWindows::getKeyboardLayoutList()
 
 std::string AppUtilWindows::getCurrentLanguageCode()
 {
-  std::string code("", 2);
+  char code[9] = {};
 
   auto hklLayout = getCurrentKeyboardLayout();
   if (hklLayout) {
     auto localLayoutID = MAKELCID(LOWORD(hklLayout), SORT_DEFAULT);
-    GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0], static_cast<int>(code.size()));
+    GetLocaleInfoA(localLayoutID, LOCALE_SISO639LANGNAME, &code[0], static_cast<int>(sizeof(code)));
   }
 
-  return code;
+  return deskflow::KeyboardLayoutManager::normalizeLanguageCode(code);
 }
 
 HKL AppUtilWindows::getCurrentKeyboardLayout() const

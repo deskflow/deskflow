@@ -150,7 +150,14 @@ private:
     KeyButtonOffset = 1
   };
 
-  using GroupMap = std::map<CFDataRef, int32_t>;
+  struct InputSourceIDLess
+  {
+    bool operator()(CFStringRef left, CFStringRef right) const
+    {
+      return CFStringCompare(left, right, 0) == kCFCompareLessThan;
+    }
+  };
+  using GroupMap = std::map<CFStringRef, int32_t, InputSourceIDLess>;
   using VirtualKeyMap = std::map<uint32_t, KeyID>;
 
   VirtualKeyMap m_virtualKeyMap;
