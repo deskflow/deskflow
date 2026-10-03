@@ -10,6 +10,7 @@
 
 #include "base/Log.h"
 #include "common/PlatformInfo.h"
+#include "deskflow/KeyboardLayoutManager.h"
 
 #if WINAPI_XWINDOWS
 #include <X11/XKBlib.h>
@@ -67,7 +68,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
         continue;
       }
 
-      std::string langCode(temporaryCString);
+      const auto langCode = deskflow::KeyboardLayoutManager::normalizeLanguageCode(temporaryCString);
       if (langCode.size() == 2 &&
           std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) == layoutLangCodes.end()) {
         layoutLangCodes.push_back(langCode);
@@ -153,7 +154,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
       continue;
     }
 
-    result = std::string(temporaryCString);
+    result = deskflow::KeyboardLayoutManager::normalizeLanguageCode(temporaryCString);
     break;
   }
 #endif
