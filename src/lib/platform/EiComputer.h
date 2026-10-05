@@ -119,7 +119,6 @@ private:
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);
-  void sendWheelEvents(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
   void onPointerScrollEvent(ei_event *event);
   void onPointerScrollDiscreteEvent(ei_event *event);
   void onMotionEvent(ei_event *event);

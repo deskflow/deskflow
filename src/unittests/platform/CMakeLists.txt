@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
@@ -26,6 +26,13 @@ elseif(APPLE)
   )
 elseif(UNIX)
   if(LIBEI_FOUND)
+    create_test(
+      NAME EiScrollStateTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE EiScrollStateTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
     create_test(
       NAME EiKeyStateTests
       DEPENDS platform

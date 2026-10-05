@@ -18,6 +18,7 @@
 #include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
+#include "platform/EiScrollState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
 
@@ -29,15 +30,25 @@
 #include <unistd.h>
 #include <vector>
 
-// Values are in fractional wheel-click units (1.0 == one full 120-unit click) for trackpad
-// and pixels in scroll wheel events.
-struct ScrollRemainder
-{
-  double x;
-  double y;
-};
-
 namespace deskflow {
+
+namespace {
+EiScrollState &scrollState(ei_device *device)
+{
+  auto state = static_cast<EiScrollState *>(ei_device_get_user_data(device));
+  if (!state) {
+    state = new EiScrollState();
+    ei_device_set_user_data(device, state);
+  }
+  return *state;
+}
+
+void resetScrollState(ei_device *device, bool x = true, bool y = true)
+{
+  if (auto state = static_cast<EiScrollState *>(ei_device_get_user_data(device)))
+    state->reset(x, y);
+}
+} // namespace
 
 EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
     : PlatformComputer{events},
@@ -149,7 +160,7 @@ void EiComputer::initEi()
 void EiComputer::cleanupEi()
 {
   for (auto device : m_eiDevices) {
-    delete static_cast<ScrollRemainder *>(ei_device_get_user_data(device));
+    delete static_cast<EiScrollState *>(ei_device_get_user_data(device));
     ei_device_set_user_data(device, nullptr);
   }
 
@@ -460,6 +471,8 @@ void EiComputer::enter()
   } else if (m_isPrimary) {
     LOG_DEBUG("releasing input capture at x=%i y=%i", m_cursorX, m_cursorY);
     m_portalInputCapture->release(m_cursorX, m_cursorY);
+    for (auto device : m_eiDevices)
+      resetScrollState(device);
     // no more button events once capture is released, so drop any held state
     updateButtons();
   }
@@ -673,7 +686,7 @@ void EiComputer::removeDevice(struct ei_device *device)
     updateButtons();
   }
 
-  delete static_cast<ScrollRemainder *>(ei_device_get_user_data(device));
+  delete static_cast<EiScrollState *>(ei_device_get_user_data(device));
   ei_device_set_user_data(device, nullptr);
 
   for (auto it = m_eiDevices.begin(); it != m_eiDevices.end();) {
@@ -809,86 +822,30 @@ void EiComputer::onButtonEvent(ei_event *event)
 
 void EiComputer::onPointerScrollEvent(ei_event *event)
 {
-  // Smooth scroll deltas are in pixels. We accumulate them as fractional
-  // wheel-click units and only send full wheel clicks (120 units each)
-  // to the client. Sub-120 fractional clicks are silently ignored by
-  // compositors on the receiving end, so accumulating full clicks avoids
-  // flooding the network with events that the client drops anyway.
-  static const double s_wheelClicksPerPixel = 0.1; // 10 pixels == 1 full wheel click
-
   assert(m_isPrimary);
 
-  auto dx = ei_event_scroll_get_dx(event);
-  auto dy = ei_event_scroll_get_dy(event);
-  struct ei_device *device = ei_event_get_device(event);
-
+  const auto dx = ei_event_scroll_get_dx(event);
+  const auto dy = ei_event_scroll_get_dy(event);
   LOG_VERBOSE("event: scroll (%.2f, %.2f)", dx, dy);
 
-  auto *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
-  if (!remainder) {
-    remainder = new ScrollRemainder();
-    ei_device_set_user_data(device, remainder);
-  }
-
-  // Accumulate smooth scroll as fractional wheel clicks (1.0 == 120 units)
-  double accX = remainder->x + dx * s_wheelClicksPerPixel;
-  double accY = remainder->y + dy * s_wheelClicksPerPixel;
-
-  // Only dispatch full wheel clicks. Use trunc (toward zero) not floor,
-  // because floor(-0.3) == -1 which would fire a spurious click.
-  double fullClicksX = std::trunc(accX);
-  double fullClicksY = std::trunc(accY);
-
-  // libei and deskflow seem to use opposite directions, so we have
-  // to send the opposite of the value reported by EI if we want to
-  // remain compatible with other platforms (including X11).
-  if (fullClicksX != 0 || fullClicksY != 0) {
-    sendEvent(
-        EventTypes::PrimaryComputerWheel,
-        WheelInfo::alloc(
-            static_cast<int32_t>(-fullClicksX) * s_scrollDelta, static_cast<int32_t>(-fullClicksY) * s_scrollDelta
-        )
-    );
-    accX -= fullClicksX;
-    accY -= fullClicksY;
-  }
-
-  remainder->x = accX;
-  remainder->y = accY;
+  const auto delta = scrollState(ei_event_get_device(event)).smooth(dx, dy);
+  // libei and Deskflow use opposite scroll directions.
+  if (delta.x != 0 || delta.y != 0)
+    sendEvent(EventTypes::PrimaryComputerWheel, WheelInfo::alloc(-delta.x, -delta.y));
 }
 
 void EiComputer::onPointerScrollDiscreteEvent(ei_event *event)
 {
-  // both libei and deskflow use multiples of 120 to represent
-  // one scroll wheel click event
-
   assert(m_isPrimary);
 
-  auto dx = ei_event_scroll_get_discrete_dx(event);
-  auto dy = ei_event_scroll_get_discrete_dy(event);
-
+  const auto dx = ei_event_scroll_get_discrete_dx(event);
+  const auto dy = ei_event_scroll_get_discrete_dy(event);
   LOG_VERBOSE("event: scroll discrete (%d, %d)", dx, dy);
 
-  // accumulate fractional ticks, then emit 120 units at a time
-  struct ei_device *device = ei_event_get_device(event);
-  auto *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
-  if (!remainder) {
-    remainder = new ScrollRemainder();
-    ei_device_set_user_data(device, remainder);
-  }
-
-  double ax = remainder->x + dx;
-  double ay = remainder->y + dy;
-  auto cx = static_cast<int32_t>(ax / s_scrollDelta) * s_scrollDelta;
-  auto cy = static_cast<int32_t>(ay / s_scrollDelta) * s_scrollDelta;
-  remainder->x = ax - cx;
-  remainder->y = ay - cy;
-
-  // libei and deskflow seem to use opposite directions, so we have
-  // to send the opposite of the value reported by EI if we want to
-  // remain compatible with other platforms (including X11).
-  if (cx != 0 || cy != 0)
-    sendEvent(EventTypes::PrimaryComputerWheel, WheelInfo::alloc(-cx, -cy));
+  const auto delta = scrollState(ei_event_get_device(event)).discrete(dx, dy);
+  // Both protocols use 120 units per click, with opposite directions.
+  if (delta.x != 0 || delta.y != 0)
+    sendEvent(EventTypes::PrimaryComputerWheel, WheelInfo::alloc(-delta.x, -delta.y));
 }
 
 void EiComputer::onMotionEvent(ei_event *event)
@@ -1011,6 +968,7 @@ void EiComputer::handleSystemEvent(const Event &)
       this->handlePortalSessionClosed();
       break;
     case EI_EVENT_DEVICE_PAUSED:
+      resetScrollState(device);
       LOG_DEBUG("device %s is paused", ei_device_get_name(device));
       m_isEmulating = false;
       // a paused device is reset to neutral by the EIS side and sends no
@@ -1036,6 +994,7 @@ void EiComputer::handleSystemEvent(const Event &)
       LOG_DEBUG("device %s started emulating", ei_device_get_name(device));
       break;
     case EI_EVENT_DEVICE_STOP_EMULATING:
+      resetScrollState(device);
       LOG_DEBUG("device %s stopped emulating", ei_device_get_name(device));
       break;
     case EI_EVENT_KEYBOARD_KEY:
@@ -1064,6 +1023,7 @@ void EiComputer::handleSystemEvent(const Event &)
       break;
     case EI_EVENT_SCROLL_STOP:
     case EI_EVENT_SCROLL_CANCEL:
+      resetScrollState(device, ei_event_scroll_get_stop_x(event), ei_event_scroll_get_stop_y(event));
       break;
     default:
       break;
