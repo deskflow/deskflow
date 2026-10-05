@@ -182,6 +182,10 @@ add_library(platform STATIC ${PLATFORM_SOURCES})
 
 target_link_libraries(platform PUBLIC client ${libs})
 
+if(WIN32)
+  target_link_libraries(platform PRIVATE imm32)
+endif()
+
 if(UNIX)
   target_link_libraries(platform PRIVATE net app)
 
