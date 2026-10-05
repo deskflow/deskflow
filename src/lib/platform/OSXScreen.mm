@@ -32,6 +32,7 @@
 #include "platform/OSXScreenSaver.h"
 
 #include <AppKit/NSEvent.h>
+#include <Foundation/Foundation.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 #include <libproc.h>
@@ -98,6 +99,7 @@ OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync)
       m_activeModifierHotKeyMask(0),
       m_eventTapPort(nullptr),
       m_eventTapRLSR(nullptr),
+      m_unlockObserver(nullptr),
       m_lastClickTime(0),
       m_clickState(1),
       m_lastSingleClickXCursor(0),
@@ -693,11 +695,57 @@ void OSXScreen::enable()
   } else {
     LOG_ERR("failed to create quartz event tap");
   }
+
+  if (m_isPrimary && !m_unlockObserver) {
+    // a tap created while locked stays dead
+    id observer = [[NSDistributedNotificationCenter defaultCenter] addObserverForName:@"com.apple.screenIsUnlocked"
+                                                                                object:nil
+                                                                                 queue:[NSOperationQueue mainQueue]
+                                                                            usingBlock:^(NSNotification *) {
+                                                                              restartEventTap();
+                                                                            }];
+    m_unlockObserver = [observer retain];
+  }
+}
+
+void OSXScreen::restartEventTap()
+{
+  if (!m_eventTapPort) {
+    return;
+  }
+
+  if (m_eventTapRLSR) {
+    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+    CFRelease(m_eventTapRLSR);
+    m_eventTapRLSR = nullptr;
+  }
+  CGEventTapEnable(m_eventTapPort, false);
+  CFRelease(m_eventTapPort);
+
+  m_eventTapPort = CGEventTapCreate(
+      kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, kCGEventMaskForAllEvents, handleCGInputEvent,
+      this
+  );
+  if (!m_eventTapPort) {
+    LOG_ERR("failed to recreate quartz event tap");
+    return;
+  }
+  m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+  if (m_eventTapRLSR) {
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
+  }
+  LOG_INFO("screen unlocked, recreated quartz event tap");
 }
 
 void OSXScreen::disable()
 {
   showCursor();
+
+  if (m_unlockObserver) {
+    [[NSDistributedNotificationCenter defaultCenter] removeObserver:(id)m_unlockObserver];
+    [(id)m_unlockObserver release];
+    m_unlockObserver = nullptr;
+  }
 
   // FIXME -- stop watching jump zones, stop capturing input
 
@@ -1664,7 +1712,11 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
     LOG_INFO("quartz event tap was disabled by timeout, re-enabling");
     break;
   case kCGEventTapDisabledByUserInput:
-    LOG_ERR("quartz event tap was disabled by user input");
+    // Re-enable our event-tap, unless disable() already released it
+    if (screen->m_eventTapPort) {
+      CGEventTapEnable(screen->m_eventTapPort, true);
+      LOG_INFO("quartz event tap was disabled by user input, re-enabling");
+    }
     break;
   case NX_NULLEVENT:
     break;

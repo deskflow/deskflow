@@ -130,6 +130,9 @@ private:
   void showCursor();
   void hideCursor();
 
+  // rebuild the tap after screen unlock
+  void restartEventTap();
+
   // map deskflow mouse button to mac buttons
   ButtonID mapDeskflowButtonToMac(uint16_t) const;
 
@@ -292,6 +295,7 @@ private:
   // Quartz input event support
   CFMachPortRef m_eventTapPort;
   CFRunLoopSourceRef m_eventTapRLSR;
+  void *m_unlockObserver;
 
   // for double click coalescing.
   double m_lastClickTime;
