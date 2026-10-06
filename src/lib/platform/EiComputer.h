@@ -19,6 +19,7 @@
 #include <libei.h>
 #include <map>
 #include <mutex>
+#include <string>
 #include <vector>
 
 struct ei;
@@ -88,6 +89,19 @@ public:
 
   // Send clipboard event (needed by PortalInputCapture)
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
+
+  // Path of an external EIS socket when one is reachable, or empty when the
+  // XDG RemoteDesktop portal should be used instead.
+  //
+  // Some compositors (e.g. niri) do not implement the RemoteDesktop portal,
+  // so xdp_session_connect_to_eis() can never succeed there. An external EIS
+  // implementation (e.g. eis-bridge, which replays emulated input through
+  // uinput) can be used through a plain socket instead. The path may be
+  // overridden with DESKFLOW_EIS_SOCKET and defaults to
+  // $XDG_RUNTIME_DIR/deskflow-eis.sock. A quick connect probe decides
+  // whether anything is listening, so default behavior is unchanged when it
+  // is not.
+  static std::string externalEisSocket();
 
   // Local clipboard cache (used by PortalRemoteDesktop to land selection reads)
   EiClipboard *getClipboardCache() const
