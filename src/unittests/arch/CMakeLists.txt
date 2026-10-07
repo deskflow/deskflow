@@ -12,3 +12,14 @@ create_test(
   SOURCE ArchTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/arch"
 )
+
+create_test(
+  NAME ArchNetworkTests
+  DEPENDS arch
+  LIBS base Qt::Network ${extra_libs}
+  SOURCE ArchNetworkTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/arch"
+)
+
+# A broken socket wakeup must fail the suite instead of hanging CI.
+set_tests_properties(ArchNetworkTests PROPERTIES TIMEOUT 60)
