@@ -86,7 +86,6 @@ This section contains options used by the daemon on windows it will begin with `
 
 |Option | Valid Values|Description|
 |:----------|:-----------:|:-----------|
-| command   | Filename          | The filename of the binary the daemon. This binary exists in the same path as the deskflow GUI |
 | elevate   | `true` or `false` | Elevate the daemon app [default: true unless portable mode ] |
 | logFile   | Filepath          | Filepath of the daemon log |
 | logLevel  | valid log Level,  | Log Level  |
