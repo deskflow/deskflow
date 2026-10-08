@@ -9,6 +9,7 @@
 #pragma once
 
 #include "deskflow/PlatformComputer.h"
+#include "platform/CursorVisibility.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
 
@@ -250,7 +251,7 @@ private:
   using MouseButtonEventMapType = std::map<uint16_t, CGEventType>;
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
-  bool m_cursorHidden;
+  deskflow::CursorVisibility m_cursorVisibility;
 
   // keyboard stuff
   OSXKeyState *m_keyState;

@@ -30,6 +30,7 @@
 #include "platform/OSXEventQueueBuffer.h"
 #include "platform/OSXKeyState.h"
 #include "platform/OSXMediaKeySupport.h"
+#include "platform/OSXMouseEvent.h"
 #include "platform/OSXPasteboardPeeker.h"
 #include "platform/OSXScreenSaver.h"
 
@@ -89,7 +90,6 @@ OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSyn
       m_isOnComputer(m_isPrimary),
       m_cursorPosValid(false),
       MouseButtonEventMap(NumButtonIDs),
-      m_cursorHidden(false),
       m_keyState(nullptr),
       m_sequenceNumber(0),
       m_screensaver(nullptr),
@@ -468,6 +468,7 @@ void OSXComputer::postMouseEvent(CGPoint &pos) const
   }
 
   CGEventRef event = CGEventCreateMouseEvent(nullptr, type, pos, static_cast<CGMouseButton>(button));
+  deskflow::osx::markMouseEvent(event);
 
   if (button != -1 && needsEventNumber()) {
     CGEventSetIntegerValueField(event, kCGMouseEventNumber, m_mouseEventNumber);
@@ -645,48 +646,54 @@ void OSXComputer::fakeMouseWheel(ScrollDelta delta) const
 
 void OSXComputer::showCursor()
 {
-  LOG_DEBUG("showing cursor");
+  m_cursorVisibility.setHidden(false, [this] {
+    LOG_DEBUG("showing cursor");
 
-  CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+    CFStringRef propertyString =
+        CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
 
-  CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
+    CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
 
-  CFRelease(propertyString);
+    CFRelease(propertyString);
 
-  CGError error = CGDisplayShowCursor(m_displayID);
-  if (error != kCGErrorSuccess) {
-    LOG_ERR("failed to show cursor, error=%d", error);
-  }
+    CGError error = CGDisplayShowCursor(m_displayID);
+    if (error != kCGErrorSuccess) {
+      LOG_ERR("failed to show cursor, error=%d", error);
+      return false;
+    }
 
-  // appears to fix "mouse randomly not showing" bug
-  CGAssociateMouseAndMouseCursorPosition(true);
+    // appears to fix "mouse randomly not showing" bug
+    CGAssociateMouseAndMouseCursorPosition(true);
 
-  logCursorVisibility();
-
-  m_cursorHidden = false;
+    logCursorVisibility();
+    return true;
+  });
 }
 
 void OSXComputer::hideCursor()
 {
-  LOG_DEBUG("hiding cursor");
+  m_cursorVisibility.setHidden(true, [this] {
+    LOG_DEBUG("hiding cursor");
 
-  CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+    CFStringRef propertyString =
+        CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
 
-  CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
+    CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
 
-  CFRelease(propertyString);
+    CFRelease(propertyString);
 
-  CGError error = CGDisplayHideCursor(m_displayID);
-  if (error != kCGErrorSuccess) {
-    LOG_ERR("failed to hide cursor, error=%d", error);
-  }
+    CGError error = CGDisplayHideCursor(m_displayID);
+    if (error != kCGErrorSuccess) {
+      LOG_ERR("failed to hide cursor, error=%d", error);
+      return false;
+    }
 
-  // appears to fix "mouse randomly not hiding" bug
-  CGAssociateMouseAndMouseCursorPosition(true);
+    // appears to fix "mouse randomly not hiding" bug
+    CGAssociateMouseAndMouseCursorPosition(true);
 
-  logCursorVisibility();
-
-  m_cursorHidden = true;
+    logCursorVisibility();
+    return true;
+  });
 }
 
 void OSXComputer::enable()
@@ -714,12 +721,13 @@ void OSXComputer::enable()
     // warp the mouse to the cursor center
     fakeMouseMove(m_xCenter, m_yCenter);
 
-    // there may be a better way to do this, but we register an event handler even if we're
-    // not on the primary display (acting as a client). This way, if a local event comes in
-    // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it.
+    // Observe local movement to restore the client's cursor without intercepting input.
+    const CGEventMask mouseEvents = CGEventMaskBit(kCGEventMouseMoved) | CGEventMaskBit(kCGEventLeftMouseDragged) |
+                                    CGEventMaskBit(kCGEventRightMouseDragged) |
+                                    CGEventMaskBit(kCGEventOtherMouseDragged);
     m_eventTapPort = CGEventTapCreate(
-        kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault, kCGEventMaskForAllEvents,
-        handleCGInputEventSecondary, this
+        kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionListenOnly, mouseEvents, handleCGInputEventSecondary,
+        this
     );
   }
 
@@ -751,6 +759,10 @@ void OSXComputer::enable()
 void OSXComputer::disable()
 {
   showCursor();
+  // leave() captures the primary pointer even if hiding it failed.
+  if (m_isPrimary) {
+    CGAssociateMouseAndMouseCursorPosition(true);
+  }
 
   // FIXME -- stop watching jump zones, stop capturing input
 
@@ -1652,25 +1664,20 @@ bool OSXComputer::HotKeyItem::operator<(const HotKeyItem &x) const
   return (m_keycode < x.m_keycode || (m_keycode == x.m_keycode && m_mask < x.m_mask));
 }
 
-// Quartz event tap support for the secondary display. This makes sure that we
-// will show the cursor if a local event comes in while deskflow has the cursor
-// off the computer.
+// Restore the client's cursor for local movement, without changing server focus.
 CGEventRef
 OSXComputer::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
-  // this fix is really screwing with the correct show/hide behavior. it
-  // should be tested better before reintroducing.
-  return event;
-
-  OSXComputer *computer = (OSXComputer *)refcon;
-  if (computer->m_cursorHidden && type == kCGEventMouseMoved) {
-
-    CGPoint pos = CGEventGetLocation(event);
-    if (pos.x != computer->m_xCenter || pos.y != computer->m_yCenter) {
-
-      LOG_DEBUG("show cursor on secondary, type=%d pos=%d,%d", type, pos.x, pos.y);
-      computer->showCursor();
+  auto *computer = static_cast<OSXComputer *>(refcon);
+  if (type == kCGEventTapDisabledByTimeout) {
+    // checkAXPermissions() may disable and join this thread; leave that to its timer.
+    if (AXIsProcessTrusted()) {
+      CGEventTapEnable(computer->m_eventTapPort, true);
     }
+    return event;
+  }
+  if (deskflow::osx::shouldRestoreCursor(type, event)) {
+    computer->showCursor();
   }
   return event;
 }

@@ -1,6 +1,13 @@
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
+create_test(
+  NAME CursorVisibilityTests
+  DEPENDS platform
+  SOURCE CursorVisibilityTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+)
+
 if (WIN32)
   create_test(
     NAME MSWindowsClipboardTests
@@ -10,6 +17,12 @@ if (WIN32)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(APPLE)
+  create_test(
+    NAME OSXMouseEventTests
+    DEPENDS platform
+    SOURCE OSXMouseEventTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
   create_test(
     NAME OSXClipboardTests
     DEPENDS platform

@@ -93,6 +93,7 @@ elseif(APPLE)
     OSXKeyState.h
     OSXMediaKeySupport.h
     OSXMediaKeySupport.m
+    OSXMouseEvent.h
     OSXPasteboardPeeker.h
     OSXPasteboardPeeker.m
     OSXPowerManager.cpp
@@ -178,6 +179,7 @@ elseif(UNIX)
 endif()
 
 # wayland.h is included to check for wayland support
+list(APPEND PLATFORM_SOURCES CursorVisibility.h)
 add_library(platform STATIC ${PLATFORM_SOURCES})
 
 target_link_libraries(platform PUBLIC client ${libs})
