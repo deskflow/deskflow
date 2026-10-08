@@ -477,7 +477,7 @@ void OSXComputer::postMouseEvent(CGPoint &pos) const
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
   // Fix for sticky keys
-  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags() | m_localModifiers.flags();
   CGEventSetFlags(event, modifiers);
 
   // Set movement deltas to fix issues with certain 3D programs
@@ -575,7 +575,7 @@ void OSXComputer::fakeMouseButton(ButtonID id, bool press)
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
   // Fix for sticky keys
-  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+  CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags() | m_localModifiers.flags();
   CGEventSetFlags(event, modifiers);
 
   m_buttonState.set(index, state);
@@ -635,7 +635,7 @@ void OSXComputer::fakeMouseWheel(ScrollDelta delta) const
     CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, delta.y, delta.x);
 
     // Fix for sticky keys
-    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags();
+    CGEventFlags modifiers = m_keyState->getModifierStateAsOSXFlags() | m_localModifiers.flags();
     CGEventSetFlags(scrollEvent, modifiers);
 
     CGEventPost(kCGHIDEventTap, scrollEvent);
@@ -732,9 +732,13 @@ void OSXComputer::enable()
       auto sem = dispatch_semaphore_create(0);
       m_eventTapThread = std::thread([this, sem]() {
         m_eventTapRunLoop = CFRunLoopGetCurrent();
+        if (!m_isPrimary)
+          m_localModifiers.start(m_eventTapRunLoop);
         CFRunLoopAddSource(m_eventTapRunLoop, m_eventTapRLSR, kCFRunLoopDefaultMode);
         dispatch_semaphore_signal(sem);
         CFRunLoopRun();
+        if (!m_isPrimary)
+          m_localModifiers.stop(CFRunLoopGetCurrent());
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
         m_eventTapRunLoop = nullptr;
       });
