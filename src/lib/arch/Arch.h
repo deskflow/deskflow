@@ -60,7 +60,7 @@ class Arch : public ARCH_LOG, public ARCH_MULTITHREAD, public ARCH_NETWORK
 {
 public:
   Arch();
-  ~Arch() override = default;
+  ~Arch() override;
 
 #if defined(Q_OS_WIN)
   //! Call init on other arch classes.

@@ -9,11 +9,14 @@
 
 #include "arch/IArchMultithread.h"
 
-#include <list>
+#include <memory>
 #include <mutex>
 #include <pthread.h>
+#include <signal.h>
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
+
+struct ArchThreadState;
 
 class ArchCondImpl
 {
@@ -31,7 +34,9 @@ public:
 class ArchMultithreadPosix : public IArchMultithread
 {
 public:
-  ArchMultithreadPosix();
+  using ThreadCreate = int (*)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *);
+
+  explicit ArchMultithreadPosix(ThreadCreate createThread = &pthread_create);
   ArchMultithreadPosix(ArchMultithreadPosix const &) = delete;
   ArchMultithreadPosix(ArchMultithreadPosix &&) = delete;
   ~ArchMultithreadPosix() override;
@@ -42,13 +47,14 @@ public:
   //! @name manipulators
   //@{
 
-  void setNetworkDataForCurrentThread(void *);
+  void shutdown();
+  std::shared_ptr<void> installNetworkDataForThread(ArchThread, std::shared_ptr<void>);
 
   //@}
   //! @name accessors
   //@{
 
-  void *getNetworkDataForThread(ArchThread);
+  std::shared_ptr<void> getNetworkDataForThread(ArchThread);
 
   static ArchMultithreadPosix *getInstance();
 
@@ -80,34 +86,32 @@ public:
   void raiseSignal(ThreadSignal) override;
 
 private:
-  void startSignalHandler();
+  bool startSignalHandler();
 
   ArchThreadImpl *find(pthread_t thread);
   ArchThreadImpl *findNoRef(pthread_t thread);
   ArchThreadImpl *findNoRefOrInsert(pthread_t thread);
   void insert(ArchThreadImpl *thread);
-  void erase(const ArchThreadImpl *thread);
-
   void refThread(ArchThreadImpl *rep);
-  void testCancelThreadImpl(ArchThreadImpl *rep);
+  static void testCancelThreadImpl(ArchThreadImpl *rep);
 
-  void doThreadFunc(ArchThread thread);
+  static void doThreadFunc(ArchThread thread);
   static void *threadFunc(void *vrep);
   static void threadCancel(int);
   static void *threadSignalHandler(void *vrep);
 
-  using ThreadList = std::list<ArchThread>;
-
   static ArchMultithreadPosix *s_instance;
 
-  bool m_newThreadCalled = false;
-
-  std::mutex m_threadMutex;
-  ArchThread m_mainThread;
-  ThreadList m_threadList;
-  ThreadID m_nextID = 0;
-
-  pthread_t m_signalThread;
-  SignalFunc m_signalFunc[static_cast<int>(ThreadSignal::MaxSignals)];
-  void *m_signalUserData[static_cast<int>(ThreadSignal::MaxSignals)];
+  std::shared_ptr<ArchThreadState> m_state;
+  std::mutex m_startupMutex;
+  ThreadCreate m_createThread;
+  ArchThread m_mainThread = nullptr;
+  bool m_shutdown = false;
+  bool m_signalStarted = false;
+  bool m_signalStop = false;
+  pthread_t m_signalThread{};
+  pthread_t m_signalMaskOwner{};
+  sigset_t m_previousSignalMask{};
+  SignalFunc m_signalFunc[static_cast<int>(ThreadSignal::MaxSignals)]{};
+  void *m_signalUserData[static_cast<int>(ThreadSignal::MaxSignals)]{};
 };

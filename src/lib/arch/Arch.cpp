@@ -26,6 +26,14 @@ Arch::Arch()
   s_instance = this;
 }
 
+Arch::~Arch()
+{
+#if !defined(Q_OS_WIN)
+  shutdown();
+#endif
+  s_instance = nullptr;
+}
+
 #if defined(Q_OS_WIN)
 void Arch::init()
 {

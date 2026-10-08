@@ -55,6 +55,8 @@ public:
     virtual int poll(struct pollfd *, nfds_t, int);
     virtual std::shared_ptr<struct pollfd[]> makePollFD(nfds_t);
     virtual ssize_t read(int, void *, size_t);
+    virtual int createPipe(int fds[2]);
+    virtual int setNonBlocking(int fd);
     virtual void testCancelThread();
   };
 
@@ -101,8 +103,9 @@ public:
   bool isEqualAddr(ArchNetAddress, ArchNetAddress) override;
 
 private:
-  const int *getUnblockPipe();
-  const int *getUnblockPipeForThread(ArchThread);
+  struct UnblockPipe;
+  std::shared_ptr<UnblockPipe> getUnblockPipe();
+  std::shared_ptr<UnblockPipe> getUnblockPipeForThread(ArchThread);
   void setBlockingOnSocket(int fd, bool blocking) const;
   [[noreturn]] void throwError(int) const override;
   [[noreturn]] void throwNameError(int) const override;
