@@ -255,6 +255,11 @@ void MainWindow::connectSlots()
       &m_coreProcess, &CoreProcess::daemonIpcClientConnectionFailed, this, &MainWindow::daemonIpcClientConnectionFailed
   );
   connect(&m_coreProcess, &CoreProcess::securityLevelChanged, m_statusBar, &StatusBar::setSecurityLevel);
+  connect(&m_coreProcess, &CoreProcess::clipboardSending, m_statusBar, &StatusBar::showClipboardSending);
+  connect(&m_coreProcess, &CoreProcess::clipboardSent, m_statusBar, &StatusBar::showClipboardSent);
+  connect(&m_coreProcess, &CoreProcess::clipboardReceiving, m_statusBar, &StatusBar::showClipboardReceiving);
+  connect(&m_coreProcess, &CoreProcess::clipboardReceived, m_statusBar, &StatusBar::showClipboardReceived);
+  connect(&m_coreProcess, &CoreProcess::clipboardOverLimit, m_statusBar, &StatusBar::showClipboardOverLimit);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);

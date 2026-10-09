@@ -7,6 +7,7 @@
 #include "deskflow/ClipboardChunk.h"
 
 #include "base/Log.h"
+#include "deskflow/IClipboard.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
@@ -112,13 +113,17 @@ TransferState ClipboardChunk::assemble(
     clearCachedData(dataCached);
     state.expectedSize = static_cast<size_t>(expected);
     state.active = true;
+    state.sinceStart.start();
 
     if (isOversize()) {
-      LOG_WARN("not receiving clipboard data, exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
+      const auto size = IClipboard::formatSize(state.expectedSize);
+      const auto limit = IClipboard::formatSize(maxDataSize);
+      LOG_WARN("not receiving clipboard data, size: %s, limit: %s", size.constData(), limit.constData());
       return Oversize;
     }
 
-    LOG_DEBUG("start receiving clipboard data, expected size=%zu", state.expectedSize);
+    const auto size = IClipboard::formatSize(state.expectedSize);
+    LOG_DEBUG("receiving clipboard %d, size: %s", id, size.constData());
     return Started;
   } else if (mark == ChunkType::DataChunk) {
     if (!state.active) {
@@ -159,10 +164,15 @@ TransferState ClipboardChunk::assemble(
     state.active = false;
 
     if (state.expectedSize != dataCached.size()) {
-      LOG_ERR("corrupted clipboard data, expected size=%zu actual size=%zu", state.expectedSize, dataCached.size());
+      LOG_ERR(
+          "corrupted clipboard data, expected: %zu bytes, actual: %zu bytes", state.expectedSize, dataCached.size()
+      );
       reset();
       return Error;
     }
+
+    const auto transfer = describeTransfer(dataCached.size(), state.sinceStart.elapsed());
+    LOG_DEBUG("received clipboard %d: %s", id, transfer.constData());
     return Finished;
   }
 
@@ -171,18 +181,16 @@ TransferState ClipboardChunk::assemble(
   return Error;
 }
 
-void ClipboardChunk::send(deskflow::IStream *stream, void *data)
+void ClipboardChunk::send(deskflow::IStream *stream, const ClipboardChunk &clipboardChunk)
 {
-  const auto *clipboardData = static_cast<ClipboardChunk *>(data);
-
   LOG_VERBOSE("sending clipboard chunk");
 
-  const char *chunk = clipboardData->m_chunk;
+  const char *chunk = clipboardChunk.m_chunk;
   ClipboardID id = chunk[0];
   uint32_t sequence;
   std::memcpy(&sequence, &chunk[1], 4);
   uint8_t mark = chunk[5];
-  std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
+  std::string dataChunk(&chunk[6], clipboardChunk.m_dataSize);
 
   switch (mark) {
   case ChunkType::DataStart:
@@ -202,4 +210,12 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
   }
 
   ProtocolUtil::writef(stream, kMsgDClipboard, id, sequence, mark, &dataChunk);
+}
+
+QByteArray ClipboardChunk::describeTransfer(size_t bytes, qint64 elapsedMs)
+{
+  const auto time = elapsedMs < 1000
+                        ? QStringLiteral("%1 ms").arg(elapsedMs)
+                        : QStringLiteral("%1 seconds").arg(static_cast<double>(elapsedMs) / 1000.0, 0, 'f', 2);
+  return IClipboard::formatSize(bytes) + " in " + time.toUtf8();
 }

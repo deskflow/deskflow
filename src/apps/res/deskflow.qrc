@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>icons/deskflow-dark/actions/16/cloud-download.svg</file>
+        <file>icons/deskflow-dark/actions/16/cloud-upload.svg</file>
         <file>icons/deskflow-dark/actions/16/configure.svg</file>
         <file>icons/deskflow-dark/actions/16/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/16/document-edit.svg</file>
@@ -17,6 +19,8 @@
         <file>icons/deskflow-dark/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/16/window-minimize-pip.svg</file>
         <file>icons/deskflow-dark/actions/16/window-restore-pip.svg</file>
+        <file>icons/deskflow-dark/actions/22/cloud-download.svg</file>
+        <file>icons/deskflow-dark/actions/22/cloud-upload.svg</file>
         <file>icons/deskflow-dark/actions/22/configure.svg</file>
         <file>icons/deskflow-dark/actions/22/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/22/document-edit.svg</file>
@@ -36,6 +40,8 @@
         <file>icons/deskflow-dark/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/22/window-minimize-pip.svg</file>
         <file>icons/deskflow-dark/actions/22/window-restore-pip.svg</file>
+        <file>icons/deskflow-dark/actions/24/cloud-download.svg</file>
+        <file>icons/deskflow-dark/actions/24/cloud-upload.svg</file>
         <file>icons/deskflow-dark/actions/24/configure.svg</file>
         <file>icons/deskflow-dark/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/24/document-edit.svg</file>
@@ -82,6 +88,8 @@
         <file>icons/deskflow-dark/status/64/security-low.svg</file>
         <file>icons/deskflow-dark/status/64/security-medium.svg</file>
         <file>icons/deskflow-dark/index.theme</file>
+        <file>icons/deskflow-light/actions/16/cloud-download.svg</file>
+        <file>icons/deskflow-light/actions/16/cloud-upload.svg</file>
         <file>icons/deskflow-light/actions/16/configure.svg</file>
         <file>icons/deskflow-light/actions/16/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/16/edit-copy.svg</file>
@@ -100,6 +108,8 @@
         <file>icons/deskflow-light/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/16/window-minimize-pip.svg</file>
         <file>icons/deskflow-light/actions/16/window-restore-pip.svg</file>
+        <file>icons/deskflow-light/actions/22/cloud-download.svg</file>
+        <file>icons/deskflow-light/actions/22/cloud-upload.svg</file>
         <file>icons/deskflow-light/actions/22/configure.svg</file>
         <file>icons/deskflow-light/actions/22/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/22/edit-copy.svg</file>
@@ -120,6 +130,8 @@
         <file>icons/deskflow-light/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/22/window-minimize-pip.svg</file>
         <file>icons/deskflow-light/actions/22/window-restore-pip.svg</file>
+        <file>icons/deskflow-light/actions/24/cloud-download.svg</file>
+        <file>icons/deskflow-light/actions/24/cloud-upload.svg</file>
         <file>icons/deskflow-light/actions/24/configure.svg</file>
         <file>icons/deskflow-light/actions/24/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/24/edit-copy.svg</file>

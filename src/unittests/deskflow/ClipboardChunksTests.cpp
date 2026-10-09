@@ -336,4 +336,14 @@ void ClipboardChunksTests::assembleAcceptsStartDuringOversizeTransfer()
   QCOMPARE(cached, std::string("WXYZ"));
 }
 
+void ClipboardChunksTests::describeTransferUsesMillisecondsUnderOneSecond()
+{
+  QCOMPARE(ClipboardChunk::describeTransfer(788596, 40), QByteArray("770.1 kb in 40 ms"));
+}
+
+void ClipboardChunksTests::describeTransferUsesSecondsFromOneSecond()
+{
+  QCOMPARE(ClipboardChunk::describeTransfer(104857600, 1210), QByteArray("100.0 mb in 1.21 seconds"));
+}
+
 QTEST_MAIN(ClipboardChunksTests)

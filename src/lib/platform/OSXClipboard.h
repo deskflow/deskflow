@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -11,6 +11,7 @@
 #include "deskflow/IClipboard.h"
 
 #include <Carbon/Carbon.h>
+#include <memory>
 #include <vector>
 
 class IOSXClipboardConverter;
@@ -38,6 +39,8 @@ public:
 
 private:
   void clearConverters();
+  IOSXClipboardConverter *findConverter(Format format) const;
+  std::string read(const IOSXClipboardConverter *converter) const;
 
 private:
   using ConverterList = std::vector<IOSXClipboardConverter *>;
@@ -45,6 +48,9 @@ private:
   mutable Time m_time;
   ConverterList m_converters;
   PasteboardRef m_pboard;
+  mutable std::unique_ptr<const __CFArray, decltype(&CFRelease)> m_flavors{nullptr, &CFRelease};
+
+  static constexpr const char *kQtPngType = "com.trolltech.anymime.image--png";
 };
 
 //! Clipboard format converter interface
@@ -82,6 +88,12 @@ public:
   (i.e., the reverse of fromIClipboard()).
   */
   virtual std::string toIClipboard(const std::string &) const = 0;
+
+  //! returns another flavor type the same data is also written under, or null
+  virtual CFStringRef getAliasOSXFormat() const
+  {
+    return nullptr;
+  }
 
   //@}
 };

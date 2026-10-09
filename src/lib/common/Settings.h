@@ -102,7 +102,7 @@ public:
   };
   struct Server
   {
-    inline static const auto ClipboardSize = QStringLiteral("server/clipboardSize");
+    inline static const auto ClipboardSizeLimit = QStringLiteral("server/clipboardSizeLimit");
     inline static const auto DefaultLockToComputerState = QStringLiteral("server/defaultLockToComputerState");
     inline static const auto DisableLockToComputer = QStringLiteral("server/disableLockToComputer");
     inline static const auto EnableClipboard = QStringLiteral("server/enableClipboard");
@@ -318,7 +318,7 @@ private:
     , Security::CheckPeers
     , Security::KeySize
     , Security::TlsEnabled
-    , Server::ClipboardSize
+    , Server::ClipboardSizeLimit
     , Server::DefaultLockToComputerState
     , Server::DisableLockToComputer
     , Server::EnableClipboard
@@ -405,7 +405,6 @@ private:
     , {InternalConfig::Win32KeepForeground, Server::Win32KeepForeground}
     , {InternalConfig::RelativeMouseMoves, Server::RelativeMouseMoves}
     , {InternalConfig::Protocol, Server::Protocol}
-    , {InternalConfig::ClipboardSharingSize, Server::ClipboardSize}
   };
 
 // Contains settings removed from server-configuration file

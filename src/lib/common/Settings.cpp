@@ -124,8 +124,6 @@ void Settings::upgradeSettings()
       continue;
     if (oldKey == InternalConfig::Protocol) {
       m_settings->setValue(newKey, networkProtocolToOption(NetworkProtocol(m_settings->value(oldKey).toInt())));
-    } else if (oldKey == InternalConfig::ClipboardSharingSize) {
-      m_settings->setValue(newKey, m_settings->value(oldKey).toUInt() / 1024);
     } else {
       m_settings->setValue(newKey, m_settings->value(oldKey));
     }
@@ -372,8 +370,8 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::SwitchDelay || key == Server::SwitchDoubleTap)
     return 250;
 
-  if (key == Server::ClipboardSize)
-    return 3; // 3 MiB
+  if (key == Server::ClipboardSizeLimit)
+    return 128; // 128 MiB
 
   return QVariant();
 }

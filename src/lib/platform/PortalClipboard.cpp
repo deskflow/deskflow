@@ -7,28 +7,80 @@
 #include "platform/PortalClipboard.h"
 
 #include "base/Log.h"
+#include "base/Unicode.h"
+#include "deskflow/ClipboardChunk.h"
+#include "platform/ClipboardImage.h"
 #include "platform/EiClipboard.h"
 
-#include <cstring>
+#include <fcntl.h>
 #include <poll.h>
 #include <unistd.h>
 
-#include <QBuffer>
+#include <algorithm>
+#include <cerrno>
+#include <cstring>
+
 #include <QByteArrayList>
-#include <QDataStream>
+#include <QElapsedTimer>
 #include <QFile>
-#include <QImage>
+#include <QIODevice>
 #include <QList>
 #include <QPair>
 #include <QSet>
 #include <QVarLengthArray>
-#include <QtEndian>
 
 namespace deskflow {
 
-static constexpr int kBmpSignatureSize = 2;
-static constexpr quint32 kBmpFileHeaderSize = 14;
-static constexpr quint32 kMinDibHeaderSize = 12;
+class PortalClipboard::SelectionPipe : public QIODevice
+{
+public:
+  explicit SelectionPipe(int fd) : m_fd(fd)
+  {
+    // a reader that stops reading without closing the pipe would otherwise block the write forever
+    fcntl(m_fd, F_SETFL, fcntl(m_fd, F_GETFL) | O_NONBLOCK);
+    open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+  }
+
+  ~SelectionPipe() override
+  {
+    ::close(m_fd);
+  }
+
+  qint64 writtenBytes() const
+  {
+    return m_written;
+  }
+
+protected:
+  qint64 readData(char *, qint64) override
+  {
+    return -1;
+  }
+
+  qint64 writeData(const char *data, qint64 size) override
+  {
+    qint64 written = 0;
+    bool failed = false;
+    while (written < size && !failed) {
+      pollfd pfd{m_fd, POLLOUT, 0};
+      if (poll(&pfd, 1, kWriteTimeoutMs) <= 0) {
+        LOG_ERR("timed out writing clipboard selection");
+        failed = true;
+      } else if (const auto n = ::write(m_fd, data + written, size - written); n >= 0) {
+        written += n;
+      } else if (errno != EAGAIN) {
+        LOG_ERR("clipboard pipe write failed: %s", std::strerror(errno));
+        failed = true;
+      }
+    }
+    m_written += written;
+    return failed ? -1 : written;
+  }
+
+private:
+  int m_fd;
+  qint64 m_written = 0;
+};
 
 QByteArray PortalClipboard::formatMimeTypes(const char *const *mimeTypes)
 {
@@ -67,124 +119,85 @@ const PortalClipboard::SupportedMime *PortalClipboard::pickSupportedMime(const c
   return nullptr;
 }
 
-QByteArray PortalClipboard::dibToBmp(const QByteArray &dib)
+std::optional<IClipboard::Format> PortalClipboard::heldFormat(EiClipboard *cache, IClipboard::Format format)
 {
-  if (dib.size() < static_cast<qint64>(sizeof(quint32)))
-    return {};
-
-  quint32 headerSize;
-  std::memcpy(&headerSize, dib.constData(), sizeof(headerSize));
-  headerSize = qFromLittleEndian(headerSize);
-  if (headerSize < kMinDibHeaderSize || headerSize > static_cast<quint32>(dib.size()))
-    return {};
-
-  const auto fileSize = static_cast<quint32>(kBmpFileHeaderSize + dib.size());
-  const quint32 pixelOffset = kBmpFileHeaderSize + headerSize;
-
-  QByteArray bmp;
-  QDataStream ds(&bmp, QIODevice::WriteOnly);
-  ds.setByteOrder(QDataStream::LittleEndian);
-  ds.writeRawData("BM", kBmpSignatureSize);
-  ds << fileSize;
-  ds << quint32(0);
-  ds << pixelOffset;
-  ds.writeRawData(dib.constData(), static_cast<int>(dib.size()));
-  return bmp;
+  std::optional<IClipboard::Format> held;
+  if (format == IClipboard::Format::PNG) {
+    const auto found = std::ranges::find_if(kPngSources, [cache](auto candidate) { return cache->has(candidate); });
+    if (found != std::end(kPngSources))
+      held = *found;
+  } else if (cache->has(format)) {
+    held = format;
+  }
+  return held;
 }
 
-QByteArray PortalClipboard::bmpToDib(const QByteArray &bmp)
+bool PortalClipboard::writeFormat(
+    IClipboard::Format format, IClipboard::Format held, const QByteArray &data, QIODevice *device
+)
 {
-  if (bmp.size() < kBmpFileHeaderSize)
-    return {};
-
-  return bmp.mid(kBmpFileHeaderSize);
+  bool written = false;
+  if (held == format)
+    written = device->write(data) == data.size();
+  else if (held == IClipboard::Format::Bitmap)
+    written = ClipboardImage::writeDibAsImage(data, "PNG", device);
+  else
+    written = ClipboardImage::writeAsPng(data, ClipboardImage::qtFormat(held), device);
+  return written;
 }
 
-QByteArray PortalClipboard::encodeFormat(IClipboard::Format format, const QByteArray &data)
+QByteArray PortalClipboard::decodeFormat(const SupportedMime &entry, const QByteArray &bytes)
 {
-  if (data.isEmpty())
-    return {};
+  auto data = bytes;
+  if (entry.format == IClipboard::Format::Bitmap) {
+    data = ClipboardImage::toPng(bytes, entry.imageFormat);
+  } else if (entry.format == IClipboard::Format::Text || entry.format == IClipboard::Format::HTML) {
+    // firefox has offered html as utf-16
+    if (entry.format == IClipboard::Format::HTML && !Unicode::isUTF8(data.toStdString()))
+      data = QByteArray::fromStdString(Unicode::UTF16ToUTF8(data.toStdString()));
 
-  if (format == IClipboard::Format::Bitmap) {
-    const auto bmpFile = dibToBmp(data);
-    if (bmpFile.isEmpty()) {
-      LOG_WARN("clipboard bitmap data is malformed");
-      return {};
-    }
-
-    QImage image;
-    if (!image.loadFromData(bmpFile, "BMP")) {
-      LOG_WARN("failed to decode clipboard bitmap");
-      return {};
-    }
-
-    QByteArray png;
-    QBuffer buf(&png);
-    buf.open(QIODevice::WriteOnly);
-    if (!image.save(&buf, "PNG")) {
-      LOG_WARN("failed to encode clipboard image as png");
-      return {};
-    }
-
-    return png;
+    while (data.endsWith('\0'))
+      data.chop(1);
+    data.replace("\r\n", "\n");
   }
   return data;
 }
 
-QByteArray PortalClipboard::decodeFormat(IClipboard::Format format, const QByteArray &bytes)
-{
-  if (bytes.isEmpty())
-    return {};
-
-  if (format == IClipboard::Format::Bitmap) {
-    QImage image;
-    if (!image.loadFromData(bytes, "PNG")) {
-      LOG_WARN("failed to decode clipboard png");
-      return {};
-    }
-
-    QByteArray bmp;
-    QBuffer buf(&bmp);
-    buf.open(QIODevice::WriteOnly);
-    if (!image.save(&buf, "BMP")) {
-      LOG_WARN("failed to encode clipboard image as bmp");
-      return {};
-    }
-
-    return bmpToDib(bmp);
-  }
-  return bytes;
-}
-
-QByteArray PortalClipboard::readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes)
+std::optional<QByteArray> PortalClipboard::readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes)
 {
   const int fd = xdp_session_selection_read(session, mime);
   if (fd < 0) {
     LOG_ERR("failed to read clipboard selection: invalid fd");
-    return {};
+    return QByteArray{};
   }
 
   QFile pipe;
   if (!pipe.open(fd, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle)) {
     LOG_WARN("failed to wrap clipboard pipe");
     ::close(fd);
-    return {};
+    return QByteArray{};
   }
 
   QByteArray contents;
   contents.reserve(std::min<qint64>(maxBytes, kChunkBytes));
-  while (contents.size() < maxBytes) {
+  bool timedOut = false;
+  int timeoutMs = kFirstByteTimeoutMs;
+  while (contents.size() < maxBytes && !timedOut) {
     pollfd pfd{fd, POLLIN, 0};
-    if (poll(&pfd, 1, kReadTimeoutMs) <= 0)
-      break;
+    timeoutMs = contents.isEmpty() ? kFirstByteTimeoutMs : kReadTimeoutMs;
+    timedOut = poll(&pfd, 1, timeoutMs) <= 0;
+    if (!timedOut) {
+      const auto chunk = pipe.read(std::min<qint64>(kChunkBytes, maxBytes - contents.size()));
+      if (chunk.isEmpty())
+        break;
 
-    const auto chunk = pipe.read(std::min<qint64>(kChunkBytes, maxBytes - contents.size()));
-    if (chunk.isEmpty())
-      break;
-
-    contents.append(chunk);
+      contents.append(chunk);
+    }
   }
-  return contents;
+
+  if (timedOut)
+    LOG_WARN("clipboard read timed out, mime: %s, waited: %d ms", mime, timeoutMs);
+  return timedOut ? std::nullopt : std::make_optional(std::move(contents));
 }
 
 void PortalClipboard::claimOwnership(EiClipboard *cache, XdpSession *session)
@@ -195,7 +208,7 @@ void PortalClipboard::claimOwnership(EiClipboard *cache, XdpSession *session)
   cache->open(0);
   QVarLengthArray<const char *, std::size(kSupportedMimes) + 1> mimeTypes;
   for (const auto &entry : kSupportedMimes) {
-    if (cache->has(entry.format))
+    if (entry.offered && heldFormat(cache, entry.format))
       mimeTypes.append(entry.mime);
   }
   cache->close();
@@ -223,15 +236,20 @@ void PortalClipboard::serveSelectionTransfer(EiClipboard *cache, XdpSession *ses
 
   cache->open(0);
   QByteArray raw;
-  const bool hasFormat = cache->has(requested->format);
-  if (hasFormat)
-    raw = QByteArray::fromStdString(cache->get(requested->format));
+  const auto held = heldFormat(cache, requested->format);
+  if (held)
+    raw = QByteArray::fromStdString(cache->get(*held));
   cache->close();
 
-  const auto data = encodeFormat(requested->format, raw);
-  if (data.isEmpty()) {
-    LOG_DEBUG("clipboard has no data for mime: %s", mime);
-    xdp_session_selection_write_done(session, serial, false);
+  // the portal can't withdraw an offer once made, so answer with nothing rather than make the app time out
+  if (!held) {
+    LOG_DEBUG("clipboard has no data for mime, serving nothing: %s", mime);
+    const int fd = xdp_session_selection_write(session, serial);
+    if (fd < 0)
+      LOG_WARN("failed to open clipboard selection write fd");
+    else
+      ::close(fd);
+    xdp_session_selection_write_done(session, serial, fd >= 0);
     return;
   }
 
@@ -242,36 +260,42 @@ void PortalClipboard::serveSelectionTransfer(EiClipboard *cache, XdpSession *ses
     return;
   }
 
-  QFile pipe;
-  if (!pipe.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
-    LOG_WARN("failed to wrap clipboard pipe");
-    ::close(fd);
-    xdp_session_selection_write_done(session, serial, false);
-    return;
-  }
-
-  const char *buf = data.constData();
-  qint64 total = data.size();
+  QElapsedTimer sinceStart;
+  sinceStart.start();
+  bool served = false;
   qint64 written = 0;
-  while (written < total) {
-    pollfd pfd{fd, POLLOUT, 0};
-    if (poll(&pfd, 1, kWriteTimeoutMs) <= 0) {
-      LOG_ERR("timed out writing clipboard selection");
-      xdp_session_selection_write_done(session, serial, false);
-      return;
-    }
-
-    qint64 n = pipe.write(buf + written, total - written);
-    if (n <= 0) {
-      LOG_ERR("clipboard pipe write returned %lld", static_cast<long long>(n));
-      xdp_session_selection_write_done(session, serial, false);
-      return;
-    }
-    written += n;
+  {
+    // streamed, so a large image reaches the app as it's encoded rather than after, which apps give up waiting for
+    SelectionPipe pipe(fd);
+    served = writeFormat(requested->format, *held, raw, &pipe);
+    written = pipe.writtenBytes();
   }
 
-  xdp_session_selection_write_done(session, serial, true);
-  LOG_DEBUG("clipboard selection transfer complete, bytes: %lld", static_cast<long long>(written));
+  xdp_session_selection_write_done(session, serial, served);
+  const auto transfer = ClipboardChunk::describeTransfer(static_cast<size_t>(written), sinceStart.elapsed());
+  if (served)
+    LOG_DEBUG("clipboard selection transfer complete: %s", transfer.constData());
+  else
+    LOG_WARN("clipboard selection transfer failed, sent: %s", transfer.constData());
+}
+
+std::optional<QByteArray> PortalClipboard::readFormat(
+    XdpSession *session, const char *const *mimeTypes, IClipboard::Format format, qint64 maxBytes
+)
+{
+  QByteArray data;
+  bool timedOut = false;
+  for (const auto &entry : kSupportedMimes) {
+    if (data.isEmpty() && !timedOut && entry.format == format && g_strv_contains(mimeTypes, entry.mime)) {
+      const auto selection = readSelectionBytes(session, entry.mime, maxBytes);
+      timedOut = !selection;
+      if (selection && selection->isEmpty())
+        LOG_DEBUG("clipboard read returned no data for mime: %s", entry.mime);
+      else if (selection)
+        data = decodeFormat(entry, *selection);
+    }
+  }
+  return timedOut ? std::nullopt : std::make_optional(data);
 }
 
 bool PortalClipboard::readSelectionIntoCache(
@@ -286,32 +310,28 @@ bool PortalClipboard::readSelectionIntoCache(
     return false;
   }
 
+  const auto offered = [mimeTypes](IClipboard::Format format) {
+    return std::ranges::any_of(kSupportedMimes, [mimeTypes, format](const SupportedMime &entry) {
+      return entry.format == format && g_strv_contains(mimeTypes, entry.mime);
+    });
+  };
+
   QList<QPair<IClipboard::Format, QByteArray>> reads;
-  QSet<IClipboard::Format> seen;
+  QSet<IClipboard::Format> tried;
+  bool timedOut = false;
   for (const auto &entry : kSupportedMimes) {
-    if (seen.contains(entry.format))
-      continue;
-    if (!g_strv_contains(mimeTypes, entry.mime))
-      continue;
+    const auto format = entry.format;
+    const auto source = IClipboard::sourceToSend(format, offered);
+    if (!timedOut && source && !tried.contains(format)) {
+      tried.insert(format);
+      const auto data = readFormat(session, mimeTypes, *source, maxBytes);
 
-    auto bytes = readSelectionBytes(session, entry.mime, maxBytes);
-    if (bytes.isEmpty()) {
-      LOG_DEBUG("clipboard read returned no data for mime: %s", entry.mime);
-      continue;
+      // the source app is still busy with this request, and each further one would queue behind it
+      timedOut = !data;
+
+      if (data && !data->isEmpty())
+        reads.append({format, *data});
     }
-
-    if (entry.format != IClipboard::Format::Bitmap) {
-      while (bytes.endsWith('\0'))
-        bytes.chop(1);
-      bytes.replace("\r\n", "\n");
-    }
-
-    auto data = decodeFormat(entry.format, bytes);
-    if (data.isEmpty())
-      continue;
-
-    reads.append({entry.format, std::move(data)});
-    seen.insert(entry.format);
   }
 
   if (reads.isEmpty()) {

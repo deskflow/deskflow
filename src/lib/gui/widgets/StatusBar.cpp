@@ -1,6 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -18,8 +19,14 @@ StatusBar::StatusBar(QWidget *parent)
       m_btnFingerprint{new QPushButton(this)},
       m_lblSecurityIcon{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
+      m_lblClipboardSending{new QLabel(this)},
+      m_lblClipboardReceiving{new QLabel(this)},
+      m_lblClipboardOverLimit{new QLabel(this)},
       m_btnUpdate{new QPushButton(this)},
-      m_retryTimer{new QTimer(this)}
+      m_retryTimer{new QTimer(this)},
+      m_clipboardSendingTimer{new QTimer(this)},
+      m_clipboardReceivingTimer{new QTimer(this)},
+      m_clipboardOverLimitTimer{new QTimer(this)}
 {
   static const auto btnHeight = height() - 2;
   static const auto btnSize = QSize(btnHeight, btnHeight);
@@ -37,8 +44,21 @@ StatusBar::StatusBar(QWidget *parent)
   m_lblSecurityIcon->setScaledContents(true);
   insertPermanentWidget(1, m_lblSecurityIcon);
 
+  int index = 2;
+  for (auto *label : {m_lblClipboardSending, m_lblClipboardReceiving, m_lblClipboardOverLimit}) {
+    label->setVisible(false);
+    label->setFixedSize(iconSize);
+    label->setScaledContents(true);
+    insertPermanentWidget(index++, label);
+  }
+  for (auto *timer : {m_clipboardSendingTimer, m_clipboardReceivingTimer, m_clipboardOverLimitTimer})
+    timer->setSingleShot(true);
+  connect(m_clipboardSendingTimer, &QTimer::timeout, m_lblClipboardSending, &QLabel::show);
+  connect(m_clipboardReceivingTimer, &QTimer::timeout, m_lblClipboardReceiving, &QLabel::show);
+  connect(m_clipboardOverLimitTimer, &QTimer::timeout, m_lblClipboardOverLimit, &QLabel::hide);
+
   m_lblStatus->setText(tr("%1 is not running").arg(kAppName));
-  insertPermanentWidget(2, m_lblStatus, 1);
+  insertPermanentWidget(5, m_lblStatus, 1);
 
   m_btnUpdate->setVisible(false);
   m_btnUpdate->setFlat(true);
@@ -46,7 +66,7 @@ StatusBar::StatusBar(QWidget *parent)
   m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
   m_btnUpdate->setFixedHeight(btnHeight);
   m_btnUpdate->setIconSize(iconSize);
-  insertPermanentWidget(3, m_btnUpdate);
+  insertPermanentWidget(6, m_btnUpdate);
   connect(m_btnUpdate, &QPushButton::clicked, this, &StatusBar::requestUpdateVersion);
 
   m_retryTimer->setInterval(1000);
@@ -63,6 +83,11 @@ void StatusBar::setStatus(ConnectionState connectionState, ProcessState processS
   if (m_retryTimer->isActive())
     m_retryTimer->stop();
   setSecurityIconVisible(false);
+  if (processState != ProcessState::Started || connectionState != ConnectionState::Connected) {
+    m_clipboardSendingTo.clear();
+    m_clipboardReceivingFrom.clear();
+    updateClipboardIcons();
+  }
   switch (processState) {
     using enum ProcessState;
     case Starting:
@@ -124,6 +149,13 @@ void StatusBar::setStatus(ConnectionState connectionState, ProcessState processS
 // clang-format on
 void StatusBar::setServerClients(const QStringList &clients)
 {
+  const auto disconnected = [&clients](std::pair<const QString &, qint64 &> transfer) {
+    return !clients.contains(transfer.first);
+  };
+  m_clipboardSendingTo.removeIf(disconnected);
+  m_clipboardReceivingFrom.removeIf(disconnected);
+  updateClipboardIcons();
+
   if (clients.isEmpty()) {
     m_lblStatus->setText(tr("%1 is waiting for clients").arg(kAppName));
     m_lblStatus->setToolTip("");
@@ -167,6 +199,78 @@ void StatusBar::updateFound(const QString &version)
 {
   m_btnUpdate->setVisible(true);
   m_btnUpdate->setToolTip(tr("A new version v%1 is available").arg(version));
+}
+
+void StatusBar::showClipboardSending(qint64 bytes, const QString &peer)
+{
+  m_clipboardSendingTo.insert(peer, bytes);
+  updateClipboardIcons();
+}
+
+void StatusBar::showClipboardSent(const QString &peer)
+{
+  m_clipboardSendingTo.remove(peer);
+  updateClipboardIcons();
+}
+
+void StatusBar::showClipboardReceiving(qint64 bytes, const QString &peer)
+{
+  m_clipboardReceivingFrom.insert(peer, bytes);
+  updateClipboardIcons();
+}
+
+void StatusBar::showClipboardReceived(const QString &peer)
+{
+  m_clipboardReceivingFrom.remove(peer);
+  updateClipboardIcons();
+}
+
+void StatusBar::showClipboardOverLimit(qint64 bytes, qint64 limit)
+{
+  const auto size = locale().formattedDataSize(bytes, 0, QLocale::DataSizeTraditionalFormat);
+  const auto maximum = locale().formattedDataSize(limit, 0, QLocale::DataSizeTraditionalFormat);
+  const auto icon = QIcon::fromTheme(QIcon::ThemeIcon::DialogWarning);
+  m_lblClipboardOverLimit->setPixmap(icon.pixmap(QSize(32, 32)));
+  m_lblClipboardOverLimit->setToolTip(tr("Clipboard not shared, %1 is over the %2 limit").arg(size, maximum));
+  m_lblClipboardOverLimit->setVisible(true);
+  m_clipboardOverLimitTimer->start(kClipboardNoticeTimeoutMs);
+}
+
+void StatusBar::updateClipboardIcons()
+{
+  const auto formatSize = [this](qint64 bytes) {
+    return locale().formattedDataSize(bytes, 0, QLocale::DataSizeTraditionalFormat);
+  };
+
+  QStringList sending;
+  for (const auto &[peer, bytes] : m_clipboardSendingTo.asKeyValueRange())
+    sending.append(tr("Sending clipboard to %1 (%2)...").arg(clipboardPeerName(peer), formatSize(bytes)));
+  m_lblClipboardSending->setPixmap(QIcon::fromTheme(QStringLiteral("cloud-upload")).pixmap(QSize(32, 32)));
+  m_lblClipboardSending->setToolTip(sending.join(QLatin1Char('\n')));
+  showClipboardIconAfterDelay(m_lblClipboardSending, m_clipboardSendingTimer, !sending.isEmpty());
+
+  QStringList receiving;
+  for (const auto &[peer, bytes] : m_clipboardReceivingFrom.asKeyValueRange())
+    receiving.append(tr("Receiving clipboard from %1 (%2)...").arg(clipboardPeerName(peer), formatSize(bytes)));
+  m_lblClipboardReceiving->setPixmap(QIcon::fromTheme(QStringLiteral("cloud-download")).pixmap(QSize(32, 32)));
+  m_lblClipboardReceiving->setToolTip(receiving.join(QLatin1Char('\n')));
+  showClipboardIconAfterDelay(m_lblClipboardReceiving, m_clipboardReceivingTimer, !receiving.isEmpty());
+}
+
+void StatusBar::showClipboardIconAfterDelay(QLabel *label, QTimer *delay, bool active)
+{
+  if (!active) {
+    delay->stop();
+    label->hide();
+  } else if (label->isHidden() && !delay->isActive()) {
+    delay->start(kClipboardIconDelayMs);
+  }
+}
+
+QString StatusBar::clipboardPeerName(const QString &peer)
+{
+  // an empty peer is the server, which the client's core can't name
+  return peer.isEmpty() ? Settings::value(Settings::Client::RemoteHost).toString() : peer;
 }
 
 void StatusBar::changeEvent(QEvent *e)

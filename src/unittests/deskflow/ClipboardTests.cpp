@@ -230,4 +230,62 @@ void ClipboardTests::equalClipboards()
   clipboard2.close();
 }
 
+void ClipboardTests::marshalGifAndSvg()
+{
+  const std::string gif("GIF89a\0\x01\x02", 9);
+  const std::string svg = R"(<svg xmlns="http://www.w3.org/2000/svg"/>)";
+  Clipboard source;
+  source.open(0);
+  source.add(IClipboard::Format::GIF, gif);
+  source.add(IClipboard::Format::SVG, svg);
+  source.close();
+
+  Clipboard copy;
+  copy.unmarshall(source.marshall(), 0);
+
+  copy.open(0);
+  QCOMPARE(copy.get(IClipboard::Format::GIF), gif);
+  QCOMPARE(copy.get(IClipboard::Format::SVG), svg);
+  copy.close();
+}
+
+void ClipboardTests::sourceToSend_pngAndJpeg_sendsOnlyPng()
+{
+  const auto available = [](IClipboard::Format format) {
+    return format == IClipboard::Format::PNG || format == IClipboard::Format::JPEG;
+  };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::PNG, available) == IClipboard::Format::PNG);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::JPEG, available));
+}
+
+void ClipboardTests::sourceToSend_bitmapOnly_sendsBitmapAsPng()
+{
+  const auto available = [](IClipboard::Format format) { return format == IClipboard::Format::Bitmap; };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::PNG, available) == IClipboard::Format::Bitmap);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::Bitmap, available));
+}
+
+void ClipboardTests::sourceToSend_bitmapBesideJpeg_sendsOnlyJpeg()
+{
+  const auto available = [](IClipboard::Format format) {
+    return format == IClipboard::Format::Bitmap || format == IClipboard::Format::JPEG;
+  };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::JPEG, available) == IClipboard::Format::JPEG);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::PNG, available));
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::Bitmap, available));
+}
+
+void ClipboardTests::sourceToSend_webpBesidePng_sendsOnlyPng()
+{
+  const auto available = [](IClipboard::Format format) {
+    return format == IClipboard::Format::PNG || format == IClipboard::Format::WebP;
+  };
+
+  QVERIFY(IClipboard::sourceToSend(IClipboard::Format::PNG, available) == IClipboard::Format::PNG);
+  QVERIFY(!IClipboard::sourceToSend(IClipboard::Format::WebP, available));
+}
+
 QTEST_MAIN(ClipboardTests)

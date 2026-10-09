@@ -142,6 +142,9 @@ MSWindowsComputer::~MSWindowsComputer()
 {
   assert(s_computer != nullptr);
 
+  if (m_clipboardReader.joinable()) {
+    m_clipboardReader.join();
+  }
   if (m_isEnabled) {
     disable();
   }
@@ -318,8 +321,14 @@ void MSWindowsComputer::leave()
   m_isOnComputer = false;
 }
 
-bool MSWindowsComputer::setClipboard(ClipboardID, const IClipboard *src)
+bool MSWindowsComputer::setClipboard(ClipboardID id, const IClipboard *src)
 {
+  // windows has one clipboard, so writing the selection would overwrite the clipboard
+  if (id == kClipboardSelection) {
+    LOG_DEBUG("ignoring selection, windows has no selection");
+    return true;
+  }
+
   MSWindowsClipboard dst(m_window);
   if (src != nullptr) {
     // save clipboard data
@@ -351,8 +360,7 @@ void MSWindowsComputer::checkClipboards()
   if (m_ownClipboard && !MSWindowsClipboard::isOwnedByDeskflow()) {
     LOG_DEBUG("clipboard changed: lost ownership and no notification received");
     m_ownClipboard = false;
-    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
-    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
+    startClipboardRead();
   }
 }
 
@@ -420,8 +428,13 @@ void *MSWindowsComputer::getEventTarget() const
 
 bool MSWindowsComputer::getClipboard(ClipboardID, IClipboard *dst) const
 {
-  MSWindowsClipboard src(m_window);
-  Clipboard::copy(dst, &src);
+  if (m_clipboardSnapshot && m_snapshotSequenceNumber == GetClipboardSequenceNumber()) {
+    Clipboard::copy(dst, m_clipboardSnapshot.get());
+  } else {
+    MSWindowsClipboard src(m_window);
+    Clipboard::copy(dst, &src);
+    src.logUnreadableFormats();
+  }
   return true;
 }
 
@@ -947,6 +960,11 @@ bool MSWindowsComputer::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LR
     return 0; // message processed
   }
 
+  case kClipboardReadMessage:
+    onClipboardRead();
+    *result = 0;
+    return true;
+
   case WM_DISPLAYCHANGE:
     return onDisplayChange();
 
@@ -1351,13 +1369,49 @@ void MSWindowsComputer::onClipboardChange()
   if (!MSWindowsClipboard::isOwnedByDeskflow()) {
     if (m_ownClipboard) {
       LOG_DEBUG("clipboard changed: lost ownership");
-      m_ownClipboard = false;
-      sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
-      sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
+    } else {
+      LOG_DEBUG("clipboard changed by another app");
     }
+
+    // grab on every copy, not only the first, so each one is sent straight away
+    m_ownClipboard = false;
+    startClipboardRead();
   } else if (!m_ownClipboard) {
     LOG_DEBUG("clipboard changed: %s owned", kAppId);
     m_ownClipboard = true;
+  }
+}
+
+void MSWindowsComputer::startClipboardRead()
+{
+  if (m_clipboardReader.joinable()) {
+    LOG_DEBUG("clipboard changed while reading, reading again when done");
+    return;
+  }
+
+  // a read waits for the source app to render its data, which takes seconds for a large copy
+  LOG_DEBUG("reading clipboard in the background");
+  m_readingSequenceNumber = GetClipboardSequenceNumber();
+  m_readingClipboard = std::make_unique<Clipboard>();
+  m_clipboardReader = std::thread([clipboard = m_readingClipboard.get(), window = m_window] {
+    MSWindowsClipboard src(nullptr);
+    Clipboard::copy(clipboard, &src);
+    src.logUnreadableFormats();
+    PostMessage(window, kClipboardReadMessage, 0, 0);
+  });
+}
+
+void MSWindowsComputer::onClipboardRead()
+{
+  m_clipboardReader.join();
+  if (MSWindowsClipboard::isOwnedByDeskflow()) {
+    LOG_DEBUG("discarding clipboard read, %s wrote the clipboard since", kAppId);
+  } else if (GetClipboardSequenceNumber() != m_readingSequenceNumber) {
+    startClipboardRead();
+  } else {
+    m_clipboardSnapshot = std::move(m_readingClipboard);
+    m_snapshotSequenceNumber = m_readingSequenceNumber;
+    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
   }
 }
 

@@ -691,9 +691,9 @@ void OSXComputer::hideCursor()
 
 void OSXComputer::enable()
 {
-  // watch the clipboard
-  m_clipboardTimer = m_events->newTimer(1.0, nullptr);
-  m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { checkClipboards(); });
+  if (m_isOnComputer) {
+    startClipboardPoll();
+  }
 
   m_axTimer = m_events->newTimer(1.0, nullptr);
   m_events->addHandler(EventTypes::Timer, m_axTimer, [this](const auto &) { checkAXPermissions(); });
@@ -774,11 +774,7 @@ void OSXComputer::disable()
   }
   // FIXME -- allow system to enter power saving mode
 
-  if (m_clipboardTimer != nullptr) {
-    m_events->removeHandler(EventTypes::Timer, m_clipboardTimer);
-    m_events->deleteTimer(m_clipboardTimer);
-    m_clipboardTimer = nullptr;
-  }
+  stopClipboardPoll();
 
   if (m_axTimer != nullptr) {
     m_events->removeHandler(EventTypes::Timer, m_axTimer);
@@ -793,6 +789,7 @@ void OSXComputer::enter()
 {
   m_isOnComputer = true;
   showCursor();
+  startClipboardPoll();
 
   if (m_isPrimary) {
     // re-couple the mouse to the cursor, undoing the capture from leave()
@@ -831,17 +828,47 @@ void OSXComputer::leave()
     CGAssociateMouseAndMouseCursorPosition(false);
   }
 
+  // a copy made since the last poll would otherwise wait until the pointer comes back
+  checkClipboards();
+  stopClipboardPoll();
+
   // now off computer
   m_isOnComputer = false;
 }
 
-bool OSXComputer::setClipboard(ClipboardID, const IClipboard *src)
+bool OSXComputer::setClipboard(ClipboardID id, const IClipboard *src)
 {
+  // macos has one pasteboard, so writing the selection would overwrite the clipboard
+  if (id == kClipboardSelection) {
+    LOG_DEBUG("ignoring selection, macos has no selection");
+    return true;
+  }
+
   if (src != nullptr) {
     LOG_DEBUG("setting clipboard");
     Clipboard::copy(&m_pasteboard, src);
   }
   return true;
+}
+
+void OSXComputer::startClipboardPoll()
+{
+  if (m_clipboardTimer != nullptr) {
+    return;
+  }
+
+  // macos has no clipboard change notification, so polling is the only way, and it costs power: poll only while here
+  m_clipboardTimer = m_events->newTimer(kClipboardPollSeconds, nullptr);
+  m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { checkClipboards(); });
+}
+
+void OSXComputer::stopClipboardPoll()
+{
+  if (m_clipboardTimer != nullptr) {
+    m_events->removeHandler(EventTypes::Timer, m_clipboardTimer);
+    m_events->deleteTimer(m_clipboardTimer);
+    m_clipboardTimer = nullptr;
+  }
 }
 
 void OSXComputer::checkClipboards()
@@ -850,7 +877,6 @@ void OSXComputer::checkClipboards()
   if (m_pasteboard.synchronize()) {
     LOG_DEBUG("clipboard changed");
     sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
-    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
   }
 }
 
