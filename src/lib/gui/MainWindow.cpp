@@ -274,6 +274,7 @@ void MainWindow::connectSlots()
 
   connect(&m_coreProcess, &CoreProcess::connectedClientsChanged, this, &MainWindow::serverClientsChanged);
   connect(&m_coreProcess, &CoreProcess::unrecognisedClient, this, &MainWindow::handleUnrecognisedClient);
+  connect(&m_coreProcess, &CoreProcess::missingClientCertificate, this, &MainWindow::handleMissingClientCertificate);
   connect(&m_coreProcess, &CoreProcess::connectionRefused, this, &MainWindow::handleConnectionRefused);
   connect(&m_coreProcess, &CoreProcess::retryIn, this, &MainWindow::updateTimeoutDelay);
   connect(&m_coreProcess, &CoreProcess::peerFingerprint, this, &MainWindow::handlePeerFingerprint);
@@ -792,6 +793,21 @@ void MainWindow::handleUnrecognisedClient(const QString &clientName)
   }
 
   m_newClientPromptShowing = false;
+}
+
+void MainWindow::handleMissingClientCertificate(const QString &clientAddress)
+{
+  // The client retries every few seconds, so only show this once per address.
+  if (m_warnedMissingCertificateClients.contains(clientAddress)) {
+    qDebug("already warned about client without tls certificate: %s", qPrintable(clientAddress));
+    return;
+  }
+
+  m_warnedMissingCertificateClients.insert(clientAddress);
+  showAndActivate();
+  if (deskflow::gui::messages::showMissingClientCertificate(this, clientAddress)) {
+    openSettings();
+  }
 }
 
 void MainWindow::handleConnectionRefused(deskflow::core::ConnectionRefusal reason)
