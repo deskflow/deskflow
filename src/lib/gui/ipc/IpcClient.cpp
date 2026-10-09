@@ -198,6 +198,8 @@ void IpcClient::handleHandshakeMessage(const QStringList &parts)
   }
 
   if (parts.at(0) != QStringLiteral("hello")) {
+    qDebug().noquote(
+    ) << QStringLiteral("%1 ipc client dropped message during handshake: %2").arg(m_typeName, parts.join('='));
     return;
   }
 

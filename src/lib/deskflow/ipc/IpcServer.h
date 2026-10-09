@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include <QHash>
 #include <QObject>
 #include <QSet>
+#include <QStringList>
 
 class QLocalServer;
 class QLocalSocket;
@@ -19,7 +21,9 @@ class IpcServer : public QObject
   Q_OBJECT
 
 public:
-  explicit IpcServer(QObject *parent, const QString &serverName, const QString &typeName);
+  explicit IpcServer(
+      QObject *parent, const QString &serverName, const QString &typeName, const QStringList &stateCommands = {}
+  );
   ~IpcServer() override;
 
   void listen();
@@ -50,9 +54,11 @@ private:
   void handleErrorOccurred();
 
   QLocalServer *m_server;
-  QSet<QLocalSocket *> m_clients;
+  QSet<QLocalSocket *> m_handshakenClients;
   QString m_serverName;
   QStringList m_pendingMessages;
+  QStringList m_stateCommands;
+  QHash<QString, QString> m_latestState;
   QByteArray m_typeName;
 };
 
