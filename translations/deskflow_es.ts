@@ -843,6 +843,22 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">Un nuevo cliente llamado &apos;%1&apos; quiere conectarse</translation>
     </message>
     <message>
+        <source>%1 - Client Refused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;The computer at %1 tried to connect without a TLS certificate, so it was refused.&lt;/p&gt;&lt;p&gt;It may be running an older version that can&apos;t send one.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Cerca</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished">Preferencias</translation>
+    </message>
+    <message>
         <source>No thanks</source>
         <translation type="unfinished">No, gracias</translation>
     </message>

@@ -90,6 +90,7 @@ Q_SIGNALS:
   void connectedClientsChanged(const QStringList &clients);
   void securityLevelChanged(QString securityLevel);
   void unrecognisedClient(const QString &clientName);
+  void missingClientCertificate(const QString &clientAddress);
   void connectionRefused(deskflow::core::ConnectionRefusal reason);
   void retryIn(int seconds);
   void peerFingerprint(const QString &fingerprint);
