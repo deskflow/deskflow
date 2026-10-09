@@ -532,7 +532,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation type="unfinished">유효하지 않은 인증서입니다. 새 인증서를 생성하는 중입니다</translation>
+        <translation type="obsolete">유효하지 않은 인증서입니다. 새 인증서를 생성하는 중입니다</translation>
     </message>
     <message>
         <source>Address missing</source>
