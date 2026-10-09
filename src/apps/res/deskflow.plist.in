@@ -45,6 +45,16 @@
 	<key>com.apple.security.networking.local</key>
 	<true/>
 
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Deskflow reads the current browser tab when you choose to send it to another computer.</string>
+	<key>NSServices</key>
+	<array><dict>
+		<key>NSMenuItem</key><dict><key>default</key><string>Send to computer…</string></dict>
+		<key>NSMessage</key><string>sendToComputer</string>
+		<key>NSPortName</key><string>Deskflow</string>
+		<key>NSSendTypes</key><array><string>NSFilenamesPboardType</string><string>public.file-url</string><string>public.url</string></array>
+	</dict></array>
+
 	<!-- Accessibility Entitlements -->
 	<key>com.apple.security.accessibility</key>
 	<array>

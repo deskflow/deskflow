@@ -365,6 +365,11 @@ bool Server::isLockedToComputerServer() const
 
 bool Server::isLockedToComputer() const
 {
+  // Dragging must stay on its computer even when scroll-lock locking is disabled.
+  if (m_primaryClient->isLockedToComputer()) {
+    return true;
+  }
+
   if (m_disableLockToComputer) {
     return false;
   }
@@ -374,11 +379,6 @@ bool Server::isLockedToComputer() const
     if (!m_defaultLockToComputerState) {
       LOG_INFO("cursor is locked to computer, check scroll lock key");
     }
-    return true;
-  }
-
-  // locked if primary says we're locked
-  if (m_primaryClient->isLockedToComputer()) {
     return true;
   }
 

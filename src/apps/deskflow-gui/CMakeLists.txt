@@ -31,7 +31,7 @@ elseif(BUILD_OSX_BUNDLE)
     @ONLY
   )
 
-  set(platform_extra ../res/Deskflow.icns)
+  set(platform_extra ../res/Deskflow.icns ../res/deskflow.entitlements)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 

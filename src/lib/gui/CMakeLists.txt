@@ -10,6 +10,10 @@ if(APPLE)
   set (platform_sources
     OSXHelpers.h
     OSXHelpers.mm
+    handoff/Native.mm
+    handoff/Native.h
+    handoff/SendTo.cpp
+    handoff/SendTo.h
   )
 endif()
 
@@ -124,3 +128,10 @@ target_link_libraries(${target}
     net
     Qt6::Widgets
 )
+
+if(APPLE)
+  add_library(handoff STATIC handoff/Transfer.cpp handoff/Transfer.h)
+  target_link_libraries(handoff PUBLIC Qt6::Core)
+  target_include_directories(handoff PUBLIC ${CMAKE_SOURCE_DIR}/src/lib)
+  target_link_libraries(gui PRIVATE handoff)
+endif()

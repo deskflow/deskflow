@@ -1393,6 +1393,69 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     </message>
 </context>
 <context>
+    <name>deskflow::handoff::SendTo</name>
+    <message>
+        <source>Send files to computer…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send current window to computer…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not send window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send to computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer (SSH alias or user@hostname):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The other Mac needs this build in /Applications/Deskflow.app, Remote Login, and SSH key login. Connect once in Terminal to verify its host key. Files are copied to Downloads; the originals stay here. Save documents before sending.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use an SSH host alias or user@hostname.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sending to %1…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sent to %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not send</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>i18n</name>
     <message>
         <source>LocalizedName</source>

@@ -16,7 +16,15 @@ if (OSX_BUNDLE)
   install(CODE "execute_process(COMMAND
     ${DEPLOYQT}
     \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
+    \"-executable=\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app/Contents/MacOS/deskflow-handoff\"
     -hardened-runtime -timestamp \"-codesign=${_codesign_identity}\"
+  )")
+  install(CODE "execute_process(COMMAND
+    /usr/bin/codesign --force --options runtime --timestamp
+    --entitlements \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app/Contents/Resources/deskflow.entitlements\"
+    --sign \"${_codesign_identity}\"
+    \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
+    COMMAND_ERROR_IS_FATAL ANY
   )")
   set(CPACK_PACKAGE_ICON "${MY_DIR}/dmg-volume.icns")
   set(CPACK_DMG_BACKGROUND_IMAGE "${MY_DIR}/dmg-background.tiff")

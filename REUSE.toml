@@ -27,6 +27,7 @@ path = [
  , "src/apps/res/manpage.txt"
  , "src/apps/res/deskflow.plist.in"
  , "src/apps/res/entitlements-dev.plist"
+ , "src/apps/res/deskflow.entitlements"
  , "translations/*.ts"
 ]
 SPDX-FileCopyrightText = "Deskflow Developers"

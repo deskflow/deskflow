@@ -14,6 +14,7 @@ add_custom_target(docs ALL
     Security.md
     HelpMain.md
     Configuration.md
+    Handoff.md
     Issues.md
 )
 
@@ -22,6 +23,7 @@ install(
     Readme.md
     HelpMain.md
     Configuration.md
+    Handoff.md
     Issues.md
     Security.md
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
@@ -33,6 +35,9 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_CURRENT_SOURCE_DIR}/HelpMain.md
       ${CMAKE_CURRENT_BINARY_DIR}/HelpMain.md
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${CMAKE_CURRENT_SOURCE_DIR}/Handoff.md
+      ${CMAKE_CURRENT_BINARY_DIR}/Handoff.md
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_CURRENT_SOURCE_DIR}/Configuration.md
       ${CMAKE_CURRENT_BINARY_DIR}/Configuration.md

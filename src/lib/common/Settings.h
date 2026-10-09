@@ -72,6 +72,7 @@ public:
   };
   struct Gui
   {
+    inline static const auto HandoffDestinations = QStringLiteral("gui/handoffDestinations");
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoStartCore = QStringLiteral("gui/startCoreWithGui");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
@@ -302,6 +303,7 @@ private:
     , Log::Level
     , Log::ToFile
     , Log::GuiDebug
+    , Gui::HandoffDestinations
     , Gui::Autohide
     , Gui::AutoStartCore
     , Gui::AutoUpdateCheck

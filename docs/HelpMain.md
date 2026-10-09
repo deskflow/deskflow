@@ -6,6 +6,7 @@ Welcome to the Deskflow Help!
 
 ## User Guides
 * [Configuration] - Configuration files
+* [Send to another Mac](Handoff.md) - Send files, saved documents and browser tabs
 * [Raising Issues] - What to do if you have found an issue.
 * [Security Policy] - Our policy around security related topics
 

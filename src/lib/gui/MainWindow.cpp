@@ -8,6 +8,10 @@
  */
 
 #include "MainWindow.h"
+
+#ifdef Q_OS_MACOS
+#include "handoff/SendTo.h"
+#endif
 #include "ui_MainWindow.h"
 
 #include "Diagnostic.h"
@@ -690,6 +694,9 @@ void MainWindow::setupTrayIcon()
   trayMenu->insertSeparator(m_actionMinimize);
   trayMenu->insertSeparator(m_actionTrayQuit);
   m_trayIcon->setContextMenu(trayMenu);
+#ifdef Q_OS_MACOS
+  new deskflow::handoff::SendTo(this, m_serverConfig, m_menuFile, trayMenu);
+#endif
 
   setTrayIcon();
   m_trayIcon->show();

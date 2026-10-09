@@ -10,3 +10,12 @@ create_test(
   SOURCE LoggerTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
 )
+
+if(APPLE)
+  create_test(
+    NAME HandoffTests
+    DEPENDS handoff
+    SOURCE HandoffTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
+  )
+endif()
