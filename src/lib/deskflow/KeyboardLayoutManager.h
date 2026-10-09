@@ -7,6 +7,7 @@
 #pragma once
 
 #include "deskflow/AppUtil.h"
+#include <string_view>
 #include <vector>
 
 namespace deskflow {
@@ -17,6 +18,10 @@ class KeyboardLayoutManager
   std::vector<std::string> m_localLayouts;
 
 public:
+  // Return the two-letter primary language subtag used by the wire protocol,
+  // or an empty string if the language cannot be represented.
+  static std::string normalizeLanguageCode(std::string_view language);
+
   explicit KeyboardLayoutManager(
       const std::vector<std::string> &localLayouts = AppUtil::instance().getKeyboardLayoutList()
   );
