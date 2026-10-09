@@ -357,6 +357,11 @@ void MainWindow::settingsChanged(const QString &key)
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
     if (TlsUtility::isEnabled()) {
+      const auto keySize = Settings::value(Settings::Security::KeySize).toInt();
+      if (key == Settings::Security::KeySize && TlsUtility::getCertKeyLength() != keySize) {
+        qInfo("tls key size changed, regenerating certificate: %d bits", keySize);
+        TlsUtility::generateCertificate();
+      }
       generateCertificate();
     }
     updateSecurityIcon(m_statusBar->securityIconVisible());
