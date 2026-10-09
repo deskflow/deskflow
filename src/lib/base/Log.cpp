@@ -11,10 +11,12 @@
 #include "common/Constants.h"
 #include "common/LogLevel.h"
 
+#include <cerrno>
 #include <cstdarg>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 #if HAVE_FORMAT
 #include <format>
@@ -143,7 +145,6 @@ Log *Log::getInstance()
 void Log::print(const char *file, int line, const char *fmt, ...)
 {
   const int initBufferSize = 1024;
-  const int bufferResizeScale = 2;
 
   const auto priority = getPriority(fmt);
   fmt += kPriorityPrefixLength;
@@ -153,17 +154,25 @@ void Log::print(const char *file, int line, const char *fmt, ...)
   }
 
   std::vector<char> buffer(initBufferSize);
-  auto length = static_cast<int>(buffer.size());
 
   while (true) {
     va_list args;
     va_start(args, fmt);
-    int n = vsnprintf(buffer.data(), length, fmt, args);
+    errno = 0;
+    const int n = vsnprintf(buffer.data(), buffer.size(), fmt, args);
+    const int formatError = errno;
     va_end(args);
 
-    if (n < 0 || n > length) {
-      length *= bufferResizeScale;
-      buffer.resize(length);
+    // A negative result is a formatting/encoding error, not a small buffer.
+    // Retrying it with ever larger buffers can overflow and throw "vector too long".
+    if (n < 0) {
+      throw std::runtime_error(
+          "log formatting failed: vsnprintf returned a negative result, errno=" + std::to_string(formatError)
+      );
+    }
+
+    if (static_cast<size_t>(n) >= buffer.size()) {
+      buffer.resize(static_cast<size_t>(n) + 1); // Include the terminating NUL.
     } else {
       break;
     }
