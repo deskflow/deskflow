@@ -156,9 +156,8 @@ void SettingsDialog::regenCertificates()
 
 void SettingsDialog::browseCertificatePath()
 {
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Select a TLS certificate to use..."), ui->lineTlsCertPath->text(), "Cert (*.pem)", nullptr,
-      QFileDialog::DontConfirmOverwrite
+  QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Select a TLS certificate to use..."), ui->lineTlsCertPath->text(), "Cert (*.pem)"
   );
 
   if (!fileName.isEmpty()) {
@@ -166,6 +165,7 @@ void SettingsDialog::browseCertificatePath()
 
     if (QFile(fileName).exists()) {
       updateKeyLengthOnFile(fileName);
+      ui->comboTlsKeyLength->setCurrentText(QString::number(TlsUtility::getCertKeyLength(fileName)));
     } else {
       qDebug("no tls certificate file at: %s", qUtf8Printable(fileName));
     }

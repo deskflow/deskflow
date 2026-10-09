@@ -676,7 +676,7 @@ Nomi validi:
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation type="unfinished">certificato non valido, ne viene generato uno nuovo</translation>
+        <translation type="obsolete">certificato non valido, ne viene generato uno nuovo</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
