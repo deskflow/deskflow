@@ -15,6 +15,7 @@
 #include "deskflow/App.h"
 #include "deskflow/IComputer.h"
 #include "deskflow/OptionTypes.h"
+#include "deskflow/ShapeHole.h"
 #include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
@@ -26,6 +27,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <unistd.h>
 #include <vector>
 
@@ -94,6 +96,7 @@ EiComputer::~EiComputer()
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
 
   cancelIdleEmulationTimer();
+  cancelShapeSettleTimer();
 
   cleanupEi();
 
@@ -213,6 +216,13 @@ void EiComputer::reconfigure(uint32_t activeSides)
   const static auto sidesText = sidesMaskToString(activeSides);
   LOG_DEBUG("active sides: %s (0x%02x)", sidesText.c_str(), activeSides);
   m_activeSides = activeSides;
+
+  // pointer barriers are otherwise only recomputed when the portal itself
+  // reports a zone change, so a change here (e.g. a new neighbor linked to a
+  // shape hole) needs to explicitly trigger a refresh
+  if (m_portalInputCapture) {
+    m_portalInputCapture->refreshPointerBarriers();
+  }
 }
 
 std::uint32_t EiComputer::activeSides()
@@ -411,6 +421,15 @@ void EiComputer::cancelIdleEmulationTimer() const
   }
 }
 
+void EiComputer::cancelShapeSettleTimer()
+{
+  if (m_shapeSettleTimer) {
+    m_events->removeHandler(EventTypes::Timer, m_shapeSettleTimer);
+    m_events->deleteTimer(m_shapeSettleTimer);
+    m_shapeSettleTimer = nullptr;
+  }
+}
+
 void EiComputer::ensureEmulating() const
 {
   if (m_isPrimary || !m_isOnComputer)
@@ -561,15 +580,22 @@ void EiComputer::updateShape()
   std::uint32_t newX = std::numeric_limits<uint32_t>::max();
   std::uint32_t newY = std::numeric_limits<uint32_t>::max();
   bool foundRegion = false;
+  std::vector<Rect> regions;
   for (auto it = m_eiDevices.begin(); it != m_eiDevices.end(); it++) {
     auto idx = 0;
     struct ei_region *r;
     while ((r = ei_device_get_region(*it, idx++)) != nullptr) {
       foundRegion = true;
-      newX = std::min(ei_region_get_x(r), newX);
-      newY = std::min(ei_region_get_y(r), newY);
-      newW = std::max(ei_region_get_x(r) + ei_region_get_width(r), newW);
-      newH = std::max(ei_region_get_y(r) + ei_region_get_height(r), newH);
+      const auto rx = ei_region_get_x(r);
+      const auto ry = ei_region_get_y(r);
+      const auto rw = ei_region_get_width(r);
+      const auto rh = ei_region_get_height(r);
+      regions.push_back({static_cast<int64_t>(rx), static_cast<int64_t>(ry), static_cast<int64_t>(rw),
+                          static_cast<int64_t>(rh)});
+      newX = std::min(rx, newX);
+      newY = std::min(ry, newY);
+      newW = std::max(rx + rw, newW);
+      newH = std::max(ry + rh, newH);
     }
   }
 
@@ -596,9 +622,40 @@ void EiComputer::updateShape()
   m_w = newW;
   m_h = newH;
 
-  if (changed) {
-    sendEvent(EventTypes::ComputerShapeChanged, nullptr);
+  // unlike m_w/m_h above, this is a true width/height (newW/newH are each the
+  // max of a region's own x/y + width/height, i.e. an absolute right/bottom
+  // edge, not a width in their own right -- findShapeHoles() needs an actual
+  // width to compare region extents against)
+  const Rect bounds{
+      static_cast<int64_t>(newX), static_cast<int64_t>(newY), static_cast<int64_t>(newW) - static_cast<int64_t>(newX),
+      static_cast<int64_t>(newH) - static_cast<int64_t>(newY)
+  };
+  m_shapeHoles = findShapeHoles(regions, bounds);
+  for (const auto &hole : m_shapeHoles) {
+    LOG_DEBUG(
+        "logical output has a %s hole: %dx%d@%d,%d", toString(hole.location), static_cast<int32_t>(hole.rect.w),
+        static_cast<int32_t>(hole.rect.h), static_cast<int32_t>(hole.rect.x), static_cast<int32_t>(hole.rect.y)
+    );
   }
+
+  // devices (monitors) are reported one EI_EVENT_DEVICE_ADDED at a time, so
+  // this may be one of several incremental updates in quick succession as
+  // each one arrives; debounce them into a single notification once the
+  // layout has gone quiet, rather than firing (and reacting to) every
+  // incomplete intermediate state
+  if (changed) {
+    cancelShapeSettleTimer();
+    m_shapeSettleTimer = m_events->newOneShotTimer(s_shapeSettleTimeout, nullptr);
+    m_events->addHandler(EventTypes::Timer, m_shapeSettleTimer, [this](const auto &) {
+      cancelShapeSettleTimer();
+      sendEvent(EventTypes::ComputerShapeChanged, nullptr);
+    });
+  }
+}
+
+std::vector<deskflow::ShapeHole> EiComputer::getShapeHoles() const
+{
+  return m_shapeHoles;
 }
 
 void EiComputer::addDevice(struct ei_device *device)
