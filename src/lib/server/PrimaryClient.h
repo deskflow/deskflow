@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include "deskflow/ShapeHole.h"
 #include "server/BaseClientProxy.h"
+
+#include <vector>
 
 namespace deskflow {
 class Computer;
@@ -83,6 +86,15 @@ public:
   the edges of the computer, typically the center.
   */
   void getCursorCenter(int32_t &x, int32_t &y) const;
+
+  //! Get the shape holes
+  /*!
+  Returns every rectangular hole in the primary computer's bounding shape
+  where no screen actually exists (e.g. the missing corner of an L-shaped,
+  or the two gaps either side of the stem of a T-shaped, monitor
+  arrangement), or an empty list if there are none.
+  */
+  std::vector<deskflow::ShapeHole> getShapeHoles() const;
 
   //! Get toggle key state
   /*!
