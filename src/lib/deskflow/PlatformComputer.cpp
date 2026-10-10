@@ -26,6 +26,13 @@ void PlatformComputer::updateKeyState()
   updateButtons();
 }
 
+std::vector<deskflow::ShapeHole> PlatformComputer::getShapeHoles() const
+{
+  // most computers are a single rectangle with no holes; platforms that can
+  // report an irregular (e.g. L- or T-shaped) arrangement override this
+  return {};
+}
+
 void PlatformComputer::setHalfDuplexMask(KeyModifierMask mask)
 {
   getKeyState()->setHalfDuplexMask(mask);
