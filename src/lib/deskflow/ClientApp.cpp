@@ -116,7 +116,12 @@ deskflow::Computer *ClientApp::createComputer()
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("detected wayland platform");
-    return new deskflow::Computer(new deskflow::EiComputer(false, getEvents(), true), getEvents());
+    // Compositors without the RemoteDesktop portal (e.g. niri) can still
+    // work through an external EIS socket (see EiComputer::externalEisSocket).
+    const auto eisSocket = deskflow::EiComputer::externalEisSocket();
+    if (!eisSocket.empty())
+      LOG_INFO("external eis socket found, bypassing remote desktop portal: %s", eisSocket.c_str());
+    return new deskflow::Computer(new deskflow::EiComputer(false, getEvents(), eisSocket.empty()), getEvents());
 #else
     throw XNoEiSupport();
 #endif
