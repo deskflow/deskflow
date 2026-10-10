@@ -630,13 +630,25 @@ void EiComputer::updateShape()
       static_cast<int64_t>(newX), static_cast<int64_t>(newY), static_cast<int64_t>(newW) - static_cast<int64_t>(newX),
       static_cast<int64_t>(newH) - static_cast<int64_t>(newY)
   };
-  m_shapeHoles = findShapeHoles(regions, bounds);
-  for (const auto &hole : m_shapeHoles) {
-    LOG_DEBUG(
-        "logical output has a %s hole: %dx%d@%d,%d", toString(hole.location), static_cast<int32_t>(hole.rect.w),
-        static_cast<int32_t>(hole.rect.h), static_cast<int32_t>(hole.rect.x), static_cast<int32_t>(hole.rect.y)
-    );
+  const auto newShapeHoles = findShapeHoles(regions, bounds);
+
+  // user-facing: what's switchable via a "<location> = <computer>" link, and
+  // where. logged only when the set actually changes so it isn't repeated on
+  // every incremental settle
+  if (newShapeHoles != m_shapeHoles) {
+    if (newShapeHoles.empty()) {
+      LOG_INFO("monitor layout has no shape holes (it's a plain rectangle)");
+    } else {
+      for (const auto &hole : newShapeHoles) {
+        LOG_INFO(
+            "logical output has a %s hole: %dx%d@%d,%d", toString(hole.location),
+            static_cast<int32_t>(hole.rect.w), static_cast<int32_t>(hole.rect.h), static_cast<int32_t>(hole.rect.x),
+            static_cast<int32_t>(hole.rect.y)
+        );
+      }
+    }
   }
+  m_shapeHoles = newShapeHoles;
 
   // devices (monitors) are reported one EI_EVENT_DEVICE_ADDED at a time, so
   // this may be one of several incremental updates in quick succession as
