@@ -1,0 +1,10 @@
+<map id="src/lib/deskflow/KeyTypes.cpp" name="src/lib/deskflow/KeyTypes.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="50,5,249,30"/>
+<area shape="rect" id="Node000002" href="$KeyTypes_8h.html" title=" " alt="" coords="77,78,222,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,28,152,63,147,62,149,33"/>
+<area shape="rect" id="Node000003" href="$KeyModifierID_8h.html" title=" " alt="" coords="5,151,174,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,101,111,141,107,137,138,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="118,223,181,248"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="160,100,176,123,188,150,190,167,186,183,171,213,167,209,181,181,184,166,183,151,171,125,158,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="101,173,133,211,127,212,98,178"/>
+</map>

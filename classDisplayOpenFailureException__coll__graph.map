@@ -1,0 +1,9 @@
+<map id="DisplayOpenFailureException" name="DisplayOpenFailureException">
+<area shape="rect" id="Node000001" title="DisplayOpenFailureException &#45; Thrown when a computer cannot be opened or initialized." alt="" coords="5,223,198,248"/>
+<area shape="rect" id="Node000002" href="$classDisplayException.html" title="The DisplayException class, generic screen exception." alt="" coords="40,151,163,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,189,104,224,99,222,100,193"/>
+<area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="47,78,156,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,116,104,151,99,150,100,121"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="40,5,163,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="102,43,104,78,99,77,101,48"/>
+</map>

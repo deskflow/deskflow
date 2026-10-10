@@ -1,0 +1,9 @@
+<map id="src/lib/gui/widgets/StatusBar.h" name="src/lib/gui/widgets/StatusBar.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="52,5,178,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,95,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,47,72,82,67,78,101,42"/>
+<area shape="rect" id="Node000003" href="$Enums_8h.html" title=" " alt="" coords="118,92,246,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="132,42,165,80,159,80,131,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="147,165,217,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="184,115,184,150,180,148,180,119"/>
+</map>
