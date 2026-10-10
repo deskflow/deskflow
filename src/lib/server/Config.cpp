@@ -190,6 +190,25 @@ bool Config::disconnect(const std::string &srcName, Direction srcSide, float pos
   return true;
 }
 
+bool Config::addHoleLink(const std::string &srcName, deskflow::HoleLocation location, const std::string &dstName)
+{
+  if (!isComputer(srcName) || !isComputer(dstName)) {
+    return false;
+  }
+
+  m_holeLinks[getCanonicalName(srcName)].push_back({location, dstName});
+  return true;
+}
+
+std::vector<Config::HoleLink> Config::getHoleLinks(const std::string &srcName) const
+{
+  const auto index = m_holeLinks.find(getCanonicalName(srcName));
+  if (index == m_holeLinks.end()) {
+    return {};
+  }
+  return index->second;
+}
+
 void Config::setDeskflowAddress(const NetworkAddress &addr)
 {
   m_deskflowAddress = addr;
@@ -439,6 +458,11 @@ bool Config::operator==(const Config &x) const
     return false;
   }
 
+  // compare hole links
+  if (m_holeLinks != x.m_holeLinks) {
+    return false;
+  }
+
   return true;
 }
 
@@ -685,7 +709,14 @@ void Config::readSectionLinks(ConfigReadContext &s)
       Interval srcInterval(s.parseInterval(srcArgs));
       Interval dstInterval(s.parseInterval(dstArgs));
 
-      // handle argument
+      if (!isComputer(dstComputer)) {
+        throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", dstComputer);
+      }
+
+      // handle argument: either a direction (left/right/up/down), linking a
+      // whole edge or an interval of one, or the name of a shape hole (e.g.
+      // "bottom-right"), linking that whole hole once its actual position is
+      // known at runtime
       using enum Direction;
       Direction dir;
       if (side == "left") {
@@ -696,12 +727,12 @@ void Config::readSectionLinks(ConfigReadContext &s)
         dir = Top;
       } else if (side == "down") {
         dir = Bottom;
+      } else if (const auto location = deskflow::parseHoleLocation(side); location.has_value()) {
+        addHoleLink(computer, *location, dstComputer);
+        continue;
       } else {
         // unknown argument
         throw ServerConfigReadException(s, "unknown side \"%{1}\" in link", side);
-      }
-      if (!isComputer(dstComputer)) {
-        throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", dstComputer);
       }
       if (!connect(
               computer, dir, srcInterval.first, srcInterval.second, dstComputer, dstInterval.first, dstInterval.second
