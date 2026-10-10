@@ -10,6 +10,9 @@
 
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
+#include "deskflow/ShapeHole.h"
+
+#include <vector>
 
 //! Primary comptuer interface
 /*!
@@ -172,6 +175,17 @@ public:
   the edges of the comptuer, typically the center.
   */
   virtual void getCursorCenter(int32_t &x, int32_t &y) const = 0;
+
+  //! Get the shape holes
+  /*!
+  Some computers are made up of several physical screens that don't form a
+  perfect rectangle (e.g. three monitors arranged in an L, or four arranged
+  in a T).  getShape() always reports the bounding rectangle of the whole
+  arrangement, so this returns every rectangular hole within that bounding
+  rectangle where no screen actually exists (see deskflow::ShapeHole), or
+  an empty list if the computer's shape has no such holes.
+  */
+  virtual std::vector<deskflow::ShapeHole> getShapeHoles() const = 0;
 
   //@}
 };
