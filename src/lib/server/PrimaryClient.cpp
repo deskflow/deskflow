@@ -59,6 +59,11 @@ void PrimaryClient::getCursorCenter(int32_t &x, int32_t &y) const
   m_computer->getCursorCenter(x, y);
 }
 
+std::vector<deskflow::ShapeHole> PrimaryClient::getShapeHoles() const
+{
+  return m_computer->getShapeHoles();
+}
+
 KeyModifierMask PrimaryClient::getToggleMask() const
 {
   return m_computer->pollActiveModifiers();
