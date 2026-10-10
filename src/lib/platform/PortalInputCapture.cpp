@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <optional>
 #include <poll.h>
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
@@ -874,13 +875,14 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   m_zoneUnionRight = unionRight;
   m_zoneUnionBottom = unionBottom;
 
-  // true if some zone *other* than zoneRects[selfIndex] also has an edge of the
-  // same orientation at `line` (e.g. another monitor's bottom edge at the same y
-  // as this one). The portal requires a barrier to be unambiguously "within one
-  // zone"; if two zones share the exact same edge coordinate, a barrier placed
-  // there -- however narrow -- is liable to be rejected, since the compositor
-  // can't tell which zone it belongs to.
-  const auto otherZoneSharesEdge = [&zoneRects](std::size_t selfIndex, bool vertical, gint line) {
+  // the OTHER zone (if any) that also has an edge of the same orientation at
+  // `line` (e.g. another monitor's bottom edge at the same y as this one).
+  // The portal requires a barrier to be unambiguously "within one zone"; if
+  // two zones share the exact same edge coordinate, a barrier placed there --
+  // however narrow -- is liable to be rejected, since the compositor can't
+  // tell which zone it belongs to.
+  const auto otherZoneSharingEdge = [&zoneRects](std::size_t selfIndex, bool vertical,
+                                                  gint line) -> std::optional<ZoneRect> {
     for (std::size_t i = 0; i < zoneRects.size(); ++i) {
       if (i == selfIndex) {
         continue;
@@ -888,29 +890,39 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
       const auto &z = zoneRects[i];
       if (vertical ? (z.x == line || z.x + static_cast<gint>(z.w) == line)
                    : (z.y == line || z.y + static_cast<gint>(z.h) == line)) {
-        return true;
+        return z;
       }
     }
-    return false;
+    return std::nullopt;
   };
 
   // warn when a hole-adjacent barrier's edge coincides with another monitor's
   // edge, since that's the one geometry the portal has been observed to reject
-  // outright (see the comment above) with no way to route around it in software
-  const auto warnIfSharedEdge = [this, &otherZoneSharesEdge](
+  // outright (see the comment above) with no way to route around it in
+  // software. named clearly enough for a non-technical user to act on, and
+  // only logged once per (hole, side) for the life of the session -- this is
+  // re-evaluated every time handleZonesChanged() runs, which happens far more
+  // often than the monitor layout actually changes
+  const auto warnIfSharedEdge = [this, &otherZoneSharingEdge, &zoneRects](
                                      std::size_t zoneIndex, BarrierSide side, bool vertical, gint line,
                                      deskflow::HoleLocation location
                                  ) {
-    if (!otherZoneSharesEdge(zoneIndex, vertical, line)) {
+    const auto other = otherZoneSharingEdge(zoneIndex, vertical, line);
+    if (!other.has_value()) {
       return;
     }
+    if (!m_warnedSharedEdges.insert({location, side}).second) {
+      return; // already warned about this one this session
+    }
+    const auto &zone = zoneRects[zoneIndex];
     const char axis = vertical ? 'x' : 'y';
-    LOG_WARN(
-        "the %s side of the \"%s\" hole sits at %c=%d, which another monitor's edge also sits at -- the display "
-        "server is likely to reject a pointer barrier there (watch for \"failed to apply barrier\" below), "
-        "breaking switching through that side of the hole. If so, try nudging your monitors' positions by a few "
-        "pixels so no two share that exact %c coordinate.",
-        barrierSideName(side), deskflow::toString(location), axis, line, axis
+    LOG_INFO(
+        "the monitor at %dx%d@%d,%d and the monitor at %dx%d@%d,%d are aligned exactly on %c=%d -- DeskFlow can't "
+        "switch through the \"%s\" side of the \"%s\" hole there, because the display server can't tell which "
+        "monitor's edge a switching boundary placed at that exact pixel belongs to. Moving either monitor by a "
+        "single pixel so they no longer share that %c coordinate will fix it.",
+        zone.w, zone.h, zone.x, zone.y, other->w, other->h, other->x, other->y, axis, line, barrierSideName(side),
+        deskflow::toString(location), axis
     );
   };
 
