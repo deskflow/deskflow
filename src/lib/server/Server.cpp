@@ -17,6 +17,7 @@
 #include "deskflow/OptionTypes.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
+#include "deskflow/ShapeHole.h"
 #include "deskflow/StreamChunker.h"
 #include "deskflow/ipc/CoreIpc.h"
 #include "net/TCPSocket.h"
@@ -33,6 +34,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <optional>
 
 using namespace deskflow::server;
 
@@ -626,11 +628,41 @@ BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, Direction dir, 
   }
 }
 
+namespace {
+
+// the side of the destination computer that's entered when leaving the
+// source computer via `side`
+Direction oppositeDirection(Direction side)
+{
+  using enum Direction;
+  switch (side) {
+  case Left:
+    return Right;
+  case Right:
+    return Left;
+  case Top:
+    return Bottom;
+  case Bottom:
+    return Top;
+  case NoDirection:
+    break;
+  }
+  return NoDirection;
+}
+
+} // namespace
+
 BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, int32_t &x, int32_t &y) const
 {
   // note -- must be locked on entry
 
   assert(src != nullptr);
+
+  // getNeighbor() remaps x (for Top/Bottom) or y (for Left/Right) into the
+  // destination's coordinate space, so keep the originals for testing
+  // against the source's own shape hole below
+  const int32_t origX = x;
+  const int32_t origY = y;
 
   // get the first neighbor
   BaseClientProxy *dst = getNeighbor(src, srcSide, x, y);
@@ -646,6 +678,11 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
   BaseClientProxy *lastGoodComputer = src;
   lastGoodComputer->getShape(dx, dy, dw, dh);
 
+  // if we're leaving through the inner edge of a shape hole (e.g. the
+  // missing corner of an L-shaped monitor arrangement), the source's
+  // effective size at this position is smaller than its full bounding box
+  adjustForShapeHole(src, srcSide, origX, origY, dx, dy, dw, dh);
+
   // find destination computer, adjusting x or y (but not both).  the
   // searches are done in a sort of canonical computer space where
   // the upper-left corner is 0,0 for each computer.  we adjust from
@@ -658,6 +695,14 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
     while (dst != nullptr) {
       lastGoodComputer = dst;
       lastGoodComputer->getShape(dx, dy, dw, dh);
+      // unlike the adjustForShapeHole() call above (which shrinks the
+      // *source* shape we're leaving), this one shrinks each *candidate
+      // destination* shape as we walk across it: if this computer is the
+      // primary and we're entering it through a hole-narrowed side (passed
+      // as oppositeDirection(srcSide) since srcSide is the side of the
+      // computer we left, not the side of this one), its usable width/height
+      // here is smaller than its full bounding box
+      adjustForShapeHole(lastGoodComputer, oppositeDirection(srcSide), x, y, dx, dy, dw, dh);
       x += dw;
       if (x >= 0) {
         break;
@@ -675,6 +720,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
       x -= dw;
       lastGoodComputer = dst;
       lastGoodComputer->getShape(dx, dy, dw, dh);
+      adjustForShapeHole(lastGoodComputer, oppositeDirection(srcSide), x, y, dx, dy, dw, dh);
       if (x < dw) {
         break;
       }
@@ -690,6 +736,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
     while (dst != nullptr) {
       lastGoodComputer = dst;
       lastGoodComputer->getShape(dx, dy, dw, dh);
+      adjustForShapeHole(lastGoodComputer, oppositeDirection(srcSide), x, y, dx, dy, dw, dh);
       y += dh;
       if (y >= 0) {
         break;
@@ -707,6 +754,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
       y -= dh;
       lastGoodComputer = dst;
       lastGoodComputer->getShape(dx, dy, dw, dh);
+      adjustForShapeHole(lastGoodComputer, oppositeDirection(srcSide), x, y, dx, dy, dw, dh);
       if (y < dh) {
         break;
       }
@@ -748,6 +796,7 @@ void Server::avoidJumpZone(const BaseClientProxy *dst, Direction dir, int32_t &x
   int32_t dw;
   int32_t dh;
   dst->getShape(dx, dy, dw, dh);
+  adjustForShapeHole(dst, oppositeDirection(dir), x, y, dx, dy, dw, dh);
   float t = mapToFraction(dst, dir, x, y);
   int32_t z = getJumpZoneSize(dst);
 
@@ -778,6 +827,190 @@ void Server::avoidJumpZone(const BaseClientProxy *dst, Direction dir, int32_t &x
 
   case NoDirection:
     assert(0 && "bad direction");
+  }
+}
+
+void Server::adjustForShapeHole(
+    const BaseClientProxy *computer, Direction side, int32_t x, int32_t y, int32_t &dx, int32_t &dy, int32_t &dw,
+    int32_t &dh
+) const
+{
+  if (computer != m_primaryClient || side == Direction::NoDirection) {
+    return;
+  }
+
+  for (const auto &hole : m_primaryClient->getShapeHoles()) {
+    const auto directions = deskflow::activeDirections(hole.location);
+    if (std::ranges::find(directions, side) == directions.end()) {
+      continue;
+    }
+
+    const auto hx = static_cast<int32_t>(hole.rect.x);
+    const auto hy = static_cast<int32_t>(hole.rect.y);
+    const auto hw = static_cast<int32_t>(hole.rect.w);
+    const auto hh = static_cast<int32_t>(hole.rect.h);
+
+    switch (side) {
+      using enum Direction;
+    case Left:
+      // real screen to the right of the hole ends where the hole begins, so
+      // approaching from there, the effective left edge is the hole's right
+      // side, not dx
+      if (y >= hy && y < hy + hh) {
+        dw -= hw;
+        dx = hx + hw;
+      }
+      break;
+
+    case Right:
+      // real screen to the left of the hole ends where the hole begins, so
+      // the effective right edge is the hole's left side, not dx + dw
+      if (y >= hy && y < hy + hh) {
+        dw = hx - dx;
+      }
+      break;
+
+    case Top:
+      if (x >= hx && x < hx + hw) {
+        dh -= hh;
+        dy = hy + hh;
+      }
+      break;
+
+    case Bottom:
+      if (x >= hx && x < hx + hw) {
+        dh = hy - dy;
+      }
+      break;
+
+    case NoDirection:
+      break;
+    }
+  }
+}
+
+void Server::resolveShapeHoleLinks()
+{
+  const std::string primaryName = getName(m_primaryClient);
+  const auto holeLinks = m_config->getHoleLinks(primaryName);
+  if (holeLinks.empty()) {
+    return;
+  }
+
+  int32_t ax;
+  int32_t ay;
+  int32_t aw;
+  int32_t ah;
+  m_primaryClient->getShape(ax, ay, aw, ah);
+  if (aw <= 0 || ah <= 0) {
+    // the primary's shape isn't known yet; this will be tried again once it is
+    return;
+  }
+
+  const auto holes = m_primaryClient->getShapeHoles();
+  bool resolvedAny = false;
+
+  for (const auto &link : holeLinks) {
+    const auto directions = deskflow::activeDirections(link.location);
+
+    const auto hole = std::ranges::find_if(holes, [&link](const auto &h) { return h.location == link.location; });
+    if (hole == holes.end()) {
+      // the hole this link named no longer exists (e.g. a monitor was added
+      // that fills it) -- remove any interval we previously resolved for it,
+      // since that edge isn't a hole anymore and shouldn't still point at
+      // link.dstName
+      for (const auto dir : directions) {
+        const auto key = std::make_pair(link.location, dir);
+        if (const auto previous = m_resolvedHoleLinkIntervals.find(key); previous != m_resolvedHoleLinkIntervals.end()) {
+          m_config->disconnect(primaryName, dir, (previous->second.first + previous->second.second) / 2.0f);
+          m_resolvedHoleLinkIntervals.erase(previous);
+        }
+      }
+      LOG_WARN(
+          "no \"%s\" hole was detected on \"%s\"; the link to \"%s\" will not be used",
+          deskflow::toString(link.location), primaryName.c_str(), link.dstName.c_str()
+      );
+      continue;
+    }
+
+    for (const auto dir : directions) {
+      float srcStart = 0.0f;
+      float srcEnd = 1.0f;
+      switch (dir) {
+        using enum Direction;
+      case Left:
+      case Right:
+        srcStart = static_cast<float>(hole->rect.y - ay) / static_cast<float>(ah);
+        srcEnd = static_cast<float>(hole->rect.y + hole->rect.h - ay) / static_cast<float>(ah);
+        break;
+      case Top:
+      case Bottom:
+        srcStart = static_cast<float>(hole->rect.x - ax) / static_cast<float>(aw);
+        srcEnd = static_cast<float>(hole->rect.x + hole->rect.w - ax) / static_cast<float>(aw);
+        break;
+      case NoDirection:
+        continue;
+      }
+
+      // if the hole moved or resized since it was last linked (e.g. the
+      // monitor layout changed), the interval below differs from the one
+      // already registered -- remove the stale one first, since
+      // Config::connect() only replaces an exact-match interval and would
+      // otherwise reject this one as a conflict with our own earlier entry
+      const auto key = std::make_pair(link.location, dir);
+      if (const auto previous = m_resolvedHoleLinkIntervals.find(key);
+          previous != m_resolvedHoleLinkIntervals.end() &&
+          previous->second != std::make_pair(srcStart, srcEnd)) {
+        m_config->disconnect(primaryName, dir, (previous->second.first + previous->second.second) / 2.0f);
+      }
+
+      if (!m_config->connect(primaryName, dir, srcStart, srcEnd, link.dstName, 0.0f, 1.0f)) {
+        LOG_WARN(
+            "could not link the \"%s\" hole on \"%s\" to \"%s\" on the %s side: a conflicting neighbor is already "
+            "configured there -- check for an existing \"%s: %s = ...\" entry",
+            deskflow::toString(link.location), primaryName.c_str(), link.dstName.c_str(), Config::dirName(dir),
+            primaryName.c_str(), Config::dirName(dir)
+        );
+        m_resolvedHoleLinkIntervals.erase(key);
+        continue;
+      }
+      m_resolvedHoleLinkIntervals[key] = {srcStart, srcEnd};
+      LOG_INFO(
+          "linked the \"%s\" hole on \"%s\" to \"%s\" on the %s side", deskflow::toString(link.location),
+          primaryName.c_str(), link.dstName.c_str(), Config::dirName(dir)
+      );
+      resolvedAny = true;
+
+      // Config::connect() is one-directional: it only lets you leave the
+      // primary through the hole, not come back. Mirror the same interval
+      // onto the client's opposite edge so crossing back lands in the right
+      // place. This is attempted unconditionally (not gated on whether the
+      // client already has *some* neighbor on that side): Cell::add()
+      // itself replaces an exact (side, interval) match -- which this
+      // always is, since the client's own side always spans its full edge
+      // -- and only rejects a genuine conflict, surfacing it below rather
+      // than silently leaving an unrelated, imprecise link (e.g. one from
+      // the GUI's grid layout) in place.
+      const auto returnDir = oppositeDirection(dir);
+      if (m_config->connect(link.dstName, returnDir, 0.0f, 1.0f, primaryName, srcStart, srcEnd)) {
+        LOG_DEBUG(
+            "linked \"%s\" back to the \"%s\" hole on \"%s\" on the %s side", link.dstName.c_str(),
+            deskflow::toString(link.location), primaryName.c_str(), Config::dirName(returnDir)
+        );
+      } else {
+        LOG_WARN(
+            "could not link \"%s\" back to the \"%s\" hole on \"%s\" on the %s side: a conflicting neighbor is "
+            "already configured there -- check for an existing \"%s: %s = ...\" entry",
+            link.dstName.c_str(), deskflow::toString(link.location), primaryName.c_str(), Config::dirName(returnDir),
+            link.dstName.c_str(), Config::dirName(returnDir)
+        );
+      }
+    }
+  }
+
+  if (resolvedAny) {
+    // the newly added links may open up jump zones that weren't active before
+    m_primaryClient->reconfigure(getActivePrimarySides());
   }
 }
 
@@ -1153,6 +1386,37 @@ void Server::handleShapeChanged(BaseClientProxy *client)
 
   // handle resolution change to primary computer
   if (client == m_primaryClient) {
+    // some platforms (e.g. EiComputer, before its portal/libei session has
+    // connected) report this event once up front with a not-yet-known,
+    // all-zero shape; only treat the shape as known once it's non-trivial
+    int32_t ax;
+    int32_t ay;
+    int32_t aw;
+    int32_t ah;
+    m_primaryClient->getShape(ax, ay, aw, ah);
+    if (aw > 0 && ah > 0) {
+      const auto holes = m_primaryClient->getShapeHoles();
+      // order-independent: findShapeHoles()'s scan order depends on
+      // arbitrary device/region enumeration order, so two reports of the
+      // same set of holes aren't guaranteed to come back in the same
+      // sequence
+      const bool sameHoles = holes.size() == m_lastKnownShapeHoles.size() &&
+                              std::ranges::all_of(holes, [this](const auto &h) {
+                                return std::ranges::find(m_lastKnownShapeHoles, h) != m_lastKnownShapeHoles.end();
+                              });
+      if (m_shapeEverKnown && !sameHoles) {
+        // resolveShapeHoleLinks() below re-resolves any configured hole
+        // links against this new layout, replacing a stale interval with
+        // the new one -- this is just an informational heads-up, not a
+        // warning that the user needs to do anything
+        LOG_INFO("the primary computer's monitor layout changed; re-resolving its hole-based links");
+      }
+      m_shapeEverKnown = true;
+      m_lastKnownShapeHoles = holes;
+
+      resolveShapeHoleLinks();
+    }
+
     if (client == m_active) {
       onMouseMovePrimary(m_x, m_y);
     } else {
@@ -1652,25 +1916,86 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
     yc = ay + ah - 1;
   }
 
+  using enum Direction;
+
+  // narrow the edges used for switch detection below to the inner boundary
+  // of any of the primary's shape holes (e.g. the missing corner of an
+  // L-shaped, or either gap beside the stem of a T-shaped, arrangement of
+  // monitors), if the cursor's position falls within that hole's span on
+  // the relevant axis
+  int32_t effLeft = ax;
+  int32_t effRight = ax + aw;
+  int32_t effTop = ay;
+  int32_t effBottom = ay + ah;
+
+  // remember which hole (if any) narrowed each direction's edge, so a switch
+  // triggered by it can be logged as such below
+  auto dirIndex = [](Direction d) { return static_cast<std::size_t>(d) - static_cast<std::size_t>(FirstDirection); };
+  std::array<std::optional<deskflow::HoleLocation>, static_cast<std::size_t>(NumDirections)> holeForDir;
+
+  for (const auto &hole : m_primaryClient->getShapeHoles()) {
+    const auto directions = deskflow::activeDirections(hole.location);
+    const auto hasDirection = [&directions](Direction d) { return std::ranges::find(directions, d) != directions.end(); };
+    const auto hx = static_cast<int32_t>(hole.rect.x);
+    const auto hy = static_cast<int32_t>(hole.rect.y);
+    const auto hw = static_cast<int32_t>(hole.rect.w);
+    const auto hh = static_cast<int32_t>(hole.rect.h);
+
+    if (y >= hy && y < hy + hh) {
+      if (hasDirection(Left)) {
+        effLeft = std::max(effLeft, hx + hw);
+        holeForDir.at(dirIndex(Left)) = hole.location;
+      }
+      if (hasDirection(Right)) {
+        effRight = std::min(effRight, hx);
+        holeForDir.at(dirIndex(Right)) = hole.location;
+      }
+    }
+    if (x >= hx && x < hx + hw) {
+      if (hasDirection(Top)) {
+        effTop = std::max(effTop, hy + hh);
+        holeForDir.at(dirIndex(Top)) = hole.location;
+      }
+      if (hasDirection(Bottom)) {
+        effBottom = std::min(effBottom, hy);
+        holeForDir.at(dirIndex(Bottom)) = hole.location;
+      }
+    }
+  }
+
+  if (!m_primaryClient->getShapeHoles().empty()) {
+    LOG_DEBUG(
+        "hole-aware edges: x=%d y=%d effLeft=%d effRight=%d effTop=%d effBottom=%d zoneSize=%d", x, y, effLeft,
+        effRight, effTop, effBottom, zoneSize
+    );
+  }
+
   // see if we should change computers
   // when the cursor is in a corner, there may be a computer either
   // horizontally or vertically.  check both directions.
-  using enum Direction;
   auto dirh = NoDirection;
   auto dirv = NoDirection;
   int32_t xh = x;
   int32_t yv = y;
-  if (x < ax + zoneSize) {
+  // for a plain (hole-free) screen, effLeft/effTop are always the true outer
+  // edge and effRight/effBottom the true outer edge too, so x/y can never
+  // legitimately fall on the wrong side of them -- "less/greater than"
+  // alone is equivalent to "near". once a hole narrows one of these inward,
+  // that guarantee breaks: x or y can legitimately sit far past the
+  // narrowed edge while still being valid, unrelated real-screen territory
+  // (e.g. the position just warped in from crossing a *different* side's
+  // hole-adjacent barrier). require actual proximity, not just inequality.
+  if (x >= effLeft - zoneSize && x < effLeft + zoneSize) {
     xh -= zoneSize;
     dirh = Left;
-  } else if (x >= ax + aw - zoneSize) {
+  } else if (x >= effRight - zoneSize && x < effRight + zoneSize) {
     xh += zoneSize;
     dirh = Right;
   }
-  if (y < ay + zoneSize) {
+  if (y >= effTop - zoneSize && y < effTop + zoneSize) {
     yv -= zoneSize;
     dirv = Top;
-  } else if (y >= ay + ah - zoneSize) {
+  } else if (y >= effBottom - zoneSize && y < effBottom + zoneSize) {
     yv += zoneSize;
     dirv = Bottom;
   }
@@ -1696,6 +2021,11 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 
     // should we switch or not?
     if (isSwitchOkay(newComputer, dir, x, y, xc, yc)) {
+      if (const auto &hole = holeForDir.at(dirIndex(dir)); hole.has_value()) {
+        LOG_INFO(
+            "switching to \"%s\" via the \"%s\" hole", getName(newComputer).c_str(), deskflow::toString(*hole)
+        );
+      }
       // switch computer
       switchComputer(newComputer, x, y, false);
       return true;
@@ -1913,6 +2243,12 @@ bool Server::addClient(BaseClientProxy *client)
   int32_t y;
   client->getCursorPos(x, y);
   client->setJumpCursorPos(x, y);
+
+  // a newly connected client may be the destination of a still-pending
+  // hole-location link (e.g. "bottom-right = someComputer"); by the time a
+  // separate machine has booted and connected, the primary's own shape has
+  // almost always settled too, so this is a good second chance to resolve it
+  resolveShapeHoleLinks();
 
   // tell primary client about the active sides
   m_primaryClient->reconfigure(getActivePrimarySides());
