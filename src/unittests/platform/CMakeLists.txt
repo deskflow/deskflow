@@ -3,6 +3,14 @@
 
 if (WIN32)
   create_test(
+    NAME MSWindowsProcessTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE MSWindowsProcessTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  set_tests_properties(MSWindowsProcessTests PROPERTIES TIMEOUT 60)
+  create_test(
     NAME MSWindowsClipboardTests
     DEPENDS platform
     LIBS base arch
