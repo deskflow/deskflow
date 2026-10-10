@@ -19,6 +19,7 @@
 
 #include <cstdint>
 #include <map>
+#include <set>
 #include <utility>
 #include <vector>
 
@@ -195,6 +196,11 @@ private:
   gint m_zoneUnionTop = 0;
   gint m_zoneUnionRight = 0;
   gint m_zoneUnionBottom = 0;
+
+  // (hole location, side) pairs already warned about via warnIfSharedEdge(),
+  // so a shared-edge conflict is reported once per session rather than every
+  // time handleZonesChanged() happens to re-run (e.g. once per reconfigure())
+  std::set<std::pair<deskflow::HoleLocation, BarrierSide>> m_warnedSharedEdges;
 
   EiClipboard *m_clipboard = nullptr;
 };
