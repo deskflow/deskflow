@@ -70,21 +70,14 @@ int PortalInputCapture::scaleCoordinateBetweenRanges(
 
 bool PortalInputCapture::getPortalBounds(Bounds &bounds) const
 {
-  if (m_barrierInfo.empty()) {
+  if (!m_zoneUnionValid) {
     return false;
   }
 
-  bounds.left = std::numeric_limits<gint>::max();
-  bounds.top = std::numeric_limits<gint>::max();
-  bounds.right = std::numeric_limits<gint>::min();
-  bounds.bottom = std::numeric_limits<gint>::min();
-
-  for (const auto &info : m_barrierInfo) {
-    bounds.left = std::min(bounds.left, info.x);
-    bounds.top = std::min(bounds.top, info.y);
-    bounds.right = std::max(bounds.right, info.x + static_cast<gint>(info.width) - 1);
-    bounds.bottom = std::max(bounds.bottom, info.y + static_cast<gint>(info.height) - 1);
-  }
+  bounds.left = m_zoneUnionLeft;
+  bounds.top = m_zoneUnionTop;
+  bounds.right = m_zoneUnionRight - 1;
+  bounds.bottom = m_zoneUnionBottom - 1;
 
   return true;
 }
@@ -94,6 +87,23 @@ bool PortalInputCapture::getClosestReleaseBarrier(
     const Bounds &portalBounds, BarrierInfo &barrier
 ) const
 {
+  // prefer the barrier that was actually crossed to get here, if it's still
+  // in the current barrier set -- this is always correct, whereas the
+  // distance-based fallback below assumes every active side's barrier sits
+  // on the computer's outer bounding box, which isn't true for one placed
+  // against a shape hole's inner edge (it can end up numerically closer to
+  // a completely different side's outer edge than to the one actually
+  // crossed)
+  if (m_lastActivationBarrierId != 0) {
+    const auto it = std::ranges::find_if(m_barrierInfo, [this](const auto &info) {
+      return info.id == m_lastActivationBarrierId;
+    });
+    if (it != m_barrierInfo.end()) {
+      barrier = *it;
+      return true;
+    }
+  }
+
   const auto activeSides = m_computer->activeSides();
   using enum DirectionMask;
 
@@ -446,22 +456,27 @@ PortalInputCapture::mapPortalActivationToComputerPosition(guint barrierId, doubl
   }
 
   // The portal reports per-output zones, while Deskflow models the whole computer as one computer.
-  // Use the activated barrier to preserve the intended switch direction in Deskflow's aggregate coordinates.
+  // Use the activated barrier's own line to preserve the intended switch direction in Deskflow's
+  // aggregate coordinates -- this is the computer's outer edge for a barrier placed on the overall
+  // union boundary, but a different, still-correct coordinate for one placed against a shape hole
+  // (e.g. the missing corner of an L-shaped arrangement of monitors).
   using enum BarrierSide;
   switch (it->side) {
   case Left:
-    x = computerX;
-    break;
   case Right:
-    x = computerX + computerW - 1;
+    x = it->x1;
     break;
   case Top:
-    y = computerY;
-    break;
   case Bottom:
-    y = computerY + computerH - 1;
+    y = it->y1;
     break;
   }
+
+  LOG_DEBUG(
+      "activation barrier %u (%s) zone=%dx%d@%d,%d raw=%.1f,%.1f -> computer=%d,%d (computer shape %dx%d@%d,%d)",
+      barrierId, barrierSideName(it->side), static_cast<gint>(it->width), static_cast<gint>(it->height), it->x, it->y,
+      rawX, rawY, x, y, computerW, computerH, computerX, computerY
+  );
 
   return {x, y};
 }
@@ -657,6 +672,31 @@ void PortalInputCapture::disable()
   }
 }
 
+void PortalInputCapture::refreshPointerBarriers()
+{
+  if (m_session == nullptr) {
+    return;
+  }
+
+  // this is called from EiComputer::reconfigure(), which runs on deskflow's
+  // own event-queue thread -- the async xdp_input_capture_session_* calls
+  // inside handleZonesChanged() must originate from the glib thread that
+  // actually iterates m_glibMainLoop's context, so marshal over to it rather
+  // than calling directly (same pattern used elsewhere in this file, e.g.
+  // initSession())
+  g_idle_add(
+      [](gpointer data) -> gboolean {
+        auto *self = static_cast<PortalInputCapture *>(data);
+        if (self->m_session != nullptr) {
+          LOG_DEBUG("refreshing pointer barriers");
+          self->handleZonesChanged(self->m_session, nullptr);
+        }
+        return G_SOURCE_REMOVE;
+      },
+      this
+  );
+}
+
 void PortalInputCapture::release()
 {
   LOG_DEBUG("releasing input capture session, id=%d", m_activationId);
@@ -713,12 +753,14 @@ void PortalInputCapture::handleActivated(
       auto warpY = static_cast<int>(y);
 
       guint barrierId = 0;
+      m_lastActivationBarrierId = 0;
 
       if (const bool hasBarrierId = g_variant_lookup(options, "barrier_id", "u", &barrierId);
           hasBarrierId && barrierId > 0) {
         auto [mappedX, mappedY] = mapPortalActivationToComputerPosition(barrierId, x, y);
         warpX = mappedX;
         warpY = mappedY;
+        m_lastActivationBarrierId = barrierId;
       } else if (!hasBarrierId) {
         LOG_DEBUG("portal activation has no barrier id, using raw cursor position");
       } else {
@@ -783,12 +825,21 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
 
   auto zones = xdp_input_capture_session_get_zones(session);
 
-  // First pass: compute the bounding box (union) of all input-capture zones.
-  // A pointer barrier must lie on the outer boundary of the combined desktop and
-  // be adjacent to a single monitor edge. A barrier placed on an internal edge
-  // between two adjacent monitors is rejected by the portal ("adjacent to
-  // multiple monitor edges"), and a single rejected barrier fails the whole
-  // barrier set - so on a multi-monitor server input capture never engages.
+  // First pass: record every zone's rect and compute the bounding box (union) of
+  // all of them. A pointer barrier must lie on the outer boundary of the combined
+  // desktop and be adjacent to a single monitor edge. A barrier placed on an
+  // internal edge between two adjacent monitors is rejected by the portal
+  // ("adjacent to multiple monitor edges"), and a single rejected barrier fails
+  // the whole barrier set - so on a multi-monitor server input capture never
+  // engages.
+  struct ZoneRect
+  {
+    gint x = 0;
+    gint y = 0;
+    guint w = 0;
+    guint h = 0;
+  };
+  std::vector<ZoneRect> zoneRects;
   gint unionLeft = 0;
   gint unionTop = 0;
   gint unionRight = 0;
@@ -800,6 +851,7 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
     gint x;
     gint y;
     g_object_get(z->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr);
+    zoneRects.push_back({x, y, w, h});
     const gint right = x + static_cast<gint>(w);
     const gint bottom = y + static_cast<gint>(h);
     if (!boundsInit) {
@@ -816,15 +868,62 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
     }
   }
 
+  m_zoneUnionValid = boundsInit;
+  m_zoneUnionLeft = unionLeft;
+  m_zoneUnionTop = unionTop;
+  m_zoneUnionRight = unionRight;
+  m_zoneUnionBottom = unionBottom;
+
+  // true if some zone *other* than zoneRects[selfIndex] also has an edge of the
+  // same orientation at `line` (e.g. another monitor's bottom edge at the same y
+  // as this one). The portal requires a barrier to be unambiguously "within one
+  // zone"; if two zones share the exact same edge coordinate, a barrier placed
+  // there -- however narrow -- is liable to be rejected, since the compositor
+  // can't tell which zone it belongs to.
+  const auto otherZoneSharesEdge = [&zoneRects](std::size_t selfIndex, bool vertical, gint line) {
+    for (std::size_t i = 0; i < zoneRects.size(); ++i) {
+      if (i == selfIndex) {
+        continue;
+      }
+      const auto &z = zoneRects[i];
+      if (vertical ? (z.x == line || z.x + static_cast<gint>(z.w) == line)
+                   : (z.y == line || z.y + static_cast<gint>(z.h) == line)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // warn when a hole-adjacent barrier's edge coincides with another monitor's
+  // edge, since that's the one geometry the portal has been observed to reject
+  // outright (see the comment above) with no way to route around it in software
+  const auto warnIfSharedEdge = [this, &otherZoneSharesEdge](
+                                     std::size_t zoneIndex, BarrierSide side, bool vertical, gint line,
+                                     deskflow::HoleLocation location
+                                 ) {
+    if (!otherZoneSharesEdge(zoneIndex, vertical, line)) {
+      return;
+    }
+    const char axis = vertical ? 'x' : 'y';
+    LOG_WARN(
+        "the %s side of the \"%s\" hole sits at %c=%d, which another monitor's edge also sits at -- the display "
+        "server is likely to reject a pointer barrier there (watch for \"failed to apply barrier\" below), "
+        "breaking switching through that side of the hole. If so, try nudging your monitors' positions by a few "
+        "pixels so no two share that exact %c coordinate.",
+        barrierSideName(side), deskflow::toString(location), axis, line, axis
+    );
+  };
+
   // Second pass: only add a barrier for a zone edge that is part of the outer
   // boundary of the union (i.e. not an internal seam between two monitors).
+  const auto holes = m_computer->getShapeHoles();
   guint id = 0;
-  while (zones != nullptr) {
-    guint w;
-    guint h;
-    gint x;
-    gint y;
-    g_object_get(zones->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr);
+  for (std::size_t zoneIndex = 0; zoneIndex < zoneRects.size(); ++zoneIndex) {
+    const auto &zone = zoneRects[zoneIndex];
+    const gint x = zone.x;
+    const gint y = zone.y;
+    const guint w = zone.w;
+    const guint h = zone.h;
 
     LOG_DEBUG("input capture zone, %dx%d@%d,%d", w, h, x, y);
 
@@ -843,7 +942,51 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
     if ((activeSides & static_cast<int>(BottomMask)) && (y + static_cast<gint>(h)) == unionBottom) {
       addBarrier(++id, BarrierSide::Bottom, x, y, w, h);
     }
-    zones = zones->next;
+
+    // a zone edge bordering a shape hole (e.g. the missing corner of an
+    // L-shaped arrangement of monitors) is also an outer boundary from this
+    // zone's own perspective, even though it sits inside the overall union
+    // and so was skipped above -- place a barrier there too. The portal
+    // rejects a barrier that doesn't span a reported zone's entire edge (it
+    // must match one exactly, not an arbitrary sub-segment of it), so this
+    // only uses the hole to decide whether this zone's edge qualifies at
+    // all, then places the barrier along the zone's full edge regardless of
+    // how much of it the hole actually covers -- any extra length just
+    // borders a neighboring zone, which is a harmless local seam the OS
+    // already lets the cursor cross without deskflow's involvement.
+    for (const auto &hole : holes) {
+      const auto directions = deskflow::activeDirections(hole.location);
+      const auto hasDirection = [&directions](Direction d) {
+        return std::ranges::find(directions, d) != directions.end();
+      };
+      const auto hx = static_cast<gint>(hole.rect.x);
+      const auto hy = static_cast<gint>(hole.rect.y);
+      const auto hw = static_cast<gint>(hole.rect.w);
+      const auto hh = static_cast<gint>(hole.rect.h);
+      const bool overlapsVertically = y < hy + hh && (y + static_cast<gint>(h)) > hy;
+      const bool overlapsHorizontally = x < hx + hw && (x + static_cast<gint>(w)) > hx;
+
+      // this zone's left edge borders the hole's right edge
+      if (hasDirection(Direction::Left) && x == hx + hw && overlapsVertically) {
+        warnIfSharedEdge(zoneIndex, BarrierSide::Left, true, x, hole.location);
+        addBarrier(++id, BarrierSide::Left, x, y, w, h);
+      }
+      // this zone's right edge borders the hole's left edge
+      if (hasDirection(Direction::Right) && (x + static_cast<gint>(w)) == hx && overlapsVertically) {
+        warnIfSharedEdge(zoneIndex, BarrierSide::Right, true, x + static_cast<gint>(w), hole.location);
+        addBarrier(++id, BarrierSide::Right, x, y, w, h);
+      }
+      // this zone's top edge borders the hole's bottom edge
+      if (hasDirection(Direction::Top) && y == hy + hh && overlapsHorizontally) {
+        warnIfSharedEdge(zoneIndex, BarrierSide::Top, false, y, hole.location);
+        addBarrier(++id, BarrierSide::Top, x, y, w, h);
+      }
+      // this zone's bottom edge borders the hole's top edge
+      if (hasDirection(Direction::Bottom) && (y + static_cast<gint>(h)) == hy && overlapsHorizontally) {
+        warnIfSharedEdge(zoneIndex, BarrierSide::Bottom, false, y + static_cast<gint>(h), hole.location);
+        addBarrier(++id, BarrierSide::Bottom, x, y, w, h);
+      }
+    }
   }
 
   GList *list = nullptr;
