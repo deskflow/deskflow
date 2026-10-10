@@ -198,6 +198,9 @@ public:
   */
   void getClients(std::vector<std::string> &list) const;
   void sendConnectedClientsIpc() const;
+
+  //! Tells the GUI the resolution of each computer so the layout can be drawn to scale
+  void sendComputerShapesIpc() const;
   size_t getMaximumClipboardSizeBytes() const;
 
   //@}

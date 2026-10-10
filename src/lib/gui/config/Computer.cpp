@@ -23,6 +23,7 @@ void Computer::loadSettings(QSettingsProxy &settings)
 {
   const auto name = settings.value("name").toString();
   setName(name);
+  setGeometry(settings.value("geometry").toRect());
 
   if (name.isEmpty())
     return;
@@ -57,6 +58,7 @@ void Computer::saveSettings(QSettingsProxy &settings) const
 {
   const auto computerName = name();
   settings.setValue("name", computerName);
+  settings.setValue("geometry", m_geometry);
 
   if (computerName.isEmpty())
     return;
@@ -116,5 +118,6 @@ bool Computer::operator==(const Computer &computer) const
 {
   return m_Name == computer.m_Name && m_Aliases == computer.m_Aliases && m_Modifiers == computer.m_Modifiers &&
          m_SwitchCorners == computer.m_SwitchCorners && m_SwitchCornerSize == computer.m_SwitchCornerSize &&
-         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
+         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer &&
+         m_geometry == computer.m_geometry;
 }

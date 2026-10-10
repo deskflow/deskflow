@@ -273,6 +273,7 @@ void MainWindow::connectSlots()
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
 
   connect(&m_coreProcess, &CoreProcess::connectedClientsChanged, this, &MainWindow::serverClientsChanged);
+  connect(&m_coreProcess, &CoreProcess::computerShapeChanged, this, &MainWindow::serverComputerShapeChanged);
   connect(&m_coreProcess, &CoreProcess::unrecognisedClient, this, &MainWindow::handleUnrecognisedClient);
   connect(&m_coreProcess, &CoreProcess::connectionRefused, this, &MainWindow::handleConnectionRefused);
   connect(&m_coreProcess, &CoreProcess::retryIn, this, &MainWindow::updateTimeoutDelay);
@@ -778,7 +779,7 @@ void MainWindow::handleUnrecognisedClient(const QString &clientName)
   if (Settings::value(Settings::Server::ExternalConfig).toBool())
     return;
 
-  if (m_serverConfig.isFull() || m_serverConfig.computerExists(clientName))
+  if (m_serverConfig.computerExists(clientName))
     return;
 
   m_newClientPromptShowing = true;
@@ -1206,6 +1207,12 @@ void MainWindow::serverClientsChanged(const QStringList &clients)
   if (m_coreProcess.mode() != CoreMode::Server || !m_coreProcess.isStarted())
     return;
   m_statusBar->setServerClients(clients);
+}
+
+void MainWindow::serverComputerShapeChanged(const QString &name, const QSize &size)
+{
+  if (m_serverConfig.resizeComputer(name, size))
+    m_serverConfig.commit();
 }
 
 void MainWindow::daemonIpcClientConnectionFailed()

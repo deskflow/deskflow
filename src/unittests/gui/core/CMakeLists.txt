@@ -7,3 +7,10 @@ create_test(
   SOURCE NetworkMonitorTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
 )
+
+create_test(
+  NAME CoreProcessTests
+  DEPENDS gui
+  SOURCE CoreProcessTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
+)

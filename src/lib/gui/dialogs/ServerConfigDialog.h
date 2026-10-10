@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "ComputerSetupModel.h"
 #include "common/NetworkProtocol.h"
 #include "config/ServerConfig.h"
 
@@ -79,10 +78,6 @@ protected:
   {
     m_originalServerConfig = s;
   }
-  ComputerSetupModel &model()
-  {
-    return m_computerSetupModel;
-  }
 
 private:
   void save();
@@ -99,8 +94,6 @@ private:
   void setButtonBoxEnabledButtons() const;
   std::unique_ptr<Ui::ServerConfigDialog> ui;
   QString m_message = "";
-  int m_columns;
-  int m_rows;
   ServerConfig &m_originalServerConfig;
   NetworkProtocol m_protocol;
   bool m_enableClipboard;
@@ -118,6 +111,5 @@ private:
   bool m_defaultLockToComputerState;
   QString m_originalServerConfigUsesExternalFile;
   ServerConfig m_serverConfig;
-  ComputerSetupModel m_computerSetupModel;
   SettingsDialogButtonBox *m_buttonBox = nullptr;
 };

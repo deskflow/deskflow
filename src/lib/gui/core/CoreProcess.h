@@ -15,6 +15,7 @@
 #include <QMutex>
 #include <QObject>
 #include <QProcess>
+#include <QSize>
 #include <QTimer>
 
 namespace deskflow::gui {
@@ -47,6 +48,12 @@ public:
   void applyLogLevel();
   void clearSettings();
   void retryDaemon();
+
+  /**
+   * @brief parseComputerShape parses the `computerShape` core message, `<name>,<width>,<height>`
+   * @return false if the message is malformed or the size is empty
+   */
+  static bool parseComputerShape(const QString &args, QString &name, QSize &size);
 
   // getters
   Settings::CoreMode mode() const
@@ -88,6 +95,7 @@ Q_SIGNALS:
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
   void connectedClientsChanged(const QStringList &clients);
+  void computerShapeChanged(const QString &name, const QSize &size);
   void securityLevelChanged(QString securityLevel);
   void unrecognisedClient(const QString &clientName);
   void connectionRefused(deskflow::core::ConnectionRefusal reason);

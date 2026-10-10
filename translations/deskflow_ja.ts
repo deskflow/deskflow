@@ -329,7 +329,7 @@ p, li { white-space: pre-wrap; }
     <name>ComputerSetupModel</name>
     <message>
         <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;コンピュータ: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;ダブルクリックして設定を編集&lt;br&gt;コンピュータをゴミ箱にドラッグして削除</translation>
+        <translation type="obsolete">&lt;center&gt;コンピュータ: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;ダブルクリックして設定を編集&lt;br&gt;コンピュータをゴミ箱にドラッグして削除</translation>
     </message>
 </context>
 <context>
@@ -922,6 +922,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
+    </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
