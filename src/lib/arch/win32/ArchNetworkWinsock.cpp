@@ -818,7 +818,7 @@ bool ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr)
   case AddressFamily::INet6: {
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return (
-        addr->m_len == sizeof(struct sockaddr_in) && memcmp(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0
+        addr->m_len == sizeof(struct sockaddr_in6) && memcmp(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0
     );
   }
 
