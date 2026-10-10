@@ -20,8 +20,8 @@ class IClipboard;
 //! Computer interface
 /*!
 This interface defines the methods common to all platform dependent
-comptuer implementations that are used by both primary and secondary
-comptuers.
+computer implementations that are used by both primary and secondary
+computers.
 */
 class IPlatformComputer : public IComputer, public IPrimaryComputer, public ISecondaryComputer, public IKeyState
 {
@@ -139,9 +139,9 @@ public:
   //! @name accessors
   //@{
 
-  //! Test if is primary comptuer
+  //! Test if is primary computer
   /*!
-  Return true iff this comptuer is a primary comptuer.
+  Return true iff this computer is a primary computer.
   */
   virtual bool isPrimary() const = 0;
 
@@ -158,7 +158,7 @@ public:
 protected:
   //! Handle system event
   /*!
-  A platform comptuer is expected to install a handler for system
+  A platform computer is expected to install a handler for system
   events in its c'tor like so:
   \code
   m_events->addHandler(EventTypes::System,
@@ -169,8 +169,8 @@ protected:
   \c handleSystemEvent() method to process system events.
   It should post the events \c IComputer as appropriate.
 
-  A primary comptuer has further responsibilities.  It should post
-  the events in \c IPrimaryComptuer as appropriate.  It should also
+  A primary computer has further responsibilities.  It should post
+  the events in \c IPrimaryComputer as appropriate.  It should also
   call \c onKey() on its \c KeyState whenever a key is pressed
   or released (but not for key repeats).  And it should call
   \c updateKeyMap() on its \c KeyState if necessary when the keyboard
