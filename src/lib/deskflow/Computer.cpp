@@ -379,6 +379,14 @@ void Computer::getCursorCenter(int32_t &x, int32_t &y) const
   m_computer->getCursorCenter(x, y);
 }
 
+std::vector<deskflow::ShapeHole> Computer::getShapeHoles() const
+{
+  if (!m_isPrimary) {
+    return {};
+  }
+  return m_computer->getShapeHoles();
+}
+
 KeyModifierMask Computer::getActiveModifiers() const
 {
   return m_computer->getActiveModifiers();
