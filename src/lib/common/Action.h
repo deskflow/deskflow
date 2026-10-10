@@ -79,7 +79,7 @@ public:
 
   QStringList typeComputerNames() const;
   void clearComputers();
-  void addComputer(const QString &comptuer);
+  void addComputer(const QString &computer);
   void removeComputer(const QString &computer);
 
   const QString &switchComputerName() const;
