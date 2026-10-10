@@ -20,6 +20,7 @@
 #include <climits>
 #include <map>
 #include <set>
+#include <utility>
 #include <vector>
 
 class BaseClientProxy;
@@ -254,6 +255,35 @@ private:
   // after entering the client in the given direction.
   void avoidJumpZone(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
+  // if `computer` is the primary computer and it has a shape hole (e.g. the
+  // missing corner of an L-shaped monitor arrangement) that affects its
+  // `side`, narrows dx,dy,dw,dh -- which must already hold computer's shape
+  // -- from the full bounding box down to the effective rectangle actually
+  // usable on that side at position x,y.  does nothing otherwise.
+  void adjustForShapeHole(
+      const BaseClientProxy *computer, Direction side, int32_t x, int32_t y, int32_t &dx, int32_t &dy, int32_t &dw,
+      int32_t &dh
+  ) const;
+
+  // resolve the hole-location links configured for the primary computer
+  // (e.g. "bottom-right = someComputer") into real connections.  safe to
+  // call at any time, repeatedly: it's a no-op if the primary's shape isn't
+  // known yet, and Config::connect() treats a full-edge interval that
+  // already exists on that side as an exact-match replace rather than a
+  // conflict (see Config::Cell::add()), so this can be retried from
+  // multiple trigger points (the primary's shape becoming known, a client
+  // connecting, the layout changing) without caring which one happens
+  // first -- and without needing its own "already resolved" bookkeeping,
+  // which previously caused a stale, unrelated existing link (e.g. one
+  // added manually or by the GUI's grid layout) to silently win instead of
+  // being replaced.  m_resolvedHoleLinkIntervals tracks what *this
+  // function itself* last resolved for each hole, so that when a hole's
+  // interval actually changes (the monitor layout changed), the stale one
+  // is disconnected first rather than rejected as a conflict with itself.
+  // a conflict with some other, unrelated link is still rejected and
+  // logged rather than overridden.
+  void resolveShapeHoleLinks();
+
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
@@ -375,6 +405,21 @@ private:
 
   // the Primary Computer Client
   PrimaryClient *m_primaryClient = nullptr;
+
+  // the primary's holes as of the last time its shape was known, so a later
+  // layout change can be detected and warned about
+  bool m_shapeEverKnown = false;
+  std::vector<deskflow::ShapeHole> m_lastKnownShapeHoles;
+
+  // the primary-side interval most recently linked for each hole direction,
+  // keyed by (hole location, direction) since a T-shaped arrangement can
+  // have two holes sharing the same direction (e.g. bottom-left and
+  // bottom-right both use Direction::Bottom) with different sub-intervals.
+  // resolveShapeHoleLinks() uses this to remove a now-stale interval before
+  // adding a changed one after a monitor layout change, since
+  // Config::Cell::add() only replaces an exact-match interval and otherwise
+  // rejects a differing one as a conflict.
+  std::map<std::pair<deskflow::HoleLocation, Direction>, std::pair<float, float>> m_resolvedHoleLinkIntervals;
 
   // the client with focus
   BaseClientProxy *m_active = nullptr;
