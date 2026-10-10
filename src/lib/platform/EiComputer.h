@@ -62,6 +62,7 @@ public:
   std::int32_t getJumpZoneSize() const override;
   bool isAnyMouseButtonDown(std::uint32_t &buttonID) const override;
   void getCursorCenter(std::int32_t &x, std::int32_t &y) const override;
+  std::vector<deskflow::ShapeHole> getShapeHoles() const override;
 
   // ISecondaryComputer overrides
   void fakeMouseButton(ButtonID id, bool press) override;
@@ -132,6 +133,7 @@ private:
   void ensureEmulating() const;
   void stopEmulating() const;
   void cancelIdleEmulationTimer() const;
+  void cancelShapeSettleTimer();
   void updatePortalGlobalShortcuts();
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
@@ -181,6 +183,19 @@ private:
   std::uint32_t m_w = 0;
   std::uint32_t m_h = 0;
   bool m_isShapeInitialized = false;
+
+  // devices (monitors) are reported one EI_EVENT_DEVICE_ADDED at a time, so a
+  // burst of ComputerShapeChanged notifications is debounced into one, fired
+  // only once the layout has gone quiet for s_shapeSettleTimeout
+  EventQueueTimer *m_shapeSettleTimer = nullptr;
+  // Chosen empirically; long enough to cover a burst of device-added events
+  // for a handful of monitors, short enough not to noticeably delay startup.
+  static constexpr double s_shapeSettleTimeout = 0.5;
+
+  // every rectangular gap in the bounding box above, where no monitor
+  // actually exists (e.g. the missing corner of an L-shaped, or the two
+  // gaps either side of the stem of a T-shaped, arrangement of monitors)
+  std::vector<deskflow::ShapeHole> m_shapeHoles;
 
   // true if mouse has entered the computer
   bool m_isOnComputer;
