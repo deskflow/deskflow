@@ -473,8 +473,15 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
           connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [] {
             qDebug("connected to core ipc server");
           });
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::connectionFailed, this, [] {
-            qWarning("failed to establish core ipc connection");
+
+          // In service mode the start is sent to the daemon, so the core may not be listening yet.
+          connect(m_coreIpcClient, &ipc::CoreIpcClient::connectionFailed, this, [this, client = m_coreIpcClient] {
+            if (m_processState == ProcessState::Started && m_coreIpcClient == client) {
+              qWarning("failed to establish core ipc connection, retrying");
+              client->connectToServer();
+            } else {
+              qWarning("failed to establish core ipc connection");
+            }
           });
           connect(m_coreIpcClient, &ipc::CoreIpcClient::serverShutdown, this, [this, client = m_coreIpcClient] {
             qDebug("core ipc server shut down cleanly");
