@@ -18,7 +18,7 @@ public:
   KeySequence() = default;
 
   QString toString() const;
-  bool appendKey(int modifiers, int key);
+  bool appendKey(int key, int modifiers);
   bool appendMouseButton(int button);
   bool isMouseButton() const;
   bool valid() const
