@@ -37,6 +37,8 @@ static WPARAM g_deadRelease = 0;
 static LPARAM g_deadLParam = 0;
 static BYTE g_deadKeyState[256] = {0};
 static BYTE g_keyState[256] = {0};
+static WCHAR g_lastChars[256] = {0};
+static BYTE g_lastNoAltGr[256] = {0};
 static bool g_keyStateValid = false;
 static std::mutex g_keyStateMutex;
 static DWORD g_hookThread = 0;
@@ -223,6 +225,116 @@ static void setDeadKey(WCHAR wc[], int size, UINT flags)
   }
 }
 
+// Map a key-down event to a character message. Kept as its own function so the
+// key-up / key-down split in keyboardHookHandler does not re-indent this logic.
+static WPARAM mapKeyDown(WPARAM wParam, LPARAM lParam, BYTE keys[256], UINT control, UINT menu, UINT flags)
+{
+  DWORD vkCode = static_cast<DWORD>(wParam);
+
+  // map the key event to a character.  we have to put the dead
+  // key back first and this has the side effect of removing it.
+  WCHAR wc[] = {0, 0};
+  setDeadKey(wc, 2, flags);
+
+  UINT scanCode = ((lParam & 0x10ff0000u) >> 16);
+  int n = ToUnicode((UINT)wParam, scanCode, keys, wc, 2, flags);
+
+  // if mapping failed and ctrl and alt are pressed then try again
+  // with both not pressed.  this handles the case where ctrl and
+  // alt are being used as individual modifiers rather than AltGr.
+  // we note that's the case in the message sent back to deskflow
+  // because there's no simple way to deduce it after the fact.
+  // we have to put the dead key back first, if there was one.
+  bool noAltGr = false;
+  if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
+    noAltGr = true;
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
+    setDeadKey(wc, 2, flags);
+
+    BYTE keys2[256];
+    for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
+      keys2[i] = keys[i];
+    }
+    keys2[VK_LCONTROL] = 0;
+    keys2[VK_RCONTROL] = 0;
+    keys2[VK_CONTROL] = 0;
+    keys2[VK_LMENU] = 0;
+    keys2[VK_RMENU] = 0;
+    keys2[VK_MENU] = 0;
+    n = ToUnicode((UINT)wParam, scanCode, keys2, wc, 2, flags);
+  }
+
+  PostThreadMessage(
+      g_threadID, DESKFLOW_MSG_DEBUG, (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) | 0x60000000,
+      lParam
+  );
+  WPARAM charAndVirtKey = 0;
+  bool clearDeadKey = false;
+  switch (n) {
+  default:
+    // key is a dead key
+    g_deadVirtKey = wParam;
+    g_deadLParam = lParam;
+    for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
+      g_deadKeyState[i] = keys[i];
+    }
+    break;
+
+  case 0:
+    // key doesn't map to a character.  this can happen if
+    // non-character keys are pressed after a dead key.
+    charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
+    if (vkCode < 256) {
+      g_lastChars[vkCode] = 0;
+      g_lastNoAltGr[vkCode] = 0;
+    }
+    break;
+
+  case 1:
+    // key maps to a character (possibly composed with dead key)
+    charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
+    clearDeadKey = true;
+    if (g_deadVirtKey != 0) {
+      g_deadRelease = g_deadVirtKey; // suppress the dead key's UP event
+    }
+    if (vkCode < 256) {
+      g_lastChars[vkCode] = wc[0];
+      g_lastNoAltGr[vkCode] = noAltGr ? 1 : 0;
+    }
+    break;
+
+  case 2: {
+    // previous dead key not composed.  send a fake key press
+    // and release for the dead key to our window.
+    WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam | 0x80000000u);
+
+    // use uncomposed character
+    charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
+    clearDeadKey = true;
+    if (vkCode < 256) {
+      g_lastChars[vkCode] = wc[1];
+      g_lastNoAltGr[vkCode] = noAltGr ? 1 : 0;
+    }
+    break;
+  }
+  }
+
+  // put back the dead key for local apps - not needed in RELAY mode
+  if (g_deadVirtKey != 0 && g_mode != kHOOK_RELAY_EVENTS) {
+    ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState, wc, 2, flags);
+  }
+
+  // clear out old dead key state
+  if (clearDeadKey) {
+    g_deadVirtKey = 0;
+    g_deadLParam = 0;
+  }
+
+  return charAndVirtKey;
+}
+
 static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
   DWORD vkCode = static_cast<DWORD>(wParam);
@@ -311,99 +423,16 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     }
   }
 
-  // map the key event to a character.  we have to put the dead
-  // key back first and this has the side effect of removing it.
-  WCHAR wc[] = {0, 0};
-  setDeadKey(wc, 2, flags);
-
-  UINT scanCode = ((lParam & 0x10ff0000u) >> 16);
-  int n = ToUnicode((UINT)wParam, scanCode, keys, wc, 2, flags);
-
-  // if mapping failed and ctrl and alt are pressed then try again
-  // with both not pressed.  this handles the case where ctrl and
-  // alt are being used as individual modifiers rather than AltGr.
-  // we note that's the case in the message sent back to deskflow
-  // because there's no simple way to deduce it after the fact.
-  // we have to put the dead key back first, if there was one.
-  bool noAltGr = false;
-  if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
-    noAltGr = true;
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x05000000, lParam);
-    setDeadKey(wc, 2, flags);
-
-    BYTE keys2[256];
-    for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
-      keys2[i] = keys[i];
-    }
-    keys2[VK_LCONTROL] = 0;
-    keys2[VK_RCONTROL] = 0;
-    keys2[VK_CONTROL] = 0;
-    keys2[VK_LMENU] = 0;
-    keys2[VK_RMENU] = 0;
-    keys2[VK_MENU] = 0;
-    n = ToUnicode((UINT)wParam, scanCode, keys2, wc, 2, flags);
-  }
-
-  PostThreadMessage(
-      g_threadID, DESKFLOW_MSG_DEBUG, (wc[0] & 0xffff) | ((wParam & 0xff) << 16) | ((n & 0xf) << 24) | 0x60000000,
-      lParam
-  );
+  // Key-up must not call ToUnicode: with a pending dead key (e.g. ~ after
+  // ç on ABNT2) the previous letter's UP would flush the dead key as a
+  // spacing '~' even if the user never typed the combining letter.
   WPARAM charAndVirtKey = 0;
-  bool clearDeadKey = false;
-  switch (n) {
-  default:
-    // key is a dead key
-
-    if (lParam & 0x80000000u)
-      // This handles the obscure situation where a key has been
-      // pressed which is both a dead key and a normal character
-      // depending on which modifiers have been pressed. We
-      // break here to prevent it from being considered a dead
-      // key.
-      break;
-
-    g_deadVirtKey = wParam;
-    g_deadLParam = lParam;
-    for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
-      g_deadKeyState[i] = keys[i];
-    }
-    break;
-
-  case 0:
-    // key doesn't map to a character.  this can happen if
-    // non-character keys are pressed after a dead key.
-    charAndVirtKey = makeKeyMsg((UINT)wParam, 0, noAltGr);
-    break;
-
-  case 1:
-    // key maps to a character composed with dead key
-    charAndVirtKey = makeKeyMsg((UINT)wParam, wc[0], noAltGr);
-    clearDeadKey = true;
-    break;
-
-  case 2: {
-    // previous dead key not composed.  send a fake key press
-    // and release for the dead key to our window.
-    WPARAM deadCharAndVirtKey = makeKeyMsg((UINT)g_deadVirtKey, wc[0], noAltGr);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, deadCharAndVirtKey, g_deadLParam | 0x80000000u);
-
-    // use uncomposed character
-    charAndVirtKey = makeKeyMsg((UINT)wParam, wc[1], noAltGr);
-    clearDeadKey = true;
-    break;
-  }
-  }
-
-  // put back the dead key, if any, for the application to use
-  if (g_deadVirtKey != 0) {
-    ToUnicode((UINT)g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16, g_deadKeyState, wc, 2, flags);
-  }
-
-  // clear out old dead key state
-  if (clearDeadKey) {
-    g_deadVirtKey = 0;
-    g_deadLParam = 0;
+  if (kf_up) {
+    WCHAR prev = (vkCode < 256) ? g_lastChars[vkCode] : 0;
+    bool noAltGr = (vkCode < 256) && (g_lastNoAltGr[vkCode] != 0);
+    charAndVirtKey = makeKeyMsg((UINT)wParam, prev, noAltGr);
+  } else {
+    charAndVirtKey = mapKeyDown(wParam, lParam, keys, control, menu, flags);
   }
 
   // forward message to our window.  do this whether or not we're
@@ -629,6 +658,9 @@ EHookResult MSWindowsHook::install()
   // discard old dead keys
   g_deadVirtKey = 0;
   g_deadLParam = 0;
+  g_deadRelease = 0;
+  std::memset(g_lastChars, 0, sizeof(g_lastChars));
+  std::memset(g_lastNoAltGr, 0, sizeof(g_lastNoAltGr));
 
   // reset fake input flag
   g_fakeServerInput = false;
@@ -673,6 +705,9 @@ int MSWindowsHook::uninstall()
   // discard old dead keys
   g_deadVirtKey = 0;
   g_deadLParam = 0;
+  g_deadRelease = 0;
+  std::memset(g_lastChars, 0, sizeof(g_lastChars));
+  std::memset(g_lastNoAltGr, 0, sizeof(g_lastNoAltGr));
 
   // uninstall hooks
   if (g_keyboardLL != nullptr) {
