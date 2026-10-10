@@ -269,6 +269,7 @@ void Server::adoptClient(BaseClientProxy *client)
   LOG_DEBUG("client \"%s\" has connected", getName(client).c_str());
   ipcSendConnectionState(deskflow::core::ConnectionState::Connected);
   sendConnectedClientsIpc();
+  sendComputerShapesIpc();
 
   // send configuration options to client
   sendOptions(client);
@@ -324,6 +325,18 @@ void Server::sendConnectedClientsIpc() const
     }
   }
   ipcSendToClient("connectedClients", clientList.join(","));
+}
+
+void Server::sendComputerShapesIpc() const
+{
+  for (const auto &[name, client] : m_clients) {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+    client->getShape(x, y, width, height);
+    ipcSendToClient("computerShape", QStringLiteral("%1,%2,%3").arg(QString::fromStdString(name)).arg(width).arg(height));
+  }
 }
 
 std::string Server::getName(const BaseClientProxy *client) const
@@ -1159,6 +1172,8 @@ void Server::handleShapeChanged(BaseClientProxy *client)
       onMouseMoveSecondary(0, 0);
     }
   }
+
+  sendComputerShapesIpc();
 }
 
 void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber)

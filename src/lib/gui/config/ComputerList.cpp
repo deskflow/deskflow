@@ -7,104 +7,69 @@
 
 #include "ComputerList.h"
 
-#include <array>
+#include "LayoutLinks.h"
 
-namespace {
+#include <algorithm>
 
-/**
- * @brief getNeightborIndexes returns indexes for server neighbors
- * @param serverIndex server index
- * @param width of the grid
- * @param size of the grid
- * @return indexes for server neighbors
- */
-std::array<int, 8> getNeighborsIndexes(int serverIndex, int width, int size)
+using deskflow::gui::layout::overlapsAny;
+
+QList<QRect> ComputerList::rects(const Computer *except) const
 {
-  const int UNSET = -1;
-  const int LEFT = 0;
-  const int RIGHT = 1;
-  const int TOP = 2;
-  const int BOTTOM = 3;
-  const int TOP_LEFT = 4;
-  const int TOP_RIGHT = 5;
-  const int BOTTOM_RIGHT = 6;
-  const int BOTTOM_LEFT = 7;
-
-  std::array<int, 8> indexes = {UNSET};
-
-  if (serverIndex >= 0 && serverIndex < size) {
-    indexes[LEFT] = (serverIndex - 1) % width != width - 1 ? (serverIndex - 1) : UNSET;
-    indexes[RIGHT] = (serverIndex + 1) % width != 0 ? (serverIndex + 1) : UNSET;
-    indexes[TOP] = (serverIndex - width) >= 0 ? (serverIndex - width) : UNSET;
-    indexes[BOTTOM] = (serverIndex + width) < size ? (serverIndex + width) : UNSET;
-    indexes[TOP_LEFT] = (indexes[TOP] != UNSET && indexes[LEFT] != UNSET) ? indexes[TOP] - 1 : UNSET;
-    indexes[TOP_RIGHT] = (indexes[TOP] != UNSET && indexes[RIGHT] != UNSET) ? indexes[TOP] + 1 : UNSET;
-    indexes[BOTTOM_RIGHT] = (indexes[BOTTOM] != UNSET && indexes[RIGHT] != UNSET) ? indexes[BOTTOM] + 1 : UNSET;
-    indexes[BOTTOM_LEFT] = (indexes[BOTTOM] != UNSET && indexes[LEFT] != UNSET) ? indexes[BOTTOM] - 1 : UNSET;
+  QList<QRect> result;
+  for (const auto &computer : *this) {
+    if (&computer != except && !computer.isNull() && computer.geometry().isValid())
+      result.append(computer.geometry());
   }
-
-  return indexes;
+  return result;
 }
 
-/**
- * @brief getServerIndex finds server and returns it's index
- * @param computers list to find server
- * @return server index
- */
-int getServerIndex(const ComputerList &computers)
+QRect ComputerList::freeSpotNextTo(const QRect &anchor, const QSize &size) const
 {
-  int serverIndex = -1;
-
-  for (int i = 0; i < computers.size(); ++i) {
-    if (computers[i].isServer()) {
-      serverIndex = i;
-      break;
-    }
+  const auto others = rects();
+  const QList<QRect> candidates = {
+      QRect(QPoint(anchor.x() - size.width(), anchor.y()), size),
+      QRect(QPoint(anchor.x() + anchor.width(), anchor.y()), size),
+      QRect(QPoint(anchor.x(), anchor.y() - size.height()), size),
+      QRect(QPoint(anchor.x(), anchor.y() + anchor.height()), size),
+  };
+  for (const auto &candidate : candidates) {
+    if (!overlapsAny(candidate, others))
+      return candidate;
   }
 
-  return serverIndex;
-}
-
-} // namespace
-
-ComputerList::ComputerList(int width) : QList<Computer>(), m_width(width)
-{
+  QRect bounds;
+  for (const auto &rect : others)
+    bounds |= rect;
+  return QRect(QPoint(bounds.x() + bounds.width(), bounds.y()), size);
 }
 
 void ComputerList::addComputerByPriority(const Computer &newComputer)
 {
-  int serverIndex = getServerIndex(*this);
-  auto indexes = getNeighborsIndexes(serverIndex, m_width, static_cast<int>(size()));
+  Computer computer = newComputer;
+  const auto server = std::ranges::find_if(*this, [](const Computer &c) { return c.isServer(); });
+  const auto size = computer.geometry().isValid() ? computer.geometry().size() : kDefaultSize;
+  const auto anchor = server != end() && server->geometry().isValid() ? server->geometry() : QRect(QPoint(), size);
+  computer.setGeometry(freeSpotNextTo(anchor, size));
+  append(computer);
+}
 
-  bool isAdded = false;
-  for (const auto &index : indexes) {
-    if (index >= 0 && index < size()) {
-      auto &computer = operator[](index);
-      if (computer.isNull()) {
-        computer = newComputer;
-        isAdded = true;
-        break;
+bool ComputerList::resizeComputer(const QString &name, const QSize &size)
+{
+  const auto it = std::ranges::find_if(*this, [&name](const Computer &c) { return c.name() == name; });
+  if (it == end() || size.isEmpty() || it->geometry().size() == size)
+    return false;
+
+  const auto others = rects(&*it);
+  QRect rect(it->geometry().topLeft(), size);
+  for (bool moved = true; moved;) {
+    moved = false;
+    for (const auto &other : others) {
+      if (rect.intersects(other)) {
+        rect.moveLeft(other.x() + other.width());
+        moved = true;
       }
     }
   }
-
-  if (!isAdded) {
-    addComputerToFirstEmpty(newComputer);
-  }
-}
-
-void ComputerList::addComputerToFirstEmpty(const Computer &newComputer)
-{
-  for (int i = 0; i < size(); ++i) {
-    auto &computer = operator[](i);
-    if (computer.isNull()) {
-      computer = newComputer;
-      break;
-    }
-  }
-}
-
-bool ComputerList::operator==(const ComputerList &sc) const
-{
-  return m_width == sc.m_width && QList::operator==(sc);
+  it->setGeometry(rect);
+  return true;
 }

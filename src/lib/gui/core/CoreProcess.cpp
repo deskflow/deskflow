@@ -624,6 +624,27 @@ void CoreProcess::setProcessState(ProcessState state)
   Q_EMIT processStateChanged(state);
 }
 
+bool CoreProcess::parseComputerShape(const QString &args, QString &name, QSize &size)
+{
+  // The name may itself contain commas, so the size is taken from the end.
+  const auto heightSep = args.lastIndexOf(',');
+  const auto widthSep = heightSep > 0 ? args.lastIndexOf(',', heightSep - 1) : -1;
+  if (widthSep <= 0)
+    return false;
+
+  bool widthOk = false;
+  bool heightOk = false;
+  const QSize parsed(
+      args.mid(widthSep + 1, heightSep - widthSep - 1).toInt(&widthOk), args.mid(heightSep + 1).toInt(&heightOk)
+  );
+  if (!widthOk || !heightOk || parsed.isEmpty())
+    return false;
+
+  name = args.left(widthSep);
+  size = parsed;
+  return true;
+}
+
 void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString &args)
 {
   if (command == "connectionState") {
@@ -638,6 +659,13 @@ void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString
   } else if (command == "connectedClients") {
     const auto clients = args.isEmpty() ? QStringList() : args.split(",");
     Q_EMIT connectedClientsChanged(clients);
+  } else if (command == "computerShape") {
+    QString name;
+    QSize size;
+    if (parseComputerShape(args, name, size))
+      Q_EMIT computerShapeChanged(name, size);
+    else
+      qWarning("core ipc got invalid computer shape: %s", qPrintable(args));
   } else if (command == "secureSocket") {
     Q_EMIT secureSocket(true);
     if (args != m_secureSocketVersion) {

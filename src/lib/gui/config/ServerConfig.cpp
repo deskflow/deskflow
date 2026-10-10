@@ -10,6 +10,7 @@
 
 #include "common/Hotkey.h"
 #include "common/Settings.h"
+#include "gui/config/LayoutLinks.h"
 
 #include <QAbstractButton>
 #include <QPushButton>
@@ -17,22 +18,7 @@
 using enum ComputerConfig::SwitchCorner;
 using enum ComputerConfig::Fix;
 
-static const struct
-{
-  int x;
-  int y;
-  const char *name;
-} neighbourDirs[] = {
-    {1, 0, "right"},
-    {-1, 0, "left"},
-    {0, -1, "up"},
-    {0, 1, "down"},
-
-};
-
-const int serverDefaultIndex = 7;
-
-ServerConfig::ServerConfig(int columns, int rows) : m_computers(columns), m_columns(columns), m_rows(rows)
+ServerConfig::ServerConfig()
 {
   recall();
 }
@@ -59,17 +45,6 @@ void ServerConfig::save(QFile &file) const
 {
   QTextStream outStream(&file);
   outStream << *this;
-}
-
-void ServerConfig::setupComputers()
-{
-  computers().clear();
-  hotkeys().clear();
-
-  // There must always be computer objects for each cell in the computers QList.
-  // Unused computers are identified by having an empty name.
-  for (int i = 0; i < m_columns * m_rows; i++)
-    addComputer(Computer());
 }
 
 void ServerConfig::commit()
@@ -107,21 +82,28 @@ void ServerConfig::recall()
 
   settings().beginGroup("internalConfig");
 
-  m_columns = Settings::value(Settings::Server::GridWidth).toInt();
-  m_rows = Settings::value(Settings::Server::GridHeight).toInt();
+  computers().clear();
+  hotkeys().clear();
 
-  // we need to know the number of columns and rows before we can set up
-  // ourselves
-  setupComputers();
+  // Layouts saved before free-form placement only stored the grid cell index.
+  const int legacyColumns = Settings::value(Settings::Server::GridWidth).toInt();
+  const auto cellSize = ComputerList::kDefaultSize;
 
   int numComputers = settings().beginReadArray("screens");
-  Q_ASSERT(numComputers <= computers().size());
   for (int i = 0; i < numComputers; i++) {
     settings().setArrayIndex(i);
-    computers()[i].loadSettings(settings());
-    if (getServerName() == computers()[i].name()) {
-      computers()[i].markAsServer();
+    Computer computer;
+    computer.loadSettings(settings());
+    if (computer.isNull())
+      continue;
+    if (!computer.geometry().isValid()) {
+      const QPoint cell(i % legacyColumns, i / legacyColumns);
+      computer.setGeometry(QRect(QPoint(cell.x() * cellSize.width(), cell.y() * cellSize.height()), cellSize));
     }
+    if (getServerName() == computer.name()) {
+      computer.markAsServer();
+    }
+    addComputer(computer);
   }
   settings().endArray();
 
@@ -137,40 +119,25 @@ void ServerConfig::recall()
   settings().endGroup();
 }
 
-int ServerConfig::adjacentComputerIndex(int idx, int deltaColumn, int deltaRow) const
-{
-  if (computers()[idx].isNull())
-    return -1;
-
-  // if we're at the left or right end of the table, don't find results going
-  // further left or right
-  if ((deltaColumn > 0 && (idx + 1) % m_columns == 0) || (deltaColumn < 0 && idx % m_columns == 0))
-    return -1;
-
-  int arrayPos = idx + deltaColumn + deltaRow * m_columns;
-
-  if (arrayPos >= computers().size() || arrayPos < 0)
-    return -1;
-
-  return arrayPos;
-}
-
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 {
-  outStream << "section: links" << Qt::endl;
+  using namespace deskflow::gui::layout;
 
-  for (int i = 0; const auto &computer : config.computers()) {
-    if (!computer.isNull()) {
-      outStream << "\t" << computer.name() << ":\n";
-      for (const auto &neighbour : std::as_const(neighbourDirs)) {
-        int idx = config.adjacentComputerIndex(i, neighbour.x, neighbour.y);
-        if (idx != -1 && !config.computers()[idx].isNull())
-          outStream << "\t\t" << neighbour.name << " = " << config.computers()[idx].name() << Qt::endl;
-      }
-    }
-    i++;
+  QList<Placed> placed;
+  for (const auto &computer : config.computers()) {
+    if (!computer.isNull())
+      placed.append({computer.name(), computer.geometry()});
   }
+  const auto links = computeLinks(placed);
 
+  outStream << "section: links" << Qt::endl;
+  for (const auto &[name, _] : std::as_const(placed)) {
+    outStream << "\t" << name << ":\n";
+    for (const auto &link : links) {
+      if (link.from == name)
+        outStream << "\t\t" << formatLink(link) << Qt::endl;
+    }
+  }
   outStream << "end" << Qt::endl << Qt::endl;
 
   outStream << "section: options" << Qt::endl;
@@ -220,20 +187,6 @@ bool ServerConfig::useExternalConfig() const
   return Settings::value(Settings::Server::ExternalConfig).toBool();
 }
 
-bool ServerConfig::isFull() const
-{
-  bool isFull = true;
-
-  for (const auto &computer : computers()) {
-    if (computer.isNull()) {
-      isFull = false;
-      break;
-    }
-  }
-
-  return isFull;
-}
-
 bool ServerConfig::computerExists(const QString &computerName) const
 {
   bool isExists = false;
@@ -250,16 +203,33 @@ bool ServerConfig::computerExists(const QString &computerName) const
 
 void ServerConfig::addClient(const QString &clientName)
 {
-  int serverIndex = -1;
-  const auto computerName = Settings::value(Settings::Core::ComputerName).toString();
+  ensureServer();
+  m_computers.addComputerByPriority(Computer(clientName));
+}
 
-  if (findComputerName(computerName, serverIndex)) {
-    m_computers[serverIndex].markAsServer();
-  } else {
-    fixNoServer(computerName, serverIndex);
+void ServerConfig::ensureServer()
+{
+  const auto serverName = getServerName();
+  int index = -1;
+  if (findComputerName(serverName, index)) {
+    m_computers[index].markAsServer();
+    return;
   }
 
-  m_computers.addComputerByPriority(Computer(clientName));
+  Computer server(serverName);
+  server.markAsServer();
+  const QRect origin(QPoint(), ComputerList::kDefaultSize);
+  server.setGeometry(
+      deskflow::gui::layout::overlapsAny(origin, m_computers.rects())
+          ? m_computers.freeSpotNextTo(origin, origin.size())
+          : origin
+  );
+  m_computers.append(server);
+}
+
+bool ServerConfig::resizeComputer(const QString &name, const QSize &size)
+{
+  return m_computers.resizeComputer(name, size);
 }
 
 void ServerConfig::setConfigFile(const QString &configFile) const
@@ -283,19 +253,6 @@ bool ServerConfig::findComputerName(const QString &name, int &index)
     }
   }
   return found;
-}
-
-bool ServerConfig::fixNoServer(const QString &name, int &index)
-{
-  bool fixed = false;
-  if (computers()[serverDefaultIndex].isNull()) {
-    m_computers[serverDefaultIndex].setName(name);
-    m_computers[serverDefaultIndex].markAsServer();
-    index = serverDefaultIndex;
-    fixed = true;
-  }
-
-  return fixed;
 }
 
 QSettingsProxy &ServerConfig::settings()

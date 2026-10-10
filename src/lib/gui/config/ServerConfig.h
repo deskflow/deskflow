@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "common/Constants.h"
 #include "common/Hotkey.h"
 #include "gui/config/ComputerConfig.h"
 #include "gui/config/ComputerList.h"
@@ -19,6 +18,7 @@ class QTextStream;
 class QSettings;
 class QString;
 class QFile;
+class QSize;
 class ServerConfigDialog;
 
 class ServerConfig : public ComputerConfig
@@ -27,7 +27,7 @@ class ServerConfig : public ComputerConfig
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
-  explicit ServerConfig(int columns = kServerGridWidth, int rows = kServerGridHeight);
+  ServerConfig();
   ~ServerConfig() = default;
 
   bool operator==(const ServerConfig &sc) const;
@@ -48,7 +48,6 @@ public:
   bool save(const QString &fileName) const;
   bool computerExists(const QString &computerName) const;
   void save(QFile &file) const;
-  bool isFull() const;
   void commit();
   int numComputers() const;
   QString getServerName() const;
@@ -57,9 +56,19 @@ public:
   bool useExternalConfig() const;
   void addClient(const QString &clientName);
 
+  /**
+   * @brief ensureServer marks the server computer, adding it to the layout if missing
+   */
+  void ensureServer();
+
+  /**
+   * @brief resizeComputer sets the size of a computer, e.g. when its resolution is reported
+   * @return true if the layout changed
+   */
+  bool resizeComputer(const QString &name, const QSize &size);
+
 private:
   void recall();
-  void setupComputers();
   QSettingsProxy &settings();
   ComputerList &computers()
   {
@@ -79,16 +88,12 @@ private:
   {
     return m_Hotkeys;
   }
-  int adjacentComputerIndex(int idx, int deltaColumn, int deltaRow) const;
   bool findComputerName(const QString &name, int &index);
-  bool fixNoServer(const QString &name, int &index);
 
 private:
   HotkeyList m_Hotkeys;
 
   ComputerList m_computers;
-  int m_columns;
-  int m_rows;
 };
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
