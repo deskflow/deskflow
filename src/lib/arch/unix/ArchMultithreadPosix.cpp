@@ -10,9 +10,14 @@
 #include "arch/Arch.h"
 #include "arch/ArchException.h"
 
+#include <algorithm>
 #include <cerrno>
+#include <chrono>
+#include <list>
 #include <signal.h>
 #include <sys/time.h>
+#include <system_error>
+#include <thread>
 #include <time.h>
 
 #define SIGWAKEUP SIGUSR1
@@ -33,7 +38,9 @@ static void setSignalSet(sigset_t *sigset)
 class ArchThreadImpl
 {
 public:
-  ArchThreadImpl() = default;
+  explicit ArchThreadImpl(std::shared_ptr<ArchThreadState> state) : m_state(std::move(state))
+  {
+  }
 
 public:
   int m_refCount = 1;
@@ -44,9 +51,100 @@ public:
   bool m_cancel = false;
   bool m_cancelling = false;
   bool m_exited = false;
+  bool m_active = false;
   void *m_result = nullptr;
-  void *m_networkData = nullptr;
+  std::shared_ptr<void> m_networkData;
+  std::shared_ptr<ArchThreadState> m_state;
 };
+
+namespace {
+void currentThreadExited(void *);
+}
+
+struct ArchThreadState
+{
+  ArchThreadState()
+  {
+    const int status = pthread_key_create(&currentThread, &currentThreadExited);
+    if (status != 0) {
+      throw std::system_error(status, std::generic_category(), "pthread_key_create");
+    }
+  }
+
+  ~ArchThreadState()
+  {
+    pthread_key_delete(currentThread);
+  }
+
+  std::mutex mutex;
+  std::list<ArchThread> threads;
+  IArchMultithread::ThreadID nextID = 0;
+  pthread_key_t currentThread{};
+  bool stopping = false;
+};
+
+namespace {
+struct ThreadRegistration
+{
+  ArchThread thread;
+};
+
+// The caller holds the registry mutex. The TLS reference keeps both the
+// representation and its registry alive independently of the Arch object.
+void registerCurrentThread(ArchThread thread)
+{
+  auto registration = std::make_unique<ThreadRegistration>(thread);
+  const int status = pthread_setspecific(thread->m_state->currentThread, registration.get());
+  if (status != 0) {
+    throw std::system_error(status, std::generic_category(), "pthread_setspecific");
+  }
+  ++thread->m_refCount;
+  registration.release();
+}
+
+bool releaseThreadLocked(ArchThread thread)
+{
+  assert(thread->m_refCount > 0);
+  if (--thread->m_refCount != 0) {
+    return false;
+  }
+  assert(!thread->m_active);
+  return true;
+}
+
+void releaseThread(ArchThread thread)
+{
+  const auto state = thread->m_state;
+  bool destroy = false;
+  {
+    std::scoped_lock lock{state->mutex};
+    destroy = releaseThreadLocked(thread);
+  }
+  if (destroy) {
+    delete thread;
+  }
+}
+
+void currentThreadExited(void *data)
+{
+  const std::unique_ptr<ThreadRegistration> registration(static_cast<ThreadRegistration *>(data));
+  ArchThread thread = registration->thread;
+  const auto state = thread->m_state;
+  std::shared_ptr<void> networkData;
+  bool destroy = false;
+  {
+    std::scoped_lock lock{state->mutex};
+    state->threads.remove(thread);
+    thread->m_active = false;
+    thread->m_exited = true;
+    networkData = std::move(thread->m_networkData);
+    destroy = releaseThreadLocked(thread);
+  }
+  if (destroy) {
+    delete thread;
+  }
+}
+} // namespace
 
 //
 // ArchMultithreadPosix
@@ -54,23 +152,25 @@ public:
 
 ArchMultithreadPosix *ArchMultithreadPosix::s_instance = nullptr;
 
-ArchMultithreadPosix::ArchMultithreadPosix()
+ArchMultithreadPosix::ArchMultithreadPosix(ThreadCreate createThread)
+    : m_state(std::make_shared<ArchThreadState>()),
+      m_createThread(createThread)
 {
   assert(s_instance == nullptr);
-
-  s_instance = this;
-
-  // no signal handlers
-  for (size_t i = 0; i < static_cast<size_t>(ThreadSignal::MaxSignals); ++i) {
-    m_signalFunc[i] = nullptr;
-    m_signalUserData[i] = nullptr;
-  }
+  assert(m_createThread != nullptr);
 
   // create thread for calling (main) thread and add it to our
   // list.  no need to lock the mutex since we're the only thread.
-  m_mainThread = new ArchThreadImpl;
+  m_mainThread = new ArchThreadImpl(m_state);
   m_mainThread->m_thread = pthread_self();
-  insert(m_mainThread);
+  try {
+    insert(m_mainThread);
+    registerCurrentThread(m_mainThread);
+  } catch (...) {
+    m_state->threads.remove(m_mainThread);
+    delete m_mainThread;
+    throw;
+  }
 
   // install SIGWAKEUP handler.  this causes SIGWAKEUP to interrupt
   // system calls.  we use that when cancelling a thread to force it
@@ -96,24 +196,71 @@ ArchMultithreadPosix::ArchMultithreadPosix()
   sigemptyset(&sigset);
   sigaddset(&sigset, SIGPIPE);
   pthread_sigmask(SIG_BLOCK, &sigset, nullptr);
+
+  s_instance = this;
 }
 
 ArchMultithreadPosix::~ArchMultithreadPosix()
 {
-  assert(s_instance != nullptr);
+  shutdown();
+  assert(s_instance == this);
   s_instance = nullptr;
 }
 
-void ArchMultithreadPosix::setNetworkDataForCurrentThread(void *data)
+void ArchMultithreadPosix::shutdown()
 {
-  std::scoped_lock lock{m_threadMutex};
-  ArchThreadImpl *thread = find(pthread_self());
-  thread->m_networkData = data;
+  std::scoped_lock startupLock{m_startupMutex};
+  if (m_shutdown) {
+    return;
+  }
+  m_shutdown = true;
+  {
+    std::scoped_lock lock{m_state->mutex};
+    m_state->stopping = true;
+    m_signalStop = true;
+  }
+
+  if (m_signalStarted) {
+    // SIGUSR2 is already in the signal worker's wait set. The stop flag
+    // prevents this private wakeup from being dispatched as a user signal.
+    pthread_kill(m_signalThread, SIGUSR2);
+    const int status = pthread_join(m_signalThread, nullptr);
+    (void)status;
+    assert(status == 0);
+    m_signalStarted = false;
+    if (pthread_equal(m_signalMaskOwner, pthread_self())) {
+      pthread_sigmask(SIG_SETMASK, &m_previousSignalMask, nullptr);
+    }
+  }
+
+  auto *registration = static_cast<ThreadRegistration *>(pthread_getspecific(m_state->currentThread));
+  if (registration != nullptr) {
+    pthread_setspecific(m_state->currentThread, nullptr);
+    currentThreadExited(registration);
+  }
+  releaseThread(m_mainThread);
+  m_mainThread = nullptr;
 }
 
-void *ArchMultithreadPosix::getNetworkDataForThread(ArchThread thread)
+std::shared_ptr<void> ArchMultithreadPosix::installNetworkDataForThread(ArchThread thread, std::shared_ptr<void> data)
 {
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
+  // TLS destructors can first poll after the thread callback has returned.
+  if (m_state->stopping || !thread->m_active) {
+    return {};
+  }
+  if (!thread->m_networkData) {
+    thread->m_networkData = std::move(data);
+  }
+  return thread->m_networkData;
+}
+
+std::shared_ptr<void> ArchMultithreadPosix::getNetworkDataForThread(ArchThread thread)
+{
+  std::scoped_lock lock{m_state->mutex};
+  if (m_state->stopping) {
+    return {};
+  }
   return thread->m_networkData;
 }
 
@@ -272,6 +419,11 @@ ArchThread ArchMultithreadPosix::newThread(ThreadFunc func, void *data)
 {
   assert(func != nullptr);
 
+  std::scoped_lock startupLock{m_startupMutex};
+  if (m_shutdown) {
+    return nullptr;
+  }
+
   // initialize signal handler.  we do this here instead of the
   // constructor so we can avoid daemonizing (using fork())
   // when there are multiple threads.  clients can safely
@@ -279,47 +431,50 @@ ArchThread ArchMultithreadPosix::newThread(ThreadFunc func, void *data)
   // new thread and they can safely use the only thread
   // they have access to, the main thread, so they really
   // can't tell the difference.
-  if (!m_newThreadCalled) {
-    m_newThreadCalled = true;
-    startSignalHandler();
+  if (!m_signalStarted && !startSignalHandler()) {
+    return nullptr;
   }
 
   // note that the child thread will wait until we release this mutex
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
 
   // create thread impl for new thread
-  auto *thread = new ArchThreadImpl;
+  auto thread = std::make_unique<ArchThreadImpl>(m_state);
   thread->m_func = func;
   thread->m_userData = data;
+  // Reserve the list node before initializing native resources. The child
+  // cannot inspect its representation until this mutex is released.
+  m_state->threads.push_back(thread.get());
 
   // create the thread.  pthread_create() on RedHat 7.2 smp fails
   // if passed a nullptr attr so use a default attr.
   pthread_attr_t attr;
   int status = pthread_attr_init(&attr);
   if (status == 0) {
-    status = pthread_create(&thread->m_thread, &attr, &ArchMultithreadPosix::threadFunc, thread);
+    status = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    if (status == 0) {
+      status = m_createThread(&thread->m_thread, &attr, &ArchMultithreadPosix::threadFunc, thread.get());
+    }
     pthread_attr_destroy(&attr);
   }
 
   // check if thread was started
   if (status != 0) {
     // failed to start thread so clean up
-    delete thread;
-    thread = nullptr;
-  } else {
-    // add thread to list
-    insert(thread);
-
-    // increment ref count to account for the thread itself
-    refThread(thread);
+    m_state->threads.pop_back();
+    return nullptr;
   }
 
-  return thread;
+  thread->m_active = true;
+  thread->m_id = ++m_state->nextID;
+  // The execution reference is separate from caller handles and TLS ownership.
+  refThread(thread.get());
+  return thread.release();
 }
 
 ArchThread ArchMultithreadPosix::newCurrentThread()
 {
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
   ArchThreadImpl *thread = find(pthread_self());
   assert(thread != nullptr);
   return thread;
@@ -329,27 +484,12 @@ void ArchMultithreadPosix::closeThread(ArchThread thread)
 {
   assert(thread != nullptr);
 
-  // decrement ref count and clean up thread if no more references
-  if (--thread->m_refCount == 0) {
-    // detach from thread (unless it's the main thread)
-    if (thread->m_func != nullptr) {
-      pthread_detach(thread->m_thread);
-    }
-
-    // remove thread from list
-    {
-      std::scoped_lock lock{m_threadMutex};
-      assert(findNoRef(thread->m_thread) == thread);
-      erase(thread);
-    }
-
-    // done with thread
-    delete thread;
-  }
+  releaseThread(thread);
 }
 
 ArchThread ArchMultithreadPosix::copyThread(ArchThread thread)
 {
+  std::scoped_lock lock{m_state->mutex};
   refThread(thread);
   return thread;
 }
@@ -359,18 +499,10 @@ void ArchMultithreadPosix::cancelThread(ArchThread thread)
   assert(thread != nullptr);
 
   // set cancel and wakeup flags if thread can be cancelled
-  bool wakeup = false;
-
-  {
-    std::scoped_lock lock{m_threadMutex};
-    if (!thread->m_exited && !thread->m_cancelling) {
-      thread->m_cancel = true;
-      wakeup = true;
-    }
-  }
-
-  // force thread to exit system calls if wakeup is true
-  if (wakeup) {
+  std::scoped_lock lock{m_state->mutex};
+  if (!thread->m_exited && !thread->m_cancelling && thread->m_active) {
+    thread->m_cancel = true;
+    // Serialize with TLS deregistration so a recycled pthread_t is never used.
     pthread_kill(thread->m_thread, SIGWAKEUP);
   }
 }
@@ -387,7 +519,7 @@ void ArchMultithreadPosix::testCancelThread()
   // find current thread
   ArchThreadImpl *thread = nullptr;
   {
-    std::scoped_lock lock{m_threadMutex};
+    std::scoped_lock lock{m_state->mutex};
     thread = findNoRefOrInsert(pthread_self());
   }
   // test cancel on thread
@@ -400,7 +532,7 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
 
   ArchThreadImpl *self = nullptr;
   {
-    std::scoped_lock lock{m_threadMutex};
+    std::scoped_lock lock{m_state->mutex};
     // find current thread
     self = findNoRefOrInsert(pthread_self());
     // ignore wait if trying to wait on ourself
@@ -421,10 +553,19 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
 
     // wait and repeat test if there's a timeout
     if (timeout != 0.0) {
-      const double start = Arch::time();
+      const auto start = std::chrono::steady_clock::now();
+      const auto duration = std::chrono::duration<double>(timeout);
       do {
         // wait a little
-        Arch::sleep(0.05);
+        auto interval = std::chrono::duration<double>(0.05);
+        if (timeout > 0.0) {
+          const std::chrono::duration<double> remaining = duration - (std::chrono::steady_clock::now() - start);
+          if (remaining <= std::chrono::duration<double>::zero()) {
+            break;
+          }
+          interval = std::min(interval, remaining);
+        }
+        std::this_thread::sleep_for(interval);
 
         // repeat test
         testCancelThreadImpl(self);
@@ -434,7 +575,7 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
         }
 
         // repeat wait and test until timed out
-      } while (timeout < 0.0 || (Arch::time() - start) <= timeout);
+      } while (timeout < 0.0 || (std::chrono::steady_clock::now() - start) < duration);
     }
 
     closeThread(target);
@@ -452,13 +593,13 @@ bool ArchMultithreadPosix::isSameThread(ArchThread thread1, ArchThread thread2)
 
 bool ArchMultithreadPosix::isExitedThread(ArchThread thread)
 {
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
   return thread->m_exited;
 }
 
 void *ArchMultithreadPosix::getResultOfThread(ArchThread thread)
 {
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
   return thread->m_result;
 }
 
@@ -469,7 +610,7 @@ IArchMultithread::ThreadID ArchMultithreadPosix::getIDOfThread(ArchThread thread
 
 void ArchMultithreadPosix::setSignalHandler(ThreadSignal signal, SignalFunc func, void *userData)
 {
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
   const auto index = static_cast<int>(signal);
   m_signalFunc[index] = func;
   m_signalUserData[index] = userData;
@@ -479,40 +620,54 @@ void ArchMultithreadPosix::raiseSignal(ThreadSignal signal)
 {
   using enum ThreadSignal;
 
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{m_state->mutex};
+  if (m_state->stopping) {
+    return;
+  }
   const auto index = static_cast<int>(signal);
   if (m_signalFunc[index] != nullptr) {
     m_signalFunc[index](signal, m_signalUserData[index]);
     pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
   } else if (signal == Interrupt || signal == Terminate) {
-    ARCH->cancelThread(m_mainThread);
+    if (!m_mainThread->m_cancelling) {
+      m_mainThread->m_cancel = true;
+      pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
+    }
   }
 }
 
-void ArchMultithreadPosix::startSignalHandler()
+bool ArchMultithreadPosix::startSignalHandler()
 {
   // set signal mask.  the main thread blocks these signals and
   // the signal handler thread will listen for them.
   sigset_t sigset;
   sigset_t oldsigset;
   setSignalSet(&sigset);
-  pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
+  int status = pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
+  if (status != 0) {
+    return false;
+  }
 
   // fire up the INT and TERM signal handler thread.  we could
   // instead arrange to catch and handle these signals but
   // we'd be unable to cancel the main thread since no pthread
   // calls are allowed in a signal handler.
   pthread_attr_t attr;
-  int status = pthread_attr_init(&attr);
+  status = pthread_attr_init(&attr);
   if (status == 0) {
-    status = pthread_create(&m_signalThread, &attr, &ArchMultithreadPosix::threadSignalHandler, nullptr);
+    status = m_createThread(&m_signalThread, &attr, &ArchMultithreadPosix::threadSignalHandler, this);
     pthread_attr_destroy(&attr);
   }
   if (status != 0) {
     // can't create thread to wait for signal so don't block
     // the signals.
-    pthread_sigmask(SIG_UNBLOCK, &oldsigset, nullptr);
+    pthread_sigmask(SIG_SETMASK, &oldsigset, nullptr);
+    return false;
   }
+  m_previousSignalMask = oldsigset;
+  m_signalMaskOwner = pthread_self();
+  m_signalStarted = true;
+  return true;
 }
 
 ArchThreadImpl *ArchMultithreadPosix::find(pthread_t thread)
@@ -526,14 +681,24 @@ ArchThreadImpl *ArchMultithreadPosix::find(pthread_t thread)
 
 ArchThreadImpl *ArchMultithreadPosix::findNoRefOrInsert(pthread_t thread)
 {
+  assert(pthread_equal(thread, pthread_self()));
   ArchThreadImpl *impl = findNoRef(thread);
   if (impl == nullptr) {
     // create thread for calling thread which isn't in our list and
     // add it to the list. this can happen when a foreign thread
     // (e.g. a Qt thread) calls into the arch layer.
-    impl = new ArchThreadImpl;
-    impl->m_thread = thread;
-    insert(impl);
+    auto owner = std::make_unique<ArchThreadImpl>(m_state);
+    owner->m_thread = thread;
+    insert(owner.get());
+    try {
+      registerCurrentThread(owner.get());
+    } catch (...) {
+      m_state->threads.remove(owner.get());
+      throw;
+    }
+    // Foreign threads are owned by their TLS registration, not by the list.
+    --owner->m_refCount;
+    impl = owner.release();
   }
   return impl;
 }
@@ -541,9 +706,9 @@ ArchThreadImpl *ArchMultithreadPosix::findNoRefOrInsert(pthread_t thread)
 ArchThreadImpl *ArchMultithreadPosix::findNoRef(pthread_t thread)
 {
   // linear search
-  for (ThreadList::const_iterator index = m_threadList.begin(); index != m_threadList.end(); ++index) {
-    if ((*index)->m_thread == thread) {
-      return *index;
+  for (auto *entry : m_state->threads) {
+    if (entry->m_active && pthread_equal(entry->m_thread, thread)) {
+      return entry;
     }
   }
   return nullptr;
@@ -556,30 +721,21 @@ void ArchMultithreadPosix::insert(ArchThreadImpl *thread)
   // thread shouldn't already be on the list
   assert(findNoRef(thread->m_thread) == nullptr);
 
-  // set thread id.  note that we don't worry about m_nextID
+  // set thread id.  note that we don't worry about nextID
   // wrapping back to 0 and duplicating thread ID's since the
   // likelihood of deskflow running that long is vanishingly
   // small.
-  thread->m_id = ++m_nextID;
+  thread->m_id = ++m_state->nextID;
 
   // append to list
-  m_threadList.push_back(thread);
-}
-
-void ArchMultithreadPosix::erase(const ArchThreadImpl *thread)
-{
-  for (auto index = m_threadList.begin(); index != m_threadList.end(); ++index) {
-    if (*index == thread) {
-      m_threadList.erase(index);
-      break;
-    }
-  }
+  m_state->threads.push_back(thread);
+  thread->m_active = true;
 }
 
 void ArchMultithreadPosix::refThread(ArchThreadImpl *thread)
 {
   assert(thread != nullptr);
-  assert(findNoRef(thread->m_thread) != nullptr);
+  assert(thread->m_refCount > 0);
   ++thread->m_refCount;
 }
 
@@ -588,7 +744,7 @@ void ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl *thread)
   assert(thread != nullptr);
 
   // update cancel state
-  std::scoped_lock lock{m_threadMutex};
+  std::scoped_lock lock{thread->m_state->mutex};
   bool cancel = false;
   if (thread->m_cancel && !thread->m_cancelling) {
     thread->m_cancelling = true;
@@ -612,7 +768,7 @@ void *ArchMultithreadPosix::threadFunc(void *vrep)
   pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, nullptr);
 
   // run thread
-  s_instance->doThreadFunc(thread);
+  doThreadFunc(thread);
 
   // terminate the thread
   return nullptr;
@@ -620,16 +776,15 @@ void *ArchMultithreadPosix::threadFunc(void *vrep)
 
 void ArchMultithreadPosix::doThreadFunc(ArchThread thread)
 {
-  // default priority is slightly below normal
-  setPriorityOfThread(thread, 1);
-
-  // wait for parent to initialize this object
-  {
-    std::scoped_lock lock{m_threadMutex};
-  }
-
+  const auto state = thread->m_state;
   void *result = nullptr;
   try {
+    // Wait for the parent to publish the representation, then give TLS its
+    // own reference. Cleanup never needs the Arch instance after this point.
+    {
+      std::scoped_lock lock{state->mutex};
+      registerCurrentThread(thread);
+    }
     // go
     result = (*thread->m_func)(thread->m_userData);
   }
@@ -641,22 +796,27 @@ void ArchMultithreadPosix::doThreadFunc(ArchThread thread)
   } catch (...) {
     // note -- don't catch (...) to avoid masking bugs
     {
-      std::scoped_lock lock{m_threadMutex};
+      std::scoped_lock lock{state->mutex};
       thread->m_exited = true;
+      if (pthread_getspecific(state->currentThread) == nullptr) {
+        state->threads.remove(thread);
+        thread->m_active = false;
+      }
     }
-    closeThread(thread);
+    releaseThread(thread);
     throw;
   }
 
-  // thread has exited
+  // Preserve the existing callback-completion semantics of wait(). Native
+  // TLS cleanup can still run; its separate owner retains the representation.
   {
-    std::scoped_lock lock{m_threadMutex};
+    std::scoped_lock lock{state->mutex};
     thread->m_result = result;
     thread->m_exited = true;
   }
 
   // done with thread
-  closeThread(thread);
+  releaseThread(thread);
 }
 
 void ArchMultithreadPosix::threadCancel(int)
@@ -664,10 +824,9 @@ void ArchMultithreadPosix::threadCancel(int)
   // do nothing
 }
 
-void *ArchMultithreadPosix::threadSignalHandler(void *)
+void *ArchMultithreadPosix::threadSignalHandler(void *data)
 {
-  // detach
-  pthread_detach(pthread_self());
+  auto *self = static_cast<ArchMultithreadPosix *>(data);
 
   // add signal to mask
   sigset_t sigset;
@@ -683,29 +842,38 @@ void *ArchMultithreadPosix::threadSignalHandler(void *)
   // reason, we don't have to block SIGABRT.
   sigaddset(&sigset, SIGABRT);
 
-  // we exit the loop via thread cancellation in sigwait()
+  // The owner requests shutdown with a thread-directed signal, then joins us.
   for (;;) {
     // wait
     int signal = 0;
-    sigwait(&sigset, &signal);
+    const int status = sigwait(&sigset, &signal);
+    {
+      std::scoped_lock lock{self->m_state->mutex};
+      if (self->m_signalStop) {
+        return nullptr;
+      }
+    }
+    if (status != 0) {
+      return nullptr;
+    }
 
     // if we get here then the signal was raised
     switch (signal) {
       using enum ThreadSignal;
     case SIGINT:
-      ARCH->raiseSignal(Interrupt);
+      self->raiseSignal(Interrupt);
       break;
 
     case SIGTERM:
-      ARCH->raiseSignal(Terminate);
+      self->raiseSignal(Terminate);
       break;
 
     case SIGHUP:
-      ARCH->raiseSignal(Hangup);
+      self->raiseSignal(Hangup);
       break;
 
     case SIGUSR2:
-      ARCH->raiseSignal(User);
+      self->raiseSignal(User);
       break;
 
     default:

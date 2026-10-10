@@ -56,6 +56,17 @@ ssize_t ArchNetworkBSD::Deps::read(int fd, void *buf, size_t len)
   return ::read(fd, buf, len);
 }
 
+int ArchNetworkBSD::Deps::createPipe(int fds[2])
+{
+  return ::pipe(fds);
+}
+
+int ArchNetworkBSD::Deps::setNonBlocking(int fd)
+{
+  const int mode = fcntl(fd, F_GETFL, 0);
+  return mode == -1 ? -1 : fcntl(fd, F_SETFL, mode | O_NONBLOCK);
+}
+
 void ArchNetworkBSD::Deps::testCancelThread()
 {
   ARCH->testCancelThread();
@@ -64,6 +75,24 @@ void ArchNetworkBSD::Deps::testCancelThread()
 //
 // ArchNetworkBSD
 //
+
+struct ArchNetworkBSD::UnblockPipe
+{
+  UnblockPipe() = default;
+  UnblockPipe(const UnblockPipe &) = delete;
+  UnblockPipe &operator=(const UnblockPipe &) = delete;
+
+  ~UnblockPipe()
+  {
+    for (const int fd : fds) {
+      if (fd != -1) {
+        ::close(fd);
+      }
+    }
+  }
+
+  int fds[2] = {-1, -1};
+};
 
 void ArchNetworkBSD::init()
 {
@@ -271,9 +300,9 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
   int n = num;
 
   // add the unblock pipe
-  const int *unblockPipe = getUnblockPipe();
+  const auto unblockPipe = getUnblockPipe();
   if (unblockPipe != nullptr) {
-    pfd[n].fd = unblockPipe[0]; // test
+    pfd[n].fd = unblockPipe->fds[0];
     pfd[n].events = POLLIN;
     ++n;
   }
@@ -288,9 +317,10 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
   if (n > 0 && unblockPipe != nullptr && (pfd[num].revents & POLLIN) != 0) {
     // the unblock event was signalled.  flush the pipe.
     char dummy[100];
+    ssize_t count;
     do {
-      m_pDeps->read(unblockPipe[0], dummy, sizeof(dummy));
-    } while (errno != EAGAIN);
+      count = m_pDeps->read(unblockPipe->fds[0], dummy, sizeof(dummy));
+    } while (count > 0 || (count == -1 && errno == EINTR));
 
     // don't count this unblock pipe in return value
     --n;
@@ -329,10 +359,15 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
 
 void ArchNetworkBSD::unblockPollSocket(ArchThread thread)
 {
-  const int *unblockPipe = getUnblockPipeForThread(thread);
+  const auto unblockPipe = getUnblockPipeForThread(thread);
   if (unblockPipe != nullptr) {
     char dummy = 0;
-    std::ignore = write(unblockPipe[1], &dummy, 1);
+    // A full pipe already contains a wakeup. Never block a caller that
+    // repeatedly wakes a thread before it has drained the previous wakeup.
+    ssize_t count;
+    do {
+      count = write(unblockPipe->fds[1], &dummy, 1);
+    } while (count == -1 && errno == EINTR);
   }
 }
 
@@ -696,35 +731,31 @@ bool ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
   return (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
-const int *ArchNetworkBSD::getUnblockPipe()
+std::shared_ptr<ArchNetworkBSD::UnblockPipe> ArchNetworkBSD::getUnblockPipe()
 {
-  ArchMultithreadPosix *mt = ArchMultithreadPosix::getInstance();
-  ArchThread thread = mt->newCurrentThread();
-  const int *p = getUnblockPipeForThread(thread);
-  ARCH->closeThread(thread);
-  return p;
+  auto *mt = ArchMultithreadPosix::getInstance();
+  const auto release = [mt](ArchThread thread) { mt->closeThread(thread); };
+  std::unique_ptr<ArchThreadImpl, decltype(release)> thread(mt->newCurrentThread(), release);
+  return getUnblockPipeForThread(thread.get());
 }
 
-const int *ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
+std::shared_ptr<ArchNetworkBSD::UnblockPipe> ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
 {
-  ArchMultithreadPosix *mt = ArchMultithreadPosix::getInstance();
-  auto *unblockPipe = static_cast<int *>(mt->getNetworkDataForThread(thread));
-  if (unblockPipe == nullptr) {
-    unblockPipe = new int[2];
-    if (pipe(unblockPipe) != -1) {
-      try {
-        setBlockingOnSocket(unblockPipe[0], false);
-        mt->setNetworkDataForCurrentThread(unblockPipe);
-      } catch (...) {
-        delete[] unblockPipe;
-        unblockPipe = nullptr;
-      }
-    } else {
-      delete[] unblockPipe;
-      unblockPipe = nullptr;
-    }
+  auto *mt = ArchMultithreadPosix::getInstance();
+  auto unblockPipe = std::static_pointer_cast<UnblockPipe>(mt->getNetworkDataForThread(thread));
+  if (unblockPipe != nullptr) {
+    return unblockPipe;
   }
-  return unblockPipe;
+
+  auto candidate = std::make_shared<UnblockPipe>();
+  if (m_pDeps->createPipe(candidate->fds) == -1 || m_pDeps->setNonBlocking(candidate->fds[0]) == -1 ||
+      m_pDeps->setNonBlocking(candidate->fds[1]) == -1) {
+    return nullptr;
+  }
+
+  // Concurrent first wakeups may each create a candidate. Only one belongs
+  // to the target; the unused candidates close both descriptors here.
+  return std::static_pointer_cast<UnblockPipe>(mt->installNetworkDataForThread(thread, std::move(candidate)));
 }
 
 [[noreturn]] void ArchNetworkBSD::throwError(int err) const
