@@ -24,6 +24,15 @@ body:
         - label: I have done the sanity checks, and my issue persists.
           required: true
 
+  - type: checkboxes
+    id: similar-issues
+    attributes:
+      label: Before raising this issue, please check for existing issues
+      description: Please be sure you have checked for similar issues before reporting
+      options:
+        - label: I have checked for similar issues before reporting
+          required: true
+
   - type: textarea
     id: version
     attributes:
@@ -109,3 +118,14 @@ body:
         - Did restarting Deskflow or the computer help?
         - Are the locales matching across all your systems?
         - Anything else you can think of?
+
+
+  - type: input
+    id: votes
+    attributes:
+      label: Have this issue yourself
+      description: Do not modify these instructions
+      value: |
+        React with :+1: if you have this issue. Only comment if you have new information to provide about the issue.
+    validations:
+      required: true
