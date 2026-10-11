@@ -14,10 +14,13 @@
 
 namespace deskflow::core::ipc {
 
-IpcServer::IpcServer(QObject *parent, const QString &serverName, const QString &typeName)
+IpcServer::IpcServer(
+    QObject *parent, const QString &serverName, const QString &typeName, const QStringList &stateCommands
+)
     : QObject(parent),
       m_server{new QLocalServer(this)}, // NOSONAR - Qt memory
       m_serverName(serverName),
+      m_stateCommands(stateCommands),
       m_typeName(typeName.toUtf8())
 {
   // do nothing
@@ -51,7 +54,6 @@ void IpcServer::handleNewConnection()
   }
 
   LOG_DEBUG("%s ipc server got new connection", m_typeName.constData());
-  m_clients.insert(clientSocket);
 
   connect(clientSocket, &QLocalSocket::readyRead, this, &IpcServer::handleReadyRead);
   connect(clientSocket, &QLocalSocket::disconnected, this, &IpcServer::handleDisconnected);
@@ -89,7 +91,7 @@ void IpcServer::handleDisconnected()
 {
   const auto clientSocket = qobject_cast<QLocalSocket *>(sender());
   LOG_DEBUG("%s ipc server client disconnected", m_typeName.constData());
-  m_clients.remove(clientSocket);
+  m_handshakenClients.remove(clientSocket);
   clientSocket->deleteLater();
 }
 
@@ -102,7 +104,7 @@ void IpcServer::handleErrorOccurred()
     LOG_ERR("%s ipc server client error: %s", m_typeName.constData(), clientSocket->errorString().toUtf8().constData());
   }
 
-  m_clients.remove(clientSocket);
+  m_handshakenClients.remove(clientSocket);
   clientSocket->deleteLater();
 }
 
@@ -136,11 +138,23 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
       );
       writeToClientSocket(clientSocket, QStringLiteral("versionMismatch=%1").arg(versionId));
       clientSocket->flush();
+
+      // A mismatched GUI asks this core to stop, and waits for the goodbye broadcast.
+      m_handshakenClients.insert(clientSocket);
       return;
     }
 
     LOG_DEBUG("%s ipc server sending hello back", m_typeName.constData());
     writeToClientSocket(clientSocket, QStringLiteral("hello=%1").arg(versionId));
+    m_handshakenClients.insert(clientSocket);
+
+    for (const auto &stateCommand : std::as_const(m_stateCommands)) {
+      if (m_latestState.contains(stateCommand)) {
+        const auto &state = m_latestState.value(stateCommand);
+        LOG_VERBOSE("%s ipc server sending current state: %s", m_typeName.constData(), state.toUtf8().constData());
+        writeToClientSocket(clientSocket, state);
+      }
+    }
 
     // Replay messages that were queued before any clients connected.
     LOG_VERBOSE("ipc server replaying %d pending messages", m_pendingMessages.size());
@@ -162,22 +176,35 @@ void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &messag
 void IpcServer::broadcastCommand(const QString &command, const QString &args)
 {
   const auto message = args.isEmpty() ? command : QStringLiteral("%1=%2").arg(command, args);
+  const bool isState = m_stateCommands.contains(command);
+  if (isState) {
+    m_latestState.insert(command, message);
+  }
 
-  if (m_clients.isEmpty()) {
+  if (!m_handshakenClients.isEmpty()) {
+    LOG_VERBOSE(
+        "%s ipc server broadcasting message to %d clients: %s", m_typeName.constData(), m_handshakenClients.size(),
+        message.toUtf8().constData()
+    );
+    for (auto *client : std::as_const(m_handshakenClients)) {
+      writeToClientSocket(client, message);
+      client->flush();
+    }
+  } else if (isState) {
+    LOG_VERBOSE(
+        "%s ipc server has no clients, state kept for next client: %s", m_typeName.constData(),
+        message.toUtf8().constData()
+    );
+  } else {
     LOG_VERBOSE(
         "%s ipc server has no clients, message queued: %s", m_typeName.constData(), message.toUtf8().constData()
     );
-    m_pendingMessages.append(message);
-    return;
-  }
 
-  LOG_VERBOSE(
-      "%s ipc server broadcasting message to %d clients: %s", m_typeName.constData(), m_clients.size(),
-      message.toUtf8().constData()
-  );
-  for (auto *client : std::as_const(m_clients)) {
-    writeToClientSocket(client, message);
-    client->flush();
+    // Only the latest of each command is kept, so the queue can't grow while no GUI is open.
+    m_pendingMessages.removeIf([&command](const QString &pending) {
+      return pending == command || pending.startsWith(command + QLatin1Char('='));
+    });
+    m_pendingMessages.append(message);
   }
 }
 

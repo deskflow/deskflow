@@ -25,6 +25,10 @@ public:
   static CoreIpcServer &instance();
 
 private:
+  inline static const QStringList kStateCommands = {
+      QStringLiteral("connectionState"), QStringLiteral("connectedClients")
+  };
+
   void processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts) override;
 };
 

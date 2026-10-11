@@ -9,6 +9,7 @@
 #include <QObject>
 
 class QLocalSocket;
+class QTimer;
 
 namespace deskflow::gui::ipc {
 
@@ -59,7 +60,12 @@ private:
   void attemptConnection();
   void handleHandshakeMessage(const QStringList &parts);
 
+  static constexpr int kConnectRetryLimit = 10;
+  static constexpr int kConnectRetryDelay = 500;
+
   QLocalSocket *m_socket;
+  QTimer *m_retryTimer;
+  QMetaObject::Connection m_attemptFailedConnection;
   State m_state{State::Unconnected};
   QString m_socketName;
   QByteArray m_readBuffer;
