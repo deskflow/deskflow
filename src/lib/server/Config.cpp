@@ -709,11 +709,6 @@ void Config::readSectionLinks(ConfigReadContext &s)
       Interval srcInterval(s.parseInterval(srcArgs));
       Interval dstInterval(s.parseInterval(dstArgs));
 
-      // checked here, ahead of the direction/hole-location branch below,
-      // because the hole-location branch discards addHoleLink()'s own
-      // return value (an unresolved hole link is expected -- see
-      // Server::resolveShapeHoleLinks()) and would otherwise swallow an
-      // unknown dstComputer silently instead of reporting it
       if (!isComputer(dstComputer)) {
         throw ServerConfigReadException(s, "unknown computer name \"%{1}\"", dstComputer);
       }

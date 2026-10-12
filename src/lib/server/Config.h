@@ -254,9 +254,9 @@ public:
   //! Hole link
   /*!
   A request, made via a hole-location entry in the config file (e.g.
-  "bottom-right = someComputer"), to link a computer's shape hole (see
-  deskflow::ShapeHole) to another computer once that hole's actual position
-  is known at runtime.
+  "bottom-right = someClient"), to link a server's monitor hole (see
+  deskflow::ShapeHole) to a client once that hole's actual position
+  is calculated.
   */
   struct HoleLink
   {
@@ -270,14 +270,14 @@ public:
   /*!
   Registers a request to link the hole named \c location on \c srcName's
   shape to \c dstName, to be resolved once \c srcName's actual holes are
-  known at runtime.  Returns false if \c srcName or \c dstName is unknown.
+  calculated at runtime.  Returns false if \c srcName or \c dstName is unknown.
   */
   bool addHoleLink(const std::string &srcName, deskflow::HoleLocation location, const std::string &dstName);
 
   //! Get hole links
   /*!
   Returns the hole links registered for \c srcName via addHoleLink(), or an
-  empty list if there are none.
+  empty list if there are none or it is not supported by the server.
   */
   std::vector<HoleLink> getHoleLinks(const std::string &srcName) const;
 

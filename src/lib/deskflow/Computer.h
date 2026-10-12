@@ -258,7 +258,7 @@ public:
   /*!
   Returns every rectangular hole in the computer's bounding shape where no
   screen actually exists (see IPrimaryComputer::getShapeHoles()), or an
-  empty list if there are none.
+  empty list if there are none or if it is not supported.
   */
   std::vector<deskflow::ShapeHole> getShapeHoles() const;
 
