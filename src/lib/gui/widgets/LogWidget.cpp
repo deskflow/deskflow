@@ -29,6 +29,10 @@ LogWidget::LogWidget(QWidget *parent) : QWidget{parent}, m_textLog{new QPlainTex
   connect(
       deskflow::gui::Logger::instance(), &deskflow::gui::Logger::newLine, m_textLog, &QPlainTextEdit::appendPlainText
   );
+
+  // only user scrolling counts, Qt shifts the value itself when trimming lines or while hidden
+  auto sb = m_textLog->verticalScrollBar();
+  connect(sb, &QScrollBar::actionTriggered, this, [this, sb] { m_followTail = sb->sliderPosition() == sb->maximum(); });
 }
 
 void LogWidget::appendLine(const QString &msg)
@@ -56,6 +60,11 @@ void LogWidget::findPrevious(const QString &text)
     m_textLog->moveCursor(QTextCursor::End);
     m_textLog->find(text, QTextDocument::FindBackward);
   }
+}
+
+bool LogWidget::isFollowingTail() const
+{
+  return m_followTail;
 }
 
 void LogWidget::scrollToBottom() const
