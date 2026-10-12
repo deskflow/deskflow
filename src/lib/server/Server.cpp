@@ -1345,6 +1345,8 @@ void Server::processOptions()
   }
   m_relativeMoves = newRelativeMoves;
   m_protocol = Settings::networkProtocol();
+
+  m_primaryClient->setRestartServerOnZoneChange(m_config->restartServerOnZoneChange());
 }
 
 void Server::handleShapeChanged(BaseClientProxy *client)
