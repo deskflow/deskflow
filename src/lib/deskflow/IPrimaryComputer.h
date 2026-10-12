@@ -187,5 +187,15 @@ public:
   */
   virtual std::vector<deskflow::ShapeHole> getShapeHoles() const = 0;
 
+  //! Set whether to recommend a restart on monitor zone changes
+  /*!
+  Enables (or disables) a log message recommending the server be restarted
+  whenever the number of monitor zones changes, since a monitor being
+  added or removed isn't always reliably detected while already running
+  (see deskflow::server::Config::restartServerOnZoneChange()). A no-op on
+  platforms with nothing to hook this up to.
+  */
+  virtual void setRestartServerOnZoneChange(bool enabled) = 0;
+
   //@}
 };

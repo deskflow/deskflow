@@ -387,6 +387,14 @@ std::vector<deskflow::ShapeHole> Computer::getShapeHoles() const
   return m_computer->getShapeHoles();
 }
 
+void Computer::setRestartServerOnZoneChange(bool enabled)
+{
+  if (!m_isPrimary) {
+    return;
+  }
+  m_computer->setRestartServerOnZoneChange(enabled);
+}
+
 KeyModifierMask Computer::getActiveModifiers() const
 {
   return m_computer->getActiveModifiers();
