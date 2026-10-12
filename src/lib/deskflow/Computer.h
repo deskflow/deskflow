@@ -262,6 +262,13 @@ public:
   */
   std::vector<deskflow::ShapeHole> getShapeHoles() const;
 
+  //! Set whether to recommend a restart on monitor zone changes
+  /*!
+  Forwards to IPrimaryComputer::setRestartServerOnZoneChange() if this is
+  the primary computer, otherwise does nothing.
+  */
+  void setRestartServerOnZoneChange(bool enabled);
+
   //! Get the active modifiers
   /*!
   Returns the modifiers that are currently active according to our

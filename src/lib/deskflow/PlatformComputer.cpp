@@ -33,6 +33,12 @@ std::vector<deskflow::ShapeHole> PlatformComputer::getShapeHoles() const
   return {};
 }
 
+void PlatformComputer::setRestartServerOnZoneChange(bool)
+{
+  // only meaningful on a platform that tracks monitor zones separately from
+  // its own shape detection (currently just EiComputer); a no-op elsewhere
+}
+
 void PlatformComputer::setHalfDuplexMask(KeyModifierMask mask)
 {
   getKeyState()->setHalfDuplexMask(mask);
