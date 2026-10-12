@@ -641,7 +641,7 @@ void EiComputer::updateShape()
     } else {
       for (const auto &hole : newShapeHoles) {
         LOG_INFO(
-            "logical output has a %s hole: %dx%d@%d,%d", toString(hole.location),
+            "logical output has a %s hole: %dx%d@%d,%d", hole.location.c_str(),
             static_cast<int32_t>(hole.rect.w), static_cast<int32_t>(hole.rect.h), static_cast<int32_t>(hole.rect.x),
             static_cast<int32_t>(hole.rect.y)
         );
