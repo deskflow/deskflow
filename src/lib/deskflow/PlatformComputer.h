@@ -40,6 +40,7 @@ public:
   bool isAnyMouseButtonDown(uint32_t &buttonID) const override = 0;
   void getCursorCenter(int32_t &x, int32_t &y) const override = 0;
   std::vector<deskflow::ShapeHole> getShapeHoles() const override;
+  void setRestartServerOnZoneChange(bool enabled) override;
 
   // ISecondaryComputer overrides
   void fakeMouseButton(ButtonID id, bool press) override = 0;

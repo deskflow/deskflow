@@ -658,6 +658,13 @@ std::vector<deskflow::ShapeHole> EiComputer::getShapeHoles() const
   return m_shapeHoles;
 }
 
+void EiComputer::setRestartServerOnZoneChange(bool enabled)
+{
+  if (m_portalInputCapture != nullptr) {
+    m_portalInputCapture->setRestartOnZoneChangeEnabled(enabled);
+  }
+}
+
 void EiComputer::addDevice(struct ei_device *device)
 {
   LOG_DEBUG("adding device %s", ei_device_get_name(device));
