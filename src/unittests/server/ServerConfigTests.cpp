@@ -220,4 +220,17 @@ void ServerConfigTests::equalityCheck_diff_holeLinks()
   QVERIFY(a == b);
 }
 
+void ServerConfigTests::restartServerOnZoneChange_defaultsFalse()
+{
+  // the full "section: options" text-parsing path (Config::read() /
+  // operator>>) isn't exercised anywhere else in this suite: it
+  // unconditionally constructs a NetworkAddress, which asserts unless the
+  // global Arch singleton has been initialized by main() first -- not
+  // something a unit test should bootstrap just for this. The actual
+  // "restartServerOnZoneChange = ..." line parsing added to
+  // readSectionOptions() is exercised manually instead.
+  Config config(nullptr);
+  QVERIFY(!config.restartServerOnZoneChange());
+}
+
 QTEST_MAIN(ServerConfigTests)

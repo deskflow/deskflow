@@ -22,4 +22,5 @@ private Q_SLOTS:
   void holeLink_unknownComputer_fails();
   void holeLink_doesNotCreateNeighbor();
   void equalityCheck_diff_holeLinks();
+  void restartServerOnZoneChange_defaultsFalse();
 };
