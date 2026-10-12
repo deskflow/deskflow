@@ -875,6 +875,27 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   m_zoneUnionRight = unionRight;
   m_zoneUnionBottom = unionBottom;
 
+  // a monitor being added or removed isn't always reliably reported to
+  // EiComputer's own shape detection (it relies on separate libei device
+  // events, which have been observed not to fire for a monitor removal that
+  // the portal's zones *did* correctly report here) -- so when the zone
+  // *count* changes, tell the user their running server may now have a
+  // stale view of the layout. deliberately keyed on count, not the zone
+  // union's bounds, so a monitor merely being moved or resized (which
+  // EiComputer's own detection is not known to miss) doesn't also trigger
+  // this.
+  if (m_restartOnZoneChangeEnabled) {
+    if (m_lastZoneCount.has_value() && *m_lastZoneCount != zoneRects.size()) {
+      LOG_WARN(
+          "the number of monitors changed (%zu -> %zu) -- restart the DeskFlow server to make sure it has picked "
+          "up the new layout correctly, since a monitor being added or removed isn't always detected while the "
+          "server is already running",
+          *m_lastZoneCount, zoneRects.size()
+      );
+    }
+    m_lastZoneCount = zoneRects.size();
+  }
+
   // the OTHER zone (if any) that also has an edge of the same orientation at
   // `line` (e.g. another monitor's bottom edge at the same y as this one).
   // The portal requires a barrier to be unambiguously "within one zone"; if

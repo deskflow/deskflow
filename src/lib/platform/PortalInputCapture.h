@@ -19,6 +19,7 @@
 
 #include <cstdint>
 #include <map>
+#include <optional>
 #include <set>
 #include <utility>
 #include <vector>
@@ -46,6 +47,16 @@ public:
   // must be called whenever the active sides mask may have changed for some
   // other reason, e.g. a new neighbor was linked to a shape hole.
   void refreshPointerBarriers();
+
+  // Enables (or disables) the log message, in handleZonesChanged(), that
+  // recommends restarting the server when the number of monitor zones
+  // changes (see Config::restartServerOnZoneChange() for why this exists
+  // and isn't just always on).
+  void setRestartOnZoneChangeEnabled(bool enabled)
+  {
+    m_restartOnZoneChangeEnabled = enabled;
+  }
+
   bool isActive() const
   {
     return m_isActive;
@@ -201,6 +212,15 @@ private:
   // so a shared-edge conflict is reported once per session rather than every
   // time handleZonesChanged() happens to re-run (e.g. once per reconfigure())
   std::set<std::pair<deskflow::HoleLocation, BarrierSide>> m_warnedSharedEdges;
+
+  bool m_restartOnZoneChangeEnabled = false;
+
+  // the number of zones reported by the last handleZonesChanged() call,
+  // used to detect a monitor being added or removed (as opposed to one
+  // simply being resized or moved, which doesn't change this count) --
+  // unset until the first call, so startup itself is never reported as a
+  // "change"
+  std::optional<std::size_t> m_lastZoneCount;
 
   EiClipboard *m_clipboard = nullptr;
 };
