@@ -98,5 +98,5 @@ target_link_libraries(${lib_name}
 )
 
 if(UNIX AND NOT APPLE)
-  target_link_libraries(${lib_name} PRIVATE server ${LIBXKBREGISTRY_LINK_LIBRARIES})
+  target_link_libraries(${lib_name} PRIVATE server)
 endif()
