@@ -24,6 +24,6 @@ private Q_SLOTS:
   void findShapeHoles_interiorGap_noHoles();
   void findShapeHoles_nonRectangularConnectedGap_noHoles();
   void activeDirections_matchesEachLocation();
-  void parseHoleLocation_roundTripsWithToString();
+  void parseHoleLocation_roundTrips();
   void parseHoleLocation_unknownName_returnsNullopt();
 };

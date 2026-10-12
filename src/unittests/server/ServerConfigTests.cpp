@@ -163,21 +163,19 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
 
 void ServerConfigTests::holeLink_addAndGet_roundTrips()
 {
-  using deskflow::HoleLocation;
-
   Config config(nullptr);
   QVERIFY(config.addComputer("server"));
   QVERIFY(config.addComputer("client1"));
   QVERIFY(config.addComputer("client2"));
 
-  QVERIFY(config.addHoleLink("server", HoleLocation::BottomLeft, "client1"));
-  QVERIFY(config.addHoleLink("server", HoleLocation::TopRight, "client2"));
+  QVERIFY(config.addHoleLink("server", "bottom-left", "client1"));
+  QVERIFY(config.addHoleLink("server", "top-right", "client2"));
 
   const auto links = config.getHoleLinks("server");
   QCOMPARE(links.size(), 2);
-  QCOMPARE(links[0].location, HoleLocation::BottomLeft);
+  QCOMPARE(links[0].location, "bottom-left");
   QCOMPARE(links[0].dstName, "client1");
-  QCOMPARE(links[1].location, HoleLocation::TopRight);
+  QCOMPARE(links[1].location, "top-right");
   QCOMPARE(links[1].dstName, "client2");
 
   // a computer with no hole links registered should report none
@@ -186,24 +184,20 @@ void ServerConfigTests::holeLink_addAndGet_roundTrips()
 
 void ServerConfigTests::holeLink_unknownComputer_fails()
 {
-  using deskflow::HoleLocation;
-
   Config config(nullptr);
   QVERIFY(config.addComputer("server"));
 
-  QVERIFY(!config.addHoleLink("server", HoleLocation::BottomLeft, "noSuchComputer"));
-  QVERIFY(!config.addHoleLink("noSuchComputer", HoleLocation::BottomLeft, "server"));
+  QVERIFY(!config.addHoleLink("server", "bottom-left", "noSuchComputer"));
+  QVERIFY(!config.addHoleLink("noSuchComputer", "bottom-left", "server"));
   QVERIFY(config.getHoleLinks("server").empty());
 }
 
 void ServerConfigTests::holeLink_doesNotCreateNeighbor()
 {
-  using deskflow::HoleLocation;
-
   Config config(nullptr);
   QVERIFY(config.addComputer("server"));
   QVERIFY(config.addComputer("client1"));
-  QVERIFY(config.addHoleLink("server", HoleLocation::BottomLeft, "client1"));
+  QVERIFY(config.addHoleLink("server", "bottom-left", "client1"));
 
   // a hole link is only a pending request -- it must not be usable as a
   // neighbor until the server resolves it against the hole's real position
@@ -213,18 +207,16 @@ void ServerConfigTests::holeLink_doesNotCreateNeighbor()
 
 void ServerConfigTests::equalityCheck_diff_holeLinks()
 {
-  using deskflow::HoleLocation;
-
   Config a(nullptr);
   Config b(nullptr);
   QVERIFY(a.addComputer("computerA"));
   QVERIFY(a.addComputer("computerB"));
-  QVERIFY(a.addHoleLink("computerA", HoleLocation::BottomLeft, "computerB"));
+  QVERIFY(a.addHoleLink("computerA", "bottom-left", "computerB"));
   QVERIFY(b.addComputer("computerA"));
   QVERIFY(b.addComputer("computerB"));
   QVERIFY(a != b);
 
-  QVERIFY(b.addHoleLink("computerA", HoleLocation::BottomLeft, "computerB"));
+  QVERIFY(b.addHoleLink("computerA", "bottom-left", "computerB"));
   QVERIFY(a == b);
 }
 

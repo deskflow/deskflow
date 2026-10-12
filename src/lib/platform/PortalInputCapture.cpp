@@ -682,9 +682,7 @@ void PortalInputCapture::refreshPointerBarriers()
   // this is called from EiComputer::reconfigure(), which runs on deskflow's
   // own event-queue thread -- the async xdp_input_capture_session_* calls
   // inside handleZonesChanged() must originate from the glib thread that
-  // actually iterates m_glibMainLoop's context, so marshal over to it rather
-  // than calling directly (same pattern used elsewhere in this file, e.g.
-  // initSession())
+  // actually iterates m_glibMainLoop's context
   g_idle_add(
       [](gpointer data) -> gboolean {
         auto *self = static_cast<PortalInputCapture *>(data);
@@ -922,7 +920,7 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
         "monitor's edge a switching boundary placed at that exact pixel belongs to. Moving either monitor by a "
         "single pixel so they no longer share that %c coordinate will fix it.",
         zone.w, zone.h, zone.x, zone.y, other->w, other->h, other->x, other->y, axis, line, barrierSideName(side),
-        deskflow::toString(location), axis
+        location.c_str(), axis
     );
   };
 
