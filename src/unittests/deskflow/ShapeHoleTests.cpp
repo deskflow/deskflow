@@ -42,7 +42,7 @@ void ShapeHoleTests::findShapeHoles_bottomRightCornerMissing_oneHoleFound()
   };
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 1);
-  QCOMPARE(holes[0].location, HoleLocation::BottomRight);
+  QCOMPARE(holes[0].location, "bottom-right");
   QCOMPARE(holes[0].rect.x, 1920);
   QCOMPARE(holes[0].rect.y, 1080);
   QCOMPARE(holes[0].rect.w, 1920);
@@ -59,7 +59,7 @@ void ShapeHoleTests::findShapeHoles_topLeftCornerMissing_oneHoleFound()
   };
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 1);
-  QCOMPARE(holes[0].location, HoleLocation::TopLeft);
+  QCOMPARE(holes[0].location, "top-left");
   QCOMPARE(holes[0].rect.x, 0);
   QCOMPARE(holes[0].rect.y, 0);
   QCOMPARE(holes[0].rect.w, 1920);
@@ -76,7 +76,7 @@ void ShapeHoleTests::findShapeHoles_bottomLeftCornerMissing_oneHoleFound()
   };
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 1);
-  QCOMPARE(holes[0].location, HoleLocation::BottomLeft);
+  QCOMPARE(holes[0].location, "bottom-left");
   QCOMPARE(holes[0].rect.x, 0);
   QCOMPARE(holes[0].rect.y, 1080);
   QCOMPARE(holes[0].rect.w, 1920);
@@ -93,7 +93,7 @@ void ShapeHoleTests::findShapeHoles_topRightCornerMissing_oneHoleFound()
   };
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 1);
-  QCOMPARE(holes[0].location, HoleLocation::TopRight);
+  QCOMPARE(holes[0].location, "top-right");
   QCOMPARE(holes[0].rect.x, 1920);
   QCOMPARE(holes[0].rect.y, 0);
   QCOMPARE(holes[0].rect.w, 1920);
@@ -112,7 +112,7 @@ void ShapeHoleTests::findShapeHoles_unequalMonitorSizes_holeFoundAtCorrectRect()
   };
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 1);
-  QCOMPARE(holes[0].location, HoleLocation::BottomRight);
+  QCOMPARE(holes[0].location, "bottom-right");
   QCOMPARE(holes[0].rect.x, 2560);
   QCOMPARE(holes[0].rect.y, 1440);
   QCOMPARE(holes[0].rect.w, 1280);
@@ -133,14 +133,14 @@ void ShapeHoleTests::findShapeHoles_tShape_twoHolesFoundBesideStem()
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 2);
 
-  const auto *bottomLeft = findByLocation(holes, HoleLocation::BottomLeft);
+  const auto *bottomLeft = findByLocation(holes, "bottom-left");
   QVERIFY(bottomLeft != nullptr);
   QCOMPARE(bottomLeft->rect.x, 0);
   QCOMPARE(bottomLeft->rect.y, 1080);
   QCOMPARE(bottomLeft->rect.w, 1920);
   QCOMPARE(bottomLeft->rect.h, 1080);
 
-  const auto *bottomRight = findByLocation(holes, HoleLocation::BottomRight);
+  const auto *bottomRight = findByLocation(holes, "bottom-right");
   QVERIFY(bottomRight != nullptr);
   QCOMPARE(bottomRight->rect.x, 3840);
   QCOMPARE(bottomRight->rect.y, 1080);
@@ -160,7 +160,7 @@ void ShapeHoleTests::findShapeHoles_notchInMiddleOfEdge_oneHoleFoundNotTouchingC
   };
   const auto holes = findShapeHoles(regions, bounds);
   QCOMPARE(holes.size(), 1);
-  QCOMPARE(holes[0].location, HoleLocation::Top);
+  QCOMPARE(holes[0].location, "top");
   QCOMPARE(holes[0].rect.x, 1000);
   QCOMPARE(holes[0].rect.y, 0);
   QCOMPARE(holes[0].rect.w, 1000);
@@ -198,22 +198,22 @@ void ShapeHoleTests::activeDirections_matchesEachLocation()
            std::ranges::all_of(expected, [&dirs](Direction d) { return std::ranges::find(dirs, d) != dirs.end(); });
   };
 
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::TopLeft), {Left, Top}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::TopRight), {Right, Top}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::BottomLeft), {Left, Bottom}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::BottomRight), {Right, Bottom}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::Top), {Left, Right, Top}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::Bottom), {Left, Right, Bottom}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::Left), {Top, Bottom, Left}));
-  QVERIFY(hasAll(deskflow::activeDirections(HoleLocation::Right), {Top, Bottom, Right}));
+  QVERIFY(hasAll(deskflow::activeDirections("top-left"), {Left, Top}));
+  QVERIFY(hasAll(deskflow::activeDirections("top-right"), {Right, Top}));
+  QVERIFY(hasAll(deskflow::activeDirections("bottom-left"), {Left, Bottom}));
+  QVERIFY(hasAll(deskflow::activeDirections("bottom-right"), {Right, Bottom}));
+  QVERIFY(hasAll(deskflow::activeDirections("top"), {Left, Right, Top}));
+  QVERIFY(hasAll(deskflow::activeDirections("bottom"), {Left, Right, Bottom}));
+  QVERIFY(hasAll(deskflow::activeDirections("left"), {Top, Bottom, Left}));
+  QVERIFY(hasAll(deskflow::activeDirections("right"), {Top, Bottom, Right}));
 }
 
-void ShapeHoleTests::parseHoleLocation_roundTripsWithToString()
+void ShapeHoleTests::parseHoleLocation_roundTrips()
 {
   for (const auto location :
-       {HoleLocation::Top, HoleLocation::Bottom, HoleLocation::Left, HoleLocation::Right, HoleLocation::TopLeft,
-        HoleLocation::TopRight, HoleLocation::BottomLeft, HoleLocation::BottomRight}) {
-    const auto parsed = deskflow::parseHoleLocation(deskflow::toString(location));
+       {"top", "bottom", "left", "right", "top-left",
+        "top-right", "bottom-left", "bottom-right"}) {
+    const auto parsed = deskflow::parseHoleLocation(location);
     QVERIFY(parsed.has_value());
     QCOMPARE(*parsed, location);
   }
