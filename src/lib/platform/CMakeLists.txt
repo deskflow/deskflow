@@ -4,6 +4,15 @@
 # SPDX-License-Identifier: MIT
 
 if(UNIX AND NOT APPLE)
+  include(FindPkgConfig)
+  find_package(PkgConfig REQUIRED)
+
+  pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+  message(STATUS "xkbcommon version: ${LIBXKBCOMMON_VERSION}")
+
+  pkg_check_modules(LIBXKBREGISTRY REQUIRED xkbregistry)
+  message(STATUS "xkbregistry version: ${LIBXKBREGISTRY_VERSION}")
+
   pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
   message(STATUS "libei version: ${LIBEI_VERSION}")
 
@@ -202,13 +211,21 @@ if(UNIX)
     if (HAVE_LP_SHORTCUTS)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_SHORTCUTS)
     endif()
-    target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
+    target_include_directories(platform
+      PUBLIC
+        ${LIBEI_INCLUDE_DIRS}
+        ${LIBPORTAL_INCLUDE_DIRS}
+        ${LIBXKBCOMMON_INCLUDE_DIRS}
+        ${LIBXKBREGISTRY_INCLUDE_DIRS}
+      )
     target_link_libraries(platform
       PUBLIC
         Qt6::DBus
+        ${LIBXKBREGISTRY_LINK_LIBRARIES}
       PRIVATE
         Qt6::Gui
         ${LIBXKBCOMMON_LINK_LIBRARIES}
-        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
+        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES}
+      )
   endif()
 endif()

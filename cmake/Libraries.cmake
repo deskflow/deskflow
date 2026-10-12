@@ -88,23 +88,8 @@ macro(configure_unix_libs)
       ${lib_Foundation} ${lib_Carbon} ${lib_UserNotifications}
     )
   else()
-
     if (BUILD_X11_SUPPORT)
       configure_xorg_libs()
-    endif()
-
-    include(FindPkgConfig)
-    find_package(PkgConfig)
-    if(PKG_CONFIG_FOUND)
-      pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
-      message(STATUS "xkbcommon version: ${LIBXKBCOMMON_VERSION}")
-      include_directories(${LIBXKBCOMMON_INCLUDE_DIRS})
-
-      pkg_check_modules(LIBXKBREGISTRY REQUIRED xkbregistry)
-      message(STATUS "xkbregistry version: ${LIBXKBREGISTRY_VERSION}")
-      include_directories(${LIBXKBREGISTRY_INCLUDE_DIRS})
-    else()
-      message(WARNING "pkg-config not found, skipping wayland libraries")
     endif()
   endif()
 endmacro()
