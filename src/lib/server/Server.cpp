@@ -928,7 +928,7 @@ void Server::resolveShapeHoleLinks()
       }
       LOG_WARN(
           "no \"%s\" hole was detected on \"%s\"; the link to \"%s\" will not be used",
-          deskflow::toString(link.location), primaryName.c_str(), link.dstName.c_str()
+          link.location.c_str(), primaryName.c_str(), link.dstName.c_str()
       );
       continue;
     }
@@ -968,7 +968,7 @@ void Server::resolveShapeHoleLinks()
         LOG_WARN(
             "could not link the \"%s\" hole on \"%s\" to \"%s\" on the %s side: a conflicting neighbor is already "
             "configured there -- check for an existing \"%s: %s = ...\" entry",
-            deskflow::toString(link.location), primaryName.c_str(), link.dstName.c_str(), Config::dirName(dir),
+            link.location.c_str(), primaryName.c_str(), link.dstName.c_str(), Config::dirName(dir),
             primaryName.c_str(), Config::dirName(dir)
         );
         m_resolvedHoleLinkIntervals.erase(key);
@@ -976,8 +976,8 @@ void Server::resolveShapeHoleLinks()
       }
       m_resolvedHoleLinkIntervals[key] = {srcStart, srcEnd};
       LOG_INFO(
-          "linked the \"%s\" hole on \"%s\" to \"%s\" on the %s side", deskflow::toString(link.location),
-          primaryName.c_str(), link.dstName.c_str(), Config::dirName(dir)
+          "linked the \"%s\" hole on \"%s\" to \"%s\" on the %s side", link.location.c_str(), primaryName.c_str(),
+          link.dstName.c_str(), Config::dirName(dir)
       );
       resolvedAny = true;
 
@@ -995,13 +995,13 @@ void Server::resolveShapeHoleLinks()
       if (m_config->connect(link.dstName, returnDir, 0.0f, 1.0f, primaryName, srcStart, srcEnd)) {
         LOG_DEBUG(
             "linked \"%s\" back to the \"%s\" hole on \"%s\" on the %s side", link.dstName.c_str(),
-            deskflow::toString(link.location), primaryName.c_str(), Config::dirName(returnDir)
+            link.location.c_str(), primaryName.c_str(), Config::dirName(returnDir)
         );
       } else {
         LOG_WARN(
             "could not link \"%s\" back to the \"%s\" hole on \"%s\" on the %s side: a conflicting neighbor is "
             "already configured there -- check for an existing \"%s: %s = ...\" entry",
-            link.dstName.c_str(), deskflow::toString(link.location), primaryName.c_str(), Config::dirName(returnDir),
+            link.dstName.c_str(), link.location.c_str(), primaryName.c_str(), Config::dirName(returnDir),
             link.dstName.c_str(), Config::dirName(returnDir)
         );
       }
@@ -2022,9 +2022,7 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
     // should we switch or not?
     if (isSwitchOkay(newComputer, dir, x, y, xc, yc)) {
       if (const auto &hole = holeForDir.at(dirIndex(dir)); hole.has_value()) {
-        LOG_INFO(
-            "switching to \"%s\" via the \"%s\" hole", getName(newComputer).c_str(), deskflow::toString(*hole)
-        );
+        LOG_INFO("switching to \"%s\" via the \"%s\" hole", getName(newComputer).c_str(), hole->c_str());
       }
       // switch computer
       switchComputer(newComputer, x, y, false);

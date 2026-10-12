@@ -922,7 +922,7 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
         "monitor's edge a switching boundary placed at that exact pixel belongs to. Moving either monitor by a "
         "single pixel so they no longer share that %c coordinate will fix it.",
         zone.w, zone.h, zone.x, zone.y, other->w, other->h, other->x, other->y, axis, line, barrierSideName(side),
-        deskflow::toString(location), axis
+        location.c_str(), axis
     );
   };
 
