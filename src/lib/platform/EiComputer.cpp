@@ -217,9 +217,7 @@ void EiComputer::reconfigure(uint32_t activeSides)
   LOG_DEBUG("active sides: %s (0x%02x)", sidesText.c_str(), activeSides);
   m_activeSides = activeSides;
 
-  // pointer barriers are otherwise only recomputed when the portal itself
-  // reports a zone change, so a change here (e.g. a new neighbor linked to a
-  // shape hole) needs to explicitly trigger a refresh
+  // a new neighbor linked to a shape hole needs to explicitly trigger a refresh
   if (m_portalInputCapture) {
     m_portalInputCapture->refreshPointerBarriers();
   }
@@ -622,19 +620,13 @@ void EiComputer::updateShape()
   m_w = newW;
   m_h = newH;
 
-  // unlike m_w/m_h above, this is a true width/height (newW/newH are each the
-  // max of a region's own x/y + width/height, i.e. an absolute right/bottom
-  // edge, not a width in their own right -- findShapeHoles() needs an actual
-  // width to compare region extents against)
+  // unlike m_w/m_h above, this is a true width/height to compare region extents against
   const Rect bounds{
       static_cast<int64_t>(newX), static_cast<int64_t>(newY), static_cast<int64_t>(newW) - static_cast<int64_t>(newX),
       static_cast<int64_t>(newH) - static_cast<int64_t>(newY)
   };
   const auto newShapeHoles = findShapeHoles(regions, bounds);
 
-  // user-facing: what's switchable via a "<location> = <computer>" link, and
-  // where. logged only when the set actually changes so it isn't repeated on
-  // every incremental settle
   if (newShapeHoles != m_shapeHoles) {
     if (newShapeHoles.empty()) {
       LOG_INFO("monitor layout has no shape holes (it's a plain rectangle)");
@@ -650,11 +642,7 @@ void EiComputer::updateShape()
   }
   m_shapeHoles = newShapeHoles;
 
-  // devices (monitors) are reported one EI_EVENT_DEVICE_ADDED at a time, so
-  // this may be one of several incremental updates in quick succession as
-  // each one arrives; debounce them into a single notification once the
-  // layout has gone quiet, rather than firing (and reacting to) every
-  // incomplete intermediate state
+  // we may get several change events triggered on startup, so process them only after s_shapeSettleTimeout seconds
   if (changed) {
     cancelShapeSettleTimer();
     m_shapeSettleTimer = m_events->newOneShotTimer(s_shapeSettleTimeout, nullptr);

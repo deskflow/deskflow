@@ -182,8 +182,8 @@ public:
   perfect rectangle (e.g. three monitors arranged in an L, or four arranged
   in a T).  getShape() always reports the bounding rectangle of the whole
   arrangement, so this returns every rectangular hole within that bounding
-  rectangle where no screen actually exists (see deskflow::ShapeHole), or
-  an empty list if the computer's shape has no such holes.
+  rectangle where no screen actually exists or an empty list if there are 
+  no holes or it is not supported.
   */
   virtual std::vector<deskflow::ShapeHole> getShapeHoles() const = 0;
 

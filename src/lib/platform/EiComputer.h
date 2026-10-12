@@ -184,17 +184,9 @@ private:
   std::uint32_t m_h = 0;
   bool m_isShapeInitialized = false;
 
-  // devices (monitors) are reported one EI_EVENT_DEVICE_ADDED at a time, so a
-  // burst of ComputerShapeChanged notifications is debounced into one, fired
-  // only once the layout has gone quiet for s_shapeSettleTimeout
+  // many devices may be connected, calculate shapes only when all monitors are known
   EventQueueTimer *m_shapeSettleTimer = nullptr;
-  // Chosen empirically; long enough to cover a burst of device-added events
-  // for a handful of monitors, short enough not to noticeably delay startup.
   static constexpr double s_shapeSettleTimeout = 0.5;
-
-  // every rectangular gap in the bounding box above, where no monitor
-  // actually exists (e.g. the missing corner of an L-shaped, or the two
-  // gaps either side of the stem of a T-shaped, arrangement of monitors)
   std::vector<deskflow::ShapeHole> m_shapeHoles;
 
   // true if mouse has entered the computer

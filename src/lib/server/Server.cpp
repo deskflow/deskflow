@@ -658,9 +658,6 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
 
   assert(src != nullptr);
 
-  // getNeighbor() remaps x (for Top/Bottom) or y (for Left/Right) into the
-  // destination's coordinate space, so keep the originals for testing
-  // against the source's own shape hole below
   const int32_t origX = x;
   const int32_t origY = y;
 
@@ -695,13 +692,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, 
     while (dst != nullptr) {
       lastGoodComputer = dst;
       lastGoodComputer->getShape(dx, dy, dw, dh);
-      // unlike the adjustForShapeHole() call above (which shrinks the
-      // *source* shape we're leaving), this one shrinks each *candidate
-      // destination* shape as we walk across it: if this computer is the
-      // primary and we're entering it through a hole-narrowed side (passed
-      // as oppositeDirection(srcSide) since srcSide is the side of the
-      // computer we left, not the side of this one), its usable width/height
-      // here is smaller than its full bounding box
+      // equivalent to the adjustForShapeHole() above but for the candidates 
       adjustForShapeHole(lastGoodComputer, oppositeDirection(srcSide), x, y, dx, dy, dw, dh);
       x += dw;
       if (x >= 0) {
@@ -981,16 +972,8 @@ void Server::resolveShapeHoleLinks()
       );
       resolvedAny = true;
 
-      // Config::connect() is one-directional: it only lets you leave the
-      // primary through the hole, not come back. Mirror the same interval
-      // onto the client's opposite edge so crossing back lands in the right
-      // place. This is attempted unconditionally (not gated on whether the
-      // client already has *some* neighbor on that side): Cell::add()
-      // itself replaces an exact (side, interval) match -- which this
-      // always is, since the client's own side always spans its full edge
-      // -- and only rejects a genuine conflict, surfacing it below rather
-      // than silently leaving an unrelated, imprecise link (e.g. one from
-      // the GUI's grid layout) in place.
+      // The config sets the transition from the server to the client. This automatically sets up 
+      // the equivalent from the client to the server.
       const auto returnDir = oppositeDirection(dir);
       if (m_config->connect(link.dstName, returnDir, 0.0f, 1.0f, primaryName, srcStart, srcEnd)) {
         LOG_DEBUG(
@@ -1386,29 +1369,19 @@ void Server::handleShapeChanged(BaseClientProxy *client)
 
   // handle resolution change to primary computer
   if (client == m_primaryClient) {
-    // some platforms (e.g. EiComputer, before its portal/libei session has
-    // connected) report this event once up front with a not-yet-known,
-    // all-zero shape; only treat the shape as known once it's non-trivial
     int32_t ax;
     int32_t ay;
     int32_t aw;
     int32_t ah;
     m_primaryClient->getShape(ax, ay, aw, ah);
     if (aw > 0 && ah > 0) {
+      // here we now have valid information
       const auto holes = m_primaryClient->getShapeHoles();
-      // order-independent: findShapeHoles()'s scan order depends on
-      // arbitrary device/region enumeration order, so two reports of the
-      // same set of holes aren't guaranteed to come back in the same
-      // sequence
       const bool sameHoles = holes.size() == m_lastKnownShapeHoles.size() &&
                               std::ranges::all_of(holes, [this](const auto &h) {
                                 return std::ranges::find(m_lastKnownShapeHoles, h) != m_lastKnownShapeHoles.end();
                               });
       if (m_shapeEverKnown && !sameHoles) {
-        // resolveShapeHoleLinks() below re-resolves any configured hole
-        // links against this new layout, replacing a stale interval with
-        // the new one -- this is just an informational heads-up, not a
-        // warning that the user needs to do anything
         LOG_INFO("the primary computer's monitor layout changed; re-resolving its hole-based links");
       }
       m_shapeEverKnown = true;
@@ -1980,11 +1953,11 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
   // for a plain (hole-free) screen, effLeft/effTop are always the true outer
   // edge and effRight/effBottom the true outer edge too, so x/y can never
   // legitimately fall on the wrong side of them -- "less/greater than"
-  // alone is equivalent to "near". once a hole narrows one of these inward,
+  // alone is equivalent to "near". Once a hole narrows one of these inward,
   // that guarantee breaks: x or y can legitimately sit far past the
   // narrowed edge while still being valid, unrelated real-screen territory
   // (e.g. the position just warped in from crossing a *different* side's
-  // hole-adjacent barrier). require actual proximity, not just inequality.
+  // hole-adjacent barrier). Require actual proximity, not just inequality.
   if (x >= effLeft - zoneSize && x < effLeft + zoneSize) {
     xh -= zoneSize;
     dirh = Left;
@@ -2242,10 +2215,7 @@ bool Server::addClient(BaseClientProxy *client)
   client->getCursorPos(x, y);
   client->setJumpCursorPos(x, y);
 
-  // a newly connected client may be the destination of a still-pending
-  // hole-location link (e.g. "bottom-right = someComputer"); by the time a
-  // separate machine has booted and connected, the primary's own shape has
-  // almost always settled too, so this is a good second chance to resolve it
+  // in case this new client is configured to fill a hole
   resolveShapeHoleLinks();
 
   // tell primary client about the active sides

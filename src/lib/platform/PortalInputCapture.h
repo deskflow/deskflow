@@ -40,11 +40,6 @@ public:
   void release();
   void release(double x, double y);
 
-  // Recompute and reapply pointer barriers against the computer's current
-  // active sides. Barriers are otherwise only recomputed when the portal
-  // itself reports a zone change (e.g. a monitor is plugged in), so this
-  // must be called whenever the active sides mask may have changed for some
-  // other reason, e.g. a new neighbor was linked to a shape hole.
   void refreshPointerBarriers();
   bool isActive() const
   {
@@ -176,30 +171,17 @@ private:
   bool m_isActive = false;
   std::uint32_t m_activationId = 0;
 
-  // the barrier that triggered the most recent activation, if known -- used
-  // to release the cursor relative to the edge actually crossed, rather
-  // than guessing the nearest active side from raw distance to the
-  // computer's outer bounding box (which is wrong whenever the barrier sits
-  // on a shape hole's inner edge rather than that outer box)
   guint m_lastActivationBarrierId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
   std::vector<BarrierInfo> m_barrierInfo;
 
-  // the true union of all reported zones, computed once per handleZonesChanged()
-  // call. getPortalBounds() returns this rather than re-aggregating from
-  // m_barrierInfo, since a rejected barrier is pruned from that list -- using
-  // it as the scaling range would then understate the real extent and distort
-  // every activation's coordinate mapping, not just the rejected barrier's own.
   bool m_zoneUnionValid = false;
   gint m_zoneUnionLeft = 0;
   gint m_zoneUnionTop = 0;
   gint m_zoneUnionRight = 0;
   gint m_zoneUnionBottom = 0;
 
-  // (hole location, side) pairs already warned about via warnIfSharedEdge(),
-  // so a shared-edge conflict is reported once per session rather than every
-  // time handleZonesChanged() happens to re-run (e.g. once per reconfigure())
   std::set<std::pair<deskflow::HoleLocation, BarrierSide>> m_warnedSharedEdges;
 
   EiClipboard *m_clipboard = nullptr;
