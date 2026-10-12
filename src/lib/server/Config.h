@@ -281,6 +281,19 @@ public:
   */
   std::vector<HoleLink> getHoleLinks(const std::string &srcName) const;
 
+  //! Get whether to restart on monitor zone changes
+  /*!
+  True if \c restartServerOnZoneChange was set in the config file's
+  "options" section.  Monitor hotplug isn't always reliably detected while
+  the server is running (see PortalInputCapture), so when this is set, the
+  server logs a message recommending a restart whenever the number of
+  monitor zones changes.
+  */
+  bool restartServerOnZoneChange() const
+  {
+    return m_restartServerOnZoneChange;
+  }
+
   //! Set server address
   /*!
   Set the deskflow listen addresses.  There is no default address so
@@ -446,6 +459,7 @@ private:
   CellMap m_map;
   NameMap m_nameToCanonicalName;
   HoleLinkMap m_holeLinks;
+  bool m_restartServerOnZoneChange = false;
   NetworkAddress m_deskflowAddress;
   ScreenOptions m_globalOptions;
   InputFilter m_inputFilter;

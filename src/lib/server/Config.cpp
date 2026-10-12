@@ -463,6 +463,10 @@ bool Config::operator==(const Config &x) const
     return false;
   }
 
+  if (m_restartServerOnZoneChange != x.m_restartServerOnZoneChange) {
+    return false;
+  }
+
   return true;
 }
 
@@ -594,8 +598,16 @@ void Config::readSectionOptions(ConfigReadContext &s)
   while (s.readLine(line)) {
     if (line == "end") {
       return;
-    } else if (const auto l = QString::fromStdString(line).simplified();
-               !l.startsWith(QStringLiteral("keystroke")) && !l.startsWith(QStringLiteral("mousepress"))) {
+    }
+
+    const auto l = QString::fromStdString(line).simplified();
+    if (l.startsWith(QStringLiteral("restartServerOnZoneChange"))) {
+      const auto parts = l.split(QLatin1Char('='));
+      const auto value = parts.size() > 1 ? parts[1].trimmed().toLower() : QString();
+      m_restartServerOnZoneChange = (value == QStringLiteral("true") || value == QStringLiteral("1"));
+      continue;
+    }
+    if (!l.startsWith(QStringLiteral("keystroke")) && !l.startsWith(QStringLiteral("mousepress"))) {
       continue;
     }
 
