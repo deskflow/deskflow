@@ -96,6 +96,12 @@ public:
   */
   std::vector<deskflow::ShapeHole> getShapeHoles() const;
 
+  //! Set whether to recommend a restart on monitor zone changes
+  /*!
+  See deskflow::server::Config::restartServerOnZoneChange().
+  */
+  void setRestartServerOnZoneChange(bool enabled);
+
   //! Get toggle key state
   /*!
   Returns the primary computer's current toggle modifier key state.

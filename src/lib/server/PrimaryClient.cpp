@@ -64,6 +64,11 @@ std::vector<deskflow::ShapeHole> PrimaryClient::getShapeHoles() const
   return m_computer->getShapeHoles();
 }
 
+void PrimaryClient::setRestartServerOnZoneChange(bool enabled)
+{
+  m_computer->setRestartServerOnZoneChange(enabled);
+}
+
 KeyModifierMask PrimaryClient::getToggleMask() const
 {
   return m_computer->pollActiveModifiers();
