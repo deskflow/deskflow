@@ -92,7 +92,7 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   g_autoptr(GError) error = nullptr;
   auto session = XDP_SESSION(object);
   if (!xdp_session_start_finish(session, res, &error)) {
-    LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
+    LOG_ERR("failed to start portal remote desktop session, quitting: %s", error ? error->message : "unknown error");
     g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
@@ -140,6 +140,7 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   auto fd = -1;
   fd = xdp_session_connect_to_eis(session, &error);
   if (fd < 0) {
+    LOG_ERR("portal ConnectToEIS failed: %s", error ? error->message : "unknown error");
     g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
@@ -157,6 +158,7 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
 
   auto session = xdp_portal_create_remote_desktop_session_finish(XDP_PORTAL(object), res, &error);
   if (!session) {
+    LOG_ERR("portal CreateSession failed: %s", error ? error->message : "unknown error");
     LOG_ERR("failed to initialize remote desktop session: %s", error->message);
     // This was the first attempt to connect to the RD portal - quit if that
     // fails.
@@ -206,7 +208,7 @@ gboolean PortalRemoteDesktop::initSession()
   LOG_DEBUG("setting up remote desktop session with restore token %s", m_sessionRestoreToken);
   xdp_portal_create_remote_desktop_session_full(
       m_portal, static_cast<XdpDeviceType>(XDP_DEVICE_POINTER | XDP_DEVICE_KEYBOARD), XDP_OUTPUT_NONE,
-      XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, XDP_PERSIST_MODE_PERSISTENT, m_sessionRestoreToken,
+      XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_METADATA, XDP_PERSIST_MODE_PERSISTENT, m_sessionRestoreToken,
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
         static_cast<PortalRemoteDesktop *>(data)->handleInitSession(obj, res);
