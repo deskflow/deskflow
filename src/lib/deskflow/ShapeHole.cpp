@@ -24,79 +24,52 @@ bool isCovered(const std::vector<Rect> &regions, std::int64_t x, std::int64_t y)
 
 } // namespace
 
-const char *toString(HoleLocation location)
-{
-  using enum HoleLocation;
-  switch (location) {
-  case Top:
-    return "top";
-  case Bottom:
-    return "bottom";
-  case Left:
-    return "left";
-  case Right:
-    return "right";
-  case TopLeft:
-    return "top-left";
-  case TopRight:
-    return "top-right";
-  case BottomLeft:
-    return "bottom-left";
-  case BottomRight:
-    return "bottom-right";
-  }
-  return "unknown";
-}
-
 std::optional<HoleLocation> parseHoleLocation(const std::string &name)
 {
-  using enum HoleLocation;
-  static const std::array<std::pair<const char *, HoleLocation>, 8> kNames{
-      {{"top", Top},
-       {"bottom", Bottom},
-       {"left", Left},
-       {"right", Right},
-       {"top-left", TopLeft},
-       {"top-right", TopRight},
-       {"bottom-left", BottomLeft},
-       {"bottom-right", BottomRight}}
+  static const std::array<const char *, 8> kNames{
+      "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left", "bottom-right"
   };
-  const auto it = std::ranges::find_if(kNames, [&name](const auto &entry) { return name == entry.first; });
-  if (it == kNames.end()) {
+  if (std::ranges::find(kNames, name) == kNames.end()) {
     return std::nullopt;
   }
-  return it->second;
+  return name;
 }
 
-std::vector<Direction> activeDirections(HoleLocation location)
+std::vector<Direction> activeDirections(const HoleLocation &location)
 {
   // for each side of the hole that does NOT coincide with an outer wall of
   // the bounding box, there's real screen immediately beyond it -- crossing
   // that side is a valid switch, in the direction you'd be leaving via if
-  // that real screen were its own computer. e.g. a BottomRight hole doesn't
-  // touch the left or top walls, so its left and top sides each border real
-  // screen: approaching from the left and moving right into the hole is a
-  // Right-direction switch; approaching from above and moving down is a
-  // Bottom-direction switch. (A hole's own left/top/right/bottom side maps
-  // to the opposite direction name, since "the hole's left side" is where
-  // you'd be moving right to reach it.)
+  // that real screen were its own computer. e.g. a "bottom-right" hole
+  // doesn't touch the left or top walls, so its left and top sides each
+  // border real screen: approaching from the left and moving right into the
+  // hole is a Right-direction switch; approaching from above and moving
+  // down is a Bottom-direction switch. (A hole's own left/top/right/bottom
+  // side maps to the opposite direction name, since "the hole's left side"
+  // is where you'd be moving right to reach it.)
   using enum Direction;
-  switch (location) {
-  case HoleLocation::Top:
+  if (location == "top") {
     return {Left, Right, Top};
-  case HoleLocation::Bottom:
+  }
+  if (location == "bottom") {
     return {Left, Right, Bottom};
-  case HoleLocation::Left:
+  }
+  if (location == "left") {
     return {Top, Bottom, Left};
-  case HoleLocation::Right:
+  }
+  if (location == "right") {
     return {Top, Bottom, Right};
-  case HoleLocation::TopLeft:
+  }
+  if (location == "top-left") {
     return {Left, Top};
-  case HoleLocation::TopRight:
+  }
+  if (location == "top-right") {
     return {Right, Top};
-  case HoleLocation::BottomLeft:
+  }
+  if (location == "bottom-left") {
     return {Left, Bottom};
-  case HoleLocation::BottomRight:
+  }
+  if (location == "bottom-right") {
     return {Right, Bottom};
   }
   return {};
@@ -199,15 +172,13 @@ std::vector<ShapeHole> findShapeHoles(const std::vector<Rect> &regions, const Re
 
       HoleLocation location;
       if (wallCount == 1) {
-        using enum HoleLocation;
-        location = touchesLeft ? Left : touchesRight ? Right : touchesTop ? Top : Bottom;
+        location = touchesLeft ? "left" : touchesRight ? "right" : touchesTop ? "top" : "bottom";
       } else if (touchesLeft != touchesRight && touchesTop != touchesBottom) {
         // exactly one horizontal and one vertical wall: an adjacent pair, i.e. a corner
-        using enum HoleLocation;
         if (touchesTop) {
-          location = touchesLeft ? TopLeft : TopRight;
+          location = touchesLeft ? "top-left" : "top-right";
         } else {
-          location = touchesLeft ? BottomLeft : BottomRight;
+          location = touchesLeft ? "bottom-left" : "bottom-right";
         }
       } else {
         // no outer wall at all, an opposite pair of walls (the gap spans the
