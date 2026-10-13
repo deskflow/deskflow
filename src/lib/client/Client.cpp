@@ -648,6 +648,7 @@ void Client::handleClipboardGrabbed(const Event &event)
   }
 
   const auto *info = static_cast<const IComputer::ClipboardInfo *>(event.getData());
+  LOG_INFO("Client: clipboard %d grabbed (active=%d), sending to server", info->m_id, m_active);
 
   // grab ownership
   m_server->onGrabClipboard(info->m_id);
@@ -657,11 +658,8 @@ void Client::handleClipboardGrabbed(const Event &event)
   m_sentClipboard[info->m_id] = false;
   m_timeClipboard[info->m_id] = 0;
 
-  // if we're not the active computer then send the clipboard now,
-  // otherwise we'll wait until we leave.
-  if (!m_active) {
-    sendClipboard(info->m_id);
-  }
+  // send the clipboard immediately so server is updated without waiting
+  sendClipboard(info->m_id);
 }
 
 void Client::handleHello()

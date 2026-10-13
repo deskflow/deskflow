@@ -35,6 +35,7 @@ class PortalRemoteDesktop;
 class PortalInputCapture;
 class PortalGlobalShortcuts;
 class EiClipboard;
+class WlrClipboard;
 
 using ClipboardInfo = IComputer::ClipboardInfo;
 
@@ -90,10 +91,7 @@ public:
   void sendClipboardEvent(EventTypes type, ClipboardID id) const;
 
   // Local clipboard cache (used by PortalRemoteDesktop to land selection reads)
-  EiClipboard *getClipboardCache() const
-  {
-    return m_clipboard;
-  }
+  EiClipboard *getClipboardCache() const;
 
   // Maximum clipboard size in KB, configured by the server
   size_t maximumClipboardSize() const
@@ -155,6 +153,7 @@ private:
 
   // clipboard stuff
   EiClipboard *m_clipboard = nullptr;
+  WlrClipboard *m_wlrClipboard = nullptr;
   size_t m_maximumClipboardSize = INT_MAX;
 
   std::vector<ei_device *> m_eiDevices;

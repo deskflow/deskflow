@@ -10,6 +10,11 @@ if(UNIX AND NOT APPLE)
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
 
+  pkg_check_modules(LIBWAYLAND_CLIENT QUIET wayland-client)
+  if(LIBWAYLAND_CLIENT_FOUND)
+    message(STATUS "wayland-client version: ${LIBWAYLAND_CLIENT_VERSION}")
+  endif()
+
   # Check if we have the restore ability in the IC portal
   include(CMakePushCheckState)
   include(CheckSymbolExists)
@@ -153,6 +158,14 @@ elseif(UNIX)
       EiKeyState.cpp
       EiKeyState.h
     )
+    if(LIBWAYLAND_CLIENT_FOUND)
+      list(APPEND PLATFORM_SOURCES
+        WlrClipboard.cpp
+        WlrClipboard.h
+        wlr-data-control-protocol.c
+        wlr-data-control-protocol.h
+      )
+    endif()
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
       list(APPEND PLATFORM_SOURCES
@@ -202,13 +215,17 @@ if(UNIX)
     if (HAVE_LP_SHORTCUTS)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_SHORTCUTS)
     endif()
-    target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
+    if (LIBWAYLAND_CLIENT_FOUND)
+      target_compile_definitions(platform PUBLIC HAVE_WLR_CLIPBOARD=1)
+    endif()
+    target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS} ${LIBWAYLAND_CLIENT_INCLUDE_DIRS})
     target_link_libraries(platform
       PUBLIC
         Qt6::DBus
       PRIVATE
         Qt6::Gui
         ${LIBXKBCOMMON_LINK_LIBRARIES}
-        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
+        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES}
+        ${LIBWAYLAND_CLIENT_LINK_LIBRARIES})
   endif()
 endif()

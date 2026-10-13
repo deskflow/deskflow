@@ -115,6 +115,8 @@ private:
   deskflow::IStream *m_stream = nullptr;
 
   uint32_t m_seqNum = 0;
+  uint32_t m_clipboardSeqNum[kClipboardEnd] = {0, 0};
+  uint32_t getNextClipboardSeqNum();
 
   bool m_compressMouse = false;
   bool m_compressMouseRelative = false;

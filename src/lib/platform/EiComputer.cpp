@@ -20,6 +20,9 @@
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#ifdef HAVE_WLR_CLIPBOARD
+#include "platform/WlrClipboard.h"
+#endif
 
 #include <algorithm>
 #include <bit>
@@ -86,6 +89,24 @@ EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
   if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     m_powerManager.disableSleep();
   }
+
+  if (!m_clipboard) {
+    m_clipboard = new EiClipboard(kClipboardClipboard);
+  }
+
+#ifdef HAVE_WLR_CLIPBOARD
+  if (std::getenv("WAYLAND_DISPLAY")) {
+    m_wlrClipboard = new WlrClipboard([this]() {
+      LOG_INFO("EiComputer: clipboard grabbed on Wayland, sending ClipboardGrabbed event");
+      sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+      sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
+    });
+    if (!m_wlrClipboard->isAvailable()) {
+      delete m_wlrClipboard;
+      m_wlrClipboard = nullptr;
+    }
+  }
+#endif
 }
 
 EiComputer::~EiComputer()
@@ -96,6 +117,10 @@ EiComputer::~EiComputer()
   cancelIdleEmulationTimer();
 
   cleanupEi();
+
+#ifdef HAVE_WLR_CLIPBOARD
+  delete m_wlrClipboard;
+#endif
 
   delete m_keyState;
   delete m_clipboard;
@@ -175,8 +200,24 @@ void *EiComputer::getEventTarget() const
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
+EiClipboard *EiComputer::getClipboardCache() const
+{
+#ifdef HAVE_WLR_CLIPBOARD
+  if (m_wlrClipboard) {
+    return m_wlrClipboard->getCache();
+  }
+#endif
+  return m_clipboard;
+}
+
 bool EiComputer::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
+#ifdef HAVE_WLR_CLIPBOARD
+  if (m_wlrClipboard && (id == kClipboardClipboard || id == kClipboardSelection)) {
+    return m_wlrClipboard->getClipboard(clipboard);
+  }
+#endif
+
   // If using portal input capture, get clipboard from there
   if (m_portalInputCapture) {
     const auto sourceClipboard = m_portalInputCapture->getClipboard(id);
@@ -484,6 +525,12 @@ bool EiComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
   if (!clipboard) {
     return false;
   }
+
+#ifdef HAVE_WLR_CLIPBOARD
+  if (m_wlrClipboard && (id == kClipboardClipboard || id == kClipboardSelection)) {
+    m_wlrClipboard->setSelection(clipboard);
+  }
+#endif
 
   // If using portal input capture, set clipboard there
   if (m_portalInputCapture) {

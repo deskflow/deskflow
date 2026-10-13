@@ -20,6 +20,9 @@
 #include "deskflow/StreamChunker.h"
 #include "io/IStream.h"
 
+#include <algorithm>
+#include <atomic>
+#include <chrono>
 #include <cstring>
 
 //
@@ -355,19 +358,37 @@ void ServerProxy::onInfoChanged()
   queryInfo();
 }
 
+uint32_t ServerProxy::getNextClipboardSeqNum()
+{
+  static std::atomic<uint32_t> s_seqCounter{0};
+  uint32_t nowSec = static_cast<uint32_t>(
+      std::chrono::duration_cast<std::chrono::seconds>(
+          std::chrono::system_clock::now().time_since_epoch()
+      ).count()
+  );
+  uint32_t candidate = std::max({m_seqNum + 1, nowSec, s_seqCounter.load() + 1});
+  s_seqCounter.store(candidate);
+  return candidate;
+}
+
 bool ServerProxy::onGrabClipboard(ClipboardID id)
 {
-  LOG_VERBOSE("sending clipboard %d changed", id);
-  ProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
+  uint32_t seq = getNextClipboardSeqNum();
+  if (id < kClipboardEnd) {
+    m_clipboardSeqNum[id] = seq;
+  }
+  LOG_INFO("ServerProxy: sending clipboard %d grab to server (seqNum=%u)", id, seq);
+  ProtocolUtil::writef(m_stream, kMsgCClipboard, id, seq);
   return true;
 }
 
 void ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard *clipboard)
 {
+  uint32_t seq = (id < kClipboardEnd && m_clipboardSeqNum[id] != 0) ? m_clipboardSeqNum[id] : getNextClipboardSeqNum();
   std::string data = IClipboard::marshall(clipboard);
-  LOG_DEBUG("sending clipboard %d seqnum=%d", id, m_seqNum);
+  LOG_INFO("ServerProxy: sending clipboard %d changed (seqNum=%u, size=%zu bytes) to server", id, seq, data.size());
 
-  StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
+  StreamChunker::sendClipboard(data, data.size(), id, seq, m_events, this);
 }
 
 void ServerProxy::flushCompressedMouse()

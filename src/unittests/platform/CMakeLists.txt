@@ -35,6 +35,16 @@ elseif(UNIX)
     )
   endif()
 
+  if(LIBWAYLAND_CLIENT_FOUND)
+    create_test(
+      NAME WlrClipboardTests
+      DEPENDS platform
+      LIBS base arch app ${LIBWAYLAND_CLIENT_LINK_LIBRARIES}
+      SOURCE WlrClipboardTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
+  endif()
+
   if (BUILD_X11_SUPPORT)
     create_test(
       NAME XWindowsClipboardTests
@@ -45,3 +55,4 @@ elseif(UNIX)
     )
   endif()
 endif()
+
