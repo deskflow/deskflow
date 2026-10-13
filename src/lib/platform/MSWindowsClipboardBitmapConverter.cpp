@@ -16,7 +16,7 @@
 #include <limits>
 
 namespace {
-bool normaliseMalformedMacDib(const std::string &data, std::string &normalisedData)
+bool normaliseMacDib(const std::string &data, std::string &normalisedData)
 {
   if (data.size() < sizeof(BITMAPINFOHEADER)) {
     return false;
@@ -32,21 +32,47 @@ bool normaliseMalformedMacDib(const std::string &data, std::string &normalisedDa
   if (height == 0 || width > (std::numeric_limits<size_t>::max() - sizeof(BITMAPINFOHEADER)) / 4 / height) {
     return false;
   }
-  const auto expectedSize = sizeof(BITMAPINFOHEADER) + width * height * 4;
+  const auto pixelSize = width * height * 4;
+  if (header->biPlanes != 1 || header->biBitCount != 32 || header->biCompression != BI_BITFIELDS) {
+    return false;
+  }
 
-  // macOS can describe an INFOHEADER-sized 32-bit pixel payload as a V5 DIB.
-  // Windows then interprets the first pixels as V5 colour masks. The pixel
-  // bytes are ordinary BGRA, so publish a canonical BI_RGB DIB instead.
-  if (header->biSize <= sizeof(BITMAPINFOHEADER) || header->biPlanes != 1 || header->biBitCount != 32 ||
-      header->biCompression != BI_BITFIELDS || expectedSize != data.size()) {
+  size_t pixelOffset;
+  if (header->biSize == sizeof(BITMAPV5HEADER) && data.size() >= sizeof(BITMAPV5HEADER) &&
+      data.size() - sizeof(BITMAPV5HEADER) == pixelSize) {
+    const auto *v5 = reinterpret_cast<const BITMAPV5HEADER *>(data.data());
+    if (v5->bV5RedMask != 0x00ff0000 || v5->bV5GreenMask != 0x0000ff00 || v5->bV5BlueMask != 0x000000ff ||
+        v5->bV5AlphaMask != 0xff000000 || v5->bV5CSType != LCS_sRGB || v5->bV5ClrUsed != 0 || v5->bV5ProfileData != 0 ||
+        v5->bV5ProfileSize != 0) {
+      return false;
+    }
+    // Windows clipboard consumers can fail to read a complete macOS V5 DIB
+    // published as CF_DIB. Its sRGB BGRA pixels also fit a BI_RGB INFOHEADER.
+    pixelOffset = sizeof(BITMAPV5HEADER);
+  } else if (header->biSize > sizeof(BITMAPINFOHEADER) && data.size() == sizeof(BITMAPINFOHEADER) + pixelSize) {
+    // Some macOS DIBs claim a V5 header but contain only an INFOHEADER.
+    pixelOffset = sizeof(BITMAPINFOHEADER);
+  } else {
     return false;
   }
 
   normalisedData = data.substr(0, sizeof(BITMAPINFOHEADER));
   qToLittleEndian<quint32>(sizeof(BITMAPINFOHEADER), reinterpret_cast<quint8 *>(&normalisedData[0]));
   qToLittleEndian<quint32>(BI_RGB, reinterpret_cast<quint8 *>(&normalisedData[0]) + 16);
-  normalisedData += data.substr(sizeof(BITMAPINFOHEADER));
-  LOG_INFO("normalised malformed macOS clipboard image to BI_RGB");
+  if (header->biHeight < 0) {
+    // CF_DIB to CF_BITMAP synthesis requires a bottom-up DIB on Windows.
+    if (height > static_cast<size_t>(std::numeric_limits<LONG>::max())) {
+      return false;
+    }
+    qToLittleEndian<quint32>(static_cast<quint32>(height), reinterpret_cast<quint8 *>(normalisedData.data()) + 8);
+    const auto stride = width * 4;
+    for (size_t row = height; row > 0; --row) {
+      normalisedData.append(data, pixelOffset + (row - 1) * stride, stride);
+    }
+  } else {
+    normalisedData += data.substr(pixelOffset);
+  }
+  LOG_INFO("normalised macOS clipboard image to bottom-up BI_RGB");
   return true;
 }
 } // namespace
@@ -70,7 +96,7 @@ MSWindowsClipboardBitmapConverter::fromIClipboard(const std::string &data) const
 {
   std::string normalisedData;
   const auto *clipboardData = &data;
-  if (normaliseMalformedMacDib(data, normalisedData)) {
+  if (normaliseMacDib(data, normalisedData)) {
     clipboardData = &normalisedData;
   }
 

@@ -30,6 +30,10 @@ private Q_SLOTS:
   void isOwnedByDeskflow();
   void normalisesMalformedMacBitmap();
   void preservesHealthyMacV5Bitmap();
+  void normalisesMacSrgbV5Bitmap_data();
+  void normalisesMacSrgbV5Bitmap();
+  void preservesUnsupportedV5Bitmap_data();
+  void preservesUnsupportedV5Bitmap();
 
 private:
   Log m_log;
