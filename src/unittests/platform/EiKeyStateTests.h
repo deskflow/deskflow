@@ -20,6 +20,7 @@ private Q_SLOTS:
   void clearStaleModifiers_shiftDownAndNumLockOn_shiftClearedAndNumLockPreserved();
   void updateLockedModifiers_compositorLockState_numLockFollowsCompositor();
   void getKeyMap_fourLevelAlphabetic_altGrLevelDoesNotRequireCapsLock();
+  void getKeyMap_fourLevelAlphabetic_baseLevelSensitiveToAltGr();
 
 private:
   Arch m_arch;

@@ -225,4 +225,38 @@ void EiKeyStateTests::getKeyMap_fourLevelAlphabetic_altGrLevelDoesNotRequireCaps
   QVERIFY(std::ranges::count(required[Aogonek], KeyModifierAltGr | KeyModifierCapsLock) == 1);
 }
 
+void EiKeyStateTests::getKeyMap_fourLevelAlphabetic_baseLevelSensitiveToAltGr()
+{
+  TestAppUtil appUtil;
+  EventQueue eventQueue;
+  TestEiKeyState keyState(nullptr, &eventQueue);
+
+  QTemporaryFile keymapFile;
+  QVERIFY(keymapFile.open());
+  const QByteArray keymapData =
+      QByteArray::fromRawData(FourLevelAlphabeticKeymap, sizeof(FourLevelAlphabeticKeymap) - 1);
+  QCOMPARE(keymapFile.write(keymapData), keymapData.size());
+  QVERIFY(keymapFile.flush());
+  keyState.init(keymapFile.handle(), keymapFile.size());
+
+  deskflow::KeyMap keyMap;
+  keyState.getKeyMap(keyMap);
+
+  std::map<KeyID, std::vector<deskflow::KeyMap::KeyItem>> items;
+  keyMap.foreachKey(
+      [](KeyID id, int32_t, deskflow::KeyMap::KeyItem &item, void *userData) {
+        (*static_cast<std::map<KeyID, std::vector<deskflow::KeyMap::KeyItem>> *>(userData))[id].push_back(item);
+      },
+      &items
+  );
+
+  constexpr KeyID a = 0x0061;
+
+  // Level 1 needs no modifiers, but AltGr changes the level, so it must be released
+  // when typing it (e.g. the base key after a dead key typed with AltGr)
+  QCOMPARE(items[a].size(), 1u);
+  QCOMPARE(items[a].front().m_required, KeyModifierMask{0});
+  QVERIFY((items[a].front().m_sensitive & KeyModifierAltGr) != 0);
+}
+
 QTEST_MAIN(EiKeyStateTests)
