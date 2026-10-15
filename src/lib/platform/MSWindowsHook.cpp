@@ -223,100 +223,8 @@ static void setDeadKey(WCHAR wc[], int size, UINT flags)
   }
 }
 
-static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
+static WPARAM mapKeyDown(WPARAM wParam, LPARAM lParam, BYTE (&keys)[256], UINT control, UINT menu, UINT flags)
 {
-  DWORD vkCode = static_cast<DWORD>(wParam);
-  bool kf_up = (lParam & (KF_UP << 16)) != 0;
-
-  // check for special events indicating if we should start or stop
-  // passing events through and not report them to the server.  this
-  // is used to allow the server to synthesize events locally but
-  // not pick them up as user events.
-  if (wParam == DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY && ((lParam >> 16) & 0xffu) == DESKFLOW_HOOK_FAKE_INPUT_SCANCODE) {
-    // update flag
-    g_fakeServerInput = ((lParam & 0x80000000u) == 0);
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xff000000u | wParam, lParam);
-
-    // discard event
-    return true;
-  }
-
-  // if we're expecting fake input then just pass the event through
-  // and do not forward to the server
-  if (g_fakeServerInput) {
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xfe000000u | wParam, lParam);
-    return false;
-  }
-
-  // VK_RSHIFT may be sent with an extended scan code but right shift
-  // is not an extended key so we reset that bit.
-  if (wParam == VK_RSHIFT) {
-    lParam &= ~0x01000000u;
-  }
-
-  // tell server about event
-  PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam, lParam);
-
-  // we need the keyboard state for ToAscii()
-  BYTE keys[256];
-  keyboardGetState(keys, vkCode, kf_up);
-
-  // Update the physical state before ignoring a dead key release so it cannot remain down in the resync snapshot.
-  if ((g_deadVirtKey == wParam || g_deadRelease == wParam) && (lParam & 0x80000000u) != 0) {
-    g_deadRelease = 0;
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
-    return false;
-  }
-
-  // ToAscii() maps ctrl+letter to the corresponding control code
-  // and ctrl+backspace to delete.  we don't want those translations
-  // so clear the control modifier state.  however, if we want to
-  // simulate AltGr (which is ctrl+alt) then we must not clear it.
-  UINT control = keys[VK_CONTROL] | keys[VK_LCONTROL] | keys[VK_RCONTROL];
-  UINT menu = keys[VK_MENU] | keys[VK_LMENU] | keys[VK_RMENU];
-  if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
-    keys[VK_LCONTROL] = 0;
-    keys[VK_RCONTROL] = 0;
-    keys[VK_CONTROL] = 0;
-  } else {
-    keys[VK_LCONTROL] = 0x80;
-    keys[VK_RCONTROL] = 0x80;
-    keys[VK_CONTROL] = 0x80;
-    keys[VK_LMENU] = 0x80;
-    keys[VK_RMENU] = 0x80;
-    keys[VK_MENU] = 0x80;
-  }
-
-  // ToAscii() needs to know if a menu is active for some reason.
-  // we don't know and there doesn't appear to be any way to find
-  // out.  so we'll just assume a menu is active if the menu key
-  // is down.
-  // FIXME -- figure out some way to check if a menu is active
-  UINT flags = 0;
-  if ((menu & 0x80) != 0)
-    flags |= 1;
-
-  // if we're on the server computer then just pass numpad keys with alt
-  // key down as-is.  we won't pick up the resulting character but the
-  // local app will.  if on a client computer then grab keys as usual;
-  // if the client is a windows system it'll synthesize the expected
-  // character.  if not then it'll probably just do nothing.
-  if (g_mode != kHOOK_RELAY_EVENTS) {
-    // we don't use virtual keys because we don't know what the
-    // state of the numlock key is.  we'll hard code the scan codes
-    // instead.  hopefully this works across all keyboards.
-    UINT sc = (lParam & 0x01ff0000u) >> 16;
-    if (menu && (sc >= 0x47u && sc <= 0x52u && sc != 0x4au && sc != 0x4eu)) {
-      return false;
-    }
-
-    // We're on the server's own screen: we're only watching for the
-    // cursor to reach a jump zone, we are NOT relaying keystrokes to a
-    // client, so we have no need for the composed character here.
-    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, makeKeyMsg((UINT)wParam, 0, false), lParam);
-    return false;
-  }
-
   // map the key event to a character.  we have to put the dead
   // key back first and this has the side effect of removing it.
   WCHAR wc[] = {0, 0};
@@ -411,6 +319,105 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
     g_deadVirtKey = 0;
     g_deadLParam = 0;
   }
+
+  return charAndVirtKey;
+}
+
+static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
+{
+  DWORD vkCode = static_cast<DWORD>(wParam);
+  bool kf_up = (lParam & (KF_UP << 16)) != 0;
+
+  // check for special events indicating if we should start or stop
+  // passing events through and not report them to the server.  this
+  // is used to allow the server to synthesize events locally but
+  // not pick them up as user events.
+  if (wParam == DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY && ((lParam >> 16) & 0xffu) == DESKFLOW_HOOK_FAKE_INPUT_SCANCODE) {
+    // update flag
+    g_fakeServerInput = ((lParam & 0x80000000u) == 0);
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xff000000u | wParam, lParam);
+
+    // discard event
+    return true;
+  }
+
+  // if we're expecting fake input then just pass the event through
+  // and do not forward to the server
+  if (g_fakeServerInput) {
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, 0xfe000000u | wParam, lParam);
+    return false;
+  }
+
+  // VK_RSHIFT may be sent with an extended scan code but right shift
+  // is not an extended key so we reset that bit.
+  if (wParam == VK_RSHIFT) {
+    lParam &= ~0x01000000u;
+  }
+
+  // tell server about event
+  PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam, lParam);
+
+  // we need the keyboard state for ToAscii()
+  BYTE keys[256];
+  keyboardGetState(keys, vkCode, kf_up);
+
+  // Update the physical state before ignoring a dead key release so it cannot remain down in the resync snapshot.
+  if ((g_deadVirtKey == wParam || g_deadRelease == wParam) && (lParam & 0x80000000u) != 0) {
+    g_deadRelease = 0;
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_DEBUG, wParam | 0x04000000, lParam);
+    return false;
+  }
+
+  // ToAscii() maps ctrl+letter to the corresponding control code
+  // and ctrl+backspace to delete.  we don't want those translations
+  // so clear the control modifier state.  however, if we want to
+  // simulate AltGr (which is ctrl+alt) then we must not clear it.
+  UINT control = keys[VK_CONTROL] | keys[VK_LCONTROL] | keys[VK_RCONTROL];
+  UINT menu = keys[VK_MENU] | keys[VK_LMENU] | keys[VK_RMENU];
+  if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
+    keys[VK_LCONTROL] = 0;
+    keys[VK_RCONTROL] = 0;
+    keys[VK_CONTROL] = 0;
+  } else {
+    keys[VK_LCONTROL] = 0x80;
+    keys[VK_RCONTROL] = 0x80;
+    keys[VK_CONTROL] = 0x80;
+    keys[VK_LMENU] = 0x80;
+    keys[VK_RMENU] = 0x80;
+    keys[VK_MENU] = 0x80;
+  }
+
+  // ToAscii() needs to know if a menu is active for some reason.
+  // we don't know and there doesn't appear to be any way to find
+  // out.  so we'll just assume a menu is active if the menu key
+  // is down.
+  // FIXME -- figure out some way to check if a menu is active
+  UINT flags = 0;
+  if ((menu & 0x80) != 0)
+    flags |= 1;
+
+  // if we're on the server computer then just pass numpad keys with alt
+  // key down as-is.  we won't pick up the resulting character but the
+  // local app will.  if on a client computer then grab keys as usual;
+  // if the client is a windows system it'll synthesize the expected
+  // character.  if not then it'll probably just do nothing.
+  if (g_mode != kHOOK_RELAY_EVENTS) {
+    // we don't use virtual keys because we don't know what the
+    // state of the numlock key is.  we'll hard code the scan codes
+    // instead.  hopefully this works across all keyboards.
+    UINT sc = (lParam & 0x01ff0000u) >> 16;
+    if (menu && (sc >= 0x47u && sc <= 0x52u && sc != 0x4au && sc != 0x4eu)) {
+      return false;
+    }
+
+    // We're on the server's own screen: we're only watching for the
+    // cursor to reach a jump zone, we are NOT relaying keystrokes to a
+    // client, so we have no need for the composed character here.
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_KEY, makeKeyMsg((UINT)wParam, 0, false), lParam);
+    return false;
+  }
+
+  WPARAM charAndVirtKey = mapKeyDown(wParam, lParam, keys, control, menu, flags);
 
   // forward message to our window.  do this whether or not we're
   // forwarding events to clients because this'll keep our thread's
