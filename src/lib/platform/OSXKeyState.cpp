@@ -36,6 +36,7 @@ static const uint32_t s_brightnessUp = 144;
 static const uint32_t s_brightnessDown = 145;
 static const uint32_t s_missionControlVK = 160;
 static const uint32_t s_launchpadVK = 131;
+static const uint32_t s_int5VK = 0x8b;
 
 static const uint32_t s_osxNumLock = 1 << 16;
 
@@ -120,12 +121,14 @@ static const KeyEntry s_controlKeys[] = {
     {kKeyNumLock, s_numLockVK},
     {kKeyCapsLock, s_capsLockVK},
 
-    // for Apple Pro JIS Keyboard, map Kana (IME activate) to Henkan (show next
-    // IME conversion), and
-    // Eisu (IME deactivate) to Zenkaku (IME activation toggle) on Windows
-    // Japanese keyboard (OADG109A)
+    // Windows servers send these; kept above the JIS entries because the last entry per key code wins on a Mac server
     {kKeyHenkan, kVK_JIS_Kana},
     {kKeyZenkaku, kVK_JIS_Eisu},
+
+    // JIS keyboards only
+    {kKeyEisuToggle, kVK_JIS_Eisu},
+    {kKeyKana, kVK_JIS_Kana},
+    {kKeyMuhenkan, s_int5VK},
 
     {kKeyMissionControl, s_missionControlVK},
     {kKeyLaunchpad, s_launchpadVK},
