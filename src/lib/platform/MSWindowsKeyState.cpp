@@ -844,14 +844,14 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
 
 void MSWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
-  BYTE keyState[256];
+  BYTE keyState[MSWindowsHook::kVirtualKeyCount];
   // The caller's GetKeyboardState queue can lag the low-level hook during a computer switch.
   if (!MSWindowsHook::getPhysicalKeyState(keyState) && !GetKeyboardState(keyState)) {
     LOG_WARN("keyboard state is unexpected");
     LOG_DEBUG("function 'GetKeyboardState' returned false on 'pollPressedKeys'");
     return;
   }
-  for (KeyButton i = 1; i < 256; ++i) {
+  for (KeyButton i = 1; i < MSWindowsHook::kVirtualKeyCount; ++i) {
     if ((keyState[i] & 0x80) != 0) {
       KeyButton keyButton = virtualKeyToButton(i);
       if (keyButton != 0) {
