@@ -532,7 +532,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation>無効な証明書、新しい証明書を生成しています</translation>
+        <translation type="vanished">無効な証明書、新しい証明書を生成しています</translation>
     </message>
     <message>
         <source>Address missing</source>

@@ -674,7 +674,7 @@ La dirección IP asignada ahora no es válida; es posible que deba reiniciar el 
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation type="unfinished">certificado no válido, generando uno nuevo</translation>
+        <translation type="obsolete">certificado no válido, generando uno nuevo</translation>
     </message>
     <message>
         <source>Ctrl+Q</source>
