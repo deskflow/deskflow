@@ -10,7 +10,9 @@
 
 #include <QTest>
 
+#include <chrono>
 #include <memory>
+#include <thread>
 
 void EventQueueTests::initTestCase()
 {
@@ -53,6 +55,16 @@ void EventQueueTests::dispatchEvent_handlerRemovesItself_keepsHandlerAliveUntilR
   QVERIFY(events.dispatchEvent(Event(EventTypes::ClientDisconnected, this)));
   QVERIFY(handlerAliveAfterRemoval);
   QVERIFY(handlerLifetimeObserver.expired());
+}
+
+void EventQueueTests::archTime_twentyMsApart_measuresTheGap()
+{
+  const double start = Arch::time();
+  std::this_thread::sleep_for(std::chrono::milliseconds(20));
+  const double elapsed = Arch::time() - start;
+
+  QVERIFY(elapsed >= 0.015);
+  QVERIFY(elapsed < 0.5);
 }
 
 QTEST_MAIN(EventQueueTests)

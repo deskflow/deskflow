@@ -23,19 +23,9 @@ public:
   CFStringRef getOSXFormat() const override = 0;
 
 protected:
-  //! Convert from IClipboard format
-  /*!
-  Do UTF-8 conversion and linefeed conversion.
-  */
   virtual std::string doFromIClipboard(const std::string &) const = 0;
-
-  //! Convert to IClipboard format
-  /*!
-  Do UTF-8 conversion and Linefeed conversion.
-  */
   virtual std::string doToIClipboard(const std::string &) const = 0;
 
 private:
-  static std::string convertLinefeedToMacOS(const std::string &);
   static std::string convertLinefeedToUnix(const std::string &);
 };

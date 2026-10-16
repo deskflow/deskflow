@@ -23,6 +23,11 @@ private Q_SLOTS:
   void unMarshalText();
   void unMarshalLongerText();
   void unMarshalTextAndHtml();
+  void marshalGifAndSvg();
+  void sourceToSend_pngAndJpeg_sendsOnlyPng();
+  void sourceToSend_bitmapOnly_sendsBitmapAsPng();
+  void sourceToSend_bitmapBesideJpeg_sendsOnlyJpeg();
+  void sourceToSend_webpBesidePng_sendsOnlyPng();
   void equalClipboards();
 
 private:

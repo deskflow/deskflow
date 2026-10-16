@@ -7,6 +7,8 @@
 
 #include "platform/MSWindowsClipboardAnyTextConverter.h"
 
+#include <QByteArray>
+
 //
 // MSWindowsClipboardAnyTextConverter
 //
@@ -61,61 +63,10 @@ std::string MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
 
 std::string MSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(const std::string &src) const
 {
-  // note -- we assume src is a valid UTF-8 string
-
-  // count newlines in string
-  uint32_t numNewlines = 0;
-  uint32_t n = (uint32_t)src.size();
-  for (const char *scan = src.c_str(); n > 0; ++scan, --n) {
-    if (*scan == '\n') {
-      ++numNewlines;
-    }
-  }
-  if (numNewlines == 0) {
-    return src;
-  }
-
-  // allocate new string
-  std::string dst;
-  dst.reserve(src.size() + numNewlines);
-
-  // copy string, converting newlines
-  n = (uint32_t)src.size();
-  for (const char *scan = src.c_str(); n > 0; ++scan, --n) {
-    if (scan[0] == '\n') {
-      dst += '\r';
-    }
-    dst += scan[0];
-  }
-
-  return dst;
+  return QByteArray::fromStdString(src).replace('\n', "\r\n").toStdString();
 }
 
 std::string MSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(const std::string &src) const
 {
-  // count newlines in string
-  uint32_t numNewlines = 0;
-  uint32_t n = (uint32_t)src.size();
-  for (const char *scan = src.c_str(); n > 0; ++scan, --n) {
-    if (scan[0] == '\r' && scan[1] == '\n') {
-      ++numNewlines;
-    }
-  }
-  if (numNewlines == 0) {
-    return src;
-  }
-
-  // allocate new string
-  std::string dst;
-  dst.reserve(src.size());
-
-  // copy string, converting newlines
-  n = (uint32_t)src.size();
-  for (const char *scan = src.c_str(); n > 0; ++scan, --n) {
-    if (scan[0] != '\r' || scan[1] != '\n') {
-      dst += scan[0];
-    }
-  }
-
-  return dst;
+  return QByteArray::fromStdString(src).replace("\r\n", "\n").toStdString();
 }

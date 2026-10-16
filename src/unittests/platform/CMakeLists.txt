@@ -1,11 +1,21 @@
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
+if (WIN32 OR (UNIX AND NOT APPLE))
+  create_test(
+    NAME ClipboardImageTests
+    DEPENDS platform
+    LIBS base arch Qt6::Gui
+    SOURCE ClipboardImageTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+endif()
+
 if (WIN32)
   create_test(
     NAME MSWindowsClipboardTests
     DEPENDS platform
-    LIBS base arch
+    LIBS base arch app
     SOURCE MSWindowsClipboardTests.cpp
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )

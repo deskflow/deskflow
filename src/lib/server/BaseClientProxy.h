@@ -51,6 +51,11 @@ public:
     return false;
   }
 
+  //! Send any clipboard transfer in progress in full, so input sent next arrives after it
+  virtual void finishClipboardTransfers()
+  {
+  }
+
   //@}
 
   // IComputer
