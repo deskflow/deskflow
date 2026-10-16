@@ -319,6 +319,7 @@ private:
   void handleClientDisconnected(BaseClientProxy *client);
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToComputerEvent(const Event &event);
+  void handleInjectedInputEvent();
   void handleSwitchInDirectionEvent(const Event &event);
   void handleToggleComputerEvent(const Event &);
   void handleKeyboardBroadcastEvent(const Event &event);

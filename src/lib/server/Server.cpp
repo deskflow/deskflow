@@ -98,6 +98,10 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Com
       EventTypes::PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget(),
       [this](const auto &) { onScreensaver(false); }
   );
+  m_events->addHandler(
+      EventTypes::PrimaryComputerInjectedInput, m_primaryClient->getEventTarget(),
+      [this](const auto &) { handleInjectedInputEvent(); }
+  );
   m_events->addHandler(EventTypes::ServerSwitchToComputer, m_inputFilter, [this](const auto &e) {
     handleSwitchToComputerEvent(e);
   });
@@ -164,6 +168,7 @@ Server::~Server()
   m_events->removeHandler(PrimaryComputerWheel, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryScreenSaverActivated, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryComputerInjectedInput, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerFakeInputBegin, m_inputFilter);
   m_events->removeHandler(PrimaryComputerFakeInputEnd, m_inputFilter);
   m_events->removeHandler(Timer, this);
@@ -1308,6 +1313,16 @@ void Server::handleClientCloseTimeout(BaseClientProxy *client)
   removeOldClient(client);
 
   delete client;
+}
+
+void Server::handleInjectedInputEvent()
+{
+  if (m_active == m_primaryClient) {
+    return;
+  }
+
+  LOG_INFO("input injected on \"%s\" (e.g. remote desktop), switching back", getName(m_primaryClient).c_str());
+  jumpToComputer(m_primaryClient);
 }
 
 void Server::handleSwitchToComputerEvent(const Event &event)

@@ -552,6 +552,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
   addOption("", kOptionDisableLockToComputer, Settings::value(Settings::Server::DisableLockToComputer).toBool());
   addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toBool());
   addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toBool());
+  addOption("", kOptionWin32IgnoreInjectedInput, Settings::value(Settings::Server::Win32IgnoreInjectedInput).toBool());
   addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());
   addOption("", kOptionClipboardSharingSize, Settings::value(Settings::Server::ClipboardSize).toUInt() * 1024);
 

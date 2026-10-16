@@ -22,6 +22,7 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/DisplayException.h"
 #include "deskflow/KeyMap.h"
+#include "deskflow/OptionTypes.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
@@ -31,6 +32,7 @@
 #include <Shlobj.h>
 #include <algorithm>
 #include <comutil.h>
+#include <iterator>
 #include <string.h>
 
 // suppress warning about GetVersionEx, which is used indirectly in this
@@ -396,11 +398,24 @@ void MSWindowsComputer::screensaver(bool activate)
 void MSWindowsComputer::resetOptions()
 {
   m_desks->resetOptions();
+  if (m_isPrimary) {
+    MSWindowsHook::setIgnoreInjectedInput(false);
+  }
 }
 
 void MSWindowsComputer::setOptions(const OptionsList &options)
 {
   m_desks->setOptions(options);
+
+  if (m_isPrimary) {
+    for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
+      if (options[i] == kOptionWin32IgnoreInjectedInput) {
+        const bool ignore = (options[i + 1] != 0);
+        LOG_VERBOSE("%s injected input", ignore ? "ignoring" : "capturing");
+        MSWindowsHook::setIgnoreInjectedInput(ignore);
+      }
+    }
+  }
 }
 
 void MSWindowsComputer::setSequenceNumber(uint32_t seqNum)
@@ -674,12 +689,32 @@ bool MSWindowsComputer::isAnyMouseButtonDown(uint32_t &buttonID) const
 
   for (uint32_t i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
     if (m_buttons[i]) {
+      // the hook can miss a release (e.g. it happened on the secure desktop
+      // or the event was injected), which would lock the cursor to this
+      // computer until the button is clicked again. if windows says no
+      // button is down then the press is stale.
+      if (!isAnyMouseButtonDownAsync()) {
+        LOG_DEBUG("clearing stale press of \"%s\"", buttonToName[i]);
+        std::fill(std::begin(m_buttons), std::end(m_buttons), false);
+        return false;
+      }
+
       buttonID = i;
       LOG_DEBUG("locked by \"%s\"", buttonToName[i]);
       return true;
     }
   }
 
+  return false;
+}
+
+bool MSWindowsComputer::isAnyMouseButtonDownAsync()
+{
+  for (int vk : {VK_LBUTTON, VK_RBUTTON, VK_MBUTTON, VK_XBUTTON1, VK_XBUTTON2}) {
+    if ((GetAsyncKeyState(vk) & 0x8000) != 0) {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -919,6 +954,14 @@ bool MSWindowsComputer::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, 
 
   case DESKFLOW_MSG_POST_WARP:
     LOG_WARN("unmatched post warp");
+    return true;
+
+  case DESKFLOW_MSG_INJECTED_INPUT:
+    // input injected by another program (e.g. remote desktop) while a
+    // client is active, so whoever is driving it wants this computer back
+    if (!m_isOnComputer) {
+      sendEvent(EventTypes::PrimaryComputerInjectedInput);
+    }
     return true;
 
   case WM_HOTKEY:

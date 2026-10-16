@@ -42,6 +42,7 @@ static std::mutex g_keyStateMutex;
 static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
 static BOOL g_isPrimary = TRUE;
+static bool g_ignoreInjectedInput = false;
 
 MSWindowsHook::~MSWindowsHook()
 {
@@ -145,6 +146,11 @@ void MSWindowsHook::setMode(EHookMode mode)
     return;
   }
   g_mode = mode;
+}
+
+void MSWindowsHook::setIgnoreInjectedInput(bool ignore)
+{
+  g_ignoreInjectedInput = ignore;
 }
 
 bool MSWindowsHook::getPhysicalKeyState(BYTE keys[256])
@@ -451,6 +457,24 @@ static bool keyboardHookHandler(WPARAM wParam, LPARAM lParam)
   return false;
 }
 
+//
+// input injected by another program (Chrome Remote Desktop, RDP tools, etc.)
+// is meant for this computer. returns true if the event should be eaten.
+//
+
+static bool injectedInputHandler()
+{
+  if (g_mode == kHOOK_RELAY_EVENTS) {
+    // the cursor is on a client, so the injected event would land on our
+    // hidden window. eat it and ask the server to come back to this computer.
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_INJECTED_INPUT, 0, 0);
+    return true;
+  }
+
+  // pass it through without reporting it, so it can't hit a jump zone
+  return false;
+}
+
 #if !NO_GRAB_KEYBOARD
 static LRESULT CALLBACK keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 {
@@ -460,6 +484,17 @@ static LRESULT CALLBACK keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 
     bool const injected = info->flags & LLKHF_INJECTED;
     if (!g_isPrimary && injected) {
+      return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
+    }
+
+    // our own fake keys are bracketed by the fake input marker key and must
+    // still reach the handler
+    bool const isFakeInputMarker =
+        info->vkCode == DESKFLOW_HOOK_FAKE_INPUT_VIRTUAL_KEY && info->scanCode == DESKFLOW_HOOK_FAKE_INPUT_SCANCODE;
+    if (g_ignoreInjectedInput && injected && !g_fakeServerInput && !isFakeInputMarker) {
+      if (injectedInputHandler()) {
+        return 1;
+      }
       return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
     }
 
@@ -607,6 +642,17 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 
     bool const injected = info->flags & LLMHF_INJECTED;
     if (!g_isPrimary && injected) {
+      return CallNextHookEx(g_mouseLL, code, wParam, lParam);
+    }
+
+    // injected moves while relaying are left to the normal path because our
+    // own cursor warps (SetCursorPos) also show up as injected moves; a remote
+    // click or scroll is what brings the cursor back.
+    bool const isMove = (wParam == WM_MOUSEMOVE || wParam == WM_NCMOUSEMOVE);
+    if (g_ignoreInjectedInput && injected && !(isMove && g_mode == kHOOK_RELAY_EVENTS)) {
+      if (injectedInputHandler()) {
+        return 1;
+      }
       return CallNextHookEx(g_mouseLL, code, wParam, lParam);
     }
 

@@ -119,6 +119,7 @@ public:
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
+    inline static const auto Win32IgnoreInjectedInput = QStringLiteral("server/win32IgnoreInjectedInput");
     inline static const auto XdpClipboardRetried = QStringLiteral("server/xdpClipboardRetried");
     inline static const auto XdpRestoreToken = QStringLiteral("server/xdpRestoreToken");
   };
@@ -335,6 +336,7 @@ private:
     , Server::SwitchDelay
     , Server::SwitchDoubleTap
     , Server::Win32KeepForeground
+    , Server::Win32IgnoreInjectedInput
   };
 
   // When checking the default values this list contains the ones that default to false.
@@ -362,6 +364,7 @@ private:
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig
     , Server::RelativeMouseMoves
+    , Server::Win32IgnoreInjectedInput
     , Server::XdpClipboardRetried
   };
 
