@@ -46,6 +46,8 @@ enum EHookMode
 class MSWindowsHook
 {
 public:
+  static constexpr int kVirtualKeyCount = 256;
+
   MSWindowsHook() = default;
   ~MSWindowsHook();
 
@@ -63,7 +65,7 @@ public:
   void setMode(EHookMode mode);
 
   //! Copy the hook's physical key state; false until it has observed an event.
-  static bool getPhysicalKeyState(BYTE keys[256]);
+  static bool getPhysicalKeyState(BYTE keys[kVirtualKeyCount]);
 
   static EHookResult install();
 
