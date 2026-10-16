@@ -7,7 +7,8 @@
  */
 
 #include "NewComputerWidget.h"
-#include "ComputerSetupModel.h"
+#include "ComputerLayoutView.h"
+#include "gui/config/Computer.h"
 
 #include <QDrag>
 #include <QLabel>
@@ -29,7 +30,7 @@ void NewComputerWidget::mousePressEvent(QMouseEvent *)
   dataStream << -1 << -1 << newComputer;
 
   auto *pMimeData = new QMimeData;
-  pMimeData->setData(ComputerSetupModel::mimeType(), itemData);
+  pMimeData->setData(ComputerLayoutView::mimeType(), itemData);
 
   auto *pDrag = new QDrag(this);
   pDrag->setMimeData(pMimeData);
