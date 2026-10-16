@@ -1,0 +1,5 @@
+<map id="deskflow::Computer" name="deskflow::Computer">
+<area shape="rect" id="Node000001" title="Platform independent computer." alt="" coords="5,78,143,103"/>
+<area shape="rect" id="Node000002" href="$classIComputer.html" title="Computer interface." alt="" coords="33,5,115,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,44,77,79,71,77,72,48"/>
+</map>
