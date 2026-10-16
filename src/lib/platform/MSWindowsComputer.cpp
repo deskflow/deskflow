@@ -22,6 +22,7 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/DisplayException.h"
 #include "deskflow/KeyMap.h"
+#include "deskflow/OptionTypes.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
@@ -397,11 +398,24 @@ void MSWindowsComputer::screensaver(bool activate)
 void MSWindowsComputer::resetOptions()
 {
   m_desks->resetOptions();
+  if (m_isPrimary) {
+    MSWindowsHook::setIgnoreInjectedInput(false);
+  }
 }
 
 void MSWindowsComputer::setOptions(const OptionsList &options)
 {
   m_desks->setOptions(options);
+
+  if (m_isPrimary) {
+    for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
+      if (options[i] == kOptionWin32IgnoreInjectedInput) {
+        const bool ignore = (options[i + 1] != 0);
+        LOG_VERBOSE("%s injected input", ignore ? "ignoring" : "capturing");
+        MSWindowsHook::setIgnoreInjectedInput(ignore);
+      }
+    }
+  }
 }
 
 void MSWindowsComputer::setSequenceNumber(uint32_t seqNum)
@@ -940,6 +954,14 @@ bool MSWindowsComputer::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, 
 
   case DESKFLOW_MSG_POST_WARP:
     LOG_WARN("unmatched post warp");
+    return true;
+
+  case DESKFLOW_MSG_INJECTED_INPUT:
+    // input injected by another program (e.g. remote desktop) while a
+    // client is active, so whoever is driving it wants this computer back
+    if (!m_isOnComputer) {
+      sendEvent(EventTypes::PrimaryComputerInjectedInput);
+    }
     return true;
 
   case WM_HOTKEY:

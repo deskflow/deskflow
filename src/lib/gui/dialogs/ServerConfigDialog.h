@@ -58,6 +58,7 @@ protected:
   void toggleDefaultLockToComputerState(bool state);
   void toggleLockToComputer(bool disabled);
   void toggleWin32Foreground(bool enabled);
+  void toggleWin32IgnoreInjectedInput(bool enabled);
 
   void toggleClipboard(bool enabled);
   void setClipboardLimit(int limit);
@@ -114,6 +115,7 @@ private:
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;
   bool m_win32keepForeground;
+  bool m_win32IgnoreInjectedInput;
   bool m_disableLockToComputer;
   bool m_defaultLockToComputerState;
   QString m_originalServerConfigUsesExternalFile;

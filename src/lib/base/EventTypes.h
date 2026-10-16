@@ -190,6 +190,10 @@ enum class EventTypes : uint32_t
   /// This event is sent when screensaver is deactivated.
   PrimaryScreenSaverDeactivated,
 
+  /// This event is sent when another program (e.g. remote desktop) injects
+  /// input on the server while a client is active.
+  PrimaryComputerInjectedInput,
+
   /// This event is sent when hotkey is down. Event data is a pointer to HotKeyInfo.
   PrimaryComputerHotkeyDown,
 
