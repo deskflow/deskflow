@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 create_test(
@@ -26,5 +26,12 @@ create_test(
   NAME KeySequenceTests
   DEPENDS common
   SOURCE KeySequenceTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/common"
+)
+
+create_test(
+  NAME LayoutLinksTests
+  DEPENDS common
+  SOURCE LayoutLinksTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/common"
 )
