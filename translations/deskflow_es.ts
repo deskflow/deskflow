@@ -326,13 +326,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;Equipo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Haz doble clic para editar la configuración&lt;br&gt;Arrastra el equipo a la papelera para eliminarlo</translation>
-    </message>
-</context>
-<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
@@ -920,6 +913,10 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
     <message>
         <source>Super</source>
         <translation type="unfinished">Súper</translation>
+    </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag the bottom right corner to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
