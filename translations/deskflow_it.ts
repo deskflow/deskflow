@@ -175,6 +175,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerLayoutView</name>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished">Riduci zoom</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished">Aumenta zoom</translation>
+    </message>
+</context>
+<context>
     <name>ComputerSettingsDialog</name>
     <message>
         <source>Computer settings</source>
@@ -323,13 +334,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">Il nome del computer non può coincidere con un alias. Rimuovere l&apos;alias o modificare il nome del computer.</translation>
-    </message>
-</context>
-<context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Fai doppio clic per modificare le impostazioni&lt;br&gt;Trascina il computer nel cestino per rimuoverlo</translation>
     </message>
 </context>
 <context>
@@ -921,6 +925,10 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <source>Super</source>
         <translation type="unfinished">Super</translation>
     </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag an edge to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Trascina accanto a un altro computer per collegarne i bordi&lt;br&gt;Trascina un bordo per ridimensionare&lt;br&gt;Fai doppio clic per modificare le impostazioni&lt;br&gt;Trascina il computer nel cestino per rimuoverlo</translation>
+    </message>
 </context>
 <context>
     <name>SearchWidget</name>
@@ -952,16 +960,16 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>Computer</translation>
     </message>
     <message>
-        <source>Drag a computer from the grid to the trashcan to remove it.</source>
-        <translation>Trascina un computer dalla griglia nel cestino per rimuoverlo.</translation>
+        <source>Drag a computer from the layout to the trashcan to remove it.</source>
+        <translation>Trascina un computer dal layout nel cestino per rimuoverlo.</translation>
     </message>
     <message>
         <source>Configure the layout of your computer displays by dragging to where you want.</source>
         <translation>Configura il layout degli schermi dei tuoi computer trascinandoli dove desideri.</translation>
     </message>
     <message>
-        <source>Drag to the grid to add a new computer.</source>
-        <translation>Trascina nella griglia per aggiungere un nuovo computer.</translation>
+        <source>Drag to the layout to add a new computer.</source>
+        <translation>Trascina nel layout per aggiungere un nuovo computer.</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -1076,10 +1084,10 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
         <translation>Percorso del file di configurazione</translation>
     </message>
     <message>
-        <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+        <source>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>Utilizza un file di configurazione del server per creare layout di computer complessi che non sono possibili con il semplice editor di layout del computer basato su griglia.
+        <translation>Utilizza un file di configurazione del server per creare layout di computer complessi che non sono possibili con l&apos;editor di layout dei computer.
 
 L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia grafica di configurazione del server.</translation>
     </message>

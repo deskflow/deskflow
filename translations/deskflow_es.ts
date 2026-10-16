@@ -175,6 +175,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerLayoutView</name>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished">Alejar</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished">Acercar</translation>
+    </message>
+</context>
+<context>
     <name>ComputerSettingsDialog</name>
     <message>
         <source>Computer settings</source>
@@ -323,13 +334,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">El nombre del equipo no puede ser igual a un alias. Elimine el alias o cambie el nombre del equipo.</translation>
-    </message>
-</context>
-<context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;Equipo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Haz doble clic para editar la configuración&lt;br&gt;Arrastra el equipo a la papelera para eliminarlo</translation>
     </message>
 </context>
 <context>
@@ -921,6 +925,10 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <source>Super</source>
         <translation type="unfinished">Súper</translation>
     </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag an edge to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Equipo: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Arrastra junto a otro equipo para enlazar sus bordes&lt;br&gt;Arrastra un borde para cambiar el tamaño&lt;br&gt;Haz doble clic para editar la configuración&lt;br&gt;Arrastra el equipo a la papelera para eliminarlo</translation>
+    </message>
 </context>
 <context>
     <name>SearchWidget</name>
@@ -952,16 +960,16 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">Computadoras</translation>
     </message>
     <message>
-        <source>Drag a computer from the grid to the trashcan to remove it.</source>
-        <translation type="unfinished">Arrastre una computadora desde la cuadrícula a la papelera para eliminarla.</translation>
+        <source>Drag a computer from the layout to the trashcan to remove it.</source>
+        <translation type="unfinished">Arrastre una computadora desde el diseño a la papelera para eliminarla.</translation>
     </message>
     <message>
         <source>Configure the layout of your computer displays by dragging to where you want.</source>
         <translation type="unfinished">Configura el diseño de las pantallas de tu computadora arrastrándolas hacia donde quieras.</translation>
     </message>
     <message>
-        <source>Drag to the grid to add a new computer.</source>
-        <translation type="unfinished">Arrastre a la cuadrícula para agregar una nueva computadora.</translation>
+        <source>Drag to the layout to add a new computer.</source>
+        <translation type="unfinished">Arrastre al diseño para agregar una nueva computadora.</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -1068,10 +1076,10 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
         <translation type="unfinished">Activar doble &amp;toque dentro</translation>
     </message>
     <message>
-        <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+        <source>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation type="unfinished">Utilice un archivo de configuración del servidor para crear diseños de computadora complejos que no son posibles con el editor de diseño de computadora simple basado en cuadrícula.
+        <translation type="unfinished">Utilice un archivo de configuración del servidor para crear diseños de computadora complejos que no son posibles con el editor de diseño de computadoras.
 
 Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GUI) de configuración del servidor.</translation>
     </message>
