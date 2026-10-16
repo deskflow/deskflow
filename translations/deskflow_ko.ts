@@ -1096,6 +1096,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation>시작 시 컴퓨터 잠금 사용</translation>
     </message>
+    <message>
+        <source>Lets remote desktop tools (e.g. Chrome Remote Desktop) control this computer while clients are connected. Remote input won&apos;t switch to a client, and a remote click or key brings the cursor back here.</source>
+        <translation>클라이언트가 연결된 상태에서도 원격 데스크톱 도구(예: Chrome 원격 데스크톱)로 이 컴퓨터를 제어할 수 있습니다. 원격 입력은 클라이언트로 전환되지 않으며, 원격으로 클릭하거나 키를 누르면 커서가 이 컴퓨터로 돌아옵니다.</translation>
+    </message>
+    <message>
+        <source>Allow remote desktop control (Windows only)</source>
+        <translation>원격 데스크톱 제어 허용 (Windows 전용)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

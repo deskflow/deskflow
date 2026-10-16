@@ -1096,6 +1096,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Activar el bloqueo del ordenador al iniciar</translation>
     </message>
+    <message>
+        <source>Lets remote desktop tools (e.g. Chrome Remote Desktop) control this computer while clients are connected. Remote input won&apos;t switch to a client, and a remote click or key brings the cursor back here.</source>
+        <translation>Permite que las herramientas de escritorio remoto (p. ej., Escritorio remoto de Chrome) controlen este ordenador mientras haya clientes conectados. La entrada remota no cambia a un cliente, y un clic o una tecla remotos devuelven el cursor aquí.</translation>
+    </message>
+    <message>
+        <source>Allow remote desktop control (Windows only)</source>
+        <translation>Permitir control por escritorio remoto (solo Windows)</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
