@@ -841,9 +841,13 @@ void MainWindow::handleMissingKeyboardLayouts(const QString &layouts)
   }
 }
 
-void MainWindow::handlePeerFingerprint(const QString &fingerprint)
+void MainWindow::handlePeerFingerprint(const QString &payload)
 {
-  const auto sha256Text = QString(fingerprint).remove(':');
+  const auto payloadList = payload.split('|');
+  bool hasPeerInfo = payloadList.size() == 3;
+  const auto sha256Text = QString(payloadList.value(0)).remove(':');
+  const auto localPeer = hasPeerInfo ? payloadList.value(1) : QString{};
+  const auto remotePeer = hasPeerInfo ? payloadList.value(2) : QString{};
   const Fingerprint sha256 = {QCryptographicHash::Sha256, QByteArray::fromHex(sha256Text.toLatin1())};
 
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
@@ -868,7 +872,7 @@ void MainWindow::handlePeerFingerprint(const QString &fingerprint)
   }
 
   auto mode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
-  FingerprintDialog fingerprintDialog(this, m_fingerprint, mode, sha256);
+  FingerprintDialog fingerprintDialog(this, m_fingerprint, mode, sha256, localPeer, remotePeer);
 
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
