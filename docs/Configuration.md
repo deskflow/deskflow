@@ -146,8 +146,6 @@ This section contains options used when in server mode it will begin with `[serv
 | enableSwitchDoubleTap  | `true` or `false` | Enables the doubletap to switch method (default: false)|
 | externalConfig     | `true` or `false` | When true use the external config path |
 | externalConfigFile | Filepath          | Path the server config file if it does not exist the GUI will it generated based on the `internalConfig` section.|
-| gridHeight         | int               | Height of the server's intenal grid used for the computer layout (default: 3)|
-| gridWidth          | int               | Width of the server's intenal grid used for the computer layout (default: 5) |
 | heartbeat          | int               | The server will expect each client to send a message no less than every `N` milliseconds. If no message arrives from a client within `3N` seconds the server forces that client to disconnect. If deskflow fails to detect clients disconnecting while the server is sleeping or vice versa, try using this option.|
 | protocol           | `barrier` or `synergy` | The protocol to use when saying hello to clients. Can be set to barrier or synergy. If not set barrier is used as the default |
 |relativeMouseMoves  | `true` or `false` | If set to ''true'' then secondary computers move the mouse using relative rather than absolute mouse moves when and only when the cursor is locked to the computer (by ''Scroll Lock'' or a configured hot key). This is intended to make Deskflow work better with certain games. If set to ''false'' or not set then all mouse moves are absolute.|
@@ -165,6 +163,7 @@ Each computer will have a section where its configuration will be stored, if the
 |:-----------------------|:-----------------:|:-----------|
 | aliases                | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
 | name                   | Valid hostname    | The name of the client. |
+| geometry               | Rect              | Position and size of the computer in the server's layout, `@Rect(x y width height)`. Unless an external server config is used, the server links the computers whose edges touch. |
 | halfDuplexCapsLock     | `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | halfDuplexNumLock      | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | halfDuplexScrollLock   | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
@@ -241,6 +240,8 @@ Comments are introduced by ''#'' and continue to the end of the line. ''name'' m
 The file is parsed top to bottom and names cannot be used before they've been defined in the general config or as an alias in the general config.
 
 ### links secion
+
+This section is only read from an external server config. Otherwise the links come from the `geometry` of each computer in the general config.
 
 ''args'' is a list of computer names just like in the ''screens'' section except each computer is followed by a list of links, one per line. Each link has the form:
 ```
