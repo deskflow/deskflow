@@ -50,7 +50,7 @@
             <bool>true</bool>
            </property>
            <property name="toolTip">
-            <string>Drag a computer from the grid to the trashcan to remove it.</string>
+            <string>Drag a computer from the layout to the trashcan to remove it.</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::Shape::StyledPanel</enum>
@@ -117,7 +117,7 @@
          <item>
           <widget class="NewComputerWidget" name="lblNewComputer">
            <property name="toolTip">
-            <string>Drag to the grid to add a new computer.</string>
+            <string>Drag to the layout to add a new computer.</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::Shape::StyledPanel</enum>
@@ -146,7 +146,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="ComputerSetupView" name="computerSetupView">
+        <widget class="ComputerLayoutView" name="computerLayoutView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -766,7 +766,7 @@
        <item>
         <widget class="QGroupBox" name="groupExternalConfig">
          <property name="toolTip">
-          <string>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+          <string>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</string>
          </property>
@@ -885,9 +885,9 @@ Enabling this setting will disable the server config GUI.</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ComputerSetupView</class>
-   <extends>QTableView</extends>
-   <header>widgets/ComputerSetupView.h</header>
+   <class>ComputerLayoutView</class>
+   <extends>QGraphicsView</extends>
+   <header>widgets/ComputerLayoutView.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -902,7 +902,7 @@ Enabling this setting will disable the server config GUI.</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>computerSetupView</tabstop>
+  <tabstop>computerLayoutView</tabstop>
   <tabstop>listHotkeys</tabstop>
   <tabstop>btnNewHotkey</tabstop>
   <tabstop>btnEditHotkey</tabstop>
