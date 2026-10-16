@@ -42,6 +42,7 @@ public:
     inline static const auto YScrollScale = QStringLiteral("client/yScrollScale");
     inline static const auto XScrollScale = QStringLiteral("client/xScrollScale");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
+    inline static const auto PhysicalKeys = QStringLiteral("client/physicalKeys");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
     inline static const auto XdpClipboardRetried = QStringLiteral("client/xdpClipboardRetried");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
@@ -277,6 +278,7 @@ private:
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::LanguageSync
+    , Client::PhysicalKeys
     , Client::RemoteHost
     , Client::YScrollScale
     , Client::XScrollScale
@@ -352,6 +354,7 @@ private:
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::LanguageSync
+    , Client::PhysicalKeys
     , Client::XdpClipboardRetried
     , Log::ToFile
     , Log::GuiDebug

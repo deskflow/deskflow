@@ -38,6 +38,16 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="cbPhysicalKeys">
+     <property name="toolTip">
+      <string>Send the server's physical key positions instead of characters, so this computer's keyboard layout decides what is typed. Language sync has no effect in this mode. Wayland clients with a Windows server only.</string>
+     </property>
+     <property name="text">
+      <string>Use physical key positions (this computer's layout applies)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Scroll Modifiers</string>

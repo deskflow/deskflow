@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <set>
 #include "deskflow/KeyState.h"
 #include "platform/EiComputer.h"
 
@@ -22,6 +23,11 @@ namespace deskflow {
 class EiKeyState : public KeyState
 {
 public:
+  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override;
+  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override;
+  bool fakeKeyUp(KeyButton button) override;
+  void fakeAllKeysUp() override;
+
   EiKeyState(EiComputer *computer, IEventQueue *events);
   ~EiKeyState() override;
 
@@ -47,6 +53,8 @@ private:
   std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn, bool mapMod2ToNumLock = false) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
+  bool m_physicalKeys = false;
+  std::set<uint32_t> m_physicalDown;
   EiComputer *m_computer = nullptr;
 
   xkb_context *m_xkb = nullptr;

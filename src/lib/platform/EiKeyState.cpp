@@ -19,12 +19,49 @@
 
 namespace deskflow {
 
+namespace {
+// Maps a Windows set-1 scancode (bit 0x100 = extended) to a Linux evdev code.
+// Non-extended set-1 codes up to 0x58 are identical to evdev codes.
+uint32_t windowsScancodeToEvdev(KeyButton button)
+{
+  const uint32_t sc = button & 0x1ff;
+  if (sc < 0x100) {
+    return (sc > 0 && sc <= 0x58) ? sc : 0;
+  }
+  switch (sc) {
+  case 0x11c: return 96;  // KP Enter
+  case 0x11d: return 97;  // Right Ctrl
+  case 0x135: return 98;  // KP Slash
+  case 0x137: return 99;  // Print Screen
+  case 0x138: return 100; // Right Alt
+  case 0x147: return 102; // Home
+  case 0x148: return 103; // Up
+  case 0x149: return 104; // Page Up
+  case 0x14b: return 105; // Left
+  case 0x14d: return 106; // Right
+  case 0x14f: return 107; // End
+  case 0x150: return 108; // Down
+  case 0x151: return 109; // Page Down
+  case 0x152: return 110; // Insert
+  case 0x153: return 111; // Delete
+  case 0x15b: return 125; // Left Meta
+  case 0x15c: return 126; // Right Meta
+  case 0x15d: return 127; // Menu
+  default: return 0;
+  }
+}
+} // namespace
+
 EiKeyState::EiKeyState(EiComputer *computer, IEventQueue *events)
     : KeyState(
           events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
       ),
       m_computer{computer}
 {
+  m_physicalKeys = Settings::value(Settings::Client::PhysicalKeys).toBool();
+  if (m_physicalKeys) {
+    LOG_INFO("physical key mode: injecting server key positions, local layout applies");
+  }
   m_xkb = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
   // FIXME: PrimaryClient->enable() calls into our keymap, so we must have
@@ -374,4 +411,50 @@ void EiKeyState::clearStaleModifiers()
   m_xkbState = xkb_state_new(m_xkbKeymap);
   xkb_state_update_mask(m_xkbState, 0, 0, lockedMods, 0, 0, lockedLayout);
 }
+void EiKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
+{
+  if (!m_physicalKeys) {
+    KeyState::fakeKeyDown(id, mask, button, lang);
+    return;
+  }
+  const auto code = windowsScancodeToEvdev(button);
+  if (code == 0) {
+    LOG_DEBUG("physical key mode: no evdev code for server button %03x, using character", button);
+    KeyState::fakeKeyDown(id, mask, button, lang);
+    return;
+  }
+  LOG_VERBOSE("physical key: server %03x -> evdev %03x down", button, code);
+  m_physicalDown.insert(code);
+  m_computer->fakeKey(code, true);
+}
+
+bool EiKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
+{
+  if (!m_physicalKeys || windowsScancodeToEvdev(button) == 0) {
+    return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
+  }
+  // the compositor generates its own autorepeat while the key is held
+  return true;
+}
+
+bool EiKeyState::fakeKeyUp(KeyButton button)
+{
+  const auto code = m_physicalKeys ? windowsScancodeToEvdev(button) : 0;
+  if (code == 0 || m_physicalDown.erase(code) == 0) {
+    return KeyState::fakeKeyUp(button);
+  }
+  LOG_VERBOSE("physical key: server %03x -> evdev %03x up", button, code);
+  m_computer->fakeKey(code, false);
+  return true;
+}
+
+void EiKeyState::fakeAllKeysUp()
+{
+  for (auto code : m_physicalDown) {
+    m_computer->fakeKey(code, false);
+  }
+  m_physicalDown.clear();
+  KeyState::fakeAllKeysUp();
+}
+
 } // namespace deskflow
