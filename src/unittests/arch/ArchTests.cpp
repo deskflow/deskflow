@@ -13,6 +13,24 @@ class ArchTests : public QObject
   Q_OBJECT
 
 private Q_SLOTS:
+  void isAnyAddr_newAnyAddr_returnsTrue_data()
+  {
+    QTest::addColumn<int>("family");
+    QTest::newRow("IPv4") << static_cast<int>(IArchNetwork::AddressFamily::INet);
+    QTest::newRow("IPv6") << static_cast<int>(IArchNetwork::AddressFamily::INet6);
+  }
+
+  void isAnyAddr_newAnyAddr_returnsTrue()
+  {
+    QFETCH(int, family);
+    ARCH_NETWORK network;
+    auto address = network.newAnyAddr(static_cast<IArchNetwork::AddressFamily>(family));
+    const bool isAny = network.isAnyAddr(address);
+    network.closeAddr(address);
+
+    QVERIFY(isAny);
+  }
+
   void time_preservesFractionalSeconds()
   {
     const double t1 = Arch::time();
