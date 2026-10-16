@@ -8,8 +8,10 @@
 #pragma once
 
 #include "deskflow/KeyState.h"
-#include "platform/EiComputer.h"
 
+#include <cstdint>
+#include <functional>
+#include <string>
 #include <xkbcommon/xkbcommon.h>
 
 struct xkb_context;
@@ -18,11 +20,14 @@ struct xkb_state;
 
 namespace deskflow {
 
-/// A key state for Ei
+/// An xkbcommon key state, used by the Ei and wlroots computers
 class EiKeyState : public KeyState
 {
 public:
-  EiKeyState(EiComputer *computer, IEventQueue *events);
+  //! Injects an evdev keycode into the display server
+  using FakeKeyFn = std::function<void(std::uint32_t keycode, bool isDown)>;
+
+  EiKeyState(FakeKeyFn fakeKey, IEventQueue *events);
   ~EiKeyState() override;
 
   void init(int fd, std::size_t len);
@@ -38,6 +43,14 @@ public:
   void updateLockedModifiers(xkb_mod_mask_t lockedMods);
   void clearStaleModifiers() override;
 
+  //! The current keymap, in XKB text format
+  std::string keymapAsString() const;
+  //! True if the key (xkb keycode) should auto-repeat
+  bool keyRepeats(std::uint32_t keyval) const;
+  void serializeModifiers(
+      std::uint32_t &depressed, std::uint32_t &latched, std::uint32_t &locked, std::uint32_t &group
+  ) const;
+
 protected:
   // KeyState overrides
   void getKeyMap(KeyMap &keyMap) override;
@@ -47,7 +60,7 @@ private:
   std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn, bool mapMod2ToNumLock = false) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
-  EiComputer *m_computer = nullptr;
+  FakeKeyFn m_fakeKey;
 
   xkb_context *m_xkb = nullptr;
   xkb_keymap *m_xkbKeymap = nullptr;

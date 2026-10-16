@@ -29,6 +29,42 @@ if(UNIX AND NOT APPLE)
   check_symbol_exists(xdp_session_request_clipboard "libportal/portal-helpers.h;libportal/clipboard.h" HAVE_LP_CLIPBOARD)
   check_symbol_exists(xdp_global_shortcut_new "libportal/globalshortcuts.h" HAVE_LP_SHORTCUTS)
   cmake_pop_check_state()
+
+  # wlroots compositors (sway, Hyprland, ...) have no InputCapture portal, so talk to them directly
+  pkg_check_modules(WAYLAND_CLIENT QUIET wayland-client)
+  pkg_check_modules(WAYLAND_PROTOCOLS QUIET "wayland-protocols >= 1.39")
+  find_program(WAYLAND_SCANNER wayland-scanner)
+  if(WAYLAND_CLIENT_FOUND AND WAYLAND_PROTOCOLS_FOUND AND WAYLAND_SCANNER)
+    pkg_get_variable(WAYLAND_PROTOCOLS_DIR wayland-protocols pkgdatadir)
+    set(WLR_PROTOCOLS
+      ${WAYLAND_PROTOCOLS_DIR}/stable/xdg-shell/xdg-shell.xml
+      ${WAYLAND_PROTOCOLS_DIR}/stable/viewporter/viewporter.xml
+      ${WAYLAND_PROTOCOLS_DIR}/unstable/xdg-output/xdg-output-unstable-v1.xml
+      ${WAYLAND_PROTOCOLS_DIR}/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml
+      ${WAYLAND_PROTOCOLS_DIR}/unstable/relative-pointer/relative-pointer-unstable-v1.xml
+      ${WAYLAND_PROTOCOLS_DIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml
+      ${WAYLAND_PROTOCOLS_DIR}/staging/ext-data-control/ext-data-control-v1.xml
+      ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-layer-shell-unstable-v1.xml
+      ${CMAKE_CURRENT_SOURCE_DIR}/protocols/wlr-virtual-pointer-unstable-v1.xml
+      ${CMAKE_CURRENT_SOURCE_DIR}/protocols/virtual-keyboard-unstable-v1.xml
+    )
+    set(WLR_PROTOCOL_SOURCES)
+    foreach(xml ${WLR_PROTOCOLS})
+      get_filename_component(name ${xml} NAME_WE)
+      set(header ${CMAKE_CURRENT_BINARY_DIR}/${name}-client-protocol.h)
+      set(code ${CMAKE_CURRENT_BINARY_DIR}/${name}-protocol.c)
+      add_custom_command(
+        OUTPUT ${header} ${code}
+        COMMAND ${WAYLAND_SCANNER} client-header ${xml} ${header}
+        COMMAND ${WAYLAND_SCANNER} private-code ${xml} ${code}
+        DEPENDS ${xml}
+        VERBATIM
+      )
+      list(APPEND WLR_PROTOCOL_SOURCES ${header} ${code})
+    endforeach()
+    set(HAVE_WLR ON)
+  endif()
+  message(STATUS "wlroots backend: ${HAVE_WLR}")
 endif()
 
 if(WIN32)
@@ -162,6 +198,13 @@ elseif(UNIX)
       EiKeyState.cpp
       EiKeyState.h
     )
+    if(HAVE_WLR)
+      list(APPEND PLATFORM_SOURCES
+        WlrComputer.cpp
+        WlrComputer.h
+        ${WLR_PROTOCOL_SOURCES}
+      )
+    endif()
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
       list(APPEND PLATFORM_SOURCES
@@ -202,6 +245,11 @@ if(UNIX)
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
     target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL)
+    if(HAVE_WLR AND LIBEI_FOUND)
+      target_compile_definitions(platform PUBLIC HAVE_WLR_COMPUTER)
+      target_include_directories(platform PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${WAYLAND_CLIENT_INCLUDE_DIRS})
+      target_link_libraries(platform PRIVATE ${WAYLAND_CLIENT_LINK_LIBRARIES})
+    endif()
     if (HAVE_IC_RESTORE)
       target_compile_definitions(platform PUBLIC HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE)
     endif()
