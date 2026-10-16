@@ -811,7 +811,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
   Keystrokes keys;
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
   const deskflow::KeyMap::KeyItem *keyItem =
-      m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, false, lang);
+      m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, false, m_isLangSyncEnabled ? lang : std::string());
 
   if (keyItem == nullptr) {
     // a media key won't be mapped on mac, so we need to fake it in a
@@ -854,7 +854,7 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
   Keystrokes keys;
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
   const deskflow::KeyMap::KeyItem *keyItem =
-      m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, true, lang);
+      m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, true, m_isLangSyncEnabled ? lang : std::string());
   if (keyItem == nullptr) {
     return false;
   }
