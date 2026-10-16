@@ -31,6 +31,7 @@
 #include <Shlobj.h>
 #include <algorithm>
 #include <comutil.h>
+#include <iterator>
 #include <string.h>
 
 // suppress warning about GetVersionEx, which is used indirectly in this
@@ -674,12 +675,32 @@ bool MSWindowsComputer::isAnyMouseButtonDown(uint32_t &buttonID) const
 
   for (uint32_t i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
     if (m_buttons[i]) {
+      // the hook can miss a release (e.g. it happened on the secure desktop
+      // or the event was injected), which would lock the cursor to this
+      // computer until the button is clicked again. if windows says no
+      // button is down then the press is stale.
+      if (!isAnyMouseButtonDownAsync()) {
+        LOG_DEBUG("clearing stale press of \"%s\"", buttonToName[i]);
+        std::fill(std::begin(m_buttons), std::end(m_buttons), false);
+        return false;
+      }
+
       buttonID = i;
       LOG_DEBUG("locked by \"%s\"", buttonToName[i]);
       return true;
     }
   }
 
+  return false;
+}
+
+bool MSWindowsComputer::isAnyMouseButtonDownAsync()
+{
+  for (int vk : {VK_LBUTTON, VK_RBUTTON, VK_MBUTTON, VK_XBUTTON1, VK_XBUTTON2}) {
+    if ((GetAsyncKeyState(vk) & 0x8000) != 0) {
+      return true;
+    }
+  }
   return false;
 }
 

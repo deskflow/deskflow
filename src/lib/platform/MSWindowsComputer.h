@@ -175,6 +175,9 @@ private: // HACK
   bool onDisplayChange();
   void onClipboardChange();
 
+  // true if windows reports any mouse button as physically down
+  static bool isAnyMouseButtonDownAsync();
+
   // warp cursor without discarding queued events
   void warpCursorNoFlush(int32_t x, int32_t y);
 
@@ -316,7 +319,8 @@ private:
   HotKeyToIDMap m_hotKeyToIDMap;
 
   // map of button state
-  bool m_buttons[NumButtonIDs];
+  // mutable so isAnyMouseButtonDown() can drop a press whose release we missed
+  mutable bool m_buttons[NumButtonIDs];
 
   // m_hasMouse is true if there's a mouse attached to the system or
   // mouse keys is simulating one.  we track this so we can force the
