@@ -274,7 +274,9 @@ void MSWindowsWatchdog::startProcess()
 
   m_process = std::make_unique<deskflow::platform::MSWindowsProcess>(m_command, m_outputWritePipe, m_outputWritePipe);
 
-  LOG_INFO("running command (%s): %ls", m_elevateProcess ? "elevated" : "not elevated", m_command.c_str());
+  // %ls in a narrow printf depends on the CRT locale and can fail before CreateProcessW.
+  const auto utf8Command = QString::fromStdWString(m_command).toUtf8();
+  LOG_INFO("running command (%s): %s", m_elevateProcess ? "elevated" : "not elevated", utf8Command.constData());
 
   BOOL createRet;
   if (m_foreground) {
@@ -295,13 +297,9 @@ void MSWindowsWatchdog::startProcess()
   }
 
   if (!createRet) {
-    DWORD exitCode = 0;
-    if (GetExitCodeProcess(m_process->info().hProcess, &exitCode)) {
-      LOG_ERR("daemon failed to run command, exit code: %d", exitCode);
-    } else {
-      LOG_ERR("daemon failed to run command, unknown exit code");
-      throw std::runtime_error(windowsErrorToString(GetLastError()));
-    }
+    const auto error = GetLastError();
+    LOG_ERR("daemon process creation failed, Windows error: %lu", error);
+    throw std::runtime_error(windowsErrorToString(error));
   } else {
     // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
     LOG_DEBUG("watchdog waiting for process start result");
@@ -315,7 +313,7 @@ void MSWindowsWatchdog::startProcess()
     LOG_DEBUG("started core process from watchdog");
     LOG_VERBOSE(
         "process info, session=%i, elevated=%s, command: %s", //
-        m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no", m_command.c_str()
+        m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no", utf8Command.constData()
     );
   }
 }
@@ -326,7 +324,12 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   std::scoped_lock lock{m_processStateMutex};
 
   LOG_DEBUG("setting watchdog process config");
-  m_command = std::wstring(command.begin(), command.end());
+  try {
+    m_command = deskflow::platform::MSWindowsProcess::commandFromUtf8(command);
+  } catch (const std::exception &e) {
+    LOG_ERR("rejecting watchdog process command (%zu UTF-8 bytes): %s", command.size(), e.what());
+    return; // Preserve the previous configuration and process state.
+  }
   m_elevateProcess = elevate;
 
   if (m_command.empty()) {

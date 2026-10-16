@@ -18,9 +18,45 @@
 
 #include <UserEnv.h>
 
+#include <stdexcept>
 #include <string>
 
 namespace deskflow::platform {
+
+std::wstring MSWindowsProcess::commandFromUtf8(std::string_view command)
+{
+  // CreateProcessW allows 32767 UTF-16 code units, including the terminating NUL.
+  constexpr size_t kMaxCommandLength = 32766;
+  if (command.empty()) {
+    return {};
+  }
+
+  // Valid UTF-8 needs at most three bytes per UTF-16 code unit. Bound input before
+  // converting size_t to int or allocating; the exact UTF-16 limit is checked below.
+  if (command.size() > 3 * kMaxCommandLength) {
+    throw std::length_error("process command exceeds the Windows command line limit");
+  }
+  if (command.find('\0') != std::string_view::npos) {
+    throw std::invalid_argument("process command contains an embedded NUL");
+  }
+
+  const auto byteCount = static_cast<int>(command.size());
+  const int length = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, command.data(), byteCount, nullptr, 0);
+  if (length == 0) {
+    const auto error = GetLastError();
+    throw std::invalid_argument("invalid UTF-8 process command, Windows error=" + std::to_string(error));
+  }
+  if (static_cast<size_t>(length) > kMaxCommandLength) {
+    throw std::length_error("process command exceeds the Windows command line limit");
+  }
+
+  std::wstring result(static_cast<size_t>(length), L'\0');
+  if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, command.data(), byteCount, result.data(), length) != length) {
+    const auto error = GetLastError();
+    throw std::runtime_error("UTF-8 process command conversion failed, Windows error=" + std::to_string(error));
+  }
+  return result;
+}
 
 MSWindowsProcess::MSWindowsProcess(const std::wstring &command, HANDLE stdOutput, HANDLE stdError)
     : m_command(command),
@@ -51,7 +87,7 @@ BOOL MSWindowsProcess::startInForeground()
   si.wShowWindow = SW_MINIMIZE;
 
   m_createProcessResult =
-      CreateProcess(nullptr, LPWSTR(m_command.c_str()), nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &m_info);
+      CreateProcessW(nullptr, m_command.data(), nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &m_info);
   return m_createProcessResult;
 }
 
@@ -62,20 +98,25 @@ BOOL MSWindowsProcess::startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 
   LPVOID environment;
   if (!CreateEnvironmentBlock(&environment, userToken, FALSE)) {
+    const auto error = GetLastError();
+    CloseHandle(userToken);
     LOG_ERR("could not create environment block");
-    throw std::runtime_error(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(error));
   }
 
   ZeroMemory(&m_info, sizeof(PROCESS_INFORMATION));
   const DWORD creationFlags = NORMAL_PRIORITY_CLASS | CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT;
-  m_createProcessResult = CreateProcessAsUser(
-      userToken, nullptr, LPWSTR(m_command.c_str()), sa, nullptr, TRUE, creationFlags, environment, nullptr, &si,
-      &m_info
+  m_createProcessResult = CreateProcessAsUserW(
+      userToken, nullptr, m_command.data(), sa, nullptr, TRUE, creationFlags, environment, nullptr, &si, &m_info
   );
+  const auto createError = GetLastError();
 
   DestroyEnvironmentBlock(environment);
   CloseHandle(userToken);
 
+  if (!m_createProcessResult) {
+    SetLastError(createError); // Cleanup must not replace the process creation error.
+  }
   return m_createProcessResult;
 }
 
