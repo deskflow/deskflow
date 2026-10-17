@@ -799,10 +799,10 @@ void MainWindow::handleConnectionRefused(deskflow::core::ConnectionRefusal reaso
   if (reason != deskflow::core::ConnectionRefusal::AlreadyConnected)
     return;
 
-  if (!isVisible() || m_clientErrorVisible)
+  if (!isVisible() || m_alreadyConnectedShown)
     return;
 
-  m_clientErrorVisible = true;
+  m_alreadyConnectedShown = true;
   showAndActivate();
 
   const auto address = Settings::value(Settings::Client::RemoteHost).toString();
@@ -814,8 +814,6 @@ void MainWindow::handleConnectionRefused(deskflow::core::ConnectionRefusal reaso
          "single instance of the client process is running.</p>")
           .arg(address)
   );
-
-  m_clientErrorVisible = false;
 }
 
 void MainWindow::handleMissingKeyboardLayouts(const QString &layouts)
@@ -969,6 +967,7 @@ void MainWindow::coreProcessStateChanged(ProcessState state)
     m_actionStopCore->setEnabled(true);
 
     if (state == Starting) {
+      m_alreadyConnectedShown = false;
       saveSettings();
     }
 
@@ -995,8 +994,11 @@ void MainWindow::coreConnectionStateChanged(ConnectionState state)
   // when the correct TLS version string is detected.
   if (state != ConnectionState::Connected) {
     secureSocket(false);
-  } else if (isVisible()) {
-    showFirstConnectedMessage();
+  } else {
+    m_alreadyConnectedShown = false;
+    if (isVisible()) {
+      showFirstConnectedMessage();
+    }
   }
 }
 
