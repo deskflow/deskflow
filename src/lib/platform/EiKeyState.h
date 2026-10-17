@@ -52,6 +52,9 @@ private:
   xkb_context *m_xkb = nullptr;
   xkb_keymap *m_xkbKeymap = nullptr;
   xkb_state *m_xkbState = nullptr;
+  /// Keymap compiled without xkb options, used to resolve the original
+  /// keysym of keys remapped by options (e.g. a compose key).
+  xkb_keymap *m_stockKeymap = nullptr;
 };
 
 } // namespace deskflow

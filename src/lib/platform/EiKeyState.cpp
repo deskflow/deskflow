@@ -17,6 +17,8 @@
 #include <memory>
 #include <unistd.h>
 
+#include <xkbcommon/xkbcommon-keysyms.h>
+
 namespace deskflow {
 
 EiKeyState::EiKeyState(EiComputer *computer, IEventQueue *events)
@@ -86,6 +88,7 @@ EiKeyState::~EiKeyState()
 {
   xkb_context_unref(m_xkb);
   xkb_keymap_unref(m_xkbKeymap);
+  xkb_keymap_unref(m_stockKeymap);
   xkb_state_unref(m_xkbState);
 }
 
@@ -282,6 +285,56 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
         item.m_required = convertModMask(modRequired);
 
         assignGeneratedModifiers(keycode, item);
+
+        // The desktop may remap a key to the compose key via an xkb option
+        // (e.g. "compose:menu"). The keymap then only contains Multi_key for
+        // that keycode, and servers (e.g. Windows) never send kKeyCompose, so
+        // presses of that key would be dropped. Register an additional entry
+        // under the keysym the key has in a keymap without options, so the
+        // server can still reach the key. Both entries share the same button,
+        // so the injected event is still the real compose keycode and the
+        // compositor composes as usual.
+        //
+        // Note: for compose keys remapped onto modifier keys (e.g. ralt or
+        // rctrl) the alias entry has m_generates == 0, so our shadow modifier
+        // state does not track the press as a modifier. This is accepted:
+        // tracking it as a modifier would put the shadow state out of sync
+        // with what the compositor actually sees (a compose key, not a
+        // modifier).
+        if (keysym == XKB_KEY_Multi_key) {
+          if (!m_stockKeymap) {
+            xkb_rule_names names{};
+            names.options = ""; // no options -> no compose remap
+            m_stockKeymap = xkb_keymap_new_from_names(m_xkb, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+            if (!m_stockKeymap) {
+              LOG_WARN("failed to compile keymap without options, compose key alias unavailable");
+            }
+          }
+          if (m_stockKeymap) {
+            const xkb_keysym_t *stockSyms;
+            if (xkb_keymap_key_get_syms_by_level(m_stockKeymap, keycode, group, level, &stockSyms) > 0) {
+              const auto stockID = XDGKeyUtil::mapKeySymToKeyID(stockSyms[0]);
+              if (stockID != kKeyNone && stockID != kKeyCompose) {
+                auto alias = item;
+                alias.m_id = stockID;
+                keyMap.addKeyEntry(alias);
+                char stockName[128] = {0};
+                xkb_keysym_get_name(stockSyms[0], stockName, sizeof(stockName));
+                LOG_INFO(
+                    "compose key on keycode %d (group %d level %d): added alias for keysym %s (0x%lx)", keycode, group,
+                    level, stockName, static_cast<unsigned long>(stockSyms[0])
+                );
+              } else {
+                LOG_VERBOSE(
+                    "compose key on keycode %d: stock keysym 0x%lx maps to no usable KeyID", keycode,
+                    static_cast<unsigned long>(stockSyms[0])
+                );
+              }
+            } else {
+              LOG_VERBOSE("compose key on keycode %d: no stock keysym at group %d level %d", keycode, group, level);
+            }
+          }
+        }
 
         // add capslock version of key is sensitive to capslock
         if (item.m_sensitive & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
