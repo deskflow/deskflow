@@ -20,6 +20,7 @@
 #include <climits>
 #include <map>
 #include <set>
+#include <utility>
 #include <vector>
 
 class BaseClientProxy;
@@ -254,6 +255,18 @@ private:
   // after entering the client in the given direction.
   void avoidJumpZone(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
+  // if `computer` is the server and it has a shape hole that affects its `side`, 
+  // then narrows dx,dy,dw,dh from the full bounding box down to the effective 
+  // rectangle actually usable on that side at position x,y. Does nothing otherwise.
+  void adjustForShapeHole(
+      const BaseClientProxy *computer, Direction side, int32_t x, int32_t y, int32_t &dx, int32_t &dy, int32_t &dw,
+      int32_t &dh
+  ) const;
+
+  // resolve the hole-location links configured for the primary computer
+  // (e.g. "bottom-right = someComputer") into real connections.  
+  void resolveShapeHoleLinks();
+
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
@@ -375,6 +388,17 @@ private:
 
   // the Primary Computer Client
   PrimaryClient *m_primaryClient = nullptr;
+
+  // the primary's holes as of the last time its shape was known, so a later
+  // layout change can be detected and warned about
+  bool m_shapeEverKnown = false;
+  std::vector<deskflow::ShapeHole> m_lastKnownShapeHoles;
+
+  // the primary-side interval most recently linked for each hole direction,
+  // keyed by (hole location, direction) since a T-shaped arrangement can
+  // have two holes sharing the same direction (e.g. bottom-left and
+  // bottom-right both use Direction::Bottom) with different sub-intervals.
+  std::map<std::pair<deskflow::HoleLocation, Direction>, std::pair<float, float>> m_resolvedHoleLinkIntervals;
 
   // the client with focus
   BaseClientProxy *m_active = nullptr;

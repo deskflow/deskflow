@@ -271,6 +271,31 @@ This indicates that computer ''larry'' is to the right of computer ''moe'' (so m
 
 Note that links do not have to be symmetrical; for instance, here the edge between ''moe'' and ''curly'' maps to different ranges depending on if you're going up or down. In fact links don't have to be bidirectional. You can configure the right of ''moe'' to go to ''larry'' without a link from the left of ''larry'' to ''moe''. It's possible to configure a computer with no outgoing links; the cursor will get stuck on that computer unless you have a hot key configured to switch off of that computer.
 
+#### hole-location links
+
+If the server's own monitors don't form a perfect rectangle (for example, three monitors arranged in an L, or four arranged in a T), each missing area is called a ''hole''. Instead of a directional link, you can link a hole directly to a computer so that its screen fills the gap:
+```
+ {top|bottom|left|right|top-left|top-right|bottom-left|bottom-right} = name
+```
+```
+section: links
+	Desktop1:
+		bottom-right = Laptop
+end
+```
+This says that whenever Desktop1's monitors leave a gap in its bottom-right corner, ''Laptop'''s screen should be treated as filling it, so moving the cursor into that gap switches to ''Laptop'' (and moving back off the matching edge of ''Laptop'' returns to Desktop1).
+
+A hole-location link differs from a directional link in a few ways:
+
+* It has no range: the hole's exact position, size and which side(s) of it border real monitors are all worked out from the server's actual monitor layout at runtime, not configured by hand.
+* The return link, from the other computer back onto the server, is added automatically; you only need to write the one line above, not both directions.
+* It only has an effect on a server platform that can report an irregular monitor layout to deskflow (currently Linux/Wayland). On other platforms, or if the named hole isn't actually present in the server's layout, the entry is accepted but logged as unused and has no effect.
+* Hole-location links are only meaningful on the server's own section, since only the server's own screen shape can have a hole; one written under any other computer's section is silently ignored.
+* If the server's monitor layout changes after startup (a monitor is added, removed or moved), the hole (probably) will not be detected so a restart is needed. This seems to be a limitation in some systems e.g. KWin. 
+
+Also note that for holes to be useable, they have to have a unique border geometry e.g. in an L-Shaped setup, the left layout of the top-right monitor, and the bottom-right monitor
+should not be aligned exactly on the left edge, nor should the top-left and top-right monitors be aligned eactly on their bottom edge. A reasonable configuration may be the top left monitor being a few pixels below the top-right monitor, and the bottom-right monitor slightly overlapping the top-left monitor. This avoids a known limitation where an edge geometry is not valid if it is exactly the same for multiple monitors.
+
 ### options section
 
 ''args'' is a list of lines of the form <code>name = value</code>. These set the global options.
