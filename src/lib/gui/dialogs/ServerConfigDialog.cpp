@@ -48,6 +48,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
+  if (!deskflow::platform::isMac())
+    ui->cbMacCapsLockSync->setVisible(false);
   initConnections();
 }
 
@@ -89,6 +91,7 @@ void ServerConfigDialog::save()
   Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
   Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
   Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
+  Settings::setValue(Settings::Server::MacCapsLockSync, m_macCapsLockSync);
   Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
   Settings::setValue(Settings::Server::ExternalConfig, ui->groupExternalConfig->isChecked());
   Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
@@ -278,6 +281,12 @@ void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
   setButtonBoxEnabledButtons();
 }
 
+void ServerConfigDialog::toggleMacCapsLockSync(bool enabled)
+{
+  m_macCapsLockSync = enabled;
+  setButtonBoxEnabledButtons();
+}
+
 void ServerConfigDialog::toggleProtocol()
 {
   m_protocol = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
@@ -389,6 +398,7 @@ void ServerConfigDialog::loadFromConfig()
   m_enableHeartbeat = Settings::value(Settings::Server::EnableHeartbeat).toBool();
   m_heartbeatRate = Settings::value(Settings::Server::Heartbeat).toInt();
   m_relativeMouseMoves = Settings::value(Settings::Server::RelativeMouseMoves).toBool();
+  m_macCapsLockSync = Settings::value(Settings::Server::MacCapsLockSync).toBool();
   m_win32keepForeground = Settings::value(Settings::Server::Win32KeepForeground).toBool();
   m_enableSwitchDelay = Settings::value(Settings::Server::EnableSwitchDelay).toBool();
   m_switchDelay = Settings::value(Settings::Server::SwitchDelay).toInt();
@@ -439,6 +449,7 @@ void ServerConfigDialog::resetFromSettings()
 
 void ServerConfigDialog::refreshControls()
 {
+  ui->cbMacCapsLockSync->setChecked(m_macCapsLockSync);
   ui->rbProtocolSynergy->setChecked(m_protocol == NetworkProtocol::Synergy);
   ui->rbProtocolBarrier->setChecked(m_protocol == NetworkProtocol::Barrier);
   ui->cbHeartbeat->setChecked(m_enableHeartbeat);
@@ -499,6 +510,7 @@ void ServerConfigDialog::initConnections() const
   );
 
   connect(ui->cbRelativeMouseMoves, &QCheckBox::toggled, this, &ServerConfigDialog::toggleRelativeMouseMoves);
+  connect(ui->cbMacCapsLockSync, &QCheckBox::toggled, this, &ServerConfigDialog::toggleMacCapsLockSync);
   connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
   connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
   connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
@@ -530,6 +542,7 @@ void ServerConfigDialog::updateControls() const
   ui->rbProtocolSynergy->setEnabled(writable);
   ui->cbHeartbeat->setEnabled(writable);
   ui->cbRelativeMouseMoves->setEnabled(writable);
+  ui->cbMacCapsLockSync->setEnabled(writable);
   ui->cbSwitchDelay->setEnabled(writable);
   ui->cbWin32KeepForeground->setEnabled(writable);
   ui->cbSwitchDoubleTap->setEnabled(writable);
@@ -545,6 +558,7 @@ void ServerConfigDialog::restoreFromDefaults()
   m_enableHeartbeat = Settings::defaultValue(Settings::Server::EnableHeartbeat).toBool();
   m_heartbeatRate = Settings::defaultValue(Settings::Server::Heartbeat).toInt();
   m_relativeMouseMoves = Settings::defaultValue(Settings::Server::RelativeMouseMoves).toBool();
+  m_macCapsLockSync = Settings::defaultValue(Settings::Server::MacCapsLockSync).toBool();
   m_win32keepForeground = Settings::defaultValue(Settings::Server::Win32KeepForeground).toBool();
   m_enableSwitchDelay = Settings::defaultValue(Settings::Server::EnableSwitchDelay).toBool();
   m_switchDelay = Settings::defaultValue(Settings::Server::SwitchDelay).toInt();
@@ -602,6 +616,7 @@ bool ServerConfigDialog::isGeneralConfigModified() const
          m_enableSwitchDoubleTap != Settings::value(Settings::Server::EnableSwitchDoubleTap).toBool() ||
          m_switchDoubleTap != Settings::value(Settings::Server::SwitchDoubleTap).toInt() ||
          m_relativeMouseMoves != Settings::value(Settings::Server::RelativeMouseMoves).toBool() ||
+         m_macCapsLockSync != Settings::value(Settings::Server::MacCapsLockSync).toBool() ||
          m_win32keepForeground != Settings::value(Settings::Server::Win32KeepForeground).toBool() ||
          m_disableLockToComputer != Settings::value(Settings::Server::DisableLockToComputer).toBool() ||
          m_defaultLockToComputerState != Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
@@ -621,6 +636,7 @@ bool ServerConfigDialog::isGeneralConfigDefault() const
          m_enableSwitchDoubleTap == Settings::defaultValue(Settings::Server::EnableSwitchDoubleTap).toBool() &&
          m_switchDoubleTap == Settings::defaultValue(Settings::Server::SwitchDoubleTap).toInt() &&
          m_relativeMouseMoves == Settings::defaultValue(Settings::Server::RelativeMouseMoves).toBool() &&
+         m_macCapsLockSync == Settings::defaultValue(Settings::Server::MacCapsLockSync).toBool() &&
          m_win32keepForeground == Settings::defaultValue(Settings::Server::Win32KeepForeground).toBool() &&
          m_disableLockToComputer == Settings::defaultValue(Settings::Server::DisableLockToComputer).toBool() &&
          m_defaultLockToComputerState == Settings::defaultValue(Settings::Server::DefaultLockToComputerState).toBool();
