@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation>接続試行回数に基づき、再接続時間を動的に調整する</translation>
     </message>
+    <message>
+        <source>Clear Server History</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ComputerSettingsDialog</name>

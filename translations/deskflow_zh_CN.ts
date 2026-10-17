@@ -173,6 +173,10 @@ p, li { white-space: pre-wrap; }
         <source>Use dynamic reconnection time based on connection attempts</source>
         <translation type="unfinished">根据连接尝试次数，采用动态重连时间</translation>
     </message>
+    <message>
+        <source>Clear Server History</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ComputerSettingsDialog</name>
