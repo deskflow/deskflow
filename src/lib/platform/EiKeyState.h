@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -9,6 +10,10 @@
 
 #include "deskflow/KeyState.h"
 #include "platform/EiComputer.h"
+#include "platform/WaylandKeyboardManager.h"
+#include <set>
+
+class EiKeyStateTests;
 
 #include <xkbcommon/xkbcommon.h>
 
@@ -44,6 +49,17 @@ protected:
   void fakeKey(const Keystroke &keystroke) override;
 
 private:
+  friend class ::EiKeyStateTests;
+  KeyID translateKey(uint32_t keyval, const platform::WaylandKeyboardManager::Snapshot &snapshot) const;
+  void refreshTranslation(const platform::WaylandKeyboardManager::Snapshot &snapshot) const;
+  void clearTranslation() const;
+  bool translationHasKey(uint32_t keyval) const;
+  mutable xkb_keymap *m_translationMap = nullptr;
+  mutable xkb_state *m_translationState = nullptr;
+  mutable uint64_t m_translationGeneration = 0;
+  mutable bool m_warnedTranslationMismatch = false;
+  std::set<uint32_t> m_pressed;
+
   std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn, bool mapMod2ToNumLock = false) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 

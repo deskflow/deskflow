@@ -11,6 +11,10 @@
 #include "base/Log.h"
 #include "common/PlatformInfo.h"
 
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+#include "platform/WaylandKeyboardManager.h"
+#endif
+
 #if WINAPI_XWINDOWS
 #include <X11/XKBlib.h>
 #include <deskflow/unix/XkbLayoutsParser.h>
@@ -37,6 +41,18 @@ int AppUtilUnix::run()
 std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 {
   std::vector<std::string> layoutLangCodes;
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+  if (deskflow::platform::isWayland()) {
+    auto &manager = deskflow::platform::WaylandKeyboardManager::instance();
+    manager.waitForInitialProbe();
+    for (const auto &language : manager.snapshot().languages) {
+      if (!language.empty() &&
+          std::find(layoutLangCodes.begin(), layoutLangCodes.end(), language) == layoutLangCodes.end())
+        layoutLangCodes.push_back(language);
+    }
+    return layoutLangCodes;
+  }
+#endif
 
 #if WINAPI_XWINDOWS
   layoutLangCodes = XkbLayoutsParser::getXkbLanguageList();
@@ -86,8 +102,14 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 std::string AppUtilUnix::getCurrentLanguageCode()
 {
   std::string result = "";
-  if (deskflow::platform::isWayland())
-    return result;
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+  if (deskflow::platform::isWayland()) {
+    const auto snapshot = deskflow::platform::WaylandKeyboardManager::instance().snapshot();
+    if (snapshot.group >= 0 && static_cast<size_t>(snapshot.group) < snapshot.languages.size())
+      return snapshot.languages[snapshot.group];
+    return {};
+  }
+#endif
 
 #if WINAPI_XWINDOWS
 

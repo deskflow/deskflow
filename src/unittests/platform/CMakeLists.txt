@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
@@ -26,6 +27,13 @@ elseif(APPLE)
   )
 elseif(UNIX)
   if(LIBEI_FOUND)
+    create_test(
+      NAME WaylandKeyboardManagerTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE WaylandKeyboardManagerTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
     create_test(
       NAME EiKeyStateTests
       DEPENDS platform

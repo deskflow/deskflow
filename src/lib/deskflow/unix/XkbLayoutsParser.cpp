@@ -6,13 +6,15 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#if WINAPI_XWINDOWS
+#if defined(__unix__) && !defined(__APPLE__)
 #include <algorithm>
 #include <sstream>
 
 #include "base/Log.h"
 
+#if WINAPI_XWINDOWS
 #include "DeskflowXkbKeyboard.h"
+#endif
 #include "ISO639Table.h"
 #include "XkbLayoutsParser.h"
 
@@ -95,10 +97,7 @@ void XkbLayoutsParser::convertLayoutToISO639_2(
     std::vector<std::string> &iso639_2Codes
 )
 {
-  static std::vector<XkbLayoutsParser::Lang> allLang;
-  if (allLang.empty()) {
-    allLang = getAllLanguageData();
-  }
+  static const auto allLang = getAllLanguageData();
   for (size_t i = 0; i < layoutNames.size(); i++) {
     const auto &layoutName = layoutNames[i];
     if (layoutNames[i].empty()) {
@@ -149,9 +148,11 @@ std::vector<std::string> XkbLayoutsParser::getXkbLanguageList()
   std::vector<std::string> layoutNames;
   std::vector<std::string> layoutVariantNames;
 
+#if WINAPI_XWINDOWS
   deskflow::linux::DeskflowXkbKeyboard keyboard;
   splitLine(layoutNames, keyboard.getLayout(), ',');
   splitLine(layoutVariantNames, keyboard.getVariant(), ',');
+#endif
 
   std::vector<std::string> iso639_2Codes;
   iso639_2Codes.reserve(layoutNames.size());
