@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -9,6 +10,8 @@
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IClipboard.h"
 #include <mutex>
+#include <utility>
+#include <vector>
 
 namespace deskflow {
 
@@ -22,6 +25,9 @@ class EiClipboard : public IClipboard
 public:
   explicit EiClipboard(ClipboardID id);
   ~EiClipboard() override = default;
+
+  bool replace(const std::vector<std::pair<Format, std::string>> &values, uint64_t expectedRevision);
+  uint64_t revision() const;
 
   //! Get clipboard ID
   ClipboardID getID() const
@@ -41,6 +47,7 @@ public:
   //@}
 
 private:
+  uint64_t m_revision = 0;
   ClipboardID m_id;
   mutable bool m_open = false;
   mutable Time m_time = 0;
