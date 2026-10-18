@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -10,6 +11,7 @@
 #include "platform/EiClipboard.h"
 
 #include <cstring>
+#include <memory>
 #include <poll.h>
 #include <unistd.h>
 
@@ -156,35 +158,35 @@ QByteArray PortalClipboard::decodeFormat(IClipboard::Format format, const QByteA
   return bytes;
 }
 
-QByteArray PortalClipboard::readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes)
+void PortalClipboard::readSelectionAsync(
+    PortalSelectionRead &reader, EiClipboard *cache, XdpSession *session, const char *const *mimeTypes, qint64 maxBytes,
+    std::function<void()> complete
+)
 {
-  const int fd = xdp_session_selection_read(session, mime);
-  if (fd < 0) {
-    LOG_ERR("failed to read clipboard selection: invalid fd");
-    return {};
+  std::vector<PortalSelectionRead::Offer> offers;
+  QSet<IClipboard::Format> seen;
+  auto retained =
+      std::shared_ptr<XdpSession>(XDP_SESSION(g_object_ref(session)), [](XdpSession *s) { g_object_unref(s); });
+  for (const auto &entry : kSupportedMimes) {
+    if (!mimeTypes || !g_strv_contains(mimeTypes, entry.mime) || seen.contains(entry.format))
+      continue;
+    seen.insert(entry.format);
+    offers.push_back({entry.format, [retained, mime = entry.mime] {
+                        return xdp_session_selection_read(retained.get(), mime);
+                      }});
   }
-
-  QFile pipe;
-  if (!pipe.open(fd, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle)) {
-    LOG_WARN("failed to wrap clipboard pipe");
-    ::close(fd);
-    return {};
-  }
-
-  QByteArray contents;
-  contents.reserve(std::min<qint64>(maxBytes, kChunkBytes));
-  while (contents.size() < maxBytes) {
-    pollfd pfd{fd, POLLIN, 0};
-    if (poll(&pfd, 1, kReadTimeoutMs) <= 0)
-      break;
-
-    const auto chunk = pipe.read(std::min<qint64>(kChunkBytes, maxBytes - contents.size()));
-    if (chunk.isEmpty())
-      break;
-
-    contents.append(chunk);
-  }
-  return contents;
+  reader.start(
+      std::move(offers), maxBytes,
+      [cache, revision = cache->revision(), complete = std::move(complete)](PortalSelectionRead::Values values) {
+        if (values.isEmpty())
+          return;
+        std::vector<std::pair<IClipboard::Format, std::string>> snapshot;
+        for (const auto &[format, data] : values)
+          snapshot.emplace_back(format, data.toStdString());
+        if (cache->replace(snapshot, revision))
+          complete();
+      }
+  );
 }
 
 void PortalClipboard::claimOwnership(EiClipboard *cache, XdpSession *session)
@@ -272,61 +274,6 @@ void PortalClipboard::serveSelectionTransfer(EiClipboard *cache, XdpSession *ses
 
   xdp_session_selection_write_done(session, serial, true);
   LOG_DEBUG("clipboard selection transfer complete, bytes: %lld", static_cast<long long>(written));
-}
-
-bool PortalClipboard::readSelectionIntoCache(
-    EiClipboard *cache, XdpSession *session, const char *const *mimeTypes, qint64 maxBytes
-)
-{
-  if (!cache || !session || !mimeTypes || !mimeTypes[0])
-    return false;
-
-  if (!pickSupportedMime(mimeTypes)) {
-    LOG_DEBUG("clipboard no supported mime types: %s", formatMimeTypes(mimeTypes).constData());
-    return false;
-  }
-
-  QList<QPair<IClipboard::Format, QByteArray>> reads;
-  QSet<IClipboard::Format> seen;
-  for (const auto &entry : kSupportedMimes) {
-    if (seen.contains(entry.format))
-      continue;
-    if (!g_strv_contains(mimeTypes, entry.mime))
-      continue;
-
-    auto bytes = readSelectionBytes(session, entry.mime, maxBytes);
-    if (bytes.isEmpty()) {
-      LOG_DEBUG("clipboard read returned no data for mime: %s", entry.mime);
-      continue;
-    }
-
-    if (entry.format != IClipboard::Format::Bitmap) {
-      while (bytes.endsWith('\0'))
-        bytes.chop(1);
-      bytes.replace("\r\n", "\n");
-    }
-
-    auto data = decodeFormat(entry.format, bytes);
-    if (data.isEmpty())
-      continue;
-
-    reads.append({entry.format, std::move(data)});
-    seen.insert(entry.format);
-  }
-
-  if (reads.isEmpty()) {
-    LOG_DEBUG("clipboard read produced no data, leaving existing clipboard intact");
-    return false;
-  }
-
-  cache->open(0);
-  cache->empty();
-  for (const auto &[format, data] : reads)
-    cache->add(format, data.toStdString());
-  cache->close();
-
-  LOG_DEBUG("clipboard read local selection, formats: %lld", static_cast<long long>(reads.size()));
-  return true;
 }
 
 } // namespace deskflow
