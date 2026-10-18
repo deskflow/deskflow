@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
@@ -8,6 +9,7 @@
 
 #pragma once
 
+#include "common/NavigationTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 
@@ -56,6 +58,15 @@ public:
   public:
     int32_t m_xDelta;
     int32_t m_yDelta;
+  };
+  //! Navigation gesture event data
+  class NavigationGestureInfo
+  {
+  public:
+    static NavigationGestureInfo *alloc(NavigationActionSlot action);
+
+  public:
+    NavigationActionSlot m_action;
   };
   //! Hot key event data
   class HotKeyInfo

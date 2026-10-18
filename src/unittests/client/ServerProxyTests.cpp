@@ -6,13 +6,17 @@
 
 #include "ServerProxyTests.h"
 
+#include "../deskflow/RecordingPlatformComputer.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "client/Client.h"
 #include "client/ServerProxy.h"
+#include "common/Settings.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/Computer.h"
 #include "deskflow/ProtocolTypes.h"
 #include "io/IStream.h"
+#include "net/ISocketFactory.h"
 
 #include <QTest>
 
@@ -43,6 +47,19 @@ public:
   std::string getCurrentLanguageCode() override
   {
     return "en";
+  }
+};
+
+class NullSocketFactory : public ISocketFactory
+{
+public:
+  IDataSocket *create(IArchNetwork::AddressFamily, SecurityLevel) const override
+  {
+    return nullptr;
+  }
+  IListenSocket *createListen(IArchNetwork::AddressFamily, SecurityLevel) const override
+  {
+    return nullptr;
   }
 };
 
@@ -270,6 +287,9 @@ const Client::DisconnectRequest *disconnectRequest(const RecordingEventQueue &ev
 
 void ServerProxyTests::initTestCase()
 {
+  QVERIFY(m_settings.isValid());
+  Settings::setSettingsFile(m_settings.filePath("Deskflow.conf"));
+  Settings::setStateFile(m_settings.filePath("Deskflow.state"));
   (void)testAppUtil();
   m_log.setFilter(LogLevel::Level::Debug);
 }
@@ -326,6 +346,60 @@ void ServerProxyTests::parseHandshakeMessage_protocolError_queuesRefusalRequest(
   QVERIFY(request->kind() == Client::DisconnectRequest::Kind::Refuse);
   QVERIFY(request->refusalReason() == deskflow::core::ConnectionRefusal::ProtocolError);
   QCOMPARE(QString::fromUtf8(request->message()), QStringLiteral("server reported a protocol error"));
+}
+
+void ServerProxyTests::navigationGesture_invalidSlots_areIgnored()
+{
+  for (int8_t slot : {int8_t(0), int8_t(3), int8_t(-1)}) {
+    FakeStream stream;
+    stream.push(std::string(1, static_cast<char>(slot)));
+    RecordingEventQueue events;
+    ServerProxy proxy(undereferenceableClient(), &stream, &events);
+    proxy.handleMessage(reinterpret_cast<const uint8_t *>("DNGS"));
+    QCOMPARE(stream.getSize(), uint32_t(0));
+    QVERIFY(events.addedEvents().empty());
+  }
+}
+
+void ServerProxyTests::handleHello_negotiatesSupportedVersionsAndRoutesNavigation()
+{
+  for (const std::string protocol : {"Synergy", "Barrier"}) {
+    for (int minor : {6, 7, 8, 9}) {
+      RecordingEventQueue events;
+      auto *platform = new RecordingPlatformComputer(&events);
+      deskflow::Computer computer(platform, &events);
+      Client client(&events, "test-client", NetworkAddress(), new NullSocketFactory, &computer);
+      auto *stream = new FakeStream;
+      std::string hello = protocol;
+      hello.append("\0\1\0", 3);
+      hello.push_back(static_cast<char>(minor));
+      stream->push(hello);
+      client.m_stream = stream;
+      client.handleHello();
+      QVERIFY2(client.isConnected(), (protocol + " 1." + std::to_string(minor)).c_str());
+      stream->push(std::string("DSOP") + std::string(4, '\0'));
+      client.m_server->handleData();
+      QVERIFY(client.m_ready);
+      QVERIFY(platform->enabled);
+      if (minor == 9) {
+        for (int slot : {1, 2}) {
+          stream->push(std::string("DNGS") + static_cast<char>(slot));
+          client.m_server->handleData();
+        }
+#ifdef Q_OS_MACOS
+        QCOMPARE(platform->keys.size(), size_t(2));
+        QCOMPARE(platform->keys[0].key, KeyID('['));
+        QCOMPARE(platform->keys[1].key, KeyID(']'));
+        QCOMPARE(platform->keys[0].mask, KeyModifierMask(KeyModifierSuper));
+        QCOMPARE(platform->releases.size(), size_t(2));
+#else
+        QCOMPARE(platform->buttons.size(), size_t(4));
+        QCOMPARE(platform->buttons[0].first, kButtonExtra0);
+        QCOMPARE(platform->buttons[2].first, kButtonExtra1);
+#endif
+      }
+    }
+  }
 }
 
 QTEST_MAIN(ServerProxyTests)

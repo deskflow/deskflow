@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,6 +8,7 @@
 
 #pragma once
 
+#include "common/NavigationTypes.h"
 #include "deskflow/IClient.h"
 
 namespace deskflow {
@@ -80,6 +82,7 @@ public:
   virtual void fileChunkSending(uint8_t mark, char *data, size_t dataSize) = 0;
   virtual std::string getSecureInputApp() const = 0;
   virtual void secureInputNotification(const std::string &app) const = 0;
+  virtual void navigationGesture(NavigationActionSlot action);
   std::string getName() const override;
   virtual deskflow::IStream *getStream() const = 0;
 

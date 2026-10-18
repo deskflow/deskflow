@@ -12,6 +12,7 @@
 #include "gui/config/ServerConfig.h"
 
 class SettingsDialogButtonBox;
+class MacSmoothModeController;
 
 namespace Ui {
 class SettingsDialog;
@@ -23,7 +24,9 @@ class SettingsDialog : public QDialog
 
 public:
   void extracted();
-  SettingsDialog(QWidget *parent, const ServerConfig &serverConfig);
+  SettingsDialog(
+      QWidget *parent, const ServerConfig &serverConfig, MacSmoothModeController *smoothController = nullptr
+  );
   ~SettingsDialog() override;
 
 Q_SIGNALS:
@@ -44,6 +47,11 @@ private:
   void updateTlsControlsEnabled();
   void resetAllSettings();
   void updateText();
+  void loadMacSettings();
+  void updateMacSmoothState();
+  void automaticSmoothingToggled(bool checked);
+  bool macSettingsModified() const;
+  bool macSettingsDefault() const;
 
   /// @brief Load all settings.
   void loadFromConfig();
@@ -87,4 +95,7 @@ private:
   std::unique_ptr<Ui::SettingsDialog> ui;
   const ServerConfig &m_serverConfig;
   SettingsDialogButtonBox *m_buttonBox = nullptr;
+  MacSmoothModeController *m_smoothController = nullptr;
+  bool m_loadedAutomaticSmoothing = false;
+  bool m_smoothModified = false;
 };

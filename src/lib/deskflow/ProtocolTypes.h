@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -45,7 +46,7 @@ static const int16_t kProtocolMajorVersion = 1;
  * @note When incrementing the minor version, the Deskflow application version should also increment
  * @since Protocol version 1.0
  */
-static const int16_t kProtocolMinorVersion = 8;
+static const int16_t kProtocolMinorVersion = 9;
 
 /**
  * @brief Default TCP port for Deskflow connections
@@ -898,6 +899,19 @@ extern const char *const kMsgDMouseWheel;
  * @since Protocol version 1.0
  */
 extern const char *const kMsgDMouseWheel1_0;
+
+/**
+ * @brief Navigation gesture action
+ *
+ * **Message Code**: `"DNGS"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DNGS%1i"`
+ * **Parameters**:
+ * - `$1`: Configurable navigation action slot
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDNavigationGesture;
 
 /** @} */ // end of protocol_mouse group
 

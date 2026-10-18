@@ -65,3 +65,8 @@ path = [
 ]
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "GPL-2.0-only WITH LicenseRef-OpenSSL-Exception"
+
+[[annotations]]
+path = ["tools/macos-smooth-mode/*.command", "tools/macos-smooth-mode/resources/**", "tools/macos-smooth-mode/.gitignore"]
+SPDX-FileCopyrightText = "2026 lxf82dev <lxf82dev@gmail.com>"
+SPDX-License-Identifier = "GPL-2.0-only WITH LicenseRef-OpenSSL-Exception"

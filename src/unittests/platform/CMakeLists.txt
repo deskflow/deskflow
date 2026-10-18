@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
@@ -10,6 +10,20 @@ if (WIN32)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(APPLE)
+  create_test(
+    NAME OSXInputCompatibilityTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE OSXInputCompatibilityTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  create_test(
+    NAME OSXComputerTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE OSXComputerTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
   create_test(
     NAME OSXClipboardTests
     DEPENDS platform

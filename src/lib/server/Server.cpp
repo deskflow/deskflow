@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
@@ -80,6 +81,10 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Com
     handleButtonUpEvent(e);
   });
   m_events->addHandler(
+      EventTypes::PrimaryComputerNavigationGesture, m_primaryClient->getEventTarget(),
+      [this](const auto &e) { handleNavigationGestureEvent(e); }
+  );
+  m_events->addHandler(
       EventTypes::PrimaryComputerMotionOnPrimary, m_primaryClient->getEventTarget(),
       [this](const auto &e) { handleMotionPrimaryEvent(e); }
   );
@@ -159,6 +164,7 @@ Server::~Server()
   m_events->removeHandler(KeyStateKeyRepeat, m_inputFilter);
   m_events->removeHandler(PrimaryComputerButtonDown, m_inputFilter);
   m_events->removeHandler(PrimaryComputerButtonUp, m_inputFilter);
+  m_events->removeHandler(PrimaryComputerNavigationGesture, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerMotionOnPrimary, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerMotionOnSecondary, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerWheel, m_primaryClient->getEventTarget());
@@ -1255,6 +1261,12 @@ void Server::handleButtonUpEvent(const Event &event)
   onMouseUp(info->m_button);
 }
 
+void Server::handleNavigationGestureEvent(const Event &event)
+{
+  const auto *info = static_cast<IPlatformComputer::NavigationGestureInfo *>(event.getData());
+  onNavigationGesture(info->m_action);
+}
+
 void Server::handleMotionPrimaryEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformComputer::MotionInfo *>(event.getData());
@@ -1606,6 +1618,14 @@ void Server::onMouseUp(ButtonID id)
 
   // relay
   m_active->mouseUp(id);
+}
+
+void Server::onNavigationGesture(NavigationActionSlot action)
+{
+  LOG_VERBOSE("onNavigationGesture action=%d", static_cast<int>(action));
+  assert(m_active != nullptr);
+
+  m_active->navigationGesture(action);
 }
 
 bool Server::onMouseMovePrimary(int32_t x, int32_t y)

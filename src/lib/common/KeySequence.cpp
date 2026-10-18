@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -72,6 +73,57 @@ static const struct
 bool KeySequence::isMouseButton() const
 {
   return !m_Sequence.isEmpty() && m_Sequence.last() < Qt::Key_Space;
+}
+
+KeySequence KeySequence::fromString(const QString &text)
+{
+  KeySequence result;
+  if (text.isEmpty()) {
+    return result;
+  }
+
+  const auto parts = text.split('+', Qt::KeepEmptyParts);
+  int modifiers = 0;
+  for (qsizetype i = 0; i < parts.size(); ++i) {
+    const auto &part = parts.at(i);
+    const bool isLast = i == parts.size() - 1;
+
+    int modifierKey = 0;
+    int modifier = 0;
+    if (part == QStringLiteral("Shift")) {
+      modifierKey = Qt::Key_Shift;
+      modifier = Qt::ShiftModifier;
+    } else if (part == QStringLiteral("Control")) {
+      modifierKey = Qt::Key_Control;
+      modifier = Qt::ControlModifier;
+    } else if (part == QStringLiteral("Alt")) {
+      modifierKey = Qt::Key_Alt;
+      modifier = Qt::AltModifier;
+    } else if (part == QStringLiteral("Meta")) {
+      modifierKey = Qt::Key_Meta;
+      modifier = Qt::MetaModifier;
+    }
+
+    if (modifier != 0) {
+      if (isLast) {
+        return {};
+      }
+      modifiers |= modifier;
+      result.appendKey(modifierKey, modifiers);
+      continue;
+    }
+
+    if (!isLast) {
+      return {};
+    }
+
+    const int key = keyFromString(part);
+    if (key == 0 || !result.appendKey(key, modifiers)) {
+      return {};
+    }
+  }
+
+  return result;
 }
 
 QString KeySequence::toString() const
@@ -220,4 +272,35 @@ QString KeySequence::keyToString(int key)
 
   // give up, deskflow probably won't handle this
   return "";
+}
+
+int KeySequence::keyFromString(const QString &text)
+{
+  for (int i = 0; keyname[i].name != nullptr; ++i) {
+    if (text == QString::fromUtf8(keyname[i].name)) {
+      return keyname[i].key;
+    }
+  }
+
+  if (text.size() == 1 && text.front().unicode() < 0x80) {
+    return text.front().unicode();
+  }
+
+  if (text.startsWith(QLatin1Char('F'))) {
+    bool ok = false;
+    const int number = text.sliced(1).toInt(&ok);
+    if (ok && number >= 1 && number <= 35) {
+      return Qt::Key_F1 + number - 1;
+    }
+  }
+
+  if (text.size() == 6 && text.startsWith(QStringLiteral("\\u"))) {
+    bool ok = false;
+    const int key = text.sliced(2).toInt(&ok, 16);
+    if (ok) {
+      return key;
+    }
+  }
+
+  return 0;
 }

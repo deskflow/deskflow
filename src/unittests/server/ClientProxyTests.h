@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -22,6 +23,7 @@ private Q_SLOTS:
   void keyRepeat();
   void keyUp_data();
   void keyUp();
+  void navigationGesture_nativeAndLegacyPackets();
 
 private:
   Log m_log;

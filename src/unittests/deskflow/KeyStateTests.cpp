@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2011 Nick Bolton
@@ -251,6 +252,34 @@ void KeyStateTests::fakeKeyDown_langSyncDisabled_keepsLocalGroup()
   QCOMPARE(keyState.countStrokes(deskflow::KeyMap::Keystroke::KeyType::Group), 0);
   QVERIFY(keyState.countStrokes(deskflow::KeyMap::Keystroke::KeyType::Button) > 0);
   QCOMPARE(keyState.m_faked.front().m_data.m_button.m_button, kSharedButton);
+}
+
+void KeyStateTests::navigationShortcut_restoresCommandModifier()
+{
+  MockEventQueue events;
+  deskflow::KeyMap map;
+  deskflow::KeyMap::KeyItem command;
+  command.m_id = kKeySuper_L;
+  command.m_button = 10;
+  deskflow::KeyMap::initModifierKey(command);
+  map.addKeyEntry(command);
+  deskflow::KeyMap::KeyItem bracket;
+  bracket.m_id = '[';
+  bracket.m_button = 11;
+  map.addKeyEntry(bracket);
+  map.finish();
+  RecordingKeyState state(&events, map, {"en"}, false);
+  state.fakeKeyDown('[', KeyModifierSuper, 0x1f1, {});
+  QVERIFY(state.fakeKeyUp(0x1f1));
+  QCOMPARE(state.getActiveModifiers(), KeyModifierMask(0));
+  std::vector<std::pair<KeyButton, bool>> buttons;
+  for (const auto &stroke : state.m_faked) {
+    if (stroke.m_type == deskflow::KeyMap::Keystroke::KeyType::Button)
+      buttons.emplace_back(stroke.m_data.m_button.m_button, stroke.m_data.m_button.m_press);
+  }
+  QVERIFY(std::find(buttons.begin(), buttons.end(), std::pair<KeyButton, bool>{10, true}) != buttons.end());
+  QVERIFY(std::find(buttons.begin(), buttons.end(), std::pair<KeyButton, bool>{10, false}) != buttons.end());
+  QVERIFY(!state.isKeyDown(11));
 }
 
 QTEST_MAIN(KeyStateTests)

@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
@@ -28,6 +29,8 @@ add_library(server STATIC
   ClientProxy1_7.h
   ClientProxy1_8.cpp
   ClientProxy1_8.h
+  ClientProxy1_9.cpp
+  ClientProxy1_9.h
   ClientProxyUnknown.cpp
   ClientProxyUnknown.h
   Config.cpp

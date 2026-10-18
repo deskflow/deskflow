@@ -743,6 +743,73 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabMacOS">
+      <attribute name="title"><string>macOS</string></attribute>
+      <layout class="QVBoxLayout" name="layoutMacOS">
+       <item>
+        <widget class="QGroupBox" name="groupMacServerInput">
+         <property name="title"><string>Input and switching — server Mac</string></property>
+         <layout class="QVBoxLayout" name="layoutMacServerInput">
+          <item>
+           <widget class="QCheckBox" name="cbMacOptionsCompatibility">
+            <property name="text"><string>Enable Logi Options+ input compatibility</string></property>
+            <property name="toolTip"><string>Forward Options+ middle clicks for Mission Control and synchronize Shift releases so scrolling keeps working after switching computers.</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cbMacNavigationGestures">
+            <property name="text"><string>Forward Back/Forward navigation gestures</string></property>
+            <property name="toolTip"><string>Forward selected macOS swipe gestures while controlling a client. Configure directions under Configure Server → Advanced and outputs under Configure Client.</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cbMacLockToComputer">
+            <property name="text"><string>Disable screen-edge switching at startup (use hotkeys)</string></property>
+            <property name="toolTip"><string>Start with the cursor locked to the active computer. Keep your existing Shift+Tab switch hotkey under Configure Server → Hotkeys.</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMacServerHint">
+            <property name="text"><string>Enable these on the server Mac. Configure gesture directions and switching hotkeys under Configure Server.</string></property>
+            <property name="wordWrap"><bool>true</bool></property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupMacSmoothing">
+         <property name="title"><string>Wi-Fi cursor smoothing — both Macs</string></property>
+         <layout class="QVBoxLayout" name="layoutMacSmoothing">
+          <item>
+           <widget class="QCheckBox" name="cbMacAutomaticSmoothing">
+            <property name="text"><string>Enable automatic smoothing while controlling a client</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMacSmoothDescription">
+            <property name="text"><string>Temporarily disables AirDrop and related peer-to-peer features on this Mac during client control, and restores access on return to the server. Enable on both Macs.</string></property>
+            <property name="wordWrap"><bool>true</bool></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMacSmoothStatus">
+            <property name="text"><string>Controller status</string></property>
+            <property name="wordWrap"><bool>true</bool></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblMacSmoothSetup">
+            <property name="text"><string>Requires one-time Smooth Mode helper setup with Info-level file logging. AirDrop overrides and setup help are available from Deskflow’s menu-bar icon → Smooth Mode.</string></property>
+            <property name="wordWrap"><bool>true</bool></property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item><spacer name="spacerMacOS"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property></spacer></item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tabAdvanced">
       <attribute name="title">
        <string>&amp;Advanced</string>

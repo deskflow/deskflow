@@ -1098,6 +1098,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">启动时启用锁定到计算机</translation>
     </message>
+    <message>
+        <source>Forward macOS navigation gestures</source>
+        <translation>转发 macOS 导航手势</translation>
+    </message>
+    <message>
+        <source>Forwards macOS back and forward gestures as standard mouse buttons while controlling a client.</source>
+        <translation>控制客户端时，将 macOS 的后退和前进手势作为标准鼠标按钮转发。</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

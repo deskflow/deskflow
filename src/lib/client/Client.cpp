@@ -308,6 +308,11 @@ void Client::mouseWheel(int32_t xDelta, int32_t yDelta)
   m_computer->mouseWheel(xDelta, yDelta);
 }
 
+void Client::navigationGesture(NavigationActionSlot action)
+{
+  m_computer->navigationGesture(action);
+}
+
 void Client::screensaver(bool activate)
 {
   m_computer->screensaver(activate);
@@ -481,6 +486,7 @@ bool Client::setupComputer(int16_t protocolMinor)
     m_server = new ServerProxy1_7(this, m_stream, m_events);
     break;
   case 8:
+  case 9: // Navigation uses the shared parser; keyboard/layout messages remain 1.8.
     m_server = new ServerProxy1_8(this, m_stream, m_events);
     break;
   default:

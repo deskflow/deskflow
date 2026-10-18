@@ -106,6 +106,10 @@ Then install either:
 - Stable: `brew install deskflow`
 - Continuous: `brew install deskflow-dev`
 
+## macOS input compatibility
+
+Optional Options+ middle-click/Shift-release compatibility, configurable navigation gestures, and Wi-Fi smoothing controls are described in the [macOS input guide](../docs/macos-input-fixes.md). Input features are opt-in; AWDL smoothing requires a separately installed helper.
+
 ## Similar Projects
 
 In the open source developer community, similar projects collaborate for the improvement of all

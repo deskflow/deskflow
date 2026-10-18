@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,7 +9,9 @@
 #include "deskflow/Computer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "common/Settings.h"
 #include "deskflow/IPlatformComputer.h"
+#include "deskflow/KeyMap.h"
 
 #include <QProcess>
 
@@ -268,6 +271,71 @@ void Computer::mouseWheel(int32_t xDelta, int32_t yDelta) const
 {
   assert(!m_isPrimary);
   m_computer->fakeMouseWheel({xDelta, yDelta});
+}
+
+void Computer::navigationGesture(NavigationActionSlot action)
+{
+  if (action != NavigationActionSlot::Action1 && action != NavigationActionSlot::Action2) {
+    LOG_WARN("ignoring invalid navigation gesture action=%d", static_cast<int>(action));
+    return;
+  }
+
+  const bool isAction1 = action == NavigationActionSlot::Action1;
+  const auto actionKey =
+      isAction1 ? Settings::Client::NavigationGestureAction1 : Settings::Client::NavigationGestureAction2;
+  const auto shortcutKey =
+      isAction1 ? Settings::Client::NavigationGestureShortcut1 : Settings::Client::NavigationGestureShortcut2;
+  const auto output = static_cast<NavigationOutputAction>(Settings::value(actionKey).toInt());
+
+  if (output == NavigationOutputAction::Ignore) {
+    return;
+  }
+
+  if (output == NavigationOutputAction::Back || output == NavigationOutputAction::Forward) {
+#ifdef Q_OS_MACOS
+    // macOS applications do not consistently interpret extra mouse buttons
+    // as navigation. Use the same native shortcuts as the validated relay.
+    const KeyID key = output == NavigationOutputAction::Back ? '[' : ']';
+    const auto button = static_cast<KeyButton>(0x1f0 + static_cast<int>(action));
+    keyDown(key, KeyModifierSuper, button, {});
+    keyUp(key, KeyModifierSuper, button);
+#else
+    const ButtonID button = output == NavigationOutputAction::Back ? kButtonExtra0 : kButtonExtra1;
+    m_computer->fakeMouseButton(button, true);
+    m_computer->fakeMouseButton(button, false);
+#endif
+    return;
+  }
+
+  if (output != NavigationOutputAction::Keystroke) {
+    LOG_WARN("ignoring invalid navigation gesture output=%d", static_cast<int>(output));
+    return;
+  }
+
+  auto shortcut = Settings::value(shortcutKey).toString().toStdString();
+  KeyModifierMask mask = 0;
+  KeyID key = kKeyNone;
+  if (!KeyMap::parseModifiers(shortcut, mask) || !KeyMap::parseKey(shortcut, key) || key == kKeyNone) {
+    LOG_WARN("ignoring invalid navigation gesture shortcut");
+    return;
+  }
+
+#ifdef Q_OS_MACOS
+  // KeySequenceWidget stores Qt's default Mac convention: physical Command
+  // is "Control", while physical Control is "Meta". Convert only these
+  // client-local shortcuts; existing server hotkey serialization is unchanged.
+  const bool command = (mask & KeyModifierControl) != 0;
+  const bool control = (mask & KeyModifierMeta) != 0;
+  mask &= ~(KeyModifierControl | KeyModifierMeta);
+  if (command)
+    mask |= KeyModifierSuper;
+  if (control)
+    mask |= KeyModifierControl;
+#endif
+
+  const auto button = static_cast<KeyButton>(0x1f0 + static_cast<int>(action));
+  keyDown(key, mask, button, {});
+  keyUp(key, mask, button);
 }
 
 void Computer::resetOptions()

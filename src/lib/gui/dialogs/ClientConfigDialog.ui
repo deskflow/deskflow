@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>482</width>
-    <height>197</height>
+    <height>330</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -164,8 +164,63 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QGroupBox" name="groupNavigationGestures">
+     <property name="title">
+      <string>Navigation Gesture Actions</string>
+     </property>
+     <property name="toolTip">
+      <string>Choose how navigation actions received from a Deskflow server behave on this computer.</string>
+     </property>
+     <layout class="QGridLayout" name="gridNavigationGestures">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelNavigationAction1">
+        <property name="text">
+         <string>Action 1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboNavigationAction1">
+        <item><property name="text"><string>Ignore</string></property></item>
+        <item><property name="text"><string>Back</string></property></item>
+        <item><property name="text"><string>Forward</string></property></item>
+        <item><property name="text"><string>Custom shortcut</string></property></item>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="KeySequenceWidget" name="keyNavigationAction1"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelNavigationAction2">
+        <property name="text">
+         <string>Action 2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="comboNavigationAction2">
+        <item><property name="text"><string>Ignore</string></property></item>
+        <item><property name="text"><string>Back</string></property></item>
+        <item><property name="text"><string>Forward</string></property></item>
+        <item><property name="text"><string>Custom shortcut</string></property></item>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="KeySequenceWidget" name="keyNavigationAction2"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KeySequenceWidget</class>
+   <extends>QPushButton</extends>
+   <header>widgets/KeySequenceWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

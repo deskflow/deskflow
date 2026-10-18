@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2024 Synergy App Ltd
@@ -52,6 +53,7 @@
 #include <memory>
 
 #if defined(Q_OS_MACOS)
+#include "MacSmoothModeMenu.h"
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
@@ -684,11 +686,19 @@ void MainWindow::createMenuBar()
 void MainWindow::setupTrayIcon()
 {
   auto trayMenu = new QMenu(this);
-  trayMenu->addActions(
-      {m_actionStartCore, m_actionRestartCore, m_actionStopCore, m_actionMinimize, m_actionRestore, m_actionTrayQuit}
-  );
-  trayMenu->insertSeparator(m_actionMinimize);
-  trayMenu->insertSeparator(m_actionTrayQuit);
+  trayMenu->addActions({m_actionStartCore, m_actionRestartCore, m_actionStopCore});
+  trayMenu->addSeparator();
+#ifdef Q_OS_MACOS
+  auto *smoothMenu = new MacSmoothModeMenu(trayMenu);
+  connect(smoothMenu, &MacSmoothModeMenu::controlError, this, [this](const QString &message) {
+    QMessageBox::warning(this, tr("Smooth Mode"), message);
+  });
+  trayMenu->addMenu(smoothMenu);
+  trayMenu->addSeparator();
+#endif
+  trayMenu->addActions({m_actionMinimize, m_actionRestore});
+  trayMenu->addSeparator();
+  trayMenu->addAction(m_actionTrayQuit);
   m_trayIcon->setContextMenu(trayMenu);
 
   setTrayIcon();

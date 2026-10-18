@@ -13,6 +13,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "common/Enums.h"
+#include "common/NavigationTypes.h"
 #include "deskflow/IClipboard.h"
 #include "net/NetworkAddress.h"
 
@@ -185,12 +186,14 @@ public:
   void mouseMove(int32_t xAbs, int32_t yAbs) override;
   void mouseRelativeMove(int32_t xRel, int32_t yRel) override;
   void mouseWheel(int32_t xDelta, int32_t yDelta) override;
+  void navigationGesture(NavigationActionSlot action);
   void screensaver(bool activate) override;
   void resetOptions() override;
   void setOptions(const OptionsList &options) override;
   std::string getName() const override;
 
 private:
+  friend class ServerProxyTests;
   void saveRelativeRestorePosition();
   void sendClipboard(ClipboardID);
   void sendEvent(deskflow::EventTypes);

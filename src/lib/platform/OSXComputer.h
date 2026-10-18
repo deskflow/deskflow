@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "common/NavigationTypes.h"
 #include "deskflow/PlatformComputer.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
@@ -19,6 +20,7 @@
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
 
+#include <atomic>
 #include <bitset>
 #include <map>
 #include <memory>
@@ -174,6 +176,17 @@ private:
   static char *CFStringRefToUTF8String(CFStringRef aString);
 
 private:
+  friend class OSXComputerTests;
+  static bool navigationGesturesEnabledFromOptions(const OptionsList &options, bool currentValue);
+  static void navigationDirectionsFromOptions(
+      const OptionsList &options, NavigationGestureDirection &action1, NavigationGestureDirection &action2
+  );
+  static NavigationGestureDirection
+  classifyNavigationGesture(CGEventType type, bool isOnComputer, bool enabled, double deltaX, double deltaY);
+  static NavigationActionSlot navigationActionSlotForDirection(
+      NavigationGestureDirection direction, NavigationGestureDirection action1, NavigationGestureDirection action2
+  );
+
   struct HotKeyItem
   {
   public:
@@ -252,6 +265,18 @@ private:
 
   bool m_cursorHidden;
 
+  struct InputOptions
+  {
+    bool compatibility = false;
+    bool navigation = false;
+    NavigationGestureDirection first = NavigationGestureDirection::Left;
+    NavigationGestureDirection second = NavigationGestureDirection::Right;
+  };
+  // Configuration runs on the core event thread; capture uses a CFRunLoop thread.
+  // Publish one consistent snapshot, including both direction mappings.
+  static_assert(std::atomic<InputOptions>::is_always_lock_free);
+  std::atomic<InputOptions> m_inputOptions;
+
   // keyboard stuff
   OSXKeyState *m_keyState;
 
@@ -299,7 +324,11 @@ private:
   static bool s_testedForGHOM;
   static bool s_hasGHOM;
 
+  static CGEventRef handleOptionsInputEvent(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon);
+
   // Quartz input event support
+  CFMachPortRef m_optionsTapPort = nullptr;
+  CFRunLoopSourceRef m_optionsTapRLSR = nullptr;
   CFMachPortRef m_eventTapPort;
   CFRunLoopSourceRef m_eventTapRLSR;
   std::thread m_eventTapThread;

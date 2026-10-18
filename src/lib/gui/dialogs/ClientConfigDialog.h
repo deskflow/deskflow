@@ -58,6 +58,7 @@ private:
    * Enable / Disable the button box buttons based on the state of the gui
    */
   void setButtonBoxEnabledButtons() const;
+  bool navigationShortcutsValid() const;
 
   /**
    * @brief Load the client setting into the gui

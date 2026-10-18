@@ -1,9 +1,18 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if(WIN32)
   set(extra_libs platform version)
 endif()
+
+create_test(
+  NAME ComputerNavigationTests
+  DEPENDS app
+  LIBS arch base platform
+  SOURCE ComputerNavigationTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
 
 create_test(
   NAME ClipboardTests

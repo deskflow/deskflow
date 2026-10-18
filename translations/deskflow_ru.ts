@@ -1094,6 +1094,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation>Включать привязку к компьютеру при запуске</translation>
     </message>
+    <message>
+        <source>Forward macOS navigation gestures</source>
+        <translation>Передавать навигационные жесты macOS</translation>
+    </message>
+    <message>
+        <source>Forwards macOS back and forward gestures as standard mouse buttons while controlling a client.</source>
+        <translation>Передаёт жесты macOS «Назад» и «Вперёд» как стандартные кнопки мыши при управлении клиентом.</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

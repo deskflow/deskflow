@@ -19,4 +19,17 @@ void KeySequenceTests::toString_controlShiftPlus_usesNamedPlus()
   QCOMPARE(sequence.toString(), QStringLiteral("Control+Shift+Plus"));
 }
 
+void KeySequenceTests::fromString_controlShiftPlus_roundTrips()
+{
+  const auto sequence = KeySequence::fromString(QStringLiteral("Control+Shift+Plus"));
+
+  QVERIFY(sequence.valid());
+  QCOMPARE(sequence.toString(), QStringLiteral("Control+Shift+Plus"));
+}
+
+void KeySequenceTests::fromString_invalidSequence_returnsInvalid()
+{
+  QVERIFY(!KeySequence::fromString(QStringLiteral("Control+NotAKey")).valid());
+}
+
 QTEST_MAIN(KeySequenceTests)

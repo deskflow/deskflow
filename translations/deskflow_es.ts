@@ -1096,6 +1096,14 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Activar el bloqueo del ordenador al iniciar</translation>
     </message>
+    <message>
+        <source>Forward macOS navigation gestures</source>
+        <translation>Reenviar los gestos de navegación de macOS</translation>
+    </message>
+    <message>
+        <source>Forwards macOS back and forward gestures as standard mouse buttons while controlling a client.</source>
+        <translation>Reenvía los gestos de retroceso y avance de macOS como botones estándar del ratón mientras se controla un cliente.</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

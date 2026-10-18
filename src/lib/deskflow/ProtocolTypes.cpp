@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -41,6 +42,7 @@ const char *const kMsgDMouseMove = "DMMV%2i%2i";
 const char *const kMsgDMouseRelMove = "DMRM%2i%2i";
 const char *const kMsgDMouseWheel = "DMWM%2i%2i";
 const char *const kMsgDMouseWheel1_0 = "DMWM%2i";
+const char *const kMsgDNavigationGesture = "DNGS%1i";
 const char *const kMsgDClipboard = "DCLP%1i%4i%1i%s";
 const char *const kMsgDInfo = "DINF%2i%2i%2i%2i%2i%2i%2i";
 const char *const kMsgDSetOptions = "DSOP%4I";

@@ -1096,6 +1096,14 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Enable lock to computer at startup</source>
         <translation>시작 시 컴퓨터 잠금 사용</translation>
     </message>
+    <message>
+        <source>Forward macOS navigation gestures</source>
+        <translation>macOS 탐색 제스처 전달</translation>
+    </message>
+    <message>
+        <source>Forwards macOS back and forward gestures as standard mouse buttons while controlling a client.</source>
+        <translation>클라이언트를 제어하는 동안 macOS 뒤로 및 앞으로 제스처를 표준 마우스 버튼으로 전달합니다.</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

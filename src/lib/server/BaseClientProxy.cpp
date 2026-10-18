@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2006 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -26,6 +27,21 @@ void BaseClientProxy::getJumpCursorPos(int32_t &x, int32_t &y) const
 {
   x = m_x;
   y = m_y;
+}
+
+void BaseClientProxy::navigationGesture(NavigationActionSlot action)
+{
+  ButtonID button = kButtonNone;
+  if (action == NavigationActionSlot::Action1) {
+    button = kButtonExtra0;
+  } else if (action == NavigationActionSlot::Action2) {
+    button = kButtonExtra1;
+  }
+
+  if (button != kButtonNone) {
+    mouseDown(button);
+    mouseUp(button);
+  }
 }
 
 std::string BaseClientProxy::getName() const

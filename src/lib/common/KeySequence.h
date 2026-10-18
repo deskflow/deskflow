@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -17,6 +18,7 @@ class KeySequence
 public:
   KeySequence() = default;
 
+  static KeySequence fromString(const QString &text);
   QString toString() const;
   bool appendKey(int key, int modifiers);
   bool appendMouseButton(int button);
@@ -39,6 +41,7 @@ public:
   bool operator==(const KeySequence &ks) const = default;
 
 private:
+  static int keyFromString(const QString &text);
   void setValid(bool b)
   {
     m_IsValid = b;

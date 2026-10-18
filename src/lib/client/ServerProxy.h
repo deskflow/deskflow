@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
@@ -9,6 +10,7 @@
 #pragma once
 
 #include "common/Enums.h"
+#include "common/NavigationTypes.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
@@ -72,6 +74,7 @@ protected:
   }
 
 private:
+  friend class ServerProxyTests;
   // if compressing mouse motion then send the last motion now
   void flushCompressedMouse();
 
@@ -102,6 +105,7 @@ private:
   void mouseMove();
   void mouseRelativeMove();
   void mouseWheel();
+  void navigationGesture();
   void screensaver();
   void resetOptions();
   void setOptions();

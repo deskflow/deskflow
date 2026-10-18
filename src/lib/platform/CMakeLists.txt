@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
@@ -98,6 +99,8 @@ elseif(APPLE)
     OSXEventQueueBuffer.h
     OSXKeyLayoutResource.cpp
     OSXKeyLayoutResource.h
+    OSXInputCompatibility.cpp
+    OSXInputCompatibility.h
     OSXKeyState.cpp
     OSXKeyState.h
     OSXMediaKeySupport.h

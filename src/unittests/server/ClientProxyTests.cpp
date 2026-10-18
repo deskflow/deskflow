@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -14,6 +15,7 @@
 #include "server/ClientProxy1_6.h"
 #include "server/ClientProxy1_7.h"
 #include "server/ClientProxy1_8.h"
+#include "server/ClientProxy1_9.h"
 
 #include <memory>
 #include <string>
@@ -120,6 +122,9 @@ std::unique_ptr<ClientProxy> makeProxy(int minor, deskflow::IStream *stream, IEv
   case 8:
     proxy = std::make_unique<ClientProxy1_8>("client", stream, server, events);
     break;
+  case 9:
+    proxy = std::make_unique<ClientProxy1_9>("client", stream, server, events);
+    break;
   default:
     break;
   }
@@ -153,6 +158,21 @@ void ClientProxyTests::initTestCase()
   static TestAppUtil appUtil;
 }
 
+void ClientProxyTests::navigationGesture_nativeAndLegacyPackets()
+{
+  ProxyUnderTest native(9);
+  native.proxy->navigationGesture(NavigationActionSlot::Action1);
+  QCOMPARE(native.stream->take(), QByteArray("DNGS") + QByteArray::fromHex("01"));
+  native.proxy->navigationGesture(NavigationActionSlot::Action2);
+  QCOMPARE(native.stream->take(), QByteArray("DNGS") + QByteArray::fromHex("02"));
+
+  ProxyUnderTest legacy(8);
+  legacy.proxy->navigationGesture(NavigationActionSlot::Action1);
+  QCOMPARE(legacy.stream->take(), QByteArray("DMDN") + QByteArray::fromHex("04") + "DMUP" + QByteArray::fromHex("04"));
+  legacy.proxy->navigationGesture(NavigationActionSlot::Action2);
+  QCOMPARE(legacy.stream->take(), QByteArray("DMDN") + QByteArray::fromHex("05") + "DMUP" + QByteArray::fromHex("05"));
+}
+
 // These formats are frozen because shipped third-party clients parse them byte
 // for byte: Synergy 1.4 through 1.14.1 negotiate 1.4 through 1.7, Barrier and
 // Input Leap negotiate 1.6, and Synergy 1.14.2 onwards and Deskflow negotiate 1.8.
@@ -166,6 +186,7 @@ void ClientProxyTests::keyDown_data()
   QTest::newRow("1.6") << 6 << "DKDN" + QByteArray::fromHex("0061 0000 001e");
   QTest::newRow("1.7") << 7 << "DKDN" + QByteArray::fromHex("0061 0000 001e");
   QTest::newRow("1.8") << 8 << "DKDL" + QByteArray::fromHex("0061 0000 001e 00000002") + "en";
+  QTest::newRow("1.9") << 9 << "DKDL" + QByteArray::fromHex("0061 0000 001e 00000002") + "en";
 }
 
 void ClientProxyTests::keyDown()
@@ -188,6 +209,7 @@ void ClientProxyTests::keyRepeat_data()
   QTest::newRow("1.6") << 6 << "DKRP" + QByteArray::fromHex("0061 0000 0003 001e");
   QTest::newRow("1.7") << 7 << "DKRP" + QByteArray::fromHex("0061 0000 0003 001e");
   QTest::newRow("1.8") << 8 << "DKRP" + QByteArray::fromHex("0061 0000 0003 001e 00000002") + "en";
+  QTest::newRow("1.9") << 9 << "DKRP" + QByteArray::fromHex("0061 0000 0003 001e 00000002") + "en";
 }
 
 void ClientProxyTests::keyRepeat()
@@ -210,6 +232,7 @@ void ClientProxyTests::keyUp_data()
   QTest::newRow("1.6") << 6 << "DKUP" + QByteArray::fromHex("0061 0000 001e");
   QTest::newRow("1.7") << 7 << "DKUP" + QByteArray::fromHex("0061 0000 001e");
   QTest::newRow("1.8") << 8 << "DKUP" + QByteArray::fromHex("0061 0000 001e");
+  QTest::newRow("1.9") << 9 << "DKUP" + QByteArray::fromHex("0061 0000 001e");
 }
 
 void ClientProxyTests::keyUp()

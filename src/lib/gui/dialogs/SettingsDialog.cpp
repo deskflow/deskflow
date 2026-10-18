@@ -17,21 +17,41 @@
 #include "gui/core/NetworkMonitor.h"
 #include "gui/widgets/SettingsDialogButtonBox.h"
 
+#ifdef Q_OS_MACOS
+#include "gui/MacSmoothModeController.h"
+#endif
+
 #include <QComboBox>
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSignalBlocker>
+#include <QStyle>
+#include <QTabBar>
 
 using namespace deskflow::gui;
 
-SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig)
+SettingsDialog::SettingsDialog(
+    QWidget *parent, const ServerConfig &serverConfig, MacSmoothModeController *smoothController
+)
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
       m_serverConfig(serverConfig),
-      m_buttonBox{new SettingsDialogButtonBox(this)}
+      m_buttonBox{new SettingsDialogButtonBox(this)},
+      m_smoothController(smoothController)
 {
 
   ui->setupUi(this);
+#ifdef Q_OS_MACOS
+  if (!m_smoothController)
+    m_smoothController = new MacSmoothModeController(this);
+  connect(m_smoothController, &MacSmoothModeController::stateChanged, this, &SettingsDialog::updateMacSmoothState);
+  connect(m_smoothController, &MacSmoothModeController::controlError, this, [this](const QString &message) {
+    QMessageBox::warning(this, tr("Smooth Mode"), message);
+  });
+#else
+  ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabMacOS));
+#endif
   layout()->addWidget(m_buttonBox);
   ui->tabWidget->setCurrentIndex(0);
 
@@ -76,6 +96,12 @@ SettingsDialog::SettingsDialog(QWidget *parent, const ServerConfig &serverConfig
   loadFromConfig();
   logLevelChanged();
 
+#ifdef Q_OS_MACOS
+  // Keep all Preferences tabs visible after adding the macOS page.
+  ui->tabWidget->setMinimumWidth(
+      ui->tabWidget->tabBar()->sizeHint().width() + 2 * style()->pixelMetric(QStyle::PM_DefaultFrameWidth)
+  );
+#endif
   adjustSize();
   QApplication::processEvents();
   setFixedHeight(height());
@@ -119,6 +145,10 @@ void SettingsDialog::initConnections() const
   });
 
   // Connect modifiable controls
+  connect(ui->cbMacOptionsCompatibility, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbMacNavigationGestures, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbMacLockToComputer, &QCheckBox::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
+  connect(ui->cbMacAutomaticSmoothing, &QCheckBox::toggled, this, &SettingsDialog::automaticSmoothingToggled);
   connect(ui->rbIconMono, &QRadioButton::toggled, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->sbPort, &QSpinBox::valueChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
   connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::setButtonBoxEnabledButtons);
@@ -220,6 +250,17 @@ void SettingsDialog::updateText()
 
 void SettingsDialog::accept()
 {
+#ifdef Q_OS_MACOS
+  // Save only an explicit edit: accepting unrelated Preferences must preserve
+  // a pending AirDrop override and any menu changes made while this is open.
+  if (m_smoothModified && !m_smoothController->setAutomatic(ui->cbMacAutomaticSmoothing->isChecked()))
+    return;
+  if (Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server) {
+    Settings::setValue(Settings::Server::MacOptionsCompatibilityEnabled, ui->cbMacOptionsCompatibility->isChecked());
+    Settings::setValue(Settings::Server::MacNavigationGesturesEnabled, ui->cbMacNavigationGestures->isChecked());
+    Settings::setValue(Settings::Server::DefaultLockToComputerState, ui->cbMacLockToComputer->isChecked());
+  }
+#endif
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->comboInterface->currentData());
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentData());
@@ -304,7 +345,72 @@ void SettingsDialog::loadFromConfig()
 
   qDebug() << "load from config done";
 
+  loadMacSettings();
   updateControls();
+}
+
+void SettingsDialog::loadMacSettings()
+{
+#ifdef Q_OS_MACOS
+  ui->cbMacOptionsCompatibility->setChecked(Settings::value(Settings::Server::MacOptionsCompatibilityEnabled).toBool());
+  ui->cbMacNavigationGestures->setChecked(Settings::value(Settings::Server::MacNavigationGesturesEnabled).toBool());
+  ui->cbMacLockToComputer->setChecked(Settings::value(Settings::Server::DefaultLockToComputerState).toBool());
+  m_smoothModified = false;
+  m_smoothController->refresh();
+#endif
+}
+
+void SettingsDialog::updateMacSmoothState()
+{
+#ifdef Q_OS_MACOS
+  const auto &state = m_smoothController->state();
+  ui->lblMacSmoothStatus->setText(state.summary);
+  if (!m_smoothModified) {
+    m_loadedAutomaticSmoothing = state.automatic;
+    const QSignalBlocker blocker(ui->cbMacAutomaticSmoothing);
+    ui->cbMacAutomaticSmoothing->setChecked(state.automatic);
+  }
+  ui->cbMacAutomaticSmoothing->setEnabled(Settings::isWritable() && state.available);
+  setButtonBoxEnabledButtons();
+#endif
+}
+
+void SettingsDialog::automaticSmoothingToggled(bool checked)
+{
+  m_smoothModified = checked != m_loadedAutomaticSmoothing;
+  setButtonBoxEnabledButtons();
+}
+
+bool SettingsDialog::macSettingsModified() const
+{
+#ifdef Q_OS_MACOS
+  const bool server = Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server;
+  return m_smoothModified ||
+         (server && (ui->cbMacOptionsCompatibility->isChecked() !=
+                         Settings::value(Settings::Server::MacOptionsCompatibilityEnabled).toBool() ||
+                     ui->cbMacNavigationGestures->isChecked() !=
+                         Settings::value(Settings::Server::MacNavigationGesturesEnabled).toBool() ||
+                     ui->cbMacLockToComputer->isChecked() !=
+                         Settings::value(Settings::Server::DefaultLockToComputerState).toBool()));
+#else
+  return false;
+#endif
+}
+
+bool SettingsDialog::macSettingsDefault() const
+{
+#ifdef Q_OS_MACOS
+  const bool server = Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server;
+  return (!m_smoothController->state().available || !ui->cbMacAutomaticSmoothing->isChecked()) &&
+         (!server || (ui->cbMacOptionsCompatibility->isChecked() ==
+                          Settings::defaultValue(Settings::Server::MacOptionsCompatibilityEnabled).toBool() &&
+                      ui->cbMacNavigationGestures->isChecked() ==
+                          Settings::defaultValue(Settings::Server::MacNavigationGesturesEnabled).toBool() &&
+                      ui->cbMacLockToComputer->isChecked() ==
+                          Settings::defaultValue(Settings::Server::DefaultLockToComputerState).toBool()));
+#else
+  return true;
+#endif
 }
 
 void SettingsDialog::updateTlsControls()
@@ -402,6 +508,14 @@ void SettingsDialog::updateControls()
 
   ui->widgetLogFilename->setEnabled(writable && logToFile);
 
+#ifdef Q_OS_MACOS
+  const bool server = Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server;
+  ui->cbMacOptionsCompatibility->setEnabled(writable && server);
+  ui->cbMacNavigationGestures->setEnabled(writable && server);
+  ui->cbMacLockToComputer->setEnabled(writable && server);
+  updateMacSmoothState();
+#endif
+
   updateTlsControls();
 }
 
@@ -423,7 +537,7 @@ bool SettingsDialog::isModified() const
   const bool ignoreInterface = !m_interfaceSetOnLoad && (ui->comboInterface->currentIndex() == 0);
 
   bool modified =
-      (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
+      macSettingsModified() || (ui->sbPort->value() != Settings::value(Settings::Core::Port).toInt()) ||
       (ui->comboLogLevel->currentData() != Settings::logLevelText()) ||
       (ui->groupLogToFile->isChecked() != Settings::value(Settings::Log::ToFile).toBool()) ||
       (ui->lineLogFilename->text() != Settings::value(Settings::Log::File).toString()) ||
@@ -458,7 +572,7 @@ bool SettingsDialog::isDefault() const
       static_cast<int>(LogLevel::fromOption(Settings::defaultValue(Settings::Log::Level).toString()));
 
   return (
-      (ui->sbPort->value() == Settings::defaultValue(Settings::Core::Port).toInt()) &&
+      macSettingsDefault() && (ui->sbPort->value() == Settings::defaultValue(Settings::Core::Port).toInt()) &&
       (ui->comboLogLevel->currentIndex() == logLevelIndex) &&
       (ui->groupLogToFile->isChecked() == Settings::defaultValue(Settings::Log::ToFile).toBool()) &&
       (ui->lineLogFilename->text() == Settings::defaultValue(Settings::Log::File).toString()) &&
@@ -486,6 +600,19 @@ bool SettingsDialog::isDefault() const
 
 void SettingsDialog::resetToDefault()
 {
+#ifdef Q_OS_MACOS
+  if (Settings::value(Settings::Core::CoreMode) == Settings::CoreMode::Server) {
+    ui->cbMacOptionsCompatibility->setChecked(
+        Settings::defaultValue(Settings::Server::MacOptionsCompatibilityEnabled).toBool()
+    );
+    ui->cbMacNavigationGestures->setChecked(
+        Settings::defaultValue(Settings::Server::MacNavigationGesturesEnabled).toBool()
+    );
+    ui->cbMacLockToComputer->setChecked(Settings::defaultValue(Settings::Server::DefaultLockToComputerState).toBool());
+  }
+  if (m_smoothController->state().available)
+    ui->cbMacAutomaticSmoothing->setChecked(false);
+#endif
   ui->sbPort->setValue(Settings::defaultValue(Settings::Core::Port).toInt());
   ui->comboLogLevel->setCurrentIndex(
       static_cast<int>(LogLevel::fromOption(Settings::defaultValue(Settings::Log::Level).toString()))

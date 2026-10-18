@@ -1096,6 +1096,14 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Abilita il blocco al computer all&apos;avvio</translation>
     </message>
+    <message>
+        <source>Forward macOS navigation gestures</source>
+        <translation>Inoltra i gesti di navigazione di macOS</translation>
+    </message>
+    <message>
+        <source>Forwards macOS back and forward gestures as standard mouse buttons while controlling a client.</source>
+        <translation>Inoltra i gesti indietro e avanti di macOS come pulsanti standard del mouse durante il controllo di un client.</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

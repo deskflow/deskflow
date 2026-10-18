@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -9,6 +10,7 @@
 #pragma once
 
 #include "ComputerSetupModel.h"
+#include "common/NavigationTypes.h"
 #include "common/NetworkProtocol.h"
 #include "config/ServerConfig.h"
 
@@ -66,6 +68,12 @@ protected:
   void setHeartbeat(int rate);
 
   void toggleRelativeMouseMoves(bool enabled);
+  void toggleMacOptionsCompatibility(bool enabled);
+  void toggleMacNavigationGestures(bool enabled);
+  void setMacNavigationGestureAction1(int index);
+  void setMacNavigationGestureAction2(int index);
+  void detectMacNavigationGestureAction1();
+  void detectMacNavigationGestureAction2();
   void toggleProtocol();
 
   void toggleExternalConfig(bool enable = false);
@@ -85,6 +93,7 @@ protected:
   }
 
 private:
+  friend class ServerConfigDialogTests;
   void save();
   void cancel();
   void loadFromConfig();
@@ -110,6 +119,10 @@ private:
   int m_switchDoubleTap;
   uint m_clipboardSize;
   bool m_relativeMouseMoves;
+  bool m_macOptionsCompatibilityEnabled = false;
+  bool m_macNavigationGesturesEnabled;
+  NavigationGestureDirection m_macNavigationGestureAction1 = NavigationGestureDirection::Left;
+  NavigationGestureDirection m_macNavigationGestureAction2 = NavigationGestureDirection::Right;
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;

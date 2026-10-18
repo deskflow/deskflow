@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -29,6 +30,7 @@ private Q_SLOTS:
   void isKeyDown_noKeysDown_returnsFalse();
   void isKeyDown_keyDown_retrunsTrue();
   void updateKeyState_pollInsertsSingleKey_keyIsDown();
+  void navigationShortcut_restoresCommandModifier();
   void fakeKeyDown_langSyncEnabled_switchesToServerGroup();
   void fakeKeyDown_langSyncDisabled_keepsLocalGroup();
 

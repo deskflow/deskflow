@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2023 Input-Leap Developers
  * SPDX-FileCopyrightText: (C) 2013 - 2016 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -170,6 +171,9 @@ enum class EventTypes : uint32_t
 
   /// This event is sent when button is up. Event data is a pointer to ButtonInfo
   PrimaryComputerButtonUp,
+
+  /// A macOS navigation gesture was matched to a configurable action slot.
+  PrimaryComputerNavigationGesture,
 
   /** This event is sent when mouse moves on the server.
       Event data is a pointer to MotionInfo, the values are absolute position.

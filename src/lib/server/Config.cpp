@@ -550,6 +550,16 @@ void Config::readSectionOptions(ConfigReadContext &s)
       "", kOptionDefaultLockToComputerState, Settings::value(Settings::Server::DefaultLockToComputerState).toBool()
   );
   addOption("", kOptionDisableLockToComputer, Settings::value(Settings::Server::DisableLockToComputer).toBool());
+  addOption(
+      "", kOptionMacNavigationGestureAction1, Settings::value(Settings::Server::MacNavigationGestureAction1).toInt()
+  );
+  addOption(
+      "", kOptionMacNavigationGestureAction2, Settings::value(Settings::Server::MacNavigationGestureAction2).toInt()
+  );
+  addOption(
+      "", kOptionMacOptionsCompatibility, Settings::value(Settings::Server::MacOptionsCompatibilityEnabled).toBool()
+  );
+  addOption("", kOptionMacNavigationGestures, Settings::value(Settings::Server::MacNavigationGesturesEnabled).toBool());
   addOption("", kOptionRelativeMouseMoves, Settings::value(Settings::Server::RelativeMouseMoves).toBool());
   addOption("", kOptionWin32KeepForeground, Settings::value(Settings::Server::Win32KeepForeground).toBool());
   addOption("", kOptionClipboardSharing, Settings::value(Settings::Server::EnableClipboard).toBool());

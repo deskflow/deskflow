@@ -242,6 +242,13 @@ add_subdirectory(translations)
 
 add_subdirectory(src)
 
+if(APPLE)
+  option(BUILD_MACOS_SMOOTH_MODE "Build the optional administrator-installed AWDL companion" OFF)
+  if(BUILD_MACOS_SMOOTH_MODE)
+    add_subdirectory(tools/macos-smooth-mode)
+  endif()
+endif()
+
 install(
   FILES ${PROJECT_SOURCE_DIR}/LICENSE
   DESTINATION ${CMAKE_INSTALL_LICENSE_DIR}

@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
 # SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
@@ -25,6 +26,7 @@ add_library(common STATIC
   KeySequence.cpp
   LogLevel.h
   NetworkProtocol.h
+  NavigationTypes.h
   PlatformInfo.h
   Settings.h
   Settings.cpp
