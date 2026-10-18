@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,8 +8,9 @@
 
 #pragma once
 
-#include "mt/Thread.h"
 #include "platform/EiComputer.h"
+#include "platform/PortalContext.h"
+#include "platform/PortalSelectionRead.h"
 
 #include <glib.h>
 #include <libportal/portal.h>
@@ -26,14 +28,12 @@ public:
   void claimClipboard() const;
 
 private:
-  void glibThread(const void *);
-  gboolean timeoutHandler() const;
   gboolean initSession();
   void handleInitSession(GObject *object, GAsyncResult *res);
   void handleSessionStarted(GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const;
-  void handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner) const;
+  void handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner);
   void reconnect(unsigned int timeout = 1000);
 
   static void handleSessionClosedCallback(XdpSession *session, gpointer data)
@@ -55,10 +55,12 @@ private:
   EiComputer *m_computer;
   IEventQueue *m_events;
 
-  Thread *m_glibThread;
-  GMainLoop *m_glibMainLoop = nullptr;
+  PortalContext m_context;
 
   XdpPortal *m_portal = nullptr;
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  PortalSelectionRead m_selectionRead{m_context.get()};
+#endif
   XdpSession *m_session = nullptr;
   char *m_sessionRestoreToken = nullptr;
 

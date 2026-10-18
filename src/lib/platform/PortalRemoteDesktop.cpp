@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 - 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
@@ -9,7 +10,6 @@
 #include "platform/PortalRemoteDesktop.h"
 
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 #include "common/Settings.h"
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
@@ -21,31 +21,18 @@ namespace deskflow {
 PortalRemoteDesktop::PortalRemoteDesktop(EiComputer *computer, IEventQueue *events)
     : m_computer{computer},
       m_events{events},
-      m_portal{xdp_portal_new()}
+      m_portal{m_context.portal()}
 {
-  m_glibMainLoop = g_main_loop_new(nullptr, true);
-
-  auto tMethodJob = new TMethodJob<PortalRemoteDesktop>(this, &PortalRemoteDesktop::glibThread);
-  m_glibThread = new Thread(tMethodJob);
-
-  reconnect(0);
+  m_context.start();
+  m_context.defer([this] { reconnect(0); });
 }
 
 PortalRemoteDesktop::~PortalRemoteDesktop()
 {
-  if (g_main_loop_is_running(m_glibMainLoop))
-    g_main_loop_quit(m_glibMainLoop);
-
-  if (m_glibThread != nullptr) {
-    m_glibThread->cancel();
-    m_glibThread->wait();
-    delete m_glibThread;
-    m_glibThread = nullptr;
-
-    g_main_loop_unref(m_glibMainLoop);
-    m_glibMainLoop = nullptr;
-  }
-
+  m_context.stop();
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
   if (m_sessionSignalId)
     g_signal_handler_disconnect(m_session, m_sessionSignalId);
   if (m_selectionTransferSignalId)
@@ -54,31 +41,30 @@ PortalRemoteDesktop::~PortalRemoteDesktop()
     g_signal_handler_disconnect(m_session, m_selectionOwnerChangedSignalId);
   if (m_session)
     g_object_unref(m_session);
-  g_object_unref(m_portal);
 
   free(m_sessionRestoreToken);
 }
 
-gboolean PortalRemoteDesktop::timeoutHandler() const
-{
-  return true; // keep re-triggering
-}
-
 void PortalRemoteDesktop::reconnect(unsigned int timeout)
 {
-  auto initCallback = [](gpointer data) { return static_cast<PortalRemoteDesktop *>(data)->initSession(); };
-
-  if (timeout > 0)
-    g_timeout_add(timeout, initCallback, this);
-  else
-    g_idle_add(initCallback, this);
+  g_source_unref(m_context.post([this] { initSession(); }, timeout));
 }
 
 void PortalRemoteDesktop::handleSessionClosed(XdpSession *session)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
+
   LOG_ERR("portal remote desktop session was closed, reconnecting");
   g_signal_handler_disconnect(session, m_sessionSignalId);
   m_sessionSignalId = 0;
+  if (m_selectionTransferSignalId)
+    g_signal_handler_disconnect(session, m_selectionTransferSignalId);
+  if (m_selectionOwnerChangedSignalId)
+    g_signal_handler_disconnect(session, m_selectionOwnerChangedSignalId);
+  m_selectionTransferSignalId = 0;
+  m_selectionOwnerChangedSignalId = 0;
   m_events->addEvent(Event(EventTypes::EISessionClosed, m_computer->getEventTarget()));
 
   // gcc warning "Suspicious usage of 'sizeof(A*)'" can be ignored
@@ -93,7 +79,6 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   auto session = XDP_SESSION(object);
   if (!xdp_session_start_finish(session, res, &error)) {
     LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
@@ -140,7 +125,6 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   auto fd = -1;
   fd = xdp_session_connect_to_eis(session, &error);
   if (fd < 0) {
-    g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
@@ -161,7 +145,6 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
     // This was the first attempt to connect to the RD portal - quit if that
     // fails.
     if (m_sessionIteration == 0) {
-      g_main_loop_quit(m_glibMainLoop);
       m_events->addEvent(Event(EventTypes::Quit));
     } else {
       this->reconnect(1000);
@@ -187,12 +170,10 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
   LOG_DEBUG("portal remote desktop session starting");
   xdp_session_start(
       session,
-      nullptr, // parent
-      nullptr, // cancellable
-      [](GObject *obj, GAsyncResult *res, gpointer data) {
-        static_cast<PortalRemoteDesktop *>(data)->handleSessionStarted(obj, res);
-      },
-      this
+      nullptr,                 // parent
+      m_context.cancellable(), // cancellable
+      PortalContext::complete,
+      m_context.callback([this](GObject *obj, GAsyncResult *res) { handleSessionStarted(obj, res); })
   );
 }
 
@@ -207,39 +188,29 @@ gboolean PortalRemoteDesktop::initSession()
   xdp_portal_create_remote_desktop_session_full(
       m_portal, static_cast<XdpDeviceType>(XDP_DEVICE_POINTER | XDP_DEVICE_KEYBOARD), XDP_OUTPUT_NONE,
       XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, XDP_PERSIST_MODE_PERSISTENT, m_sessionRestoreToken,
-      nullptr, // cancellable
-      [](GObject *obj, GAsyncResult *res, gpointer data) {
-        static_cast<PortalRemoteDesktop *>(data)->handleInitSession(obj, res);
-      },
-      this
+      m_context.cancellable(), // cancellable
+      PortalContext::complete,
+      m_context.callback([this](GObject *obj, GAsyncResult *res) { handleInitSession(obj, res); })
   );
 
   return false; // don't reschedule
 }
 
-void PortalRemoteDesktop::glibThread(const void *)
-{
-  auto context = g_main_loop_get_context(m_glibMainLoop);
-
-  while (g_main_loop_is_running(m_glibMainLoop)) {
-    Thread::testCancel();
-    g_main_context_iteration(context, true);
-  }
-}
-
 void PortalRemoteDesktop::claimClipboard() const
 {
+  m_context.defer([this] {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (!m_session) {
-    LOG_DEBUG("portal remote desktop clipboard claim deferred, no session yet");
-    return;
-  }
-  if (!xdp_session_is_clipboard_enabled(m_session)) {
-    LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
-    return;
-  }
-  PortalClipboard::claimOwnership(m_computer->getClipboardCache(), m_session);
+    if (!m_session) {
+      LOG_DEBUG("portal remote desktop clipboard claim deferred, no session yet");
+      return;
+    }
+    if (!xdp_session_is_clipboard_enabled(m_session)) {
+      LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
+      return;
+    }
+    PortalClipboard::claimOwnership(m_computer->getClipboardCache(), m_session);
 #endif
+  });
 }
 
 void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const
@@ -253,8 +224,12 @@ void PortalRemoteDesktop::handleSelectionTransfer(XdpSession *session, const cha
 #endif
 }
 
-void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner) const
+void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char **mimeTypes, gboolean isOwner)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
+
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (isOwner) {
     LOG_DEBUG("portal remote desktop selection owner changed, we own it, ignoring");
@@ -262,8 +237,10 @@ void PortalRemoteDesktop::handleSelectionOwnerChanged(XdpSession *session, char 
   }
 
   const qint64 maxBytes = static_cast<qint64>(m_computer->maximumClipboardSize()) * 1024;
-  if (PortalClipboard::readSelectionIntoCache(m_computer->getClipboardCache(), session, mimeTypes, maxBytes))
-    m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+  PortalClipboard::readSelectionAsync(
+      m_selectionRead, m_computer->getClipboardCache(), session, mimeTypes, maxBytes,
+      [this] { m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard); }
+  );
 #else
   (void)session;
   (void)mimeTypes;
