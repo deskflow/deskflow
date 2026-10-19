@@ -141,7 +141,16 @@ int main(int argc, char *argv[])
   }
 
   if (!checkMacAssistiveDevices()) {
-    return 1;
+    while (!AXIsProcessTrusted()) {
+      const auto button = QMessageBox::warning(
+          nullptr, QObject::tr("Accessibility permission required"),
+          QObject::tr("Enable Deskflow in System Settings, then click Retry."),
+          QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry
+      );
+      if (button != QMessageBox::Retry) {
+        return 1;
+      }
+    }
   }
 #endif
 
