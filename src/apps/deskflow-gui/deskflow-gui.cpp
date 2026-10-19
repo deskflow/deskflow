@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -141,7 +142,20 @@ int main(int argc, char *argv[])
   }
 
   if (!checkMacAssistiveDevices()) {
-    return 1;
+    while (!AXIsProcessTrusted()) {
+      const auto button = QMessageBox::warning(
+          nullptr, QObject::tr("macOS input permission required"),
+          QObject::tr("Deskflow needs permission under Privacy & Security > "
+                      "Device Control and Data Access (formerly Accessibility). "
+                      "Enable the installed Deskflow app and its deskflow-core executable. "
+                      "Also allow them in Input Monitoring if required. "
+                      "Click Retry after granting permission, or Cancel to leave Deskflow closed."),
+          QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry
+      );
+      if (button != QMessageBox::Retry) {
+        return 1;
+      }
+    }
   }
 #endif
 
