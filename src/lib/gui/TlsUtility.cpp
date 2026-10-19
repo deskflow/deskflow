@@ -98,14 +98,13 @@ QByteArray certFingerprint(const QString &certPath)
   return cert.digest(QCryptographicHash::Sha256);
 }
 
-bool generateCertificate()
+bool generateCertificate(int keyLength)
 {
   qDebug(
       "generating tls certificate, "
       "all clients must trust the new fingerprint"
   );
 
-  const auto keyLength = std::max(2048, Settings::value(Settings::Security::KeySize).toInt());
   const auto certPath = Settings::value(Settings::Security::Certificate).toString();
 
   QFileInfo info(certPath);
@@ -114,8 +113,18 @@ bool generateCertificate()
     return false;
   }
 
+  if (info.exists()) {
+    const auto oldPath = certPath + QStringLiteral(".old");
+    QFile::remove(oldPath);
+    if (!QFile::rename(certPath, oldPath)) {
+      qCritical("failed to move existing tls certificate to: %s", qUtf8Printable(oldPath));
+      return false;
+    }
+    qInfo("moved existing tls certificate to: %s", qUtf8Printable(oldPath));
+  }
+
   try {
-    deskflow::generatePemSelfSignedCert(certPath, keyLength);
+    deskflow::generatePemSelfSignedCert(certPath, std::max(2048, keyLength));
   } catch (const std::exception &e) {
     qCritical() << "failed to generate self-signed pem cert:" << e.what();
     return false;

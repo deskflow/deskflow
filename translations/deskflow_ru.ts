@@ -532,7 +532,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation>недействительный сертификат, создание нового</translation>
+        <translation type="vanished">недействительный сертификат, создание нового</translation>
     </message>
     <message>
         <source>Address missing</source>
