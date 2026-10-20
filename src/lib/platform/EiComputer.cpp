@@ -491,7 +491,15 @@ bool EiComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
     if (!targetClipboard) {
       return false;
     }
-    return IClipboard::copy(targetClipboard, clipboard);
+    bool ok = IClipboard::copy(targetClipboard, clipboard);
+
+    // without re-claiming, the local selection still advertises whatever the
+    // cache held when input capture last activated (possibly nothing)
+    if (ok && id == kClipboardClipboard) {
+      m_portalInputCapture->claimClipboard();
+    }
+
+    return ok;
   }
 
   // Otherwise use our own clipboard
