@@ -34,6 +34,9 @@ public:
 
   // Get the clipboard for the specified ID
   EiClipboard *getClipboard(ClipboardID id) const;
+  /// Advertise the clipboard cache to the local selection, e.g. after a
+  /// remote computer's clipboard has been copied into it.
+  void claimClipboard() const;
   void enable();
   void disable();
   void release();
