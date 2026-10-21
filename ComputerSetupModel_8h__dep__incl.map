@@ -1,0 +1,17 @@
+<map id="src/lib/gui/ComputerSetupModel.h" name="src/lib/gui/ComputerSetupModel.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="375,5,547,44"/>
+<area shape="rect" id="Node000002" href="$ComputerSetupModel_8cpp.html" title=" " alt="" coords="5,92,178,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="363,50,174,94,172,89,366,46"/>
+<area shape="rect" id="Node000003" href="$ServerConfigDialog_8h.html" title=" " alt="" coords="202,92,352,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="409,50,319,94,316,89,404,52"/>
+<area shape="rect" id="Node000006" href="$ComputerSetupView_8cpp.html" title=" " alt="" coords="376,92,546,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="463,58,463,93,459,90,459,62"/>
+<area shape="rect" id="Node000007" href="$NewComputerWidget_8cpp.html" title=" " alt="" coords="570,92,744,131"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="519,48,616,91,611,91,518,53"/>
+<area shape="rect" id="Node000008" href="$RemoveComputerWidget_8cpp.html" title=" " alt="" coords="768,92,962,131"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="563,44,778,91,773,92,562,50"/>
+<area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="88,186,268,210"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="246,140,193,187,190,183,241,142"/>
+<area shape="rect" id="Node000005" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="292,179,456,217"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="311,139,355,178,350,178,309,144"/>
+</map>

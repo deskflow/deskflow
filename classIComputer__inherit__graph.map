@@ -1,0 +1,45 @@
+<map id="IComputer" name="IComputer">
+<area shape="rect" id="Node000001" title="Computer interface." alt="" coords="425,5,507,30"/>
+<area shape="rect" id="Node000002" href="$classIClient.html" title="Client interface." alt="" coords="280,78,340,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="424,39,337,79,334,75,428,35"/>
+<area shape="rect" id="Node000016" href="$classIPlatformComputer.html" title="Computer interface." alt="" coords="400,78,532,103"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="467,43,468,78,463,77,465,48"/>
+<area shape="rect" id="Node000022" href="$classdeskflow_1_1Computer.html" title="Platform independent computer." alt="" coords="556,78,693,103"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="505,34,601,76,596,78,506,39"/>
+<area shape="rect" id="Node000003" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="121,151,240,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,112,204,152,200,148,277,108"/>
+<area shape="rect" id="Node000015" href="$classClient.html" title="Deskflow client." alt="" coords="282,151,338,175"/>
+<area shape="poly" id="edge14_Node000002_Node000015" title=" " alt="" coords="310,116,312,151,307,150,309,121"/>
+<area shape="rect" id="Node000004" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="16,223,105,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="146,186,82,224,78,221,149,181"/>
+<area shape="rect" id="Node000014" href="$classPrimaryClient.html" title="Primary computer as pseudo&#45;client." alt="" coords="130,223,231,248"/>
+<area shape="poly" id="edge13_Node000003_Node000014" title=" " alt="" coords="181,189,183,223,178,223,180,194"/>
+<area shape="rect" id="Node000005" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="5,296,116,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="61,261,63,296,58,296,60,266"/>
+<area shape="rect" id="Node000006" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="5,369,116,393"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="61,334,63,368,58,368,60,339"/>
+<area shape="rect" id="Node000007" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="5,441,116,466"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="61,406,63,441,58,441,60,412"/>
+<area shape="rect" id="Node000008" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="5,514,116,539"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="61,479,63,514,58,513,60,484"/>
+<area shape="rect" id="Node000009" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="5,587,116,611"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="61,552,63,587,58,586,60,557"/>
+<area shape="rect" id="Node000010" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="5,659,116,684"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="61,625,63,659,58,659,60,630"/>
+<area shape="rect" id="Node000011" href="$classClientProxy1__6.html" title="Proxy for client implementing protocol version 1.6." alt="" coords="5,732,116,757"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="61,697,63,732,58,731,60,702"/>
+<area shape="rect" id="Node000012" href="$classClientProxy1__7.html" title="Proxy for client implementing protocol version 1.7." alt="" coords="5,805,116,829"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="61,770,63,805,58,804,60,775"/>
+<area shape="rect" id="Node000013" href="$classClientProxy1__8.html" title=" " alt="" coords="5,877,116,902"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="62,843,63,878,58,876,59,847"/>
+<area shape="rect" id="Node000017" href="$classPlatformComputer.html" title="Base computer implementation." alt="" coords="421,151,548,175"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="473,115,484,151,479,150,472,120"/>
+<area shape="rect" id="Node000018" href="$classMSWindowsComputer.html" title="Implementation of IPlatformComputer for Microsoft Windows." alt="" coords="255,223,407,248"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="444,184,358,225,355,221,447,180"/>
+<area shape="rect" id="Node000019" href="$classOSXComputer.html" title="Implementation of IPlatformComputer for OS X." alt="" coords="432,223,537,248"/>
+<area shape="poly" id="edge18_Node000017_Node000019" title=" " alt="" coords="485,189,487,224,482,222,484,194"/>
+<area shape="rect" id="Node000020" href="$classXWindowsComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="562,223,703,248"/>
+<area shape="poly" id="edge19_Node000017_Node000020" title=" " alt="" coords="522,180,611,222,605,224,523,185"/>
+<area shape="rect" id="Node000021" href="$classdeskflow_1_1EiComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="727,223,876,248"/>
+<area shape="poly" id="edge20_Node000017_Node000021" title=" " alt="" coords="552,177,751,221,747,224,553,182"/>
+</map>
