@@ -29,12 +29,15 @@
 #include <unistd.h>
 #include <vector>
 
-// Values are in fractional wheel-click units (1.0 == one full 120-unit click) for trackpad
-// and pixels in scroll wheel events.
+// Smooth remainders are in fractional wheel-click units (1.0 == one full 120-unit click).
+// Discrete remainders are in wheel units (120 == one full click).
+// Keep these separate to avoid mixing units between the two handlers.
 struct ScrollRemainder
 {
-  double x;
-  double y;
+  double smoothX;
+  double smoothY;
+  double discreteX;
+  double discreteY;
 };
 
 namespace deskflow {
@@ -831,8 +834,8 @@ void EiComputer::onPointerScrollEvent(ei_event *event)
   }
 
   // Accumulate smooth scroll as fractional wheel clicks (1.0 == 120 units)
-  double accX = remainder->x + dx * s_wheelClicksPerPixel;
-  double accY = remainder->y + dy * s_wheelClicksPerPixel;
+  double accX = remainder->smoothX + dx * s_wheelClicksPerPixel;
+  double accY = remainder->smoothY + dy * s_wheelClicksPerPixel;
 
   // Only dispatch full wheel clicks. Use trunc (toward zero) not floor,
   // because floor(-0.3) == -1 which would fire a spurious click.
@@ -853,8 +856,8 @@ void EiComputer::onPointerScrollEvent(ei_event *event)
     accY -= fullClicksY;
   }
 
-  remainder->x = accX;
-  remainder->y = accY;
+  remainder->smoothX = accX;
+  remainder->smoothY = accY;
 }
 
 void EiComputer::onPointerScrollDiscreteEvent(ei_event *event)
@@ -877,12 +880,12 @@ void EiComputer::onPointerScrollDiscreteEvent(ei_event *event)
     ei_device_set_user_data(device, remainder);
   }
 
-  double ax = remainder->x + dx;
-  double ay = remainder->y + dy;
+  double ax = remainder->discreteX + dx;
+  double ay = remainder->discreteY + dy;
   auto cx = static_cast<int32_t>(ax / s_scrollDelta) * s_scrollDelta;
   auto cy = static_cast<int32_t>(ay / s_scrollDelta) * s_scrollDelta;
-  remainder->x = ax - cx;
-  remainder->y = ay - cy;
+  remainder->discreteX = ax - cx;
+  remainder->discreteY = ay - cy;
 
   // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
