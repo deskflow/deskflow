@@ -20,6 +20,10 @@ private Q_SLOTS:
   void fakePollShift();
   void fakePollChar();
   void fakePollCharWithModifier();
+  void handleModifierKeys_sidedVirtualKey_sendsSameSide_data();
+  void handleModifierKeys_sidedVirtualKey_sendsSameSide();
+  void handleModifierKeys_bothSidesHeld_releasesPressedSide_data();
+  void handleModifierKeys_bothSidesHeld_releasesPressedSide();
 
 private:
   bool isKeyPressed(const OSXKeyState &keyState, KeyButton button);
