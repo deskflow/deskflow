@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -11,9 +11,13 @@
 #include "base/Log.h"
 #include "platform/OSXClipboardBMPConverter.h"
 #include "platform/OSXClipboardHTMLConverter.h"
+#include "platform/OSXClipboardImageConverter.h"
+#include "platform/OSXClipboardRawConverter.h"
 #include "platform/OSXClipboardTextConverter.h"
 #include "platform/OSXClipboardUTF16Converter.h"
 #include "platform/OSXClipboardUTF8Converter.h"
+
+#include <algorithm>
 
 //
 // OSXClipboard
@@ -22,7 +26,30 @@
 OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 {
   m_converters.push_back(new OSXClipboardHTMLConverter);
+
+  // image files go under both the standard type and the one qt apps read
+  m_converters.push_back(new OSXClipboardRawConverter("public.png", IClipboard::Format::PNG));
+  m_converters.push_back(new OSXClipboardRawConverter(kQtPngType, IClipboard::Format::PNG));
+  m_converters.push_back(new OSXClipboardRawConverter("public.jpeg", IClipboard::Format::JPEG));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--jpeg", IClipboard::Format::JPEG));
+  m_converters.push_back(new OSXClipboardRawConverter("org.webmproject.webp", IClipboard::Format::WebP));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--webp", IClipboard::Format::WebP));
+  m_converters.push_back(new OSXClipboardRawConverter("public.tiff", IClipboard::Format::TIFF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--tiff", IClipboard::Format::TIFF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.compuserve.gif", IClipboard::Format::GIF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--gif", IClipboard::Format::GIF));
+  m_converters.push_back(new OSXClipboardRawConverter("public.svg-image", IClipboard::Format::SVG));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.image--svg+xml", IClipboard::Format::SVG));
+
+  // raw pixels: older peers' bitmaps are written as png, and the rest are read to send as png
+  m_converters.push_back(new OSXClipboardImageConverter("public.png", kQtPngType));
+  m_converters.push_back(new OSXClipboardImageConverter("public.heic"));
+  m_converters.push_back(new OSXClipboardImageConverter("com.trolltech.anymime.image--bmp"));
   m_converters.push_back(new OSXClipboardBMPConverter);
+
+  m_converters.push_back(new OSXClipboardRawConverter("public.rtf", IClipboard::Format::RTF));
+  m_converters.push_back(new OSXClipboardRawConverter("com.trolltech.anymime.text--rtf", IClipboard::Format::RTF));
+
   m_converters.push_back(new OSXClipboardUTF8Converter);
   m_converters.push_back(new OSXClipboardUTF16Converter);
   m_converters.push_back(new OSXClipboardTextConverter);
@@ -52,6 +79,8 @@ bool OSXClipboard::empty()
   if (m_pboard == nullptr)
     return false;
 
+  m_flavors.reset();
+
   OSStatus err = PasteboardClear(m_pboard);
   if (err != noErr) {
     LOG_WARN("failed to clear clipboard: error %i", err);
@@ -80,7 +109,8 @@ void OSXClipboard::add(Format format, const std::string &data)
   if (m_pboard == nullptr)
     return;
 
-  LOG_DEBUG("add %d bytes to clipboard format: %d", data.size(), format);
+  const auto size = formatSize(data.size());
+  LOG_DEBUG("adding to clipboard, format: %d, size: %s", format, size.constData());
   if (format == IClipboard::Format::Text) {
     LOG_DEBUG("format of data to be added to clipboard was kText");
   } else if (format == IClipboard::Format::Bitmap) {
@@ -89,22 +119,31 @@ void OSXClipboard::add(Format format, const std::string &data)
     LOG_DEBUG("format of data to be added to clipboard was kHTML");
   }
 
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-
+  // macos converts other flavours on demand, but native and qt apps look for unchanged files under different types
+  const bool writeEveryFlavour = isFile(format);
+  bool added = false;
+  for (ConverterList::const_iterator index = m_converters.begin();
+       index != m_converters.end() && (!added || writeEveryFlavour); ++index) {
     IOSXClipboardConverter *converter = *index;
-
-    // skip converters for other formats
     if (converter->getFormat() == format) {
       std::string osXData = converter->fromIClipboard(data);
+      if (osXData.empty()) {
+        continue;
+      }
+
       CFStringRef flavorType = converter->getOSXFormat();
       CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (uint8_t *)osXData.data(), osXData.size());
       PasteboardItemID itemID = 0;
 
       if (dataRef) {
         PasteboardPutItemFlavor(m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
+        if (CFStringRef alias = converter->getAliasOSXFormat(); alias != nullptr) {
+          PasteboardPutItemFlavor(m_pboard, itemID, alias, dataRef, kPasteboardFlavorNoFlags);
+        }
 
         CFRelease(dataRef);
-        LOG_DEBUG("added %d bytes to clipboard format: %d", data.size(), format);
+        LOG_DEBUG("added to clipboard, format: %d, size: %s", format, size.constData());
+        added = true;
       }
     }
   }
@@ -117,13 +156,14 @@ bool OSXClipboard::open(Time time) const
 
   LOG_DEBUG("opening clipboard");
   m_time = time;
+  m_flavors.reset();
   return true;
 }
 
 void OSXClipboard::close() const
 {
   LOG_DEBUG("closing clipboard");
-  /* not needed */
+  m_flavors.reset();
 }
 
 IClipboard::Time OSXClipboard::getTime() const
@@ -133,64 +173,69 @@ IClipboard::Time OSXClipboard::getTime() const
 
 bool OSXClipboard::has(Format format) const
 {
-  if (m_pboard == nullptr)
-    return false;
-
-  PasteboardItemID item;
-  PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
-
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    IOSXClipboardConverter *converter = *index;
-    if (converter->getFormat() == format) {
-      PasteboardFlavorFlags flags;
-      CFStringRef type = converter->getOSXFormat();
-
-      OSStatus res;
-
-      if ((res = PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags)) == noErr) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  const auto available = [this](Format candidate) { return findConverter(candidate) != nullptr; };
+  return m_pboard != nullptr && sourceToSend(format, available).has_value();
 }
 
 std::string OSXClipboard::get(Format format) const
 {
-  CFStringRef type;
-  PasteboardItemID item;
-  std::string result;
-
   if (m_pboard == nullptr)
-    return result;
+    return {};
 
+  const auto available = [this](Format candidate) { return findConverter(candidate) != nullptr; };
+  const auto source = sourceToSend(format, available);
+  std::string data;
+  if (source == Format::Bitmap) {
+    data = OSXClipboardImageConverter("public.png").fromIClipboard(read(findConverter(Format::Bitmap)));
+  } else if (source) {
+    data = read(findConverter(*source));
+  } else {
+    LOG_DEBUG("unable to find converter for data");
+  }
+  return data;
+}
+
+IOSXClipboardConverter *OSXClipboard::findConverter(Format format) const
+{
+  PasteboardItemID item;
   PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
 
-  // find the converter for the first clipboard format we can handle
-  IOSXClipboardConverter *converter = nullptr;
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    converter = *index;
-
-    PasteboardFlavorFlags flags;
-    type = converter->getOSXFormat();
-
-    if (converter->getFormat() == format && PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr) {
-      break;
-    }
-    converter = nullptr;
+  // each flavour query can make the copying app produce its data again, so list the flavours once per read
+  if (!m_flavors) {
+    CFArrayRef flavors = nullptr;
+    if (PasteboardCopyItemFlavors(m_pboard, item, &flavors) == noErr)
+      m_flavors.reset(flavors);
+    else
+      LOG_DEBUG("failed to list clipboard flavours");
   }
 
-  // if no converter then we don't recognize any formats
+  // macos converts between types on request, which would hide which file was copied
+  const bool skipConverted = isFile(format);
+  const auto found = std::ranges::find_if(m_converters, [this, item, format, skipConverted](auto *converter) {
+    const auto type = converter->getOSXFormat();
+    PasteboardFlavorFlags flags = kPasteboardFlavorNoFlags;
+    return converter->getFormat() == format && m_flavors &&
+           CFArrayContainsValue(m_flavors.get(), CFRangeMake(0, CFArrayGetCount(m_flavors.get())), type) &&
+           PasteboardGetItemFlavorFlags(m_pboard, item, type, &flags) == noErr &&
+           !(skipConverted && (flags & kPasteboardFlavorSystemTranslated));
+  });
+  return found != m_converters.end() ? *found : nullptr;
+}
+
+std::string OSXClipboard::read(const IOSXClipboardConverter *converter) const
+{
   if (converter == nullptr) {
-    LOG_DEBUG("unable to find converter for data");
-    return result;
+    LOG_DEBUG("clipboard changed while reading it");
+    return {};
   }
 
-  // get the clipboard data.
+  PasteboardItemID item;
+  PasteboardGetItemIdentifier(m_pboard, (CFIndex)1, &item);
+
+  std::string result;
   CFDataRef buffer = nullptr;
   try {
-    OSStatus err = PasteboardCopyItemFlavorData(m_pboard, item, type, &buffer);
+    OSStatus err = PasteboardCopyItemFlavorData(m_pboard, item, converter->getOSXFormat(), &buffer);
 
     if (err != noErr) {
       throw err;
@@ -198,9 +243,9 @@ std::string OSXClipboard::get(Format format) const
 
     result = std::string((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
   } catch (OSStatus err) {
-    LOG_DEBUG("exception thrown in OSXClipboard::get MacError (%d)", err);
+    LOG_DEBUG("failed to read clipboard flavour, error: %d", err);
   } catch (...) {
-    LOG_DEBUG("unknown exception in OSXClipboard::get");
+    LOG_DEBUG("unknown exception reading clipboard flavour");
     RETHROW_THREADEXCEPTION
   }
 

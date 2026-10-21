@@ -1367,6 +1367,18 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>새 버전(v%1)을 사용할 수 있습니다</translation>
     </message>
     <message>
+        <source>Sending clipboard to %1 (%2)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clipboard not shared, %1 is over the %2 limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receiving clipboard from %1 (%2)...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>View local fingerprint</source>
         <translation>로컬 핑거프린팅 보기</translation>
     </message>

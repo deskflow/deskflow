@@ -19,6 +19,7 @@ private Q_SLOTS:
   void dispatchEvent_noHandler_returnsFalse();
   void dispatchEvent_noTypeHandler_dispatchesUnknownHandler();
   void dispatchEvent_handlerRemovesItself_keepsHandlerAliveUntilReturn();
+  void archTime_twentyMsApart_measuresTheGap();
 
 private:
   Arch m_arch;

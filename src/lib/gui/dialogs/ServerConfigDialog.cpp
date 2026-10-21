@@ -79,7 +79,7 @@ void ServerConfigDialog::save()
   }
   Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
   Settings::setValue(Settings::Server::EnableClipboard, m_enableClipboard);
-  Settings::setValue(Settings::Server::ClipboardSize, m_clipboardSize);
+  Settings::setValue(Settings::Server::ClipboardSizeLimit, m_clipboardSize);
   Settings::setValue(Settings::Server::EnableHeartbeat, m_enableHeartbeat);
   Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
   Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
@@ -240,7 +240,7 @@ void ServerConfigDialog::toggleClipboard(bool enabled)
 
   ui->sbClipboardSizeLimit->setEnabled(enabled);
   if (enabled && !ui->sbClipboardSizeLimit->value()) {
-    m_clipboardSize = Settings::defaultValue(Settings::Server::ClipboardSize).toUInt();
+    m_clipboardSize = Settings::defaultValue(Settings::Server::ClipboardSizeLimit).toUInt();
     ui->sbClipboardSizeLimit->setValue(m_clipboardSize ? m_clipboardSize : 1);
   }
   setButtonBoxEnabledButtons();
@@ -397,7 +397,7 @@ void ServerConfigDialog::loadFromConfig()
   m_defaultLockToComputerState = Settings::value(Settings::Server::DefaultLockToComputerState).toBool();
   m_disableLockToComputer = Settings::value(Settings::Server::DisableLockToComputer).toBool();
   m_enableClipboard = Settings::value(Settings::Server::EnableClipboard).toBool();
-  m_clipboardSize = Settings::value(Settings::Server::ClipboardSize).toUInt();
+  m_clipboardSize = Settings::value(Settings::Server::ClipboardSizeLimit).toUInt();
 
   ui->lineConfigFile->setText(serverConfig().configFile());
   ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
@@ -553,7 +553,7 @@ void ServerConfigDialog::restoreFromDefaults()
   m_defaultLockToComputerState = Settings::defaultValue(Settings::Server::DefaultLockToComputerState).toBool();
   m_disableLockToComputer = Settings::defaultValue(Settings::Server::DisableLockToComputer).toBool();
   m_enableClipboard = Settings::defaultValue(Settings::Server::EnableClipboard).toBool();
-  m_clipboardSize = Settings::defaultValue(Settings::Server::ClipboardSize).toUInt();
+  m_clipboardSize = Settings::defaultValue(Settings::Server::ClipboardSizeLimit).toUInt();
 
   ui->groupExternalConfig->setChecked(Settings::defaultValue(Settings::Server::ExternalConfig).toBool());
   ui->lineConfigFile->setText(Settings::defaultValue(Settings::Server::ExternalConfigFile).toString());
@@ -594,7 +594,7 @@ bool ServerConfigDialog::isGeneralConfigModified() const
          m_originalServerConfigUsesExternalFile != Settings::value(Settings::Server::ExternalConfigFile).toString() ||
          m_protocol != Settings::networkProtocol() ||
          m_enableClipboard != Settings::value(Settings::Server::EnableClipboard).toBool() ||
-         m_clipboardSize != Settings::value(Settings::Server::ClipboardSize).toUInt() ||
+         m_clipboardSize != Settings::value(Settings::Server::ClipboardSizeLimit).toUInt() ||
          m_enableHeartbeat != Settings::value(Settings::Server::EnableHeartbeat).toBool() ||
          m_heartbeatRate != Settings::value(Settings::Server::Heartbeat).toInt() ||
          m_enableSwitchDelay != Settings::value(Settings::Server::EnableSwitchDelay).toBool() ||
@@ -613,7 +613,7 @@ bool ServerConfigDialog::isGeneralConfigDefault() const
          ui->lineConfigFile->text() == Settings::defaultValue(Settings::Server::ExternalConfigFile).toString() &&
          m_protocol == networkProtocolFromString(Settings::defaultValue(Settings::Server::Protocol).toString()) &&
          m_enableClipboard == Settings::defaultValue(Settings::Server::EnableClipboard).toBool() &&
-         m_clipboardSize == Settings::defaultValue(Settings::Server::ClipboardSize).toUInt() &&
+         m_clipboardSize == Settings::defaultValue(Settings::Server::ClipboardSizeLimit).toUInt() &&
          m_enableHeartbeat == Settings::defaultValue(Settings::Server::EnableHeartbeat).toBool() &&
          m_heartbeatRate == Settings::defaultValue(Settings::Server::Heartbeat).toInt() &&
          m_enableSwitchDelay == Settings::defaultValue(Settings::Server::EnableSwitchDelay).toBool() &&
