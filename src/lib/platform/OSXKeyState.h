@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Nagato Yuzuru <nagato@yuzuru.me>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -39,6 +40,13 @@ public:
   state and sends key events as appropriate.
   */
   void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask);
+
+  //! Handle fn key change
+  /*!
+  Sends a key event for the fn key.  fn has no KeyModifierMask bit, so
+  handleModifierKeys() cannot detect it from the modifier masks.
+  */
+  void handleFnKey(void *target, bool down, KeyModifierMask mask);
 
   //@}
   //! @name accessors
@@ -168,4 +176,5 @@ private:
   bool m_controlRightPressed;
   bool m_altRightPressed;
   bool m_superRightPressed;
+  bool m_fnPressed;
 };
