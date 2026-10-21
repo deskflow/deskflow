@@ -175,6 +175,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerLayoutView</name>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished">縮小</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished">拡大</translation>
+    </message>
+</context>
+<context>
     <name>ComputerSettingsDialog</name>
     <message>
         <source>Computer settings</source>
@@ -323,13 +334,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">コンピューター名をエイリアスと同じにすることはできません。エイリアスを削除するか、コンピューター名を変更してください。</translation>
-    </message>
-</context>
-<context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;コンピュータ: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;ダブルクリックして設定を編集&lt;br&gt;コンピュータをゴミ箱にドラッグして削除</translation>
     </message>
 </context>
 <context>
@@ -923,6 +927,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
     </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag an edge to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;コンピュータ: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;他のコンピュータの隣にドラッグして端をつなげる&lt;br&gt;端をドラッグしてサイズを変更&lt;br&gt;ダブルクリックして設定を編集&lt;br&gt;コンピュータをゴミ箱にドラッグして削除</translation>
+    </message>
 </context>
 <context>
     <name>SearchWidget</name>
@@ -954,7 +962,7 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>コンピューター</translation>
     </message>
     <message>
-        <source>Drag a computer from the grid to the trashcan to remove it.</source>
+        <source>Drag a computer from the layout to the trashcan to remove it.</source>
         <translation>コンピューターを削除するには、ゴミ箱にドラッグしてください。</translation>
     </message>
     <message>
@@ -962,8 +970,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>コンピューターの画面を置きたい場所にドラッグして画面配置を設定してください。</translation>
     </message>
     <message>
-        <source>Drag to the grid to add a new computer.</source>
-        <translation>新しいコンピューターを追加するには、下の枠にドラッグしてください。</translation>
+        <source>Drag to the layout to add a new computer.</source>
+        <translation>新しいコンピューターを追加するには、レイアウトにドラッグしてください。</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -1070,7 +1078,7 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>指定時間内に画面端ダブルタップで移動(&amp;T)</translation>
     </message>
     <message>
-        <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+        <source>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
         <translation>GUIでの単純な配置ではできないような複雑なコンピューター配置を設定したい場合は、サーバー設定ファイルを使用してください。

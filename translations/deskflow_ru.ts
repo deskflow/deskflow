@@ -175,6 +175,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerLayoutView</name>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished">Уменьшить</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished">Увеличить</translation>
+    </message>
+</context>
+<context>
     <name>ComputerSettingsDialog</name>
     <message>
         <source>Computer settings</source>
@@ -323,13 +334,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">Имя компьютера не может совпадать с псевдонимом. Удалите псевдоним или измените имя компьютера.</translation>
-    </message>
-</context>
-<context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;Компьютер: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Дважды щелкните, чтобы изменить настройки&lt;br&gt;Перетащите компьютер в корзину, чтобы удалить его</translation>
     </message>
 </context>
 <context>
@@ -921,6 +925,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
     </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag an edge to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;Компьютер: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Перетащите рядом с другим компьютером, чтобы связать их края&lt;br&gt;Перетащите край, чтобы изменить размер&lt;br&gt;Дважды щелкните, чтобы изменить настройки&lt;br&gt;Перетащите компьютер в корзину, чтобы удалить его</translation>
+    </message>
 </context>
 <context>
     <name>SearchWidget</name>
@@ -952,7 +960,7 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>Компьютеры</translation>
     </message>
     <message>
-        <source>Drag a computer from the grid to the trashcan to remove it.</source>
+        <source>Drag a computer from the layout to the trashcan to remove it.</source>
         <translation>Перетащите компьютер в корзину, чтобы удалить его.</translation>
     </message>
     <message>
@@ -960,8 +968,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>Настройте расположение мониторов, перетаскивая их в нужные места.</translation>
     </message>
     <message>
-        <source>Drag to the grid to add a new computer.</source>
-        <translation>Перетащите на сетку, чтобы добавить компьютер.</translation>
+        <source>Drag to the layout to add a new computer.</source>
+        <translation>Перетащите в макет, чтобы добавить компьютер.</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -1068,7 +1076,7 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>Переключать по двойному &amp;касанию за</translation>
     </message>
     <message>
-        <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+        <source>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
         <translation>Используйте файл конфигурации для сложных макетов. Включение этой опции отключит графический редактор.</translation>
