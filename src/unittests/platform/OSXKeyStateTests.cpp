@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2011 Nick Bolton
@@ -13,6 +14,7 @@
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R
 #define SHIFT_BUTTON 57
+#define FN_BUTTON 64
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
 
@@ -53,6 +55,10 @@ void OSXKeyStateTests::mapModifiersFromOSX_OSXMask()
   uint32_t numMask = 0 | kCGEventFlagMaskNumericPad;
   outMask = keyState.mapModifiersFromOSX(numMask);
   QCOMPARE(outMask, KeyModifierNumLock);
+
+  uint32_t fnMask = 0 | kCGEventFlagMaskSecondaryFn;
+  outMask = keyState.mapModifiersFromOSX(fnMask);
+  QCOMPARE(outMask, KeyModifierFn);
 }
 
 void OSXKeyStateTests::fakePollShift()
@@ -73,6 +79,22 @@ void OSXKeyStateTests::fakePollShift()
 
   keyState.fakeKeyUp(2);
   QVERIFY(!isKeyPressed(keyState, SHIFT_BUTTON));
+}
+
+void OSXKeyStateTests::fakePollFn()
+{
+  deskflow::KeyMap keyMap;
+  EventQueue eventQueue;
+  OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
+  keyState.updateKeyMap();
+
+  keyState.fakeKeyDown(kKeyFn, 0, 1, "en");
+  QVERIFY(isKeyPressed(keyState, FN_BUTTON));
+  QVERIFY((CGEventSourceFlagsState(kCGEventSourceStateHIDSystemState) & kCGEventFlagMaskSecondaryFn) != 0);
+
+  keyState.fakeKeyUp(1);
+  QVERIFY(!isKeyPressed(keyState, FN_BUTTON));
+  QVERIFY((CGEventSourceFlagsState(kCGEventSourceStateHIDSystemState) & kCGEventFlagMaskSecondaryFn) == 0);
 }
 
 void OSXKeyStateTests::fakePollChar()
