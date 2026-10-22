@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,6 +11,8 @@
 #include "base/Log.h"
 #include "platform/OSXKeyLayoutResource.h"
 #include "platform/OSXMediaKeySupport.h"
+
+#include <cstring>
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
@@ -180,6 +183,49 @@ bool isModifier(uint8_t virtualKey)
                                      s_shiftRightVK, s_controlRightVK, s_altRightVK, s_superRightVK};
 
   return (modifiers.find(virtualKey) != modifiers.end());
+}
+
+// Input-source IDs are CFStrings. TIS does not promise pointer identity across calls.
+std::string inputSourceID(TISInputSourceRef source)
+{
+  if (!source)
+    return {};
+  auto id = static_cast<CFStringRef>(TISGetInputSourceProperty(source, kTISPropertyInputSourceID));
+  if (!id)
+    return {};
+  std::string value(CFStringGetMaximumSizeForEncoding(CFStringGetLength(id), kCFStringEncodingUTF8) + 1, '\0');
+  if (!CFStringGetCString(id, value.data(), value.size(), kCFStringEncodingUTF8))
+    return {};
+  value.resize(std::strlen(value.c_str()));
+  return value;
+}
+
+AutoTISInputSourceRef copyFallbackKeyboardLayout()
+{
+  std::lock_guard<std::mutex> lock(g_tisMutex);
+  AutoTISInputSourceRef current(TISCopyCurrentASCIICapableKeyboardLayoutInputSource(), CFRelease);
+  if (current && TISGetInputSourceProperty(current.get(), kTISPropertyUnicodeKeyLayoutData))
+    return current;
+
+  // Installed layouts can supply translation data even when they are not enabled
+  // in the input menu. Reading one does not enable it or change the user's IME.
+  const void *keys[] = {kTISPropertyInputSourceType, kTISPropertyInputSourceIsASCIICapable};
+  const void *values[] = {kTISTypeKeyboardLayout, kCFBooleanTrue};
+  AutoCFDictionary filter(
+      CFDictionaryCreate(nullptr, keys, values, 2, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks),
+      CFRelease
+  );
+  AutoCFArray sources(TISCreateInputSourceList(filter.get(), true), CFRelease);
+  if (sources) {
+    for (CFIndex i = 0; i < CFArrayGetCount(sources.get()); ++i) {
+      auto source = (TISInputSourceRef)CFArrayGetValueAtIndex(sources.get(), i);
+      if (TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData)) {
+        CFRetain(source);
+        return AutoTISInputSourceRef(source, CFRelease);
+      }
+    }
+  }
+  return AutoTISInputSourceRef(nullptr, CFRelease);
 }
 
 AutoTISInputSourceRef copyKeyboardLayoutForKeyTranslation()
@@ -472,22 +518,18 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
 
 int32_t OSXKeyState::pollActiveGroup() const
 {
-  AutoTISInputSourceRef keyboardLayout(nullptr, CFRelease);
-  CFDataRef id = nullptr;
-  {
-    std::lock_guard<std::mutex> lock(g_tisMutex);
-    keyboardLayout = AutoTISInputSourceRef(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
-    if (keyboardLayout)
-      id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceID);
-  }
-
-  GroupMap::const_iterator i = m_groupMap.find(id);
-  if (i != m_groupMap.end()) {
-    return i->second;
-  }
-
-  LOG_WARN("can't get the active group, use the first group instead");
-
+  std::lock_guard<std::mutex> lock(g_tisMutex);
+  // An IME can expose a different underlying layout. Prefer its own group,
+  // whose character map is backed by the ASCII layout when necessary.
+  AutoTISInputSourceRef source(TISCopyCurrentKeyboardInputSource(), CFRelease);
+  auto group = m_groupMap.find(inputSourceID(source.get()));
+  if (group != m_groupMap.end())
+    return group->second;
+  AutoTISInputSourceRef layout(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
+  group = m_groupMap.find(inputSourceID(layout.get()));
+  if (group != m_groupMap.end())
+    return group->second;
+  LOG_DEBUG("active input source has no group; using fallback group 0");
   return 0;
 }
 
@@ -514,15 +556,16 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
     numGroups = CFArrayGetCount(m_groups.get());
     for (int32_t g = 0; g < numGroups; ++g) {
       TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), g);
-      CFDataRef id = nullptr;
-      {
-        std::lock_guard<std::mutex> lock(g_tisMutex);
-        id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceID);
-      }
-      m_groupMap[id] = g;
+      std::lock_guard<std::mutex> lock(g_tisMutex);
+      const auto id = inputSourceID(keyboardLayout);
+      if (!id.empty())
+        m_groupMap[id] = g;
     }
   }
 
+  auto fallback = copyFallbackKeyboardLayout();
+  if (!fallback)
+    LOG_WARN("no usable ASCII keyboard layout resource; character mapping may be unavailable");
   uint32_t keyboardType = LMGetKbdType();
   for (int32_t g = 0; g < numGroups; ++g) {
     // add special keys
@@ -537,6 +580,12 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
     {
       std::lock_guard<std::mutex> lock(g_tisMutex);
       resourceRef = (CFDataRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyUnicodeKeyLayoutData);
+      // IMEs often have no UCKeyboardLayout. Translate physical keys with the
+      // system's existing ASCII layout, leaving the selected IME in charge of composition.
+      if (!resourceRef && fallback) {
+        resourceRef = (CFDataRef)TISGetInputSourceProperty(fallback.get(), kTISPropertyUnicodeKeyLayoutData);
+        LOG_DEBUG("using ASCII keyboard resource for input group %d", g);
+      }
     }
 
     layoutValid = resourceRef != nullptr;
@@ -953,10 +1002,19 @@ bool OSXKeyState::getGroups(AutoCFArray &groups) const
 
 void OSXKeyState::setGroup(int32_t group)
 {
+  if (!m_groups || group < 0 || group >= CFArrayGetCount(m_groups.get())) {
+    LOG_WARN("requested keyboard group is out of range: %d", group);
+    return;
+  }
   TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
   if (!keyboardLayout) {
     LOG_WARN("needed keyboard layout is null");
     return;
+  }
+  {
+    std::lock_guard<std::mutex> lock(g_tisMutex);
+    if (!TISGetInputSourceProperty(keyboardLayout, kTISPropertyUnicodeKeyLayoutData))
+      return;
   }
   CFBooleanRef canBeSetted = nullptr;
   {
