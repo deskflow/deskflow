@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -41,6 +42,8 @@ using ClipboardInfo = IComputer::ClipboardInfo;
 //! Implementation of IPlatformComputer for X11
 class EiComputer : public PlatformComputer
 {
+  friend class EiHotKeyModifierMatchingTests;
+
 public:
   EiComputer(bool isPrimary, IEventQueue *events, bool usePortal);
   ~EiComputer() override;
