@@ -1018,6 +1018,14 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>使用相对鼠标移动(&amp;R)</translation>
     </message>
     <message>
+        <source>Sync Mac Caps Lock and Chinese/English mode to Windows</source>
+        <translation>同步 Mac 的 Caps Lock 和中英文模式到 Windows</translation>
+    </message>
+    <message>
+        <source>For updated Windows clients with a Chinese IME. Mac handles Caps Lock locally; physical Caps Lock is not forwarded to any client. Chinese/English mode and capitalization synchronize before the next key is typed. Enable keyboard language synchronization on Windows for Chinese/English mode. Leave disabled for Linux or Mac clients.</source>
+        <translation>适用于使用中文输入法的新版 Windows 客户端。Mac 在本地处理 Caps Lock，不向任何客户端转发该按键。中英文模式及大小写状态会在下一次按键输入前同步。同步中英文模式还需开启 Windows 端的键盘语言同步。连接 Linux 或 Mac 客户端时请关闭。</translation>
+    </message>
+    <message>
         <source>Don&apos;t take &amp;foreground window (Windows only)</source>
         <translation>不获取前台窗口焦点 (仅限 Windows)(&amp;F)</translation>
     </message>
