@@ -1092,6 +1092,9 @@ bool OSXComputer::onKey(CGEventRef event)
     KeyModifierMask oldMask = getActiveModifiers();
     KeyModifierMask newMask = m_keyState->mapModifiersFromOSX(macMask);
     m_keyState->handleModifierKeys(getEventTarget(), oldMask, newMask);
+    if (virtualKey == kVK_Function) {
+      m_keyState->handleFnKey(getEventTarget(), (macMask & kCGEventFlagMaskSecondaryFn) != 0, newMask);
+    }
 
     // if the current set of modifiers exactly matches a modifiers-only
     // hot key then generate a hot key down event.

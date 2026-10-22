@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Nagato Yuzuru <nagato@yuzuru.me>
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -18,6 +19,7 @@ private Q_SLOTS:
   // Test are run in order top to bottom
   void mapModifiersFromOSX_OSXMask();
   void fakePollShift();
+  void fakePollFn();
   void fakePollChar();
   void fakePollCharWithModifier();
 
