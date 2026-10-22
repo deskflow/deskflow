@@ -26,6 +26,9 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <string>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <unistd.h>
 #include <vector>
 
@@ -38,6 +41,27 @@ struct ScrollRemainder
 };
 
 namespace deskflow {
+
+std::string EiComputer::externalEisSocket()
+{
+  std::string path;
+  if (const char *envPath = getenv("DESKFLOW_EIS_SOCKET"); envPath && *envPath)
+    path = envPath;
+  else if (const char *runtimeDir = getenv("XDG_RUNTIME_DIR"); runtimeDir && *runtimeDir)
+    path = std::string(runtimeDir) + "/deskflow-eis.sock";
+  if (path.empty())
+    return path;
+
+  const int fd = ::socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
+  if (fd < 0)
+    return {};
+  sockaddr_un addr{};
+  addr.sun_family = AF_UNIX;
+  path.copy(addr.sun_path, sizeof(addr.sun_path) - 1);
+  const bool reachable = ::connect(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == 0;
+  ::close(fd);
+  return reachable ? path : std::string{};
+}
 
 EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
     : PlatformComputer{events},
@@ -73,8 +97,13 @@ EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
       m_clipboard = new EiClipboard(kClipboardClipboard);
     }
   } else {
+    // Socket backend for use with an external EIS implementation when the
+    // compositor has no RemoteDesktop portal (see externalEisSocket()).
     // Note: socket backend does not support reconnections
-    if (auto rc = ei_setup_backend_socket(m_ei, nullptr); rc != 0) {
+    const auto socketPath = externalEisSocket();
+    if (!socketPath.empty())
+      LOG_INFO("ei: using external socket backend: %s", socketPath.c_str());
+    if (auto rc = ei_setup_backend_socket(m_ei, socketPath.empty() ? nullptr : socketPath.c_str()); rc != 0) {
       LOG_ERR("ei init error: %s", strerror(-rc));
       throw std::runtime_error("failed to init ei context");
     }
