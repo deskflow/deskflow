@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -35,6 +36,7 @@ class PortalRemoteDesktop;
 class PortalInputCapture;
 class PortalGlobalShortcuts;
 class EiClipboard;
+class WlClipboardCollection;
 
 using ClipboardInfo = IComputer::ClipboardInfo;
 
@@ -155,6 +157,7 @@ private:
 
   // clipboard stuff
   EiClipboard *m_clipboard = nullptr;
+  WlClipboardCollection *m_legacyClipboard = nullptr;
   size_t m_maximumClipboardSize = INT_MAX;
 
   std::vector<ei_device *> m_eiDevices;

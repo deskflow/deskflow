@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
@@ -44,4 +44,14 @@ elseif(UNIX)
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
   endif()
+endif()
+
+if(UNIX AND NOT APPLE AND LIBEI_FOUND)
+  create_test(
+    NAME WlClipboardCompatTests
+    DEPENDS platform
+    LIBS base arch app
+    SOURCE WlClipboardCompatTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
 endif()
