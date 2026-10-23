@@ -48,18 +48,14 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
       CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr), CFRelease
   );
   AutoCFArray kbds(nullptr, CFRelease);
-  {
-    std::lock_guard<std::mutex> lock(g_tisMutex);
-    kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease);
-  }
+  withTISOnMainThread([&] { kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease); });
 
-  for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
+  for (CFIndex i = 0; kbds && i < CFArrayGetCount(kbds.get()); ++i) {
     TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds.get(), i);
     CFArrayRef layoutLanguages = nullptr;
-    {
-      std::lock_guard<std::mutex> lock(g_tisMutex);
+    withTISOnMainThread([&] {
       layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
-    }
+    });
     char temporaryCString[128] = {0};
     for (CFIndex index = 0; layoutLanguages && index < CFArrayGetCount(layoutLanguages); index++) {
       auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
@@ -140,12 +136,11 @@ std::string AppUtilUnix::getCurrentLanguageCode()
 #elif defined(Q_OS_MACOS)
   AutoTISInputSourceRef source(nullptr, CFRelease);
   CFArrayRef layoutLanguages = nullptr;
-  {
-    std::lock_guard<std::mutex> lock(g_tisMutex);
+  withTISOnMainThread([&] {
     source = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
     if (source)
       layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(source.get(), kTISPropertyInputSourceLanguages);
-  }
+  });
   char temporaryCString[128] = {0};
   for (CFIndex index = 0; layoutLanguages && index < CFArrayGetCount(layoutLanguages); index++) {
     auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
