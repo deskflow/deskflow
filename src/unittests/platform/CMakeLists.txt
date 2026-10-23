@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
@@ -25,6 +26,15 @@ elseif(APPLE)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(UNIX)
+  if(HAVE_LP_CLIPBOARD)
+    create_test(
+      NAME PortalSelectionReadTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE PortalSelectionReadTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
+  endif()
   if(LIBEI_FOUND)
     create_test(
       NAME EiKeyStateTests

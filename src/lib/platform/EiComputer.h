@@ -1,11 +1,14 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #pragma once
+
+#include <atomic>
 
 #include "deskflow/IComputer.h"
 #include "deskflow/PlatformComputer.h"
@@ -175,7 +178,7 @@ private:
   // Chosen empirically on one machine in 2026-06; not derived from any protocol constant.
   static constexpr double s_idleEmulationTimeout = 4.0;
 
-  std::uint32_t m_activeSides = 0;
+  std::atomic<std::uint32_t> m_activeSides{0};
   std::uint32_t m_x = 0;
   std::uint32_t m_y = 0;
   std::uint32_t m_w = 0;
