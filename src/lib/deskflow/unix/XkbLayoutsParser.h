@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#if WINAPI_XWINDOWS
+#if defined(__unix__) && !defined(__APPLE__)
 #pragma once
 
 #include <string>

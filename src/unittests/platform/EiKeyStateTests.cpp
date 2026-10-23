@@ -134,4 +134,84 @@ void EiKeyStateTests::updateLockedModifiers_compositorLockState_numLockFollowsCo
   QVERIFY((keyState.pollActiveModifiers() & KeyModifierNumLock) == 0);
 }
 
+namespace {
+void loadUsKeymap(deskflow::EiKeyState &state)
+{
+  auto *context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+  xkb_rule_names names{};
+  names.layout = "us";
+  auto *map = xkb_keymap_new_from_names(context, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+  char *text = xkb_keymap_get_as_string(map, XKB_KEYMAP_FORMAT_TEXT_V1);
+  QTemporaryFile file;
+  QVERIFY(file.open());
+  file.write(text);
+  file.flush();
+  state.init(file.handle(), file.size());
+  free(text);
+  xkb_keymap_unref(map);
+  xkb_context_unref(context);
+}
+deskflow::platform::WaylandKeyboardManager::Snapshot twoLayouts()
+{
+  deskflow::platform::WaylandKeyboardManager::Snapshot result;
+  result.layouts = "us,ru";
+  result.variants = ",";
+  result.group = 1;
+  result.configured = true;
+  result.generation = 1;
+  return result;
+}
+} // namespace
+
+void EiKeyStateTests::captureLayout_preservesCompositorKeymap()
+{
+  TestAppUtil util;
+  EventQueue events;
+  deskflow::EiKeyState state(nullptr, &events);
+  loadUsKeymap(state);
+  auto *native = state.m_xkbKeymap;
+  auto snapshot = twoLayouts();
+  QCOMPARE(state.translateKey(38, snapshot), KeyID(0x0444));
+  QCOMPARE(state.m_xkbKeymap, native);
+  QCOMPARE(xkb_keymap_num_layouts(native), 1u);
+  QCOMPARE(state.mapKeyFromKeyval(38), KeyID('a'));
+  state.updateXkbState(50, true);
+  QCOMPARE(state.translateKey(38, snapshot), KeyID(0x0424));
+  snapshot.group = 0;
+  QCOMPARE(state.translateKey(38, snapshot), KeyID('A'));
+  state.updateXkbState(50, false);
+  QCOMPARE(state.translateKey(38, snapshot), KeyID('a'));
+}
+
+void EiKeyStateTests::captureLayout_defersRebuildWhileShiftHeld()
+{
+  TestAppUtil util;
+  EventQueue events;
+  deskflow::EiKeyState state(nullptr, &events);
+  loadUsKeymap(state);
+  auto snapshot = twoLayouts();
+  state.translateKey(38, snapshot);
+  state.updateXkbState(50, true);
+  snapshot.generation = 2;
+  state.translateKey(38, snapshot);
+  QCOMPARE(state.m_translationGeneration, uint64_t(1));
+  state.updateXkbState(50, false);
+  QCOMPARE(state.translateKey(38, snapshot), KeyID(0x0444));
+  QCOMPARE(state.m_translationGeneration, uint64_t(2));
+  QVERIFY(!(state.pollActiveModifiers() & KeyModifierShift));
+}
+
+void EiKeyStateTests::captureLayout_unknownGroupUsesCompositor()
+{
+  TestAppUtil util;
+  EventQueue events;
+  deskflow::EiKeyState state(nullptr, &events);
+  loadUsKeymap(state);
+  auto snapshot = twoLayouts();
+  snapshot.group = 9;
+  QCOMPARE(state.translateKey(38, snapshot), KeyID('a'));
+  snapshot.group = -1;
+  QCOMPARE(state.translateKey(38, snapshot), KeyID('a'));
+}
+
 QTEST_MAIN(EiKeyStateTests)

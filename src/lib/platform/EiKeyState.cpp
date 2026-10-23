@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Devs.
  * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
@@ -14,6 +15,7 @@
 #include "platform/XDGKeyUtil.h"
 
 #include <cstddef>
+#include <cstring>
 #include <memory>
 #include <unistd.h>
 
@@ -36,6 +38,8 @@ EiKeyState::EiKeyState(EiComputer *computer, IEventQueue *events)
 
 void EiKeyState::initDefaultKeymap()
 {
+  clearTranslation();
+  m_pressed.clear();
   if (m_xkbKeymap) {
     xkb_keymap_unref(m_xkbKeymap);
   }
@@ -74,6 +78,8 @@ void EiKeyState::init(int fd, size_t len)
   if (m_xkbKeymap) {
     xkb_keymap_unref(m_xkbKeymap);
   }
+  clearTranslation();
+  m_pressed.clear();
   m_xkbKeymap = keymap;
 
   if (m_xkbState) {
@@ -84,6 +90,7 @@ void EiKeyState::init(int fd, size_t len)
 
 EiKeyState::~EiKeyState()
 {
+  clearTranslation();
   xkb_context_unref(m_xkb);
   xkb_keymap_unref(m_xkbKeymap);
   xkb_state_unref(m_xkbState);
@@ -313,24 +320,94 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
   m_computer->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
 }
 
+void EiKeyState::clearTranslation() const
+{
+  if (m_translationState)
+    xkb_state_unref(m_translationState);
+  if (m_translationMap)
+    xkb_keymap_unref(m_translationMap);
+  m_translationState = nullptr;
+  m_translationMap = nullptr;
+  m_translationGeneration = 0;
+  m_warnedTranslationMismatch = false;
+}
+
+bool EiKeyState::translationHasKey(uint32_t keyval) const
+{
+  if (!m_translationMap)
+    return false;
+  const auto *native = xkb_keymap_key_get_name(m_xkbKeymap, keyval);
+  const auto *translated = xkb_keymap_key_get_name(m_translationMap, keyval);
+  return native && translated && std::strcmp(native, translated) == 0;
+}
+
+void EiKeyState::refreshTranslation(const platform::WaylandKeyboardManager::Snapshot &snapshot) const
+{
+  if (snapshot.generation == m_translationGeneration || !m_pressed.empty())
+    return;
+  clearTranslation();
+  m_translationGeneration = snapshot.generation;
+  if (!snapshot.configured || snapshot.layouts.empty())
+    return;
+  const xkb_rule_names names = {
+      nullptr, snapshot.model.empty() ? nullptr : snapshot.model.c_str(), snapshot.layouts.c_str(),
+      snapshot.variants.c_str(), snapshot.options.c_str()
+  };
+  m_translationMap = xkb_keymap_new_from_names(m_xkb, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+  if (m_translationMap) {
+    m_translationState = xkb_state_new(m_translationMap);
+    const auto locked = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_LOCKED);
+    xkb_mod_mask_t translatedLocks = 0;
+    for (xkb_mod_index_t i = 0; i < xkb_keymap_num_mods(m_xkbKeymap); ++i) {
+      if (!(locked & (xkb_mod_mask_t{1} << i)))
+        continue;
+      const auto index = xkb_keymap_mod_get_index(m_translationMap, xkb_keymap_mod_get_name(m_xkbKeymap, i));
+      if (index != XKB_MOD_INVALID)
+        translatedLocks |= xkb_mod_mask_t{1} << index;
+    }
+    xkb_state_update_mask(m_translationState, 0, 0, translatedLocks, 0, 0, 0);
+  }
+}
+
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 {
-  // Get the base keysym from level 0, ignoring current modifiers.
-  // We need this because with newer xkeyboard-config, function keys use CTRL+ALT type,
-  // and xkb_state_key_get_one_sym() would return XF86_Switch_VT_* when Ctrl+Alt are
-  // pressed, instead of F1. We want to send F1 + modifiers to the server, not the
-  // VT switch action.
-  const auto shifted = xkb_keymap_num_levels_for_key(m_xkbKeymap, keyval, 0);
-  const xkb_keysym_t *syms;
-  int nsyms = xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keyval, 0, shifted, &syms);
+  return translateKey(
+      keyval, m_computer && m_computer->isPrimary() ? platform::WaylandKeyboardManager::instance().snapshot()
+                                                    : platform::WaylandKeyboardManager::Snapshot{}
+  );
+}
 
-  xkb_keysym_t xkbKeysym;
-  if (nsyms > 0) {
-    xkbKeysym = syms[0];
-  } else {
-    // Fallback to state-based lookup if level 0 has no symbols
-    xkbKeysym = xkb_state_key_get_one_sym(m_xkbState, keyval);
+KeyID EiKeyState::translateKey(uint32_t keyval, const platform::WaylandKeyboardManager::Snapshot &snapshot) const
+{
+  auto *keymap = m_xkbKeymap;
+  auto *state = m_xkbState;
+  auto layout = xkb_state_serialize_layout(state, XKB_STATE_LAYOUT_EFFECTIVE);
+  if (snapshot.configured) {
+    refreshTranslation(snapshot);
+    if (m_translationMap && !translationHasKey(keyval) && !m_warnedTranslationMismatch) {
+      LOG_WARN("desktop keycode names differ from EIS; using the compositor mapping for unmatched keys");
+      m_warnedTranslationMismatch = true;
+    }
+    if (snapshot.generation == m_translationGeneration && snapshot.group >= 0 && translationHasKey(keyval) &&
+        static_cast<xkb_layout_index_t>(snapshot.group) < xkb_keymap_num_layouts(m_translationMap)) {
+      keymap = m_translationMap;
+      state = m_translationState;
+      layout = snapshot.group;
+    }
   }
+  const auto symbolAt = [&](xkb_level_index_t level) {
+    const xkb_keysym_t *symbols = nullptr;
+    return xkb_keymap_key_get_syms_by_level(keymap, keyval, layout, level, &symbols) > 0 ? symbols[0]
+                                                                                         : XKB_KEY_NoSymbol;
+  };
+  const auto level = xkb_state_key_get_level(state, keyval, layout);
+  auto xkbKeysym = level == XKB_LEVEL_INVALID ? XKB_KEY_NoSymbol : symbolAt(level);
+  if (xkbKeysym >= XKB_KEY_XF86Switch_VT_1 && xkbKeysym <= XKB_KEY_XF86Switch_VT_12)
+    xkbKeysym = symbolAt(0);
+  if (xkbKeysym == XKB_KEY_NoSymbol)
+    xkbKeysym = symbolAt(0);
+  if (xkbKeysym == XKB_KEY_NoSymbol)
+    xkbKeysym = xkb_state_key_get_one_sym(m_xkbState, keyval);
 
   auto keysym = static_cast<KeySym>(xkbKeysym);
   KeyID keyid = XDGKeyUtil::mapKeySymToKeyID(keysym);
@@ -342,11 +419,32 @@ KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 void EiKeyState::updateXkbState(uint32_t keyval, bool isPressed)
 {
   LOG_VERBOSE("update key state: keyval=%d pressed=%i", keyval, isPressed);
+  if (isPressed)
+    m_pressed.insert(keyval);
+  else
+    m_pressed.erase(keyval);
   xkb_state_update_key(m_xkbState, keyval, isPressed ? XKB_KEY_DOWN : XKB_KEY_UP);
+  if (translationHasKey(keyval))
+    xkb_state_update_key(m_translationState, keyval, isPressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }
 
 void EiKeyState::updateLockedModifiers(xkb_mod_mask_t lockedMods)
 {
+  if (m_translationState) {
+    xkb_mod_mask_t locks = 0;
+    for (xkb_mod_index_t i = 0; i < xkb_keymap_num_mods(m_xkbKeymap); ++i) {
+      if (!(lockedMods & (xkb_mod_mask_t{1} << i)))
+        continue;
+      const auto index = xkb_keymap_mod_get_index(m_translationMap, xkb_keymap_mod_get_name(m_xkbKeymap, i));
+      if (index != XKB_MOD_INVALID)
+        locks |= xkb_mod_mask_t{1} << index;
+    }
+    xkb_state_update_mask(
+        m_translationState, xkb_state_serialize_mods(m_translationState, XKB_STATE_MODS_DEPRESSED),
+        xkb_state_serialize_mods(m_translationState, XKB_STATE_MODS_LATCHED), locks, 0, 0, 0
+    );
+  }
+
   // The compositor's lock state (Caps/Num/Scroll Lock) is authoritative; it
   // also covers locks toggled while we weren't seeing the key events.
   const auto depressedMods = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_DEPRESSED);
@@ -361,6 +459,14 @@ void EiKeyState::updateLockedModifiers(xkb_mod_mask_t lockedMods)
 
 void EiKeyState::clearStaleModifiers()
 {
+  m_pressed.clear();
+  if (m_translationState) {
+    const auto locks = xkb_state_serialize_mods(m_translationState, XKB_STATE_MODS_LOCKED);
+    xkb_state_unref(m_translationState);
+    m_translationState = xkb_state_new(m_translationMap);
+    xkb_state_update_mask(m_translationState, 0, 0, locks, 0, 0, 0);
+  }
+
   const auto lockedMods = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_LOCKED);
   const auto lockedLayout = xkb_state_serialize_layout(m_xkbState, XKB_STATE_LAYOUT_LOCKED);
 
