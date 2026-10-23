@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
@@ -10,6 +10,21 @@ if (WIN32)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(APPLE)
+  create_test(
+    NAME TISMainThreadProbe
+    DEPENDS platform
+    LIBS base arch app
+    SOURCE TISMainThreadProbe.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  create_test(
+    NAME TISReadPathsTests
+    DEPENDS platform
+    LIBS base arch app Qt::Widgets
+    SOURCE TISReadPathsTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  set_tests_properties(TISMainThreadProbe TISReadPathsTests PROPERTIES TIMEOUT 90)
   create_test(
     NAME OSXClipboardTests
     DEPENDS platform

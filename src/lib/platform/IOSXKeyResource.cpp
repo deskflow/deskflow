@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2016 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -104,12 +105,13 @@ KeyID IOSXKeyResource::getKeyID(uint8_t c)
     // get current keyboard script
     AutoTISInputSourceRef isref(nullptr, CFRelease);
     CFArrayRef langs = nullptr;
-    {
-      std::lock_guard<std::mutex> lock(g_tisMutex);
+    withTISOnMainThread([&] {
       isref = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
       if (isref)
         langs = (CFArrayRef)TISGetInputSourceProperty(isref.get(), kTISPropertyInputSourceLanguages);
-    }
+    });
+    if (!langs || CFArrayGetCount(langs) == 0)
+      return kKeyNone;
     CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
     // convert to unicode
     CFStringRef cfString = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
