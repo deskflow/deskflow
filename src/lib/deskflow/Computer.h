@@ -12,8 +12,10 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
+#include "deskflow/ShapeHole.h"
 
 #include <string>
+#include <vector>
 
 class IClipboard;
 class IPlatformComputer;
@@ -251,6 +253,21 @@ public:
   the edges of the computer, typically the center.
   */
   void getCursorCenter(int32_t &x, int32_t &y) const;
+
+  //! Get the shape holes
+  /*!
+  Returns every rectangular hole in the computer's bounding shape where no
+  screen actually exists (see IPrimaryComputer::getShapeHoles()), or an
+  empty list if there are none or if it is not supported.
+  */
+  std::vector<deskflow::ShapeHole> getShapeHoles() const;
+
+  //! Set whether to recommend a restart on monitor zone changes
+  /*!
+  Forwards to IPrimaryComputer::setRestartServerOnZoneChange() if this is
+  the primary computer, otherwise does nothing.
+  */
+  void setRestartServerOnZoneChange(bool enabled);
 
   //! Get the active modifiers
   /*!
