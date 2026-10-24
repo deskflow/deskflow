@@ -1118,6 +1118,8 @@ void EiComputer::HotKeySet::addItem(HotKeyItem item)
 
 std::uint32_t EiComputer::HotKeySet::findByMask(std::uint32_t mask) const
 {
+  mask &= ~(KeyModifierCapsLock | KeyModifierNumLock | KeyModifierScrollLock);
+
   for (const auto &item : m_set) {
     if (item.mask == mask) {
       return item.id;
