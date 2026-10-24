@@ -843,6 +843,22 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>새 클라이언트 &apos;%1&apos;이(가) 연결을 요청합니다</translation>
     </message>
     <message>
+        <source>%1 - Client Refused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;The computer at %1 tried to connect without a TLS certificate, so it was refused.&lt;/p&gt;&lt;p&gt;It may be running an older version that can&apos;t send one.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">닫다</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished">환경설정</translation>
+    </message>
+    <message>
         <source>No thanks</source>
         <translation>아니요</translation>
     </message>
