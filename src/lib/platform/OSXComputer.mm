@@ -1810,7 +1810,9 @@ void OSXComputer::waitForCarbonLoop() const
   LOG_DEBUG("waiting for carbon loop");
 
   double timeout = Arch::time() + kCarbonLoopWaitTimeout;
-  while (!m_carbonLoopReady->wait()) {
+  while (!*m_carbonLoopReady) {
+    m_carbonLoopReady->wait();
+
     if (Arch::time() > timeout) {
       LOG_DEBUG("carbon loop not ready, waiting again");
       timeout = Arch::time() + kCarbonLoopWaitTimeout;

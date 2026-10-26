@@ -420,10 +420,12 @@ void EventQueue::waitForReady() const
   double timeout = Arch::time() + 10;
   Lock lock(m_readyMutex);
 
-  while (!m_readyCondVar->wait()) {
+  while (!*m_readyCondVar) {
     if (Arch::time() > timeout) {
-      throw std::runtime_error("event queue is not ready within 5 sec");
+      throw std::runtime_error("event queue is not ready within 10 sec");
     }
+
+    m_readyCondVar->wait();
   }
 }
 
