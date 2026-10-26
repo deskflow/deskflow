@@ -206,33 +206,45 @@ void Settings::upgradeSettings()
     if (!m_settings->contains(Settings::Computer::SwitchCornerSize.arg(name)))
       m_settings->setValue(Settings::Computer::SwitchCornerSize.arg(name), switchCornerSize);
     if (!m_settings->contains(Settings::Computer::HalfDuplexCapsLock.arg(name)))
-      m_settings->setValue(Settings::Computer::HalfDuplexCapsLock.arg(name), fixTemp.at(0));
+      m_settings->setValue(Settings::Computer::HalfDuplexCapsLock.arg(name), fixTemp.value(0));
     if (!m_settings->contains(Settings::Computer::HalfDuplexNumLock.arg(name)))
-      m_settings->setValue(Settings::Computer::HalfDuplexNumLock.arg(name), fixTemp.at(1));
+      m_settings->setValue(Settings::Computer::HalfDuplexNumLock.arg(name), fixTemp.value(1));
     if (!m_settings->contains(Settings::Computer::HalfDuplexScrollLock.arg(name)))
-      m_settings->setValue(Settings::Computer::HalfDuplexScrollLock.arg(name), fixTemp.at(2));
+      m_settings->setValue(Settings::Computer::HalfDuplexScrollLock.arg(name), fixTemp.value(2));
     if (!m_settings->contains(Settings::Computer::XtestIsXineramaUnaware.arg(name)))
-      m_settings->setValue(Settings::Computer::XtestIsXineramaUnaware.arg(name), fixTemp.at(3));
+      m_settings->setValue(Settings::Computer::XtestIsXineramaUnaware.arg(name), fixTemp.value(3));
     if (!m_settings->contains(Settings::Computer::SwitchCornerTopLeft.arg(name)))
-      m_settings->setValue(Settings::Computer::SwitchCornerTopLeft.arg(name), cornerTemp.at(0));
+      m_settings->setValue(Settings::Computer::SwitchCornerTopLeft.arg(name), cornerTemp.value(0));
     if (!m_settings->contains(Settings::Computer::SwitchCornerTopRight.arg(name)))
-      m_settings->setValue(Settings::Computer::SwitchCornerTopRight.arg(name), cornerTemp.at(1));
+      m_settings->setValue(Settings::Computer::SwitchCornerTopRight.arg(name), cornerTemp.value(1));
     if (!m_settings->contains(Settings::Computer::SwitchCornerBottomLeft.arg(name)))
-      m_settings->setValue(Settings::Computer::SwitchCornerBottomLeft.arg(name), cornerTemp.at(2));
+      m_settings->setValue(Settings::Computer::SwitchCornerBottomLeft.arg(name), cornerTemp.value(2));
     if (!m_settings->contains(Settings::Computer::SwitchCornerBottomRight.arg(name)))
-      m_settings->setValue(Settings::Computer::SwitchCornerBottomRight.arg(name), cornerTemp.at(3));
+      m_settings->setValue(Settings::Computer::SwitchCornerBottomRight.arg(name), cornerTemp.value(3));
     if (!m_settings->contains(Settings::Computer::ModifierShift.arg(name)))
-      m_settings->setValue(Settings::Computer::ModifierShift.arg(name), modifierTemp.at(0));
+      m_settings->setValue(
+          Settings::Computer::ModifierShift.arg(name), modifierTemp.value(0, valueToKeyboardModifierOption(0))
+      );
     if (!m_settings->contains(Settings::Computer::ModifierCtrl.arg(name)))
-      m_settings->setValue(Settings::Computer::ModifierCtrl.arg(name), modifierTemp.at(1));
+      m_settings->setValue(
+          Settings::Computer::ModifierCtrl.arg(name), modifierTemp.value(1, valueToKeyboardModifierOption(1))
+      );
     if (!m_settings->contains(Settings::Computer::ModifierAlt.arg(name)))
-      m_settings->setValue(Settings::Computer::ModifierAlt.arg(name), modifierTemp.at(2));
+      m_settings->setValue(
+          Settings::Computer::ModifierAlt.arg(name), modifierTemp.value(2, valueToKeyboardModifierOption(2))
+      );
     if (!m_settings->contains(Settings::Computer::ModifierMeta.arg(name)))
-      m_settings->setValue(Settings::Computer::ModifierMeta.arg(name), modifierTemp.at(3));
+      m_settings->setValue(
+          Settings::Computer::ModifierMeta.arg(name), modifierTemp.value(3, valueToKeyboardModifierOption(3))
+      );
     if (!m_settings->contains(Settings::Computer::ModifierSuper.arg(name)))
-      m_settings->setValue(Settings::Computer::ModifierSuper.arg(name), modifierTemp.at(4));
+      m_settings->setValue(
+          Settings::Computer::ModifierSuper.arg(name), modifierTemp.value(4, valueToKeyboardModifierOption(4))
+      );
     if (!m_settings->contains(Settings::Computer::ModifierAltGr.arg(name)))
-      m_settings->setValue(Settings::Computer::ModifierAltGr.arg(name), modifierTemp.at(5));
+      m_settings->setValue(
+          Settings::Computer::ModifierAltGr.arg(name), modifierTemp.value(5, valueToKeyboardModifierOption(5))
+      );
     if (!m_settings->contains(Settings::Computer::Aliases.arg(name))) {
       m_settings->setValue(Settings::Computer::Aliases.arg(name), aliases);
     }
