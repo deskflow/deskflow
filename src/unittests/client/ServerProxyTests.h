@@ -19,6 +19,9 @@ private Q_SLOTS:
   void handleKeepAliveAlarm_timeout_queuesDisconnectRequest();
   void handleData_incompleteMessage_queuesDisconnectRequest();
   void parseHandshakeMessage_protocolError_queuesRefusalRequest();
+  void onClipboardChanged_largeClipboard_sendsOneChunkPerFlush();
+  void onClipboardChanged_otherClipboardInFlight_waitsForTransferToEnd();
+  void onClipboardChanged_sameClipboardInFlight_restartsTransfer();
 
 private:
   Log m_log;

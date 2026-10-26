@@ -662,6 +662,36 @@ void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString
     Q_EMIT peerFingerprint(args);
   } else if (command == "missingKeyboardLayouts") {
     Q_EMIT missingKeyboardLayouts(args);
+  } else if (command == "clipboardSending") {
+    bool ok = false;
+    const auto bytes = args.section(',', 0, 0).toLongLong(&ok);
+    if (ok) {
+      Q_EMIT clipboardSending(bytes, args.section(',', 1));
+    } else {
+      qWarning("core ipc got invalid clipboard sending args: %s", args.toUtf8().constData());
+    }
+  } else if (command == "clipboardSent") {
+    Q_EMIT clipboardSent(args);
+  } else if (command == "clipboardReceiving") {
+    bool ok = false;
+    const auto bytes = args.section(',', 0, 0).toLongLong(&ok);
+    if (ok) {
+      Q_EMIT clipboardReceiving(bytes, args.section(',', 1));
+    } else {
+      qWarning("core ipc got invalid clipboard receiving args: %s", args.toUtf8().constData());
+    }
+  } else if (command == "clipboardReceived") {
+    Q_EMIT clipboardReceived(args);
+  } else if (command == "clipboardOverLimit") {
+    bool bytesOk = false;
+    bool limitOk = false;
+    const auto bytes = args.section(',', 0, 0).toLongLong(&bytesOk);
+    const auto limit = args.section(',', 1, 1).toLongLong(&limitOk);
+    if (bytesOk && limitOk) {
+      Q_EMIT clipboardOverLimit(bytes, limit);
+    } else {
+      qWarning("core ipc got invalid clipboard over limit args: %s", args.toUtf8().constData());
+    }
   }
 }
 

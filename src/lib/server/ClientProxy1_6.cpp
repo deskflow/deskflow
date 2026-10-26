@@ -9,7 +9,7 @@
 #include "base/Log.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ProtocolUtil.h"
-#include "deskflow/StreamChunker.h"
+#include "deskflow/ipc/CoreIpc.h"
 #include "io/IStream.h"
 #include "server/Server.h"
 
@@ -19,16 +19,9 @@
 
 ClientProxy1_6::ClientProxy1_6(const std::string &name, deskflow::IStream *stream, Server *server, IEventQueue *events)
     : ClientProxy1_5(name, stream, server, events),
-      m_events(events)
+      m_events(events),
+      m_clipboardSender(events, getStream(), QString::fromStdString(name))
 {
-  m_events->addHandler(EventTypes::ClipboardSending, this, [this](const auto &e) {
-    ClipboardChunk::send(getStream(), e.getDataObject());
-  });
-}
-
-ClientProxy1_6::~ClientProxy1_6()
-{
-  m_events->removeHandler(EventTypes::ClipboardSending, this);
 }
 
 void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
@@ -41,11 +34,15 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
 
     std::string data = m_clipboard[id].m_clipboard.marshall();
 
-    size_t size = data.size();
     LOG_DEBUG("sending clipboard %d to \"%s\"", id, getName().c_str());
 
-    StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
+    m_clipboardSender.sendClipboard(std::move(data), id, 0);
   }
+}
+
+void ClientProxy1_6::finishClipboardTransfers()
+{
+  m_clipboardSender.sendRemaining();
 }
 
 bool ClientProxy1_6::recvClipboard()
@@ -60,17 +57,17 @@ bool ClientProxy1_6::recvClipboard()
 
   if (r == TransferState::Started) {
     size_t size = ClipboardChunk::getExpectedSize(m_clipboardChunkState);
-    LOG_DEBUG("receiving clipboard %d size=%zu", id, size);
-  } else if (r == TransferState::Finished) {
-    LOG(
-        (CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%zu", getName().c_str(), id, seq,
-         m_clipboardDataCached.size())
+    ipcSendToClient(
+        QStringLiteral("clipboardReceiving"), QStringLiteral("%1,%2").arg(size).arg(QString::fromStdString(getName()))
     );
+  } else if (r == TransferState::Finished) {
+    LOG_DEBUG("received clipboard %d from \"%s\", sequence: %u", id, getName().c_str(), seq);
     // save clipboard
     m_clipboard[id].m_clipboard.unmarshall(m_clipboardDataCached, 0);
     m_clipboard[id].m_sequenceNumber = seq;
     m_clipboardDataCached.clear();
     m_clipboardDataCached.shrink_to_fit();
+    ipcSendToClient(QStringLiteral("clipboardReceived"), QString::fromStdString(getName()));
 
     // notify
     auto *info = new ClipboardInfo;

@@ -77,6 +77,7 @@ private:
   int secureConnect(int s);
   bool showCertificate() const;
   void checkResult(int n, int &retry);
+  bool hasPendingSecureData();
   void disconnect();
   bool verifyCertFingerprint(const QString &FingerprintDatabasePath) const;
 

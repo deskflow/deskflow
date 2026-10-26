@@ -22,6 +22,8 @@ private Q_SLOTS:
   void assembleRefusesExpectedSizeBeyondLimit();
   void assembleDiscardsOversizeTransferThenAcceptsNext();
   void assembleAcceptsStartDuringOversizeTransfer();
+  void describeTransferUsesMillisecondsUnderOneSecond();
+  void describeTransferUsesSecondsFromOneSecond();
 
 private:
   Log m_log;
