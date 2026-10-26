@@ -103,6 +103,8 @@ void ServerConfigDialog::save()
     Settings::setValue(Settings::Computer::Aliases.arg(computerName), computer.aliases());
     Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
   }
+  // Write the computer list now too, or it keeps computers whose settings were just removed until the app quits.
+  m_serverConfig.commit();
   Settings::removeUnknownComputers(computerNames);
   QDialog::accept();
 }
