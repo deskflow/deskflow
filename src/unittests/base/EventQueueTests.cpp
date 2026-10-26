@@ -55,4 +55,13 @@ void EventQueueTests::dispatchEvent_handlerRemovesItself_keepsHandlerAliveUntilR
   QVERIFY(handlerLifetimeObserver.expired());
 }
 
+void EventQueueTests::waitForReady_loopSignalledBeforeWait_returns()
+{
+  EventQueue events;
+  events.addEvent(Event(EventTypes::Quit));
+  events.loop();
+
+  events.waitForReady();
+}
+
 QTEST_MAIN(EventQueueTests)
