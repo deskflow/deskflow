@@ -200,6 +200,12 @@ void Settings::upgradeSettings()
     m_settings->endArray();
     m_settings->endGroup();
 
+    // A listed computer can have none of these arrays saved
+    fixTemp.resize(4);
+    cornerTemp.resize(4);
+    while (modifierTemp.size() < 6)
+      modifierTemp.append(valueToKeyboardModifierOption(static_cast<int>(modifierTemp.size())));
+
     // Write Settings
     if (!m_settings->contains(Settings::Computer::Name.arg(name)))
       m_settings->setValue(Settings::Computer::Name.arg(name), name);
