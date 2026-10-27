@@ -241,6 +241,7 @@ void OSXKeyState::init()
   m_controlRightPressed = false;
   m_altRightPressed = false;
   m_superRightPressed = false;
+  m_rightSideModifiers = 0;
 
   // build virtual key map
   for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]); ++i) {
@@ -894,23 +895,41 @@ bool OSXKeyState::mapDeskflowHotKeyToMac(
   return true;
 }
 
-void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask)
+void OSXKeyState::handleModifierKeys(
+    void *target, KeyModifierMask oldMask, KeyModifierMask newMask, uint32_t virtualKey
+)
 {
   // compute changed modifiers
   KeyModifierMask changed = (oldMask ^ newMask);
 
-  // synthesize changed modifier keys
+  // synthesize changed modifier keys. the modifier mask does not say which
+  // side changed, so use the virtual key of the event to keep a right-hand
+  // modifier from being sent as its left-hand counterpart. with both sides
+  // held the mask only changes on the last release, whose virtual key need
+  // not be the side that was pressed, so a release uses the side that was sent.
+  const auto handleSidedModifierKey = [&](KeyModifierMask modifier, uint32_t leftVK, KeyID leftID, uint32_t rightVK,
+                                          KeyID rightID) {
+    const bool down = (newMask & modifier) != 0;
+    const bool right = down ? (virtualKey == rightVK) : (m_rightSideModifiers & modifier) != 0;
+    if (down && right) {
+      m_rightSideModifiers |= modifier;
+    } else {
+      m_rightSideModifiers &= ~modifier;
+    }
+    handleModifierKey(target, right ? rightVK : leftVK, right ? rightID : leftID, down, newMask);
+  };
+
   if ((changed & KeyModifierShift) != 0) {
-    handleModifierKey(target, s_shiftVK, kKeyShift_L, (newMask & KeyModifierShift) != 0, newMask);
+    handleSidedModifierKey(KeyModifierShift, s_shiftVK, kKeyShift_L, s_shiftRightVK, kKeyShift_R);
   }
   if ((changed & KeyModifierControl) != 0) {
-    handleModifierKey(target, s_controlVK, kKeyControl_L, (newMask & KeyModifierControl) != 0, newMask);
+    handleSidedModifierKey(KeyModifierControl, s_controlVK, kKeyControl_L, s_controlRightVK, kKeyControl_R);
   }
   if ((changed & KeyModifierAlt) != 0) {
-    handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
+    handleSidedModifierKey(KeyModifierAlt, s_altVK, kKeyAlt_L, s_altRightVK, kKeyAlt_R);
   }
   if ((changed & KeyModifierSuper) != 0) {
-    handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
+    handleSidedModifierKey(KeyModifierSuper, s_superVK, kKeySuper_L, s_superRightVK, kKeySuper_R);
   }
   if ((changed & KeyModifierCapsLock) != 0) {
     handleModifierKey(target, s_capsLockVK, kKeyCapsLock, (newMask & KeyModifierCapsLock) != 0, newMask);
