@@ -41,6 +41,13 @@ elseif(UNIX)
       SOURCE EiKeyStateTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
+    create_test(
+      NAME WlClipboardBridgeTests
+      DEPENDS platform
+      LIBS base arch Qt6::Gui
+      SOURCE WlClipboardBridgeTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
   endif()
 
   if (BUILD_X11_SUPPORT)

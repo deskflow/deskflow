@@ -19,6 +19,7 @@
 #include <climits>
 #include <libei.h>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <vector>
 
@@ -35,6 +36,7 @@ class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
 class PortalGlobalShortcuts;
+class WlClipboardBridge;
 class EiClipboard;
 
 using ClipboardInfo = IComputer::ClipboardInfo;
@@ -136,6 +138,8 @@ private:
   void stopEmulating() const;
   void cancelIdleEmulationTimer() const;
   void updatePortalGlobalShortcuts();
+  EiClipboard *localClipboard(ClipboardID id) const;
+  void handleWaylandClipboardChanged(const std::map<std::string, std::string> &data);
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
@@ -158,6 +162,7 @@ private:
 
   // clipboard stuff
   EiClipboard *m_clipboard = nullptr;
+  std::unique_ptr<WlClipboardBridge> m_wlClipboard;
   size_t m_maximumClipboardSize = INT_MAX;
 
   std::vector<ei_device *> m_eiDevices;

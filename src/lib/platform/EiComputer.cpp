@@ -20,6 +20,7 @@
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#include "platform/WlClipboardBridge.h"
 
 #include <algorithm>
 #include <bit>
@@ -89,12 +90,23 @@ EiComputer::EiComputer(bool isPrimary, IEventQueue *events, bool usePortal)
   if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     m_powerManager.disableSleep();
   }
+
+  // The Clipboard portal is missing on some compositors (e.g. Hyprland), use wl-clipboard instead
+  if (WlClipboardBridge::isAvailable()) {
+    m_wlClipboard = std::make_unique<WlClipboardBridge>([this](const WlClipboardBridge::MimeData &data) {
+      handleWaylandClipboardChanged(data);
+    });
+    m_wlClipboard->start();
+  }
 }
 
 EiComputer::~EiComputer()
 {
   m_events->adoptBuffer(nullptr);
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
+
+  // Stop the watcher thread before the clipboards it writes to are deleted
+  m_wlClipboard.reset();
 
   cancelIdleEmulationTimer();
 
@@ -180,21 +192,46 @@ void *EiComputer::getEventTarget() const
 
 bool EiComputer::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  // If using portal input capture, get clipboard from there
-  if (m_portalInputCapture) {
-    const auto sourceClipboard = m_portalInputCapture->getClipboard(id);
-    if (!sourceClipboard) {
-      return false;
-    }
-    return IClipboard::copy(clipboard, sourceClipboard);
-  }
-
-  // Otherwise use our own clipboard
-  if (!m_clipboard) {
+  const auto sourceClipboard = localClipboard(id);
+  if (!sourceClipboard) {
     return false;
   }
+  return IClipboard::copy(clipboard, sourceClipboard);
+}
 
-  return IClipboard::copy(clipboard, m_clipboard);
+EiClipboard *EiComputer::localClipboard(ClipboardID id) const
+{
+  // If using portal input capture, it owns the clipboard
+  if (m_portalInputCapture) {
+    return m_portalInputCapture->getClipboard(id);
+  }
+  return id == kClipboardClipboard ? m_clipboard : nullptr;
+}
+
+void EiComputer::handleWaylandClipboardChanged(const WlClipboardBridge::MimeData &data)
+{
+  size_t total = 0;
+  for (const auto &[mime, bytes] : data) {
+    total += bytes.size();
+  }
+  if (total > m_maximumClipboardSize * 1024) {
+    LOG_WARN("wayland clipboard data too large to share: %zu bytes", total);
+    return;
+  }
+
+  auto clipboard = localClipboard(kClipboardClipboard);
+  if (!clipboard) {
+    return;
+  }
+
+  clipboard->open(0);
+  clipboard->empty();
+  const bool added = WlClipboardBridge::toClipboard(data, clipboard);
+  clipboard->close();
+
+  if (added) {
+    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+  }
 }
 
 void EiComputer::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
@@ -488,24 +525,23 @@ bool EiComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
     return false;
   }
 
-  // If using portal input capture, set clipboard there
-  if (m_portalInputCapture) {
-    IClipboard *targetClipboard = m_portalInputCapture->getClipboard(id);
-    if (!targetClipboard) {
-      return false;
-    }
-    return IClipboard::copy(targetClipboard, clipboard);
-  }
-
-  // Otherwise use our own clipboard
-  if (!m_clipboard) {
+  IClipboard *targetClipboard = localClipboard(id);
+  if (!targetClipboard) {
     return false;
   }
 
-  bool ok = IClipboard::copy(m_clipboard, clipboard);
+  bool ok = IClipboard::copy(targetClipboard, clipboard);
 
-  if (ok && m_portalRemoteDesktop && id == kClipboardClipboard) {
+  if (ok && !m_portalInputCapture && m_portalRemoteDesktop && id == kClipboardClipboard) {
     m_portalRemoteDesktop->claimClipboard();
+  }
+
+  if (ok && m_wlClipboard && id == kClipboardClipboard && clipboard->open(0)) {
+    const auto [mime, data] = WlClipboardBridge::fromClipboard(clipboard);
+    clipboard->close();
+    if (!mime.empty()) {
+      m_wlClipboard->setData(mime, data);
+    }
   }
 
   return ok;

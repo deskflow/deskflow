@@ -161,6 +161,8 @@ elseif(UNIX)
       EiEventQueueBuffer.h
       EiKeyState.cpp
       EiKeyState.h
+      WlClipboardBridge.cpp
+      WlClipboardBridge.h
     )
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
