@@ -19,6 +19,15 @@ private Q_SLOTS:
   void computeLinks_threeInRow_onlyNearestLinked();
   void computeLinks_partlyCovered_restLinkedToFarther();
   void computeLinks_cornerTouch_noLinks();
+  void computeLinks_manual_replacesBothWays();
+  void computeLinks_manualIntoOtherLink_clipped();
+  void computeLinks_manualIntoFreeEdge_widened();
+  void computeLinks_manualToMissingComputer_ignored();
+  void computeLinks_manualToOtherSide_ignored();
+  void computeLinks_manualPastNearerComputer_ignored();
+  void computeLinks_laterManualSamePair_wins();
+  void parseLink_written_roundTrips();
+  void parseLink_outOfRange_nullopt();
   void snap_nearRightEdge_flushAndAligned();
   void snap_nearTopEdge_flushAndAligned();
   void snap_farFromOthers_unchanged();

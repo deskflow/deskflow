@@ -10,11 +10,13 @@
 #include "dialogs/ComputerSettingsDialog.h"
 #include "gui/config/ComputerList.h"
 
+#include <QContextMenuEvent>
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QGraphicsRectItem>
 #include <QHBoxLayout>
 #include <QKeyEvent>
+#include <QMenu>
 #include <QMimeData>
 #include <QPainter>
 #include <QStyle>
@@ -33,6 +35,9 @@ constexpr int kSnapPixels = 12;
 constexpr int kMarginPixels = 16;
 // Width in view pixels of the borders that resize a computer.
 constexpr int kHandlePixels = 14;
+// Distance in view pixels within which a ray corner can be grabbed, and the radius it is drawn with.
+constexpr int kRayCornerPixels = 8;
+constexpr int kRayCornerRadius = 4;
 constexpr QSize kMinimumSize{32, 18};
 // Computers are about 100 units across, this leaves plenty of room to scroll around them.
 constexpr QRectF kCanvas{-1000, -1000, 2000, 2000};
@@ -176,6 +181,7 @@ void ComputerLayoutView::rebuild()
   if (m_computers == nullptr)
     return;
 
+  dropStaleManualLinks();
   for (int i = 0; i < m_computers->size(); i++) {
     const auto &computer = m_computers->at(i);
     if (!computer.isNull())
@@ -185,10 +191,10 @@ void ComputerLayoutView::rebuild()
     fit();
   else
     growSceneRect(transform().m11());
-  updateLinkLines();
+  updateLinkRays();
 }
 
-void ComputerLayoutView::updateLinkLines()
+void ComputerLayoutView::updateLinkRays()
 {
   // Taken from the items rather than the stored geometry so the lines follow a computer while it is dragged.
   QMap<QString, QRect> rects;
@@ -197,37 +203,145 @@ void ComputerLayoutView::updateLinkLines()
       rects.insert(computer->name(), QRectF(computer->pos(), computer->rect().size()).toRect());
   }
 
-  m_linkLines.clear();
-  for (const auto &link : computeLinks(rects)) {
-    const QRectF r = rects.value(link.from);
-    const auto along = [](double start, double length, double percent) { return start + length * percent / 100; };
-    switch (link.side) {
-    case Side::Right:
-    case Side::Left: {
-      const double x = link.side == Side::Right ? r.x() + r.width() : r.x();
-      m_linkLines.append({x, along(r.y(), r.height(), link.fromStart), x, along(r.y(), r.height(), link.fromEnd)});
-      break;
-    }
-    case Side::Up:
-    case Side::Down: {
-      const double y = link.side == Side::Down ? r.y() + r.height() : r.y();
-      m_linkLines.append({along(r.x(), r.width(), link.fromStart), y, along(r.x(), r.width(), link.fromEnd), y});
-      break;
-    }
+  QList<Link> manual;
+  if (m_computers != nullptr) {
+    for (const auto &computer : *m_computers) {
+      for (const auto &text : computer.links()) {
+        if (const auto link = parseLink(computer.name(), text); link)
+          manual.append(*link);
+      }
     }
   }
+
+  m_linkRays.clear();
+  const auto along = [](double start, double length, double percent) { return start + length * percent / 100; };
+  for (const auto &link : computeLinks(rects, manual)) {
+    // Every link is also returned the other way round as Left or Up, one ray per pair is enough.
+    if (link.side != Side::Right && link.side != Side::Down)
+      continue;
+    const QRectF from = rects.value(link.from);
+    const QRectF to = rects.value(link.to);
+    QPolygonF ray;
+    if (link.side == Side::Right) {
+      ray << QPointF(from.right(), along(from.y(), from.height(), link.fromStart))
+          << QPointF(to.left(), along(to.y(), to.height(), link.toStart))
+          << QPointF(to.left(), along(to.y(), to.height(), link.toEnd))
+          << QPointF(from.right(), along(from.y(), from.height(), link.fromEnd));
+    } else {
+      ray << QPointF(along(from.x(), from.width(), link.fromStart), from.bottom())
+          << QPointF(along(to.x(), to.width(), link.toStart), to.top())
+          << QPointF(along(to.x(), to.width(), link.toEnd), to.top())
+          << QPointF(along(from.x(), from.width(), link.fromEnd), from.bottom());
+    }
+    const bool isManual = std::ranges::any_of(manual, [&link](const Link &m) {
+      return (m.from == link.from && m.to == link.to) || (m.from == link.to && m.to == link.from);
+    });
+    m_linkRays.append({link, ray, isManual});
+  }
   viewport()->update();
+}
+
+void ComputerLayoutView::dropStaleManualLinks()
+{
+  // Keep links set by hand the way computeLinks clipped them to the current layout, and forget those it left out, so
+  // moving computers back doesn't bring back what no longer fits.
+  QList<Link> manual;
+  for (const auto &computer : std::as_const(*m_computers)) {
+    for (const auto &text : computer.links()) {
+      if (const auto link = parseLink(computer.name(), text); link)
+        manual.append(*link);
+    }
+  }
+  const auto links = computeLinks(m_computers->rects(), manual);
+  for (auto &computer : *m_computers) {
+    QStringList kept;
+    for (const auto &text : computer.links()) {
+      const auto link = parseLink(computer.name(), text);
+      if (!link)
+        continue;
+      const auto clipped = std::ranges::find_if(links, [&link](const Link &l) {
+        return l.from == link->from && l.side == link->side && l.to == link->to;
+      });
+      if (clipped != links.end() && !kept.contains(linkToString(*clipped)))
+        kept.append(linkToString(*clipped));
+    }
+    computer.setLinks(kept);
+  }
+}
+
+void ComputerLayoutView::setManualLink(const Link &link)
+{
+  removeManualLink(link.from, link.to);
+  auto from = std::ranges::find(*m_computers, link.from, &Computer::name);
+  auto links = from->links();
+  links.append(linkToString(link));
+  from->setLinks(links);
+}
+
+void ComputerLayoutView::removeManualLink(const QString &a, const QString &b)
+{
+  for (auto &computer : *m_computers) {
+    const QString other = computer.name() == a ? b : (computer.name() == b ? a : QString());
+    if (other.isEmpty())
+      continue;
+    QStringList kept;
+    for (const auto &text : computer.links()) {
+      if (const auto link = parseLink(computer.name(), text); !link || link->to != other)
+        kept.append(text);
+    }
+    computer.setLinks(kept);
+  }
 }
 
 void ComputerLayoutView::drawForeground(QPainter *painter, const QRectF &rect)
 {
   QGraphicsView::drawForeground(painter, rect);
-  // Green so links don't look like the highlighted server border; cosmetic so the width is the same at any zoom.
-  QPen pen(QColor(0x34, 0xc7, 0x59), 3);
-  pen.setCosmetic(true);
-  pen.setCapStyle(Qt::FlatCap);
-  painter->setPen(pen);
-  painter->drawLines(m_linkLines);
+  // No blue so links don't look like the highlighted server border, and the next ray gets the next color so
+  // several links on one edge can be told apart.
+  static const QList<QColor> colors = {
+      QColor(0x34, 0xc7, 0x59), QColor(0xff, 0x95, 0x00), QColor(0xaf, 0x52, 0xde), QColor(0xff, 0x2d, 0x55),
+      QColor(0x30, 0xb0, 0xc7)
+  };
+  const double cornerRadius = kRayCornerRadius / transform().m11();
+  for (qsizetype i = 0; i < m_linkRays.size(); ++i) {
+    const auto &ray = m_linkRays.at(i).polygon;
+    QColor color = colors.at(i % colors.size());
+    // Cosmetic so the edges are the same width at any zoom, dashed when the link was set by hand.
+    QPen pen(color, 3, m_linkRays.at(i).manual ? Qt::DashLine : Qt::SolidLine);
+    pen.setCosmetic(true);
+    pen.setCapStyle(Qt::FlatCap);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(color);
+    for (const auto &corner : ray)
+      painter->drawEllipse(corner, cornerRadius, cornerRadius);
+    color.setAlpha(80);
+    painter->setBrush(color);
+    painter->drawPolygon(ray);
+    painter->setPen(pen);
+    painter->drawLine(ray.at(0), ray.at(3));
+    painter->drawLine(ray.at(1), ray.at(2));
+  }
+}
+
+void ComputerLayoutView::contextMenuEvent(QContextMenuEvent *event)
+{
+  const auto at = mapToScene(event->pos());
+  const double margin = kRayCornerPixels / transform().m11();
+  const auto ray = std::ranges::find_if(m_linkRays, [&](const LinkRay &r) {
+    return r.manual && r.polygon.boundingRect().adjusted(-margin, -margin, margin, margin).contains(at);
+  });
+  if (ray == m_linkRays.end()) {
+    QGraphicsView::contextMenuEvent(event);
+    return;
+  }
+
+  QMenu menu(this);
+  menu.addAction(tr("Reset link to automatic"), this, [this, link = ray->link] {
+    removeManualLink(link.from, link.to);
+    updateLinkRays();
+    Q_EMIT computersChanged();
+  });
+  menu.exec(event->globalPos());
 }
 
 void ComputerLayoutView::fit()
@@ -387,6 +501,17 @@ void ComputerLayoutView::zoomBy(double factor)
 void ComputerLayoutView::mousePressEvent(QMouseEvent *event)
 {
   m_autoFit = false;
+  if (event->button() == Qt::LeftButton) {
+    for (const auto &ray : std::as_const(m_linkRays)) {
+      for (qsizetype corner = 0; corner < ray.polygon.size(); ++corner) {
+        if (QLineF(mapFromScene(ray.polygon.at(corner)), event->position()).length() <= kRayCornerPixels) {
+          m_adjusted = ray.link;
+          m_adjustedCorner = corner;
+          return;
+        }
+      }
+    }
+  }
   auto *item = event->button() == Qt::LeftButton ? itemAt(event->pos()) : nullptr;
   if (item != nullptr && resizeEdges(item, event->pos())) {
     m_resized = item;
@@ -399,6 +524,41 @@ void ComputerLayoutView::mousePressEvent(QMouseEvent *event)
 
 void ComputerLayoutView::mouseMoveEvent(QMouseEvent *event)
 {
+  if (m_adjusted) {
+    // Corners 0 and 3 are on the first computer's edge, 1 and 2 on the other's.
+    const bool onFrom = m_adjustedCorner == 0 || m_adjustedCorner == 3;
+    const QRect r = m_computers->rects().value(onFrom ? m_adjusted->from : m_adjusted->to);
+    const auto cursor = mapToScene(event->pos());
+    const bool vertical = m_adjusted->side == Side::Right || m_adjusted->side == Side::Left;
+    const double at = std::clamp(
+        std::round(vertical ? (cursor.y() - r.y()) * 100 / r.height() : (cursor.x() - r.x()) * 100 / r.width()), 0.0,
+        100.0
+    );
+    auto &link = *m_adjusted;
+    switch (m_adjustedCorner) {
+    case 0:
+      link.fromStart = std::min(at, link.fromEnd - 1);
+      break;
+    case 1:
+      link.toStart = std::min(at, link.toEnd - 1);
+      break;
+    case 2:
+      link.toEnd = std::max(at, link.toStart + 1);
+      break;
+    default:
+      link.fromEnd = std::max(at, link.fromStart + 1);
+    }
+    setManualLink(link);
+    updateLinkRays();
+    // Follow the ray as computeLinks clipped it, so dragging past the end of the edge doesn't build up.
+    const auto ray = std::ranges::find_if(m_linkRays, [&link](const LinkRay &r) {
+      return r.link.from == link.from && r.link.side == link.side && r.link.to == link.to;
+    });
+    if (ray != m_linkRays.end())
+      link = ray->link;
+    return;
+  }
+
   if (m_resized != nullptr) {
     const auto cursor = mapToScene(event->pos());
     QRectF rect(m_resized->pos(), m_resized->rect().size());
@@ -412,7 +572,7 @@ void ComputerLayoutView::mouseMoveEvent(QMouseEvent *event)
       rect.setBottom(std::max(cursor.y(), rect.top() + kMinimumSize.height()));
     m_resized->setPos(rect.topLeft());
     m_resized->setRect(QRectF(QPointF(), rect.size()));
-    updateLinkLines();
+    updateLinkRays();
     return;
   }
 
@@ -425,11 +585,15 @@ void ComputerLayoutView::mouseMoveEvent(QMouseEvent *event)
     item->setCursor(resizeCursor(resizeEdges(item, event->pos())));
   QGraphicsView::mouseMoveEvent(event);
   if (m_dragged != nullptr)
-    updateLinkLines();
+    updateLinkRays();
 }
 
 void ComputerLayoutView::mouseReleaseEvent(QMouseEvent *event)
 {
+  if (std::exchange(m_adjusted, std::nullopt)) {
+    Q_EMIT computersChanged();
+    return;
+  }
   if (auto *resized = std::exchange(m_resized, nullptr); resized != nullptr) {
     finishResize(resized);
     return;

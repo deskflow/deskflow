@@ -8,6 +8,8 @@
 
 #include "common/LayoutLinks.h"
 
+#include <algorithm>
+
 using namespace deskflow::layout;
 
 void LayoutLinksTests::computeLinks_sideBySideSameHeight_fullEdgeLinks()
@@ -120,6 +122,92 @@ void LayoutLinksTests::computeLinks_cornerTouch_noLinks()
   const auto links = computeLinks(placed);
 
   QVERIFY(links.isEmpty());
+}
+
+void LayoutLinksTests::computeLinks_manual_replacesBothWays()
+{
+  const QMap<QString, QRect> placed = {{"a", QRect(0, 0, 100, 100)}, {"b", QRect(100, 0, 100, 100)}};
+
+  const auto links = computeLinks(placed, {{"a", Side::Right, 0, 50, "b", 0, 100}});
+
+  QCOMPARE(links, QList<Link>({{"a", Side::Right, 0, 50, "b", 0, 100}, {"b", Side::Left, 0, 100, "a", 0, 50}}));
+}
+
+void LayoutLinksTests::computeLinks_manualIntoOtherLink_clipped()
+{
+  const QMap<QString, QRect> placed = {
+      {"a", QRect(0, 0, 100, 100)}, {"b", QRect(100, 0, 100, 50)}, {"c", QRect(100, 50, 100, 50)}
+  };
+
+  const auto links = computeLinks(placed, {{"a", Side::Right, 0, 75, "b", 20, 100}});
+
+  QList<Link> fromA;
+  std::ranges::copy_if(links, std::back_inserter(fromA), [](const Link &l) { return l.from == "a"; });
+  QCOMPARE(fromA, QList<Link>({{"a", Side::Right, 0, 50, "b", 20, 100}, {"a", Side::Right, 50, 100, "c", 0, 100}}));
+}
+
+void LayoutLinksTests::computeLinks_manualIntoFreeEdge_widened()
+{
+  const QMap<QString, QRect> placed = {{"a", QRect(0, 0, 100, 100)}, {"b", QRect(100, 50, 100, 100)}};
+
+  const auto links = computeLinks(placed, {{"a", Side::Right, 0, 100, "b", 0, 100}});
+
+  QCOMPARE(links, QList<Link>({{"a", Side::Right, 0, 100, "b", 0, 100}, {"b", Side::Left, 0, 100, "a", 0, 100}}));
+}
+
+void LayoutLinksTests::computeLinks_manualToMissingComputer_ignored()
+{
+  const QMap<QString, QRect> placed = {{"a", QRect(0, 0, 100, 100)}, {"b", QRect(100, 0, 100, 100)}};
+
+  const auto links = computeLinks(placed, {{"a", Side::Right, 0, 50, "gone", 0, 100}});
+
+  QCOMPARE(links, computeLinks(placed));
+}
+
+void LayoutLinksTests::computeLinks_manualToOtherSide_ignored()
+{
+  const QMap<QString, QRect> placed = {{"a", QRect(200, 0, 100, 100)}, {"b", QRect(100, 0, 100, 100)}};
+
+  const auto links = computeLinks(placed, {{"a", Side::Right, 0, 50, "b", 0, 100}});
+
+  QCOMPARE(links, computeLinks(placed));
+}
+
+void LayoutLinksTests::computeLinks_manualPastNearerComputer_ignored()
+{
+  const QMap<QString, QRect> placed = {
+      {"a", QRect(0, 0, 100, 100)}, {"b", QRect(100, 0, 100, 100)}, {"c", QRect(200, 0, 100, 100)}
+  };
+
+  const auto links = computeLinks(placed, {{"a", Side::Right, 0, 50, "c", 0, 100}});
+
+  QCOMPARE(links, computeLinks(placed));
+}
+
+void LayoutLinksTests::computeLinks_laterManualSamePair_wins()
+{
+  const QMap<QString, QRect> placed = {{"a", QRect(0, 0, 100, 100)}, {"b", QRect(100, 0, 100, 100)}};
+
+  const auto links =
+      computeLinks(placed, {{"a", Side::Right, 0, 40, "b", 0, 100}, {"b", Side::Left, 0, 100, "a", 10, 30}});
+
+  QCOMPARE(links, QList<Link>({{"a", Side::Right, 10, 30, "b", 0, 100}, {"b", Side::Left, 0, 100, "a", 10, 30}}));
+}
+
+void LayoutLinksTests::parseLink_written_roundTrips()
+{
+  const Link link = {"a", Side::Up, 12.5, 100, "my computer", 0, 40};
+
+  QCOMPARE(linkToString(link), "up(12.5,100) = my computer(0,40)");
+  QCOMPARE(parseLink("a", linkToString(link)), link);
+  QCOMPARE(parseLink("a", " up ( 12.5 , 100 )=my computer( 0,40 ) "), link);
+}
+
+void LayoutLinksTests::parseLink_outOfRange_nullopt()
+{
+  QCOMPARE(parseLink("a", "right(50,20) = b(0,100)"), std::nullopt);
+  QCOMPARE(parseLink("a", "right(0,100) = b(0,101)"), std::nullopt);
+  QCOMPARE(parseLink("a", "sideways(0,100) = b(0,100)"), std::nullopt);
 }
 
 void LayoutLinksTests::snap_nearRightEdge_flushAndAligned()

@@ -199,4 +199,19 @@ void ServerConfigTests::read_touchingGeometry_linked()
   QCOMPARE(config.getNeighbor("a", Direction::Right, 0.25f, nullptr), "");
 }
 
+void ServerConfigTests::read_manualLink_replacesGeometry()
+{
+  placeComputer("c", QRect(1000, 0, 100, 100));
+  placeComputer("d", QRect(1100, 0, 100, 100));
+  Settings::setValue(Settings::Computer::Links.arg("c"), QStringList{"right(0,50) = d(0,100)"});
+  Config config(nullptr);
+  std::istringstream empty;
+
+  empty >> config;
+
+  QCOMPARE(config.getNeighbor("c", Direction::Right, 0.25f, nullptr), "d");
+  QCOMPARE(config.getNeighbor("c", Direction::Right, 0.75f, nullptr), "");
+  QCOMPARE(config.getNeighbor("d", Direction::Left, 0.75f, nullptr), "c");
+}
+
 QTEST_MAIN(ServerConfigTests)

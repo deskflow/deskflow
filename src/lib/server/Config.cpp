@@ -47,13 +47,21 @@ Direction toDirection(deskflow::layout::Side side)
 void connectByGeometry(Config &config, const QStringList &computers)
 {
   QMap<QString, QRect> placed;
+  QList<deskflow::layout::Link> manual;
   for (const auto &computer : computers) {
     const auto geometry = Settings::value(Settings::Computer::Geometry.arg(computer)).toRect();
-    if (!computer.isEmpty() && geometry.isValid())
-      placed.insert(computer, geometry);
+    if (computer.isEmpty() || !geometry.isValid())
+      continue;
+    placed.insert(computer, geometry);
+    for (const auto &text : Settings::value(Settings::Computer::Links.arg(computer)).toStringList()) {
+      if (const auto link = deskflow::layout::parseLink(computer, text); link)
+        manual.append(*link);
+      else
+        qWarning("ignoring invalid link '%s' of '%s'", qPrintable(text), qPrintable(computer));
+    }
   }
 
-  for (const auto &link : deskflow::layout::computeLinks(placed)) {
+  for (const auto &link : deskflow::layout::computeLinks(placed, manual)) {
     if (!config.connect(
             link.from.toStdString(), toDirection(link.side), static_cast<float>(link.fromStart / 100),
             static_cast<float>(link.fromEnd / 100), link.to.toStdString(), static_cast<float>(link.toStart / 100),
