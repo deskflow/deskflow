@@ -175,6 +175,21 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerLayoutView</name>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished">缩小</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished">放大</translation>
+    </message>
+    <message>
+        <source>Reset link to automatic</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ComputerSettingsDialog</name>
     <message>
         <source>Computer settings</source>
@@ -323,13 +338,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">计算机名称不能与别名相同。请删除别名或更改计算机名称。</translation>
-    </message>
-</context>
-<context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;计算机：&lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;双击以编辑设置&lt;br&gt;将计算机拖至废纸篓以将其移除</translation>
     </message>
 </context>
 <context>
@@ -923,6 +931,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
     </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag an edge to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;计算机：&lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;拖到另一台计算机旁边以连接它们的边缘&lt;br&gt;拖动边缘以调整大小&lt;br&gt;双击以编辑设置&lt;br&gt;将计算机拖至废纸篓以将其移除</translation>
+    </message>
 </context>
 <context>
     <name>SearchWidget</name>
@@ -954,16 +966,16 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>计算机</translation>
     </message>
     <message>
-        <source>Drag a computer from the grid to the trashcan to remove it.</source>
-        <translation>将计算机从网格拖到垃圾桶以将其移除。</translation>
+        <source>Drag a computer from the layout to the trashcan to remove it.</source>
+        <translation>将计算机从布局拖到垃圾桶以将其移除。</translation>
     </message>
     <message>
         <source>Configure the layout of your computer displays by dragging to where you want.</source>
         <translation>通过将计算机显示器拖动到所需位置来配置布局。</translation>
     </message>
     <message>
-        <source>Drag to the grid to add a new computer.</source>
-        <translation>拖动到网格以添加新计算机。</translation>
+        <source>Drag to the layout to add a new computer.</source>
+        <translation>拖动到布局以添加新计算机。</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -1070,10 +1082,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>在指定时间内双击切换(&amp;T)</translation>
     </message>
     <message>
-        <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+        <source>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>使用服务器配置文件来创建简单的网格布局编辑器无法实现的复杂计算机布局。
+        <translation>使用服务器配置文件来创建计算机布局编辑器无法实现的复杂计算机布局。
 
 启用此设置将禁用服务器配置 GUI。</translation>
     </message>

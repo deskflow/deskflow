@@ -175,6 +175,21 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ComputerLayoutView</name>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished">축소</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished">확대</translation>
+    </message>
+    <message>
+        <source>Reset link to automatic</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ComputerSettingsDialog</name>
     <message>
         <source>Computer settings</source>
@@ -323,13 +338,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">컴퓨터 이름은 별칭과 같을 수 없습니다. 별칭을 제거하거나 컴퓨터 이름을 변경하십시오.</translation>
-    </message>
-</context>
-<context>
-    <name>ComputerSetupModel</name>
-    <message>
-        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
-        <translation type="unfinished">&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;설정을 편집하려면 두 번 클릭하세요&lt;br&gt;컴퓨터를 휴지통으로 드래그하여 제거하세요</translation>
     </message>
 </context>
 <context>
@@ -921,6 +929,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <source>Super</source>
         <translation type="unfinished">Super</translation>
     </message>
+    <message>
+        <source>&lt;center&gt;Computer: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Drag next to another computer to link their edges&lt;br&gt;Drag an edge to resize&lt;br&gt;Double click to edit settings&lt;br&gt;Drag computer to the trashcan to remove it</source>
+        <translation type="unfinished">&lt;center&gt;컴퓨터: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;다른 컴퓨터 옆으로 드래그하여 가장자리를 연결하세요&lt;br&gt;가장자리를 드래그하여 크기를 조정하세요&lt;br&gt;설정을 편집하려면 두 번 클릭하세요&lt;br&gt;컴퓨터를 휴지통으로 드래그하여 제거하세요</translation>
+    </message>
 </context>
 <context>
     <name>SearchWidget</name>
@@ -952,7 +964,7 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>컴퓨터</translation>
     </message>
     <message>
-        <source>Drag a computer from the grid to the trashcan to remove it.</source>
+        <source>Drag a computer from the layout to the trashcan to remove it.</source>
         <translation>컴퓨터를 삭제하려면 휴지통으로 드래그하세요.</translation>
     </message>
     <message>
@@ -960,8 +972,8 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>원하는 위치로 드래그하여 컴퓨터 화면 배치를 설정하세요.</translation>
     </message>
     <message>
-        <source>Drag to the grid to add a new computer.</source>
-        <translation>새 컴퓨터를 추가하려면 격자로 드래그하세요.</translation>
+        <source>Drag to the layout to add a new computer.</source>
+        <translation>새 컴퓨터를 추가하려면 레이아웃으로 드래그하세요.</translation>
     </message>
     <message>
         <source>Hotkeys</source>
@@ -1068,10 +1080,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
         <translation>지정 시간 내 더블 탭으로 전환(&amp;T)</translation>
     </message>
     <message>
-        <source>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
+        <source>Use a server config file to create complex computer layouts that are not possible with the computer layout editor.
 
 Enabling this setting will disable the server config GUI.</source>
-        <translation>격자 기반 레이아웃 편집기로는 만들 수 없는 복잡한 컴퓨터 배치를 구성하려면 서버 설정 파일을 사용하세요.
+        <translation>레이아웃 편집기로는 만들 수 없는 복잡한 컴퓨터 배치를 구성하려면 서버 설정 파일을 사용하세요.
 
 이 설정을 활성화하면 서버 설정 GUI가 비활성화됩니다.</translation>
     </message>
