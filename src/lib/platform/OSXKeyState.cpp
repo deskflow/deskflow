@@ -45,6 +45,28 @@ public:
   KeyID m_keyID;
   uint32_t m_virtualKey;
 };
+// one side of a modifier key, with the device-dependent event flag that
+// macOS sets while that side is held.
+struct ModifierSide
+{
+  KeyModifierMask m_modifier;
+  CGEventFlags m_deviceMask;
+  CGEventFlags m_otherSideMask;
+  uint32_t m_virtualKey;
+  KeyID m_keyID;
+  bool m_isRight;
+};
+static const ModifierSide s_modifierSides[] = {
+    {KeyModifierShift, NX_DEVICELSHIFTKEYMASK, NX_DEVICERSHIFTKEYMASK, s_shiftVK, kKeyShift_L, false},
+    {KeyModifierShift, NX_DEVICERSHIFTKEYMASK, NX_DEVICELSHIFTKEYMASK, s_shiftRightVK, kKeyShift_R, true},
+    {KeyModifierControl, NX_DEVICELCTLKEYMASK, NX_DEVICERCTLKEYMASK, s_controlVK, kKeyControl_L, false},
+    {KeyModifierControl, NX_DEVICERCTLKEYMASK, NX_DEVICELCTLKEYMASK, s_controlRightVK, kKeyControl_R, true},
+    {KeyModifierAlt, NX_DEVICELALTKEYMASK, NX_DEVICERALTKEYMASK, s_altVK, kKeyAlt_L, false},
+    {KeyModifierAlt, NX_DEVICERALTKEYMASK, NX_DEVICELALTKEYMASK, s_altRightVK, kKeyAlt_R, true},
+    {KeyModifierSuper, NX_DEVICELCMDKEYMASK, NX_DEVICERCMDKEYMASK, s_superVK, kKeySuper_L, false},
+    {KeyModifierSuper, NX_DEVICERCMDKEYMASK, NX_DEVICELCMDKEYMASK, s_superRightVK, kKeySuper_R, true},
+};
+
 static const KeyEntry s_controlKeys[] = {
     // cursor keys.  if we don't do this we'll may still get these from
     // the keyboard resource but they may not correspond to the arrow
@@ -241,6 +263,7 @@ void OSXKeyState::init()
   m_controlRightPressed = false;
   m_altRightPressed = false;
   m_superRightPressed = false;
+  m_reportedDeviceModifiers = 0;
 
   // build virtual key map
   for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]); ++i) {
@@ -894,23 +917,33 @@ bool OSXKeyState::mapDeskflowHotKeyToMac(
   return true;
 }
 
-void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask)
+void OSXKeyState::handleModifierKeys(
+    void *target, KeyModifierMask oldMask, KeyModifierMask newMask, CGEventFlags macMask
+)
 {
   // compute changed modifiers
   KeyModifierMask changed = (oldMask ^ newMask);
 
-  // synthesize changed modifier keys
-  if ((changed & KeyModifierShift) != 0) {
-    handleModifierKey(target, s_shiftVK, kKeyShift_L, (newMask & KeyModifierShift) != 0, newMask);
-  }
-  if ((changed & KeyModifierControl) != 0) {
-    handleModifierKey(target, s_controlVK, kKeyControl_L, (newMask & KeyModifierControl) != 0, newMask);
-  }
-  if ((changed & KeyModifierAlt) != 0) {
-    handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
-  }
-  if ((changed & KeyModifierSuper) != 0) {
-    handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
+  // synthesize changed modifier keys.  the device-dependent bits of the
+  // event flags say which side of each modifier is held, so the left and
+  // right keys are sent as separate keys.  this also reports the second
+  // key of a pair (e.g. right command while left command is held), which
+  // does not change the device-independent mask.
+  for (const auto &side : s_modifierSides) {
+    bool down = (macMask & side.m_deviceMask) != 0;
+    if ((newMask & side.m_modifier) == 0) {
+      // the modifier is up, so neither side can be held
+      down = false;
+    } else if ((macMask & (side.m_deviceMask | side.m_otherSideMask)) == 0) {
+      // no device-dependent bits for this modifier (e.g. a synthetic
+      // event); report it as the left key
+      down = !side.m_isRight;
+    }
+    const bool wasDown = (m_reportedDeviceModifiers & side.m_deviceMask) != 0;
+    if (down != wasDown) {
+      m_reportedDeviceModifiers ^= side.m_deviceMask;
+      handleModifierKey(target, side.m_virtualKey, side.m_keyID, down, newMask);
+    }
   }
   if ((changed & KeyModifierCapsLock) != 0) {
     handleModifierKey(target, s_capsLockVK, kKeyCapsLock, (newMask & KeyModifierCapsLock) != 0, newMask);

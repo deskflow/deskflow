@@ -15,6 +15,8 @@
 #define SHIFT_BUTTON 57
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
+#define COMMAND_L_BUTTON (kVK_Command + 1)
+#define COMMAND_R_BUTTON (kVK_RightCommand + 1)
 
 void OSXKeyStateTests::initTestCase()
 {
@@ -111,6 +113,45 @@ void OSXKeyStateTests::fakePollCharWithModifier()
   // we should really set focus to an invisible window.
   keyState.fakeKeyDown(kKeyBackSpace, 0, 2, "en");
   keyState.fakeKeyUp(2);
+}
+
+void OSXKeyStateTests::handleModifierKeys_leftAndRight()
+{
+  deskflow::KeyMap keyMap;
+  EventQueue eventQueue;
+  OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
+  keyState.updateKeyMap();
+
+  // left command down
+  CGEventFlags flags = kCGEventFlagMaskCommand | NX_DEVICELCMDKEYMASK;
+  keyState.handleModifierKeys(nullptr, 0, KeyModifierSuper, flags);
+  QVERIFY(keyState.isKeyDown(COMMAND_L_BUTTON));
+  QVERIFY(!keyState.isKeyDown(COMMAND_R_BUTTON));
+
+  // right command down while left is held: the device-independent mask
+  // does not change, but the right key must still be reported
+  flags |= NX_DEVICERCMDKEYMASK;
+  keyState.handleModifierKeys(nullptr, KeyModifierSuper, KeyModifierSuper, flags);
+  QVERIFY(keyState.isKeyDown(COMMAND_L_BUTTON));
+  QVERIFY(keyState.isKeyDown(COMMAND_R_BUTTON));
+
+  // left command up, right still held
+  flags = kCGEventFlagMaskCommand | NX_DEVICERCMDKEYMASK;
+  keyState.handleModifierKeys(nullptr, KeyModifierSuper, KeyModifierSuper, flags);
+  QVERIFY(!keyState.isKeyDown(COMMAND_L_BUTTON));
+  QVERIFY(keyState.isKeyDown(COMMAND_R_BUTTON));
+
+  // all up
+  keyState.handleModifierKeys(nullptr, KeyModifierSuper, 0, 0);
+  QVERIFY(!keyState.isKeyDown(COMMAND_L_BUTTON));
+  QVERIFY(!keyState.isKeyDown(COMMAND_R_BUTTON));
+
+  // no device-dependent bits: reported as the left key
+  keyState.handleModifierKeys(nullptr, 0, KeyModifierSuper, kCGEventFlagMaskCommand);
+  QVERIFY(keyState.isKeyDown(COMMAND_L_BUTTON));
+  QVERIFY(!keyState.isKeyDown(COMMAND_R_BUTTON));
+  keyState.handleModifierKeys(nullptr, KeyModifierSuper, 0, 0);
+  QVERIFY(!keyState.isKeyDown(COMMAND_L_BUTTON));
 }
 
 bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState, KeyButton button)

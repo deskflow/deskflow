@@ -36,9 +36,11 @@ public:
   //! Handle modifier key change
   /*!
   Determines which modifier keys have changed and updates the modifier
-  state and sends key events as appropriate.
+  state and sends key events as appropriate.  \p macMask is the event's
+  flags; its device-dependent bits decide whether the left or the right
+  key of a modifier is sent.
   */
-  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask);
+  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask, CGEventFlags macMask);
 
   //@}
   //! @name accessors
@@ -168,4 +170,7 @@ private:
   bool m_controlRightPressed;
   bool m_altRightPressed;
   bool m_superRightPressed;
+  // device-dependent modifier flags (NX_DEVICE*KEYMASK) whose key down has
+  // been reported by handleModifierKeys and not yet released.
+  CGEventFlags m_reportedDeviceModifiers;
 };
