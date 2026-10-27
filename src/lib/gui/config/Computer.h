@@ -32,13 +32,15 @@ class Computer : public ComputerConfig
   friend QDataStream &operator<<(QDataStream &outStream, const Computer &computer)
   {
     return outStream << computer.name() << computer.switchCornerSize() << computer.aliases() << computer.modifiers()
-                     << computer.switchCorners() << computer.fixes() << computer.isServer() << computer.geometry();
+                     << computer.switchCorners() << computer.fixes() << computer.isServer() << computer.geometry()
+                     << computer.links();
   }
 
   friend QDataStream &operator>>(QDataStream &inStream, Computer &computer)
   {
     return inStream >> computer.m_Name >> computer.m_SwitchCornerSize >> computer.m_Aliases >> computer.m_Modifiers >>
-           computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer >> computer.m_geometry;
+           computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer >> computer.m_geometry >>
+           computer.m_links;
   }
 
 public:
@@ -98,6 +100,14 @@ public:
     return m_geometry;
   }
 
+  /**
+   * @brief Links set by hand from this computer, written as deskflow::layout::parseLink reads them.
+   */
+  [[nodiscard]] const QStringList &links() const
+  {
+    return m_links;
+  }
+
   void loadSettings(QSettingsProxy &settings);
   void saveSettings(QSettingsProxy &settings) const;
   [[nodiscard]] QString screensSection() const;
@@ -114,6 +124,10 @@ public:
   void setGeometry(const QRect &geometry)
   {
     m_geometry = geometry;
+  }
+  void setLinks(const QStringList &links)
+  {
+    m_links = links;
   }
   [[nodiscard]] bool isServer() const
   {
@@ -179,4 +193,5 @@ private:
   bool m_Swapped = false;
   bool m_isServer = false;
   QRect m_geometry = {};
+  QStringList m_links = {};
 };

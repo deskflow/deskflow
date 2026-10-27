@@ -184,6 +184,10 @@ p, li { white-space: pre-wrap; }
         <source>Zoom in</source>
         <translation type="unfinished">放大</translation>
     </message>
+    <message>
+        <source>Reset link to automatic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ComputerSettingsDialog</name>

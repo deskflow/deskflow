@@ -6,15 +6,22 @@
 
 #include "LayoutLinks.h"
 
+#include <QRegularExpression>
 #include <QStringList>
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <limits>
+#include <tuple>
+#include <utility>
 
 namespace deskflow::layout {
 
 namespace {
+
+// Indexed by Side.
+const std::array<QString, 4> kSideNames = {"right", "left", "up", "down"};
 
 // QRect::right() and bottom() are inclusive, edges here are exclusive.
 int rightEdge(const QRect &r)
@@ -100,6 +107,48 @@ QList<Link> linksOnSide(const QString &from, const QMap<QString, QRect> &compute
   return links;
 }
 
+Side opposite(Side side)
+{
+  switch (side) {
+  case Side::Right:
+    return Side::Left;
+  case Side::Left:
+    return Side::Right;
+  case Side::Up:
+    return Side::Down;
+  case Side::Down:
+    return Side::Up;
+  }
+  return side;
+}
+
+Link reversed(const Link &link)
+{
+  return {link.to, opposite(link.side), link.toStart, link.toEnd, link.from, link.fromStart, link.fromEnd};
+}
+
+bool samePair(const Link &a, const Link &b)
+{
+  return a.from == b.from && a.side == b.side && a.to == b.to;
+}
+
+// The part of from's edge on that side around start..end that isn't linked to anything but except.
+std::pair<double, double>
+freeAround(const QList<Link> &links, const QString &from, Side side, const QString &except, double start, double end)
+{
+  double low = 0;
+  double high = 100;
+  for (const auto &l : links) {
+    if (l.from != from || l.side != side || l.to == except)
+      continue;
+    if (l.fromEnd <= start)
+      low = std::max(low, l.fromEnd);
+    if (l.fromStart >= end)
+      high = std::min(high, l.fromStart);
+  }
+  return {low, high};
+}
+
 } // namespace
 
 QList<Link> computeLinks(const QMap<QString, QRect> &computers)
@@ -110,6 +159,71 @@ QList<Link> computeLinks(const QMap<QString, QRect> &computers)
       links.append(linksOnSide(from, computers, side));
   }
   return links;
+}
+
+QList<Link> computeLinks(const QMap<QString, QRect> &computers, const QList<Link> &manual)
+{
+  const auto geometric = computeLinks(computers);
+  QList<Link> links = geometric;
+  for (const auto &link : manual) {
+    const auto given = std::ranges::find_if(geometric, [&link](const Link &g) { return samePair(g, link); });
+    if (given == geometric.end())
+      continue;
+    const auto back = reversed(*given);
+    links.removeIf([&](const Link &l) { return samePair(l, *given) || samePair(l, back); });
+
+    // Can grow into the free parts of both edges but not into what they're linked to otherwise, so it can't overlap
+    // other links or reach past a nearer computer.
+    const auto [fromLow, fromHigh] =
+        freeAround(links, given->from, given->side, given->to, given->fromStart, given->fromEnd);
+    const auto [toLow, toHigh] = freeAround(links, given->to, back.side, given->from, given->toStart, given->toEnd);
+    Link adjusted = *given;
+    adjusted.fromStart = std::max(link.fromStart, fromLow);
+    adjusted.fromEnd = std::min(link.fromEnd, fromHigh);
+    adjusted.toStart = std::max(link.toStart, toLow);
+    adjusted.toEnd = std::min(link.toEnd, toHigh);
+    if (adjusted.fromStart >= adjusted.fromEnd || adjusted.toStart >= adjusted.toEnd) {
+      links << *given << back;
+      continue;
+    }
+    links << adjusted << reversed(adjusted);
+  }
+  std::ranges::sort(links, {}, [](const Link &l) { return std::tuple(l.from, l.side, l.fromStart); });
+  return links;
+}
+
+std::optional<Link> parseLink(const QString &from, const QString &text)
+{
+  static const QRegularExpression format(QStringLiteral(
+      R"(^\s*(right|left|up|down)\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*\)\s*=\s*(.+?)\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*\)\s*$)"
+  ));
+  const auto match = format.match(text);
+  if (!match.hasMatch())
+    return std::nullopt;
+
+  const auto side = static_cast<Side>(std::ranges::find(kSideNames, match.captured(1)) - kSideNames.begin());
+  const Link link = {
+      from,
+      side,
+      match.captured(2).toDouble(),
+      match.captured(3).toDouble(),
+      match.captured(4),
+      match.captured(5).toDouble(),
+      match.captured(6).toDouble()
+  };
+  const auto valid = [](double start, double end) { return 0 <= start && start < end && end <= 100; };
+  if (!valid(link.fromStart, link.fromEnd) || !valid(link.toStart, link.toEnd))
+    return std::nullopt;
+  return link;
+}
+
+QString linkToString(const Link &link)
+{
+  return QStringLiteral("%1(%2,%3) = %4(%5,%6)")
+      .arg(
+          kSideNames.at(static_cast<int>(link.side)), QString::number(link.fromStart), QString::number(link.fromEnd),
+          link.to, QString::number(link.toStart), QString::number(link.toEnd)
+      );
 }
 
 QRect snap(const QRect &moving, const QList<QRect> &others, int threshold)

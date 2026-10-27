@@ -12,6 +12,8 @@
 #include <QRect>
 #include <QString>
 
+#include <optional>
+
 namespace deskflow::layout {
 Q_NAMESPACE
 
@@ -48,6 +50,23 @@ struct Link
  * Computers that only touch at a corner are not linked.
  */
 QList<Link> computeLinks(const QMap<QString, QRect> &computers);
+
+/**
+ * @brief Like computeLinks, but each @p manual link replaces what the geometry gives between those two computers on
+ * that edge, both ways. It can only cover parts of either edge that aren't linked to another computer, a later manual
+ * link for the same computers wins, and manual links between computers the geometry doesn't link are ignored.
+ */
+QList<Link> computeLinks(const QMap<QString, QRect> &computers, const QList<Link> &manual);
+
+/**
+ * @brief Reads a manual link of @p from written like `right(0,50) = name(20,100)`, std::nullopt if it isn't one.
+ */
+std::optional<Link> parseLink(const QString &from, const QString &text);
+
+/**
+ * @brief Writes @p link the way parseLink reads it.
+ */
+QString linkToString(const Link &link);
 
 /**
  * @brief Moves @p moving flush against the nearest edge of @p others within @p threshold,

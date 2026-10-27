@@ -21,6 +21,7 @@ private Q_SLOTS:
   void equalityCheck_diff_neighbours2();
   void equalityCheck_diff_neighbours3();
   void read_touchingGeometry_linked();
+  void read_manualLink_replacesGeometry();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");

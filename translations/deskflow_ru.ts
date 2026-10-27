@@ -184,6 +184,10 @@ p, li { white-space: pre-wrap; }
         <source>Zoom in</source>
         <translation type="unfinished">Увеличить</translation>
     </message>
+    <message>
+        <source>Reset link to automatic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ComputerSettingsDialog</name>

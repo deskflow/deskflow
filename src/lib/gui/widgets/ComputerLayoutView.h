@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "common/LayoutLinks.h"
+
 #include <QGraphicsView>
 
 class ComputerList;
@@ -14,7 +16,7 @@ class ComputerItem;
 /**
  * @brief Shows each computer as a rectangle that can be dragged anywhere and resized from any edge, Ctrl + scroll or
  * the zoom buttons zoom in and out. Each edge links to the nearest computers beyond it, see
- * deskflow::layout::computeLinks.
+ * deskflow::layout::computeLinks. Links are drawn as rays whose corners can be dragged to set a link by hand.
  */
 class ComputerLayoutView : public QGraphicsView
 {
@@ -43,10 +45,14 @@ protected:
   void dragMoveEvent(QDragMoveEvent *event) override;
   void dropEvent(QDropEvent *event) override;
   void drawForeground(QPainter *painter, const QRectF &rect) override;
+  void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
   void rebuild();
-  void updateLinkLines();
+  void updateLinkRays();
+  void dropStaleManualLinks();
+  void setManualLink(const deskflow::layout::Link &link);
+  void removeManualLink(const QString &a, const QString &b);
   void fit();
   double minimumScale() const;
   void growSceneRect(double scale);
@@ -65,6 +71,16 @@ private:
   // Fits the layout to the view until it is first shown or the user moves, resizes or zooms anything.
   bool m_autoFit = true;
   QWidget *m_zoomButtons = nullptr;
-  // Scene coordinates of the linked edge ranges.
-  QList<QLineF> m_linkLines;
+  struct LinkRay
+  {
+    deskflow::layout::Link link;
+    // Scene coordinates from the start of the linked range on one computer's edge to the range on the other's and
+    // back to the end of the first range.
+    QPolygonF polygon;
+    bool manual;
+  };
+  QList<LinkRay> m_linkRays;
+  // The link whose ray corner is being dragged, and which corner of its polygon.
+  std::optional<deskflow::layout::Link> m_adjusted;
+  qsizetype m_adjustedCorner = 0;
 };
