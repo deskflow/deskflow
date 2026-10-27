@@ -1,0 +1,22 @@
+<map id="src/lib/deskflow/KeyMap.h" name="src/lib/deskflow/KeyMap.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="296,5,470,30"/>
+<area shape="rect" id="Node000002" href="$String_8h.html" title=" " alt="" coords="68,78,167,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="337,33,177,76,175,71,341,28"/>
+<area shape="rect" id="Node000005" href="$KeyTypes_8h.html" title=" " alt="" coords="190,78,336,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="361,32,297,72,294,67,365,29"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="360,78,406,103"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="384,28,385,64,380,61,381,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="430,78,469,103"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="395,28,431,67,426,66,393,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="493,78,550,103"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="406,28,488,70,482,71,405,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,70,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,106,64,142,60,139,106,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="94,151,147,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="119,101,122,136,117,134,117,106"/>
+<area shape="rect" id="Node000006" href="$KeyModifierID_8h.html" title=" " alt="" coords="176,151,344,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="264,101,264,136,259,134,261,105"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="288,223,352,248"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="297,100,331,120,346,133,359,150,363,166,360,183,343,214,340,209,355,181,358,166,354,152,343,137,328,124,296,106"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="271,173,303,212,298,211,269,178"/>
+</map>

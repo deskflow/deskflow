@@ -1,0 +1,7 @@
+<map id="ComputerConfig" name="ComputerConfig">
+<area shape="rect" id="Node000001" title="Computer configuration base class." alt="" coords="42,5,159,30"/>
+<area shape="rect" id="Node000002" href="$classComputer.html" title=" " alt="" coords="5,78,84,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,42,56,79,52,76,79,43"/>
+<area shape="rect" id="Node000003" href="$classServerConfig.html" title=" " alt="" coords="108,78,205,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,40,150,78,145,78,118,45"/>
+</map>

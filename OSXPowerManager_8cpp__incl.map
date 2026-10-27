@@ -1,0 +1,20 @@
+<map id="src/lib/platform/OSXPowerManager.cpp" name="src/lib/platform/OSXPowerManager.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="146,5,321,44"/>
+<area shape="rect" id="Node000002" href="$OSXPowerManager_8h.html" title=" " alt="" coords="91,92,238,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,43,187,82,183,78,215,47"/>
+<area shape="rect" id="Node000004" href="$Log_8h.html" title=" " alt="" coords="334,92,419,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,42,345,84,339,85,268,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,165,177,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="150,119,115,156,112,152,154,115"/>
+<area shape="rect" id="Node000005" href="$LogLevel_8h.html" title=" " alt="" coords="201,165,338,189"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="361,116,301,158,299,153,356,118"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="336,237,401,262"/>
+<area shape="poly" id="edge9_Node000004_Node000007" title=" " alt="" coords="378,115,372,223,368,220,374,119"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="413,165,452,189"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="387,115,416,153,411,152,385,120"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="476,165,533,189"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="398,115,472,157,467,157,397,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="235,237,304,262"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="272,188,272,223,267,220,268,192"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="287,187,342,228,337,228,285,192"/>
+</map>

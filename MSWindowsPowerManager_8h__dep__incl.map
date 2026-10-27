@@ -1,0 +1,15 @@
+<map id="src/lib/platform/MSWindowsPowerManager.h" name="src/lib/platform/MSWindowsPowerManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="388,5,573,44"/>
+<area shape="rect" id="Node000002" href="$MSWindowsComputer_8h.html" title=" " alt="" coords="284,92,469,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="448,53,401,94,398,89,443,55"/>
+<area shape="rect" id="Node000007" href="$MSWindowsPowerManager_8cpp.html" title=" " alt="" coords="493,92,678,131"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="516,51,565,92,560,91,515,57"/>
+<area shape="rect" id="Node000003" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="5,179,156,217"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="297,138,147,181,145,176,296,133"/>
+<area shape="rect" id="Node000004" href="$MSWindowsComputer_8cpp.html" title=" " alt="" coords="180,179,365,217"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="344,140,297,180,294,176,339,142"/>
+<area shape="rect" id="Node000005" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="389,179,574,217"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="413,138,461,179,456,178,411,143"/>
+<area shape="rect" id="Node000006" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="598,179,784,217"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="461,133,624,178,619,178,460,138"/>
+</map>
