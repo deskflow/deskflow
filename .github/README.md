@@ -69,7 +69,7 @@ Windows 10 v1809 or higher is required.
 
 macOS 13 or higher is required to use our CI builds for Apple Silicon machines. macOS 12 or higher is required for Intel macs or local builds.
 
-Linux requires libei 1.3+ and libportal 0.8+ for the server/client. Additionally, Qt 6.7+ is required for the GUI.
+Linux requires libei 1.3+ and libportal 0.11+ for the server/client. Additionally, Qt 6.7+ is required for the GUI.
 Linux users with systems not meeting these requirements should use flatpak in place of a native package.
 
 We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
