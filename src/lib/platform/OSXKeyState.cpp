@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -31,6 +32,7 @@ static const uint32_t s_controlRightVK = kVK_RightControl;
 static const uint32_t s_altRightVK = kVK_RightOption;
 static const uint32_t s_superRightVK = kVK_RightCommand;
 static const uint32_t s_numLockVK = kVK_ANSI_KeypadClear; // 71
+static const uint32_t s_fnVK = kVK_Function;
 
 static const uint32_t s_brightnessUp = 144;
 static const uint32_t s_brightnessDown = 145;
@@ -130,7 +132,8 @@ static const KeyEntry s_controlKeys[] = {
     {kKeyMissionControl, s_missionControlVK},
     {kKeyLaunchpad, s_launchpadVK},
     {kKeyBrightnessUp, s_brightnessUp},
-    {kKeyBrightnessDown, s_brightnessDown}
+    {kKeyBrightnessDown, s_brightnessDown},
+    {kKeyFn, s_fnVK}
 };
 
 namespace {
@@ -176,8 +179,8 @@ io_connect_t getEventDriver()
 
 bool isModifier(uint8_t virtualKey)
 {
-  static std::set<uint8_t> modifiers{s_shiftVK,      s_controlVK,      s_altVK,      s_superVK,     s_capsLockVK,
-                                     s_shiftRightVK, s_controlRightVK, s_altRightVK, s_superRightVK};
+  static std::set<uint8_t> modifiers{s_shiftVK,      s_controlVK,      s_altVK,      s_superVK,      s_capsLockVK,
+                                     s_shiftRightVK, s_controlRightVK, s_altRightVK, s_superRightVK, s_fnVK};
 
   return (modifiers.find(virtualKey) != modifiers.end());
 }
@@ -241,6 +244,7 @@ void OSXKeyState::init()
   m_controlRightPressed = false;
   m_altRightPressed = false;
   m_superRightPressed = false;
+  m_fnPressed = false;
 
   // build virtual key map
   for (size_t i = 0; i < sizeof(s_controlKeys) / sizeof(s_controlKeys[0]); ++i) {
@@ -269,6 +273,9 @@ KeyModifierMask OSXKeyState::mapModifiersFromOSX(uint32_t mask) const
   }
   if ((mask & kCGEventFlagMaskNumericPad) != 0) {
     outMask |= KeyModifierNumLock;
+  }
+  if ((mask & kCGEventFlagMaskSecondaryFn) != 0) {
+    outMask |= KeyModifierFn;
   }
 
   LOG_VERBOSE("mask=%04x outMask=%04x", mask, outMask);
@@ -434,6 +441,10 @@ CGEventFlags OSXKeyState::getModifierStateAsOSXFlags() const
 
   if (m_capsPressed) {
     modifiers |= kCGEventFlagMaskAlphaShift;
+  }
+
+  if (m_fnPressed) {
+    modifiers |= kCGEventFlagMaskSecondaryFn;
   }
 
   return modifiers;
@@ -633,6 +644,9 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
     break;
   case s_capsLockVK:
     m_capsPressed = keyDown;
+    break;
+  case s_fnVK:
+    m_fnPressed = keyDown;
     break;
   default:
     LOG_VERBOSE("the key is not a modifier");
@@ -917,6 +931,9 @@ void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyM
   }
   if ((changed & KeyModifierNumLock) != 0) {
     handleModifierKey(target, s_numLockVK, kKeyNumLock, (newMask & KeyModifierNumLock) != 0, newMask);
+  }
+  if ((changed & KeyModifierFn) != 0) {
+    handleModifierKey(target, s_fnVK, kKeyFn, (newMask & KeyModifierFn) != 0, newMask);
   }
 }
 
