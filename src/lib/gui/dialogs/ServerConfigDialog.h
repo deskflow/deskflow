@@ -66,6 +66,7 @@ protected:
   void setHeartbeat(int rate);
 
   void toggleRelativeMouseMoves(bool enabled);
+  void toggleMacCapsLockSync(bool enabled);
   void toggleProtocol();
 
   void toggleExternalConfig(bool enable = false);
@@ -110,6 +111,7 @@ private:
   int m_switchDoubleTap;
   uint m_clipboardSize;
   bool m_relativeMouseMoves;
+  bool m_macCapsLockSync;
   bool m_enableSwitchDelay;
   bool m_enableSwitchDoubleTap;
   bool m_originalServerConfigIsExternal;
