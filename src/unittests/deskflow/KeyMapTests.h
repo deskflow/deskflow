@@ -23,6 +23,14 @@ private Q_SLOTS:
   void mapkey();
   void parseModifiers_plusKey_keepsPlusAsKey();
   void parseKey_plusSymbol_parsesAsAsciiKey();
+  void groupLanguages_preserveSourceIndices();
+  void groupLanguages_keepCurrentDuplicate();
+  void groupLanguages_imeOnlyKeepsCurrentGroup();
+  void groupLanguages_emptyLanguageKeepsCurrentGroup();
+  void groupLanguages_followKeymapSwap();
+  void groupLanguages_emptyOverrideDoesNotUseInstalledList();
+  void groupLanguages_legacyMappingIsPreserved();
+  void mapKey_imeOnlyLanguageDoesNotSwitchGroup();
 
 private:
   Log m_log;

@@ -41,6 +41,7 @@ void KeyMap::swap(KeyMap &x) noexcept
   m_modifierKeys.swap(x.m_modifierKeys);
   m_halfDuplex.swap(x.m_halfDuplex);
   m_halfDuplexMods.swap(x.m_halfDuplexMods);
+  m_groupLanguages.swap(x.m_groupLanguages);
   auto tmp1 = m_numGroups;
   m_numGroups = x.m_numGroups;
   x.m_numGroups = tmp1;
@@ -298,12 +299,27 @@ void KeyMap::setLanguageData(std::vector<std::string> layouts)
   m_keyboardLayouts = std::move(layouts);
 }
 
+void KeyMap::setGroupLanguageData(std::vector<std::string> languages)
+{
+  m_groupLanguages = std::move(languages);
+}
+
 int32_t KeyMap::getLanguageGroupID(int32_t group, const std::string &lang) const
 {
+  // Empty entries are placeholders, not language-sync targets.
+  if (lang.empty()) {
+    return group;
+  }
+
+  const auto &languages = m_groupLanguages ? *m_groupLanguages : m_keyboardLayouts;
+  if (m_groupLanguages && group >= 0 && static_cast<size_t>(group) < languages.size() && languages[group] == lang) {
+    return group;
+  }
+
   auto id = group;
 
-  if (auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang); it != m_keyboardLayouts.end()) {
-    id = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
+  if (auto it = std::find(languages.begin(), languages.end(), lang); it != languages.end()) {
+    id = static_cast<int>(std::distance(languages.begin(), it));
     LOG_VERBOSE("language %s has group id %d", lang.c_str(), id);
   } else {
     LOG_VERBOSE("could not found requested language");
