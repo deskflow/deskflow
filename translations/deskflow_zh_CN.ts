@@ -532,7 +532,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>invalid certificate, generating a new one</source>
-        <translation type="unfinished">证书无效，正在生成新证书</translation>
+        <translation type="obsolete">证书无效，正在生成新证书</translation>
     </message>
     <message>
         <source>Address missing</source>
