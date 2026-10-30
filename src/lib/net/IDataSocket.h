@@ -48,6 +48,8 @@ public:
   virtual void connect(const NetworkAddress &) = 0;
 
   //@}
+  //! Get the remote peer name or address
+  virtual const std::string &remotePeerNameOrAddress() = 0;
 
   // ISocket overrides
   void close() override;

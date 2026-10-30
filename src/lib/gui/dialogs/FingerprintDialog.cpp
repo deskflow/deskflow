@@ -15,7 +15,7 @@
 
 FingerprintDialog::FingerprintDialog(
     QWidget *parent, const Fingerprint &localFingerprint, FingerprintDialogMode mode,
-    const Fingerprint &remoteFingerprint
+    const Fingerprint &remoteFingerprint, const QString &localPeer, const QString &remotePeer
 )
     : QDialog(parent),
       m_lblHeader{new QLabel(this)},
@@ -32,7 +32,8 @@ FingerprintDialog::FingerprintDialog(
   layout->addWidget(m_lblHeader);
   layout->addSpacerItem(new QSpacerItem(0, 10, QSizePolicy::Fixed, QSizePolicy::Fixed));
   layout->addLayout(
-      localMode ? makeLocalLayout(localFingerprint) : makeCompareLayout(localFingerprint, isServer, remoteFingerprint)
+      localMode ? makeLocalLayout(localFingerprint)
+                : makeCompareLayout(localFingerprint, isServer, remoteFingerprint, localPeer, remotePeer)
   );
   layout->addWidget(m_lblFooter);
   layout->addWidget(m_buttonBox);
@@ -94,14 +95,16 @@ QLayout *FingerprintDialog::makeLocalLayout(const Fingerprint &localFingerprint)
 }
 
 QLayout *FingerprintDialog::makeCompareLayout(
-    const Fingerprint &localFingerprint, bool isServer, const Fingerprint &remoteFingerprint
+    const Fingerprint &localFingerprint, bool isServer, const Fingerprint &remoteFingerprint, const QString &localPeer,
+    const QString &remotePeer
 )
 {
   const auto serverText = tr("Server Fingerprint");
   const auto clientText = tr("Client Fingerprint");
 
-  m_localPreview = new FingerprintPreview(this, localFingerprint, isServer ? serverText : clientText, false);
-  m_remotePreview = new FingerprintPreview(this, remoteFingerprint, isServer ? clientText : serverText, false);
+  m_localPreview = new FingerprintPreview(this, localFingerprint, isServer ? serverText : clientText, localPeer, false);
+  m_remotePreview =
+      new FingerprintPreview(this, remoteFingerprint, isServer ? clientText : serverText, remotePeer, false);
 
   auto fpLayout = new QHBoxLayout();
   fpLayout->setAlignment(Qt::AlignTop);
