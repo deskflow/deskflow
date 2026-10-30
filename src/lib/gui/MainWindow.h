@@ -117,6 +117,7 @@ private:
   void applyConfig();
   void setTrayIcon();
   void handleUnrecognisedClient(const QString &clientName);
+  void handleMissingClientCertificate(const QString &clientAddress);
   void handleConnectionRefused(deskflow::core::ConnectionRefusal reason);
   void handlePeerFingerprint(const QString &fingerprint);
   void handleMissingKeyboardLayouts(const QString &layouts);
@@ -173,6 +174,7 @@ private:
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
   QSet<QString> m_ignoredClients;
+  QSet<QString> m_warnedMissingCertificateClients;
   bool m_newClientPromptShowing = false;
   bool m_serverConfigDialogVisible = false;
   QSize m_expandedSize = QSize();
