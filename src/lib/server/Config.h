@@ -12,6 +12,7 @@
 #include "base/String.h"
 #include "deskflow/IPlatformComputer.h"
 #include "deskflow/OptionTypes.h"
+#include "deskflow/ShapeHole.h"
 #include "net/NetworkAddress.h"
 #include "server/InputFilter.h"
 
@@ -250,6 +251,49 @@ public:
   */
   bool disconnect(const std::string &srcName, Direction srcSide, float position);
 
+  //! Hole link
+  /*!
+  A request, made via a hole-location entry in the config file (e.g.
+  "bottom-right = someClient"), to link a server's monitor hole (see
+  deskflow::ShapeHole) to a client once that hole's actual position
+  is calculated.
+  */
+  struct HoleLink
+  {
+    deskflow::HoleLocation location;
+    std::string dstName;
+
+    bool operator==(const HoleLink &) const = default;
+  };
+
+  //! Add a hole link
+  /*!
+  Registers a request to link the hole named \c location on \c srcName's
+  shape to \c dstName, to be resolved once \c srcName's actual holes are
+  calculated at runtime.  Returns false if \c srcName or \c dstName is unknown.
+  */
+  bool addHoleLink(const std::string &srcName, deskflow::HoleLocation location, const std::string &dstName);
+
+  //! Get hole links
+  /*!
+  Returns the hole links registered for \c srcName via addHoleLink(), or an
+  empty list if there are none or it is not supported by the server.
+  */
+  std::vector<HoleLink> getHoleLinks(const std::string &srcName) const;
+
+  //! Get whether to restart on monitor zone changes
+  /*!
+  True if \c restartServerOnZoneChange was set in the config file's
+  "options" section.  Monitor hotplug isn't always reliably detected while
+  the server is running (see PortalInputCapture), so when this is set, the
+  server logs a message recommending a restart whenever the number of
+  monitor zones changes.
+  */
+  bool restartServerOnZoneChange() const
+  {
+    return m_restartServerOnZoneChange;
+  }
+
   //! Set server address
   /*!
   Set the deskflow listen addresses.  There is no default address so
@@ -410,8 +454,12 @@ private:
   void parseComputers(const ConfigReadContext &, const std::string_view &, std::set<std::string> &computers) const;
 
 private:
+  using HoleLinkMap = std::map<std::string, std::vector<HoleLink>, deskflow::string::CaselessCmp>;
+
   CellMap m_map;
   NameMap m_nameToCanonicalName;
+  HoleLinkMap m_holeLinks;
+  bool m_restartServerOnZoneChange = false;
   NetworkAddress m_deskflowAddress;
   ScreenOptions m_globalOptions;
   InputFilter m_inputFilter;
