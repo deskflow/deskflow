@@ -116,7 +116,10 @@ OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSyn
       m_impl(nullptr)
 {
   m_displayID = CGMainDisplayID();
-  if (!updateComputerShape(m_displayID, 0)) {
+  CGDisplayCount displayCount = 0;
+  if (CGGetActiveDisplayList(0, nullptr, &displayCount) == CGDisplayNoErr && displayCount == 0) {
+    LOG_WARN("no active display, computer shape will be set when one is activated");
+  } else if (!updateComputerShape(m_displayID, 0)) {
     throw DisplayInvalidException("failed to initialize computer shape");
   }
 
