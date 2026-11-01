@@ -190,6 +190,9 @@ public:
   void setOptions(const OptionsList &options) override;
   std::string getName() const override;
 
+  //! Replay a serialized trackpad gesture event (called by ServerProxy1_9)
+  void trackpadEvent(const std::string &bytes);
+
 private:
   void saveRelativeRestorePosition();
   void sendClipboard(ClipboardID);

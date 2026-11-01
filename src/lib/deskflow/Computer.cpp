@@ -467,4 +467,13 @@ std::string Computer::getSecureInputApp() const
   return m_computer->getSecureInputApp();
 }
 
+void Computer::trackpadEvent(const std::string &bytes)
+{
+  // like the other fake input, only while the cursor is on this computer
+  if (!m_entered) {
+    return;
+  }
+  m_computer->fakeTrackpadEvent(bytes);
+}
+
 } // namespace deskflow

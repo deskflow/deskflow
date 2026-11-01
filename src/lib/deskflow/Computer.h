@@ -218,6 +218,9 @@ public:
   */
   std::string getSecureInputApp() const;
 
+  //! Replay a trackpad gesture event (see IPlatformComputer::fakeTrackpadEvent)
+  void trackpadEvent(const std::string &bytes);
+
   //@}
   //! @name accessors
   //@{

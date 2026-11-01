@@ -14,6 +14,7 @@
 #include "client/ServerProxy.h"
 #include "client/ServerProxy1_7.h"
 #include "client/ServerProxy1_8.h"
+#include "client/ServerProxy1_9.h"
 #include "common/NetworkProtocol.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
@@ -483,6 +484,9 @@ bool Client::setupComputer(int16_t protocolMinor)
   case 8:
     m_server = new ServerProxy1_8(this, m_stream, m_events);
     break;
+  case 9:
+    m_server = new ServerProxy1_9(this, m_stream, m_events);
+    break;
   default:
     break;
   }
@@ -766,4 +770,9 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
   bindAddress.resolve();
 
   socket->bind(bindAddress);
+}
+
+void Client::trackpadEvent(const std::string &bytes)
+{
+  m_computer->trackpadEvent(bytes);
 }

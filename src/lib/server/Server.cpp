@@ -8,6 +8,8 @@
 
 #include "server/Server.h"
 
+#include "deskflow/TrackpadEvent.h"
+
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/AppUtil.h"
@@ -91,6 +93,10 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Com
     handleWheelEvent(e);
   });
   m_events->addHandler(
+      EventTypes::PrimaryComputerTrackpadEvent, m_primaryClient->getEventTarget(),
+      [this](const auto &e) { handleTrackpadEvent(e); }
+  );
+  m_events->addHandler(
       EventTypes::PrimaryScreenSaverActivated, m_primaryClient->getEventTarget(),
       [this](const auto &) { onScreensaver(true); }
   );
@@ -162,6 +168,7 @@ Server::~Server()
   m_events->removeHandler(PrimaryComputerMotionOnPrimary, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerMotionOnSecondary, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerWheel, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryComputerTrackpadEvent, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryScreenSaverActivated, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget());
   m_events->removeHandler(PrimaryComputerFakeInputBegin, m_inputFilter);
@@ -1271,6 +1278,19 @@ void Server::handleWheelEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformComputer::WheelInfo *>(event.getData());
   onMouseWheel(info->m_xDelta, info->m_yDelta);
+}
+
+void Server::handleTrackpadEvent(const Event &event)
+{
+  const auto *data = dynamic_cast<const deskflow::TrackpadEventData *>(event.getDataObject());
+  if (data == nullptr || m_active == nullptr || m_active == m_primaryClient) {
+    return;
+  }
+  if (m_active->supportsTrackpadEvents()) {
+    m_active->trackpadEvent(data->m_bytes);
+  } else if (data->m_wheel.has_value() && (data->m_wheel->x != 0 || data->m_wheel->y != 0)) {
+    onMouseWheel(data->m_wheel->x, data->m_wheel->y);
+  }
 }
 
 void Server::handleSwitchWaitTimeout()

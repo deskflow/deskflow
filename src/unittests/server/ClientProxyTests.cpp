@@ -14,6 +14,7 @@
 #include "server/ClientProxy1_6.h"
 #include "server/ClientProxy1_7.h"
 #include "server/ClientProxy1_8.h"
+#include "server/ClientProxy1_9.h"
 
 #include <memory>
 #include <string>
@@ -120,6 +121,9 @@ std::unique_ptr<ClientProxy> makeProxy(int minor, deskflow::IStream *stream, IEv
   case 8:
     proxy = std::make_unique<ClientProxy1_8>("client", stream, server, events);
     break;
+  case 9:
+    proxy = std::make_unique<ClientProxy1_9>("client", stream, server, events);
+    break;
   default:
     break;
   }
@@ -219,6 +223,23 @@ void ClientProxyTests::keyUp()
 
   ProxyUnderTest test(minor);
   test.proxy->keyUp(kKey, kMask, kButton);
+  QCOMPARE(test.stream->take(), expected);
+}
+
+void ClientProxyTests::trackpadEvent()
+{
+  // only 1.9 and later clients can post trackpad events
+  QVERIFY(!ProxyUnderTest(8).proxy->supportsTrackpadEvents());
+
+  ProxyUnderTest test(9);
+  QVERIFY(test.proxy->supportsTrackpadEvents());
+
+  // serialized events are binary: zero bytes and high bytes must survive
+  std::string sent("\x00\x00\x00\x02gesture\x00\xff\x10\x6d", 15);
+  sent.append(900, '\x7f');
+  test.proxy->trackpadEvent(sent);
+
+  const QByteArray expected = "DTPE" + QByteArray::fromHex("00000393") + QByteArray(sent.data(), sent.size());
   QCOMPARE(test.stream->take(), expected);
 }
 

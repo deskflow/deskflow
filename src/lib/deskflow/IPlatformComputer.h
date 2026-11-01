@@ -135,6 +135,14 @@ public:
   */
   virtual std::string getSecureInputApp() const = 0;
 
+  //! Secondary: post a trackpad gesture event serialized by the primary
+  //! (see deskflow::TrackpadEventData). Ignore data from another platform.
+  //! Optional, macOS only for now.
+  virtual void fakeTrackpadEvent(const std::string &)
+  {
+    // not supported
+  }
+
   //@}
   //! @name accessors
   //@{

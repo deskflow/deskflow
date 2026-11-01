@@ -111,6 +111,10 @@ elseif(APPLE)
     OSXScreenSaverControl.h
     OSXScreenSaverUtil.h
     OSXScreenSaverUtil.m
+    OSXTrackpadGesture.h
+    OSXTrackpadGesture.mm
+    OSXTrackpadZoom.h
+    OSXTrackpadZoom.mm
   )
 elseif(UNIX)
   set(PLATFORM_SOURCES

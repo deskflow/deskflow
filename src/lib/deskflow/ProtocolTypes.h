@@ -45,7 +45,7 @@ static const int16_t kProtocolMajorVersion = 1;
  * @note When incrementing the minor version, the Deskflow application version should also increment
  * @since Protocol version 1.0
  */
-static const int16_t kProtocolMinorVersion = 8;
+static const int16_t kProtocolMinorVersion = 9;
 
 /**
  * @brief Default TCP port for Deskflow connections
@@ -1096,6 +1096,39 @@ extern const char *const kMsgDFileTransfer;
 extern const char *const kMsgDDragInfo;
 
 /** @} */ // end of protocol_files group
+
+/**
+ * @defgroup protocol_gestures Trackpad Gesture Messages
+ * @brief Forwarding of system trackpad gestures
+ * @{
+ */
+
+/**
+ * @brief Trackpad gesture event
+ *
+ * **Message Code**: `"DTPE"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DTPE%s"`
+ * **Parameters**:
+ * - `$1`: the event as serialized by the primary's platform (macOS:
+ *   CGEventCreateData)
+ *
+ * Sent for each event of a trackpad gesture made on the primary while a
+ * secondary is active: dock swipes (Spaces, Mission Control, App Exposé,
+ * Launchpad), application pinch, and rotation, and trackpad scrolls with
+ * their scroll and momentum phases (smooth scrolling, rubber-banding and
+ * two-finger swipes between pages). A secondary on the same platform posts it
+ * unchanged; others ignore it. A secondary older than 1.9 gets the scrolls
+ * as ordinary wheel messages instead.
+ *
+ * Only sent while the primary has trackpad gestures enabled
+ * (kOptionTrackpadGestures).
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDTrackpadEvent;
+
+/** @} */ // end of protocol_gestures group
 
 /**
  * @defgroup protocol_system System Messages

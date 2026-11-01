@@ -184,6 +184,10 @@ enum class EventTypes : uint32_t
   /// This event is sent when mouse wheel is rotated. Event data is a pointer to WheelInfo.
   PrimaryComputerWheel,
 
+  /// A trackpad gesture event was made while a secondary is active.
+  /// Event data object is a deskflow::TrackpadEventData.
+  PrimaryComputerTrackpadEvent,
+
   /// This event is sent when screensaver is activated.
   PrimaryScreenSaverActivated,
 

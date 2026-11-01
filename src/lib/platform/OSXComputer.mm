@@ -22,6 +22,8 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/DisplayInvalidException.h"
 #include "deskflow/KeyMap.h"
+#include "deskflow/OptionTypes.h"
+#include "deskflow/TrackpadEvent.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
@@ -32,6 +34,8 @@
 #include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
 #include "platform/OSXScreenSaver.h"
+#include "platform/OSXTrackpadGesture.h"
+#include "platform/OSXTrackpadZoom.h"
 
 #include <AppKit/NSEvent.h>
 #include <AvailabilityMacros.h>
@@ -641,6 +645,25 @@ void OSXComputer::fakeMouseWheel(ScrollDelta delta) const
   }
 }
 
+void OSXComputer::fakeTrackpadEvent(const std::string &bytes)
+{
+  if (const auto command = deskflow::osx::zoom::decode(bytes)) {
+    deskflow::osx::zoom::perform(*command);
+    return;
+  }
+  // trackpad scrolls get this client's scroll settings and modifier keys,
+  // as fakeMouseWheel() gives the others
+  constexpr int32_t kUnit = 1 << 16;
+  const auto scale = applyScrollModifier({kUnit, kUnit});
+  deskflow::osx::gesture::PostOptions options;
+  options.scrollScaleX = static_cast<double>(scale.x) / kUnit;
+  options.scrollScaleY = static_cast<double>(scale.y) / kUnit;
+  options.flags = m_keyState->getModifierStateAsOSXFlags();
+  if (!deskflow::osx::gesture::post(bytes, options)) {
+    LOG_DEBUG("ignoring trackpad event this macOS cannot read (%zu bytes)", bytes.size());
+  }
+}
+
 void OSXComputer::showCursor()
 {
   LOG_DEBUG("showing cursor");
@@ -827,6 +850,9 @@ void OSXComputer::leave()
     // a client (onMouseMove reads raw deltas instead). must follow hideCursor(),
     // which re-associates. re-coupled in enter()/disable().
     CGAssociateMouseAndMouseCursorPosition(false);
+  } else {
+    // a zoom drag cut short by leaving keeps no magnifying glass pointer
+    deskflow::osx::zoom::cancelDrag();
   }
 
   // now off computer
@@ -878,12 +904,17 @@ void OSXComputer::screensaver(bool activate)
 
 void OSXComputer::resetOptions()
 {
-  // no options
+  m_trackpadGestures = true;
 }
 
-void OSXComputer::setOptions(const OptionsList &)
+void OSXComputer::setOptions(const OptionsList &options)
 {
-  // no options
+  for (size_t i = 0; i + 1 < options.size(); i += 2) {
+    if (options[i] == kOptionTrackpadGestures) {
+      m_trackpadGestures = (options[i + 1] != 0);
+      LOG_DEBUG("trackpad gestures %s", m_trackpadGestures ? "enabled" : "disabled");
+    }
+  }
 }
 
 void OSXComputer::setSequenceNumber(uint32_t seqNum)
@@ -1045,6 +1076,79 @@ bool OSXComputer::onMouseButton(bool pressed, uint16_t macButton)
   }
 
   return true;
+}
+
+void OSXComputer::onTrackpadGesture(CGEventType type, CGEventRef event)
+{
+  // on this computer the system handles the gesture; off it the tap swallows
+  // the event (so the local Dock does not react) and the active client
+  // posts it instead, if trackpad gestures are enabled
+  if (m_isOnComputer || !m_trackpadGestures) {
+    m_zoomRecognizer.reset();
+    return;
+  }
+
+  // the Zoom gesture is recognized here: the client may have no trackpad
+  // to recognize it from (see OSXTrackpadZoom.h)
+  using namespace deskflow::osx;
+  if (static_cast<int>(type) == gesture::kEventTypeGesture) {
+    if (const auto frame = zoom::touchFrame(event)) {
+      const auto result = m_zoomRecognizer.update(*frame);
+      if (result.toggle) {
+        LOG_DEBUG("trackpad zoom toggle gesture");
+        sendTrackpadEvent(zoom::encode({zoom::Command::Kind::Toggle, 0}));
+      }
+      if (result.dragBegan) {
+        LOG_DEBUG("trackpad zoom drag began");
+        sendTrackpadEvent(zoom::encode({zoom::Command::Kind::DragBegin, 0}));
+      }
+      if (result.steps != 0) {
+        LOG_VERBOSE("trackpad zoom drag, %+d steps", result.steps);
+        sendTrackpadEvent(zoom::encode({zoom::Command::Kind::Step, result.steps}));
+      }
+      if (result.dragEnded) {
+        LOG_DEBUG("trackpad zoom drag ended");
+        sendTrackpadEvent(zoom::encode({zoom::Command::Kind::DragEnd, 0}));
+      }
+    }
+  }
+  if (m_zoomRecognizer.holdsGestures()) {
+    // like macOS, the second touch of the double-tap only drives Zoom
+    return;
+  }
+
+  for (auto &bytes : m_gestureForwarder.take(type, event)) {
+    sendTrackpadEvent(std::move(bytes));
+  }
+}
+
+bool OSXComputer::onTrackpadScroll(CGEventRef event, int32_t xDelta, int32_t yDelta)
+{
+  if (!m_trackpadGestures) {
+    return false;
+  }
+  // a trackpad scroll goes whole, so the client scrolls like a local
+  // trackpad and can swipe between pages; the server falls back to the
+  // wheel deltas for clients that cannot post it
+  auto bytes = deskflow::osx::gesture::takeScroll(event);
+  if (!bytes.has_value()) {
+    return false;
+  }
+  LOG_VERBOSE("event: trackpad scroll delta=%+d,%+d", xDelta, yDelta);
+  m_events->addEvent(Event(
+      EventTypes::PrimaryComputerTrackpadEvent, getEventTarget(),
+      new deskflow::TrackpadEventData(std::move(*bytes), deskflow::TrackpadEventData::Wheel{xDelta, yDelta})
+  ));
+  return true;
+}
+
+void OSXComputer::sendTrackpadEvent(std::string bytes)
+{
+  if (!bytes.empty()) {
+    m_events->addEvent(Event(
+        EventTypes::PrimaryComputerTrackpadEvent, getEventTarget(), new deskflow::TrackpadEventData(std::move(bytes))
+    ));
+  }
 }
 
 bool OSXComputer::onMouseWheel(int32_t xDelta, int32_t yDelta) const
@@ -1697,12 +1801,17 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
     // the move below instead of returning (leaking) it to local apps.
     computer->onMouseMove(event);
     break;
-  case kCGEventScrollWheel:
-    computer->onMouseWheel(
-        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
-        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1))
-    );
+  case kCGEventScrollWheel: {
+    const auto x =
+        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2));
+    const auto y =
+        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1));
+    if (!computer->m_isOnComputer && computer->onTrackpadScroll(event, x, y)) {
+      break;
+    }
+    computer->onMouseWheel(x, y);
     break;
+  }
   case kCGEventKeyDown:
   case kCGEventKeyUp:
   case kCGEventFlagsChanged:
@@ -1721,6 +1830,10 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
   case NX_NULLEVENT:
     break;
   default:
+    if (deskflow::osx::gesture::isGestureEventType(type)) {
+      computer->onTrackpadGesture(type, event);
+      break;
+    }
     if (type == NX_SYSDEFINED) {
       if (isMediaKeyEvent(event)) {
         LOG_VERBOSE("detected media key event");

@@ -11,8 +11,11 @@
 #include "deskflow/PlatformComputer.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
+#include "platform/OSXTrackpadGesture.h"
+#include "platform/OSXTrackpadZoom.h"
 
 #include <Carbon/Carbon.h>
+#include <atomic>
 #include <IOKit/IOMessage.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
 #include <mach/mach_init.h>
@@ -77,6 +80,7 @@ public:
   void fakeMouseMove(int32_t x, int32_t y) override;
   void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override;
   void fakeMouseWheel(ScrollDelta delta) const override;
+  void fakeTrackpadEvent(const std::string &bytes) override;
 
   // IPlatformComputer overrides
   void enable() override;
@@ -125,6 +129,9 @@ private:
   bool onKey(CGEventRef event);
 
   void onMediaKey(CGEventRef event);
+  void onTrackpadGesture(CGEventType type, CGEventRef event);
+  void sendTrackpadEvent(std::string bytes);
+  bool onTrackpadScroll(CGEventRef event, int32_t xDelta, int32_t yDelta);
 
   bool onHotKey(EventRef event) const;
 
@@ -320,6 +327,17 @@ private:
   CondVar<bool> *m_carbonLoopReady;
 
   OSXPowerManager m_powerManager;
+
+  // primary: forward trackpad gestures to the active client
+  // (kOptionTrackpadGestures; written by setOptions(), read by the event tap)
+  std::atomic<bool> m_trackpadGestures{true};
+
+  // picks the trackpad gesture events forwarded to the active client
+  deskflow::osx::gesture::Forwarder m_gestureForwarder;
+
+  // primary: Accessibility Zoom trackpad gesture made for the active client
+  // (event tap thread only)
+  deskflow::osx::zoom::Recognizer m_zoomRecognizer;
 
   class OSXComputerImpl *m_impl;
 };

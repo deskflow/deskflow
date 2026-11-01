@@ -79,6 +79,19 @@ public:
   virtual void sendDragInfo(uint32_t fileCount, const char *info, size_t size) = 0;
   virtual void fileChunkSending(uint8_t mark, char *data, size_t dataSize) = 0;
   virtual std::string getSecureInputApp() const = 0;
+
+  //! Relay a serialized trackpad gesture event of the primary (protocol 1.9+)
+  virtual void trackpadEvent(const std::string &)
+  {
+    // not supported before 1.9
+  }
+
+  //! True if trackpadEvent() reaches the client
+  virtual bool supportsTrackpadEvents() const
+  {
+    return false;
+  }
+
   virtual void secureInputNotification(const std::string &app) const = 0;
   std::string getName() const override;
   virtual deskflow::IStream *getStream() const = 0;

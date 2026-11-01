@@ -315,6 +315,7 @@ private:
   void handleMotionPrimaryEvent(const Event &event);
   void handleMotionSecondaryEvent(const Event &event);
   void handleWheelEvent(const Event &event);
+  void handleTrackpadEvent(const Event &event);
   void handleSwitchWaitTimeout();
   void handleClientDisconnected(BaseClientProxy *client);
   void handleClientCloseTimeout(BaseClientProxy *client);

@@ -368,6 +368,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbTrackpadGestures">
+            <property name="toolTip">
+             <string>Forward trackpad gestures (swipes between spaces and pages, Mission Control, pinch, rotate, smooth scrolling) to macOS clients</string>
+            </property>
+            <property name="text">
+             <string>Enable trackpad &amp;gestures for macOS</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbWin32KeepForeground">
             <property name="enabled">
              <bool>true</bool>
@@ -920,6 +930,7 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>cbHeartbeat</tabstop>
   <tabstop>sbHeartbeat</tabstop>
   <tabstop>cbRelativeMouseMoves</tabstop>
+  <tabstop>cbTrackpadGestures</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>

@@ -71,6 +71,11 @@ protected:
     return m_stream;
   }
 
+  Client *getClient() const
+  {
+    return m_client;
+  }
+
 private:
   // if compressing mouse motion then send the last motion now
   void flushCompressedMouse();
