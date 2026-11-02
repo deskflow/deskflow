@@ -72,6 +72,7 @@ public:
   };
   struct Gui
   {
+    inline static const auto AlwaysOnTop = QStringLiteral("gui/alwaysOnTop");
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoStartCore = QStringLiteral("gui/startCoreWithGui");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
@@ -302,6 +303,7 @@ private:
     , Log::Level
     , Log::ToFile
     , Log::GuiDebug
+    , Gui::AlwaysOnTop
     , Gui::Autohide
     , Gui::AutoStartCore
     , Gui::AutoUpdateCheck
@@ -340,6 +342,7 @@ private:
   // When checking the default values this list contains the ones that default to false.
   inline static const QStringList m_defaultFalseValues = {
       Gui::Autohide
+    , Gui::AlwaysOnTop
     , Gui::AutoStartCore
     , Gui::ShownFirstConnectedMessage
     , Gui::ShownServerFirstStartMessage

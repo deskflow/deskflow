@@ -97,6 +97,7 @@ This section contains options used by the GUI it will begin with `[gui]`
 |Option                          | Valid Values      |Description|
 |:-------------------------------|:-----------------:|:-----------|
 | autoHide                       | `true` or `false` | When true the app will hide itself on start up [default: false] |
+| alwaysOnTop                    | `true` or `false` | When true the main window stays above other windows (ignored by some Wayland compositors) [default: false] |
 | enableUpdateCheck              | `true` or `false` | When true check the update URL to see if a new version was released on start up [default: false] |
 | closeReminder                  | `true` or `false` | Used to track if we have shown the reminder that when you close the app it remain running in the background  [default: true]|
 | closeToTray                    | `true` or `false` | When `true` the gui will run in the systemTray when its closed [default: true] |

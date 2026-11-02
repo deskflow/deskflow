@@ -579,6 +579,10 @@ Do you want to connect to the server?
         <translation type="unfinished">查看帮助(&amp;H)</translation>
     </message>
     <message>
+        <source>&amp;Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Invalid Computer Name</source>
         <translation type="unfinished"></translation>
     </message>

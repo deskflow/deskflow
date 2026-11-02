@@ -545,6 +545,10 @@ Vuoi connetterti al server?
         <translation type="unfinished">Visualizza la &amp;guida</translation>
     </message>
     <message>
+        <source>&amp;Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Ctrl+S</source>
         <extracomment>start / restart core shortcut</extracomment>
         <translation>Ctrl+A</translation>

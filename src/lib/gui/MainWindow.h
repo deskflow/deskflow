@@ -84,6 +84,8 @@ private:
    */
   void updateText();
   void toggleLogVisible(bool visible);
+  void toggleAlwaysOnTop(bool enabled);
+  void applyAlwaysOnTop(bool enabled);
 
   void settingsChanged(const QString &key = QString());
   void serverConfigSaving();
@@ -202,6 +204,7 @@ private:
   QAction *m_actionRestartCore = nullptr;
   QAction *m_actionStopCore = nullptr;
   QAction *m_actionShowHelp = nullptr;
+  QAction *m_actionAlwaysOnTop = nullptr;
 
   // Network monitoring
   NetworkMonitor *m_networkMonitor = nullptr;

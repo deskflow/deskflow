@@ -48,6 +48,7 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
+#include <QSignalBlocker>
 
 #include <memory>
 
@@ -79,6 +80,7 @@ MainWindow::MainWindow()
       m_actionRestartCore{new QAction(this)},
       m_actionStopCore{new QAction(this)},
       m_actionShowHelp{new QAction(this)},
+      m_actionAlwaysOnTop{new QAction(this)},
       m_networkMonitor{new NetworkMonitor(this)}
 {
   ui->setupUi(this);
@@ -122,6 +124,8 @@ MainWindow::MainWindow()
   m_actionShowHelp->setIcon(QIcon::fromTheme(QStringLiteral("question")));
   m_actionShowHelp->setMenuRole(QAction::NoRole);
   m_actionShowHelp->setShortcut(QKeySequence::HelpContents);
+
+  m_actionAlwaysOnTop->setCheckable(true);
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
@@ -299,6 +303,7 @@ void MainWindow::connectSlots()
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
 
   connect(m_logDock->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
+  connect(m_actionAlwaysOnTop, &QAction::toggled, this, &MainWindow::toggleAlwaysOnTop);
 
   connect(m_statusBar, &StatusBar::requestShowMyFingerprints, this, &MainWindow::showMyFingerprint);
   connect(m_statusBar, &StatusBar::requestUpdateVersion, this, &MainWindow::openGetNewVersionUrl);
@@ -342,6 +347,37 @@ void MainWindow::toggleLogVisible(bool visible)
     setFixedSize(size());
   }
   Settings::setValue(Settings::Gui::WindowGeometry, geometry());
+}
+
+void MainWindow::toggleAlwaysOnTop(bool enabled)
+{
+  Settings::setValue(Settings::Gui::AlwaysOnTop, enabled);
+  applyAlwaysOnTop(enabled);
+}
+
+void MainWindow::applyAlwaysOnTop(bool enabled)
+{
+  if (windowFlags().testFlag(Qt::WindowStaysOnTopHint) == enabled)
+    return;
+
+  const auto wasVisible = isVisible();
+  const auto wasMaximized = isMaximized();
+  const auto wasMinimized = isMinimized();
+
+  // Use setWindowFlag to preserve the other window flags.
+  setWindowFlag(Qt::WindowStaysOnTopHint, enabled);
+
+  // Changing flags hides a visible window, so restore its previous state.
+  // During startup the window is not visible yet, so don't show it early.
+  if (!wasVisible)
+    return;
+
+  if (wasMinimized)
+    showMinimized();
+  else if (wasMaximized)
+    showMaximized();
+  else
+    show();
 }
 
 void MainWindow::settingsChanged(const QString &key)
@@ -667,6 +703,8 @@ void MainWindow::createMenuBar()
 
   m_menuEdit->addAction(m_actionSettings);
 
+  m_menuView->addAction(m_actionAlwaysOnTop);
+  m_menuView->addSeparator();
   m_menuView->addAction(m_logDock->toggleViewAction());
 
   m_menuHelp->addAction(m_actionAbout);
@@ -715,6 +753,13 @@ void MainWindow::applyConfig()
   }
 
   coreModeToggled(true);
+
+  const auto alwaysOnTop = Settings::value(Settings::Gui::AlwaysOnTop).toBool();
+  {
+    const QSignalBlocker blocker(m_actionAlwaysOnTop);
+    m_actionAlwaysOnTop->setChecked(alwaysOnTop);
+  }
+  applyAlwaysOnTop(alwaysOnTop);
 }
 
 void MainWindow::saveSettings() const
@@ -1067,6 +1112,7 @@ void MainWindow::updateText()
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
 
   m_actionShowHelp->setText(tr("View &Help"));
+  m_actionAlwaysOnTop->setText(tr("&Always on top"));
 
   //: start / restart core shortcut
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));

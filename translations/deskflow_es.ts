@@ -557,6 +557,10 @@ Do you want to connect to the server?
         <translation type="unfinished">Ver &amp;ayuda</translation>
     </message>
     <message>
+        <source>&amp;Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Ctrl+S</source>
         <extracomment>start / restart core shortcut</extracomment>
         <translation type="unfinished">Ctrl+S</translation>
