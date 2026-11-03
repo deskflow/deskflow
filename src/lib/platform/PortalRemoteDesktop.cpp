@@ -230,15 +230,33 @@ void PortalRemoteDesktop::glibThread(const void *)
 void PortalRemoteDesktop::claimClipboard() const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (!m_session) {
-    LOG_DEBUG("portal remote desktop clipboard claim deferred, no session yet");
-    return;
-  }
-  if (!xdp_session_is_clipboard_enabled(m_session)) {
-    LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
-    return;
-  }
-  PortalClipboard::claimOwnership(m_computer->getClipboardCache(), m_session);
+  // claimClipboard() is invoked from the event-queue thread (via
+  // EiComputer::setClipboard), but every other portal D-Bus operation for this
+  // session runs on the glib main-loop thread: session setup, the
+  // selection-transfer / selection-owner-changed signal handlers and the
+  // synchronous selection read/write they perform. Calling
+  // xdp_session_set_selection directly from here races the glib thread while it
+  // is parked inside a synchronous selection_write serving an in-flight paste.
+  // The re-claim makes the compositor cancel the pending transfer request, so
+  // the serve then calls SelectionWrite for a serial the compositor has already
+  // dropped ("serial doesn't match any transfer request"). On
+  // xdg-desktop-portal before 1.20 that error path dereferences a NULL fd list
+  // and crashes the portal, which tears down the whole session. Marshal the
+  // claim onto the glib thread so all session traffic is serialized there.
+  auto claimOnGlibThread = [](gpointer data) -> gboolean {
+    auto *self = static_cast<PortalRemoteDesktop *>(data);
+    if (!self->m_session) {
+      LOG_DEBUG("portal remote desktop clipboard claim deferred, no session yet");
+      return G_SOURCE_REMOVE;
+    }
+    if (!xdp_session_is_clipboard_enabled(self->m_session)) {
+      LOG_DEBUG("portal remote desktop clipboard not enabled on session, cannot claim");
+      return G_SOURCE_REMOVE;
+    }
+    PortalClipboard::claimOwnership(self->m_computer->getClipboardCache(), self->m_session);
+    return G_SOURCE_REMOVE;
+  };
+  g_idle_add(claimOnGlibThread, const_cast<PortalRemoteDesktop *>(this));
 #endif
 }
 
