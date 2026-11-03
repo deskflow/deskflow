@@ -320,6 +320,11 @@ void Settings::checkIfSettingsWritableChange()
 
 QVariant Settings::defaultValue(const QString &key)
 {
+  // Preserve an existing manually configured address on upgrades. New clients
+  // with no address start in discovery mode.
+  if (key == Client::AutoServerDiscovery)
+    return Settings::value(Client::RemoteHost).toString().trimmed().isEmpty();
+
   if (key.startsWith(QStringLiteral("computer_"))) {
     const auto computerKey = key.mid(key.indexOf('/') + 1);
     return computerDefaults(computerKey);
@@ -527,6 +532,8 @@ void Settings::removeUnknownComputers(const QStringList &knownComputers)
 
 QVariant Settings::computerDefaults(const QString &key)
 {
+  if (key == "autoModifierSwitch")
+    return true;
   if (key.contains(QStringLiteral("halfDuplex")) || key.contains("xtestIsXineramaUnaware") || key.contains("X11") ||
       key.contains("Left") || key.contains("Right"))
     return false;

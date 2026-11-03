@@ -52,6 +52,7 @@ It will begin with `[client]`
 | Option                    |    Valid Values    | Description |
 |:--------------------------|:------------------:|:-----------|
 | dynamicConnectionInterval | `true` or `false`  | Use dynamic connection retry times based on number of previously failed attempts [default: false] |
+| autoServerDiscovery | `true` or `false` | Find a server configured for this client on the local IPv4 network. Requires updated server and client with TLS and peer fingerprint verification enabled. Existing manual addresses stay in manual mode until discovery is enabled. If multiple servers respond, enter an address manually. Discovery uses UDP port 24801. |
 | languageSync              | `true` or `false`  | Sync to server language [default: true] |
 | remoteHost                | `IP` or `hostname` | The remote host(s) to connect to. Use a comma separated list when you want to try several hosts |
 | yScrollScale              | Double 0.1 - 10.0  | Vertical mouse scrolling will be scaled by this amount on the client [default: 1.0] |
@@ -165,6 +166,7 @@ Each computer will have a section where its configuration will be stored, if the
 |:-----------------------|:-----------------:|:-----------|
 | aliases                | Comma separated list of hostnames | Names here will be used as alternatives for the computer. Names must be valid hostnames. |
 | name                   | Valid hostname    | The name of the client. |
+| autoModifierSwitch     | `true` or `false` | Automatically swap Alt and Super between a Windows server and macOS client, or a macOS server and Windows client. Enabled by default; set to false when the keyboard is already in the target layout. Explicit non-default modifier mappings take precedence. Both ends need a version that supports this option. |
 | halfDuplexCapsLock     | `true` or `false` | This computer has a ''Caps Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Caps Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | halfDuplexNumLock      | `true` or `false` | This computer has a ''Num Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Num Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | halfDuplexScrollLock   | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
@@ -181,6 +183,15 @@ Each computer will have a section where its configuration will be stored, if the
 | switchCornerBottomRight| `true` or `false` | Deskflow won't switch computers when the mouse reaches the edge of the computer if it includes this corner. The size of the corner is given by the `switchCornerSize` option. |
 | xtestIsXineramaUnaware | `true` or `false` | This option works around a bug in the XTest extension when used in combination with Xinerama. It affects X11 clients only. Not all versions of the XTest extension are aware of the Xinerama extension. As a result, they do not move the mouse correctly when using multiple Xinerama screens. This option is currently ''true'' by default. If you know your XTest extension is Xinerama aware then set this option to ''false''.|
 | weakX11Focus           | `true` or `false` | This X11 Client will not gain focus until an input event has been processed its any of its screens |
+
+The automatic Windows/macOS mapping translates Deskflow input when the cursor
+enters a client; it does not change the physical keyboard or its Bluetooth
+connection. Leave the keyboard in the layout for the computer it is connected
+to. For example, a K380 connected to a Windows server should use its Windows
+layout; the Mac client then receives the keys marked Cmd and Option in their
+Mac positions. If the keyboard is manually switched to the target layout or
+another tool already swaps these keys, turn off automatic adaptation for that
+computer to avoid a double swap.
 
 ### InternalConfig
 

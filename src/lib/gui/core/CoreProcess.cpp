@@ -658,6 +658,8 @@ void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString
     }
   } else if (command == "retryIn") {
     Q_EMIT retryIn(args.toInt());
+  } else if (command == "serverDiscovery") {
+    Q_EMIT serverDiscoveryStatus(args);
   } else if (command == "peerFingerprint") {
     Q_EMIT peerFingerprint(args);
   } else if (command == "missingKeyboardLayouts") {

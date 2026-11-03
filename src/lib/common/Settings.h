@@ -36,6 +36,7 @@ public:
 
   struct Client
   {
+    inline static const auto AutoServerDiscovery = QStringLiteral("client/autoServerDiscovery");
     inline static const auto DynamicConnectionRetry = QStringLiteral("client/dynamicConnectionInterval");
     inline static const auto InvertYScroll = QStringLiteral("client/invertYScroll");
     inline static const auto InvertXScroll = QStringLiteral("client/invertXScroll");
@@ -130,6 +131,7 @@ public:
     inline static const auto HalfDuplexCapsLock = QStringLiteral("computer_%1/halfDuplexCapsLock");
     inline static const auto HalfDuplexNumLock = QStringLiteral("computer_%1/halfDuplexNumLock");
     inline static const auto HalfDuplexScrollLock = QStringLiteral("computer_%1/halfDuplexScrollLock");
+    inline static const auto AutoModifierSwitch = QStringLiteral("computer_%1/autoModifierSwitch");
     inline static const auto ModifierAlt = QStringLiteral("computer_%1/modifierAlt");
     inline static const auto ModifierAltGr = QStringLiteral("computer_%1/modifierAltGr");
     inline static const auto ModifierCtrl = QStringLiteral("computer_%1/modifierCtrl");
@@ -273,7 +275,8 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Client::DynamicConnectionRetry
+      Client::AutoServerDiscovery
+    , Client::DynamicConnectionRetry
     , Client::InvertYScroll
     , Client::InvertXScroll
     , Client::LanguageSync

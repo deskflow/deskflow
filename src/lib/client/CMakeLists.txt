@@ -6,6 +6,8 @@
 add_library(client STATIC
   Client.cpp
   Client.h
+  ModifierTranslation.cpp
+  ModifierTranslation.h
   ServerProxy.cpp
   ServerProxy.h
   ServerProxy1_7.cpp

@@ -48,6 +48,7 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
+#include <QSignalBlocker>
 
 #include <memory>
 
@@ -212,6 +213,9 @@ void MainWindow::setupControls()
 
   ui->serverOptions->setVisible(false);
   ui->clientOptions->setVisible(false);
+  ui->chkAutoServerDiscovery->setChecked(Settings::value(Settings::Client::AutoServerDiscovery).toBool());
+  showDiscoveryStatus({});
+  updateDiscoveryControls();
 
   const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
   ui->rbModeClient->setChecked(coreMode == Settings::CoreMode::Client);
@@ -276,6 +280,7 @@ void MainWindow::connectSlots()
   connect(&m_coreProcess, &CoreProcess::unrecognisedClient, this, &MainWindow::handleUnrecognisedClient);
   connect(&m_coreProcess, &CoreProcess::connectionRefused, this, &MainWindow::handleConnectionRefused);
   connect(&m_coreProcess, &CoreProcess::retryIn, this, &MainWindow::updateTimeoutDelay);
+  connect(&m_coreProcess, &CoreProcess::serverDiscoveryStatus, this, &MainWindow::handleServerDiscoveryStatus);
   connect(&m_coreProcess, &CoreProcess::peerFingerprint, this, &MainWindow::handlePeerFingerprint);
   connect(&m_coreProcess, &CoreProcess::missingKeyboardLayouts, this, &MainWindow::handleMissingKeyboardLayouts);
 
@@ -289,6 +294,26 @@ void MainWindow::connectSlots()
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
   connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
+  connect(ui->chkAutoServerDiscovery, &QCheckBox::toggled, this, [this](bool enabled) {
+    if (enabled && (!Settings::value(Settings::Security::TlsEnabled).toBool() ||
+                    !Settings::value(Settings::Security::CheckPeers).toBool())) {
+      const QSignalBlocker blocker(ui->chkAutoServerDiscovery);
+      ui->chkAutoServerDiscovery->setChecked(false);
+      QMessageBox::warning(
+          this, tr("Automatic discovery unavailable"),
+          tr("Enable TLS encryption and peer fingerprint verification before using automatic discovery.")
+      );
+      return;
+    }
+    Settings::setValue(Settings::Client::AutoServerDiscovery, enabled);
+    m_discoverySilentRounds = 0;
+    showDiscoveryStatus({});
+    updateDiscoveryControls();
+    toggleCanRunCore(canRunCore());
+    if (m_coreProcess.mode() == CoreMode::Client && m_coreProcess.isStarted()) {
+      m_coreProcess.restart();
+    }
+  });
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -651,7 +676,8 @@ void MainWindow::open()
   }
 
   if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+    if (ui->rbModeClient->isChecked() && !ui->chkAutoServerDiscovery->isChecked() &&
+        ui->lineHostname->text().isEmpty())
       return;
     startCore();
   }
@@ -981,6 +1007,10 @@ void MainWindow::coreProcessStateChanged(ProcessState state)
     m_actionRestartCore->setVisible(false);
     m_actionStopCore->setEnabled(false);
   }
+  if (state == Stopped) {
+    m_discoverySilentRounds = 0;
+    showDiscoveryStatus({});
+  }
   updateModeControlLabels();
 }
 
@@ -1227,11 +1257,66 @@ void MainWindow::toggleCanRunCore(bool enableButtons)
 void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 {
   m_coreProcess.setAddress(newRemoteHost);
-  toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());
+  toggleCanRunCore(canRunCore());
+  // The auto-find default depends on whether an address is saved, so keep the
+  // current choice when an address is typed while auto-find is on.
+  Settings::setValue(Settings::Client::AutoServerDiscovery, ui->chkAutoServerDiscovery->isChecked());
   if (newRemoteHost.isEmpty()) {
     Settings::setValue(Settings::Client::RemoteHost);
   } else {
     Settings::setValue(Settings::Client::RemoteHost, newRemoteHost);
+  }
+}
+
+void MainWindow::updateDiscoveryControls()
+{
+  // The address stays editable in auto-find mode: it is queried directly,
+  // which is the only way to reach a server behind a router.
+  ui->lineHostname->setPlaceholderText(
+      ui->chkAutoServerDiscovery->isChecked() ? tr("Optional: server IP on another network")
+                                              : tr("Server hostname or IP address")
+  );
+}
+
+void MainWindow::showDiscoveryStatus(const QString &text)
+{
+  ui->lblDiscoveryStatus->setText(text);
+  ui->lblDiscoveryStatus->setVisible(!text.isEmpty());
+}
+
+void MainWindow::handleServerDiscoveryStatus(const QString &status)
+{
+  // The core retries every few seconds; after a few silent rounds explain why
+  // nothing answers instead of showing "searching" forever.
+  static constexpr int kSilentRoundsBeforeHint = 3;
+
+  const auto state = status.section(QLatin1Char(':'), 0, 0);
+  if (state != QStringLiteral("searching"))
+    m_discoverySilentRounds = 0;
+
+  const auto computerName = Settings::value(Settings::Core::ComputerName).toString();
+  const auto address = ui->lineHostname->text().trimmed();
+
+  if (state == QStringLiteral("found")) {
+    showDiscoveryStatus(tr("Found server %1").arg(status.section(QLatin1Char(':'), 1)));
+  } else if (state == QStringLiteral("multiple")) {
+    showDiscoveryStatus(tr("More than one server answered. Enter the address of the one to use above."));
+  } else if (state == QStringLiteral("socketError")) {
+    showDiscoveryStatus(tr("Could not search the network. Enter the server address above."));
+  } else if (state == QStringLiteral("searching")) {
+    if (++m_discoverySilentRounds < kSilentRoundsBeforeHint) {
+      showDiscoveryStatus(tr("Searching for a server..."));
+    } else if (address.isEmpty()) {
+      showDiscoveryStatus(
+          tr("No server found on this network. Auto-find only reaches the same network segment; if the server is "
+             "elsewhere, enter its IP address above. The server must also have added \"%1\".")
+              .arg(computerName)
+      );
+    } else {
+      showDiscoveryStatus(tr("No server answered at %1 or on this network. Check that the server is running and has "
+                             "added \"%2\".")
+                              .arg(address, computerName));
+    }
   }
 }
 
@@ -1245,6 +1330,18 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
   static const auto colorText = QStringLiteral(R"(<span style="color:%1;">%2</span>)");
   const bool serverStarted = m_coreProcess.isStarted();
   const bool fixedIP = !Settings::value(Settings::Core::Interface).toString().isEmpty();
+
+  // A wildcard listener follows interface changes without a restart. Always
+  // display a current address instead of retaining the address from startup.
+  if (!fixedIP && !addresses.isEmpty()) {
+    m_currentIpAddress = addresses.first();
+    ui->lblIpAddresses->setText(tr("Suggested IP: ") + m_currentIpAddress);
+    ui->lblIpAddresses->setToolTip(mode == CoreMode::Server
+                                      ? tr("<p>If connecting via the hostname fails, try %1</p>")
+                                            .arg(addresses.join(QStringLiteral("<br/>")))
+                                      : QString());
+    return;
+  }
 
   if (!fixedIP && addresses.isEmpty() && !serverStarted || (serverStarted && m_serverStartSuggestedIP.isEmpty())) {
     ui->lblIpAddresses->setText(colorText.arg(palette().linkVisited().color().name(), tr("No IP Detected")));
@@ -1325,5 +1422,5 @@ bool MainWindow::canRunCore() const
   const auto mode = m_coreProcess.mode();
   const bool isServer = mode == Settings::CoreMode::Server;
   const bool isClient = mode == Settings::CoreMode::Client;
-  return ((isServer || isClient) && (isClient && !ui->lineHostname->text().isEmpty()) || isServer);
+  return isServer || (isClient && (ui->chkAutoServerDiscovery->isChecked() || !ui->lineHostname->text().isEmpty()));
 }

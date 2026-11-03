@@ -10,6 +10,9 @@
 #include "common/Settings.h"
 #include "gui/config/Computer.h"
 
+#include <QDataStream>
+#include <QIODevice>
+
 void ComputerTests::initTestCase()
 {
   QDir dir;
@@ -30,10 +33,22 @@ void ComputerTests::basicFunctionality()
 
   computer.setName("stub");
   QVERIFY(!computer.isNull());
+  QVERIFY(computer.autoModifierSwitch());
+  computer.setAutoModifierSwitch(false);
 
   computer.saveSettings(Settings::proxy());
   computer.loadSettings(Settings::proxy());
   QCOMPARE("stub", computer.name());
+  QVERIFY(!computer.autoModifierSwitch());
+
+  QByteArray encoded;
+  QDataStream output(&encoded, QIODevice::WriteOnly);
+  output << computer;
+  Computer decoded;
+  QDataStream input(&encoded, QIODevice::ReadOnly);
+  input >> decoded;
+  QVERIFY(!decoded.autoModifierSwitch());
+  QVERIFY(computer == decoded);
 }
 
 QTEST_MAIN(ComputerTests)

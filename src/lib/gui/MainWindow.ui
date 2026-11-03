@@ -328,7 +328,7 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QGridLayout" name="gridLayoutClientOptions">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -341,7 +341,10 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item>
+             <property name="verticalSpacing">
+              <number>4</number>
+             </property>
+             <item row="0" column="0">
               <widget class="QPushButton" name="btnConfigureClient">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -366,7 +369,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="0" column="1">
               <spacer name="horizontalSpacer_3">
                <property name="orientation">
                 <enum>Qt::Orientation::Horizontal</enum>
@@ -382,7 +385,7 @@
                </property>
               </spacer>
              </item>
-             <item>
+             <item row="0" column="2">
               <widget class="QLabel" name="m_pLabelServerName">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -398,16 +401,45 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="0" column="3">
               <widget class="QLineEdit" name="lineHostname">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>1</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>180</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="toolTip">
                 <string>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QCheckBox" name="chkAutoServerDiscovery">
+               <property name="text">
+                <string>Auto-find server</string>
+               </property>
+               <property name="toolTip">
+                <string>Search this network for a server that has added this computer. A server behind a router cannot be found this way; enter its IP address above and it will be asked directly.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QLabel" name="lblDiscoveryStatus">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
                </property>
               </widget>
              </item>

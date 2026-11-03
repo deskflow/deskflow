@@ -415,6 +415,16 @@
             </item>
            </widget>
           </item>
+          <item row="10" column="0" colspan="2">
+           <widget class="QCheckBox" name="chkAutoModifierSwitch">
+            <property name="toolTip">
+             <string>Swap Alt and Super between Windows and macOS when the modifier mappings above are unchanged. Turn this off if the keyboard already uses the target system mode.</string>
+            </property>
+            <property name="text">
+             <string>Auto-adjust Mac/Windows keys</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

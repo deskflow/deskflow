@@ -90,6 +90,7 @@ void ServerApp::reloadConfig()
     if (m_server != nullptr) {
       m_server->setConfig(*m_config);
     }
+    updateDiscoveryClients();
     LOG_INFO("reloaded configuration");
   }
 }
@@ -196,6 +197,7 @@ void ServerApp::closeClientListener(ClientListener *listen)
 
 void ServerApp::stopServer()
 {
+  m_discovery.reset();
   using enum ServerState;
   if (m_serverState == Started) {
     closeServer(m_server);
@@ -376,6 +378,17 @@ bool ServerApp::startServer()
     LOG_DEBUG("started server, waiting for clients");
     ipcSendConnectionState(deskflow::core::ConnectionState::Listening);
     m_serverState = Started;
+    if (Settings::value(Settings::Security::TlsEnabled).toBool() &&
+        Settings::value(Settings::Security::CheckPeers).toBool()) {
+      m_discovery = std::make_unique<deskflow::discovery::Responder>(m_config->getDeskflowAddress().getPort());
+      updateDiscoveryClients();
+      if (!m_discovery->startListening()) {
+        LOG_WARN("automatic server discovery could not listen on UDP port %u", deskflow::discovery::kDiscoveryPort);
+        m_discovery.reset();
+      }
+    } else {
+      LOG_WARN("automatic discovery requires TLS and peer fingerprint verification");
+    }
     return true;
   } catch (SocketAddressInUseException &e) {
     LOG_CRIT("cannot listen for clients: %s", e.what());
@@ -387,6 +400,18 @@ bool ServerApp::startServer()
   }
 
   return false;
+}
+
+void ServerApp::updateDiscoveryClients()
+{
+  if (!m_discovery || !m_config) {
+    return;
+  }
+  QSet<QString> names;
+  for (auto it = m_config->beginAll(); it != m_config->endAll(); ++it) {
+    names.insert(QString::fromStdString(it->first));
+  }
+  m_discovery->setAllowedClients(names);
 }
 
 deskflow::Computer *ServerApp::createComputer()

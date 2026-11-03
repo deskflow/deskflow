@@ -1073,6 +1073,11 @@ void Server::sendOptions(BaseClientProxy *client) const
     }
   }
 
+  // Updated clients can compare the keyboard host with their own platform.
+  // Older clients ignore unknown options without changing the handshake.
+  optionsList.push_back(kOptionServerKeyboardPlatform);
+  optionsList.push_back(kCurrentKeyboardPlatform);
+
   // send the options
   client->resetOptions();
   client->setOptions(optionsList);

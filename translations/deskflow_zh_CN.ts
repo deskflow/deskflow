@@ -193,6 +193,14 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">修饰键</translation>
     </message>
     <message>
+        <source>Auto-adjust Mac/Windows keys</source>
+        <translation>自动适配 Mac/Windows 键位</translation>
+    </message>
+    <message>
+        <source>Swap Alt and Super between Windows and macOS when the modifier mappings above are unchanged. Turn this off if the keyboard already uses the target system mode.</source>
+        <translation>在 Windows 和 macOS 之间切换时，如果上方修饰键均为默认设置，则交换 Alt 和 Super。键盘已使用目标系统模式时，请关闭此选项。</translation>
+    </message>
+    <message>
         <source>M&amp;eta</source>
         <translation type="unfinished">M&amp;eta</translation>
     </message>
@@ -706,6 +714,54 @@ Valid names:
     <message>
         <source>Connect to:</source>
         <translation type="unfinished">连接到：</translation>
+    </message>
+    <message>
+        <source>Auto-find server</source>
+        <translation>自动查找服务器</translation>
+    </message>
+    <message>
+        <source>Automatic discovery unavailable</source>
+        <translation>无法自动查找</translation>
+    </message>
+    <message>
+        <source>Enable TLS encryption and peer fingerprint verification before using automatic discovery.</source>
+        <translation>使用自动查找前，请先启用 TLS 加密和对方指纹验证。</translation>
+    </message>
+    <message>
+        <source>Search this network for a server that has added this computer. A server behind a router cannot be found this way; enter its IP address above and it will be asked directly.</source>
+        <translation>在本网段查找已添加本机的服务器。隔着路由器的服务器用这种方式找不到，请在上方填写它的 IP 地址，会直接向它询问。</translation>
+    </message>
+    <message>
+        <source>Optional: server IP on another network</source>
+        <translation>可留空；服务器在其他网段时填它的 IP</translation>
+    </message>
+    <message>
+        <source>Server hostname or IP address</source>
+        <translation>服务器的主机名或 IP 地址</translation>
+    </message>
+    <message>
+        <source>Found server %1</source>
+        <translation>已找到服务器 %1</translation>
+    </message>
+    <message>
+        <source>More than one server answered. Enter the address of the one to use above.</source>
+        <translation>有多台服务器应答，请在上方填写要连接的那台的地址。</translation>
+    </message>
+    <message>
+        <source>Could not search the network. Enter the server address above.</source>
+        <translation>无法在网络中查找，请在上方填写服务器地址。</translation>
+    </message>
+    <message>
+        <source>Searching for a server...</source>
+        <translation>正在查找服务器……</translation>
+    </message>
+    <message>
+        <source>No server found on this network. Auto-find only reaches the same network segment; if the server is elsewhere, enter its IP address above. The server must also have added &quot;%1&quot;.</source>
+        <translation>本网段没有找到服务器。自动查找只能找到同一网段的电脑；服务器在其他网段时，请在上方填写它的 IP 地址。另外服务器上需要已添加“%1”。</translation>
+    </message>
+    <message>
+        <source>No server answered at %1 or on this network. Check that the server is running and has added &quot;%2&quot;.</source>
+        <translation>%1 和本网段都没有服务器应答。请确认服务器已启动，并已添加“%2”。</translation>
     </message>
     <message>
         <source>&lt;html&gt;Hostname or IP address of the server computer.&lt;br/&gt;May contain a comma seperated list.&lt;/html&gt;</source>

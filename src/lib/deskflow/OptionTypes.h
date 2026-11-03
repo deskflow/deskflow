@@ -57,7 +57,24 @@ static const OptionID kOptionDefaultLockToComputerState = OPTION_CODE("LTSS");
 static const OptionID kOptionDisableLockToComputer = OPTION_CODE("DLTS");
 static const OptionID kOptionClipboardSharing = OPTION_CODE("CLPS");
 static const OptionID kOptionClipboardSharingSize = OPTION_CODE("CLSZ");
+// Optional extension: older clients ignore option IDs they do not understand.
+static const OptionID kOptionServerKeyboardPlatform = OPTION_CODE("SKPL");
+static const OptionID kOptionAutoModifierSwitch = OPTION_CODE("AMSW");
 //@}
+
+// These values describe the server platform, not the physical keyboard mode.
+static constexpr uint32_t kKeyboardPlatformUnknown = 0;
+static constexpr uint32_t kKeyboardPlatformWindows = 1;
+static constexpr uint32_t kKeyboardPlatformMacOS = 2;
+static constexpr uint32_t kKeyboardPlatformOther = 3;
+
+#if defined(_WIN32)
+static constexpr uint32_t kCurrentKeyboardPlatform = kKeyboardPlatformWindows;
+#elif defined(__APPLE__)
+static constexpr uint32_t kCurrentKeyboardPlatform = kKeyboardPlatformMacOS;
+#else
+static constexpr uint32_t kCurrentKeyboardPlatform = kKeyboardPlatformOther;
+#endif
 
 //! @name Computer switch corner masks
 //@{

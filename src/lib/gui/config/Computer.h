@@ -32,13 +32,14 @@ class Computer : public ComputerConfig
   friend QDataStream &operator<<(QDataStream &outStream, const Computer &computer)
   {
     return outStream << computer.name() << computer.switchCornerSize() << computer.aliases() << computer.modifiers()
-                     << computer.switchCorners() << computer.fixes() << computer.isServer();
+                     << computer.switchCorners() << computer.fixes() << computer.isServer()
+                     << computer.autoModifierSwitch();
   }
 
   friend QDataStream &operator>>(QDataStream &inStream, Computer &computer)
   {
     return inStream >> computer.m_Name >> computer.m_SwitchCornerSize >> computer.m_Aliases >> computer.m_Modifiers >>
-           computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer;
+           computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer >> computer.m_AutoModifierSwitch;
   }
 
 public:
@@ -107,6 +108,14 @@ public:
   {
     return m_isServer;
   }
+  [[nodiscard]] bool autoModifierSwitch() const
+  {
+    return m_AutoModifierSwitch;
+  }
+  void setAutoModifierSwitch(bool enabled)
+  {
+    m_AutoModifierSwitch = enabled;
+  }
   void markAsServer()
   {
     m_isServer = true;
@@ -166,4 +175,5 @@ private:
   QList<bool> m_Fixes{false, false, false, false};
   bool m_Swapped = false;
   bool m_isServer = false;
+  bool m_AutoModifierSwitch = true;
 };

@@ -140,6 +140,9 @@ private:
   void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString &newRemoteHost);
+  void updateDiscoveryControls();
+  void showDiscoveryStatus(const QString &text);
+  void handleServerDiscoveryStatus(const QString &status);
   void updateIpLabel(const QStringList &addresses);
   void updateTimeoutDelay(int newDelay);
   void setHelpFilePath();
@@ -170,6 +173,7 @@ private:
   bool m_secureSocket = false;
   bool m_saveOnExit = true;
   bool m_clientErrorVisible = false;
+  int m_discoverySilentRounds = 0;
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
   QSet<QString> m_ignoredClients;

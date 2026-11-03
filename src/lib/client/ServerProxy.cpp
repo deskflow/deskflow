@@ -34,10 +34,6 @@ ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue 
   assert(m_client != nullptr);
   assert(m_stream != nullptr);
 
-  // initialize modifier translation table
-  for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
-    m_modifierTranslationTable[id] = id;
-
   // handle data on stream
   m_events->addHandler(EventTypes::StreamInputReady, m_stream->getEventTarget(), [this](const auto &) {
     handleData();
@@ -390,111 +386,6 @@ void ServerProxy::sendInfo(const ClientInfo &info)
   ProtocolUtil::writef(m_stream, kMsgDInfo, info.m_x, info.m_y, info.m_w, info.m_h, 0, info.m_mx, info.m_my);
 }
 
-KeyID ServerProxy::translateKey(KeyID id) const
-{
-  static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
-      {kKeyNone, kKeyNone},     {kKeyShift_L, kKeyShift_R}, {kKeyControl_L, kKeyControl_R}, {kKeyAlt_L, kKeyAlt_R},
-      {kKeyMeta_L, kKeyMeta_R}, {kKeySuper_L, kKeySuper_R}, {kKeyAltGr, kKeyAltGr}
-  };
-
-  KeyModifierID id2 = kKeyModifierIDNull;
-  uint32_t side = 0;
-  switch (id) {
-  case kKeyShift_L:
-    id2 = kKeyModifierIDShift;
-    side = 0;
-    break;
-
-  case kKeyShift_R:
-    id2 = kKeyModifierIDShift;
-    side = 1;
-    break;
-
-  case kKeyControl_L:
-    id2 = kKeyModifierIDControl;
-    side = 0;
-    break;
-
-  case kKeyControl_R:
-    id2 = kKeyModifierIDControl;
-    side = 1;
-    break;
-
-  case kKeyAlt_L:
-    id2 = kKeyModifierIDAlt;
-    side = 0;
-    break;
-
-  case kKeyAlt_R:
-    id2 = kKeyModifierIDAlt;
-    side = 1;
-    break;
-
-  case kKeyAltGr:
-    id2 = kKeyModifierIDAltGr;
-    side = 1; // there is only one alt gr key on the right side
-    break;
-
-  case kKeyMeta_L:
-    id2 = kKeyModifierIDMeta;
-    side = 0;
-    break;
-
-  case kKeyMeta_R:
-    id2 = kKeyModifierIDMeta;
-    side = 1;
-    break;
-
-  case kKeySuper_L:
-    id2 = kKeyModifierIDSuper;
-    side = 0;
-    break;
-
-  case kKeySuper_R:
-    id2 = kKeyModifierIDSuper;
-    side = 1;
-    break;
-
-  default:
-    break;
-  }
-
-  if (id2 != kKeyModifierIDNull) {
-    return s_translationTable[m_modifierTranslationTable[id2]][side];
-  } else {
-    return id;
-  }
-}
-
-KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
-{
-  static const KeyModifierMask s_masks[kKeyModifierIDLast] = {0x0000,          KeyModifierShift, KeyModifierControl,
-                                                              KeyModifierAlt,  KeyModifierMeta,  KeyModifierSuper,
-                                                              KeyModifierAltGr};
-
-  KeyModifierMask newMask = mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierMeta |
-                                     KeyModifierSuper | KeyModifierAltGr);
-  if ((mask & KeyModifierShift) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
-  }
-  if ((mask & KeyModifierControl) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDControl]];
-  }
-  if ((mask & KeyModifierAlt) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAlt]];
-  }
-  if ((mask & KeyModifierAltGr) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAltGr]];
-  }
-  if ((mask & KeyModifierMeta) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDMeta]];
-  }
-  if ((mask & KeyModifierSuper) != 0) {
-    newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDSuper]];
-  }
-  return newMask;
-}
-
 void ServerProxy::enter()
 {
   // parse
@@ -578,8 +469,8 @@ void ServerProxy::keyDown(uint16_t id, uint16_t mask, uint16_t button, const std
 {
   flushCompressedMouse();
 
-  KeyID id2 = translateKey(static_cast<KeyID>(id));
-  KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  KeyID id2 = m_modifierTranslation.translateKey(static_cast<KeyID>(id));
+  KeyModifierMask mask2 = m_modifierTranslation.translateMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key down translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
@@ -590,8 +481,8 @@ void ServerProxy::keyRepeat(uint16_t id, uint16_t mask, uint16_t count, uint16_t
 {
   flushCompressedMouse();
 
-  KeyID id2 = translateKey(static_cast<KeyID>(id));
-  KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  KeyID id2 = m_modifierTranslation.translateKey(static_cast<KeyID>(id));
+  KeyModifierMask mask2 = m_modifierTranslation.translateMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
@@ -611,8 +502,8 @@ void ServerProxy::keyUp()
   LOG_VERBOSE("recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
 
   // translate
-  KeyID id2 = translateKey(static_cast<KeyID>(id));
-  KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  KeyID id2 = m_modifierTranslation.translateKey(static_cast<KeyID>(id));
+  KeyModifierMask mask2 = m_modifierTranslation.translateMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
     LOG_VERBOSE("key up translated to id=0x%08x, mask=0x%04x", id2, mask2);
 
@@ -748,10 +639,7 @@ void ServerProxy::resetOptions()
   // reset keep alive
   setKeepAliveRate(kKeepAliveRate);
 
-  // reset modifier translation table
-  for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
-    m_modifierTranslationTable[id] = id;
-  }
+  m_modifierTranslation.reset();
 }
 
 void ServerProxy::setOptions()
@@ -769,29 +657,14 @@ void ServerProxy::setOptions()
   // forward
   m_client->setOptions(options);
 
-  // update modifier table
-  for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
-    KeyModifierID id = kKeyModifierIDNull;
-    if (options[i] == kOptionModifierMapForShift) {
-      id = kKeyModifierIDShift;
-    } else if (options[i] == kOptionModifierMapForControl) {
-      id = kKeyModifierIDControl;
-    } else if (options[i] == kOptionModifierMapForAlt) {
-      id = kKeyModifierIDAlt;
-    } else if (options[i] == kOptionModifierMapForAltGr) {
-      id = kKeyModifierIDAltGr;
-    } else if (options[i] == kOptionModifierMapForMeta) {
-      id = kKeyModifierIDMeta;
-    } else if (options[i] == kOptionModifierMapForSuper) {
-      id = kKeyModifierIDSuper;
-    } else if (options[i] == kOptionHeartbeat) {
-      // update keep alive
-      setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
-    }
+  m_modifierTranslation.setOptions(options);
+  if (m_modifierTranslation.isAutoSwitchActive()) {
+    LOG_INFO("automatic Windows/macOS Alt and Super key mapping is active");
+  }
 
-    if (id != kKeyModifierIDNull) {
-      m_modifierTranslationTable[id] = std::clamp<KeyModifierMask>(options[i + 1], 0, kKeyModifierIDLast - 1);
-      LOG_VERBOSE("modifier %d mapped to %d", id, m_modifierTranslationTable[id]);
+  for (size_t i = 0; i < options.size(); i += 2) {
+    if (options[i] == kOptionHeartbeat) {
+      setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
     }
   }
 }

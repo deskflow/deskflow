@@ -327,28 +327,20 @@ void Client::setOptions(const OptionsList &options)
     return;
   }
 
-  for (auto index = options.begin(); index != options.end(); ++index) {
-    const OptionID id = *index;
+  for (std::size_t index = 0; index < options.size(); index += 2) {
+    const OptionID id = options[index];
+    const auto value = options[index + 1];
     if (id == kOptionClipboardSharing) {
-      index++;
-      if (index != options.end()) {
-        if (!*index) {
-          LOG_INFO("clipboard sharing disabled by server");
-        }
-        m_enableClipboard = *index;
+      if (!value) {
+        LOG_INFO("clipboard sharing disabled by server");
       }
+      m_enableClipboard = value;
     } else if (id == kOptionClipboardSharingSize) {
-      index++;
-      if (index != options.end()) {
-        m_maximumClipboardSize = *index;
-      }
+      m_maximumClipboardSize = value;
     } else if (id == kOptionRelativeMouseMoves) {
-      index++;
-      if (index != options.end()) {
-        m_relativeMouseMoves = (*index != 0);
-        if (m_relativeMouseMoves && m_ready && !m_hasRelativeRestorePosition) {
-          saveRelativeRestorePosition();
-        }
+      m_relativeMouseMoves = (value != 0);
+      if (m_relativeMouseMoves && m_ready && !m_hasRelativeRestorePosition) {
+        saveRelativeRestorePosition();
       }
     }
   }

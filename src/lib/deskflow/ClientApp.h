@@ -90,6 +90,7 @@ private:
   void tryNextServer();
 
   bool m_suspended = false;
+  bool m_autoDiscoverServer = false;
   Client *m_client = nullptr;
   deskflow::Computer *m_clientComputer = nullptr;
   QList<NetworkAddress> m_serverAddresses;

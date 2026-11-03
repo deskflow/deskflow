@@ -12,3 +12,11 @@ create_test(
   SOURCE ServerProxyTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/client"
 )
+
+create_test(
+  NAME ModifierTranslationTests
+  DEPENDS client
+  LIBS arch base io mt net platform server app ${extra_libs}
+  SOURCE ModifierTranslationTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/client"
+)

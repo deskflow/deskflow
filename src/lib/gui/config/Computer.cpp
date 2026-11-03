@@ -33,6 +33,7 @@ void Computer::loadSettings(QSettingsProxy &settings)
   setModifier(Meta, modifierValueFromString(Settings::value(Settings::Computer::ModifierMeta.arg(name)).toString()));
   setModifier(Shift, modifierValueFromString(Settings::value(Settings::Computer::ModifierShift.arg(name)).toString()));
   setModifier(Super, modifierValueFromString(Settings::value(Settings::Computer::ModifierSuper.arg(name)).toString()));
+  setAutoModifierSwitch(Settings::value(Settings::Computer::AutoModifierSwitch.arg(name)).toBool());
 
   setSwitchCornerSize(Settings::value(Settings::Computer::SwitchCornerSize.arg(name)).toInt());
 
@@ -62,6 +63,7 @@ void Computer::saveSettings(QSettingsProxy &settings) const
     return;
 
   Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
+  Settings::setValue(Settings::Computer::AutoModifierSwitch.arg(computerName), autoModifierSwitch());
   Settings::setValue(Settings::Computer::Aliases.arg(computerName), m_Aliases);
   Settings::setValue(Settings::Computer::HalfDuplexCapsLock.arg(computerName), m_Fixes[static_cast<int>(CapsLock)]);
   Settings::setValue(Settings::Computer::HalfDuplexNumLock.arg(computerName), m_Fixes[static_cast<int>(NumLock)]);
@@ -116,5 +118,6 @@ bool Computer::operator==(const Computer &computer) const
 {
   return m_Name == computer.m_Name && m_Aliases == computer.m_Aliases && m_Modifiers == computer.m_Modifiers &&
          m_SwitchCorners == computer.m_SwitchCorners && m_SwitchCornerSize == computer.m_SwitchCornerSize &&
-         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
+         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer &&
+         m_AutoModifierSwitch == computer.m_AutoModifierSwitch;
 }

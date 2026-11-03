@@ -17,6 +17,7 @@
 #include "common/Settings.h"
 #include "deskflow/Computer.h"
 #include "deskflow/DisplayException.h"
+#include "deskflow/ServerDiscovery.h"
 #include "deskflow/ipc/CoreIpc.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketException.h"
@@ -41,7 +42,32 @@
 #include "platform/OSXComputer.h"
 #endif
 
+#include <QHostInfo>
+
 #include <memory>
+#include <algorithm>
+
+namespace {
+// Broadcasts do not cross routers, so addresses the user entered are also
+// asked directly; this lets auto-find reach a server on another subnet.
+QList<QHostAddress> discoveryHints()
+{
+  QList<QHostAddress> hints;
+  const auto entries = Settings::value(Settings::Client::RemoteHost).toString().split(',', Qt::SkipEmptyParts);
+  for (const auto &entry : entries) {
+    const auto host = entry.trimmed();
+    if (host.isEmpty()) {
+      continue;
+    }
+    for (const auto &address : QHostInfo::fromName(host).addresses()) {
+      if (address.protocol() == QAbstractSocket::IPv4Protocol && !hints.contains(address)) {
+        hints.append(address);
+      }
+    }
+  }
+  return hints;
+}
+} // namespace
 
 ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
@@ -50,6 +76,18 @@ ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(even
 
 void ClientApp::parseArgs()
 {
+  m_autoDiscoverServer = Settings::value(Settings::Client::AutoServerDiscovery).toBool();
+  if (m_autoDiscoverServer) {
+    if (!Settings::value(Settings::Security::TlsEnabled).toBool() ||
+        !Settings::value(Settings::Security::CheckPeers).toBool()) {
+      LOG_CRIT("automatic discovery requires TLS and peer fingerprint verification");
+      bye(s_exitFailed);
+      return;
+    }
+    LOG_INFO("automatic server discovery enabled");
+    return;
+  }
+
   // save server addresses (comma-separated list supported)
   if (const auto addressList = Settings::value(Settings::Client::RemoteHost).toString(); !addressList.isEmpty()) {
     const int port = Settings::value(Settings::Core::Port).toInt();
@@ -274,6 +312,39 @@ bool ClientApp::startClient()
 {
   deskflow::Computer *clientComputer = nullptr;
   try {
+    if (m_autoDiscoverServer) {
+      using deskflow::discovery::Result;
+      const auto name = Settings::value(Settings::Core::ComputerName).toString();
+      Result result;
+      if (const auto hints = discoveryHints(); !hints.isEmpty()) {
+        result = deskflow::discovery::findServer(name, 800, deskflow::discovery::kDiscoveryPort, hints);
+      }
+      if (result.status != Result::Status::Found) {
+        result = deskflow::discovery::findServer(name);
+      }
+      if (result.status != deskflow::discovery::Result::Status::Found) {
+        if (result.status == deskflow::discovery::Result::Status::Multiple) {
+          LOG_WARN("multiple servers found; select a server address manually");
+          ipcSendToClient("serverDiscovery", "multiple");
+        } else if (result.status == deskflow::discovery::Result::Status::SocketError) {
+          LOG_WARN("unable to open a socket for automatic server discovery");
+          ipcSendToClient("serverDiscovery", "socketError");
+        } else {
+          LOG_DEBUG("no configured server found on the local network");
+          ipcSendToClient("serverDiscovery", "searching");
+        }
+        scheduleClientRestart(std::max(3.0, retryTime()));
+        ++m_retryCount;
+        return true;
+      }
+      m_serverAddresses.clear();
+      m_serverAddresses.append(NetworkAddress(result.address.toString().toStdString(), result.port));
+      m_currentServerIndex = 0;
+      m_lastServerAddressIndex = 0;
+      LOG_INFO("discovered server at %s:%u", qPrintable(result.address.toString()), result.port);
+      ipcSendToClient("serverDiscovery", QStringLiteral("found:%1").arg(result.address.toString()));
+    }
+
     if (m_clientComputer == nullptr) {
       clientComputer = openClientComputer();
       m_client = openClient(

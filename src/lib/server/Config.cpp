@@ -72,6 +72,9 @@ bool Config::addComputer(const std::string &name)
   addOption(
       name, kOptionComputerX11WeakFocus, Settings::value(Settings::Computer::WeakX11Focus.arg(computer)).toBool()
   );
+  addOption(
+      name, kOptionAutoModifierSwitch, Settings::value(Settings::Computer::AutoModifierSwitch.arg(computer)).toBool()
+  );
 
   OptionValue cornerValue = s_noCornerMask;
   if (Settings::value(Settings::Computer::SwitchCornerTopLeft.arg(computer)).toBool()) {

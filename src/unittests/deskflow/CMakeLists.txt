@@ -1,6 +1,14 @@
 # SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
+create_test(
+  NAME ServerDiscoveryTests
+  DEPENDS app
+  LIBS arch base io mt net platform server client
+  SOURCE ServerDiscoveryTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
 if(WIN32)
   set(extra_libs platform version)
 endif()
