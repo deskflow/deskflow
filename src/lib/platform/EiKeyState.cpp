@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Devs.
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Devs.
  * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -224,6 +224,27 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
       continue;
 
     for (auto group = 0U; group < xkb_keymap_num_layouts(m_xkbKeymap); group++) {
+      // A key is sensitive to every modifier that selects one of its levels, not only
+      // to the modifiers of the level being added. Otherwise e.g. AltGr is left held
+      // when typing a level 1 key, such as the base key after a dead key.
+      // VT switch levels are skipped (see below) so they don't count.
+      uint32_t keySensitive = 0;
+      for (auto level = 0U; level < xkb_keymap_num_levels_for_key(m_xkbKeymap, keycode, group); level++) {
+        const xkb_keysym_t *syms;
+        if (xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keycode, group, level, &syms) == 0)
+          continue;
+
+        char keysymName[128] = {0};
+        xkb_keysym_get_name(syms[0], keysymName, sizeof(keysymName));
+        if (strncmp(keysymName, "XF86_Switch_VT_", 15) == 0)
+          continue;
+
+        xkb_mod_mask_t masks[64];
+        auto nmasks = xkb_keymap_key_get_mods_for_level(m_xkbKeymap, keycode, group, level, masks, 64);
+        for (std::size_t m = 0; m < nmasks; m++)
+          keySensitive |= masks[m];
+      }
+
       for (auto level = 0U; level < xkb_keymap_num_levels_for_key(m_xkbKeymap, keycode, group); level++) {
         const xkb_keysym_t *syms;
         xkb_mod_mask_t masks[64];
@@ -261,10 +282,10 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
         // be accessed via None, Control, or Alt. We want the SIMPLEST (fewest bits)
         // combination, not the OR of all combinations.
         //
-        // For modSensitive, we only OR modifiers from this level, not all levels.
+        // For modSensitive, we OR modifiers from all levels except skipped ones.
         // This prevents marking F1 as sensitive to Ctrl+Alt just because Level5
         // (which we skip) uses those modifiers.
-        uint32_t modSensitive = 0;
+        uint32_t modSensitive = keySensitive;
         uint32_t modRequired = 0xFFFFFFFF;
         int minBits = 32;
         for (std::size_t m = 0; m < nmasks; m++) {
@@ -283,8 +304,9 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 
         assignGeneratedModifiers(keycode, item);
 
-        // add capslock version of key is sensitive to capslock
-        if (item.m_sensitive & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
+        // add capslock version of shifted levels. AltGr levels are Shift+Lock sensitive too,
+        // but must stay reachable without Lock (e.g. aogonek on the Polish layout)
+        if (item.m_required & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
           item.m_required &= ~KeyModifierShift;
           item.m_required |= KeyModifierCapsLock;
           keyMap.addKeyEntry(item);
