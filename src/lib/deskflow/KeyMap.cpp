@@ -55,7 +55,16 @@ void KeyMap::addKeyEntry(const KeyItem &item)
   if (item.m_id == kKeyNone) {
     return;
   }
-
+  
+  // ignore AltGr mapped to XKB keycode 84 (X11 keycode 92 = SysRq/PrintScreen).
+  // X11 keycode 92 produces scancode 0x054 in Spice's XT table, which the VM
+  // interprets as SysRq instead of AltGr.  The correct AltGr entry uses
+  // X11 keycode 108 (Right Alt, scancode 0x138), which is XKB keycode 100.
+  // Deskflow stores XKB keycodes internally, which are 8 less than X11 keycodes.
+  if (item.m_id == kKeyAltGr && item.m_button == 84) {
+    return;
+  }
+  
   // resize number of groups for key
   auto numGroups = item.m_group + 1;
   if (getNumGroups() > numGroups) {
