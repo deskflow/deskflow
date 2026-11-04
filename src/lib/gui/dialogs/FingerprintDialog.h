@@ -28,14 +28,16 @@ class FingerprintDialog : public QDialog
 public:
   explicit FingerprintDialog(
       QWidget *parent = nullptr, const Fingerprint &localFingerprint = {},
-      FingerprintDialogMode mode = FingerprintDialogMode::Local, const Fingerprint &remoteFingerprint = {}
+      FingerprintDialogMode mode = FingerprintDialogMode::Local, const Fingerprint &remoteFingerprint = {},
+      const QString &localPeer = {}, const QString &remotePeer = {}
   );
   ~FingerprintDialog() override = default;
 
 private:
   QLayout *makeLocalLayout(const Fingerprint &localFingerprint = {});
   QLayout *makeCompareLayout(
-      const Fingerprint &localFingerprint = {}, bool isServer = true, const Fingerprint &remoteFingerprint = {}
+      const Fingerprint &localFingerprint = {}, bool isServer = true, const Fingerprint &remoteFingerprint = {},
+      const QString &localPeer = {}, const QString &remotePeer = {}
   );
   void togglePreviewMode(bool hashMode);
   void updateModeButton(bool hashMode) const;

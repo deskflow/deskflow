@@ -88,6 +88,7 @@ public:
   int getAddrPort(ArchNetAddress) override;
   bool isAnyAddr(ArchNetAddress) override;
   bool isEqualAddr(ArchNetAddress, ArchNetAddress) override;
+  [[nodiscard]] ArchNetAddress getRemotePeerAddress(ArchSocket) override;
 
 private:
   void initModule(HMODULE);
