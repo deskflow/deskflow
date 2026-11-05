@@ -426,6 +426,15 @@ void MSWindowsDesks::destroyWindow(HWND hwnd) const
 
 LRESULT CALLBACK MSWindowsDesks::primaryDeskProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+  // Precision touchpad scrolling can skip the low level hook and land here instead.
+  // The hook eats normal wheel events, so this can't double up. Needs on-hardware testing.
+  if (msg == WM_MOUSEWHEEL) {
+    MSWindowsHook::relayWheel(0, static_cast<int16_t>(HIWORD(wParam)));
+    return 0;
+  } else if (msg == WM_MOUSEHWHEEL) {
+    MSWindowsHook::relayWheel(static_cast<int16_t>(HIWORD(wParam)), 0);
+    return 0;
+  }
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 

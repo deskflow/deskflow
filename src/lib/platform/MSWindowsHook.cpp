@@ -647,6 +647,13 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
   return CallNextHookEx(g_mouseLL, code, wParam, lParam);
 }
 
+void MSWindowsHook::relayWheel(int32_t xDelta, int32_t yDelta)
+{
+  if (g_mode == kHOOK_RELAY_EVENTS && g_threadID != 0) {
+    PostThreadMessage(g_threadID, DESKFLOW_MSG_MOUSE_WHEEL, yDelta, xDelta);
+  }
+}
+
 EHookResult MSWindowsHook::install()
 {
   assert(g_getMessage == nullptr || g_screenSaver);

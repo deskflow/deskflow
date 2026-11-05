@@ -67,6 +67,9 @@ public:
   //! Copy the hook's physical key state; false until it has observed an event.
   static bool getPhysicalKeyState(BYTE keys[kVirtualKeyCount]);
 
+  //! Relay wheel input that bypassed the low level hook (e.g. precision touchpads)
+  static void relayWheel(int32_t xDelta, int32_t yDelta);
+
   static EHookResult install();
 
   static int uninstall();
