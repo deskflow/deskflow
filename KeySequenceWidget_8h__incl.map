@@ -1,0 +1,11 @@
+<map id="src/lib/gui/widgets/KeySequenceWidget.h" name="src/lib/gui/widgets/KeySequenceWidget.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="56,5,212,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,105,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,47,79,83,76,79,116,42"/>
+<area shape="rect" id="Node000003" href="$KeySequence_8h.html" title=" " alt="" coords="129,92,296,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,42,192,81,187,81,152,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="145,165,197,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="208,116,187,153,184,149,203,119"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="221,165,286,189"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="220,115,242,152,237,151,218,120"/>
+</map>
