@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2005 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -36,7 +36,7 @@ InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, IPlatfo
       m_mask(info->m_mask),
       m_events(events)
 {
-  free(info);
+  delete info;
 }
 
 InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask)
@@ -431,12 +431,12 @@ InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue *events, IPlatformComp
 
 InputFilter::KeystrokeAction::~KeystrokeAction()
 {
-  free(m_keyInfo);
+  delete m_keyInfo;
 }
 
 void InputFilter::KeystrokeAction::adoptInfo(IPlatformComputer::KeyInfo *info)
 {
-  free(m_keyInfo);
+  delete m_keyInfo;
   m_keyInfo = info;
 }
 
