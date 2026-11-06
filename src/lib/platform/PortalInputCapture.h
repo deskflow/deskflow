@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
@@ -8,8 +9,9 @@
 
 #pragma once
 
-#include "mt/Thread.h"
 #include "platform/EiComputer.h"
+#include "platform/PortalContext.h"
+#include "platform/PortalSelectionRead.h"
 
 #include <QByteArray>
 
@@ -17,6 +19,7 @@
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
 
+#include <atomic>
 #include <cstdint>
 #include <map>
 #include <utility>
@@ -35,6 +38,8 @@ public:
   // Get the clipboard for the specified ID
   EiClipboard *getClipboard(ClipboardID id) const;
   void enable();
+  void claimClipboard();
+  void refreshBarriers();
   void disable();
   void release();
   void release(double x, double y);
@@ -44,8 +49,6 @@ public:
   }
 
 private:
-  void glibThread(const void *);
-  gboolean timeoutHandler() const;
   gboolean initSession();
   void setupSession(XdpInputCaptureSession *session);
   void handleStart(GObject *object, GAsyncResult *res);
@@ -59,7 +62,7 @@ private:
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
 
   void handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const;
-  void readClipboardSelection(XdpSession *session) const;
+  void readClipboardSelection(XdpSession *session);
   void claimClipboardOwnership(XdpSession *session) const;
 
   /// g_signal_connect callback wrapper
@@ -103,6 +106,7 @@ private:
 
     // Clipboard signals
     SelectionTransfer,
+    SelectionOwnerChanged,
   };
 
   enum class BarrierSide : uint8_t
@@ -151,21 +155,29 @@ private:
   IEventQueue *m_events = nullptr;
   int m_portalVersion = 0;
 
-  Thread *m_glibThread;
-  GMainLoop *m_glibMainLoop = nullptr;
+  PortalContext m_context;
 
   XdpPortal *m_portal = nullptr;
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  PortalSelectionRead m_selectionRead{m_context.get()};
+#endif
   XdpInputCaptureSession *m_session = nullptr;
 
   std::map<Signal, gulong> m_signals = {
-      {Signal::SessionClosed, 0},     {Signal::Disabled, 0},     {Signal::Activated, 0},
-      {Signal::Deactivated, 0},       {Signal::ZonesChanged, 0},
+      {Signal::SessionClosed, 0},     {Signal::Disabled, 0},
+      {Signal::Activated, 0},         {Signal::Deactivated, 0},
+      {Signal::ZonesChanged, 0},
 
-      {Signal::SelectionTransfer, 0},
+      {Signal::SelectionTransfer, 0}, {Signal::SelectionOwnerChanged, 0},
   };
 
+  GSource *m_retry = nullptr;
+  gint64 m_lastDisabledAt = 0;
+  unsigned m_backoffMs = 0;
+  bool m_barriersPending = false;
+  bool m_barriersDirty = false;
   bool m_enabled = false;
-  bool m_isActive = false;
+  std::atomic<bool> m_isActive{false};
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
