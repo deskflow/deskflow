@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -13,6 +14,8 @@
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
+
+#include <algorithm>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -216,7 +219,8 @@ AutoTISInputSourceRef copyKeyboardLayoutForKeyTranslation()
 //
 
 OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled)
-    : KeyState(events, std::move(layouts), isLangSyncEnabled)
+    : KeyState(events, layouts, isLangSyncEnabled),
+      m_treatKanaAsHangul(isKanaKeyHangul(layouts))
 {
   init();
 }
@@ -224,7 +228,8 @@ OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, 
 OSXKeyState::OSXKeyState(
     IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled
 )
-    : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled)
+    : KeyState(events, keyMap, layouts, isLangSyncEnabled),
+      m_treatKanaAsHangul(isKanaKeyHangul(layouts))
 {
   init();
 }
@@ -328,7 +333,11 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   VirtualKeyMap::const_iterator i = m_virtualKeyMap.find(vkCode);
   if (i != m_virtualKeyMap.end()) {
     m_deadKeyState = 0;
-    ids.push_back(i->second);
+    if (vkCode == kVK_JIS_Kana && m_treatKanaAsHangul) {
+      ids.push_back(kKeyHangul);
+    } else {
+      ids.push_back(i->second);
+    }
     return mapVirtualKeyToKeyButton(vkCode);
   }
 
@@ -1010,4 +1019,12 @@ KeyButton OSXKeyState::mapVirtualKeyToKeyButton(uint32_t keyCode)
 uint32_t OSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
 {
   return static_cast<uint32_t>(keyButton - KeyButtonOffset);
+}
+
+bool OSXKeyState::isKanaKeyHangul(const std::vector<std::string> &layouts)
+{
+  const auto hasLayout = [&layouts](const char *lang) {
+    return std::find(layouts.begin(), layouts.end(), lang) != layouts.end();
+  };
+  return hasLayout("ko") && !hasLayout("ja");
 }
