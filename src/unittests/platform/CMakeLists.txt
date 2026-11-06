@@ -11,6 +11,13 @@ if (WIN32)
   )
 elseif(APPLE)
   create_test(
+    NAME OSXKeyMapFallbackTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE OSXKeyMapFallbackTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+  create_test(
     NAME OSXClipboardTests
     DEPENDS platform
     LIBS base arch
