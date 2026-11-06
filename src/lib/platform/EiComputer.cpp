@@ -229,8 +229,11 @@ void EiComputer::warpCursor(int32_t x, int32_t y)
   m_cursorY = y;
 }
 
-std::uint32_t EiComputer::registerHotKey(KeyID key, KeyModifierMask mask)
+std::uint32_t EiComputer::registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS)
 {
+  // FIXME -- hot keys are always registered as portal shortcuts
+  (void)registerWithOS;
+
   static std::uint32_t next_id;
   std::uint32_t id = std::max(++next_id, 1u);
 
@@ -248,7 +251,7 @@ std::uint32_t EiComputer::registerHotKey(KeyID key, KeyModifierMask mask)
   return id;
 }
 
-void EiComputer::unregisterHotKey(uint32_t id)
+void EiComputer::unregisterHotKey(uint32_t id, bool)
 {
   for (auto it = m_hotkeys.begin(); it != m_hotkeys.end(); ++it) {
     if (it->second.removeById(id)) {

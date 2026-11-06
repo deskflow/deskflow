@@ -731,13 +731,23 @@ InputFilter::Condition *
 Config::parseCondition(const ConfigReadContext &s, const std::string &name, const std::vector<std::string> &args)
 {
   if (name == "keystroke") {
-    if (args.size() != 1) {
-      throw ServerConfigReadException(s, "syntax for condition: keystroke(modifiers+key)");
+    if (args.size() < 1 || args.size() > 2) {
+      throw ServerConfigReadException(
+          s, "syntax for condition: keystroke(modifiers+key[,disableGlobalHotkeyRegister])"
+      );
+    }
+
+    bool registerWithOS = true;
+    if (args.size() == 2) {
+      if (args[1] != "disableGlobalHotkeyRegister") {
+        throw ServerConfigReadException(s, "unknown keystroke condition option \"%{1}\"", args[1]);
+      }
+      registerWithOS = false;
     }
 
     IPlatformComputer::KeyInfo *keyInfo = s.parseKeystroke(args[0]);
 
-    return new InputFilter::KeystrokeCondition(m_events, keyInfo);
+    return new InputFilter::KeystrokeCondition(m_events, keyInfo, registerWithOS);
   }
 
   if (name == "mousebutton") {
@@ -776,8 +786,16 @@ void Config::parseAction(
   InputFilter::Action *action;
 
   if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
-    if (args.size() < 1 || args.size() > 2) {
-      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,computers])");
+    if (args.size() < 1 || args.size() > 3) {
+      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,computers[,activeScreenOnly]])");
+    }
+
+    bool activeComputerOnly = false;
+    if (args.size() == 3) {
+      if (args[2] != "activeScreenOnly") {
+        throw ServerConfigReadException(s, "unknown keystroke action option \"%{1}\"", args[2]);
+      }
+      activeComputerOnly = true;
     }
 
     IPlatformComputer::KeyInfo *keyInfo;
@@ -788,6 +806,7 @@ void Config::parseAction(
       parseComputers(s, args[1], computers);
       keyInfo = s.parseKeystroke(args[0], computers);
     }
+    keyInfo->m_activeComputerOnly = activeComputerOnly;
 
     if (name == "keystroke") {
       IPlatformComputer::KeyInfo *keyInfo2 = IKeyState::KeyInfo::alloc(*keyInfo);

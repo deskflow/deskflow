@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2005 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -51,8 +51,8 @@ public:
   class KeystrokeCondition : public Condition
   {
   public:
-    KeystrokeCondition(IEventQueue *events, IPlatformComputer::KeyInfo *);
-    KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask);
+    KeystrokeCondition(IEventQueue *events, IPlatformComputer::KeyInfo *, bool registerWithOS = true);
+    KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask, bool registerWithOS = true);
     ~KeystrokeCondition() override = default;
 
     KeyID getKey() const;
@@ -70,6 +70,7 @@ public:
     KeyID m_key;
     KeyModifierMask m_mask;
     IEventQueue *m_events;
+    bool m_registerWithOS;
   };
 
   // MouseButtonCondition

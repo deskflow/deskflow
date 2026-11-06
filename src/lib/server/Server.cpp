@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers.
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -1227,13 +1227,13 @@ void Server::handleKeyDownEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformComputer::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
-  onKeyDown(info->m_key, info->m_mask, info->m_button, lang, info->m_computers.c_str());
+  onKeyDown(info->m_key, info->m_mask, info->m_button, lang, info->m_computers.c_str(), info->m_activeComputerOnly);
 }
 
 void Server::handleKeyUpEvent(const Event &event)
 {
   auto *info = static_cast<IPlatformComputer::KeyInfo *>(event.getData());
-  onKeyUp(info->m_key, info->m_mask, info->m_button, info->m_computers.c_str());
+  onKeyUp(info->m_key, info->m_mask, info->m_button, info->m_computers.c_str(), info->m_activeComputerOnly);
 }
 
 void Server::handleKeyRepeatEvent(const Event &event)
@@ -1532,7 +1532,10 @@ void Server::onScreensaver(bool activated)
   }
 }
 
-void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang, const char *computers)
+void Server::onKeyDown(
+    KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang, const char *computers,
+    bool activeComputerOnly
+)
 {
   LOG_VERBOSE("onKeyDown id=%d mask=0x%04x button=0x%04x lang=%s", id, mask, button, lang.c_str());
   assert(m_active != nullptr);
@@ -1540,6 +1543,10 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
   // relay
   if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(computers)) {
     m_active->keyDown(id, mask, button, lang);
+  } else if (activeComputerOnly) {
+    if (IKeyState::KeyInfo::contains(computers, m_active->getName())) {
+      m_active->keyDown(id, mask, button, lang);
+    }
   } else {
     if (!computers && m_keyboardBroadcasting) {
       computers = m_keyboardBroadcastingComputers.c_str();
@@ -1555,7 +1562,7 @@ void Server::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const s
   }
 }
 
-void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const char *computers)
+void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const char *computers, bool activeComputerOnly)
 {
   LOG_VERBOSE("onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button);
   assert(m_active != nullptr);
@@ -1563,6 +1570,10 @@ void Server::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button, const cha
   // relay
   if (!m_keyboardBroadcasting && IKeyState::KeyInfo::isDefault(computers)) {
     m_active->keyUp(id, mask, button);
+  } else if (activeComputerOnly) {
+    if (IKeyState::KeyInfo::contains(computers, m_active->getName())) {
+      m_active->keyUp(id, mask, button);
+    }
   } else {
     if (!computers && m_keyboardBroadcasting) {
       computers = m_keyboardBroadcastingComputers.c_str();

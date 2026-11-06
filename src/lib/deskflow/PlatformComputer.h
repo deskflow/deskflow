@@ -32,8 +32,8 @@ public:
   void reconfigure(uint32_t activeSides) override = 0;
   uint32_t activeSides() override = 0;
   void warpCursor(int32_t x, int32_t y) override = 0;
-  uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override = 0;
-  void unregisterHotKey(uint32_t id) override = 0;
+  uint32_t registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS) override = 0;
+  void unregisterHotKey(uint32_t id, bool registerWithOS) override = 0;
   void fakeInputBegin() override = 0;
   void fakeInputEnd() override = 0;
   int32_t getJumpZoneSize() const override = 0;

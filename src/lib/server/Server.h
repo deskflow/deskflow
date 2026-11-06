@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -327,8 +327,10 @@ private:
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
   void onScreensaver(bool activated);
-  void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *computers);
-  void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *computers);
+  void onKeyDown(
+      KeyID, KeyModifierMask, KeyButton, const std::string &, const char *computers, bool activeComputerOnly = false
+  );
+  void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *computers, bool activeComputerOnly = false);
   void onKeyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const std::string &);
   void onMouseDown(ButtonID);
   void onMouseUp(ButtonID);

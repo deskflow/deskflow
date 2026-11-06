@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -64,8 +64,8 @@ public:
   void reconfigure(uint32_t activeSides) override;
   uint32_t activeSides() override;
   void warpCursor(int32_t x, int32_t y) override;
-  uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
-  void unregisterHotKey(uint32_t id) override;
+  uint32_t registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS) override;
+  void unregisterHotKey(uint32_t id, bool registerWithOS) override;
   void fakeInputBegin() override;
   void fakeInputEnd() override;
   int32_t getJumpZoneSize() const override;

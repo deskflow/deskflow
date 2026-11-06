@@ -31,18 +31,24 @@ void InputFilter::Condition::disablePrimary(PrimaryClient *)
   // do nothing
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, IPlatformComputer::KeyInfo *info)
+InputFilter::KeystrokeCondition::KeystrokeCondition(
+    IEventQueue *events, IPlatformComputer::KeyInfo *info, bool registerWithOS
+)
     : m_key(info->m_key),
       m_mask(info->m_mask),
-      m_events(events)
+      m_events(events),
+      m_registerWithOS(registerWithOS)
 {
   delete info;
 }
 
-InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask)
+InputFilter::KeystrokeCondition::KeystrokeCondition(
+    IEventQueue *events, KeyID key, KeyModifierMask mask, bool registerWithOS
+)
     : m_key(key),
       m_mask(mask),
-      m_events(events)
+      m_events(events),
+      m_registerWithOS(registerWithOS)
 {
   // do nothing
 }
@@ -59,12 +65,15 @@ KeyModifierMask InputFilter::KeystrokeCondition::getMask() const
 
 InputFilter::Condition *InputFilter::KeystrokeCondition::clone() const
 {
-  return new KeystrokeCondition(m_events, m_key, m_mask);
+  return new KeystrokeCondition(m_events, m_key, m_mask, m_registerWithOS);
 }
 
 std::string InputFilter::KeystrokeCondition::format() const
 {
-  return deskflow::string::sprintf("keystroke(%s)", deskflow::KeyMap::formatKey(m_key, m_mask).c_str());
+  return deskflow::string::sprintf(
+      "keystroke(%s%s)", deskflow::KeyMap::formatKey(m_key, m_mask).c_str(),
+      m_registerWithOS ? "" : ",disableGlobalHotkeyRegister"
+  );
 }
 
 InputFilter::FilterStatus InputFilter::KeystrokeCondition::match(const Event &event)
@@ -91,12 +100,12 @@ InputFilter::FilterStatus InputFilter::KeystrokeCondition::match(const Event &ev
 
 void InputFilter::KeystrokeCondition::enablePrimary(PrimaryClient *primary)
 {
-  m_id = primary->registerHotKey(m_key, m_mask);
+  m_id = primary->registerHotKey(m_key, m_mask, m_registerWithOS);
 }
 
 void InputFilter::KeystrokeCondition::disablePrimary(PrimaryClient *primary)
 {
-  primary->unregisterHotKey(m_id);
+  primary->unregisterHotKey(m_id, m_registerWithOS);
   m_id = 0;
 }
 
@@ -459,6 +468,7 @@ InputFilter::Action *InputFilter::KeystrokeAction::clone() const
 std::string InputFilter::KeystrokeAction::format() const
 {
   const char *type = formatName();
+  const char *options = m_keyInfo->m_activeComputerOnly ? ",activeScreenOnly" : "";
 
   if (m_keyInfo->m_computers[0] == '\0') {
     return deskflow::string::sprintf(
@@ -466,12 +476,12 @@ std::string InputFilter::KeystrokeAction::format() const
     );
   } else if (m_keyInfo->m_computers[0] == '*') {
     return deskflow::string::sprintf(
-        "%s(%s,*)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str()
+        "%s(%s,*%s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(), options
     );
   } else {
     return deskflow::string::sprintf(
-        "%s(%s,%s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
-        m_keyInfo->m_computers.c_str()
+        "%s(%s,%s%s)", type, deskflow::KeyMap::formatKey(m_keyInfo->m_key, m_keyInfo->m_mask).c_str(),
+        m_keyInfo->m_computers.c_str(), options
     );
   }
 }

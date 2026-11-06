@@ -538,7 +538,7 @@ void MSWindowsComputer::saveMousePosition(int32_t x, int32_t y)
   LOG_VERBOSE("saved mouse position for next delta: %+d,%+d", x, y);
 }
 
-uint32_t MSWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t MSWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS)
 {
   // only allow certain modifiers
   if ((mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierSuper)) != 0) {
@@ -586,9 +586,11 @@ uint32_t MSWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
     id = (uint32_t)m_hotKeys.size() + 1;
   }
 
-  // if this hot key has modifiers only then we'll handle it specially
+  // if this hot key has modifiers only then we'll handle it specially.
+  // hot keys not registered with the OS are only matched by our keyboard
+  // hook, so they still reach other applications when we're on the primary.
   bool err;
-  if (key == kKeyNone) {
+  if (key == kKeyNone || !registerWithOS) {
     // check if already registered
     err = (m_hotKeyToIDMap.count(HotKeyItem(vk, modifiers)) > 0);
   } else {
@@ -615,7 +617,7 @@ uint32_t MSWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
   return id;
 }
 
-void MSWindowsComputer::unregisterHotKey(uint32_t id)
+void MSWindowsComputer::unregisterHotKey(uint32_t id, bool registerWithOS)
 {
   // look up hotkey
   HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -625,7 +627,7 @@ void MSWindowsComputer::unregisterHotKey(uint32_t id)
 
   // unregister with OS
   bool err;
-  if (i->second.getVirtualKey() != 0) {
+  if (registerWithOS && i->second.getVirtualKey() != 0) {
     err = !UnregisterHotKey(nullptr, id);
   } else {
     err = false;

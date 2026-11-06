@@ -319,7 +319,7 @@ void OSXComputer::getCursorCenter(int32_t &x, int32_t &y) const
   y = m_yCenter;
 }
 
-uint32_t OSXComputer::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t OSXComputer::registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS)
 {
   // get mac virtual key and modifier mask matching deskflow key and mask
   uint32_t macKey, macMask;
@@ -348,6 +348,19 @@ uint32_t OSXComputer::registerHotKey(KeyID key, KeyModifierMask mask)
       m_modifierHotKeys[mask] = id;
       okay = true;
     }
+  } else if (!registerWithOS) {
+    // only matched by our event tap, so other applications still get the
+    // key while we're on the primary
+    if (m_hotKeyToIDMap.count(HotKeyItem(macKey, macMask)) > 0) {
+      // already registered, don't let the failure path below remove it
+      m_oldHotKeyIDs.push_back(id);
+      LOG_WARN(
+          "failed to register hotkey %s (id=%04x mask=%04x)", deskflow::KeyMap::formatKey(key, mask).c_str(), key, mask
+      );
+      return 0;
+    }
+    m_hotKeyToIDMap[HotKeyItem(macKey, macMask)] = id;
+    okay = true;
   } else {
     EventHotKeyID hkid = {'SNRG', (uint32_t)id};
     OSStatus status = RegisterEventHotKey(macKey, macMask, hkid, GetApplicationEventTarget(), 0, &ref);
@@ -372,7 +385,7 @@ uint32_t OSXComputer::registerHotKey(KeyID key, KeyModifierMask mask)
   return id;
 }
 
-void OSXComputer::unregisterHotKey(uint32_t id)
+void OSXComputer::unregisterHotKey(uint32_t id, bool registerWithOS)
 {
   // look up hotkey
   HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -385,7 +398,8 @@ void OSXComputer::unregisterHotKey(uint32_t id)
   if (i->second.getRef() != nullptr) {
     okay = (UnregisterEventHotKey(i->second.getRef()) == noErr);
   } else {
-    okay = false;
+    // hot keys not registered with the OS are only in m_hotKeyToIDMap
+    okay = !registerWithOS && m_hotKeyToIDMap.count(i->second) > 0;
     // XXX -- this is inefficient
     for (ModifierHotKeyMap::iterator j = m_modifierHotKeys.begin(); j != m_modifierHotKeys.end(); ++j) {
       if (j->second == id) {

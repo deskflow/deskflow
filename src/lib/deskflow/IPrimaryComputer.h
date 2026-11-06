@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -122,14 +122,20 @@ public:
   When the key is a modifier, it's acceptable to allow the user to press
   the modifiers in any order or to require the user to press the given key
   last.
+
+  If \p registerWithOS is false the hot key is not registered with the
+  operating system.  It is then only detected while input is being relayed
+  to a secondary computer, and other applications continue to receive the
+  key when the primary computer is active.
   */
-  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS) = 0;
 
   //! Unregister a system hotkey
   /*!
-  Unregisters a previously registered hot key.
+  Unregisters a previously registered hot key.  \p registerWithOS must
+  match the value passed to \c registerHotKey().
   */
-  virtual void unregisterHotKey(uint32_t id) = 0;
+  virtual void unregisterHotKey(uint32_t id, bool registerWithOS) = 0;
 
   //! Prepare to synthesize input on primary computer
   /*!

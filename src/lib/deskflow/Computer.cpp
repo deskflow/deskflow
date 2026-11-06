@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -324,14 +325,14 @@ void Computer::setSequenceNumber(uint32_t seqNum)
   m_computer->setSequenceNumber(seqNum);
 }
 
-uint32_t Computer::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t Computer::registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS)
 {
-  return m_computer->registerHotKey(key, mask);
+  return m_computer->registerHotKey(key, mask, registerWithOS);
 }
 
-void Computer::unregisterHotKey(uint32_t id)
+void Computer::unregisterHotKey(uint32_t id, bool registerWithOS)
 {
-  m_computer->unregisterHotKey(id);
+  m_computer->unregisterHotKey(id, registerWithOS);
 }
 
 void Computer::fakeInputBegin()

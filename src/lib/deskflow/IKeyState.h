@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -31,7 +31,10 @@ public:
   {
   public:
     static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, int32_t count);
-    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, int32_t count, const std::set<std::string> &destinations);
+    static KeyInfo *alloc(
+        KeyID, KeyModifierMask, KeyButton, int32_t count, const std::set<std::string> &destinations,
+        bool activeComputerOnly = false
+    );
     static KeyInfo *alloc(const KeyInfo &);
 
     static bool isDefault(const char *computers);
@@ -46,6 +49,8 @@ public:
     KeyButton m_button;
     int32_t m_count;
     std::string m_computers;
+    //! Only send to whichever of \c m_computers is the active computer
+    bool m_activeComputerOnly = false;
   };
 
   using KeyButtonSet = std::set<KeyButton>;

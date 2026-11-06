@@ -509,7 +509,7 @@ void XWindowsComputer::warpCursor(int32_t x, int32_t y)
   m_yCursor = y;
 }
 
-uint32_t XWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t XWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS)
 {
   // only allow certain modifiers
   if ((mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierSuper)) != 0) {
@@ -618,7 +618,9 @@ uint32_t XWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
         for (int k = 0; k < modKeymap->max_keypermod && !err; ++k) {
           KeyCode code = modifiermap[k];
           if (modifiermap[k] != 0) {
-            XGrabKey(m_display, code, modifiers2, m_root, False, GrabModeAsync, GrabModeAsync);
+            if (registerWithOS) {
+              XGrabKey(m_display, code, modifiers2, m_root, False, GrabModeAsync, GrabModeAsync);
+            }
             if (!err) {
               hotKeys.push_back(std::make_pair(code, modifiers2));
               m_hotKeyToIDMap[HotKeyItem(code, modifiers2)] = id;
@@ -662,7 +664,9 @@ uint32_t XWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
           }
 
           // add grab
-          XGrabKey(m_display, *j, tmpModifiers, m_root, False, GrabModeAsync, GrabModeAsync);
+          if (registerWithOS) {
+            XGrabKey(m_display, *j, tmpModifiers, m_root, False, GrabModeAsync, GrabModeAsync);
+          }
           if (!err) {
             hotKeys.push_back(std::make_pair(*j, tmpModifiers));
             m_hotKeyToIDMap[HotKeyItem(*j, tmpModifiers)] = id;
@@ -675,7 +679,9 @@ uint32_t XWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
   if (err) {
     // if any failed then unregister any we did get
     for (const auto &[keyCode, keyMask] : hotKeys) {
-      XUngrabKey(m_display, keyCode, keyMask, m_root);
+      if (registerWithOS) {
+        XUngrabKey(m_display, keyCode, keyMask, m_root);
+      }
       m_hotKeyToIDMap.erase(HotKeyItem(keyCode, keyMask));
     }
 
@@ -695,7 +701,7 @@ uint32_t XWindowsComputer::registerHotKey(KeyID key, KeyModifierMask mask)
   return id;
 }
 
-void XWindowsComputer::unregisterHotKey(uint32_t id)
+void XWindowsComputer::unregisterHotKey(uint32_t id, bool registerWithOS)
 {
   // look up hotkey
   HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -709,7 +715,9 @@ void XWindowsComputer::unregisterHotKey(uint32_t id)
     XWindowsUtil::ErrorLock lock(m_display, &err);
     const HotKeyList &hotKeys = i->second;
     for (const auto &[keyCode, keyMask] : hotKeys) {
-      XUngrabKey(m_display, keyCode, keyMask, m_root);
+      if (registerWithOS) {
+        XUngrabKey(m_display, keyCode, keyMask, m_root);
+      }
       m_hotKeyToIDMap.erase(HotKeyItem(keyCode, keyMask));
     }
   }

@@ -58,8 +58,8 @@ public:
   void reconfigure(std::uint32_t activeSides) override;
   std::uint32_t activeSides() override;
   void warpCursor(std::int32_t x, std::int32_t y) override;
-  std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
-  void unregisterHotKey(std::uint32_t id) override;
+  std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS) override;
+  void unregisterHotKey(std::uint32_t id, bool registerWithOS) override;
   void fakeInputBegin() override;
   void fakeInputEnd() override;
   std::int32_t getJumpZoneSize() const override;

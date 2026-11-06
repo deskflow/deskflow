@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -25,14 +26,14 @@ void PrimaryClient::reconfigure(uint32_t activeSides)
   m_computer->reconfigure(activeSides);
 }
 
-uint32_t PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS)
 {
-  return m_computer->registerHotKey(key, mask);
+  return m_computer->registerHotKey(key, mask, registerWithOS);
 }
 
-void PrimaryClient::unregisterHotKey(uint32_t id)
+void PrimaryClient::unregisterHotKey(uint32_t id, bool registerWithOS)
 {
-  m_computer->unregisterHotKey(id);
+  m_computer->unregisterHotKey(id, registerWithOS);
 }
 
 void PrimaryClient::fakeInputBegin()
@@ -139,14 +140,12 @@ void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
   m_clipboardDirty[id] = dirty;
 }
 
-void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &)
+void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
+  // only keystrokes synthesized by a keystroke action are faked locally,
+  // real key presses on the primary have already been seen by the system
   if (m_fakeInputCount > 0) {
-    // XXX -- don't forward keystrokes to primary computer for now
-    (void)key;
-    (void)mask;
-    (void)button;
-    //        m_computer->keyDown(key, mask, button);
+    m_computer->keyDown(key, mask, button, lang);
   }
 }
 
@@ -158,11 +157,7 @@ void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const 
 void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
   if (m_fakeInputCount > 0) {
-    // XXX -- don't forward keystrokes to primary screen for now
-    (void)key;
-    (void)mask;
-    (void)button;
-    //        m_computer->keyUp(key, mask, button);
+    m_computer->keyUp(key, mask, button);
   }
 }
 

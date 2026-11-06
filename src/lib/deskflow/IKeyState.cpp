@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -34,7 +35,8 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, Ke
 }
 
 IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
-    KeyID id, KeyModifierMask mask, KeyButton button, int32_t count, const std::set<std::string> &destinations
+    KeyID id, KeyModifierMask mask, KeyButton button, int32_t count, const std::set<std::string> &destinations,
+    bool activeComputerOnly
 )
 {
   auto *info = new KeyInfo();
@@ -43,6 +45,7 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
   info->m_button = button;
   info->m_count = count;
   info->m_computers = join(destinations);
+  info->m_activeComputerOnly = activeComputerOnly;
   return info;
 }
 
@@ -55,6 +58,7 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(const KeyInfo &x)
   info->m_button = x.m_button;
   info->m_count = x.m_count;
   info->m_computers = x.m_computers;
+  info->m_activeComputerOnly = x.m_activeComputerOnly;
   return info;
 }
 
@@ -86,7 +90,7 @@ bool IKeyState::KeyInfo::equal(const KeyInfo *a, const KeyInfo *b)
 {
   return (
       a->m_key == b->m_key && a->m_mask == b->m_mask && a->m_button == b->m_button && a->m_count == b->m_count &&
-      a->m_computers == b->m_computers
+      a->m_computers == b->m_computers && a->m_activeComputerOnly == b->m_activeComputerOnly
   );
 }
 

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -186,15 +187,16 @@ public:
   //! Register a system hotkey
   /*!
   Registers a system-wide hotkey for key \p key with modifiers \p mask.
-  Returns an id used to unregister the hotkey.
+  Returns an id used to unregister the hotkey.  See
+  \c IPrimaryComputer::registerHotKey() for \p registerWithOS.
   */
-  uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
+  uint32_t registerHotKey(KeyID key, KeyModifierMask mask, bool registerWithOS);
 
   //! Unregister a system hotkey
   /*!
   Unregisters a previously registered hot key.
   */
-  void unregisterHotKey(uint32_t id);
+  void unregisterHotKey(uint32_t id, bool registerWithOS);
 
   //! Prepare to synthesize input on primary computer
   /*!
