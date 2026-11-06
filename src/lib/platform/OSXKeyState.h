@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -168,4 +169,5 @@ private:
   bool m_controlRightPressed;
   bool m_altRightPressed;
   bool m_superRightPressed;
+  bool m_fnPressed;
 };

@@ -403,6 +403,10 @@ void KeyMap::initModifierKey(KeyItem &item)
     item.m_generates = KeyModifierAltGr;
     break;
 
+  case kKeyFn:
+    item.m_generates = KeyModifierFn;
+    break;
+
   case kKeyCapsLock:
     item.m_generates = KeyModifierCapsLock;
     item.m_lock = true;
