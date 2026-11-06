@@ -29,6 +29,7 @@ struct SettingsKeys
   inline static const QString ActiveOnRelease = QStringLiteral("activeOnRelease");
   inline static const QString HasComputers = QStringLiteral("hasScreens");
   inline static const QString RestartServer = QStringLiteral("restartServer");
+  inline static const QString ActiveComputerOnly = QStringLiteral("activeComputerOnly");
 };
 
 class Action
@@ -100,6 +101,9 @@ public:
   bool restartServer() const;
   void setRestartServer(bool b);
 
+  bool activeComputerOnly() const;
+  void setActiveComputerOnly(bool b);
+
   bool operator==(const Action &a) const = default;
 
 private:
@@ -112,6 +116,7 @@ private:
   bool m_activeOnRelease = false;
   bool m_hasComputers = false;
   bool m_restartServer;
+  bool m_activeComputerOnly = false;
 
   inline static const QString m_commandTemplate = QStringLiteral("(%1)");
   inline static const QStringList m_actionTypeNames{

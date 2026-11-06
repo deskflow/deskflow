@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -38,6 +39,7 @@ void Hotkey::removeActionAt(int index)
 void Hotkey::loadSettings(QSettings &settings)
 {
   m_keySequence.loadSettings(settings);
+  m_registerWithOS = !settings.value(kDisableGlobalHotkeyRegister, false).toBool();
 
   m_actions.clear();
   int num = settings.beginReadArray(kSectionActions);
@@ -54,6 +56,7 @@ void Hotkey::loadSettings(QSettings &settings)
 void Hotkey::saveSettings(QSettings &settings) const
 {
   m_keySequence.saveSettings(settings);
+  settings.setValue(kDisableGlobalHotkeyRegister, !m_registerWithOS);
 
   settings.beginWriteArray(kSectionActions);
   for (int i = 0; i < m_actions.size(); i++) {
@@ -65,7 +68,7 @@ void Hotkey::saveSettings(QSettings &settings) const
 
 bool Hotkey::operator==(const Hotkey &hk) const
 {
-  return m_keySequence == hk.keySequence() && m_actions == hk.actions();
+  return m_keySequence == hk.keySequence() && m_actions == hk.actions() && m_registerWithOS == hk.registerWithOS();
 }
 
 QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
@@ -74,7 +77,10 @@ QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
   if (hotkey.actions().size() == 0)
     return outStream;
 
-  QString outText = QStringLiteral("\t%1 = ").arg(hotkey.text());
+  const bool noRegister = !hotkey.registerWithOS() && !hotkey.keySequence().isMouseButton();
+  const QString condition =
+      noRegister ? Hotkey::kKeystrokeNoRegister.arg(hotkey.keySequence().toString()) : hotkey.text();
+  QString outText = QStringLiteral("\t%1 = ").arg(condition);
   for (int i = 0; i < hotkey.actions().size(); i++) {
     outText.append(hotkey.actions().at(i).text());
     if (i != hotkey.actions().size() - 1) {

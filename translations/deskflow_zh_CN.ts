@@ -134,6 +134,14 @@ p, li { white-space: pre-wrap; }
         <source>Switch to %1</source>
         <translation>切换到 %1</translation>
     </message>
+    <message>
+        <source>Send the keys only if one of the selected computers is the one currently being controlled, and only to that computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only when the selected computer is active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ClientConfigDialog</name>
@@ -436,6 +444,14 @@ Do you want to connect to the server?
     <message>
         <source>Enter the specification for the hotkey:</source>
         <translation>输入热键定义：</translation>
+    </message>
+    <message>
+        <source>Don&apos;t register the hotkey with the server&apos;s operating system, so it keeps working normally on the server. The hotkey only triggers its actions while controlling another computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t capture this hotkey on the server</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -25,6 +25,16 @@
     <widget class="KeySequenceWidget" name="m_pKeySequenceWidgetHotkey"/>
    </item>
    <item>
+    <widget class="QCheckBox" name="cbPassThroughOnServer">
+     <property name="toolTip">
+      <string>Don't register the hotkey with the server's operating system, so it keeps working normally on the server. The hotkey only triggers its actions while controlling another computer.</string>
+     </property>
+     <property name="text">
+      <string>Don't capture this hotkey on the server</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

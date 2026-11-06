@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -34,6 +34,9 @@ QString Action::text() const
         commandArgs.append(QStringLiteral(",%1").arg(computerList));
       } else
         commandArgs.append(QStringLiteral(",*"));
+
+      if (activeComputerOnly())
+        commandArgs.append(QStringLiteral(",activeScreenOnly"));
     }
     text.append(m_commandTemplate.arg(commandArgs));
   } break;
@@ -81,6 +84,7 @@ void Action::loadSettings(QSettings &settings)
   setActiveOnRelease(settings.value(SettingsKeys::ActiveOnRelease, false).toBool());
   setHaveComputers(settings.value(SettingsKeys::HasComputers, false).toBool());
   setRestartServer(settings.value(SettingsKeys::RestartServer, false).toBool());
+  setActiveComputerOnly(settings.value(SettingsKeys::ActiveComputerOnly, false).toBool());
 }
 
 void Action::saveSettings(QSettings &settings) const
@@ -101,6 +105,7 @@ void Action::saveSettings(QSettings &settings) const
   settings.setValue(SettingsKeys::ActiveOnRelease, m_activeOnRelease);
   settings.setValue(SettingsKeys::HasComputers, m_hasComputers);
   settings.setValue(SettingsKeys::RestartServer, m_restartServer);
+  settings.setValue(SettingsKeys::ActiveComputerOnly, m_activeComputerOnly);
 }
 
 int Action::type() const
@@ -162,6 +167,11 @@ bool Action::restartServer() const
   return m_restartServer;
 }
 
+bool Action::activeComputerOnly() const
+{
+  return m_activeComputerOnly;
+}
+
 void Action::setKeySequence(const KeySequence &seq)
 {
   m_keySequence = seq;
@@ -200,6 +210,11 @@ void Action::setHaveComputers(bool b)
 void Action::setRestartServer(bool b)
 {
   m_restartServer = b;
+}
+
+void Action::setActiveComputerOnly(bool b)
+{
+  m_activeComputerOnly = b;
 }
 
 QTextStream &operator<<(QTextStream &outStream, const Action &action)

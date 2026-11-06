@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -16,6 +17,7 @@ HotkeyDialog::HotkeyDialog(QWidget *parent, Hotkey &hotkey)
   ui->setupUi(this);
 
   ui->m_pKeySequenceWidgetHotkey->setText(m_Hotkey.text());
+  ui->cbPassThroughOnServer->setChecked(!m_Hotkey.registerWithOS());
 }
 
 HotkeyDialog::~HotkeyDialog() = default;
@@ -26,6 +28,7 @@ void HotkeyDialog::accept()
     return;
 
   hotkey().setKeySequence(sequenceWidget()->keySequence());
+  hotkey().setRegisterWithOS(!ui->cbPassThroughOnServer->isChecked());
   QDialog::accept();
 }
 

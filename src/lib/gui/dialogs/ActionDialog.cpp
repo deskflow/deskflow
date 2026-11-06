@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -39,6 +40,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
   ui->comboActionType->setCurrentIndex(m_action.type());
   ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
+  ui->cbActiveComputerOnly->setChecked(m_action.activeComputerOnly());
 
   for (const Computer &computer : config.computers()) {
     if (computer.isNull())
@@ -97,6 +99,10 @@ void ActionDialog::accept()
   m_action.setLockCursorMode(ui->comboLockCursorToComputer->currentIndex());
   m_action.setActiveOnRelease(ui->comboTriggerOn->currentIndex());
   m_action.setRestartServer(ui->comboActionType->currentIndex() == ActionTypes::RestartServer);
+  m_action.setActiveComputerOnly(
+      isKeyAction(ui->comboActionType->currentIndex()) && !ui->keySequenceWidget->keySequence().isMouseButton() &&
+      ui->cbActiveComputerOnly->isChecked()
+  );
 
   QDialog::accept();
 }
@@ -112,6 +118,7 @@ void ActionDialog::updateSize()
 void ActionDialog::keySequenceChanged()
 {
   ui->listComputers->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->cbActiveComputerOnly->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
 }
 
@@ -126,6 +133,7 @@ void ActionDialog::actionTypeChanged(int index)
   ui->keySequenceWidget->setVisible(isKeyAction(index));
   ui->groupComputers->setVisible(isKeyAction(index));
   ui->listComputers->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->cbActiveComputerOnly->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
   ui->comboSwitchToComputer->setVisible(index == ActionTypes::SwitchTo);
   ui->comboSwitchInDirection->setVisible(index == ActionTypes::SwitchInDirection);
   ui->comboLockCursorToComputer->setVisible(index == ActionTypes::ModifyCursorLock);

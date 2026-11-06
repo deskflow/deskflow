@@ -156,11 +156,21 @@
      <property name="title">
       <string>Computers to receive this event</string>
      </property>
-     <layout class="QHBoxLayout" name="_3">
+     <layout class="QVBoxLayout" name="_3">
       <item>
        <widget class="QListWidget" name="listComputers">
         <property name="sizeAdjustPolicy">
          <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cbActiveComputerOnly">
+        <property name="toolTip">
+         <string>Send the keys only if one of the selected computers is the one currently being controlled, and only to that computer.</string>
+        </property>
+        <property name="text">
+         <string>Only when the selected computer is active</string>
         </property>
        </widget>
       </item>
