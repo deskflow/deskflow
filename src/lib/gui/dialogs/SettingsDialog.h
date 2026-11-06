@@ -54,9 +54,6 @@ private:
   /// @brief Enables controls when they should be.
   void updateControls();
 
-  /// @brief updates the setting vaule for key size.
-  void updateRequestedKeySize() const;
-
   /// @brief update if the log level warning is shown
   void logLevelChanged();
 
