@@ -12,6 +12,8 @@
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
 
+#include <QMutex>
+
 #include <Carbon/Carbon.h>
 #include <IOKit/IOMessage.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
@@ -104,6 +106,9 @@ protected:
   IKeyState *getKeyState() const override;
 
 private:
+  friend class OSXComputerTests;
+  static bool isLocalPointerMovement(CGEventType type, CGEventRef event);
+
   bool updateComputerShape();
   bool updateComputerShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
   void postMouseEvent(CGPoint &) const;
@@ -250,6 +255,7 @@ private:
   using MouseButtonEventMapType = std::map<uint16_t, CGEventType>;
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
+  QMutex m_cursorMutex;
   bool m_cursorHidden;
 
   // keyboard stuff

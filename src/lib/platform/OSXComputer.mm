@@ -643,6 +643,11 @@ void OSXComputer::fakeMouseWheel(ScrollDelta delta) const
 
 void OSXComputer::showCursor()
 {
+  const QMutexLocker lock(&m_cursorMutex);
+  if (!m_cursorHidden) {
+    return;
+  }
+
   LOG_DEBUG("showing cursor");
 
   CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
@@ -654,6 +659,7 @@ void OSXComputer::showCursor()
   CGError error = CGDisplayShowCursor(m_displayID);
   if (error != kCGErrorSuccess) {
     LOG_ERR("failed to show cursor, error=%d", error);
+    return;
   }
 
   // appears to fix "mouse randomly not showing" bug
@@ -666,6 +672,11 @@ void OSXComputer::showCursor()
 
 void OSXComputer::hideCursor()
 {
+  const QMutexLocker lock(&m_cursorMutex);
+  if (m_cursorHidden) {
+    return;
+  }
+
   LOG_DEBUG("hiding cursor");
 
   CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
@@ -677,6 +688,7 @@ void OSXComputer::hideCursor()
   CGError error = CGDisplayHideCursor(m_displayID);
   if (error != kCGErrorSuccess) {
     LOG_ERR("failed to hide cursor, error=%d", error);
+    return;
   }
 
   // appears to fix "mouse randomly not hiding" bug
@@ -1650,25 +1662,27 @@ bool OSXComputer::HotKeyItem::operator<(const HotKeyItem &x) const
   return (m_keycode < x.m_keycode || (m_keycode == x.m_keycode && m_mask < x.m_mask));
 }
 
-// Quartz event tap support for the secondary display. This makes sure that we
-// will show the cursor if a local event comes in while deskflow has the cursor
-// off the computer.
+bool OSXComputer::isLocalPointerMovement(CGEventType type, CGEventRef event)
+{
+  if (!event) {
+    return false;
+  }
+  switch (type) {
+  case kCGEventMouseMoved:
+  case kCGEventLeftMouseDragged:
+  case kCGEventRightMouseDragged:
+  case kCGEventOtherMouseDragged:
+    return CGEventGetIntegerValueField(event, kCGEventSourceUnixProcessID) == 0;
+  default:
+    return false;
+  }
+}
+
 CGEventRef
 OSXComputer::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
-  // this fix is really screwing with the correct show/hide behavior. it
-  // should be tested better before reintroducing.
-  return event;
-
-  OSXComputer *computer = (OSXComputer *)refcon;
-  if (computer->m_cursorHidden && type == kCGEventMouseMoved) {
-
-    CGPoint pos = CGEventGetLocation(event);
-    if (pos.x != computer->m_xCenter || pos.y != computer->m_yCenter) {
-
-      LOG_DEBUG("show cursor on secondary, type=%d pos=%d,%d", type, pos.x, pos.y);
-      computer->showCursor();
-    }
+  if (isLocalPointerMovement(type, event)) {
+    static_cast<OSXComputer *>(refcon)->showCursor();
   }
   return event;
 }
