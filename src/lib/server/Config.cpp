@@ -10,6 +10,7 @@
 
 #include "base/IEventQueue.h"
 #include "common/KeyboardModifier.h"
+#include "common/LayoutLinks.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -24,6 +25,46 @@
 using namespace deskflow::string;
 
 namespace deskflow::server {
+
+namespace {
+
+Direction toDirection(deskflow::layout::Side side)
+{
+  using enum deskflow::layout::Side;
+  switch (side) {
+  case Left:
+    return Direction::Left;
+  case Right:
+    return Direction::Right;
+  case Up:
+    return Direction::Top;
+  case Down:
+    return Direction::Bottom;
+  }
+  return Direction::NoDirection;
+}
+
+void connectByGeometry(Config &config, const QStringList &computers)
+{
+  QMap<QString, QRect> placed;
+  for (const auto &computer : computers) {
+    const auto geometry = Settings::value(Settings::Computer::Geometry.arg(computer)).toRect();
+    if (!computer.isEmpty() && geometry.isValid())
+      placed.insert(computer, geometry);
+  }
+
+  for (const auto &link : deskflow::layout::computeLinks(placed)) {
+    if (!config.connect(
+            link.from.toStdString(), toDirection(link.side), static_cast<float>(link.fromStart / 100),
+            static_cast<float>(link.fromEnd / 100), link.to.toStdString(), static_cast<float>(link.toStart / 100),
+            static_cast<float>(link.toEnd / 100)
+        )) {
+      qWarning("failed to link '%s' to '%s'", qPrintable(link.from), qPrintable(link.to));
+    }
+  }
+}
+
+} // namespace
 //
 // Config
 //
@@ -463,6 +504,7 @@ void Config::read(ConfigReadContext &context)
   while (context.getStream()) {
     tmp.readSection(context);
   }
+  connectByGeometry(tmp, computers);
   *this = tmp;
 }
 
