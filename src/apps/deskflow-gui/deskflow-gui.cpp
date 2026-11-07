@@ -20,16 +20,13 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QLocalSocket>
+#include <QLoggingCategory>
 #include <QMessageBox>
 #include <QSharedMemory>
 
 #if defined(Q_OS_MACOS)
 #include <Carbon/Carbon.h>
 #include <cstdlib>
-#endif
-
-#if defined(Q_OS_UNIX) && defined(QT_DEBUG)
-#include <QLoggingCategory>
 #endif
 
 #if !defined(Q_OS_MACOS) && !defined(Q_OS_WIN)
@@ -46,9 +43,12 @@ const static auto kHeader = QStringLiteral("%1: %2\n").arg(kAppName, kDisplayVer
 
 int main(int argc, char *argv[])
 {
+  // Do not show ICC messages
 #if defined(Q_OS_UNIX) && defined(QT_DEBUG)
   // Fixes Fedora bug where qDebug() messages aren't printed.
   QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
+#else
+  QLoggingCategory::setFilterRules(QStringLiteral("qt.gui.icc=false"));
 #endif
 
 #if !defined(Q_OS_MACOS) && !defined(Q_OS_WIN)
