@@ -23,6 +23,8 @@ add_library(common STATIC
   KeyboardModifier.h
   KeySequence.h
   KeySequence.cpp
+  LayoutLinks.cpp
+  LayoutLinks.h
   LogLevel.h
   NetworkProtocol.h
   PlatformInfo.h
