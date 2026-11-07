@@ -17,6 +17,7 @@ If a matching or similar issues exists there is no need to comment unless your c
  When in doubt start by [asking a question](https://github.com/deskflow/deskflow/discussions/new?category=q-a)
 
   1. Enable debug level in your log to capture the log the next time the issue happens.
+     Turn logging back to INFO afterward; leaving VERBOSE on makes mouse input feel laggy on Wayland.
   1. Create A [New Issue](https://github.com/deskflow/deskflow/issues/new/choose)
   1. When reporting issues make sure you include the initial version tested as well as the version of the continuous used when testing. Use the about dialogs copy button to get this information.
   1. Include logs when reporting 

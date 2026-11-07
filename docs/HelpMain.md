@@ -6,6 +6,7 @@ Welcome to the Deskflow Help!
 
 ## User Guides
 * [Configuration] - Configuration files
+* [Wayland] - Wayland client/server notes (portals, scale, logging)
 * [Raising Issues] - What to do if you have found an issue.
 * [Security Policy] - Our policy around security related topics
 
@@ -21,4 +22,4 @@ Welcome to the Deskflow Help!
 [Configuration]:Configuration.md
 [Raising Issues]:Issues.md
 [Security Policy]:Security.md
-
+[Wayland]:Wayland.md
