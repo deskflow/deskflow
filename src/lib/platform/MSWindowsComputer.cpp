@@ -396,11 +396,17 @@ void MSWindowsComputer::screensaver(bool activate)
 void MSWindowsComputer::resetOptions()
 {
   m_desks->resetOptions();
+  m_keyState->setMacCapsLockSync(false);
 }
 
 void MSWindowsComputer::setOptions(const OptionsList &options)
 {
   m_desks->setOptions(options);
+  for (size_t i = 0; i + 1 < options.size(); i += 2) {
+    if (options[i] == kOptionMacCapsLockSync) {
+      m_keyState->setMacCapsLockSync(!m_isPrimary && options[i + 1] != 0);
+    }
+  }
 }
 
 void MSWindowsComputer::setSequenceNumber(uint32_t seqNum)

@@ -792,6 +792,27 @@ void KeyState::setHalfDuplexMask(KeyModifierMask mask)
   }
 }
 
+void KeyState::synchronizeCapsLock(KeyModifierMask mask)
+{
+  if (!isMacCapsLockSyncEnabled()) {
+    return;
+  }
+  auto &state = getActiveModifiersRValue();
+  if (((state ^ mask) & KeyModifierCapsLock) == 0) {
+    return;
+  }
+
+  Keystrokes keys;
+  const ModifierToKeys oldModifiers = m_activeModifiers;
+  const auto action = (mask & KeyModifierCapsLock) ? kKeySetModifiers : kKeyClearModifiers;
+  if (!m_keyMap.mapKey(keys, action, pollActiveGroup(), m_activeModifiers, state, KeyModifierCapsLock, false, {})) {
+    LOG_DEBUG("unable to synchronize Caps Lock state");
+    return;
+  }
+  updateModifierKeyState(0, oldModifiers, m_activeModifiers);
+  fakeKeys(keys, 1);
+}
+
 void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const std::string &lang)
 {
   // if this server key is already down then this is probably a
@@ -836,7 +857,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
   }
 
   // generate key events
-  fakeKeys(keys, 1);
+  fakeKeys(keys, 1, lang);
 }
 
 bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton serverID, const std::string &lang)
@@ -892,7 +913,7 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
   }
 
   // generate key events
-  fakeKeys(keys, count);
+  fakeKeys(keys, count, lang);
   return true;
 }
 
@@ -1056,7 +1077,7 @@ void KeyState::addCombinationEntries()
   }
 }
 
-void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
+void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count, const std::string &lang)
 {
   // do nothing if no keys or no repeats
   if (count == 0 || keys.empty()) {
@@ -1064,6 +1085,13 @@ void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
   }
 
   // generate key events
+  bool syncInputMethod = m_isLangSyncEnabled && !lang.empty();
+  const auto syncBeforePress = [&](const Keystroke &key) {
+    if (syncInputMethod && key.m_type == Keystroke::KeyType::Button && key.m_data.m_button.m_press) {
+      synchronizeInputMethod(lang);
+      syncInputMethod = false;
+    }
+  };
   for (auto k = keys.begin(); k != keys.end();) {
     if (k->m_type == Keystroke::KeyType::Button && k->m_data.m_button.m_repeat) {
       // repeat from here up to but not including the next key
@@ -1073,6 +1101,7 @@ void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
         // send repeating events
         for (k = start; k != keys.end() && k->m_type == Keystroke::KeyType::Button && k->m_data.m_button.m_repeat;
              ++k) {
+          syncBeforePress(*k);
           fakeKey(*k);
         }
       }
@@ -1081,6 +1110,7 @@ void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
       // repeat keys, exactly where we'd like to continue from.
     } else if (k->m_type != Keystroke::KeyType::Group || (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
       // send event
+      syncBeforePress(*k);
       fakeKey(*k);
 
       // next key
