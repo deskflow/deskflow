@@ -192,7 +192,7 @@ const KeyID MSWindowsKeyState::s_virtualKey[] = {
     /* 0x0a2 */ {kKeyControl_L},        // VK_LCONTROL
     /* 0x0a3 */ {kKeyControl_R},        // VK_RCONTROL
     /* 0x0a4 */ {kKeyAlt_L},            // VK_LMENU
-    /* 0x0a5 */ {kKeyAltGr},            // VK_RMENU
+    /* 0x0a5 */ {kKeyAlt_R},            // VK_RMENU
     /* 0x0a6 */ {kKeyNone},             // VK_BROWSER_BACK
     /* 0x0a7 */ {kKeyNone},             // VK_BROWSER_FORWARD
     /* 0x0a8 */ {kKeyNone},             // VK_BROWSER_REFRESH
@@ -449,7 +449,7 @@ const KeyID MSWindowsKeyState::s_virtualKey[] = {
     /* 0x1a2 */ {kKeyControl_L},    // VK_LCONTROL
     /* 0x1a3 */ {kKeyControl_R},    // VK_RCONTROL
     /* 0x1a4 */ {kKeyAlt_L},        // VK_LMENU
-    /* 0x1a5 */ {kKeyAltGr},        // VK_RMENU
+    /* 0x1a5 */ {kKeyAlt_R},        // VK_RMENU
     /* 0x1a6 */ {kKeyWWWBack},      // VK_BROWSER_BACK
     /* 0x1a7 */ {kKeyWWWForward},   // VK_BROWSER_FORWARD
     /* 0x1a8 */ {kKeyWWWRefresh},   // VK_BROWSER_REFRESH
@@ -1077,7 +1077,7 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
           static const Modifier modifiers[] = {
               {VK_SHIFT, VK_SHIFT, 0x80u, KeyModifierShift},
               {VK_CAPITAL, VK_CAPITAL, 0x01u, KeyModifierCapsLock},
-              {VK_CONTROL, VK_MENU, 0x80u, KeyModifierAltGr}
+              {VK_CONTROL, VK_MENU, 0x80u, KeyModifierControl | KeyModifierAlt}
           };
           static const size_t s_numModifiers = sizeof(modifiers) / sizeof(modifiers[0]);
           static const size_t s_numCombinations = 1 << s_numModifiers;
@@ -1149,6 +1149,15 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
           case VK_CANCEL:
             item.m_required |= KeyModifierControl;
             item.m_sensitive |= KeyModifierControl;
+            break;
+
+          case VK_RMENU:
+            // AltGr is only an alias: Windows types it as Ctrl+Alt, and Windows servers must keep sending right Alt
+            item.m_id = kKeyAltGr;
+            deskflow::KeyMap::initModifierKey(item);
+            addKeyEntry(keyMap, item);
+            item.m_id = kKeyAlt_R;
+            deskflow::KeyMap::initModifierKey(item);
             break;
           }
 
