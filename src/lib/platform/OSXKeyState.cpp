@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -13,6 +14,8 @@
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
+#include <dispatch/dispatch.h>
+#include <pthread.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -470,15 +473,26 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
   return outMask;
 }
 
+/**
+ * Queries the active group on the main thread, where AppKit also accesses TIS.
+ */
 int32_t OSXKeyState::pollActiveGroup() const
 {
   AutoTISInputSourceRef keyboardLayout(nullptr, CFRelease);
   CFDataRef id = nullptr;
-  {
+  auto readLayout = [&] {
     std::lock_guard<std::mutex> lock(g_tisMutex);
     keyboardLayout = AutoTISInputSourceRef(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
     if (keyboardLayout)
       id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceID);
+  };
+  if (pthread_main_np()) {
+    readLayout();
+  } else {
+    // Acquire g_tisMutex inside the callback so the main thread can still use TIS while we wait.
+    dispatch_sync_f(dispatch_get_main_queue(), &readLayout, [](void *context) {
+      (*static_cast<decltype(readLayout) *>(context))();
+    });
   }
 
   GroupMap::const_iterator i = m_groupMap.find(id);

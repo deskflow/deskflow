@@ -10,6 +10,15 @@ if (WIN32)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(APPLE)
+  add_library(OSXInputSourceAudit SHARED osx_input_source_audit.cpp)
+  target_link_libraries(OSXInputSourceAudit PRIVATE ${lib_Carbon})
+  create_test(
+    NAME OSXInputSourceTests
+    DEPENDS platform
+    LIBS base arch OSXInputSourceAudit Qt6::Widgets
+    SOURCE OSXInputSourceTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
   create_test(
     NAME OSXClipboardTests
     DEPENDS platform
