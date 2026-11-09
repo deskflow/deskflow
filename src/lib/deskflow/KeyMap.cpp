@@ -1050,13 +1050,13 @@ KeyID KeyMap::getDeadKey(KeyID key)
     return kKeyDeadAbovedot;
 
   case 0xa8u:
+  case '\"':
     return kKeyDeadDiaeresis;
 
   case 0xb0u:
   case 0x2dau:
     return kKeyDeadAbovering;
 
-  case '\"':
   case 0x2ddu:
     return kKeyDeadDoubleacute;
 
