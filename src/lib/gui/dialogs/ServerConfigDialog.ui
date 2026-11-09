@@ -344,21 +344,21 @@
            <number>6</number>
           </property>
           <item>
-           <widget class="QCheckBox" name="cbDisableLockToComputer">
+           <widget class="deskflow::gui::OptionCheckBox" name="cbDisableLockToComputer">
             <property name="text">
              <string>Disable lock to computer (scroll lock key)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbDefaultLockToComputerState">
+           <widget class="deskflow::gui::OptionCheckBox" name="cbDefaultLockToComputerState">
             <property name="text">
              <string>Enable lock to computer at startup</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbRelativeMouseMoves">
+           <widget class="deskflow::gui::OptionCheckBox" name="cbRelativeMouseMoves">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -368,7 +368,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbWin32KeepForeground">
+           <widget class="deskflow::gui::OptionCheckBox" name="cbWin32KeepForeground">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -380,7 +380,7 @@
           <item>
            <layout class="QHBoxLayout" name="layoutClipboard">
             <item>
-             <widget class="QCheckBox" name="cbEnableClipboard">
+             <widget class="deskflow::gui::OptionCheckBox" name="cbEnableClipboard">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -487,7 +487,7 @@
           <item>
            <layout class="QHBoxLayout" name="_5">
             <item>
-             <widget class="QCheckBox" name="cbSwitchDelay">
+             <widget class="deskflow::gui::OptionCheckBox" name="cbSwitchDelay">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -558,7 +558,7 @@
           <item>
            <layout class="QHBoxLayout" name="_6">
             <item>
-             <widget class="QCheckBox" name="cbSwitchDoubleTap">
+             <widget class="deskflow::gui::OptionCheckBox" name="cbSwitchDoubleTap">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -657,7 +657,7 @@
               <number>1</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="cbHeartbeat">
+              <widget class="deskflow::gui::OptionCheckBox" name="cbHeartbeat">
                <property name="enabled">
                 <bool>true</bool>
                </property>
@@ -742,7 +742,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="rbProtocolSynergy">
+             <widget class="deskflow::gui::OptionRadioButton" name="rbProtocolSynergy">
               <property name="text">
                <string notr="true">Synergy</string>
               </property>
@@ -752,7 +752,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="rbProtocolBarrier">
+             <widget class="deskflow::gui::OptionRadioButton" name="rbProtocolBarrier">
               <property name="text">
                <string notr="true">Barrier</string>
               </property>
@@ -899,6 +899,16 @@ Enabling this setting will disable the server config GUI.</string>
    <class>NewComputerWidget</class>
    <extends>QLabel</extends>
    <header>widgets/NewComputerWidget.h</header>
+  </customwidget>
+   <customwidget>
+   <class>deskflow::gui::OptionCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>gui/widgets/OptionControl.h</header>
+  </customwidget>
+  <customwidget>
+   <class>deskflow::gui::OptionRadioButton</class>
+   <extends>QRadioButton</extends>
+   <header>gui/widgets/OptionControl.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

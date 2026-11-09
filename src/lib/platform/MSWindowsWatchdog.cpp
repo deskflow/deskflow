@@ -179,7 +179,9 @@ void MSWindowsWatchdog::mainLoop(const void *)
 
     if (m_processState == Running && !m_command.empty() && !m_foreground && m_session.hasChanged()) {
       LOG_DEBUG("session changed, queueing process start");
-      m_processState = StartPending;
+      m_processState = m_guiManaged ? StopPending : StartPending;
+      if (m_guiManaged)
+        m_command.clear();
       m_nextStartTime.reset();
     }
 
@@ -213,7 +215,12 @@ void MSWindowsWatchdog::mainLoop(const void *)
       LOG_VERBOSE("watchdog process in running state");
       if (!isProcessRunning()) {
         LOG_WARN("detected application not running, pid=%d", m_process->info().dwProcessId);
-        m_processState = StartPending;
+        if (m_guiManaged) {
+          m_process.reset();
+          m_command.clear();
+          m_processState = Idle;
+        } else
+          m_processState = StartPending;
       }
     } break;
 
@@ -320,14 +327,20 @@ void MSWindowsWatchdog::startProcess()
   }
 }
 
-void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
+bool MSWindowsWatchdog::quiescent()
+{
+  std::scoped_lock lock{m_processStateMutex};
+  return m_processState == ProcessState::Idle && m_command.empty() && !m_process;
+}
+void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate, bool guiManaged)
 {
   LOG_VERBOSE("locking process state mutex for watchdog config change");
   std::scoped_lock lock{m_processStateMutex};
 
   LOG_DEBUG("setting watchdog process config");
-  m_command = std::wstring(command.begin(), command.end());
+  m_command = QString::fromUtf8(command.data(), static_cast<qsizetype>(command.size())).toStdWString();
   m_elevateProcess = elevate;
+  m_guiManaged = guiManaged;
 
   if (m_command.empty()) {
     LOG_DEBUG("command cleared, queueing process stop");
@@ -381,6 +394,11 @@ void MSWindowsWatchdog::outputLoop(const void *)
 
 void MSWindowsWatchdog::shutdownExistingProcesses()
 {
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  // Candidate only shuts down the process handle it created. Never enumerate
+  // and kill legacy/production names; stale candidate core uses its own IPC.
+  return;
+#endif
   LOG_DEBUG("shutting down any existing processes");
 
   const auto kAllProcesses = 0;

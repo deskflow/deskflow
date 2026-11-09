@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "common/DisplayTopology.h"
 #include "deskflow/IClient.h"
 
 namespace deskflow {
@@ -46,6 +47,22 @@ public:
   /*!
   Return if this proxy is for client or primary.
   */
+  virtual const deskflow::display::Topology *monitorTopology() const
+  {
+    return nullptr;
+  }
+  virtual bool supportsMonitorTopology() const
+  {
+    return false;
+  }
+  virtual QString peerIdentityReference() const
+  {
+    return {};
+  }
+  virtual void updateServerTopology()
+  {
+  }
+
   virtual bool isPrimary() const
   {
     return false;

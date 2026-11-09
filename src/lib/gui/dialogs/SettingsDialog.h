@@ -8,10 +8,19 @@
 
 #pragma once
 #include <QDialog>
+#include <memory>
 
 #include "gui/config/ServerConfig.h"
 
 class SettingsDialogButtonBox;
+class QLabel;
+class QListWidget;
+class QToolButton;
+class QHBoxLayout;
+class QPushButton;
+namespace deskflow::gui::startup {
+class Reader;
+}
 
 namespace Ui {
 class SettingsDialog;
@@ -23,16 +32,35 @@ class SettingsDialog : public QDialog
 
 public:
   void extracted();
-  SettingsDialog(QWidget *parent, const ServerConfig &serverConfig);
+  SettingsDialog(
+      QWidget *parent, const ServerConfig &serverConfig,
+      std::shared_ptr<deskflow::gui::startup::Reader> startupReader = {}
+  );
   ~SettingsDialog() override;
 
 Q_SIGNALS:
   void requestRemoveAllSettings();
+  void requestStartupQuit();
+  void requestConnectionSetup();
 
 protected:
   void changeEvent(QEvent *e) override;
 
 private:
+  QLabel *m_identityStatus = nullptr;
+  QHBoxLayout *m_identityAction = nullptr;
+  QLabel *m_identityHeading = nullptr;
+  QLabel *m_pageTitle = nullptr;
+  QLabel *m_pageDescription = nullptr;
+  QListWidget *m_navigation = nullptr;
+  QToolButton *m_connectionDetails = nullptr;
+  QWidget *m_connectionDetailsBody = nullptr;
+  bool m_styling = false;
+  QPushButton *m_startupRecovery = nullptr;
+  std::shared_ptr<deskflow::gui::startup::Reader> m_startupReader;
+  void setupPresentation();
+  void updatePageHeading();
+  void updateAppearance();
   void initConnections() const;
   void regenCertificates();
   void browseCertificatePath();
@@ -53,6 +81,7 @@ private:
 
   /// @brief Enables controls when they should be.
   void updateControls();
+  void enforceReviewBoundary();
 
   /// @brief updates the setting vaule for key size.
   void updateRequestedKeySize() const;

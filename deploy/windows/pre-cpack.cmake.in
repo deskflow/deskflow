@@ -3,11 +3,18 @@
 
 if(CPACK_GENERATOR MATCHES 7Z|ZIP)
   string(REPLACE " " "*" _TEMP_LIST "@CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS@")
-  set(${PORTABLE_LIBS} "")
+  set(PORTABLE_LIBS "")
   foreach(ITEM ${_TEMP_LIST})
     string(REPLACE "*" " " _ITEM ${ITEM})
     file(COPY ${_ITEM} DESTINATION ${CPACK_TEMPORARY_INSTALL_DIRECTORY})
   endforeach()
+  if(@DESKFLOW_CANDIDATE_BUILD@)
+    file(WRITE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/DeskflowCandidate/DeskflowCandidate.conf " ")
+    file(REMOVE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/deskflow-candidate-daemon.exe)
+    file(WRITE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/README.txt
+      "DeskflowCandidate portable: @CMAKE_PROJECT_VERSION@. Separate candidate profile; no service or firewall installation. Not native-validated. Preserve the original Deskflow. Input/TLS tests require separate authorization.")
+    return()
+  endif()
   file(WRITE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/settings/Deskflow.conf " ")
   file(REMOVE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/deskflow-daemon.exe)
   file(WRITE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/README.txt

@@ -6,13 +6,16 @@
 
 #include "SettingsDialogButtonBox.h"
 #include "common/Settings.h"
+#include "gui/DialogPresentation.h"
 
 #include <QDialogButtonBox>
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
+#include <QMenu>
 #include <QPushButton>
+#include <QToolButton>
 
 SettingsDialogButtonBox::SettingsDialogButtonBox(QWidget *parent)
     : QWidget{parent},
@@ -25,15 +28,38 @@ SettingsDialogButtonBox::SettingsDialogButtonBox(QWidget *parent)
   m_buttonBox->addButton(QDialogButtonBox::Cancel);
   m_buttonBox->addButton(QDialogButtonBox::Reset);
   m_buttonBox->addButton(QDialogButtonBox::RestoreDefaults);
+  m_more = new QToolButton(this);
+  m_more->setObjectName("settingsMoreActions");
+  m_more->setPopupMode(QToolButton::InstantPopup);
+  auto *menu = new QMenu(m_more);
+  m_more->setMenu(menu);
+  m_resetAction = menu->addAction(QString());
+  m_defaultsAction = menu->addAction(QString());
+  connect(m_resetAction, &QAction::triggered, m_buttonBox->button(QDialogButtonBox::Reset), &QPushButton::click);
+  connect(
+      m_defaultsAction, &QAction::triggered, m_buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::click
+  );
+  m_buttonBox->button(QDialogButtonBox::Save)->setProperty("primaryAction", true);
   settingsWritableChanged(Settings::isWritable());
 
   auto layout = new QHBoxLayout(this);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(8);
+  layout->setSizeConstraint(QLayout::SetMinimumSize);
   layout->addWidget(m_lblIcon);
   layout->addWidget(m_lblText);
+  layout->addWidget(m_more);
+  layout->addStretch();
   layout->addWidget(m_buttonBox);
   setLayout(layout);
 
   updateText();
+  for (auto *button : m_buttonBox->findChildren<QPushButton *>())
+    new deskflow::gui::FormButtonMetrics(button);
+  // Font/style changes can grow the buttons after QDialogButtonBox has cached
+  // its size hint. Enforce the nested layout's actual minimum so it cannot
+  // clip the last pixels of a focused button while its outer footer still fits.
+  m_buttonBox->layout()->setSizeConstraint(QLayout::SetMinimumSize);
 
   connect(m_buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialogButtonBox::accepted);
   connect(m_buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialogButtonBox::rejected);
@@ -55,11 +81,13 @@ void SettingsDialogButtonBox::enableSave(bool enable) const
 void SettingsDialogButtonBox::enableReset(bool enable) const
 {
   m_buttonBox->button(QDialogButtonBox::Reset)->setEnabled(enable);
+  m_resetAction->setEnabled(enable);
 }
 
 void SettingsDialogButtonBox::enableRestoreDefaults(bool enable) const
 {
   m_buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(enable);
+  m_defaultsAction->setEnabled(enable);
 }
 
 void SettingsDialogButtonBox::changeEvent(QEvent *e)
@@ -72,6 +100,9 @@ void SettingsDialogButtonBox::changeEvent(QEvent *e)
 void SettingsDialogButtonBox::updateText()
 {
   m_lblText->setText(tr("Settings are read only"));
+  m_more->setText(tr("More actions"));
+  m_resetAction->setText(tr("Discard unsaved changes"));
+  m_defaultsAction->setText(tr("Restore default settings…"));
   m_lblText->setToolTip(tr("%1 is not writable").arg(Settings::settingsFile()));
 
   m_buttonBox->button(QDialogButtonBox::Save)->setToolTip(tr("Close and save changes"));
@@ -92,6 +123,5 @@ void SettingsDialogButtonBox::settingsWritableChanged(bool writable)
   m_lblIcon->setVisible(!writable);
   m_lblText->setVisible(!writable);
   m_buttonBox->button(QDialogButtonBox::Save)->setVisible(writable);
-  m_buttonBox->button(QDialogButtonBox::Reset)->setVisible(writable);
-  m_buttonBox->button(QDialogButtonBox::RestoreDefaults)->setVisible(writable);
+  m_more->setVisible(writable);
 }

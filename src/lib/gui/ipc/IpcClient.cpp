@@ -27,6 +27,15 @@ IpcClient::IpcClient(QObject *parent, const QString &socketName, const QString &
 
 void IpcClient::connectToServer()
 {
+#ifdef DESKFLOW_LAB_BUILD
+  qInfo("DeskflowLab: core and daemon IPC disabled");
+  return;
+#endif
+  beginConnection();
+}
+
+void IpcClient::beginConnection()
+{
   if (m_state == State::Connecting) {
     qWarning().noquote() << QStringLiteral("%1 ipc client already connecting to server").arg(m_typeName);
     return;
@@ -43,12 +52,20 @@ void IpcClient::connectToServer()
     disconnectFromServer();
   }
 
+  ++m_connectionGeneration;
+  m_shouldConnect = true;
+  m_readBuffer.clear();
   m_retryCount = 0;
   attemptConnection();
 }
 
 void IpcClient::attemptConnection()
 {
+  if (!m_shouldConnect)
+    return;
+  disconnect(m_connectedAttempt);
+  disconnect(m_failedAttempt);
+  const auto generation = m_connectionGeneration;
   if (const int retryLimit = 10; m_retryCount >= retryLimit) {
     qWarning().noquote() << QStringLiteral("%1 ipc client failed to connect after %2 attempts")
                                 .arg(m_typeName, QString::number(retryLimit));
@@ -67,14 +84,34 @@ void IpcClient::attemptConnection()
   m_state = State::Connecting;
   m_retryCount++;
 
-  connect(
-      m_socket, &QLocalSocket::connected, this, &IpcClient::handleConnectionSuccess,
-      static_cast<Qt::ConnectionType>(Qt::SingleShotConnection | Qt::UniqueConnection)
+  m_connectedAttempt = connect(
+      m_socket, &QLocalSocket::connected, this,
+      [this, generation] {
+        if (generation != m_connectionGeneration || !m_shouldConnect)
+          return;
+        const auto versionId = QStringLiteral("%1+%2").arg(kVersion, kVersionGitSha);
+        m_socket->write(QStringLiteral("hello=%1\n").arg(versionId).toUtf8());
+        qDebug().noquote() << QStringLiteral("%1 ipc client sent hello with version: %2").arg(m_typeName, versionId);
+      },
+      Qt::SingleShotConnection
   );
 
-  connect(
-      m_socket, &QLocalSocket::errorOccurred, this, &IpcClient::handleConnectionFailure,
-      static_cast<Qt::ConnectionType>(Qt::SingleShotConnection | Qt::UniqueConnection)
+  m_failedAttempt = connect(
+      m_socket, &QLocalSocket::errorOccurred, this,
+      [this, generation] {
+        if (generation != m_connectionGeneration || !m_shouldConnect || m_state != State::Connecting)
+          return;
+        disconnect(m_connectedAttempt);
+        qWarning().noquote(
+        ) << QStringLiteral("%1 ipc client failed to connect: %2").arg(m_typeName, m_socket->errorString());
+        m_socket->disconnectFromServer();
+        m_state = State::Unconnected;
+        QTimer::singleShot(0, this, [this, generation] {
+          if (generation == m_connectionGeneration && m_shouldConnect)
+            attemptConnection();
+        });
+      },
+      Qt::SingleShotConnection
   );
 
   m_socket->connectToServer(m_socketName);
@@ -82,6 +119,11 @@ void IpcClient::attemptConnection()
 
 void IpcClient::disconnectFromServer()
 {
+  ++m_connectionGeneration;
+  m_shouldConnect = false;
+  m_readBuffer.clear();
+  disconnect(m_connectedAttempt);
+  disconnect(m_failedAttempt);
   m_state = State::Disconnecting;
   qDebug().noquote() << QStringLiteral("%1 ipc client disconnecting from server").arg(m_typeName);
   m_socket->disconnectFromServer();
@@ -119,10 +161,20 @@ void IpcClient::handleErrorOccurred()
 
 void IpcClient::handleReadyRead()
 {
-  QByteArray data = m_readBuffer + m_socket->readAll();
+  const auto bytes = m_socket->readAll();
+  if (m_state != State::Connecting && m_state != State::Connected) {
+    m_readBuffer.clear();
+    return;
+  }
+  QByteArray data = m_readBuffer + bytes;
+  if (data.size() > 65536) {
+    disconnectFromServer();
+    Q_EMIT connectionFailed();
+    return;
+  }
   m_readBuffer.clear();
 
-  while (data.contains('\n')) {
+  while (data.contains('\n') && (m_state == State::Connecting || m_state == State::Connected)) {
     const auto index = data.indexOf('\n');
     const auto message = QString::fromUtf8(data.left(index));
     data.remove(0, index + 1);
@@ -149,7 +201,7 @@ void IpcClient::handleReadyRead()
     processCommand(parts.at(0), parts);
   }
 
-  if (!data.isEmpty()) {
+  if (!data.isEmpty() && (m_state == State::Connecting || m_state == State::Connected)) {
     m_readBuffer = data;
   }
 }

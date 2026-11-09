@@ -60,28 +60,28 @@ StatusBar::StatusBar(QWidget *parent)
 // clang-format off
 void StatusBar::setStatus(ConnectionState connectionState, ProcessState processState, bool isServer)
 {
-  if (m_retryTimer->isActive())
+  m_retryAllowed = processState == ProcessState::Started && !isServer &&
+                   (connectionState == ConnectionState::Connecting || connectionState == ConnectionState::Disconnected);
+  if (!m_retryAllowed) {
     m_retryTimer->stop();
+    m_retryDeadline = QDeadlineTimer();
+  }
   setSecurityIconVisible(false);
   switch (processState) {
     using enum ProcessState;
     case Starting:
-      m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 is starting...").arg(kAppName));
       break;
 
     case RetryPending:
-      m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 will retry in a moment...").arg(kAppName));
       break;
 
     case Stopping:
-        m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 is stopping...").arg(kAppName));
       break;
 
     case Stopped:
-      m_connectionInterval = -1;
       m_lblStatus->setText(tr("%1 is not running").arg(kAppName));
       break;
 
@@ -99,13 +99,10 @@ void StatusBar::setStatus(ConnectionState connectionState, ProcessState processS
 
         case Connecting:
           updateTimerLabel();
-          if (Settings::value(Settings::Client::DynamicConnectionRetry).toBool())
-            m_retryTimer->start();
           break;
 
         case Connected: {
           setSecurityIconVisible(true);
-          m_connectionInterval = -1;
           if (!isServer) {
             m_lblStatus->setText(tr("%1 is connected as client of %2")
                                      .arg(kAppName, Settings::value(Settings::Client::RemoteHost).toString()));
@@ -114,8 +111,10 @@ void StatusBar::setStatus(ConnectionState connectionState, ProcessState processS
         }
 
         case Disconnected:
-          m_lblStatus->setText(tr("%1 is disconnected").arg(kAppName));
-          m_connectionInterval = -1;
+          if (m_retryDeadline.hasExpired())
+            m_lblStatus->setText(tr("%1 is disconnected").arg(kAppName));
+          else
+            updateTimerLabel();
           break;
       }
     }
@@ -145,12 +144,25 @@ void StatusBar::setServerClients(const QStringList &clients)
 
 void StatusBar::setSecurityIconVisible(bool visible)
 {
-  m_lblSecurityIcon->setVisible(visible);
+  m_lblSecurityIcon->setVisible(visible && m_summaryVisible);
+}
+
+void StatusBar::setConnectionSummaryVisible(bool visible)
+{
+  m_summaryVisible = visible;
+  m_lblStatus->setVisible(visible);
+  if (!visible)
+    m_lblSecurityIcon->hide();
 }
 
 void StatusBar::setConnectionInterval(int newInterval)
 {
-  m_connectionInterval = newInterval;
+  if (!m_retryAllowed)
+    return;
+
+  // The core owns retry scheduling; repainting must not consume the wait.
+  m_retryDeadline.setRemainingTime(qint64(qMax(0, newInterval)) * 1000);
+  updateTimerLabel();
 }
 
 bool StatusBar::securityIconVisible() const
@@ -185,14 +197,20 @@ void StatusBar::updateText()
 
 void StatusBar::updateTimerLabel()
 {
-  QString text;
-  if (m_connectionInterval < 2 || !Settings::value(Settings::Client::DynamicConnectionRetry).toBool()) {
-    text = tr("%1 is connecting...").arg(kAppName);
-  } else {
-    text = tr("%1 is waiting %2 seconds before the next retry").arg(kAppName, QString::number(m_connectionInterval));
-    m_connectionInterval--;
+  if (!m_retryAllowed)
+    return;
+
+  const auto remainingMs = m_retryDeadline.remainingTime();
+  if (remainingMs <= 0) {
+    m_retryTimer->stop();
+    m_lblStatus->setText(tr("%1 is connecting...").arg(kAppName));
+    return;
   }
-  m_lblStatus->setText(text);
+
+  const auto seconds = static_cast<int>((remainingMs + 999) / 1000);
+  m_lblStatus->setText(tr("%1 is waiting %n second(s) before the next retry", nullptr, seconds).arg(kAppName));
+  if (!m_retryTimer->isActive())
+    m_retryTimer->start();
 }
 
 void StatusBar::setSecurityIcon(bool encrypted)

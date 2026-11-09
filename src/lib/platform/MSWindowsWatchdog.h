@@ -48,7 +48,8 @@ public:
   /**
    * @brief Set the command to run and whether to elevate the process.
    */
-  void setProcessConfig(const std::string_view &command, bool elevate);
+  void setProcessConfig(const std::string_view &command, bool elevate, bool guiManaged = false);
+  bool quiescent();
 
   /**
    * @brief Stop the main loop and output loop threads.
@@ -136,6 +137,7 @@ private:
   HANDLE m_outputWritePipe = nullptr;
   HANDLE m_outputReadPipe = nullptr;
   bool m_elevateProcess = false;
+  bool m_guiManaged = false;
   MSWindowsSession m_session;
   int m_startFailures = 0;
   FileLogOutputter &m_fileLogOutputter;

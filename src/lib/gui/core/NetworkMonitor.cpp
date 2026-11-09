@@ -5,6 +5,7 @@
  */
 
 #include "NetworkMonitor.h"
+#include "DiscoveryScope.h"
 
 #include <QAbstractSocket>
 #include <QList>
@@ -32,6 +33,10 @@ NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(
 
 void NetworkMonitor::startMonitoring(int intervalMs)
 {
+#ifdef DESKFLOW_UI_REVIEW_BUILD
+  Q_UNUSED(intervalMs);
+  return;
+#endif
   if (m_isMonitoring) {
     return;
   }
@@ -54,6 +59,9 @@ void NetworkMonitor::stopMonitoring()
 
 QStringList NetworkMonitor::validAddresses()
 {
+#ifdef DESKFLOW_UI_REVIEW_BUILD
+  return {};
+#endif
   QList<QHostAddress> physicalIP4;
   QList<QHostAddress> physicalIP6;
   QList<QHostAddress> virtualIP4;
@@ -147,6 +155,15 @@ void NetworkMonitor::setIpAddresses(const QStringList &newAddresses)
 void NetworkMonitor::updateNetworkState()
 {
   setIpAddresses(validAddresses());
+  QStringList signature;
+  for (const auto &s : DiscoveryScope::current())
+    signature << QString::number(s.index) + ":" + s.name + ":" + s.address.toString() + "/" + QString::number(s.prefix);
+  signature.sort();
+  const auto joined = signature.join('|');
+  if (joined != m_scopeSignature) {
+    m_scopeSignature = joined;
+    Q_EMIT networkConfigurationChanged();
+  }
 }
 
 } // namespace deskflow::gui

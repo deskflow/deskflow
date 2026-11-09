@@ -79,14 +79,14 @@
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbAutoUpdate">
+        <widget class="deskflow::gui::OptionCheckBox" name="cbAutoUpdate">
          <property name="text">
           <string>Check for updates on startup</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbPreventSleep">
+        <widget class="deskflow::gui::OptionCheckBox" name="cbPreventSleep">
          <property name="text">
           <string>Prevent this computer from going to sleep</string>
          </property>
@@ -95,14 +95,14 @@
        <item>
         <layout class="QFormLayout" name="formLayout">
          <item row="1" column="1">
-          <widget class="QRadioButton" name="rbIconColorful">
+          <widget class="deskflow::gui::OptionRadioButton" name="rbIconColorful">
            <property name="text">
             <string>Colorful</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QRadioButton" name="rbIconMono">
+          <widget class="deskflow::gui::OptionRadioButton" name="rbIconMono">
            <property name="text">
             <string>Monocolor</string>
            </property>
@@ -181,14 +181,14 @@
           <widget class="QWidget" name="widget" native="true">
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <widget class="QRadioButton" name="rbShowOnStart">
+             <widget class="deskflow::gui::OptionRadioButton" name="rbShowOnStart">
               <property name="text">
                <string>Show the main window</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="rbAutoHide">
+             <widget class="deskflow::gui::OptionRadioButton" name="rbAutoHide">
               <property name="text">
                <string>Send to background</string>
               </property>
@@ -211,14 +211,14 @@
           <widget class="QWidget" name="widget_2" native="true">
            <layout class="QVBoxLayout" name="verticalLayout_13">
             <item>
-             <widget class="QRadioButton" name="rbExitOnClose">
+             <widget class="deskflow::gui::OptionRadioButton" name="rbExitOnClose">
               <property name="text">
                <string>Exit</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="rbCloseToTray">
+             <widget class="deskflow::gui::OptionRadioButton" name="rbCloseToTray">
               <property name="text">
                <string>Send to background</string>
               </property>
@@ -230,7 +230,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbShowVersion">
+        <widget class="deskflow::gui::OptionCheckBox" name="cbShowVersion">
          <property name="text">
           <string>Include version in the window title</string>
          </property>
@@ -415,7 +415,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbGuiDebug">
+        <widget class="deskflow::gui::OptionCheckBox" name="cbGuiDebug">
          <property name="text">
           <string>Enable GUI debug messages</string>
          </property>
@@ -706,7 +706,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbRequireClientCert">
+           <widget class="deskflow::gui::OptionCheckBox" name="cbRequireClientCert">
             <property name="text">
              <string>Require client certificates</string>
             </property>
@@ -792,7 +792,7 @@
          </property>
          <layout class="QGridLayout" name="_6">
           <item row="1" column="0">
-           <widget class="QCheckBox" name="cbElevateDaemon">
+           <widget class="deskflow::gui::OptionCheckBox" name="cbElevateDaemon">
             <property name="text">
              <string>Always run as system (work at login screen and UAC)</string>
             </property>
@@ -819,7 +819,7 @@
           <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
          </property>
          <item row="0" column="0">
-          <widget class="QCheckBox" name="cbRunEnterCommand">
+          <widget class="deskflow::gui::OptionCheckBox" name="cbRunEnterCommand">
            <property name="text">
             <string>Run command on enter</string>
            </property>
@@ -829,7 +829,7 @@
           <widget class="QLineEdit" name="lineCommandEnter"/>
          </item>
          <item row="1" column="0">
-          <widget class="QCheckBox" name="cbRunExitCommand">
+          <widget class="deskflow::gui::OptionCheckBox" name="cbRunExitCommand">
            <property name="text">
             <string>Run command on exit</string>
            </property>
@@ -868,4 +868,16 @@
  </widget>
  <resources/>
  <connections/>
+ <customwidgets>
+  <customwidget>
+   <class>deskflow::gui::OptionCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>gui/widgets/OptionControl.h</header>
+  </customwidget>
+  <customwidget>
+   <class>deskflow::gui::OptionRadioButton</class>
+   <extends>QRadioButton</extends>
+   <header>gui/widgets/OptionControl.h</header>
+  </customwidget>
+ </customwidgets>
 </ui>

@@ -30,6 +30,7 @@
 
 // must be before computer header includes
 #include <QFileInfo>
+#include <QSettings>
 
 #if defined(Q_OS_WIN)
 #include "platform/MSWindowsComputer.h"
@@ -534,6 +535,23 @@ int ServerApp::mainLoop()
   getEvents()->addHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget(), [this](const auto &) {
     reloadConfig();
   });
+  getEvents()->addHandler(
+      EventTypes::ServerAppApplyWorkspace, getEvents()->getSystemTarget(),
+      [this](const Event &event) {
+        const auto *data = dynamic_cast<const WorkspaceApplyEvent *>(event.getDataObject());
+        if (!data || !m_server)
+          return;
+        // Read only the saved ordinary workspace. Never read a requested file path,
+        // write settings, reload credentials or restart input for a layout change.
+        QSettings persisted(Settings::settingsFile(), QSettings::IniFormat);
+        const auto saved = persisted.value(Settings::Server::WorkspaceDraft).toByteArray();
+        const auto result = m_server->applyWorkspace(
+            data->request, saved, persisted.value(Settings::Server::MonitorLayout).toByteArray()
+        );
+        if (!result.isEmpty())
+          ipcSendToClient("workspaceApplyResult", QString::fromUtf8(result));
+      }
+  );
 
   // handle force reconnect event by disconnecting clients.  they'll
   // reconnect automatically.
@@ -556,6 +574,7 @@ int ServerApp::mainLoop()
   LOG_DEBUG("stopping server");
   getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
   getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
+  getEvents()->removeHandler(EventTypes::ServerAppApplyWorkspace, getEvents()->getSystemTarget());
   cleanupServer();
   LOG_INFO("stopped server");
 

@@ -10,6 +10,8 @@
 #include "base/Log.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"
+#include "io/StreamFilter.h"
+#include "net/SecureSocket.h"
 
 //
 // ClientProxy
@@ -37,6 +39,15 @@ void ClientProxy::close(const char *msg) const
 deskflow::IStream *ClientProxy::getStream() const
 {
   return m_stream;
+}
+
+QString ClientProxy::peerIdentityReference() const
+{
+  auto *stream = m_stream;
+  while (auto *filter = dynamic_cast<StreamFilter *>(stream))
+    stream = filter->getStream();
+  const auto *secure = dynamic_cast<SecureSocket *>(stream);
+  return secure ? secure->peerIdentityReference() : QString();
 }
 
 void *ClientProxy::getEventTarget() const

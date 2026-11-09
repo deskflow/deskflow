@@ -65,6 +65,7 @@ Q_SIGNALS:
    * @param addresses New IP address list
    */
   void ipAddressesChanged(const QStringList &addresses);
+  void networkConfigurationChanged();
 
 private:
   void setIpAddresses(const QStringList &newAddresses);
@@ -74,7 +75,8 @@ private:
    */
   void updateNetworkState();
 
-  QTimer *m_checkTimer;        ///< Timer for periodic network checks
+  QTimer *m_checkTimer; ///< Timer for periodic network checks
+  QString m_scopeSignature;
   QStringList m_lastAddresses; ///< Last known IP addresses
   bool m_isMonitoring = false; ///< Flag indicating if monitoring is active
 };

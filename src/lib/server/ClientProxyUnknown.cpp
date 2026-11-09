@@ -1,3 +1,4 @@
+#include "deskflow/DisplayTopologyMessage.h"
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
@@ -10,6 +11,7 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "common/Settings.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
@@ -43,8 +45,11 @@ ClientProxyUnknown::ClientProxyUnknown(deskflow::IStream *stream, double timeout
   const auto protocol = m_server->protocolString();
   const auto helloMessage = protocol + kMsgHelloArgs;
 
-  LOG_INFO("saying hello as %s, protocol v%d.%d", protocol.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
-  ProtocolUtil::writef(m_stream, helloMessage.c_str(), kProtocolMajorVersion, kProtocolMinorVersion);
+  const auto minor = deskflow::display::offeredMinor(
+      Settings::value(Settings::Security::TlsEnabled).toBool(), Settings::value(Settings::Security::CheckPeers).toBool()
+  );
+  LOG_INFO("saying hello as %s, protocol v%d.%d", protocol.c_str(), kProtocolMajorVersion, minor);
+  ProtocolUtil::writef(m_stream, helloMessage.c_str(), kProtocolMajorVersion, minor);
 }
 
 ClientProxyUnknown::~ClientProxyUnknown()
@@ -171,6 +176,12 @@ void ClientProxyUnknown::initProxy(const std::string &name, int major, int minor
 
     case 7:
       m_proxy = new ClientProxy1_7(name, m_stream, m_server, m_events);
+      break;
+
+    case 9:
+      if (Settings::value(Settings::Security::TlsEnabled).toBool() &&
+          Settings::value(Settings::Security::CheckPeers).toBool())
+        m_proxy = new ClientProxy1_8(name, m_stream, m_server, m_events, true);
       break;
 
     case 8:

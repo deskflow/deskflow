@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "common/IpcLineBuffer.h"
+#include <QHash>
 #include <QObject>
 #include <QSet>
 
@@ -23,6 +25,10 @@ public:
   ~IpcServer() override;
 
   void listen();
+  QString socketName() const
+  {
+    return m_serverName;
+  }
   void broadcastCommand(const QString &command, const QString &args = "");
 
 Q_SIGNALS:
@@ -51,6 +57,7 @@ private:
 
   QLocalServer *m_server;
   QSet<QLocalSocket *> m_clients;
+  QHash<QLocalSocket *, deskflow::ipc::LineBuffer> m_readBuffers;
   QString m_serverName;
   QStringList m_pendingMessages;
   QByteArray m_typeName;

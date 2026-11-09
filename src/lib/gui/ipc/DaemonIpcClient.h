@@ -21,11 +21,15 @@ public:
   void sendLogLevel(const QString &logLevel);
   void sendConfigFile(const QString &configFile);
   void sendStartProcess();
+  virtual void sendPeerSession(const QString &encoded);
+  virtual void sendPeerStop(const QString &token);
   void sendStopProcess();
   void sendClearSettings();
   void requestLogPath();
 
 Q_SIGNALS:
+  void peerStopped(const QString &token);
+  void peerSessionRejected(const QString &token);
   void logPathReceived(const QString &logPath);
 
 protected:

@@ -47,6 +47,8 @@ if(WIN32)
   endif()
 endif()
 
-add_subdirectory(deskflow-core)
-add_subdirectory(deskflow-daemon) #Only used on windows
+if(NOT DESKFLOW_UI_REVIEW_BUILD)
+  add_subdirectory(deskflow-core)
+  add_subdirectory(deskflow-daemon) #Only used on windows
+endif()
 add_subdirectory(deskflow-gui)

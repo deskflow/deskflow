@@ -7,6 +7,11 @@
  */
 
 #include "server/Server.h"
+#include "common/DesktopWorkspace.h"
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSet>
+#include <QSslCertificate>
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
@@ -213,6 +218,16 @@ bool Server::setConfig(const ServerConfig &config)
   // configuration.
   closeClients(config);
 
+  const auto confirmed =
+      deskflow::display::WorkspaceState::decode(Settings::value(Settings::Server::WorkspaceApplied).toByteArray());
+  m_appliedWorkspace = confirmed.value_or(deskflow::display::WorkspaceState{});
+  m_monitorLayout = deskflow::display::workspaceLayoutOnRestart(
+      Settings::value(Settings::Server::WorkspaceApplied).toByteArray(),
+      Settings::value(Settings::Server::WorkspaceDraft).toByteArray(),
+      Settings::value(Settings::Server::MonitorLayout).toByteArray(),
+      Settings::value(Settings::Server::ExternalConfig).toBool()
+  );
+  monitorTopologyChanged(m_primaryClient);
   // cut over
   processOptions();
 
@@ -269,6 +284,7 @@ void Server::adoptClient(BaseClientProxy *client)
   LOG_DEBUG("client \"%s\" has connected", getName(client).c_str());
   ipcSendConnectionState(deskflow::core::ConnectionState::Connected);
   sendConnectedClientsIpc();
+  monitorTopologyChanged(client);
 
   // send configuration options to client
   sendOptions(client);
@@ -578,6 +594,14 @@ bool Server::hasAnyNeighbor(const BaseClientProxy *client, Direction dir) const
 {
   assert(client != nullptr);
 
+  const auto name = QString::fromStdString(getName(client));
+  const auto side = dir == Direction::Left    ? deskflow::display::Side::Left
+                    : dir == Direction::Right ? deskflow::display::Side::Right
+                    : dir == Direction::Top   ? deskflow::display::Side::Top
+                                              : deskflow::display::Side::Bottom;
+  for (const auto &route : m_monitorRoutes)
+    if (route.device == name && route.side == side)
+      return true;
   return m_config->hasNeighbor(getName(client), dir);
 }
 
@@ -612,6 +636,13 @@ BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, Direction dir, 
     // look up neighbor cell.  if the computer is connected and
     // ready then we can stop.
     if (ClientList::const_iterator index = m_clients.find(dstName); index != m_clients.end()) {
+      if (m_monitorLayout && (src == m_primaryClient || src->supportsMonitorTopology()) &&
+          (index->second == m_primaryClient || index->second->supportsMonitorTopology()))
+        return nullptr; // Modern endpoints use only the validated monitor plan.
+      int32_t dx, dy, dw, dh;
+      index->second->getShape(dx, dy, dw, dh);
+      if (dw <= 0 || dh <= 0)
+        return nullptr; // No invented legacy endpoint geometry.
       LOG_VERBOSE("\"%s\" is on %s of \"%s\" at %f", dstName.c_str(), Config::dirName(dir), srcName.c_str(), t);
       mapToPixel(index->second, dir, tTmp, x, y);
       return index->second;
@@ -1139,6 +1170,12 @@ void Server::handleShapeChanged(BaseClientProxy *client)
 
   LOG_DEBUG("computer \"%s\" shape changed", getName(client).c_str());
 
+  monitorTopologyChanged(client);
+  if (client == m_primaryClient)
+    for (const auto &[name, peer] : m_clients)
+      if (peer != client)
+        peer->updateServerTopology();
+
   // update jump coordinate
   int32_t x;
   int32_t y;
@@ -1608,6 +1645,243 @@ void Server::onMouseUp(ButtonID id)
   m_active->mouseUp(id);
 }
 
+QByteArray Server::workspaceSnapshot() const
+{
+  using namespace deskflow::display;
+  WorkspaceSnapshot snapshot;
+  for (const auto &name : *m_config)
+    snapshot.devices.append(QString::fromStdString(name));
+  for (const auto &[name, client] : m_clients) {
+    const auto id = QString::fromStdString(name);
+    if (!snapshot.devices.contains(id))
+      continue;
+    snapshot.onlineDevices.append(id);
+    if (client == m_primaryClient || client->supportsMonitorTopology())
+      snapshot.topologyCapable.append(id);
+    const auto identity = client->peerIdentityReference();
+    if (!identity.isEmpty())
+      snapshot.identityReferences[id] = identity;
+    if (client != m_primaryClient && !client->supportsMonitorTopology()) {
+      int32_t x, y, w, h;
+      client->getShape(x, y, w, h);
+      if (w > 0 && h > 0)
+        snapshot.legacyDesktops[id] = {x, y, w, h};
+    }
+  }
+  for (auto it = m_monitorTopologies.cbegin(); it != m_monitorTopologies.cend(); ++it)
+    if (snapshot.devices.contains(it.key()))
+      snapshot.topologies.insert(it.key(), it.value());
+  const auto certificates = QSslCertificate::fromPath(Settings::value(Settings::Security::Certificate).toString());
+  if (!certificates.isEmpty() && Settings::value(Settings::Security::TlsEnabled).toBool() &&
+      Settings::value(Settings::Security::CheckPeers).toBool())
+    snapshot.identityReferences[QString::fromStdString(getName(m_primaryClient))] =
+        QString::fromLatin1(certificates.first().digest(QCryptographicHash::Sha256).toHex());
+  // Only the active core layout is authoritative. An unsaved/pending UI draft
+  // must never be broadcast as applied input routing.
+  if (!m_monitorDevices.isEmpty()) {
+    snapshot.applied.mode = ArrangementMode::CustomScreenRoutes; // Do not assume OS grouping for a legacy saved layout.
+    for (const auto &p : m_liveMonitorLayout.placements)
+      if (snapshot.devices.contains(p.device))
+        snapshot.applied.layout.placements.append(p);
+    for (auto it = m_liveMonitorLayout.revisions.cbegin(); it != m_liveMonitorLayout.revisions.cend(); ++it)
+      if (snapshot.devices.contains(it.key()))
+        snapshot.applied.layout.revisions.insert(it.key(), it.value());
+  }
+  const auto metadata = WorkspaceState::decode(m_appliedWorkspace.encode());
+  if (metadata) {
+    if (m_monitorLayout && metadata->layout.encode() == m_monitorLayout->encode())
+      snapshot.applied.mode = metadata->mode;
+    for (auto it = metadata->displayNumbers.cbegin(); it != metadata->displayNumbers.cend(); ++it)
+      if (snapshot.devices.contains(it.key().section('/', 0, 0)))
+        snapshot.applied.displayNumbers.insert(it.key(), it.value());
+    for (auto it = metadata->physicalCalibration.cbegin(); it != metadata->physicalCalibration.cend(); ++it)
+      if (snapshot.devices.contains(it.key().section('/', 0, 0)))
+        snapshot.applied.physicalCalibration.insert(it.key(), it.value());
+  }
+  snapshot.externalConfig = Settings::value(Settings::Server::ExternalConfig).toBool();
+  snapshot.perDisplayActive = !m_monitorDevices.isEmpty();
+  snapshot.session = m_workspaceSession;
+  snapshot.generation = m_workspaceGeneration;
+  snapshot.planRevision = m_appliedWorkspace.revision;
+  if (snapshot.planRevision)
+    snapshot.planId = workspacePlanId(m_appliedWorkspace);
+  snapshot.planComplete = m_monitorLayout && m_liveMonitorLayout.encode() == m_monitorLayout->encode();
+  return snapshot.encode();
+}
+
+QByteArray
+Server::applyWorkspace(const QByteArray &bytes, const QByteArray &persisted, const QByteArray &submittedLayout)
+{
+  using namespace deskflow::display;
+  const auto request = WorkspaceApplyRequest::decode(bytes);
+  if (!request)
+    return {};
+  WorkspaceApplyResult result{request->id, request->session,    workspacePlanId(request->state),
+                              {},          request->generation, request->state.revision,
+                              false};
+  const auto live = WorkspaceSnapshot::decode(workspaceSnapshot());
+  result.error =
+      live ? validateWorkspaceApply(*request, *live, persisted, submittedLayout == request->state.layout.encode())
+           : QString("snapshot-unavailable");
+  if (result.error.isEmpty()) {
+    // One event-thread cutover. Validation failure never overwrites the old
+    // plan; topology/disconnection events cannot interleave with this swap.
+    stopSwitch();
+    m_appliedWorkspace = request->state;
+    m_monitorLayout = request->state.layout;
+    refreshMonitorRouting();
+    result.accepted = true;
+  }
+  return result.encode();
+}
+
+void Server::monitorTopologyChanged(BaseClientProxy *client)
+{
+  // A proxy can receive DTOP before adoption. Keep its snapshot on the proxy,
+  // but publish/use it only after the existing name/adoption checks succeed.
+  if (!m_clientSet.contains(client))
+    return;
+  ++m_workspaceGeneration;
+  const auto name = QString::fromStdString(getName(client));
+  auto topology = client == m_primaryClient   ? deskflow::display::localTopology()
+                  : client->monitorTopology() ? *client->monitorTopology()
+                                              : deskflow::display::Topology{};
+  if (topology.error().isEmpty())
+    m_monitorTopologies.insert(name, topology);
+  else
+    m_monitorTopologies.remove(name);
+  ipcSendToClient(
+      "displayTopology",
+      QString::fromUtf8(
+          QJsonDocument(
+              QJsonObject{{"device", name}, {"topology", QJsonDocument::fromJson(topology.encode()).object()}}
+          ).toJson(QJsonDocument::Compact)
+      )
+  );
+  refreshMonitorRouting();
+}
+
+void Server::refreshMonitorRouting()
+{
+  // A missing/old peer only removes its own screen routes. It cannot disable
+  // unrelated, still-verified devices. New submissions are validated as a
+  // complete plan; this projection is solely for live availability changes.
+  auto eligible = m_monitorTopologies;
+  if (m_appliedWorkspace.revision) {
+    const auto live = deskflow::display::WorkspaceSnapshot::decode(workspaceSnapshot());
+    for (const auto &name : eligible.keys())
+      if (!live || live->identityReferences.value(name).isEmpty() ||
+          live->identityReferences.value(name) != m_appliedWorkspace.identityReferences.value(name))
+        eligible.remove(name);
+  }
+  m_liveMonitorLayout = m_monitorLayout ? m_monitorLayout->available(eligible) : deskflow::display::Layout{};
+  m_monitorDevices.clear();
+  for (const auto &p : m_liveMonitorLayout.placements)
+    m_monitorDevices.insert(p.device);
+  m_monitorRoutes = m_liveMonitorLayout.routes(m_monitorTopologies);
+  stopSwitch(); // A delayed crossing must never outlive an endpoint change.
+  if (m_clientSet.contains(m_primaryClient))
+    m_primaryClient->reconfigure(getActivePrimarySides());
+  ipcSendToClient("monitorRoutingMode", m_monitorDevices.isEmpty() ? "aggregate" : "per-monitor");
+  if (m_clientSet.contains(m_primaryClient)) {
+    const auto snapshot = workspaceSnapshot();
+    if (!snapshot.isEmpty())
+      ipcSendToClient(
+          "workspaceSnapshot", QString::fromUtf8(QJsonDocument(
+                                                     QJsonObject{
+                                                         {"device", QString::fromStdString(getName(m_primaryClient))},
+                                                         {"workspace", QJsonDocument::fromJson(snapshot).object()}
+                                                     }
+                               ).toJson(QJsonDocument::Compact))
+      );
+    // Existing verified DTOP stream only; no additional listener or trust path.
+    for (const auto &[name, client] : m_clients)
+      if (client != m_primaryClient)
+        client->updateServerTopology();
+  }
+}
+
+bool Server::monitorMotion(int32_t x, int32_t y, int32_t previousX, int32_t previousY, bool primary)
+{
+  using deskflow::display::Side;
+  const auto name = QString::fromStdString(getName(m_active));
+  auto source = m_liveMonitorLayout.monitorAt(m_monitorTopologies, name, {double(previousX), double(previousY)});
+  if (!source)
+    source = m_liveMonitorLayout.monitorAt(m_monitorTopologies, name, {double(x), double(y)});
+  if (!source) {
+    stopSwitch();
+    return false;
+  }
+  const QPointF current(x, y), previous(previousX, previousY);
+  const auto side = m_liveMonitorLayout.leaving(
+      m_monitorTopologies, name, *source, previous, current, primary ? getJumpZoneSize(m_active) : 0
+  );
+  if (side) {
+    const auto atEdge = m_liveMonitorLayout.clamp(m_monitorTopologies, name, *source, current);
+    auto crossing =
+        m_liveMonitorLayout.crossValidated(m_monitorTopologies, m_monitorRoutes, name, *source, *side, atEdge);
+    BaseClientProxy *destination = nullptr;
+    if (crossing) {
+      const auto found = m_clients.find(crossing->device.toStdString());
+      if (found != m_clients.end()) {
+        destination = found->second;
+        crossing = m_liveMonitorLayout.crossValidated(
+            m_monitorTopologies, m_monitorRoutes, name, *source, *side, atEdge,
+            std::max(1, getJumpZoneSize(destination))
+        );
+      }
+    }
+    const auto direction = *side == Side::Left    ? Direction::Left
+                           : *side == Side::Right ? Direction::Right
+                           : *side == Side::Top   ? Direction::Top
+                                                  : Direction::Bottom;
+    auto target = crossing ? crossing->input : atEdge;
+    if (!crossing) {
+      // Legacy compatibility is restricted to a real DINF desktop endpoint
+      // and the actual outside edge of the source desktop. Never use a saved
+      // 1440x900 UI placeholder or an internal monitor seam as input geometry.
+      int32_t sx, sy, sw, sh;
+      m_active->getShape(sx, sy, sw, sh);
+      const bool outside = sw > 0 && sh > 0 &&
+                           (*side == Side::Left    ? atEdge.x() == sx
+                            : *side == Side::Right ? atEdge.x() == sx + sw - 1
+                            : *side == Side::Top   ? atEdge.y() == sy
+                                                   : atEdge.y() == sy + sh - 1);
+      if (outside) {
+        int32_t tx = x, ty = y;
+        auto *legacy = mapToNeighbor(m_active, direction, tx, ty);
+        if (legacy && legacy != m_primaryClient && !legacy->supportsMonitorTopology()) {
+          int32_t lx, ly, lw, lh;
+          legacy->getShape(lx, ly, lw, lh);
+          if (lw > 0 && lh > 0) {
+            destination = legacy;
+            target = {tx, ty};
+          }
+        }
+      }
+    }
+    // Retain existing lock, corner, double-tap and delayed-switch policy.
+    if (isSwitchOkay(destination, direction, target.x(), target.y(), atEdge.x(), atEdge.y())) {
+      switchComputer(destination, target.x(), target.y(), false);
+      return true;
+    }
+  } else {
+    // A local OS-owned adjacent screen is still the same computer. Its native
+    // coordinates, not canvas positions, continue to determine local motion.
+    noSwitch(x, y);
+  }
+  if (!primary) {
+    const auto inside = m_liveMonitorLayout.monitorAt(m_monitorTopologies, name, current);
+    const auto position =
+        inside ? current.toPoint() : m_liveMonitorLayout.clamp(m_monitorTopologies, name, *source, current);
+    m_x = position.x();
+    m_y = position.y();
+    if (m_x != previousX || m_y != previousY)
+      m_active->mouseMove(m_x, m_y);
+  }
+  return false;
+}
+
 bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 {
   LOG_VERBOSE("onMouseMovePrimary %d,%d", x, y);
@@ -1629,6 +1903,8 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
   // save position
   m_x = x;
   m_y = y;
+  if (m_monitorDevices.contains(QString::fromStdString(getName(m_active))))
+    return monitorMotion(x, y, x - m_xDelta, y - m_yDelta, true);
 
   // get computer shape
   int32_t ax;
@@ -1753,6 +2029,10 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
   m_xDelta = dx;
   m_yDelta = dy;
 
+  if (m_monitorDevices.contains(QString::fromStdString(getName(m_active)))) {
+    monitorMotion(m_x + dx, m_y + dy, m_x, m_y, false);
+    return;
+  }
   // accumulate motion
   m_x += dx;
   m_y += dy;
@@ -1935,8 +2215,11 @@ bool Server::removeClient(BaseClientProxy *client)
   m_events->removeHandler(ClipboardChanged, client->getEventTarget());
 
   // remove from list
+  m_monitorTopologies.remove(QString::fromStdString(getName(client)));
   m_clients.erase(getName(client));
   m_clientSet.erase(i);
+  ++m_workspaceGeneration;
+  refreshMonitorRouting();
 
   return true;
 }

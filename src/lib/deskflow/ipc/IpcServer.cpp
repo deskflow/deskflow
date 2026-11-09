@@ -5,6 +5,7 @@
  */
 
 #include "IpcServer.h"
+#include "common/IsolatedSession.h"
 
 #include "base/Log.h"
 #include "common/VersionInfo.h"
@@ -20,7 +21,11 @@ IpcServer::IpcServer(QObject *parent, const QString &serverName, const QString &
       m_serverName(serverName),
       m_typeName(typeName.toUtf8())
 {
-  // do nothing
+  // Freeze the startup namespace before any IPC can be opened.
+  deskflow::lab::IsolatedSession::sealStartup();
+  m_server->setSocketOptions(
+      deskflow::lab::IsolatedSession::active() ? QLocalServer::UserAccessOption : QLocalServer::WorldAccessOption
+  );
 }
 
 IpcServer::~IpcServer()
@@ -30,9 +35,6 @@ IpcServer::~IpcServer()
 
 void IpcServer::listen()
 {
-  // IPC server normally runs as system, but GUI runs as regular user, so we need to allow world access.
-  m_server->setSocketOptions(QLocalServer::WorldAccessOption);
-
   connect(m_server, &QLocalServer::newConnection, this, &IpcServer::handleNewConnection);
   QLocalServer::removeServer(m_serverName);
   if (m_server->listen(m_serverName)) {
@@ -69,20 +71,13 @@ void IpcServer::handleReadyRead()
     return;
   }
 
-  // we don't handle incomplete messages yet; each socket read must have delimiters.
-  if (!data.contains('\n')) {
-    LOG_WARN("%s ipc server got incomplete message: %s", m_typeName.constData(), data.constData());
+  QVector<QByteArray> messages;
+  if (!m_readBuffers[clientSocket].append(data, messages)) {
+    clientSocket->disconnectFromServer();
     return;
   }
-
-  // each message is delimited by a newline to keep the protocol super simple.
-  while (data.contains('\n')) {
-    const auto index = data.indexOf('\n');
-    QByteArray messageData = data.left(index);
-    data.remove(0, index + 1);
-    QString message = QString::fromUtf8(messageData);
-    processMessage(clientSocket, message);
-  }
+  for (const auto &message : messages)
+    processMessage(clientSocket, QString::fromUtf8(message));
 }
 
 void IpcServer::handleDisconnected()
@@ -90,6 +85,7 @@ void IpcServer::handleDisconnected()
   const auto clientSocket = qobject_cast<QLocalSocket *>(sender());
   LOG_DEBUG("%s ipc server client disconnected", m_typeName.constData());
   m_clients.remove(clientSocket);
+  m_readBuffers.remove(clientSocket);
   clientSocket->deleteLater();
 }
 
@@ -103,6 +99,7 @@ void IpcServer::handleErrorOccurred()
   }
 
   m_clients.remove(clientSocket);
+  m_readBuffers.remove(clientSocket);
   clientSocket->deleteLater();
 }
 

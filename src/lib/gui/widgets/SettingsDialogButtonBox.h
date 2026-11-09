@@ -10,6 +10,8 @@
 
 class QLabel;
 class QDialogButtonBox;
+class QToolButton;
+class QAction;
 
 class SettingsDialogButtonBox : public QWidget
 {
@@ -34,4 +36,7 @@ private:
   QDialogButtonBox *m_buttonBox = nullptr;
   QLabel *m_lblText = nullptr;
   QLabel *m_lblIcon = nullptr;
+  QToolButton *m_more = nullptr;
+  QAction *m_resetAction = nullptr;
+  QAction *m_defaultsAction = nullptr;
 };

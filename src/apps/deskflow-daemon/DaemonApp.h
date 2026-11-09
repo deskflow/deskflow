@@ -48,6 +48,8 @@ private:
   void saveLogLevel(const QString &logLevel) const;
   void setConfigFile(const QString &configFile);
   void applyWatchdogCommand() const;
+  void applyPeerSession(const QString &encoded);
+  void stopPeerSession(const QString &token);
   void clearWatchdogCommand();
   void clearSettings();
 
@@ -61,5 +63,7 @@ private:
   FileLogOutputter *m_pFileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
   QString m_configFile;
+  QString m_peerSession;
+  quint64 m_peerEpoch = 0;
   bool m_foreground = false;
 };

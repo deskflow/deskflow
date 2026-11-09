@@ -42,8 +42,14 @@ inline QString iconMode()
 inline void updateIconTheme()
 {
   // Sets the fallback icon path and fallback theme
-  const auto themeName = QStringLiteral("%1-%2").arg(kAppId, iconMode());
-  if (QIcon::themeName().isEmpty() || QIcon::themeName().startsWith(kAppId))
+  // Lab/Candidate runtime identities do not rename the bundled artwork.
+  const auto themeName = QStringLiteral("deskflow-%1").arg(iconMode());
+  auto paths = QIcon::themeSearchPaths();
+  if (!paths.contains(":/icons")) {
+    paths.append(":/icons");
+    QIcon::setThemeSearchPaths(paths);
+  }
+  if (QIcon::themeName().isEmpty() || QIcon::themeName().startsWith("deskflow"))
     QIcon::setThemeName(themeName);
   else
     QIcon::setFallbackThemeName(themeName);

@@ -40,7 +40,7 @@ add_library(server STATIC
   Server.h
 )
 
-target_link_libraries(server PUBLIC common)
+target_link_libraries(server PUBLIC common PRIVATE Qt6::Network)
 
 if(UNIX)
   target_link_libraries(server PUBLIC app)

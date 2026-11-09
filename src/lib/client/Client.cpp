@@ -1,3 +1,4 @@
+#include "deskflow/DisplayTopologyMessage.h"
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
@@ -160,7 +161,7 @@ void Client::refuseConnection(deskflow::core::ConnectionRefusal reason, const ch
 
   if (msg) {
     auto info = new FailInfo(msg);
-    info->m_retry = true;
+    info->m_retry = false; // Protocol/identity/configuration refusal requires user action.
     Event event(EventTypes::ClientConnectionRefused, getEventTarget(), info, Event::EventFlags::DontFreeData);
     m_events->addEvent(std::move(event));
   }
@@ -480,6 +481,9 @@ bool Client::setupComputer(int16_t protocolMinor)
   case 7:
     m_server = new ServerProxy1_7(this, m_stream, m_events);
     break;
+  case 9:
+    m_server = new ServerProxy1_8(this, m_stream, m_events, true);
+    break;
   case 8:
     m_server = new ServerProxy1_8(this, m_stream, m_events);
     break;
@@ -693,8 +697,10 @@ void Client::handleHello()
     return;
   }
 
-  int16_t helloBackMinor = kProtocolMinorVersion;
-  if (serverMinor < kProtocolMinorVersion) {
+  int16_t helloBackMinor = deskflow::display::offeredMinor(
+      Settings::value(Settings::Security::TlsEnabled).toBool(), Settings::value(Settings::Security::CheckPeers).toBool()
+  );
+  if (serverMinor < helloBackMinor) {
     helloBackMinor = serverMinor;
     LOG_INFO(
         "downgrading client protocol version from %d.%d to %d.%d", //
@@ -735,6 +741,7 @@ void Client::handleSuspend()
 {
   if (!m_suspended) {
     LOG_INFO("suspend");
+    ipcSendToClient("powerState", "sleep");
     m_suspended = true;
     bool wasConnected = isConnected();
     disconnect(nullptr);
@@ -746,6 +753,7 @@ void Client::handleResume()
 {
   if (m_suspended) {
     LOG_INFO("resume");
+    ipcSendToClient("powerState", "wake");
     m_suspended = false;
     if (m_connectOnResume) {
       m_connectOnResume = false;

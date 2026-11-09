@@ -15,11 +15,58 @@
 #include "common/Settings.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/ComputerSettingsDialog.h"
+#include "dialogs/DesktopLayoutEditor.h"
 #include "dialogs/HotkeyDialog.h"
+#include "gui/DialogPresentation.h"
+#include "gui/ExperienceStyle.h"
 #include "gui/widgets/SettingsDialogButtonBox.h"
 
+#include <QComboBox>
+#include <QEvent>
 #include <QFileDialog>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
 #include <QMessageBox>
+#include <QPainter>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSignalBlocker>
+#include <QStackedWidget>
+#include <QStyledItemDelegate>
+#include <QTabBar>
+
+namespace {
+QPixmap computerSymbol(const QColor &color)
+{
+  QPixmap display(28, 28);
+  display.fill(Qt::transparent);
+  QPainter painter(&display);
+  painter.setRenderHint(QPainter::Antialiasing);
+  painter.setPen(QPen(color, 1.5));
+  painter.drawRoundedRect(QRectF(3, 3, 22, 16), 2, 2);
+  painter.drawLine(QPointF(14, 19), QPointF(14, 24));
+  painter.drawLine(QPointF(8, 24), QPointF(20, 24));
+  return display;
+}
+class CompatibilityComputerDelegate final : public QStyledItemDelegate
+{
+public:
+  using QStyledItemDelegate::QStyledItemDelegate;
+
+protected:
+  void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override
+  {
+    QStyledItemDelegate::initStyleOption(option, index);
+    if (index.data(Qt::DisplayRole).toString().isEmpty())
+      return;
+    option->icon = QIcon(computerSymbol(option->palette.color(QPalette::Text)));
+    option->decorationSize = QSize(28, 28);
+    option->decorationPosition = QStyleOptionViewItem::Top;
+    option->displayAlignment = Qt::AlignCenter;
+  }
+};
+} // namespace
 
 using enum ComputerConfig::SwitchCorner;
 
@@ -38,20 +85,382 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->setupUi(this);
   ui->tabWidget->setCurrentIndex(0);
   layout()->addWidget(m_buttonBox);
+  auto *layoutActions = new QHBoxLayout;
+  m_editLayout = new QPushButton(tr("Arrange computers…"), this);
+  m_editLayout->setObjectName("editDesktopLayout");
+  m_restoreGrid = new QPushButton(tr("Restore grid…"), this);
+  m_restoreGrid->setObjectName("restoreGridLayout");
+  layoutActions->addWidget(m_editLayout);
+  layoutActions->addWidget(m_restoreGrid);
+  layoutActions->addStretch();
+  auto *computerLayout = qobject_cast<QBoxLayout *>(ui->tabComputers->layout());
+  computerLayout->insertLayout(0, layoutActions);
+  m_layoutSummary = new QLabel(this);
+  m_layoutSummary->setWordWrap(true);
+  m_layoutSummary->setTextFormat(Qt::PlainText);
+  computerLayout->insertWidget(1, m_layoutSummary);
+  m_deviceControls = new QWidget(this);
+  auto *deviceRow = new QHBoxLayout(m_deviceControls);
+  deviceRow->setContentsMargins(0, 0, 0, 0);
+  m_devicePicker = new QComboBox(this);
+  m_devicePicker->setObjectName("layoutDevicePicker");
+  m_devicePicker->setAccessibleName(tr("Computer to manage"));
+  deviceRow->addWidget(m_devicePicker, 1);
+  auto *addDevice = new QPushButton(tr("Add computer…"), this);
+  auto *renameDevice = new QPushButton(tr("Rename…"), this);
+  auto *removeDevice = new QPushButton(tr("Remove…"), this);
+  renameDevice->setObjectName("renameLayoutClient");
+  removeDevice->setObjectName("removeLayoutClient");
+  deviceRow->addWidget(addDevice);
+  deviceRow->addWidget(renameDevice);
+  deviceRow->addWidget(removeDevice);
+  computerLayout->insertWidget(2, m_deviceControls);
+  connect(addDevice, &QPushButton::clicked, this, [this] { addClient(); });
+  connect(renameDevice, &QPushButton::clicked, this, [this] { manageLayoutClient(false); });
+  connect(removeDevice, &QPushButton::clicked, this, [this] { manageLayoutClient(true); });
 
   loadFromConfig();
 
-  ui->lblRemoveComputer->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
-  ui->lblNewComputer->setEnabled(!model().isFull());
-  ui->lblNewComputer->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->btnBrowseConfigFile->setText(tr("Choose…"));
 
   if (!deskflow::platform::isWindows())
     ui->cbWin32KeepForeground->setVisible(false);
   initConnections();
+  setupPresentation();
 }
 
 ServerConfigDialog::~ServerConfigDialog() = default;
+
+void ServerConfigDialog::setupPresentation()
+{
+  auto *root = qobject_cast<QVBoxLayout *>(layout());
+  root->setContentsMargins(24, 20, 24, 16);
+  root->setSpacing(16);
+  root->removeWidget(ui->tabWidget);
+  m_pages = new QStackedWidget(this);
+  m_pages->setObjectName("serverConfigPages");
+  root->insertWidget(0, m_pages, 1);
+  auto *monitorRow = new QHBoxLayout;
+  m_monitorStatus = new QLabel(this);
+  m_monitorStatus->setObjectName("monitorLayoutStatus");
+  m_monitorStatus->setWordWrap(true);
+  m_monitorStatus->setTextFormat(Qt::PlainText);
+  m_monitorToggle = new QPushButton(tr("Arrange individual displays"), this);
+  m_monitorToggle->setObjectName("toggleMonitorLayout");
+  auto *reviewDisplays = new QPushButton(tr("Review detected displays"), this);
+  reviewDisplays->setObjectName("reviewDetectedDisplays");
+  monitorRow->addWidget(m_monitorStatus, 1);
+  monitorRow->addWidget(m_monitorToggle);
+  monitorRow->addWidget(reviewDisplays);
+  root->insertLayout(0, monitorRow);
+  connect(m_monitorToggle, &QPushButton::clicked, this, [this] {
+    if (m_monitorMode) {
+      m_serverConfig.clearMonitorLayout();
+      m_monitorMode = false;
+      reloadLayoutDraft();
+      return;
+    }
+    m_monitorDraft = m_serverConfig.monitorLayoutDraft();
+    if (!m_monitorDraft.error.isEmpty())
+      return;
+    m_monitorMode = true;
+    m_serverConfig.setMonitorLayout(m_monitorDraft);
+    reloadLayoutDraft();
+  });
+  connect(reviewDisplays, &QPushButton::clicked, this, [this] {
+    auto detected = m_serverConfig.monitorLayoutDraft(true);
+    if (!detected.error.isEmpty()) {
+      m_monitorStatus->setText(detected.error);
+      return;
+    }
+    m_monitorDraft = std::move(detected);
+    m_serverConfig.setMonitorLayout(m_monitorDraft);
+    m_monitorMode = true;
+    reloadLayoutDraft();
+  });
+
+  m_layoutEditor = new DesktopLayoutEditor(m_serverConfig.desktopLayout().desktops, m_pages);
+  m_layoutEditor->setObjectName("serverArrangement");
+  m_layoutEditor->embedInSettings();
+  auto *arrangementScroll = new QScrollArea(m_pages);
+  arrangementScroll->setObjectName("arrangementScroll");
+  arrangementScroll->setWidgetResizable(true);
+  arrangementScroll->setFrameShape(QFrame::NoFrame);
+  arrangementScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  arrangementScroll->setWidget(m_layoutEditor);
+  m_pages->addWidget(arrangementScroll);
+  m_addLayoutComputer = new QPushButton(tr("Add computer…"), this);
+  m_addLayoutComputer->setObjectName("arrangementAddComputer");
+  auto *advanced = new QPushButton(tr("Advanced settings…"), this);
+  advanced->setObjectName("advancedServerSettings");
+  m_layoutEditor->addSecondaryAction(m_addLayoutComputer);
+  m_layoutEditor->addSecondaryAction(advanced);
+
+  auto *advancedPage = new QWidget(m_pages);
+  auto *advancedLayout = new QVBoxLayout(advancedPage);
+  advancedLayout->setContentsMargins(0, 0, 0, 0);
+  advancedLayout->setSpacing(16);
+  m_backToArrangement = new QPushButton(tr("Back to arrangement"), advancedPage);
+  m_backToArrangement->setObjectName("backToArrangement");
+  advancedLayout->addWidget(m_backToArrangement, 0, Qt::AlignLeft);
+  ui->tabWidget->setTabText(0, tr("Compatibility grid"));
+  ui->tabWidget->tabBar()->setExpanding(false);
+  ui->computerSetupView->setIconSize(QSize(28, 28));
+  ui->computerSetupView->setItemDelegate(new CompatibilityComputerDelegate(ui->computerSetupView));
+  advancedLayout->addWidget(ui->tabWidget, 1);
+  m_pages->addWidget(advancedPage);
+  for (int i = 0; i < ui->tabWidget->count(); ++i) {
+    if (auto *pageLayout = ui->tabWidget->widget(i)->layout()) {
+      pageLayout->setContentsMargins(16, 16, 16, 16);
+      pageLayout->setSpacing(12);
+    }
+  }
+  connect(advanced, &QPushButton::clicked, this, &ServerConfigDialog::showAdvancedSettings);
+  connect(m_backToArrangement, &QPushButton::clicked, this, &ServerConfigDialog::editDesktopLayout);
+  connect(m_addLayoutComputer, &QPushButton::clicked, this, [this] {
+    if (applyLayoutDraft())
+      addClient();
+  });
+  connect(m_layoutEditor, &DesktopLayoutEditor::draftChanged, this, [this] {
+    applyLayoutDraft();
+    setButtonBoxEnabledButtons();
+  });
+  connect(m_layoutEditor, &DesktopLayoutEditor::saveRequested, this, &ServerConfigDialog::save);
+  connect(m_layoutEditor, &DesktopLayoutEditor::cancelRequested, this, &ServerConfigDialog::cancel);
+  connect(&m_computerSetupModel, &ComputerSetupModel::computersChanged, this, &ServerConfigDialog::reloadLayoutDraft);
+  reloadLayoutDraft();
+  if (m_serverConfig.useExternalConfig() || !m_serverConfig.desktopLayoutError().isEmpty())
+    m_pages->setCurrentIndex(1);
+  setWindowTitle(tr("Computer arrangement"));
+  resize(820, 700);
+  setMinimumSize(680, 620);
+  updateAppearance();
+  updateLayoutControls();
+  setButtonBoxEnabledButtons();
+}
+
+void ServerConfigDialog::updateAppearance()
+{
+  deskflow::gui::applyExperienceStyle(this);
+  const bool dark = palette().color(QPalette::Window).lightness() < 128;
+  setStyleSheet(
+      styleSheet() +
+      QString(
+          "QTabWidget::pane{border:1px solid %1;border-radius:6px;}"
+          "QTabBar::tab{padding:10px 16px;margin-right:4px;border:0;border-bottom:2px solid transparent;}"
+          "QTabBar::tab:selected{border-bottom:2px solid %2;font-weight:600;}"
+          "QToolButton#settingsMoreActions{padding:6px 10px;border:0;color:%3;}"
+      )
+          .arg(dark ? "#45464b" : "#d9dadd", dark ? "#0a84ff" : "#0067d9", dark ? "#f5f5f7" : "#1d1d1f")
+  );
+  // Compatibility drag targets remain functional but no longer dominate the page.
+  for (auto *target : {static_cast<QLabel *>(ui->lblNewComputer), static_cast<QLabel *>(ui->lblRemoveComputer)}) {
+    target->setFixedSize(40, 40);
+    target->setAlignment(Qt::AlignCenter);
+    target->setFrameShape(QFrame::NoFrame);
+  }
+  ui->lblRemoveComputer->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(24, 24)));
+  ui->lblNewComputer->setPixmap(computerSymbol(palette().color(QPalette::WindowText)));
+}
+
+void ServerConfigDialog::changeEvent(QEvent *event)
+{
+  QDialog::changeEvent(event);
+  if (m_pages && event->type() == QEvent::PaletteChange)
+    updateAppearance();
+}
+
+bool ServerConfigDialog::applyLayoutDraft()
+{
+  if (m_advancedOnly)
+    return true;
+  if (!m_layoutEditor || !m_layoutEditor->editingEnabled() || ui->groupExternalConfig->isChecked())
+    return true;
+  const auto &draft = m_layoutEditor->desktops();
+  if (m_monitorMode) {
+    if (!m_monitorDraft.apply(draft)) {
+      m_layoutEditor->setMonitorEdges({});
+      m_layoutEditor->setRoutingError(m_monitorDraft.validationError);
+      return false;
+    }
+    QVector<QLineF> edges;
+    for (const auto &route : m_monitorDraft.layout.routes(m_monitorDraft.topologies))
+      edges.append(route.segment);
+    m_layoutEditor->setMonitorEdges(std::move(edges));
+    m_serverConfig.setMonitorLayout(m_monitorDraft);
+    return true;
+  }
+  if (!deskflow::gui::DesktopLayout::draftError(draft).isEmpty())
+    return false;
+  // Undoing every edit must also retain the original grid representation.
+  if (draft == m_loadedLayout && !m_loadedLayoutWasCustom) {
+    if (m_serverConfig.hasDesktopLayout())
+      m_serverConfig.restoreGridLayout();
+    return true;
+  }
+  if (draft == m_serverConfig.desktopLayout().desktops)
+    return true;
+  return m_serverConfig.setDesktopLayout(draft);
+}
+
+void ServerConfigDialog::reloadLayoutDraft()
+{
+  if (!m_layoutEditor)
+    return;
+  m_monitorMode = m_serverConfig.hasMonitorLayout();
+  m_monitorDraft = m_serverConfig.monitorLayoutDraft();
+  const QSignalBlocker editorBlock(m_layoutEditor);
+  const auto desktops = m_monitorMode && m_monitorDraft.error.isEmpty() ? m_monitorDraft.desktops()
+                                                                        : m_serverConfig.desktopLayout().desktops;
+  m_loadedLayout = desktops;
+  m_loadedLayoutWasCustom = m_monitorMode || m_serverConfig.hasDesktopLayout();
+  m_layoutEditor->setDesktops(desktops);
+  m_layoutEditor->setMonitorMode(m_monitorMode && m_monitorDraft.error.isEmpty());
+  QMap<QString, QString> details;
+  if (m_monitorMode && m_monitorDraft.error.isEmpty())
+    for (const auto &p : m_monitorDraft.layout.placements) {
+      const auto m = m_monitorDraft.topologies.constFind(p.device)->find(p.monitor);
+      details[deskflow::gui::MonitorLayoutDraft::token(p)] =
+          tr("Detected: %1 × %2 pixels · %3 × %4 logical units · physical size unknown")
+              .arg(m->pixels.width())
+              .arg(m->pixels.height())
+              .arg(m->logical.width())
+              .arg(m->logical.height());
+    }
+  m_layoutEditor->setMonitorDetails(std::move(details));
+  QVector<QLineF> edges;
+  if (m_monitorMode && m_monitorDraft.error.isEmpty())
+    for (const auto &route : m_monitorDraft.layout.routes(m_monitorDraft.topologies))
+      edges.append(route.segment);
+  m_layoutEditor->setMonitorEdges(std::move(edges));
+  m_monitorStatus->setText(
+      m_monitorDraft.error.isEmpty() ? tr("Detected display sizes. Disconnected computers use their last received "
+                                          "snapshot; the core verifies it again before use.")
+                                     : m_monitorDraft.error
+  );
+  m_monitorToggle->setText(m_monitorMode ? tr("Use compatibility layout") : tr("Arrange individual displays"));
+  m_monitorToggle->setEnabled(
+      Settings::isWritable() && !ui->groupExternalConfig->isChecked() &&
+      (m_monitorMode || m_monitorDraft.error.isEmpty())
+  );
+  updateLayoutControls();
+  setButtonBoxEnabledButtons();
+}
+
+void ServerConfigDialog::showAdvancedSettings()
+{
+  if (!applyLayoutDraft()) {
+    m_layoutEditor->setFocus();
+    return;
+  }
+  m_pages->setCurrentIndex(1);
+  ui->tabWidget->setCurrentIndex(1); // Hotkeys first; the legacy grid is explicitly secondary.
+  updateLayoutControls();
+  m_backToArrangement->setFocus();
+}
+
+void ServerConfigDialog::showAdvancedOnly()
+{
+  if (m_advancedOnly)
+    return;
+  m_advancedOnly = true;
+  m_pages->setCurrentIndex(1);
+  ui->tabWidget->setCurrentIndex(1);
+  // Modern workspace owns arrangement. Retain per-computer options here,
+  // without presenting a second editable layout that can diverge from it.
+  auto *page = new QWidget(ui->tabWidget);
+  page->setObjectName("computerOptionsPage");
+  auto *form = new QVBoxLayout(page);
+  form->setContentsMargins(16, 16, 16, 16);
+  form->setSpacing(12);
+  auto *description = new QLabel(
+      tr("Choose a computer to edit aliases, modifier keys and corner behavior. Screen arrangement is managed in My "
+         "desktop."),
+      page
+  );
+  description->setWordWrap(true);
+  form->addWidget(description);
+  auto *picker = new QComboBox(page);
+  picker->setObjectName("computerOptionsPicker");
+  form->addWidget(picker);
+  for (int i = 0; i < m_serverConfig.computers().size(); ++i) {
+    const auto &computer = m_serverConfig.computers()[i];
+    if (!computer.isNull())
+      picker->addItem(computer.name(), i);
+  }
+  auto *edit = new QPushButton(tr("Computer options…"), page);
+  edit->setObjectName("editComputerOptions");
+  form->addWidget(edit, 0, Qt::AlignLeft);
+  auto *reason = new QLabel(
+      tr("An external configuration file controls these options. Edit that file or explicitly switch configuration "
+         "mode."),
+      page
+  );
+  reason->setWordWrap(true);
+  form->addWidget(reason);
+  form->addStretch();
+  auto enabled = [this, picker, edit, reason] {
+    const bool external = ui->groupExternalConfig->isChecked();
+    picker->setEnabled(!external);
+    edit->setEnabled(!external && picker->count() > 0 && Settings::isWritable());
+    reason->setVisible(external);
+  };
+  connect(ui->groupExternalConfig, &QGroupBox::toggled, page, enabled);
+  enabled();
+  connect(edit, &QPushButton::clicked, this, [this, picker] {
+    const auto index = picker->currentData().toInt();
+    if (index < 0 || index >= m_serverConfig.computers().size())
+      return;
+    ComputerSettingsDialog options(this, &m_serverConfig.computers()[index], &m_serverConfig.computers());
+    // Renaming a workspace identity belongs to its explicit identity flow.
+    options.findChild<QLineEdit *>("lineNameEdit")->setReadOnly(true);
+    if (options.exec() == QDialog::Accepted)
+      setButtonBoxEnabledButtons();
+  });
+  ui->tabWidget->removeTab(0);
+  ui->tabComputers->hide();
+  ui->tabWidget->insertTab(0, page, tr("Computers"));
+  ui->tabWidget->setCurrentIndex(0);
+  m_backToArrangement->hide();
+  m_monitorToggle->hide();
+  m_monitorStatus->hide();
+  m_editLayout->hide();
+  m_restoreGrid->hide();
+  findChild<QPushButton *>("reviewDetectedDisplays")->hide();
+  m_layoutEditor->setEditingEnabled(false);
+  for (int index = 1; index < ui->tabWidget->count(); ++index) {
+    auto *content = ui->tabWidget->widget(index);
+    const auto title = ui->tabWidget->tabText(index);
+    ui->tabWidget->removeTab(index);
+    auto *scroll = new QScrollArea(ui->tabWidget);
+    scroll->setObjectName(QString("sharingOptionsScroll%1").arg(index));
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scroll->setWidget(content);
+    ui->tabWidget->insertTab(index, scroll, title);
+  }
+  for (auto *group : findChildren<QGroupBox *>())
+    if (group->layout()) {
+      group->layout()->setContentsMargins(14, 20, 14, 14);
+      group->layout()->setSpacing(12);
+    }
+  const bool dark = palette().color(QPalette::Window).lightness() < 128;
+  setStyleSheet(
+      styleSheet() + QString(
+                         "QGroupBox{border:1px solid "
+                         "%1;border-radius:7px;margin-top:12px;}QGroupBox::title{subcontrol-origin:margin;left:12px;"
+                         "padding:0 4px;}QListWidget{border:1px solid %1;border-radius:5px;}"
+                     )
+                         .arg(dark ? "#45464b" : "#d9dadd")
+  );
+  for (auto *button : m_buttonBox->findChildren<QPushButton *>())
+    new deskflow::gui::FormButtonMetrics(button);
+  setMinimumSize(620, 480);
+  resize(760, 640);
+  setWindowTitle(tr("Advanced sharing settings"));
+}
 
 bool ServerConfigDialog::addClient(const QString &clientName)
 {
@@ -60,6 +469,14 @@ bool ServerConfigDialog::addClient(const QString &clientName)
 
 void ServerConfigDialog::save()
 {
+  if (!Settings::isWritable())
+    return;
+  if (!applyLayoutDraft())
+    return;
+  if (!ui->groupExternalConfig->isChecked() && !m_serverConfig.desktopLayoutError().isEmpty()) {
+    QMessageBox::warning(this, tr("Layout needs attention"), m_serverConfig.desktopLayoutError());
+    return;
+  }
   if (ui->groupExternalConfig->isChecked() && !QFile::exists(ui->lineConfigFile->text())) {
 
     auto selectedButton = QMessageBox::warning(
@@ -70,49 +487,59 @@ void ServerConfigDialog::save()
       return;
     }
   }
-  // now that the dialog has been accepted, copy the new server config to the
-  // original one, which is a reference to the one in MainWindow.
+  const auto previousConfig = m_originalServerConfig;
+  const bool resetClipboardState = Settings::value(Settings::Server::EnableClipboard).toBool() != m_enableClipboard;
+  // Keep MainWindow consistent with notifications from the successful commit.
+  // On failure both its config and the persisted values remain unchanged.
   setOriginalServerConfig(serverConfig());
-  if (Settings::value(Settings::Server::EnableClipboard).toBool() != m_enableClipboard) {
+  const bool saved = Settings::saveConfig([this] {
+    Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
+    Settings::setValue(Settings::Server::EnableClipboard, m_enableClipboard);
+    Settings::setValue(Settings::Server::ClipboardSize, m_clipboardSize);
+    Settings::setValue(Settings::Server::EnableHeartbeat, m_enableHeartbeat);
+    Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
+    Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
+    Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
+    Settings::setValue(Settings::Server::DefaultLockToComputerState, m_defaultLockToComputerState);
+    Settings::setValue(Settings::Server::DisableLockToComputer, m_disableLockToComputer);
+    Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
+    Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
+    Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
+    Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
+    Settings::setValue(Settings::Server::ExternalConfig, ui->groupExternalConfig->isChecked());
+    Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
+
+    QStringList computerNames;
+    const auto computerList = m_computerSetupModel.m_computers;
+    for (const auto &computer : computerList) {
+      const auto &computerName = computer.name();
+      if (computerName.isEmpty())
+        continue;
+      computerNames.append(QStringLiteral("computer_%1").arg(computerName));
+      Settings::setValue(Settings::Computer::Aliases.arg(computerName), computer.aliases());
+      Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
+    }
+    Settings::removeUnknownComputers(computerNames);
+    m_originalServerConfig.commit();
+  });
+  if (!saved) {
+    setOriginalServerConfig(previousConfig);
+    QMessageBox::warning(
+        this, tr("Unable to save configuration"),
+        tr("The configuration could not be saved. Your previous layout is unchanged. Check the file permissions and "
+           "available disk space, then try again.")
+    );
+    return;
+  }
+  if (resetClipboardState) {
     Settings::setValue(Settings::Server::XdpRestoreToken, QString());
     Settings::setValue(Settings::Server::XdpClipboardRetried, false);
   }
-  Settings::setValue(Settings::Server::Protocol, networkProtocolToOption(m_protocol));
-  Settings::setValue(Settings::Server::EnableClipboard, m_enableClipboard);
-  Settings::setValue(Settings::Server::ClipboardSize, m_clipboardSize);
-  Settings::setValue(Settings::Server::EnableHeartbeat, m_enableHeartbeat);
-  Settings::setValue(Settings::Server::Heartbeat, m_heartbeatRate);
-  Settings::setValue(Settings::Server::EnableSwitchDelay, m_enableSwitchDelay);
-  Settings::setValue(Settings::Server::SwitchDelay, m_switchDelay);
-  Settings::setValue(Settings::Server::DefaultLockToComputerState, m_defaultLockToComputerState);
-  Settings::setValue(Settings::Server::DisableLockToComputer, m_disableLockToComputer);
-  Settings::setValue(Settings::Server::EnableSwitchDoubleTap, m_enableSwitchDoubleTap);
-  Settings::setValue(Settings::Server::SwitchDoubleTap, m_switchDoubleTap);
-  Settings::setValue(Settings::Server::RelativeMouseMoves, m_relativeMouseMoves);
-  Settings::setValue(Settings::Server::Win32KeepForeground, m_win32keepForeground);
-  Settings::setValue(Settings::Server::ExternalConfig, ui->groupExternalConfig->isChecked());
-  Settings::setValue(Settings::Server::ExternalConfigFile, ui->lineConfigFile->text());
-
-  QStringList computerNames;
-  const auto computerList = m_computerSetupModel.m_computers;
-  for (const auto &computer : computerList) {
-    const auto &computerName = computer.name();
-    if (computerName.isEmpty())
-      continue;
-    computerNames.append(QStringLiteral("computer_%1").arg(computerName));
-    Settings::setValue(Settings::Computer::Aliases.arg(computerName), computer.aliases());
-    Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
-  }
-  // Write the computer list now too, or it keeps computers whose settings were just removed until the app quits.
-  m_serverConfig.commit();
-  Settings::removeUnknownComputers(computerNames);
   QDialog::accept();
 }
 
 void ServerConfigDialog::cancel()
 {
-  serverConfig().setUseExternalConfig(m_originalServerConfigIsExternal);
-  serverConfig().setConfigFile(m_originalServerConfigUsesExternalFile);
   QDialog::reject();
 }
 
@@ -363,7 +790,7 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
   ui->widgetExternalConfigControls->setEnabled(checked);
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
-  serverConfig().setUseExternalConfig(checked);
+  updateLayoutControls();
   setButtonBoxEnabledButtons();
 }
 
@@ -427,12 +854,113 @@ void ServerConfigDialog::loadFromConfig()
   updateControls();
 }
 
+void ServerConfigDialog::editDesktopLayout()
+{
+  if (!m_pages || ui->groupExternalConfig->isChecked() || !m_serverConfig.desktopLayoutError().isEmpty())
+    return;
+  m_pages->setCurrentIndex(0);
+  m_layoutEditor->findChild<LayoutCanvas *>("layoutCanvas")->setFocus();
+}
+
+void ServerConfigDialog::manageLayoutClient(bool remove)
+{
+  if (!Settings::isWritable() || !m_serverConfig.hasDesktopLayout())
+    return;
+  const auto name = m_devicePicker->currentText();
+  QString error;
+  if (remove) {
+    if (QMessageBox::question(
+            this, tr("Remove computer?"),
+            tr("Remove %1 from this draft? Saved settings remain unchanged until you save.").arg(name)
+        ) != QMessageBox::Yes)
+      return;
+    error = m_serverConfig.removeLayoutClient(name);
+  } else {
+    bool ok = false;
+    const auto renamed =
+        QInputDialog::getText(this, tr("Rename computer"), tr("Computer name"), QLineEdit::Normal, name, &ok);
+    if (!ok)
+      return;
+    error = m_serverConfig.renameLayoutClient(name, renamed);
+  }
+  if (!error.isEmpty())
+    QMessageBox::warning(this, tr("Layout needs attention"), error);
+  else
+    reloadLayoutDraft();
+  updateLayoutControls();
+  // The grid model references the same draft list; keep its display current.
+  Q_EMIT m_computerSetupModel.dataChanged(
+      m_computerSetupModel.index(0, 0), m_computerSetupModel.index(m_rows - 1, m_columns - 1)
+  );
+  ui->listHotkeys->clear();
+  for (const auto &hotkey : std::as_const(m_serverConfig).hotkeys())
+    ui->listHotkeys->addItem(hotkey.text());
+  setButtonBoxEnabledButtons();
+}
+
+void ServerConfigDialog::restoreGridLayout()
+{
+  if (!Settings::isWritable() || !m_serverConfig.hasDesktopLayout())
+    return;
+  if (QMessageBox::question(
+          this, tr("Restore grid layout?"),
+          tr("Replace the custom alignment and layout display names with the original grid below? Cancel server "
+             "settings to keep your saved layout.")
+      ) != QMessageBox::Yes)
+    return;
+  m_serverConfig.restoreGridLayout();
+  reloadLayoutDraft();
+  updateLayoutControls();
+  setButtonBoxEnabledButtons();
+}
+
+void ServerConfigDialog::updateLayoutControls() const
+{
+  const bool custom = m_serverConfig.hasDesktopLayout();
+  if (auto *review = findChild<QPushButton *>("reviewDetectedDisplays"))
+    review->setEnabled(Settings::isWritable() && !ui->groupExternalConfig->isChecked());
+  const bool writable = Settings::isWritable();
+  m_editLayout->setEnabled(writable && !ui->groupExternalConfig->isChecked());
+  if (m_layoutEditor) {
+    const bool editable =
+        writable && !ui->groupExternalConfig->isChecked() && m_serverConfig.desktopLayoutError().isEmpty();
+    m_layoutEditor->setEditingEnabled(editable && (!m_monitorMode || m_monitorDraft.error.isEmpty()));
+    m_backToArrangement->setEnabled(
+        !ui->groupExternalConfig->isChecked() && m_serverConfig.desktopLayoutError().isEmpty()
+    );
+    m_addLayoutComputer->setEnabled(editable && !m_monitorMode && !m_computerSetupModel.isFull());
+  }
+  m_restoreGrid->setVisible(custom);
+  m_restoreGrid->setEnabled(writable);
+  m_deviceControls->setVisible(custom);
+  m_deviceControls->setEnabled(writable && !m_monitorMode && !ui->groupExternalConfig->isChecked());
+  const auto selected = m_devicePicker->currentText();
+  const QSignalBlocker pickerBlock(m_devicePicker);
+  m_devicePicker->clear();
+  for (const auto &computer : std::as_const(m_serverConfig).computers())
+    if (!computer.isNull() && !computer.isServer())
+      m_devicePicker->addItem(computer.name());
+  const auto previous = m_devicePicker->findText(selected);
+  if (previous >= 0)
+    m_devicePicker->setCurrentIndex(previous);
+  ui->computerSetupView->setEnabled(writable && !custom);
+  ui->computerSetupView->setVisible(!custom);
+  ui->lblNewComputer->setEnabled(writable && !custom && !m_computerSetupModel.isFull());
+  ui->lblRemoveComputer->setEnabled(writable && !custom);
+  const auto error = m_serverConfig.desktopLayoutError();
+  m_layoutSummary->setText(
+      !error.isEmpty() ? tr("Layout needs attention: %1").arg(error)
+      : custom         ? tr("Custom alignment · %1 computers. Edit devices below or arrange their shared edges.")
+                     .arg(m_serverConfig.numComputers())
+               : tr("The grid is preserved. Arrange computers to set sizes, offsets and shared edges.")
+  );
+}
+
 void ServerConfigDialog::resetFromSettings()
 {
   m_serverConfig = m_originalServerConfig;
-  m_serverConfig.setConfigFile(m_originalServerConfigUsesExternalFile);
-  m_serverConfig.setUseExternalConfig(m_originalServerConfigIsExternal);
   loadFromConfig();
+  reloadLayoutDraft();
   if (ui->tabWidget->currentWidget() == ui->tabComputers) {
     ui->computerSetupView->reset();
     ui->computerSetupView->update();
@@ -465,6 +993,8 @@ void ServerConfigDialog::refreshControls()
 
 void ServerConfigDialog::initConnections() const
 {
+  connect(m_editLayout, &QPushButton::clicked, this, &ServerConfigDialog::editDesktopLayout);
+  connect(m_restoreGrid, &QPushButton::clicked, this, &ServerConfigDialog::restoreGridLayout);
   connect(m_buttonBox, &SettingsDialogButtonBox::accepted, this, &ServerConfigDialog::save);
   connect(m_buttonBox, &SettingsDialogButtonBox::rejected, this, &ServerConfigDialog::cancel);
   connect(m_buttonBox, &SettingsDialogButtonBox::reset, this, &ServerConfigDialog::resetFromSettings);
@@ -538,6 +1068,7 @@ void ServerConfigDialog::updateControls() const
   ui->sbSwitchDoubleTap->setEnabled(writable && ui->cbSwitchDoubleTap->isChecked());
   ui->sbSwitchDelay->setEnabled(writable && ui->cbSwitchDelay->isChecked());
   ui->groupExternalConfig->setEnabled(writable);
+  updateLayoutControls();
   setButtonBoxEnabledButtons();
 }
 
@@ -571,7 +1102,6 @@ void ServerConfigDialog::setServerConfig()
     m_buttonBox->enableSave(false);
     return;
   }
-  serverConfig().setConfigFile(configFile);
   setButtonBoxEnabledButtons();
 }
 
@@ -582,18 +1112,28 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 
   if (ComputerSettingsDialog dlg(this, &newComputer, &model().m_computers);
       doSilent || dlg.exec() == QDialog::Accepted) {
-    model().addComputer(newComputer);
+    if (m_serverConfig.hasDesktopLayout()) {
+      m_serverConfig.addClient(newComputer.name());
+      for (auto &computer : m_serverConfig.computers())
+        if (computer.name() == newComputer.name())
+          computer = newComputer;
+    } else {
+      model().addComputer(newComputer);
+    }
     isAccepted = true;
   }
 
-  ui->lblNewComputer->setEnabled(!model().isFull());
+  updateLayoutControls();
+  if (isAccepted)
+    reloadLayoutDraft();
+  setButtonBoxEnabledButtons();
   return isAccepted;
 }
 
 bool ServerConfigDialog::isGeneralConfigModified() const
 {
-  return m_originalServerConfigIsExternal != Settings::value(Settings::Server::ExternalConfig).toBool() ||
-         m_originalServerConfigUsesExternalFile != Settings::value(Settings::Server::ExternalConfigFile).toString() ||
+  return m_originalServerConfigIsExternal != ui->groupExternalConfig->isChecked() ||
+         m_originalServerConfigUsesExternalFile != ui->lineConfigFile->text() ||
          m_protocol != Settings::networkProtocol() ||
          m_enableClipboard != Settings::value(Settings::Server::EnableClipboard).toBool() ||
          m_clipboardSize != Settings::value(Settings::Server::ClipboardSize).toUInt() ||
@@ -631,7 +1171,19 @@ bool ServerConfigDialog::isGeneralConfigDefault() const
 void ServerConfigDialog::setButtonBoxEnabledButtons() const
 {
   const bool writable = Settings::isWritable();
-  m_buttonBox->enableSave(writable && (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig)));
-  m_buttonBox->enableReset(writable && (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig)));
+  auto monitorDraft = m_monitorDraft;
+  const bool validDraft =
+      !m_layoutEditor || !m_layoutEditor->editingEnabled() ||
+      (m_monitorMode ? monitorDraft.apply(m_layoutEditor->desktops())
+                     : deskflow::gui::DesktopLayout::draftError(m_layoutEditor->desktops()).isEmpty());
+  const bool editorChanged = m_layoutEditor && m_layoutEditor->desktops() != m_loadedLayout;
+  m_buttonBox->enableSave(
+      writable && validDraft &&
+      (ui->groupExternalConfig->isChecked() || m_serverConfig.desktopLayoutError().isEmpty()) &&
+      (isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig))
+  );
+  m_buttonBox->enableReset(
+      writable && (editorChanged || isGeneralConfigModified() || !(m_originalServerConfig == m_serverConfig))
+  );
   m_buttonBox->enableRestoreDefaults(writable && !isGeneralConfigDefault() && ui->tabWidget->currentIndex() == 2);
 }

@@ -19,7 +19,8 @@ class CoreIpcClient : public IpcClient
 public:
   explicit CoreIpcClient(QObject *parent = nullptr);
 
-  void sendStop();
+  virtual void sendStop();
+  virtual bool sendWorkspaceApply(const QByteArray &request);
 
 Q_SIGNALS:
   void commandReceived(const QString &command, const QString &args);

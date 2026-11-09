@@ -8,6 +8,12 @@
 #include "SecureUtils.h"
 
 #include "base/FinalAction.h"
+#include "common/CredentialStore.h"
+#if defined(DESKFLOW_CANDIDATE_BUILD) && !defined(Q_OS_WIN)
+#include <unistd.h>
+#elif defined(DESKFLOW_CANDIDATE_BUILD)
+#include <io.h>
+#endif
 
 #include <openssl/evp.h>
 #include <openssl/pem.h>
@@ -65,6 +71,17 @@ Fingerprint sslCertFingerprint(const X509 *cert, QCryptographicHash::Algorithm t
 
 void generatePemSelfSignedCert(const QString &path, int keyLength)
 {
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  QFile privateOutput(path);
+  if (!deskflow::lab::CredentialStore::openPrivateCandidateFile(privateOutput))
+    throw std::runtime_error("candidate private identity output refused");
+  bool committed = false;
+  auto cleanup = finally([&] {
+    privateOutput.close();
+    if (!committed)
+      privateOutput.remove();
+  });
+#endif
   auto expirationDays = 365;
 
   auto *privateKey = EVP_RSA_gen(keyLength);
@@ -97,7 +114,17 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   const QFile file(path);
   const std::filesystem::path fsPath = file.filesystemFileName();
 
-#if defined(Q_OS_WIN)
+#if defined(DESKFLOW_CANDIDATE_BUILD) && !defined(Q_OS_WIN)
+  const auto descriptor = ::dup(privateOutput.handle());
+  auto fp = descriptor < 0 ? nullptr : fdopen(descriptor, "w");
+  if (!fp && descriptor >= 0)
+    ::close(descriptor);
+#elif defined(DESKFLOW_CANDIDATE_BUILD) && defined(Q_OS_WIN)
+  const auto descriptor = ::_dup(privateOutput.handle());
+  auto fp = descriptor < 0 ? nullptr : _fdopen(descriptor, "wb");
+  if (!fp && descriptor >= 0)
+    ::_close(descriptor);
+#elif defined(Q_OS_WIN)
   auto fp = _wfopen(fsPath.native().c_str(), L"w");
 #else
   auto fp = std::fopen(fsPath.native().c_str(), "w");
@@ -108,8 +135,16 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   }
   auto fileClose = finally([fp]() { std::fclose(fp); });
 
-  PEM_write_PrivateKey(fp, privateKey, nullptr, nullptr, 0, nullptr, nullptr);
-  PEM_write_X509(fp, cert);
+  const bool written =
+      PEM_write_PrivateKey(fp, privateKey, nullptr, nullptr, 0, nullptr, nullptr) == 1 && PEM_write_X509(fp, cert) == 1;
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!written || std::fflush(fp) != 0 || !privateOutput.flush())
+    throw std::runtime_error("candidate identity write failed");
+  committed = true;
+#else
+  if (!written)
+    throw std::runtime_error("certificate write failed");
+#endif
 }
 
 QString formatSSLFingerprintColumns(const QByteArray &fingerprint)

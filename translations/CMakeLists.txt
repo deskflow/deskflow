@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 option(CLEAN_TRS "Clean obsolete translations from tr files" OFF)
+option(UPDATE_TRANSLATIONS "Update TS source catalogs using lupdate before compiling" ON)
 find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE COMPONENTS LinguistTools)
 
 # To add a new language Add 639 shortname
@@ -20,10 +21,15 @@ if(CLEAN_TRS)
 endif()
 
 # English will have only plurals
-qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${CMAKE_PROJECT_NAME}_en.ts OPTIONS -pluralonly ${TR_OPTIONS})
+if(UPDATE_TRANSLATIONS)
+  qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${CMAKE_PROJECT_NAME}_en.ts OPTIONS -pluralonly ${TR_OPTIONS})
 
 # Other languages contain the full set of strings.
 qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${${CMAKE_PROJECT_NAME}_TRS} OPTIONS ${TR_OPTIONS})
+else()
+  # Compilation only needs lrelease. Keep catalog editing separate from build.
+  qt_add_translation(TRS ${CMAKE_PROJECT_NAME}_en.ts ${${CMAKE_PROJECT_NAME}_TRS})
+endif()
 
 #ensure that the targets are built always
 add_custom_target(app_translations ALL DEPENDS ${TRS})
@@ -33,7 +39,11 @@ if (NOT BUILD_OSX_BUNDLE)
   install(FILES ${TRS} DESTINATION ${CMAKE_INSTALL_I18N_DIR})
 else()
   #when making the bundle copy our translation into the bundle
-  set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/Resources/translations)
+  if(DESKFLOW_UI_REVIEW_BUILD)
+    set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:DeskflowUIReview>/Resources/translations)
+  else()
+    set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/Resources/translations)
+  endif()
 
   # find the qt translation files needed to copy into the bundle
   get_target_property(lupdate_executable Qt6::lupdate IMPORTED_LOCATION)

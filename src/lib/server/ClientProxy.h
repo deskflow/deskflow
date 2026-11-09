@@ -46,6 +46,7 @@ public:
   Returns the original stream passed to the c'tor.
   */
   deskflow::IStream *getStream() const override;
+  QString peerIdentityReference() const override;
 
   //@}
 

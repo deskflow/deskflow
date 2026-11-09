@@ -31,25 +31,41 @@ set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_PROPER_NAME}")
 
 # Menu Entry
 set(CPACK_WIX_PROGRAM_MENU_FOLDER "${CMAKE_PROJECT_PROPER_NAME}")
-set(CPACK_PACKAGE_EXECUTABLES "deskflow" "${CMAKE_PROJECT_PROPER_NAME}")
+if(DESKFLOW_CANDIDATE_BUILD)
+  set(CPACK_PACKAGE_EXECUTABLES "DeskflowCandidate" "${CMAKE_PROJECT_PROPER_NAME}")
+else()
+  set(CPACK_PACKAGE_EXECUTABLES "deskflow" "${CMAKE_PROJECT_PROPER_NAME}")
+endif()
 
 # Default Install Path
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_PROPER_NAME}")
 
 # Wix Specific Values
-set(CPACK_WIX_UPGRADE_GUID "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8")
+if(DESKFLOW_CANDIDATE_BUILD)
+  set(CPACK_WIX_UPGRADE_GUID "7926478A-7922-45D7-AEAD-852FBA10D8EC")
+else()
+  set(CPACK_WIX_UPGRADE_GUID "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8")
+endif()
 set(CPACK_WIX_UI_BANNER "${MY_DIR}/wix-banner.png")
 set(CPACK_WIX_UI_DIALOG "${MY_DIR}/wix-dialog.png")
 
 # Required Extra Extenstions
-list(APPEND CPACK_WIX_EXTENSIONS "WixToolset.Util.wixext" "WixToolset.Firewall.wixext")
+if(NOT DESKFLOW_CANDIDATE_BUILD)
+  list(APPEND CPACK_WIX_EXTENSIONS "WixToolset.Util.wixext" "WixToolset.Firewall.wixext")
+endif()
 
 # Make sure to also put the xmlns for the ext into the wix block on generated files
-list(APPEND CPACK_WIX_CUSTOM_XMLNS "util=http://wixtoolset.org/schemas/v4/wxs/util" "firewall=http://wixtoolset.org/schemas/v4/wxs/firewall")
+if(NOT DESKFLOW_CANDIDATE_BUILD)
+  list(APPEND CPACK_WIX_CUSTOM_XMLNS "util=http://wixtoolset.org/schemas/v4/wxs/util" "firewall=http://wixtoolset.org/schemas/v4/wxs/firewall")
+endif()
 
 # The patch has to know the full path of our msm file
+set(DESKFLOW_WIX_PATCH "${MY_DIR}/wix-patch.xml.in")
+if(DESKFLOW_CANDIDATE_BUILD)
+  set(DESKFLOW_WIX_PATCH "${MY_DIR}/wix-candidate-patch.xml.in")
+endif()
 configure_file(
-  ${MY_DIR}/wix-patch.xml.in
+  ${DESKFLOW_WIX_PATCH}
   ${CMAKE_CURRENT_BINARY_DIR}/wix-patch.xml @ONLY
 )
 

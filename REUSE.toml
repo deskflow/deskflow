@@ -65,3 +65,20 @@ path = [
 ]
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "GPL-2.0-only WITH LicenseRef-OpenSSL-Exception"
+
+[[annotations]]
+path = ["src/apps/res/icons/deskflow-light/actions/22/monitor-duotone.svg", "src/apps/res/icons/deskflow-light/actions/22/mouse-duotone.svg", "src/apps/res/icons/deskflow-light/actions/22/keyboard-duotone.svg", "src/apps/res/icons/deskflow-light/actions/22/laptop-duotone.svg", "src/apps/res/icons/deskflow-dark/actions/22/monitor-duotone.svg", "src/apps/res/icons/deskflow-dark/actions/22/mouse-duotone.svg", "src/apps/res/icons/deskflow-dark/actions/22/keyboard-duotone.svg", "src/apps/res/icons/deskflow-dark/actions/22/laptop-duotone.svg"]
+precedence = "override"
+SPDX-FileCopyrightText = "2023 Phosphor Icons"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["src/apps/res/icons/deskflow-light/actions/16/computer-add.svg", "src/apps/res/icons/deskflow-light/actions/16/connection-link.svg", "src/apps/res/icons/deskflow-light/actions/16/computers.svg", "src/apps/res/icons/deskflow-dark/actions/16/computer-add.svg", "src/apps/res/icons/deskflow-dark/actions/16/connection-link.svg", "src/apps/res/icons/deskflow-dark/actions/16/computers.svg"]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "src/apps/res/icons/PHOSPHOR-LICENSE.txt"
+SPDX-FileCopyrightText = "2023 Phosphor Icons"
+SPDX-License-Identifier = "MIT"

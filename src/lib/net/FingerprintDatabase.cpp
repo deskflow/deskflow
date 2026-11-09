@@ -6,12 +6,17 @@
  */
 
 #include "FingerprintDatabase.h"
+#include "common/CredentialStore.h"
 
 #include <QFile>
 #include <QTextStream>
 
 void FingerprintDatabase::read(const QString &path)
 {
+#ifdef DESKFLOW_UI_REVIEW_BUILD
+  Q_UNUSED(path);
+  return;
+#endif
   QFile file(path);
   if (!file.open(QIODevice::ReadOnly))
     return;
@@ -46,6 +51,18 @@ void FingerprintDatabase::readStream(QTextStream &in)
 
 bool FingerprintDatabase::write(const QString &path)
 {
+#ifdef DESKFLOW_UI_REVIEW_BUILD
+  Q_UNUSED(path);
+  return false;
+#endif
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  QString encoded;
+  QTextStream stream(&encoded);
+  if (!writeStream(stream))
+    return false;
+  stream.flush();
+  return deskflow::lab::CredentialStore::writeCandidateTrust(path, encoded.toUtf8());
+#endif
   QFile file(path);
   if (!file.open(QIODevice::WriteOnly))
     return false;

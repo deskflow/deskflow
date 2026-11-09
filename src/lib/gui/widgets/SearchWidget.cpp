@@ -20,27 +20,40 @@ SearchWidget::SearchWidget(QWidget *parent)
 {
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  const auto iconSize = QSize(fontMetrics().height() - 2, fontMetrics().height() - 2);
-  const auto maxBtnSize = QSize(fontMetrics().height() + 2, fontMetrics().height() + 2);
+  setObjectName("logSearch");
+  const auto iconSize = QSize(16, 16);
+  const auto maxBtnSize = QSize(30, 30);
+  setStyleSheet(
+      "QPushButton{min-height:0;padding:4px;border:1px solid "
+      "transparent;border-radius:4px;}QPushButton:focus{border:2px solid #5687d5;}"
+  );
+  m_btnToggle->setObjectName("logSearchToggle");
+  m_btnNext->setObjectName("logSearchNext");
+  m_btnPrev->setObjectName("logSearchPrevious");
+  m_searchLine->setObjectName("logSearchText");
 
   m_btnToggle->setFixedSize(maxBtnSize);
   m_btnToggle->setCheckable(true);
   m_btnToggle->setChecked(false);
   m_btnToggle->setFlat(true);
-  m_btnToggle->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::SystemSearch));
+  m_btnToggle->setIcon(
+      QIcon::fromTheme(QIcon::ThemeIcon::SystemSearch, QIcon(":/icons/deskflow-light/actions/16/system-search.svg"))
+  );
   m_btnToggle->setIconSize(iconSize);
 
   m_btnNext->setFixedSize(maxBtnSize);
   m_btnNext->setFlat(true);
-  m_btnNext->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoDown));
+  m_btnNext->setIcon(
+      QIcon::fromTheme(QIcon::ThemeIcon::GoDown, QIcon(":/icons/deskflow-light/actions/16/go-down.svg"))
+  );
   m_btnNext->setIconSize(iconSize);
 
   m_btnPrev->setFixedSize(maxBtnSize);
   m_btnPrev->setFlat(true);
-  m_btnPrev->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoUp));
+  m_btnPrev->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoUp, QIcon(":/icons/deskflow-light/actions/16/go-up.svg")));
   m_btnPrev->setIconSize(iconSize);
 
-  m_searchLine->setMaximumHeight(maxBtnSize.height());
+  m_searchLine->setMinimumWidth(140);
 
   connect(m_btnToggle, &QPushButton::toggled, this, &SearchWidget::toggleVisible);
   connect(m_btnNext, &QPushButton::clicked, this, &SearchWidget::next);
@@ -50,6 +63,8 @@ SearchWidget::SearchWidget(QWidget *parent)
   setText();
 
   auto mainLayout = new QHBoxLayout;
+  mainLayout->setContentsMargins(0, 0, 0, 0);
+  mainLayout->setSpacing(4);
   mainLayout->addWidget(m_btnToggle);
   mainLayout->addWidget(m_searchLine);
   mainLayout->addWidget(m_btnNext);
@@ -63,7 +78,7 @@ SearchWidget::SearchWidget(QWidget *parent)
 void SearchWidget::changeEvent(QEvent *e)
 {
   QWidget::changeEvent(e);
-  if (e->type() == QEvent::LanguageChange)
+  if (e->type() == QEvent::LanguageChange || e->type() == QEvent::PaletteChange)
     setText();
 }
 
@@ -80,6 +95,13 @@ void SearchWidget::setText()
   m_btnNext->setToolTip(tr("Find next"));
   m_btnPrev->setToolTip(tr("Find previous"));
   m_searchLine->setPlaceholderText(tr("Find..."));
+  m_btnToggle->setAccessibleName(m_btnToggle->toolTip());
+  m_btnNext->setAccessibleName(m_btnNext->toolTip());
+  m_btnPrev->setAccessibleName(m_btnPrev->toolTip());
+  const auto theme = palette().color(QPalette::Window).lightness() < 128 ? "dark" : "light";
+  m_btnToggle->setIcon(QIcon(QString(":/icons/deskflow-%1/actions/16/system-search.svg").arg(theme)));
+  m_btnNext->setIcon(QIcon(QString(":/icons/deskflow-%1/actions/16/go-down.svg").arg(theme)));
+  m_btnPrev->setIcon(QIcon(QString(":/icons/deskflow-%1/actions/16/go-up.svg").arg(theme)));
 }
 
 void SearchWidget::next()

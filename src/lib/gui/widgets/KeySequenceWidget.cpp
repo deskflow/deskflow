@@ -14,7 +14,7 @@ KeySequenceWidget::KeySequenceWidget(QWidget *parent, const KeySequence &seq)
       m_KeySequence(seq),
       m_BackupSequence(seq)
 {
-  setFocusPolicy(Qt::NoFocus);
+  setFocusPolicy(Qt::StrongFocus);
   updateOutput();
 }
 
@@ -49,6 +49,8 @@ void KeySequenceWidget::startRecording()
   setFocus();
   grabKeyboard();
   setStatus(Recording);
+  updateOutput();
+  Q_EMIT keySequenceChanged();
 }
 
 void KeySequenceWidget::stopRecording()
@@ -98,8 +100,11 @@ void KeySequenceWidget::keyPressEvent(QKeyEvent *event)
 {
   event->accept();
 
-  if (status() == Stopped)
+  if (status() == Stopped) {
+    if (event->key() == Qt::Key_Space || event->key() == Qt::Key_Return)
+      startRecording();
     return;
+  }
 
   if (m_KeySequence.appendKey(event->key(), event->modifiers()))
     stopRecording();
@@ -109,6 +114,14 @@ void KeySequenceWidget::keyPressEvent(QKeyEvent *event)
 
 void KeySequenceWidget::updateOutput()
 {
+  if (status() == Recording) {
+    setText(tr("Press a shortcut…"));
+    return;
+  }
+  if (!m_KeySequence.valid()) {
+    setText(tr("Record shortcut…"));
+    return;
+  }
   QString s;
 
   if (m_KeySequence.isMouseButton())

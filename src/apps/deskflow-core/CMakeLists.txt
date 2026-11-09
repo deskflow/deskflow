@@ -11,6 +11,39 @@ add_executable(${target}
   CoreArgParser.h
   CoreArgParser.cpp
 )
+if(DESKFLOW_CANDIDATE_BUILD)
+  set_target_properties(${target} PROPERTIES OUTPUT_NAME "deskflow-candidate-core")
+endif()
+if(DESKFLOW_LAB_BUILD)
+  set_target_properties(${target} PROPERTIES OUTPUT_NAME "deskflow-lab-core")
+  add_executable(deskflow-lab-network-core NetworkOnlyMain.cpp "${CMAKE_SOURCE_DIR}/src/lib/gui/core/DiscoveryScope.cpp")
+  if(APPLE)
+    target_link_libraries(deskflow-lab-network-core PRIVATE "-framework SystemConfiguration" "-framework CoreFoundation")
+  elseif(WIN32)
+    target_link_libraries(deskflow-lab-network-core PRIVATE iphlpapi ws2_32 version)
+  endif()
+  target_link_libraries(deskflow-lab-network-core PRIVATE net base arch io mt common Qt6::Core Qt6::Network)
+  if(APPLE AND BUILD_OSX_BUNDLE)
+    set_target_properties(deskflow-lab-network-core PROPERTIES
+      BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
+      RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:DeskflowLab>/MacOS)
+  endif()
+endif()
+
+if(DESKFLOW_CANDIDATE_BUILD)
+  add_executable(deskflow-candidate-network-core NetworkOnlyMain.cpp "${CMAKE_SOURCE_DIR}/src/lib/gui/core/DiscoveryScope.cpp")
+  if(APPLE)
+    target_link_libraries(deskflow-candidate-network-core PRIVATE "-framework SystemConfiguration" "-framework CoreFoundation")
+  elseif(WIN32)
+    target_link_libraries(deskflow-candidate-network-core PRIVATE iphlpapi ws2_32 version)
+  endif()
+  target_link_libraries(deskflow-candidate-network-core PRIVATE net base arch io mt common Qt6::Core Qt6::Network)
+  if(APPLE AND BUILD_OSX_BUNDLE)
+    set_target_properties(deskflow-candidate-network-core PROPERTIES
+      BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
+      RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:DeskflowCandidate>/MacOS)
+  endif()
+endif()
 
 if(WIN32)
   # Generate rc file

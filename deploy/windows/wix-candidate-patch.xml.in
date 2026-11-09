@@ -1,0 +1,27 @@
+<!-- SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
+SPDX-License-Identifier: MIT -->
+<!-- Candidate-only installer source. Never changes production services, rules or trust. -->
+<CPackWiXPatch>
+  <CPackWiXFragment Id="CM_CP_deskflow_candidate_daemon.exe">
+    <ServiceInstall Id="CandidateServiceInstall" Name="DeskflowCandidate" DisplayName="Deskflow Candidate"
+      Description="Independent Deskflow candidate service. Start manually after reviewing permissions."
+      ErrorControl="normal" Start="demand" Type="ownProcess" />
+    <ServiceControl Id="CandidateServiceControl" Name="DeskflowCandidate" Stop="uninstall" Remove="uninstall" />
+  </CPackWiXFragment>
+  <CPackWiXFragment Id="#PRODUCT">
+    <!-- No firewall exception, existing-process termination, auto-run checkbox,
+         credential migration, launch action or original product upgrade code. -->
+    <Property Id="VC_REDIST_INSTALLED">
+      <RegistrySearch Id="CandidateFindVCRedist" Root="HKLM"
+        Key="SOFTWARE\Microsoft\VisualStudio\@REQUIRED_MSVC_RUNTIME_MAJOR@.0\VC\Runtimes\@BUILD_ARCHITECTURE@"
+        Name="Installed" Type="raw" />
+    </Property>
+    <Binary Id="CandidateCustomDLL" SourceFile="@CMAKE_CURRENT_BINARY_DIR@/wix-custom.dll" />
+    <CustomAction Id="CandidateCheckVCRedist" BinaryRef="CandidateCustomDLL" DllEntry="CheckVCRedist" Execute="immediate" />
+    <CustomAction Id="CandidateMissingRuntime" Error="The required Microsoft Visual C++ runtime is missing. Installation makes no runtime download or permission change." />
+    <InstallExecuteSequence>
+      <Custom Action="CandidateCheckVCRedist" Before="InstallInitialize" Condition="NOT Installed AND VC_REDIST_INSTALLED" />
+      <Custom Action="CandidateMissingRuntime" Before="InstallInitialize" Condition="NOT Installed AND (NOT VC_REDIST_INSTALLED OR NOT VC_REDIST_VERSION_OK)" />
+    </InstallExecuteSequence>
+  </CPackWiXFragment>
+</CPackWiXPatch>

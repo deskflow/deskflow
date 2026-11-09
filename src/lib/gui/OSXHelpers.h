@@ -17,3 +17,6 @@ bool isOSXInterfaceStyleDark();
 void forceAppActive();
 void macOSNativeHide();
 void installQuitHandler(std::function<bool()> shouldQuit);
+
+class QObject;
+void observeOSXPower(QObject *owner, std::function<void(bool)> callback);

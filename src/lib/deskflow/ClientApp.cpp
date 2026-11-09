@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "client/Client.h"
 #include "common/ExitCodes.h"
+#include "common/PeerAuthentication.h"
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/Computer.h"
@@ -148,27 +149,43 @@ void ClientApp::closeClientComputer(deskflow::Computer *computer)
   }
 }
 
+void ClientApp::cancelClientRestart()
+{
+  ++m_retryGeneration;
+  if (m_restartTimer) {
+    getEvents()->removeHandler(EventTypes::Timer, m_restartTimer);
+    getEvents()->deleteTimer(m_restartTimer);
+    m_restartTimer = nullptr;
+  }
+}
 void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
 {
-  // discard old timer
-  getEvents()->deleteTimer(timer);
-  getEvents()->removeHandler(EventTypes::Timer, timer);
-
-  // reconnect
-  startClient();
+  if (timer != m_restartTimer || !m_retryAllowed || m_suspended || !deskflow::auth::Runtime::retryAllowed())
+    return;
+  cancelClientRestart();
+  startClient(); // Client::connect resolves the saved hostname again on each attempt.
 }
-
 void ClientApp::scheduleClientRestart(double retryTime)
 {
+  if (!m_retryAllowed || m_suspended || m_restartTimer || !deskflow::auth::Runtime::retryAllowed())
+    return;
   LOG_DEBUG("retry in %.0f seconds", retryTime);
   ipcSendToClient("retryIn", QString::number(retryTime, 'f', 0));
-  // install a timer and handler to retry later
-  EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
-  getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
+  m_restartTimer = getEvents()->newOneShotTimer(retryTime, nullptr);
+  if (!m_restartTimer)
+    return;
+  const auto generation = ++m_retryGeneration;
+  auto *timer = m_restartTimer;
+  getEvents()->addHandler(EventTypes::Timer, timer, [this, timer, generation](const auto &e) {
+    if (generation == m_retryGeneration)
+      handleClientRestart(e, timer);
+  });
 }
 
 void ClientApp::handleClientConnected()
 {
+  cancelClientRestart();
+  m_retryCount = 0;
   LOG_DEBUG("connected to server");
   ipcSendConnectionState(deskflow::core::ConnectionState::Connected);
   // Reset server index on successful connection
@@ -178,6 +195,10 @@ void ClientApp::handleClientConnected()
 
 void ClientApp::handleClientFailed(const Event &e)
 {
+  if (!static_cast<Client::FailInfo *>(e.getData())->m_retry) {
+    handleClientRefused(e);
+    return;
+  }
   if ((++m_lastServerAddressIndex) < m_client->getLastResolvedAddressesCount()) {
     // Try next resolved address for current hostname
     std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
@@ -209,6 +230,9 @@ void ClientApp::handleClientRefused(const Event &e)
   std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
   if (!info->m_retry) {
+    m_retryAllowed = false;
+    m_fatalConnectionRefusal = true;
+    cancelClientRestart();
     LOG_ERR("failed to connect to server: %s", qPrintable(info->m_what));
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else {
@@ -272,6 +296,8 @@ void ClientApp::closeClient(Client *client)
 
 bool ClientApp::startClient()
 {
+  if (!m_retryAllowed || m_suspended || !deskflow::auth::Runtime::retryAllowed())
+    return false;
   deskflow::Computer *clientComputer = nullptr;
   try {
     if (m_clientComputer == nullptr) {
@@ -309,6 +335,8 @@ bool ClientApp::startClient()
 
 void ClientApp::stopClient()
 {
+  m_retryAllowed = false;
+  cancelClientRestart();
   closeClient(m_client);
   closeClientComputer(m_clientComputer);
   m_client = nullptr;
@@ -329,6 +357,8 @@ int ClientApp::mainLoop()
   // later.  the timer installed by startClient() will take care of
   // that.
   int exitCode = getEvents()->loop();
+  if (m_fatalConnectionRefusal)
+    exitCode = s_exitConfig;
 
   // close down
   LOG_DEBUG("stopping client");
@@ -375,6 +405,8 @@ void ClientApp::tryNextServer()
 
 void ClientApp::startNode()
 {
+  m_retryAllowed = true;
+  m_fatalConnectionRefusal = false;
   // start the client.  if this return false then we've failed and
   // we shouldn't retry.
   LOG_VERBOSE("starting client");

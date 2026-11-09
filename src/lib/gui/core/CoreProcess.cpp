@@ -6,6 +6,15 @@
  */
 
 #include "CoreProcess.h"
+#include "DiscoveryScope.h"
+#include "common/CandidatePolicy.h"
+#include "common/DesktopWorkspace.h"
+#include "common/DisplayTopology.h"
+#include "common/ServiceSession.h"
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QPointer>
+#include <QUuid>
 
 #include "common/ExitCodes.h"
 #include "gui/ipc/CoreIpcClient.h"
@@ -108,14 +117,45 @@ CoreProcess::CoreProcess(const ServerConfig &serverConfig)
     qCritical("core server binary does not exist");
   }
 
+  connect(m_daemonIpcClient, &ipc::DaemonIpcClient::peerStopped, this, &CoreProcess::serviceStopped);
+  connect(m_daemonIpcClient, &ipc::DaemonIpcClient::peerSessionRejected, this, [this](const QString &token) {
+    if ((token == m_serviceStopToken && m_processState == ProcessState::Stopping) ||
+        (!m_serviceContext.isEmpty() && token == deskflow::auth::Context::decode(m_serviceContext).session)) {
+      m_recoveryBlocked = true;
+      m_retryTimer.stop();
+      setConnectionState(ConnectionState::Disconnected);
+      Q_EMIT error(Error::StartFailed);
+    }
+  });
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
   connect(
       m_daemonIpcClient, &ipc::DaemonIpcClient::connectionFailed, this, &CoreProcess::daemonIpcClientConnectionFailed
   );
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::logPathReceived, this, &CoreProcess::setupDaemonLogTail);
 
+  m_rebindDeadline.setSingleShot(true);
+  m_rebindDeadline.setInterval(5000);
+  connect(this, &CoreProcess::connectionAttemptStarting, this, [this](bool server) {
+    if (server)
+      observeServerInterfaces();
+    else
+      m_boundServerScope.reset();
+  });
+  connect(this, &CoreProcess::connectionIntentChanged, this, [this](bool wanted) {
+    if (!wanted)
+      m_boundServerScope.reset();
+  });
+  connect(&m_rebindDeadline, &QTimer::timeout, this, [this] {
+    if (!m_serverRebind)
+      return;
+    m_serverRebind.reset();
+    m_recoveryBlocked = true;
+    Q_EMIT error(Error::StartFailed);
+  });
+  connect(this, &CoreProcess::processStateChanged, this, [this](auto) { finishServerRebind(); }, Qt::QueuedConnection);
   connect(&m_retryTimer, &QTimer::timeout, this, [this] {
-    if (m_processState == ProcessState::RetryPending) {
+    if (m_startRequested && !m_recoveryBlocked && !m_addressRecoveryHold &&
+        m_processState == ProcessState::RetryPending) {
       start();
     } else {
       qDebug("retry cancelled, process state is not retry pending");
@@ -145,59 +185,93 @@ void CoreProcess::daemonIpcClientConnected()
 
 void CoreProcess::checkExistingProcess()
 {
-  qInfo("checking existing core");
-
+  // A GUI crash may leave this namespace's old core alive. Its authentication
+  // context belongs to the old GUI; do not adopt it or display stale success.
+  if (!m_startRequested || ++m_existingCoreAttempts > 3) {
+    m_recoveryBlocked = true;
+    setProcessState(ProcessState::Stopped);
+    Q_EMIT error(Error::StartFailed);
+    return;
+  }
   auto *client = new ipc::CoreIpcClient(this);
-  connect(client, &ipc::CoreIpcClient::connected, this, [client] {
-    qInfo("existing core has matching version, leaving it running");
-    client->deleteLater();
-  });
-  connect(client, &ipc::CoreIpcClient::versionMismatch, this, [client] {
-    qInfo("existing core has mismatched version, asking it to stop");
+  bindExistingProcess(client);
+  client->connectToServer();
+}
+void CoreProcess::bindExistingProcess(ipc::CoreIpcClient *client)
+{
+  const auto generation = m_runGeneration;
+  const QPointer<ipc::CoreIpcClient> source = client;
+  const auto terminal = std::make_shared<bool>(false);
+  auto *deadline = new QTimer(client);
+  deadline->setObjectName("existingCoreStopDeadline");
+  deadline->setSingleShot(true);
+  auto stop = [this, client, generation, terminal] {
+    if (*terminal || m_recoveryBlocked || generation != m_runGeneration || !m_startRequested) {
+      client->deleteLater();
+      return;
+    }
+    qInfo("asking the previous core in this application namespace to stop before a new session");
     client->sendStop();
-  });
-  connect(client, &ipc::CoreIpcClient::serverShutdown, this, [this, client] {
-    qInfo("existing core stopped successfully");
+  };
+  connect(client, &ipc::CoreIpcClient::connected, this, stop);
+  connect(client, &ipc::CoreIpcClient::versionMismatch, this, stop);
+  connect(client, &ipc::CoreIpcClient::serverShutdown, this, [this, client, generation, deadline, terminal] {
+    if (*terminal)
+      return;
+    *terminal = true;
+    deadline->stop();
     client->deleteLater();
+    if (m_recoveryBlocked || generation != m_runGeneration || !m_startRequested)
+      return;
     setProcessState(ProcessState::RetryPending);
     m_retryTimer.setSingleShot(true);
     m_retryTimer.start(kRetryDelay);
   });
-  connect(client, &ipc::CoreIpcClient::connectionFailed, this, [client] {
-    qCritical("could not contact existing core");
-    client->deleteLater();
-  });
-  client->connectToServer();
+  auto fail = [this, source, generation, terminal, deadline] {
+    if (!source || *terminal)
+      return;
+    *terminal = true;
+    deadline->stop();
+    source->deleteLater();
+    if (generation != m_runGeneration || !m_startRequested)
+      return;
+    m_recoveryBlocked = true;
+    m_retryTimer.stop();
+    setProcessState(ProcessState::Stopped);
+    Q_EMIT error(Error::StartFailed);
+  };
+  connect(client, &ipc::CoreIpcClient::connectionFailed, this, fail);
+  connect(deadline, &QTimer::timeout, this, fail);
+  deadline->start(5000);
 }
 
-void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
+void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus status)
 {
   using enum ProcessState;
+  const bool wanted = m_startRequested && !m_recoveryBlocked && !m_addressRecoveryHold && m_processState == Started;
+  invalidatePendingEvents();
   setConnectionState(ConnectionState::Disconnected);
-
-  if (m_retryTimer.isActive()) {
-    m_retryTimer.stop();
-  }
-
-  if (exitCode != s_exitSuccess) {
+  m_retryTimer.stop();
+  if (!wanted) {
     setProcessState(Stopped);
-    if (exitCode == s_exitDuplicate) {
-      checkExistingProcess();
-      return;
-    }
-    qWarning("desktop process exited with code: %d", exitCode);
     return;
   }
-
-  qDebug("desktop process exited normally");
-
-  if (const auto wasStarted = m_processState == Started; wasStarted) {
-    qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
+  if (exitCode == s_exitDuplicate && status == QProcess::NormalExit) {
+    setProcessState(Stopped);
+    checkExistingProcess();
+    return;
+  }
+  const bool normalRestart = exitCode == s_exitSuccess && status == QProcess::NormalExit;
+  const bool crashRestart = status == QProcess::CrashExit && m_crashRetries < 3;
+  if (normalRestart || crashRestart) {
+    const int delay = crashRestart ? kRetryDelay * (1 << m_crashRetries++) : kRetryDelay;
     setProcessState(RetryPending);
     m_retryTimer.setSingleShot(true);
-    m_retryTimer.start(kRetryDelay);
+    m_retryTimer.start(delay);
   } else {
+    m_recoveryBlocked = true;
     setProcessState(Stopped);
+    Q_EMIT error(Error::StartFailed);
   }
 }
 
@@ -232,6 +306,13 @@ void CoreProcess::startForegroundProcess(const QStringList &args)
   });
 #endif
 
+  if (m_mode == Settings::CoreMode::Client) {
+    Q_EMIT clientConnectionStarting(
+        Settings::value(Settings::Client::RemoteHost).toString(), Settings::value(Settings::Core::Port).toInt(),
+        Settings::value(Settings::Security::TlsEnabled).toBool() &&
+            Settings::value(Settings::Security::CheckPeers).toBool()
+    );
+  }
   m_process->start(m_appPath, args);
 
   if (m_process->waitForStarted()) {
@@ -252,9 +333,26 @@ void CoreProcess::startProcessFromDaemon()
   const auto configFile = Settings::settingsFile();
   qInfo("sending start to daemon (config file: %s)", qPrintable(configFile));
 
-  auto sendStart = [this, configFile] {
-    m_daemonIpcClient->sendConfigFile(configFile);
-    m_daemonIpcClient->sendStartProcess();
+  const auto generation = m_runGeneration;
+  auto sendStart = [this, configFile, generation] {
+    if (generation != m_runGeneration || m_processState != ProcessState::Starting)
+      return;
+    if (!m_serviceContext.isEmpty()) {
+      const deskflow::candidate::ServiceSession request{configFile, deskflow::auth::Context::decode(m_serviceContext)};
+      if (!request.valid()) {
+        m_recoveryBlocked = true;
+        setProcessState(ProcessState::Stopped);
+        Q_EMIT error(Error::StartFailed);
+        return;
+      }
+      m_daemonIpcClient->sendPeerSession(request.encode());
+      Q_EMIT clientConnectionStarting(
+          Settings::value(Settings::Client::RemoteHost).toString(), Settings::value(Settings::Core::Port).toInt(), true
+      );
+    } else {
+      m_daemonIpcClient->sendConfigFile(configFile);
+      m_daemonIpcClient->sendStartProcess();
+    }
     setProcessState(ProcessState::Started);
   };
 
@@ -277,7 +375,7 @@ void CoreProcess::stopForegroundProcess()
   }
 
   if (!m_process) {
-    qCritical("not stopping core desktop process, no process to stop");
+    setProcessState(ProcessState::Stopped);
     return;
   }
 
@@ -288,8 +386,11 @@ void CoreProcess::stopForegroundProcess()
 
     // Fallback: if the core doesn't confirm shutdown via IPC within the
     // timeout, force-terminate it so we never hang in the Stopping state.
-    QTimer::singleShot(kRetryDelay, this, [this] {
-      if (m_processState != ProcessState::Stopping) {
+    const auto generation = m_runGeneration;
+    const QPointer<QProcess> stoppingProcess = m_process;
+    QTimer::singleShot(kRetryDelay, this, [this, generation, stoppingProcess] {
+      if (generation != m_runGeneration || !stoppingProcess || m_process != stoppingProcess ||
+          m_processState != ProcessState::Stopping) {
         return;
       }
 
@@ -313,6 +414,7 @@ void CoreProcess::stopForegroundProcess()
     m_process->terminate();
   } else {
     qDebug("process is not running, skipping terminate");
+    setProcessState(ProcessState::Stopped);
   }
 }
 
@@ -323,9 +425,24 @@ void CoreProcess::stopProcessFromDaemon()
     return;
   }
 
-  auto sendStop = [this] {
+  const auto generation = m_runGeneration;
+  auto sendStop = [this, generation] {
+    if (generation != m_runGeneration || m_processState != ProcessState::Stopping)
+      return;
+#if !defined(DESKFLOW_CANDIDATE_BUILD) && !defined(DESKFLOW_LAB_BUILD)
     m_daemonIpcClient->sendStopProcess();
     setProcessState(ProcessState::Stopped);
+    return;
+#endif
+    m_serviceStopToken = QUuid::createUuid().toString(QUuid::Id128);
+    m_daemonIpcClient->sendPeerStop(m_serviceStopToken);
+    const auto token = m_serviceStopToken;
+    QTimer::singleShot(5500, this, [this, generation, token] {
+      if (generation == m_runGeneration && token == m_serviceStopToken && m_processState == ProcessState::Stopping) {
+        m_recoveryBlocked = true;
+        Q_EMIT error(Error::StartFailed);
+      }
+    });
   };
 
   if (m_daemonIpcClient->isConnected()) {
@@ -336,6 +453,14 @@ void CoreProcess::stopProcessFromDaemon()
         static_cast<Qt::ConnectionType>(Qt::SingleShotConnection | Qt::QueuedConnection)
     );
     m_daemonIpcClient->connectToServer();
+  }
+}
+
+void CoreProcess::serviceStopped(const QString &token)
+{
+  if (!token.isEmpty() && token == m_serviceStopToken && m_processState == ProcessState::Stopping) {
+    m_serviceStopToken.clear();
+    setProcessState(ProcessState::Stopped);
   }
 }
 
@@ -376,7 +501,23 @@ void CoreProcess::handleLogLines(const QString &text)
 
 void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
-  if (m_processState == ProcessState::Started) {
+#ifdef DESKFLOW_LAB_BUILD
+  qInfo("DeskflowLab: input core launch disabled");
+  Q_EMIT inputExecutionUnavailable();
+  return;
+#endif
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!deskflow::candidate::securityProfile(
+          Settings::settingsFile(), Settings::value(Settings::Security::Certificate).toString(),
+          Settings::value(Settings::Security::TlsEnabled).toBool(),
+          Settings::value(Settings::Security::CheckPeers).toBool()
+      )) {
+    Q_EMIT error(Error::StartFailed);
+    return;
+  }
+#endif
+  if (m_processState == ProcessState::Started || m_processState == ProcessState::Starting ||
+      m_processState == ProcessState::Stopping) {
     qCritical("not starting core process, already started");
     return;
   }
@@ -387,6 +528,19 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   }
 
   QMutexLocker locker(&m_processMutex);
+  if (m_processState != ProcessState::RetryPending)
+    m_crashRetries = 0;
+  const bool newIntent = !m_startRequested || m_addressRecoveryHold || m_recoveryBlocked;
+  m_startRequested = true;
+  m_recoveryBlocked = false;
+  m_addressRecoveryHold = false;
+  ++m_restartRequest;
+  if (newIntent) {
+    m_existingCoreAttempts = 0;
+    Q_EMIT connectionIntentChanged(true);
+  }
+  invalidatePendingEvents();
+  const auto generation = m_runGeneration;
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
   const auto processMode = processModeOption.value_or(currentMode);
@@ -394,6 +548,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   qInfo().noquote() << QString("starting %1 process (%2 mode)").arg(coreMode, processModeToString(processMode));
 
+  Q_EMIT connectionAttemptStarting(
+      m_mode == Settings::CoreMode::Server, Settings::value(Settings::Client::RemoteHost).toString(),
+      Settings::value(Settings::Core::Port).toInt(), Settings::value(Settings::Security::TlsEnabled).toBool(),
+      Settings::value(Settings::Security::CheckPeers).toBool()
+  );
   setProcessState(ProcessState::Starting);
 
 #ifdef Q_OS_MACOS
@@ -404,18 +563,49 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   if (processMode == ProcessMode::Desktop) {
     m_process = new QProcess(this);
-    connect(m_process, &QProcess::finished, this, &CoreProcess::onProcessFinished, Qt::UniqueConnection);
-    connect(
-        m_process, &QProcess::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput,
-        Qt::UniqueConnection
-    );
-    connect(
-        m_process, &QProcess::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError,
-        Qt::UniqueConnection
-    );
+    const QPointer<QProcess> process = m_process;
+    connect(m_process, &QProcess::finished, this, [this, process](int code, QProcess::ExitStatus status) {
+      if (!process || m_process != process)
+        return;
+      onProcessFinished(code, status);
+      process->deleteLater();
+      if (m_process == process)
+        m_process = nullptr;
+    });
+    connect(m_process, &QProcess::readyReadStandardOutput, this, [this, process, generation] {
+      if (process && m_process == process && generation == m_runGeneration)
+        onProcessReadyReadStandardOutput();
+    });
+    connect(m_process, &QProcess::readyReadStandardError, this, [this, process, generation] {
+      if (process && m_process == process && generation == m_runGeneration)
+        onProcessReadyReadStandardError();
+    });
   }
 
   QStringList args = {coreMode};
+  const bool scopedService =
+      processMode == ProcessMode::Service && deskflow::candidate::settingsPath(Settings::settingsFile());
+  m_serviceContext.clear();
+  m_serviceStopToken.clear();
+  if (!m_expectedPeer.isEmpty() &&
+      ((!scopedService && processMode != ProcessMode::Desktop) || m_mode != Settings::CoreMode::Client ||
+       !Settings::value(Settings::Security::TlsEnabled).toBool() ||
+       !Settings::value(Settings::Security::CheckPeers).toBool())) {
+    m_startRequested = false;
+    m_recoveryBlocked = true;
+    setProcessState(ProcessState::Stopped);
+    setConnectionState(ConnectionState::Disconnected);
+    Q_EMIT error(Error::StartFailed);
+    return;
+  }
+  if ((processMode == ProcessMode::Desktop || scopedService) && m_mode == Settings::CoreMode::Client &&
+      Settings::value(Settings::Security::TlsEnabled).toBool() &&
+      Settings::value(Settings::Security::CheckPeers).toBool()) {
+    const auto context = prepareAuthentication();
+    args << "--peer-auth-context" << context.encode();
+    if (scopedService)
+      m_serviceContext = context.encode();
+  }
 
   if (m_mode == Settings::CoreMode::Server) {
     const auto [hasNeededPermissions, configFilename] = persistServerConfig();
@@ -446,14 +636,14 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   // Wired before the start calls so it catches Started from both sync (desktop) and async (service) paths.
   connect(
       this, &CoreProcess::processStateChanged, this,
-      [this](ProcessState state) {
-        if (state != ProcessState::Started) {
+      [this, generation](ProcessState state) {
+        if (generation != m_runGeneration || state != ProcessState::Started) {
           return;
         }
 
         // Delay briefly to give the core process time to start its IPC server.
-        QTimer::singleShot(kRetryDelay, this, [this] {
-          if (m_processState != ProcessState::Started) {
+        QTimer::singleShot(kRetryDelay, this, [this, generation] {
+          if (generation != m_runGeneration || m_processState != ProcessState::Started) {
             return;
           }
 
@@ -465,23 +655,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
           m_coreIpcClient = new ipc::CoreIpcClient(this);
 
-          // queued so a modal dialog opened by a handler can't block readyRead and strand later messages
-          connect(
-              m_coreIpcClient, &ipc::CoreIpcClient::commandReceived, this, &CoreProcess::onCoreIpcMessageReceived,
-              Qt::QueuedConnection
-          );
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::connected, this, [] {
-            qDebug("connected to core ipc server");
-          });
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::connectionFailed, this, [] {
-            qWarning("failed to establish core ipc connection");
-          });
-          connect(m_coreIpcClient, &ipc::CoreIpcClient::serverShutdown, this, [this, client = m_coreIpcClient] {
-            qDebug("core ipc server shut down cleanly");
-            client->deleteLater();
-            if (m_coreIpcClient == client)
-              m_coreIpcClient = nullptr;
-          });
+          bindCoreIpcClient(m_coreIpcClient);
 
           m_coreIpcClient->connectToServer();
         });
@@ -500,7 +674,23 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
 void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
 {
+  stopInternal(processModeOption, false);
+}
+void CoreProcess::stopInternal(std::optional<ProcessMode> processModeOption, bool preserveIntent)
+{
   QMutexLocker locker(&m_processMutex);
+  if (!preserveIntent) {
+    m_serverRebind.reset();
+    m_rebindDeadline.stop();
+    const bool hadIntent = m_startRequested;
+    m_startRequested = false;
+    m_addressRecoveryHold = false;
+    if (hadIntent)
+      Q_EMIT connectionIntentChanged(false);
+  }
+  ++m_restartRequest;
+  invalidatePendingEvents();
+  m_retryTimer.stop();
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
   const auto processMode = processModeOption.value_or(currentMode);
@@ -514,8 +704,11 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
   }
 
   if (m_processState == ProcessState::Starting) {
-    qDebug("core process is starting, cancelling");
-    setProcessState(ProcessState::Stopped);
+    if (m_process && m_process->state() != QProcess::NotRunning) {
+      setProcessState(ProcessState::Stopping);
+      stopForegroundProcess();
+    } else
+      setProcessState(ProcessState::Stopped);
   } else if (m_processState != ProcessState::Stopped) {
     setProcessState(ProcessState::Stopping);
 
@@ -532,47 +725,135 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
   setConnectionState(ConnectionState::Disconnected);
 }
 
+void CoreProcess::observeServerInterfaces(DiscoveryScopeSource source)
+{
+  if (m_mode != Settings::CoreMode::Server || !m_startRequested || m_recoveryBlocked || m_serverRebind)
+    return;
+  const auto binding = Settings::value(Settings::Core::Interface).toString();
+  if (binding.isEmpty()) {
+    m_boundServerScope.reset();
+    return;
+  }
+  const auto available = source();
+  if (m_boundServerScope && binding != m_boundServerScope->address.toString())
+    m_boundServerScope.reset();
+  if (!m_boundServerScope) {
+    for (const auto &scope : available)
+      if (scope.valid() && scope.address.toString() == binding) {
+        m_boundServerScope = scope;
+        return;
+      }
+    return; // No previously observed physical link: never guess one.
+  }
+  if (available.contains(*m_boundServerScope))
+    return;
+  QVector<DiscoveryScope> replacements;
+  for (const auto &scope : available)
+    if (scope.valid() && scope.index == m_boundServerScope->index && scope.name == m_boundServerScope->name &&
+        scope.prefix == m_boundServerScope->prefix &&
+        scope.address.isInSubnet(m_boundServerScope->address, scope.prefix))
+      replacements.append(scope);
+  if (replacements.size() == 1)
+    rebindServer(*m_boundServerScope, replacements.front(), std::move(source));
+}
+bool CoreProcess::rebindServer(const DiscoveryScope &before, const DiscoveryScope &after, DiscoveryScopeSource source)
+{
+  if (!before.valid() || !after.valid() || before == after || before.index != after.index ||
+      before.name != after.name || before.prefix != after.prefix || m_mode != Settings::CoreMode::Server ||
+      !m_startRequested || m_recoveryBlocked || m_serverRebind ||
+      Settings::value(Settings::Core::Interface).toString() != before.address.toString() || !source().contains(after))
+    return false;
+  const auto mask = 0xffffffffu >> before.prefix;
+  if ((before.address.toIPv4Address() & ~mask) != (after.address.toIPv4Address() & ~mask))
+    return false;
+  m_serverRebind = qMakePair(before, after);
+  m_rebindScopes = std::move(source);
+  m_rebindDeadline.start();
+  stopInternal(std::nullopt, true);
+  // Let the same network-change turn update the selected discovery scope and
+  // withdraw its old advertisement before a new start snapshots GUI settings.
+  QTimer::singleShot(0, this, &CoreProcess::finishServerRebind);
+  return true;
+}
+void CoreProcess::finishServerRebind()
+{
+  if (!m_serverRebind || !recoveryQuiescent())
+    return;
+  const auto change = *m_serverRebind;
+  m_serverRebind.reset();
+  m_rebindDeadline.stop();
+  if (!m_startRequested || m_recoveryBlocked || m_mode != Settings::CoreMode::Server ||
+      !m_rebindScopes().contains(change.second) ||
+      Settings::value(Settings::Core::Interface).toString() != change.first.address.toString())
+    return;
+  Settings::setValue(Settings::Core::Interface, change.second.address.toString());
+  start(); // Only after this owned listener has completed its stop.
+}
+bool CoreProcess::recoveryPermitted() const
+{
+  return m_startRequested && !m_recoveryBlocked && m_mode == Settings::CoreMode::Client &&
+         (Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Desktop ||
+          (Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Service &&
+           deskflow::candidate::settingsPath(Settings::settingsFile()))) &&
+         Settings::value(Settings::Security::TlsEnabled).toBool() &&
+         Settings::value(Settings::Security::CheckPeers).toBool();
+}
+bool CoreProcess::recoveryQuiescent() const
+{
+  return m_processState == ProcessState::Stopped && (!m_process || m_process->state() == QProcess::NotRunning);
+}
+bool CoreProcess::holdForAddressRecovery()
+{
+  if (!recoveryPermitted() || m_connectionState == ConnectionState::Connected)
+    return false;
+  if (m_addressRecoveryHold)
+    return true;
+  m_addressRecoveryHold = true;
+  stopInternal(std::nullopt, true);
+  return true;
+}
+bool CoreProcess::resumeForAddressRecovery(const QString &fp, const QString &address, int port)
+{
+  if (!m_addressRecoveryHold || !recoveryPermitted() || !recoveryQuiescent() ||
+      deskflow::auth::fingerprint(fp).isEmpty() || fp != m_expectedPeer || port < 1 || port > 65535 ||
+      !DiscoveryScope::privateAddress(QHostAddress(address)) || QHostAddress(address).toString() != address)
+    return false;
+  Settings::setValue(Settings::Client::RemoteHost, address);
+  Settings::setValue(Settings::Core::Port, port);
+  setAddress(address);
+  m_addressRecoveryHold = false;
+  Q_EMIT recoveredConnectionRequested(fp, address, port);
+  if (!m_startRequested)
+    return false;
+  start();
+  return true;
+}
 void CoreProcess::restart()
 {
-  qDebug("restarting core process");
-
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
-
-  const bool waitForProcess = m_process && m_process->state() != QProcess::ProcessState::NotRunning;
-
-  if (waitForProcess) {
-    qInfo("waiting for current desktop core to exit before restarting");
-
+  const QPointer<QProcess> old = m_process;
+  const bool wait = old && old->state() != QProcess::NotRunning;
+  stop(m_lastProcessMode.value_or(processMode));
+  // A later explicit stop invalidates this restart, even if exit arrives late.
+  const auto request = m_restartRequest;
+  if (wait) {
     connect(
-        m_process, &QProcess::finished, this,
-        [this](int, QProcess::ExitStatus) {
-          qInfo("desktop core exited, restarting");
-          start();
+        old, &QProcess::finished, this,
+        [this, request](int, QProcess::ExitStatus) {
+          if (request == m_restartRequest)
+            start();
         },
         Qt::SingleShotConnection
     );
-  }
-
-  if (m_lastProcessMode != std::nullopt && m_lastProcessMode != processMode) {
-    const auto debugMessage =
-        QStringLiteral("process mode changed to %1, stopping %2 process")
-            .arg(processModeToString(processMode), processModeToString(m_lastProcessMode.value()));
-    qDebug().noquote() << debugMessage;
-    stop(m_lastProcessMode);
-  } else {
-    // in service mode: though there is technically no need to stop the service
-    // before restarting it, it does make for cleaner process state tracking,
-    // especially if something goes wrong with starting the service.
-    stop();
-  }
-
-  if (!waitForProcess) {
+  } else
     start();
-  }
 }
 
 void CoreProcess::cleanup()
 {
+#ifdef DESKFLOW_LAB_BUILD
+  return; // No input process exists in this build.
+#endif
   qInfo("cleaning up core process");
 
   const auto isDesktop = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Desktop;
@@ -589,19 +870,18 @@ QPair<bool, QString> CoreProcess::persistServerConfig() const
   }
 
   const auto configFilePath = Settings::defaultValue(Settings::Server::ExternalConfigFile).toString();
-  QFile configFile(configFilePath);
-  if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+  if (!m_serverConfig.save(configFilePath)) {
     qWarning() << "failed to open core config file for write:" << configFilePath;
-    return {false, configFile.fileName()};
+    return {false, configFilePath};
   }
-
-  m_serverConfig.save(configFile);
-  configFile.close();
-  return {Settings::isServerConfigFileReadable(), configFile.fileName()};
+  return {Settings::isServerConfigFileReadable(), configFilePath};
 }
 
 void CoreProcess::setConnectionState(ConnectionState state)
 {
+  // Retry attempts can repeat Connecting without a state change. Diagnostics
+  // need that observation; existing consumers still get changes only.
+  Q_EMIT connectionStateObserved(state);
   if (m_connectionState == state) {
     return;
   }
@@ -624,15 +904,214 @@ void CoreProcess::setProcessState(ProcessState state)
   Q_EMIT processStateChanged(state);
 }
 
+QString CoreProcess::applyWorkspace(const QByteArray &bytes)
+{
+  using namespace deskflow::display;
+  const auto state = WorkspaceState::decode(bytes);
+  if (!state || !state->revision || m_workspacePending || !m_workspaceLive || m_workspaceLive->session.isEmpty() ||
+      !m_workspaceLive->generation || !m_coreIpcClient || m_mode != Settings::CoreMode::Server || !m_startRequested ||
+      m_recoveryBlocked || m_processState != ProcessState::Started)
+    return {};
+  WorkspaceApplyRequest request{
+      QUuid::createUuid().toString(QUuid::Id128), m_workspaceLive->session, m_workspaceLive->generation, *state
+  };
+  if (!WorkspaceApplyRequest::decode(request.encode()))
+    return {};
+  m_workspacePending = request;
+  if (!m_coreIpcClient->sendWorkspaceApply(request.encode())) {
+    m_workspacePending.reset();
+    return {};
+  }
+  QTimer::singleShot(5000, this, [this, id = request.id] {
+    if (!m_workspacePending || m_workspacePending->id != id)
+      return;
+    m_workspacePending.reset();
+    Q_EMIT workspaceApplyFinished(id, "unknown", "acknowledgement-timeout");
+  });
+  return request.id;
+}
+
+void CoreProcess::invalidatePendingEvents()
+{
+  if (m_workspacePending) {
+    const auto id = m_workspacePending->id;
+    m_workspacePending.reset();
+    Q_EMIT workspaceApplyFinished(id, "unknown", "core-session-ended");
+  }
+  m_workspaceLive.reset();
+  ++m_runGeneration;
+  m_secureSocketVersion.clear();
+  m_authGate.cancel();
+  m_authRequired = false;
+  m_peerVerified = false;
+  m_authenticatedPeer.clear();
+  Q_EMIT authenticationCancelled();
+}
+
+bool CoreProcess::setExpectedPeerFingerprint(const QString &value)
+{
+  if (!recoveryQuiescent() || (m_startRequested && !m_addressRecoveryHold))
+    return false;
+  const auto fp = deskflow::auth::fingerprint(value);
+  if (!value.isEmpty() && fp.isEmpty())
+    return false;
+  m_expectedPeer = fp;
+  return true;
+}
+
+deskflow::auth::Context CoreProcess::prepareAuthentication()
+{
+  deskflow::auth::Context context{QUuid::createUuid().toString(QUuid::Id128), m_expectedPeer, m_runGeneration};
+  m_authGate.begin(context);
+  m_authRequired = true;
+  m_peerVerified = false;
+  m_authenticatedPeer.clear();
+  Q_EMIT authenticationStarting(
+      context, Settings::value(Settings::Client::RemoteHost).toString(), Settings::value(Settings::Core::Port).toInt()
+  );
+  return context;
+}
+#ifdef DESKFLOW_LAB_BUILD
+deskflow::auth::Context CoreProcess::labBeginAuthentication(const QString &expected)
+{
+  invalidatePendingEvents();
+  m_expectedPeer = deskflow::auth::fingerprint(expected);
+  m_mode = Settings::CoreMode::Client;
+  m_startRequested = true;
+  m_recoveryBlocked = false;
+  m_processState = ProcessState::Started;
+  return prepareAuthentication();
+}
+#endif
+
+void CoreProcess::bindCoreIpcClient(ipc::CoreIpcClient *client)
+{
+  const auto generation = m_runGeneration;
+  const QPointer<ipc::CoreIpcClient> source = client;
+  // Disconnecting does not retract already queued deliveries. A generation
+  // and source check is required even when the new process is also Started.
+  connect(
+      client, &ipc::CoreIpcClient::commandReceived, this,
+      [this, generation, source](const QString &command, const QString &args) {
+        if (!source || generation != m_runGeneration || source != m_coreIpcClient ||
+            m_processState != ProcessState::Started)
+          return;
+        onCoreIpcMessageReceived(command, args);
+      },
+      Qt::QueuedConnection
+  );
+  connect(client, &ipc::CoreIpcClient::connectionFailed, this, [this, source, generation] {
+    if (source && source == m_coreIpcClient && generation == m_runGeneration && !m_serviceContext.isEmpty() &&
+        m_processState == ProcessState::Started) {
+      m_coreIpcClient = nullptr;
+      source->deleteLater();
+      onProcessFinished(1, QProcess::CrashExit);
+    }
+  });
+  connect(client, &ipc::CoreIpcClient::serverShutdown, this, [this, source] {
+    if (!source)
+      return;
+    if (source == m_coreIpcClient) {
+      m_coreIpcClient = nullptr;
+      if (!m_serviceContext.isEmpty() && m_processState == ProcessState::Started)
+        onProcessFinished(1, QProcess::CrashExit);
+    }
+    source->deleteLater();
+  });
+}
+
 void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString &args)
 {
-  if (command == "connectionState") {
+  if (command == "workspaceApplyResult") {
+    if (m_mode != Settings::CoreMode::Server || !m_startRequested || m_recoveryBlocked || !m_workspacePending ||
+        !m_workspaceLive)
+      return;
+    const auto result = deskflow::display::WorkspaceApplyResult::decode(args.toUtf8());
+    if (!result || !result->matches(*m_workspacePending) || result->session != m_workspaceLive->session ||
+        result->generation != m_workspaceLive->generation)
+      return;
+    m_workspacePending.reset();
+    Q_EMIT workspaceApplyFinished(result->id, result->accepted ? "applied" : "rejected", result->error);
+  } else if (command == "workspaceSnapshot") {
+    if (!m_startRequested || m_recoveryBlocked || m_processState != ProcessState::Started || args.size() > 14000)
+      return;
+    const auto message = QJsonDocument::fromJson(args.toUtf8()).object();
+    if (message.size() != 2 || !message["device"].isString() || !message["workspace"].isObject())
+      return;
+    const auto name = message["device"].toString();
+    const auto payload = QJsonDocument(message["workspace"].toObject()).toJson(QJsonDocument::Compact);
+    const auto snapshot = deskflow::display::WorkspaceSnapshot::decode(payload);
+    if (!snapshot || !snapshot->devices.contains(name))
+      return;
+    if (m_mode == Settings::CoreMode::Server && name == Settings::value(Settings::Core::ComputerName).toString()) {
+      m_workspaceLive = *snapshot;
+      if (m_workspacePending && (m_workspacePending->session != snapshot->session ||
+                                 m_workspacePending->generation != snapshot->generation)) {
+        const auto id = m_workspacePending->id;
+        m_workspacePending.reset();
+        Q_EMIT workspaceApplyFinished(id, "unknown", "connection-generation-changed");
+      }
+      Q_EMIT workspaceSnapshotReceived(name, payload, QString());
+    } else if (m_mode == Settings::CoreMode::Client && m_authRequired && m_peerVerified &&
+               !m_authenticatedPeer.isEmpty())
+      Q_EMIT workspaceSnapshotReceived(name, payload, m_authenticatedPeer);
+  } else if (command == "displayTopology") {
+    if (!m_startRequested || m_recoveryBlocked || args.size() > 20000)
+      return;
+    const auto message = QJsonDocument::fromJson(args.toUtf8()).object();
+    const auto name = message["device"].toString();
+    static const QRegularExpression validDevice("\\A[a-zA-Z0-9_.-]{1,255}\\z");
+    if (message.size() != 2 || !validDevice.match(name).hasMatch() || !message["topology"].isObject())
+      return;
+    const auto object = message["topology"].toObject();
+    const auto payload = QJsonDocument(object).toJson(QJsonDocument::Compact);
+    if (!object.isEmpty() && !deskflow::display::Topology::decode(payload))
+      return;
+    if (m_mode == Settings::CoreMode::Server)
+      Q_EMIT displayTopologyReceived(name, object.isEmpty() ? QByteArray() : payload);
+    else if (m_mode == Settings::CoreMode::Client && m_processState == ProcessState::Started && m_authRequired &&
+             m_peerVerified && !m_authenticatedPeer.isEmpty())
+      // DTOP is sent only over the existing verified 1.9 stream. IPC is bound
+      // to this core generation; Started/rejection/pause clear the peer gate.
+      // The name is display metadata, never evidence used to grant trust.
+      Q_EMIT verifiedPeerNameReceived(m_authenticatedPeer, name.left(80));
+  } else if (command == "monitorRoutingMode") {
+    if (m_mode == Settings::CoreMode::Server && (args == "per-monitor" || args == "aggregate"))
+      Q_EMIT monitorRoutingModeChanged(args == "per-monitor");
+  } else if (command == "powerState") {
+    if (m_startRequested && !m_recoveryBlocked && (args == "sleep" || args == "wake"))
+      Q_EMIT powerStateChanged(args == "sleep");
+  } else if (command == "peerAuthentication") {
+    const auto report = deskflow::auth::Report::decode(args);
+    if (!m_startRequested || m_recoveryBlocked || m_mode != Settings::CoreMode::Client ||
+        m_processState != ProcessState::Started || !report || !m_authGate.consume(*report))
+      return;
+    m_peerVerified = report->outcome == deskflow::auth::Outcome::Verified;
+    m_authenticatedPeer = m_peerVerified ? report->observed : QString();
+    if (report->outcome != deskflow::auth::Outcome::Started && report->outcome != deskflow::auth::Outcome::Verified) {
+      m_recoveryBlocked = true;
+      m_retryTimer.stop();
+      setConnectionState(ConnectionState::Disconnected);
+    }
+    Q_EMIT authenticationResult(*report);
+  } else if (command == "connectionState") {
     const auto metaEnum = QMetaEnum::fromType<ConnectionState>();
     bool ok = false;
     const auto state = static_cast<ConnectionState>(metaEnum.keyToValue(args.toUtf8().constData(), &ok));
     if (!ok) {
       qWarning("core ipc got unknown connection state: %s", args.toUtf8().constData());
       return;
+    }
+    if (state == ConnectionState::Connected && (m_recoveryBlocked || (m_authRequired && !m_peerVerified)))
+      return;
+    if (state == ConnectionState::Disconnected && m_mode == Settings::CoreMode::Client) {
+      m_authGate.endAttempt();
+      m_peerVerified = false;
+      m_authenticatedPeer.clear();
+    }
+    if (state == ConnectionState::Connected || state == ConnectionState::Listening) {
+      m_crashRetries = 0;
+      m_existingCoreAttempts = 0;
     }
     setConnectionState(state);
   } else if (command == "connectedClients") {
@@ -652,14 +1131,24 @@ void CoreProcess::onCoreIpcMessageReceived(const QString &command, const QString
     const auto reason =
         static_cast<deskflow::core::ConnectionRefusal>(metaEnum.keyToValue(args.toUtf8().constData(), &ok));
     if (ok) {
+      if (m_mode == Settings::CoreMode::Client) {
+        m_recoveryBlocked = true;
+        m_retryTimer.stop();
+      }
       Q_EMIT connectionRefused(reason);
     } else {
       qWarning("core ipc got unknown connection refusal: %s", args.toUtf8().constData());
     }
   } else if (command == "retryIn") {
-    Q_EMIT retryIn(args.toInt());
+    bool ok = false;
+    const auto seconds = args.toInt(&ok);
+    if (ok && seconds >= 0 && seconds <= 3600 && !m_recoveryBlocked)
+      Q_EMIT retryIn(seconds);
   } else if (command == "peerFingerprint") {
-    Q_EMIT peerFingerprint(args);
+    // Correlated clients must wait for the structured authentication decision;
+    // an unverified observation cannot open a trust dialog for an old attempt.
+    if (!m_authRequired)
+      Q_EMIT peerFingerprint(args);
   } else if (command == "missingKeyboardLayouts") {
     Q_EMIT missingKeyboardLayouts(args);
   }

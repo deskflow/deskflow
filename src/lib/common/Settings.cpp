@@ -5,6 +5,54 @@
  */
 
 #include "Settings.h"
+#include "CandidatePolicy.h"
+#include "IsolatedSession.h"
+#include <QDir>
+#include <QFileInfo>
+
+namespace {
+QVariant isolatedValue(const QString &key)
+{
+  const auto *s = deskflow::lab::IsolatedSession::active();
+  if (!s)
+    return {};
+  if (key == Settings::Core::Port)
+    return s->port;
+  if (key == Settings::Core::ProcessMode)
+    return Settings::Desktop;
+  if (key == Settings::Core::CoreMode)
+    return s->mode == "client" ? Settings::Client : Settings::Server;
+  if (key == Settings::Core::ComputerName)
+    return QString("Lab-") + QFileInfo(s->root).fileName().left(8);
+  if (key == Settings::Core::Interface)
+    return s->bindAddress;
+  if (key == Settings::Client::RemoteHost)
+    return s->peerAddress;
+  if (key == Settings::Security::Certificate)
+    return s->identity;
+  if (key == Settings::Security::TlsEnabled || key == Settings::Security::CheckPeers)
+    return true;
+  if (key == Settings::Log::File)
+    return s->root + "/logs/core.log";
+  if (key == Settings::Log::Level || key == Settings::Daemon::LogLevel)
+    return "INFO";
+  if (key == Settings::Server::ExternalConfigFile)
+    return s->root + "/config/DeskflowLab/server.conf";
+  if (key == Settings::Daemon::ConfigFile)
+    return s->settings;
+  if (key == Settings::Daemon::LogFile)
+    return s->root + "/logs/daemon-disabled.log";
+  if (QStringList{
+          Settings::Client::LanguageSync, Settings::Core::PreventSleep, Settings::Core::UseHooks,
+          Settings::Core::EnableEnterCommand, Settings::Core::EnableExitCommand, Settings::Daemon::Elevate,
+          Settings::Gui::AutoStartCore, Settings::Gui::AutoUpdateCheck, Settings::Log::ToFile, Settings::Log::GuiDebug,
+          Settings::Server::EnableClipboard, Settings::Server::DiscoveryEnabled, Settings::Server::ExternalConfig
+      }
+          .contains(key))
+    return false;
+  return {};
+}
+} // namespace
 
 #include "LogLevel.h"
 #include "NetworkProtocol.h"
@@ -17,15 +65,23 @@
 #include <QRect>
 #include <QRegularExpression>
 #include <QStandardPaths>
+#include <QUuid>
 
 Settings *Settings::instance()
 {
+  deskflow::lab::IsolatedSession::sealStartup();
   static Settings m;
   return &m;
 }
 
 void Settings::setSettingsFile(const QString &settingsFile)
 {
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!deskflow::lab::IsolatedSession::active() && !deskflow::candidate::settingsPath(settingsFile))
+    qFatal("Candidate settings path rejected");
+#endif
+  if (const auto *s = deskflow::lab::IsolatedSession::active(); s && settingsFile != s->settings)
+    return;
   if (Settings::settingsFile() == settingsFile) {
     qDebug("settings file already set, skipping");
     return;
@@ -49,6 +105,13 @@ void Settings::setSettingsFile(const QString &settingsFile)
 
 void Settings::setStateFile(const QString &stateFile)
 {
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!deskflow::lab::IsolatedSession::active() &&
+      (!deskflow::candidate::plainPath(stateFile) || QFileInfo(stateFile).fileName() != "DeskflowCandidate.state"))
+    qFatal("Candidate state path rejected");
+#endif
+  if (const auto *s = deskflow::lab::IsolatedSession::active(); s && stateFile != s->state)
+    return;
   if (instance()->m_stateSettings->fileName() == stateFile) {
     qDebug("state file already set, skipping");
     return;
@@ -70,22 +133,40 @@ void Settings::clearState()
 Settings::Settings(QObject *parent) : QObject(parent), m_settingsWatcher{new QFileSystemWatcher(this)}
 {
   QString fileToLoad;
-#ifdef Q_OS_WIN
-  const auto portableFile = portableSettingsFile();
-  qDebug().noquote() << "checking for portable settings file at:" << portableFile;
-  if (QFile(portableFile).exists())
-    fileToLoad = portableFile;
+  const auto *isolated = deskflow::lab::IsolatedSession::active();
+  if (isolated)
+    fileToLoad = isolated->settings;
+  else {
+#ifdef DESKFLOW_LAB_BUILD
+    // Windows must use the same explicitly prepared isolated profile as macOS.
+    // Never fall back to a portable, per-user or system production profile.
+    const auto labConfig = qEnvironmentVariable("XDG_CONFIG_HOME");
+    if (labConfig.isEmpty() || !QDir::isAbsolutePath(labConfig))
+      qFatal("Lab settings require an isolated config root");
+    fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(labConfig, kAppName);
 #else
-  if (const auto xdgConfigHome = qEnvironmentVariable("XDG_CONFIG_HOME"); !xdgConfigHome.isEmpty())
-    fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(xdgConfigHome, kAppName);
+#ifdef Q_OS_WIN
+    const auto portableFile = portableSettingsFile();
+    qDebug().noquote() << "checking for portable settings file at:" << portableFile;
+    if (QFile(portableFile).exists())
+      fileToLoad = portableFile;
+#else
+    if (const auto xdgConfigHome = qEnvironmentVariable("XDG_CONFIG_HOME"); !xdgConfigHome.isEmpty())
+      fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(xdgConfigHome, kAppName);
 #endif
-  else if (QFile(UserSettingFile).exists())
-    fileToLoad = UserSettingFile;
-  else if (QFile(SystemSettingFile).exists())
-    fileToLoad = SystemSettingFile;
-  else
-    fileToLoad = UserSettingFile;
+    else if (QFile(UserSettingFile).exists())
+      fileToLoad = UserSettingFile;
+    else if (QFile(SystemSettingFile).exists())
+      fileToLoad = SystemSettingFile;
+    else
+      fileToLoad = UserSettingFile;
+#endif
+  }
 
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!isolated && !deskflow::candidate::settingsPath(fileToLoad))
+    qFatal("Candidate settings path rejected");
+#endif
   m_settings = new QSettings(fileToLoad, QSettings::IniFormat, this);
   m_settingsWritable = m_settings->isWritable();
   m_settingsWatcher->addPath(m_settings->fileName());
@@ -98,8 +179,13 @@ Settings::Settings(QObject *parent) : QObject(parent), m_settingsWatcher{new QFi
   const auto stateBase = !xdgStateHome.isEmpty()
                              ? xdgStateHome
                              : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
-  const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
+  const auto stateFile = isolated ? isolated->state : QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
 
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!deskflow::lab::IsolatedSession::active() &&
+      (!deskflow::candidate::plainPath(stateFile) || QFileInfo(stateFile).fileName() != "DeskflowCandidate.state"))
+    qFatal("Candidate state path rejected");
+#endif
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
 
   upgradeSettings();
@@ -279,8 +365,16 @@ void Settings::cleanStateSettings()
 
 void Settings::setupComputerName()
 {
-  if (m_settings->value(Settings::Core::ComputerName).toString().isEmpty())
-    m_settings->setValue(Settings::Core::ComputerName, cleanComputerName(QSysInfo::machineHostName()));
+  if (deskflow::lab::IsolatedSession::active()) {
+    m_settings->setValue(Core::ComputerName, isolatedValue(Core::ComputerName));
+    return;
+  }
+  if (m_settings->value(Settings::Core::ComputerName).toString().isEmpty()) {
+    auto name = cleanComputerName(QSysInfo::machineHostName());
+    if (name.isEmpty())
+      name = QStringLiteral("Deskflow-%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces).left(8));
+    m_settings->setValue(Settings::Core::ComputerName, name);
+  }
 }
 
 QString Settings::cleanComputerName(const QString &name)
@@ -320,11 +414,24 @@ void Settings::checkIfSettingsWritableChange()
 
 QVariant Settings::defaultValue(const QString &key)
 {
+  if (const auto pinned = isolatedValue(key); pinned.isValid())
+    return pinned;
   if (key.startsWith(QStringLiteral("computer_"))) {
     const auto computerKey = key.mid(key.indexOf('/') + 1);
     return computerDefaults(computerKey);
   }
 
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (key == deskflow::candidate::pausedKey)
+    return true;
+  if (key == Gui::AutoStartCore || key == Gui::AutoUpdateCheck || key == Client::LanguageSync ||
+      key == Server::DiscoveryEnabled || key == Daemon::Elevate)
+    return false;
+  if (key == Core::Port)
+    return 34800;
+  if (key == Core::ProcessMode)
+    return ProcessMode::Desktop;
+#endif
   if (m_defaultFalseValues.contains(key))
     return false;
 
@@ -410,6 +517,40 @@ void Settings::save(bool emitSaving)
   instance()->m_stateSettings->sync();
 }
 
+bool Settings::saveConfig(const std::function<void()> &update)
+{
+  auto *self = instance();
+  if (self->m_configWritePending || !isWritable())
+    return false;
+
+  QMap<QString, QVariant> previous;
+  for (const auto &key : self->m_settings->allKeys())
+    previous.insert(key, self->m_settings->value(key));
+  self->m_pendingConfigKeys.clear();
+  self->m_configWritePending = true;
+  update();
+
+  // QSettings objects for the same INI share pending values in this process.
+  // A fresh writer gives this attempt its own error status and requires an
+  // atomic replacement; never fall back to writing over the live file.
+  QSettings writer(settingsFile(), QSettings::IniFormat);
+  writer.setAtomicSyncRequired(true);
+  writer.sync();
+  const bool saved = writer.status() == QSettings::NoError;
+  if (!saved) {
+    self->m_settings->clear();
+    for (auto it = previous.cbegin(); it != previous.cend(); ++it)
+      self->m_settings->setValue(it.key(), it.value());
+  }
+  const auto changedKeys = self->m_pendingConfigKeys;
+  self->m_pendingConfigKeys.clear();
+  self->m_configWritePending = false;
+  if (saved)
+    for (const auto &key : changedKeys)
+      Q_EMIT self->settingsChanged(key);
+  return saved;
+}
+
 QStringList Settings::validKeys()
 {
   return Settings::m_validKeys;
@@ -445,6 +586,11 @@ QString Settings::settingsFile()
 
 QString Settings::settingsPath()
 {
+  if (const auto *s = deskflow::lab::IsolatedSession::active())
+    return QFileInfo(s->settings).absolutePath();
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  return QFileInfo(instance()->m_settings->fileName()).absolutePath();
+#endif
 #ifdef Q_OS_WIN
   if (!isPortableMode())
     return SystemDir;
@@ -475,6 +621,8 @@ QString Settings::logLevelText()
 
 void Settings::setValue(const QString &key, const QVariant &value)
 {
+  if (const auto pinned = isolatedValue(key); pinned.isValid() && value != pinned)
+    return;
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
 
@@ -490,12 +638,19 @@ void Settings::setValue(const QString &key, const QVariant &value)
       settings->setValue(key, value);
   }
 
+  if (instance()->m_configWritePending && !useState) {
+    if (!instance()->m_pendingConfigKeys.contains(key))
+      instance()->m_pendingConfigKeys.append(key);
+    return;
+  }
   settings->sync();
   Q_EMIT instance()->settingsChanged(key);
 }
 
 QVariant Settings::value(const QString &key)
 {
+  if (const auto pinned = isolatedValue(key); pinned.isValid())
+    return pinned;
   const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
   auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
   return settings->value(key, defaultValue(key));
@@ -510,6 +665,9 @@ void Settings::restoreDefaultSettings()
 
 QString Settings::portableSettingsFile()
 {
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  return QCoreApplication::applicationDirPath() + "/DeskflowCandidate/DeskflowCandidate.conf";
+#endif
   static const auto filename =
       QStringLiteral("%1/settings/%2.conf").arg(QCoreApplication::applicationDirPath(), kAppName);
   return QFileInfo(filename).absoluteFilePath();

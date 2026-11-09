@@ -22,6 +22,10 @@ class DaemonIpcServer : public IpcServer
 public:
   explicit DaemonIpcServer(QObject *parent, const QString &logFilename);
 
+Q_SIGNALS:
+  void peerSessionRequested(const QString &encoded);
+  void peerStopRequested(const QString &token);
+
 private:
   void processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts) override;
   void processLogLevel(QLocalSocket *&clientSocket, const QStringList &messageParts);

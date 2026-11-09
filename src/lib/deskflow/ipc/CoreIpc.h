@@ -6,9 +6,18 @@
 
 #pragma once
 
+#include "base/Event.h"
 #include "common/Enums.h"
+#include <QByteArray>
 
 #include <QString>
 
 void ipcSendToClient(const QString &command, const QString &args = "");
 void ipcSendConnectionState(deskflow::core::ConnectionState state);
+struct WorkspaceApplyEvent final : EventData
+{
+  QByteArray request;
+  explicit WorkspaceApplyEvent(QByteArray value) : request(std::move(value))
+  {
+  }
+};

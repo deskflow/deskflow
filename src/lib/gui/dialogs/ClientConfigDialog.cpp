@@ -5,6 +5,7 @@
  */
 
 #include "ClientConfigDialog.h"
+#include "gui/DialogPresentation.h"
 #include "ui_ClientConfigDialog.h"
 
 #include "common/Settings.h"
@@ -24,6 +25,7 @@ ClientConfigDialog::ClientConfigDialog(QWidget *parent)
   load();
   updateControls();
   setButtonBoxEnabledButtons();
+  deskflow::gui::prepareFormDialog(this, m_buttonBox);
 }
 
 ClientConfigDialog::~ClientConfigDialog()

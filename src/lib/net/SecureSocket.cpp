@@ -11,12 +11,15 @@
 #include "arch/ArchException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "common/CredentialStore.h"
+#include "common/IsolatedSession.h"
 #include "common/Settings.h"
 #include "deskflow/ipc/CoreIpc.h"
 #include "mt/Lock.h"
 #include "net/FingerprintDatabase.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
+#include <QTextStream>
 #include <net/SslLogger.h>
 
 #include <cstdlib>
@@ -24,6 +27,7 @@
 #include <iterator>
 #include <memory>
 #include <openssl/err.h>
+#include <openssl/pem.h>
 #include <openssl/ssl.h>
 
 //
@@ -51,7 +55,9 @@ SecureSocket::SecureSocket(
     : TCPSocket(events, socketMultiplexer, family),
       m_securityLevel{securityLevel}
 {
-  // do nothing
+  m_authAttempt = deskflow::auth::Runtime::capture();
+  if (m_authAttempt.valid())
+    ipcSendToClient("peerAuthentication", m_authAttempt.encode());
 }
 
 SecureSocket::SecureSocket(
@@ -60,7 +66,9 @@ SecureSocket::SecureSocket(
     : TCPSocket(events, socketMultiplexer, socket),
       m_securityLevel{securityLevel}
 {
-  // do nothing
+  m_authAttempt = deskflow::auth::Runtime::capture();
+  if (m_authAttempt.valid())
+    ipcSendToClient("peerAuthentication", m_authAttempt.encode());
 }
 
 SecureSocket::~SecureSocket()
@@ -71,6 +79,11 @@ SecureSocket::~SecureSocket()
 
 void SecureSocket::close()
 {
+  {
+    std::lock_guard lock(m_identityMutex);
+    m_verifiedPeerIdentity.clear();
+  }
+  m_authCancelled = true;
   freeSSL();
   TCPSocket::close();
 }
@@ -290,9 +303,32 @@ void SecureSocket::initSsl(bool server)
   initContext(server);
 }
 
+bool SecureSocket::loadPreparedIdentity(ssl_ctx_st *context, const QByteArray &material)
+{
+  if (!context || material.isEmpty() || material.size() > 65536)
+    return false;
+  // Memory-only parsing of the validated snapshot; no second path lookup and
+  // no password prompt or error logger capable of exposing supplied bytes.
+  auto denyPassword = [](char *, int, int, void *) { return 0; };
+  BIO *certInput = BIO_new_mem_buf(material.constData(), static_cast<int>(material.size()));
+  BIO *keyInput = BIO_new_mem_buf(material.constData(), static_cast<int>(material.size()));
+  X509 *certificate = certInput ? PEM_read_bio_X509(certInput, nullptr, denyPassword, nullptr) : nullptr;
+  EVP_PKEY *key = keyInput ? PEM_read_bio_PrivateKey(keyInput, nullptr, denyPassword, nullptr) : nullptr;
+  const bool ok = certificate && key && SSL_CTX_use_certificate(context, certificate) == 1 &&
+                  SSL_CTX_use_PrivateKey(context, key) == 1 && SSL_CTX_check_private_key(context) == 1;
+  X509_free(certificate);
+  EVP_PKEY_free(key);
+  BIO_free(certInput);
+  BIO_free(keyInput);
+  ERR_clear_error();
+  return ok;
+}
+
 bool SecureSocket::loadCertificate(const QString &filename)
 {
   std::scoped_lock ssl_lock{ssl_mutex_};
+  if (const auto *prepared = deskflow::lab::CredentialStore::active())
+    return deskflow::lab::IsolatedSession::active() && loadPreparedIdentity(m_ssl->m_context, prepared->identity);
 
   if (filename.isEmpty()) {
     SslLogger::logError("tls certificate is not specified");
@@ -430,7 +466,8 @@ int SecureSocket::secureAccept(int socket)
 
   // If not fatal and no retry, state is good
   if (retry == 0) {
-    if (m_securityLevel == SecurityLevel::PeerAuth && !verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
+    if ((m_securityLevel == SecurityLevel::PeerAuth || m_authAttempt.valid()) &&
+        !verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
       retry = 0;
       disconnect();
       return -1; // Fail
@@ -491,8 +528,9 @@ int SecureSocket::secureConnect(int socket)
   }
 
   retry = 0;
-  // No error, set ready, process and return ok
-  m_secureReady = true;
+  // A completed TLS handshake is not authentication. Do not expose readiness
+  // until both the existing trust database and the expected identity pass.
+  m_secureReady = false;
   if (verifyCertFingerprint(Settings::tlsTrustedServersDb())) {
     LOG_INFO("connected to secure socket");
     if (!showCertificate()) {
@@ -507,6 +545,7 @@ int SecureSocket::secureConnect(int socket)
   LOG_VERBOSE("connected secure socket");
   SslLogger::logSecureCipherInfo(m_ssl->m_ssl);
   SslLogger::logSecureConnectInfo(m_ssl->m_ssl);
+  m_secureReady = true;
   return 1;
 }
 
@@ -613,16 +652,43 @@ void SecureSocket::disconnect()
   sendEvent(StreamInputShutdown);
 }
 
-bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath) const
+deskflow::auth::Report SecureSocket::authenticatePeerDigest(
+    deskflow::auth::Report attempt, const QString &digest, bool tls, bool peerChecks, bool databaseTrusted
+)
 {
+  attempt.observed = deskflow::auth::fingerprint(digest);
+  attempt.outcome = deskflow::auth::evaluate(attempt.context, digest, tls, peerChecks, databaseTrusted);
+  return attempt;
+}
+
+void SecureSocket::publishAuthentication(deskflow::auth::Outcome outcome, const QString &digest)
+{
+  if (!m_authAttempt.valid() || m_authTerminal)
+    return;
+  m_authTerminal = true;
+  m_authAttempt.outcome = m_authCancelled ? deskflow::auth::Outcome::Cancelled : outcome;
+  m_authAttempt.observed = deskflow::auth::fingerprint(digest);
+  if (m_authAttempt.outcome != deskflow::auth::Outcome::Verified)
+    deskflow::auth::Runtime::reject();
+  ipcSendToClient("peerAuthentication", m_authAttempt.encode());
+}
+
+bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
+{
+  {
+    std::lock_guard lock(m_identityMutex);
+    m_verifiedPeerIdentity.clear();
+  }
   const auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
   const auto sha256 = deskflow::sslCertFingerprint(cert, QCryptographicHash::Sha256);
 
   if (cert)
     X509_free(cert);
 
-  if (!sha256.isValid())
+  if (!sha256.isValid()) {
+    publishAuthentication(deskflow::auth::Outcome::MissingCertificate);
     return false;
+  }
 
   const auto fingerprint = deskflow::formatSSLFingerprint(sha256.data, false);
   LOG_DEBUG("peer fingerprint: %s", qPrintable(fingerprint));
@@ -631,12 +697,24 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
   QFile file(FingerprintDatabasePath);
 
   FingerprintDatabase db;
-  db.read(FingerprintDatabasePath);
+  const auto *prepared = deskflow::lab::CredentialStore::active();
+  if (prepared) {
+    if (!deskflow::lab::IsolatedSession::active())
+      return false;
+    QString content = QString::fromUtf8(
+        FingerprintDatabasePath == Settings::tlsTrustedServersDb() ? prepared->servers : prepared->clients
+    );
+    QTextStream stream(&content, QIODevice::ReadOnly);
+    db.readStream(stream);
+  } else
+    db.read(FingerprintDatabasePath);
   const bool emptyDB = db.fingerprints().empty();
 
   const auto &path = FingerprintDatabasePath;
-  if (file.exists() && emptyDB) {
-    LOG_ERR("failed to open trusted fingerprints file: %s", qPrintable(path));
+  if ((prepared || file.exists()) && emptyDB) {
+    if (!prepared)
+      LOG_ERR("failed to open trusted fingerprints file: %s", qPrintable(path));
+    publishAuthentication(deskflow::auth::Outcome::Untrusted, fingerprint);
     return false;
   }
 
@@ -644,13 +722,33 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
     LOG_DEBUG("read %d fingerprint(s) from file: %s", db.fingerprints().size(), qPrintable(path));
   }
 
-  if (!db.isTrusted(sha256)) {
+  const bool trusted = db.isTrusted(sha256);
+  if (m_authAttempt.valid()) {
+    const auto result =
+        authenticatePeerDigest(m_authAttempt, fingerprint, true, m_securityLevel == SecurityLevel::PeerAuth, trusted);
+    publishAuthentication(result.outcome, fingerprint);
+    if (m_authCancelled || result.outcome != deskflow::auth::Outcome::Verified) {
+      LOG_WARN("peer authentication rejected");
+      return false;
+    }
+  }
+  if (!trusted) {
     LOG_WARN("fingerprint does not match trusted fingerprint");
     return false;
   }
 
   LOG_DEBUG("fingerprint matches trusted fingerprint");
+  if (m_securityLevel == SecurityLevel::PeerAuth) {
+    std::lock_guard lock(m_identityMutex);
+    m_verifiedPeerIdentity = deskflow::auth::fingerprint(fingerprint);
+  }
   return true;
+}
+
+QString SecureSocket::peerIdentityReference() const
+{
+  std::lock_guard lock(m_identityMutex);
+  return m_verifiedPeerIdentity;
 }
 
 ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *const, bool, bool, bool)

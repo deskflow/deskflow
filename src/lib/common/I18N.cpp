@@ -28,6 +28,7 @@ I18N::I18N(QObject *parent) : QObject{parent}
   const auto homeDir = QDir::homePath();
 
   const QList<QDir> appTrDirs{
+      {QStringLiteral(":/translations")},
       {QStringLiteral("%1/%2").arg(appDir, QStringLiteral("translations"))},
       {QStringLiteral("%1/../translations").arg(appDir)},
       {QStringLiteral("%1/../Resources/translations").arg(appDir)},
@@ -36,7 +37,7 @@ I18N::I18N(QObject *parent) : QObject{parent}
       {QStringLiteral("/usr/local/share/%1/translations").arg(kAppId)},
       {QStringLiteral("/usr/share/%1/translations").arg(kAppId)}
   };
-  const QStringList appTrFilter{QStringLiteral("%1*.qm").arg(kAppId)};
+  const QStringList appTrFilter{QStringLiteral("%1*.qm").arg(kTranslationId)};
 
   for (const auto &dir : appTrDirs) {
     if (!dir.entryList(appTrFilter, QDir::Files, QDir::Name).isEmpty()) {
@@ -82,9 +83,24 @@ I18N::I18N(QObject *parent) : QObject{parent}
 
   static const auto s_prefix = QStringLiteral("_");
 
-  if (Settings::value(Settings::Core::Language).toString().isEmpty()) {
+  const bool explicitLanguage = Settings::value(Settings::Core::LanguageExplicit).toBool();
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  const bool preferChinese = !explicitLanguage;
+#else
+  const bool preferChinese = false;
+#endif
+  if (preferChinese || Settings::value(Settings::Core::Language).toString().isEmpty()) {
+    // Candidate builds are distributed to Chinese users. Keep the first-run
+    // experience Chinese even when the host locale is English; an explicit
+    // language choice made in Settings remains authoritative.
+#if defined(Q_OS_WIN) || defined(DESKFLOW_CANDIDATE_BUILD)
+    const QLocale defaultLocale(QLocale::Chinese, QLocale::China);
+#else
+    const QLocale defaultLocale;
+#endif
     auto appTranslator = new QTranslator(this);
-    if (appTranslator->load(QLocale(), kAppId, s_prefix, m_appTrPath)) {
+    const bool defaultLoaded = appTranslator->load(defaultLocale, kTranslationId, s_prefix, m_appTrPath);
+    if (defaultLoaded) {
       m_currentTranslations.append(appTranslator);
       QCoreApplication::installTranslator(appTranslator);
     }
@@ -94,10 +110,12 @@ I18N::I18N(QObject *parent) : QObject{parent}
       m_currentLang = QStringLiteral("en");
 
     auto qtTranslator = new QTranslator(this);
-    if (qtTranslator->load(QLocale(), QStringLiteral("qt"), s_prefix, m_qtTrPath)) {
+    if (qtTranslator->load(defaultLocale, QStringLiteral("qt"), s_prefix, m_qtTrPath)) {
       m_currentTranslations.append(qtTranslator);
       QCoreApplication::installTranslator(qtTranslator);
     }
+    if (preferChinese && defaultLoaded)
+      Settings::setValue(Settings::Core::Language, QStringLiteral("zh_CN"));
   } else {
     m_currentLang = Settings::value(Settings::Core::Language).toString();
     const auto translations = m_translations.value(m_currentLang);
@@ -143,6 +161,7 @@ void I18N::setLanguage(const QString &langName)
 
   instance()->m_currentLang = langName;
   Settings::setValue(Settings::Core::Language, langName);
+  Settings::setValue(Settings::Core::LanguageExplicit, true);
 
   for (const auto &translation : std::as_const(instance()->m_currentTranslations))
     QCoreApplication::removeTranslator(translation);
@@ -173,7 +192,7 @@ void I18N::detectLanguages()
   m_translations.clear();
   m_nameMap.clear();
 
-  QStringList nameFilter = {QStringLiteral("%1_*.qm").arg(kAppId)};
+  QStringList nameFilter = {QStringLiteral("%1_*.qm").arg(kTranslationId)};
   QMap<QString, QString> appTranslations;
   QStringList detectedLangCodes;
   QDir dir(m_appTrPath);

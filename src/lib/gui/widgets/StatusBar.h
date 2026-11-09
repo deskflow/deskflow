@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <QDeadlineTimer>
 #include <QStatusBar>
 
 #include "common/Enums.h"
@@ -31,6 +32,7 @@ public:
   void setSecurityLevel(const QString &securityLevel);
   void setBtnFingerprintVisible(bool visible);
   void updateFound(const QString &version);
+  void setConnectionSummaryVisible(bool visible);
 
 Q_SIGNALS:
   void requestShowMyFingerprints();
@@ -47,7 +49,9 @@ private:
   QLabel *m_lblStatus = nullptr;
   QPushButton *m_btnUpdate = nullptr;
   bool m_encrypted = false;
+  bool m_summaryVisible = true;
   QString m_securityLevel;
-  int m_connectionInterval = -1;
+  bool m_retryAllowed = false;
+  QDeadlineTimer m_retryDeadline;
   QTimer *m_retryTimer = nullptr;
 };

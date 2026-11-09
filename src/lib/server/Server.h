@@ -10,13 +10,17 @@
 
 #include "base/Event.h"
 #include "base/Stopwatch.h"
+#include "common/DisplayTopology.h"
 #include "common/NetworkProtocol.h"
+#include "common/WorkspaceApply.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "server/Config.h"
+#include <QUuid>
 
+#include <QSet>
 #include <climits>
 #include <map>
 #include <set>
@@ -153,6 +157,9 @@ public:
   This will disconnect any clients no longer in the configuration.
   */
   bool setConfig(const ServerConfig &);
+  void monitorTopologyChanged(BaseClientProxy *client);
+  QByteArray workspaceSnapshot() const;
+  QByteArray applyWorkspace(const QByteArray &request, const QByteArray &persisted, const QByteArray &submittedLayout);
 
   //! Add a client
   /*!
@@ -257,6 +264,17 @@ private:
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
+  bool monitorMotion(int32_t x, int32_t y, int32_t previousX, int32_t previousY, bool primary);
+  void refreshMonitorRouting();
+  deskflow::display::Topologies m_monitorTopologies;
+  std::optional<deskflow::display::Layout> m_monitorLayout;
+  deskflow::display::Layout m_liveMonitorLayout;
+  QSet<QString> m_monitorDevices;
+  deskflow::display::WorkspaceState m_appliedWorkspace;
+  QString m_workspaceSession = QUuid::createUuid().toString(QUuid::Id128);
+  quint64 m_workspaceGeneration = 1;
+  QVector<deskflow::display::Route> m_monitorRoutes;
+
   bool isSwitchOkay(BaseClientProxy *dst, Direction, int32_t x, int32_t y, int32_t xActive, int32_t yActive);
 
   // update switch state due to a mouse move at \p x, \p y that

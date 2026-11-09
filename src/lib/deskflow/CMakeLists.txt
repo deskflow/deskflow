@@ -25,6 +25,8 @@ elseif(UNIX)
 endif()
 
 add_library(${lib_name} STATIC ${PLATFORM_CODE}
+  DisplayTopologyMessage.cpp
+  DisplayTopologyMessage.h
   App.cpp
   App.h
   AppUtil.cpp

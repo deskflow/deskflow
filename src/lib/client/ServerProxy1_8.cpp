@@ -1,3 +1,4 @@
+#include "deskflow/DisplayTopologyMessage.h"
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
@@ -7,24 +8,67 @@
 #include "client/ServerProxy1_8.h"
 
 #include "base/Log.h"
+#include "common/DisplayTopology.h"
+#include "common/Settings.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/ipc/CoreIpc.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include <cstring>
 #include <string>
 
 #include <QString>
 
-ServerProxy1_8::ServerProxy1_8(Client *client, deskflow::IStream *stream, IEventQueue *events)
-    : ServerProxy1_7(client, stream, events)
+void ServerProxy1_8::sendInfo(const ClientInfo &info)
+{
+  ServerProxy::sendInfo(info); // Original DINF stays unchanged for every version.
+  if (!m_monitorSupport)
+    return;
+  deskflow::display::writeTopologyMessage(
+      getStream(), Settings::value(Settings::Core::ComputerName).toString(), deskflow::display::localTopology()
+  );
+}
+void ServerProxy1_8::receiveTopology()
+{
+  const auto message = deskflow::display::readTopologyMessage(getStream());
+  ipcSendToClient(
+      "displayTopology",
+      QString::fromUtf8(QJsonDocument(
+                            QJsonObject{
+                                {"device", message.device},
+                                {"topology", message.topology
+                                                 ? QJsonDocument::fromJson(message.topology->encode()).object()
+                                                 : QJsonObject{}}
+                            }
+      ).toJson(QJsonDocument::Compact))
+  );
+  if (!message.workspace.isEmpty())
+    ipcSendToClient(
+        "workspaceSnapshot",
+        QString::fromUtf8(QJsonDocument(
+                              QJsonObject{
+                                  {"device", message.device},
+                                  {"workspace", QJsonDocument::fromJson(message.workspace).object()}
+                              }
+        ).toJson(QJsonDocument::Compact))
+    );
+}
+
+ServerProxy1_8::ServerProxy1_8(Client *client, deskflow::IStream *stream, IEventQueue *events, bool monitors)
+    : ServerProxy1_7(client, stream, events),
+      m_monitorSupport(monitors)
 {
 }
 
 ServerProxy::ConnectionResult ServerProxy1_8::parseHandshakeMessage(const uint8_t *code)
 {
   auto result = ConnectionResult::Okay;
-  if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
+  if (m_monitorSupport && memcmp(code, "DTOP", 4) == 0) {
+    receiveTopology();
+  } else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
     setServerLayouts();
   } else {
     result = ServerProxy1_7::parseHandshakeMessage(code);
@@ -35,7 +79,9 @@ ServerProxy::ConnectionResult ServerProxy1_8::parseHandshakeMessage(const uint8_
 ServerProxy::ConnectionResult ServerProxy1_8::parseMessage(const uint8_t *code)
 {
   auto result = ConnectionResult::Okay;
-  if (memcmp(code, kMsgDKeyDown, 4) == 0) {
+  if (m_monitorSupport && memcmp(code, "DTOP", 4) == 0) {
+    receiveTopology();
+  } else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
     uint16_t id = 0;
     uint16_t mask = 0;
     uint16_t button = 0;

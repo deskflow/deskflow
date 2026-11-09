@@ -675,6 +675,15 @@ std::vector<ArchNetAddress> ArchNetworkWinsock::nameToAddr(const std::string &na
   struct addrinfo *pResult;
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;
+  // Numeric test peers must never enter DNS, hosts-file or multicast fallback.
+  in6_addr numeric{};
+  if (inet_pton(AF_INET, name.c_str(), &numeric) == 1) {
+    hints.ai_family = AF_INET;
+    hints.ai_flags = AI_NUMERICHOST;
+  } else if (inet_pton(AF_INET6, name.c_str(), &numeric) == 1) {
+    hints.ai_family = AF_INET6;
+    hints.ai_flags = AI_NUMERICHOST;
+  }
   int ret = -1;
 
   std::scoped_lock lock{m_mutex};

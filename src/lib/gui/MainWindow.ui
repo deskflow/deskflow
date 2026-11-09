@@ -29,12 +29,6 @@
         <height>28</height>
        </size>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>28</height>
-       </size>
-      </property>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <property name="leftMargin">
         <number>3</number>
@@ -98,6 +92,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="btnEditName">
+         <property name="text">
+          <string>Rename</string>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -169,7 +166,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QRadioButton" name="rbModeServer">
+           <widget class="deskflow::gui::OptionRadioButton" name="rbModeServer">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -177,13 +174,12 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Use this computer's keyboard and mouse
-(make this computer the server)</string>
+             <string>Control other computers (server)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="rbModeClient">
+           <widget class="deskflow::gui::OptionRadioButton" name="rbModeClient">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -191,8 +187,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Use another computer’s mouse and keyboard
-(make this computer the client)</string>
+             <string>Receive keyboard and mouse (client)</string>
             </property>
            </widget>
           </item>
@@ -207,7 +202,7 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QVBoxLayout" name="horizontalLayout_2">
           <item>
            <widget class="QWidget" name="serverOptions" native="true">
             <property name="sizePolicy">
@@ -219,12 +214,6 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>32</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
               <height>32</height>
              </size>
             </property>
@@ -255,12 +244,6 @@
                  <height>32</height>
                 </size>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>32</height>
-                </size>
-               </property>
                <property name="text">
                 <string>&amp;Configure Server</string>
                </property>
@@ -275,12 +258,6 @@
                 </sizepolicy>
                </property>
                <property name="minimumSize">
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="maximumSize">
                 <size>
                  <width>32</width>
                  <height>32</height>
@@ -352,12 +329,6 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
                  <height>32</height>
                 </size>
                </property>
@@ -440,12 +411,6 @@
               <height>32</height>
              </size>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>32</height>
-             </size>
-            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <property name="leftMargin">
               <number>0</number>
@@ -459,6 +424,12 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
+             <item>
+              <spacer name="connectionActionsSpacer">
+               <property name="orientation"><enum>Qt::Orientation::Horizontal</enum></property>
+               <property name="sizeHint"><size><width>20</width><height>5</height></size></property>
+              </spacer>
+             </item>
              <item>
               <widget class="QPushButton" name="btnToggleCore">
                <property name="enabled">
@@ -476,12 +447,6 @@
                  <height>32</height>
                 </size>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>32</height>
-                </size>
-               </property>
                <property name="text">
                 <string>&amp;Start</string>
                </property>
@@ -489,6 +454,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="btnRestartCore">
+               <property name="text">
+                <string>Restart</string>
+               </property>
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -499,12 +467,6 @@
                 </sizepolicy>
                </property>
                <property name="minimumSize">
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="maximumSize">
                 <size>
                  <width>32</width>
                  <height>32</height>
@@ -532,4 +494,11 @@
  </widget>
  <resources/>
  <connections/>
+ <customwidgets>
+  <customwidget>
+   <class>deskflow::gui::OptionRadioButton</class>
+   <extends>QRadioButton</extends>
+   <header>gui/widgets/OptionControl.h</header>
+  </customwidget>
+ </customwidgets>
 </ui>

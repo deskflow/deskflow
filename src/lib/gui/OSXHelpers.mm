@@ -155,3 +155,26 @@ void installQuitHandler(std::function<bool()> shouldQuit)
                                                                 s_isSystemShuttingDown = YES;
                                                               }];
 }
+
+// Read-only workspace notifications. No sleep prevention or permission request.
+#include <QObject>
+#include <QPointer>
+void observeOSXPower(QObject *owner, std::function<void(bool)> callback)
+{
+  QPointer<QObject> guarded(owner);
+  auto *center = [[NSWorkspace sharedWorkspace] notificationCenter];
+  for (int sleeping = 0; sleeping < 2; ++sleeping) {
+    auto name = sleeping ? NSWorkspaceWillSleepNotification : NSWorkspaceDidWakeNotification;
+    id observer = [[center addObserverForName:name
+                                       object:nil
+                                        queue:[NSOperationQueue mainQueue]
+                                   usingBlock:^(NSNotification *) {
+                                     if (guarded)
+                                       callback(sleeping != 0);
+                                   }] retain];
+    QObject::connect(owner, &QObject::destroyed, [center, observer] {
+      [center removeObserver:observer];
+      [observer release];
+    });
+  }
+}

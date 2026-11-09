@@ -12,6 +12,8 @@
 #include "common/Hotkey.h"
 #include "gui/config/ComputerConfig.h"
 #include "gui/config/ComputerList.h"
+#include "gui/config/DesktopLayout.h"
+#include "gui/config/MonitorLayoutDraft.h"
 
 #include <QList>
 
@@ -56,6 +58,42 @@ public:
   QString configFile() const;
   bool useExternalConfig() const;
   void addClient(const QString &clientName);
+  void ensureLocalServer();
+  bool hasMonitorLayout() const
+  {
+    return !m_monitorLayout.isEmpty();
+  }
+  deskflow::gui::MonitorLayoutDraft monitorLayoutDraft(bool reset = false) const;
+  void setMonitorLayout(const deskflow::gui::MonitorLayoutDraft &draft)
+  {
+    m_monitorLayout = draft.layout.encode();
+  }
+  void clearMonitorLayout()
+  {
+    m_monitorLayout.clear();
+  }
+  QByteArray workspaceState() const
+  {
+    return m_workspaceState;
+  }
+  QByteArray monitorLayoutBytes() const
+  {
+    return m_monitorLayout;
+  }
+  bool setWorkspace(const QByteArray &state, const QByteArray &layout, bool apply);
+  bool hasDesktopLayout() const
+  {
+    return !m_desktopLayout.isEmpty();
+  }
+  deskflow::gui::DesktopLayout desktopLayout() const;
+  QString desktopLayoutError() const;
+  bool setDesktopLayout(const std::vector<deskflow::experience::Desktop> &desktops);
+  void restoreGridLayout()
+  {
+    m_desktopLayout.clear();
+  }
+  QString renameLayoutClient(const QString &oldName, const QString &newName);
+  QString removeLayoutClient(const QString &name);
 
 private:
   void recall();
@@ -89,6 +127,9 @@ private:
   ComputerList m_computers;
   int m_columns;
   int m_rows;
+  QByteArray m_monitorLayout;
+  QByteArray m_workspaceState;
+  QString m_desktopLayout; // Kept verbatim on recall, including unreadable future schemas.
 };
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);

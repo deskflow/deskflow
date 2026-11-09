@@ -19,6 +19,10 @@ if(WIN32)
     DaemonApp.h
     ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc)
 
+  if(DESKFLOW_CANDIDATE_BUILD)
+    set_target_properties(${target} PROPERTIES OUTPUT_NAME "deskflow-candidate-daemon")
+  endif()
+
   target_link_libraries(
     ${target}
     arch

@@ -433,7 +433,7 @@
           <item>
            <layout class="QHBoxLayout" name="layoutDeadCornersTop">
             <item>
-             <widget class="QCheckBox" name="chkDeadTopLeft">
+             <widget class="deskflow::gui::OptionCheckBox" name="chkDeadTopLeft">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -449,7 +449,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="chkDeadTopRight">
+             <widget class="deskflow::gui::OptionCheckBox" name="chkDeadTopRight">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -508,7 +508,7 @@
           <item>
            <layout class="QHBoxLayout" name="layoutDeadCornersBottom">
             <item>
-             <widget class="QCheckBox" name="chkDeadBottomLeft">
+             <widget class="deskflow::gui::OptionCheckBox" name="chkDeadBottomLeft">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -521,7 +521,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="chkDeadBottomRight">
+             <widget class="deskflow::gui::OptionCheckBox" name="chkDeadBottomRight">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -552,7 +552,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QCheckBox" name="chkFixScrollLock">
+           <widget class="deskflow::gui::OptionCheckBox" name="chkFixScrollLock">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -565,7 +565,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkFixCapsLock">
+           <widget class="deskflow::gui::OptionCheckBox" name="chkFixCapsLock">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -578,7 +578,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkFixNumLock">
+           <widget class="deskflow::gui::OptionCheckBox" name="chkFixNumLock">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -591,7 +591,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkFixXTest">
+           <widget class="deskflow::gui::OptionCheckBox" name="chkFixXTest">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -607,7 +607,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkWeakX11Focus">
+           <widget class="deskflow::gui::OptionCheckBox" name="chkWeakX11Focus">
             <property name="toolTip">
              <string>X11 computers Only, When enabled the client will not give focus to its focused window as soon as the client is switched to. This can help prevent unwanted focus stealing with some X11 setups.</string>
             </property>
@@ -776,4 +776,11 @@
  </tabstops>
  <resources/>
  <connections/>
+ <customwidgets>
+  <customwidget>
+   <class>deskflow::gui::OptionCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>gui/widgets/OptionControl.h</header>
+  </customwidget>
+ </customwidgets>
 </ui>

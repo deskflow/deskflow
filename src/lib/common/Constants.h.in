@@ -8,10 +8,20 @@
 #pragma once
 
 const auto kAppName = "@CMAKE_PROJECT_PROPER_NAME@";
-const auto kAppId = "@CMAKE_PROJECT_NAME@";
+#ifdef DESKFLOW_LAB_BUILD
+const auto kAppId = "deskflow-lab";
+#else
+const auto kAppId = "@DESKFLOW_RUNTIME_ID@";
+#endif
+const auto kTranslationId = "@CMAKE_PROJECT_NAME@";
 const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
-const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
-const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
+#ifdef DESKFLOW_LAB_BUILD
+const auto kDaemonBinName = "deskflow-lab-daemon-disabled";
+const auto kDaemonIpcName = "deskflow-lab-daemon-disabled";
+#else
+const auto kDaemonBinName = "@DESKFLOW_RUNTIME_ID@-daemon";
+const auto kDaemonIpcName = "@DESKFLOW_RUNTIME_ID@-daemon";
+#endif
 const auto kRevFqdnName = "@CMAKE_PROJECT_REV_FQDN@";
 
 const auto kCopyright = //
@@ -21,7 +31,11 @@ const auto kCopyright = //
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
 const auto kCoreBinName = "@CORE_BINARY@";
-const auto kCoreIpcName = "@CMAKE_PROJECT_NAME@-core";
+#ifdef DESKFLOW_LAB_BUILD
+const auto kCoreIpcName = "deskflow-lab-core-disabled";
+#else
+const auto kCoreIpcName = "@DESKFLOW_RUNTIME_ID@-core";
+#endif
 
 const auto kServerGridHeight = 3;
 const auto kServerGridWidth = 5;

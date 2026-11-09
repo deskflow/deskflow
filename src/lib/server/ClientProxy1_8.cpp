@@ -1,3 +1,4 @@
+#include "deskflow/DisplayTopologyMessage.h"
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2015 - 2021 Synergy App Ltd
@@ -9,13 +10,51 @@
 #include "deskflow/ProtocolUtil.h"
 
 #include "ClientProxy1_8.h"
+#include "common/Settings.h"
+#include "deskflow/DeskflowException.h"
+#include "server/Server.h"
+#include <cstring>
+
+void ClientProxy1_8::updateServerTopology()
+{
+  if (!m_monitorSupport)
+    return;
+  deskflow::display::writeTopologyMessage(
+      getStream(), Settings::value(Settings::Core::ComputerName).toString(), deskflow::display::localTopology(),
+      m_server->workspaceSnapshot()
+  );
+}
+bool ClientProxy1_8::recvTopology()
+{
+  m_topology = deskflow::display::readTopologyMessage(getStream(), QString::fromStdString(getName())).topology;
+  m_server->monitorTopologyChanged(this);
+  return true;
+}
+bool ClientProxy1_8::parseHandshakeMessage(const uint8_t *code)
+{
+  if (m_monitorSupport && memcmp(code, "DTOP", 4) == 0)
+    return recvTopology();
+  return ClientProxy1_7::parseHandshakeMessage(code);
+}
+bool ClientProxy1_8::parseMessage(const uint8_t *code)
+{
+  if (m_monitorSupport && memcmp(code, "DTOP", 4) == 0)
+    return recvTopology();
+  if (m_monitorSupport && memcmp(code, kMsgDInfo, 4) == 0) {
+    m_topology.reset();
+    m_server->monitorTopologyChanged(this); // DTOP must validate the new shape first.
+  }
+  return ClientProxy1_7::parseMessage(code);
+}
 
 ClientProxy1_8::ClientProxy1_8(
-    const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events
+    const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events, bool monitors
 )
-    : ClientProxy1_7(name, adoptedStream, server, events)
+    : ClientProxy1_7(name, adoptedStream, server, events),
+      m_monitorSupport(monitors)
 {
   synchronizeLanguages();
+  updateServerTopology();
 }
 
 void ClientProxy1_8::synchronizeLanguages() const

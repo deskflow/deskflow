@@ -71,11 +71,11 @@ protected:
     return m_stream;
   }
 
+  virtual void sendInfo(const ClientInfo &);
+
 private:
   // if compressing mouse motion then send the last motion now
   void flushCompressedMouse();
-
-  void sendInfo(const ClientInfo &);
 
   void resetKeepAliveAlarm();
   void setKeepAliveRate(double);

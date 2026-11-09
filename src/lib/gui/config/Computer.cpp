@@ -51,6 +51,7 @@ void Computer::loadSettings(QSettingsProxy &settings)
   m_Fixes[static_cast<int>(XTest)] = Settings::value(Settings::Computer::XtestIsXineramaUnaware.arg(name)).toBool();
 
   m_Aliases = Settings::value(Settings::Computer::Aliases.arg(name)).toStringList();
+  m_weakX11Focus = Settings::value(Settings::Computer::WeakX11Focus.arg(name)).toBool();
 }
 
 void Computer::saveSettings(QSettingsProxy &settings) const
@@ -63,6 +64,7 @@ void Computer::saveSettings(QSettingsProxy &settings) const
 
   Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
   Settings::setValue(Settings::Computer::Aliases.arg(computerName), m_Aliases);
+  Settings::setValue(Settings::Computer::WeakX11Focus.arg(computerName), m_weakX11Focus);
   Settings::setValue(Settings::Computer::HalfDuplexCapsLock.arg(computerName), m_Fixes[static_cast<int>(CapsLock)]);
   Settings::setValue(Settings::Computer::HalfDuplexNumLock.arg(computerName), m_Fixes[static_cast<int>(NumLock)]);
   Settings::setValue(Settings::Computer::HalfDuplexScrollLock.arg(computerName), m_Fixes[static_cast<int>(ScrollLock)]);
@@ -116,5 +118,6 @@ bool Computer::operator==(const Computer &computer) const
 {
   return m_Name == computer.m_Name && m_Aliases == computer.m_Aliases && m_Modifiers == computer.m_Modifiers &&
          m_SwitchCorners == computer.m_SwitchCorners && m_SwitchCornerSize == computer.m_SwitchCornerSize &&
-         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
+         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer &&
+         m_weakX11Focus == computer.m_weakX11Focus;
 }

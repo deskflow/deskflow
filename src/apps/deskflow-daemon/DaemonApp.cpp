@@ -6,6 +6,9 @@
  */
 
 #include "DaemonApp.h"
+#include "common/ServiceSession.h"
+#include <QElapsedTimer>
+#include <QTimer>
 
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
@@ -50,6 +53,8 @@ void DaemonApp::saveLogLevel(const QString &logLevel) const
 void DaemonApp::setConfigFile(const QString &configFile)
 {
   LOG_DEBUG("config file updated: %s", configFile.toUtf8().constData());
+  m_peerSession.clear();
+  ++m_peerEpoch;
   m_configFile = configFile;
   Settings::setValue(Settings::Daemon::ConfigFile, configFile);
 }
@@ -77,7 +82,11 @@ void DaemonApp::applyWatchdogCommand() const
 
   QSettings config(m_configFile, QSettings::IniFormat);
   const auto coreMode = config.value(Settings::Core::CoreMode).toInt();
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  const auto elevate = config.value(Settings::Daemon::Elevate, false).toBool();
+#else
   const auto elevate = config.value(Settings::Daemon::Elevate, !Settings::isPortableMode()).toBool();
+#endif
 
   QString modeArg;
   if (coreMode == Settings::CoreMode::Server) {
@@ -90,12 +99,93 @@ void DaemonApp::applyWatchdogCommand() const
   }
 
   const auto corePath = QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName);
-  const auto command = QStringLiteral("\"%1\" %2 --settings \"%3\"").arg(corePath, modeArg, m_configFile).toStdString();
+  auto command = QStringLiteral("\"%1\" %2 --settings \"%3\"").arg(corePath, modeArg, m_configFile).toStdString();
+  bool guiManaged = false;
+#ifdef DESKFLOW_CANDIDATE_BUILD
+  if (!deskflow::candidate::securityProfile(
+          m_configFile,
+          config
+              .value(
+                  Settings::Security::Certificate,
+                  QFileInfo(m_configFile).absolutePath() + "/tls/deskflow-candidate.pem"
+              )
+              .toString(),
+          config.value(Settings::Security::TlsEnabled, true).toBool(),
+          config.value(Settings::Security::CheckPeers, true).toBool()
+      ))
+    return;
+  if (coreMode == Settings::CoreMode::Client) {
+    const auto session = deskflow::candidate::ServiceSession::decode(m_peerSession);
+    if (!session.valid() || session.settings != m_configFile || elevate)
+      return;
+    command = QString("\"%1\" %2").arg(corePath, session.arguments()).toStdString();
+    guiManaged = true;
+  }
+#endif
 
   LOG_DEBUG("applying watchdog command (elevate: %s)", elevate ? "yes" : "no");
-  m_pWatchdog->setProcessConfig(command, elevate);
+  m_pWatchdog->setProcessConfig(command, elevate, guiManaged);
 #else
   LOG_ERR("applying watchdog command not implemented on this platform");
+#endif
+}
+
+void DaemonApp::applyPeerSession(const QString &encoded)
+{
+  const auto session = deskflow::candidate::ServiceSession::decode(encoded);
+  if (!session.valid())
+    return;
+  QSettings config(session.settings, QSettings::IniFormat);
+  if (!deskflow::candidate::securityProfile(
+          session.settings,
+          config
+              .value(
+                  Settings::Security::Certificate,
+                  QFileInfo(session.settings).absolutePath() + "/tls/deskflow-candidate.pem"
+              )
+              .toString(),
+          config.value(Settings::Security::TlsEnabled, true).toBool(),
+          config.value(Settings::Security::CheckPeers, true).toBool()
+      ) ||
+      config.value(Settings::Core::CoreMode).toInt() != Settings::CoreMode::Client ||
+      config.value(Settings::Daemon::Elevate, false).toBool()) {
+    m_ipcServer->broadcastCommand("peerRejected", session.context.session);
+    return;
+  }
+  ++m_peerEpoch;
+  m_peerSession = encoded;
+  m_configFile = session.settings;
+  // Deliberately not persisted. GUI login/restart submits a new generation.
+  applyWatchdogCommand();
+}
+void DaemonApp::stopPeerSession(const QString &token)
+{
+  if (!deskflow::auth::identifier(token))
+    return;
+  clearWatchdogCommand();
+#if defined(Q_OS_WIN)
+  const auto epoch = m_peerEpoch;
+  auto *timer = new QTimer(m_ipcServer);
+  timer->setInterval(100);
+  auto elapsed = std::make_shared<QElapsedTimer>();
+  elapsed->start();
+  connect(timer, &QTimer::timeout, m_ipcServer, [this, timer, elapsed, epoch, token] {
+    if (epoch != m_peerEpoch) {
+      timer->stop();
+      timer->deleteLater();
+      return;
+    }
+    if (m_pWatchdog->quiescent()) {
+      m_ipcServer->broadcastCommand("peerStopped", token);
+      timer->stop();
+      timer->deleteLater();
+    } else if (elapsed->elapsed() >= 5000) {
+      m_ipcServer->broadcastCommand("peerRejected", token);
+      timer->stop();
+      timer->deleteLater();
+    }
+  });
+  timer->start();
 #endif
 }
 
@@ -104,6 +194,8 @@ void DaemonApp::clearWatchdogCommand()
   LOG_DEBUG("clearing watchdog command");
 
   // Clear the persisted config path so the daemon does not auto-start the core on next boot.
+  m_peerSession.clear();
+  ++m_peerEpoch;
   m_configFile.clear();
   Settings::setValue(Settings::Daemon::ConfigFile);
 
@@ -127,6 +219,10 @@ void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const
 {
   // Use direct connection as this object is on it's own thread,
   // and so is on a different event loop to the main Qt loop.
+  connect(
+      ipcServer, &ipc::DaemonIpcServer::peerSessionRequested, this, &DaemonApp::applyPeerSession, Qt::DirectConnection
+  );
+  connect(ipcServer, &ipc::DaemonIpcServer::peerStopRequested, this, &DaemonApp::stopPeerSession, Qt::DirectConnection);
   connect(ipcServer, &ipc::DaemonIpcServer::logLevelChanged, this, &DaemonApp::saveLogLevel, Qt::DirectConnection);
   connect(ipcServer, &ipc::DaemonIpcServer::configFileChanged, this, &DaemonApp::setConfigFile, Qt::DirectConnection);
   connect(
@@ -158,7 +254,11 @@ void DaemonApp::run(QThread &daemonThread)
       mainLoop();
     } else {
       LOG_DEBUG("running daemon in background (daemonizing)");
+#if defined(Q_OS_WIN)
       ARCH->daemonize([this] { return daemonLoop(); });
+#else
+      LOG_ERR("native daemonization is unavailable on this platform");
+#endif
     }
 
     daemonThread.quit();
