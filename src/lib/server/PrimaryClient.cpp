@@ -139,41 +139,39 @@ void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
   m_clipboardDirty[id] = dirty;
 }
 
-void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &)
+void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   if (m_fakeInputCount > 0) {
-    // XXX -- don't forward keystrokes to primary computer for now
-    (void)key;
-    (void)mask;
-    (void)button;
-    //        m_computer->keyDown(key, mask, button);
+    m_computer->keyDown(key, mask, button, lang);
   }
 }
 
-void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const std::string &)
+void PrimaryClient::keyRepeat(KeyID key, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
 {
-  // ignore
+  if (m_fakeInputCount > 0) {
+    m_computer->keyRepeat(key, mask, count, button, lang);
+  }
 }
 
 void PrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
   if (m_fakeInputCount > 0) {
-    // XXX -- don't forward keystrokes to primary screen for now
-    (void)key;
-    (void)mask;
-    (void)button;
-    //        m_computer->keyUp(key, mask, button);
+    m_computer->keyUp(key, mask, button);
   }
 }
 
-void PrimaryClient::mouseDown(ButtonID)
+void PrimaryClient::mouseDown(ButtonID id)
 {
-  // ignore
+  if (m_fakeInputCount > 0) {
+    m_computer->mouseDown(id);
+  }
 }
 
-void PrimaryClient::mouseUp(ButtonID)
+void PrimaryClient::mouseUp(ButtonID id)
 {
-  // ignore
+  if (m_fakeInputCount > 0) {
+    m_computer->mouseUp(id);
+  }
 }
 
 void PrimaryClient::mouseMove(int32_t x, int32_t y)
