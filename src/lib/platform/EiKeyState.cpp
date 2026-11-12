@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Devs.
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Devs.
  * SPDX-FileCopyrightText: (C) 2024 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -283,8 +283,9 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 
         assignGeneratedModifiers(keycode, item);
 
-        // add capslock version of key is sensitive to capslock
-        if (item.m_sensitive & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
+        // add capslock version of shifted levels. AltGr levels are Shift+Lock sensitive too,
+        // but must stay reachable without Lock (e.g. aogonek on the Polish layout)
+        if (item.m_required & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
           item.m_required &= ~KeyModifierShift;
           item.m_required |= KeyModifierCapsLock;
           keyMap.addKeyEntry(item);
