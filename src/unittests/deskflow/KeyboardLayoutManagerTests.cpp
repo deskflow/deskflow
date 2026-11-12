@@ -76,4 +76,41 @@ void KeyboardLayoutManagerTests::serializeLocalLayouts()
   QCOMPARE(manager.getSerializedLocalLayouts(), "ruenuk");
 }
 
+void KeyboardLayoutManagerTests::normalizeLanguageCode_data()
+{
+  QTest::addColumn<QString>("tag");
+  QTest::addColumn<QString>("expected");
+
+  QTest::newRow("bare") << "en" << "en";
+  QTest::newRow("simplified") << "zh-Hans" << "zh";
+  QTest::newRow("traditional") << "zh-Hant" << "zh";
+  QTest::newRow("script-and-region") << "zh-Hant-TW" << "zh";
+  QTest::newRow("region") << "pt-BR" << "pt";
+  QTest::newRow("uppercase") << "ZH-Hans" << "zh";
+  QTest::newRow("empty") << "" << "";
+  QTest::newRow("three-letter") << "yue-Hant" << "";
+  QTest::newRow("undefined") << "und" << "";
+  QTest::newRow("private-use") << "x-private" << "";
+  QTest::newRow("digits") << "12" << "";
+}
+
+void KeyboardLayoutManagerTests::normalizeLanguageCode()
+{
+  QFETCH(QString, tag);
+  QFETCH(QString, expected);
+
+  QCOMPARE(deskflow::KeyboardLayoutManager::normalizeLanguageCode(tag.toStdString()), expected.toStdString());
+}
+
+void KeyboardLayoutManagerTests::normalizedChineseLayout_isInstalled()
+{
+  using deskflow::KeyboardLayoutManager;
+  KeyboardLayoutManager manager({"en", KeyboardLayoutManager::normalizeLanguageCode("zh-Hans")});
+  manager.setRemoteLayouts("zh");
+
+  QVERIFY(manager.isLayoutInstalled("zh"));
+  QVERIFY(manager.getMissedLayouts().empty());
+  QCOMPARE(manager.getSerializedLocalLayouts(), "enzh");
+}
+
 QTEST_MAIN(KeyboardLayoutManagerTests)
