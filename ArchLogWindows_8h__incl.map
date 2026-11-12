@@ -1,0 +1,14 @@
+<map id="src/lib/arch/win32/ArchLogWindows.h" name="src/lib/arch/win32/ArchLogWindows.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,5,214,44"/>
+<area shape="rect" id="Node000002" href="$IArchLog_8h.html" title=" " alt="" coords="27,92,140,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,47,104,81,100,78,131,42"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="164,92,250,117"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="160,42,191,80,186,80,159,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,237,71,262"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,115,59,166,45,223,40,221,54,164,76,120"/>
+<area shape="rect" id="Node000004" href="$LogLevel_8h.html" title=" " alt="" coords="68,165,205,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="93,115,121,152,116,153,92,120"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="123,190,68,230,65,226,118,190"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="102,237,171,262"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="138,188,139,223,134,221,135,192"/>
+</map>

@@ -1,0 +1,13 @@
+var OSXComputer_8mm =
+[
+    [ "__attribute__", "OSXComputer_8mm.html#a1e7b25f05d53afeb25723c48396770ca", null ],
+    [ "avoidHesitatingCursor", "OSXComputer_8mm.html#a3ed592b4f1ae656616b993fad167d04f", null ],
+    [ "avoidSupression", "OSXComputer_8mm.html#aacd901c10242511e6f7c110592d1bdfd", null ],
+    [ "getProcessName", "OSXComputer_8mm.html#a197d03862e70575dbbe6beb53bfec725", null ],
+    [ "getSecureInputEventPID", "OSXComputer_8mm.html#aff07fb5fda4f2d6b23716a311b2513ca", null ],
+    [ "logCursorVisibility", "OSXComputer_8mm.html#a38cb7af89c29a152f0a820c8ce7217bb", null ],
+    [ "needsEventNumber", "OSXComputer_8mm.html#a1556f54973d93faed0f2c4abbc8998ef", null ],
+    [ "setZeroSuppressionInterval", "OSXComputer_8mm.html#ab59a1e754b858874c471a6a5e1955c39", null ],
+    [ "kCarbonLoopWaitTimeout", "OSXComputer_8mm.html#a0befc5d91cae5936cb81bacd0c5cb06a", null ],
+    [ "magic_section", "OSXComputer_8mm.html#a1a03b970897173cd5ad998e9cb2eaaf3", null ]
+];

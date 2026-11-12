@@ -1,0 +1,5 @@
+<map id="Server::SwitchToComputerInfo" name="Server::SwitchToComputerInfo">
+<area shape="rect" id="Node000001" title="Switch to computer data." alt="" coords="5,78,206,103"/>
+<area shape="rect" id="Node000002" href="$classEventData.html" title=" " alt="" coords="65,5,146,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,44,108,79,103,77,104,48"/>
+</map>
