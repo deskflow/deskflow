@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
@@ -10,7 +11,6 @@
 #include "base/DirectionTypes.h"
 #include "base/Event.h"
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 #include "common/Settings.h"
 #include "deskflow/ClipboardTypes.h"
 #include "platform/EiClipboard.h"
@@ -172,46 +172,39 @@ PortalInputCapture::PortalInputCapture(EiComputer *computer, IEventQueue *events
     : m_computer{computer},
       m_events{events},
       m_portalVersion(0),
-      m_portal{xdp_portal_new()}
+      m_portal{m_context.portal()}
 {
   // Create clipboard for primary clipboard ID
   m_clipboard = new EiClipboard(kClipboardClipboard);
 
-  m_glibMainLoop = g_main_loop_new(nullptr, true);
-
-  auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
-  m_glibThread = new Thread(tMethodJob);
-
-  auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
-
-  g_idle_add(captureCallback, this);
+  m_context.start();
+  m_context.defer([this] { initSession(); });
 }
 
 PortalInputCapture::~PortalInputCapture()
 {
-  if (g_main_loop_is_running(m_glibMainLoop))
-    g_main_loop_quit(m_glibMainLoop);
-
-  if (m_glibThread) {
-    m_glibThread->cancel();
-    m_glibThread->wait();
-    m_glibThread = nullptr;
-
-    g_main_loop_unref(m_glibMainLoop);
-    m_glibMainLoop = nullptr;
-  }
-
+  m_context.stop();
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
   if (m_session) {
     using enum Signal;
     XdpSession *parentSession = xdp_input_capture_session_get_session(m_session);
     if (m_signals.at(SessionClosed) != 0)
       g_signal_handler_disconnect(parentSession, m_signals.at(SessionClosed));
-    g_signal_handler_disconnect(m_session, m_signals.at(Disabled));
-    g_signal_handler_disconnect(m_session, m_signals.at(Activated));
-    g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
-    g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
+    if (m_signals.at(Disabled))
+      g_signal_handler_disconnect(m_session, m_signals.at(Disabled));
+    if (m_signals.at(Activated))
+      g_signal_handler_disconnect(m_session, m_signals.at(Activated));
+    if (m_signals.at(Deactivated))
+      g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
+    if (m_signals.at(ZonesChanged))
+      g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-    g_signal_handler_disconnect(parentSession, m_signals.at(SelectionTransfer));
+    if (m_signals.at(SelectionTransfer))
+      g_signal_handler_disconnect(parentSession, m_signals.at(SelectionTransfer));
+    if (m_signals.at(SelectionOwnerChanged))
+      g_signal_handler_disconnect(parentSession, m_signals.at(SelectionOwnerChanged));
 #endif
     g_object_unref(m_session);
   }
@@ -220,8 +213,11 @@ PortalInputCapture::~PortalInputCapture()
     g_object_unref(b);
   }
   m_barriers.clear();
-  g_object_unref(m_portal);
 
+  if (m_retry) {
+    g_source_destroy(m_retry);
+    g_source_unref(m_retry);
+  }
   delete m_clipboard;
 }
 
@@ -234,19 +230,46 @@ EiClipboard *PortalInputCapture::getClipboard(ClipboardID id) const
   return nullptr;
 }
 
-gboolean PortalInputCapture::timeoutHandler() const
-{
-  return true; // keep re-triggering
-}
-
 void PortalInputCapture::handleSessionClosed(XdpSession *session)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
+
+  if (m_retry) {
+    g_source_destroy(m_retry);
+    g_source_unref(m_retry);
+    m_retry = nullptr;
+  }
+  m_enabled = false;
+  m_isActive = false;
   LOG_ERR("portal input capture session was closed, exiting");
-  g_main_loop_quit(m_glibMainLoop);
   m_events->addEvent(Event(EventTypes::Quit));
 
   g_signal_handler_disconnect(session, m_signals.at(Signal::SessionClosed));
   m_signals.at(Signal::SessionClosed) = 0;
+}
+
+void PortalInputCapture::claimClipboard()
+{
+  m_context.defer([this] {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+    m_selectionRead.cancel();
+    if (m_session) {
+      auto *session = xdp_input_capture_session_get_session(m_session);
+      if (xdp_session_is_clipboard_enabled(session))
+        claimClipboardOwnership(session);
+    }
+#endif
+  });
+}
+
+void PortalInputCapture::refreshBarriers()
+{
+  m_context.defer([this] {
+    if (m_session)
+      handleZonesChanged(m_session, nullptr);
+  });
 }
 
 void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *session) const
@@ -256,7 +279,7 @@ void PortalInputCapture::claimClipboardOwnership([[maybe_unused]] XdpSession *se
 #endif
 }
 
-void PortalInputCapture::readClipboardSelection(XdpSession *session) const
+void PortalInputCapture::readClipboardSelection(XdpSession *session)
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   const qint64 maxBytes = static_cast<qint64>(m_computer->maximumClipboardSize()) * 1024;
@@ -268,8 +291,9 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
     return;
   }
 
-  if (PortalClipboard::readSelectionIntoCache(m_clipboard, session, mimeTypes, maxBytes))
+  PortalClipboard::readSelectionAsync(m_selectionRead, m_clipboard, session, mimeTypes, maxBytes, [this] {
     m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+  });
 #else
   (void)session;
 #endif
@@ -278,10 +302,6 @@ void PortalInputCapture::readClipboardSelection(XdpSession *session) const
 void PortalInputCapture::handleSelectionTransfer(XdpSession *session, const char *mimeType, uint32_t serial) const
 {
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
-  if (m_isActive) {
-    LOG_DEBUG("skipping clipboard selection transfer, clipboard is active");
-    return;
-  }
   PortalClipboard::serveSelectionTransfer(m_clipboard, session, mimeType, serial);
 #else
   (void)session;
@@ -308,7 +328,7 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
       Settings::setValue(Settings::Server::XdpClipboardRetried, true);
       g_object_unref(m_session);
       m_session = nullptr;
-      g_idle_add([](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); }, this);
+      m_context.defer([this] { initSession(); });
       return;
     }
   }
@@ -317,7 +337,6 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
   if (fd < 0) {
     LOG_ERR("failed to connect to eis: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
@@ -335,6 +354,16 @@ void PortalInputCapture::setupSession(XdpInputCaptureSession *session)
   handleZonesChanged(session, nullptr);
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_signals.at(SelectionOwnerChanged) = g_signal_connect(
+      G_OBJECT(parentSession), "selection-owner-changed",
+      G_CALLBACK(+[](XdpSession *selection, char **, gboolean owner, gpointer data) {
+        auto *self = static_cast<PortalInputCapture *>(data);
+        self->m_selectionRead.cancel();
+        if (!owner && self->m_isActive)
+          self->readClipboardSelection(selection);
+      }),
+      this
+  );
   m_signals.at(SelectionTransfer) =
       g_signal_connect(G_OBJECT(parentSession), "selection-transfer", G_CALLBACK(selectionTransfer), this);
 #endif
@@ -349,7 +378,6 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   auto session = xdp_portal_create_input_capture_session_finish(XDP_PORTAL(object), res, &error);
   if (!session) {
     LOG_ERR("failed to initialize input capture session, quitting: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
@@ -367,7 +395,6 @@ void PortalInputCapture::handleStart(GObject *object, GAsyncResult *res)
   LOG_DEBUG("portal input capture session initialized");
   if (!xdp_input_capture_session_start_finish(m_session, res, &error)) {
     LOG_ERR("failed to start input capture session, quitting: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
@@ -411,7 +438,15 @@ void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult 
   }
   g_list_free_full(failed_list, g_object_unref);
 
-  enable();
+  m_barriersPending = false;
+  if (g_cancellable_is_cancelled(m_context.cancellable()))
+    return;
+  if (m_barriersDirty) {
+    m_barriersDirty = false;
+    handleZonesChanged(m_session, nullptr);
+  } else if (!error) {
+    enable();
+  }
 }
 
 std::pair<int, int>
@@ -572,7 +607,7 @@ gboolean PortalInputCapture::initSession()
 
   m_portalVersion = xdp_portal_get_input_capture_version_sync(
       m_portal,
-      nullptr, // Cancellable
+      m_context.cancellable(), // Cancellable
       nullptr
   );
   LOG_DEBUG("input capture version %d", m_portalVersion);
@@ -586,22 +621,19 @@ gboolean PortalInputCapture::initSession()
         m_portal,
         nullptr, // parent
         static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
-        nullptr, // cancellable
-        [](GObject *obj, GAsyncResult *res, gpointer data) {
-          static_cast<PortalInputCapture *>(data)->handleInitSession(obj, res);
-        },
-        this
+        m_context.cancellable(), // cancellable
+        PortalContext::complete,
+        m_context.callback([this](GObject *obj, GAsyncResult *res) { handleInitSession(obj, res); })
     );
     break;
   default:
     session = xdp_portal_create_input_capture_session2_sync(
         m_portal,
-        nullptr, // Cancellable
+        m_context.cancellable(), // Cancellable
         &error
     );
     if (!session) {
       LOG_ERR("failed to initialize input capture session, quitting: %s", error->message);
-      g_main_loop_quit(m_glibMainLoop);
       m_events->addEvent(Event(EventTypes::Quit));
       return FALSE;
     }
@@ -615,11 +647,8 @@ gboolean PortalInputCapture::initSession()
         m_session,
         nullptr, // parent
         static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
-        nullptr, // cancellable
-        [](GObject *obj, GAsyncResult *res, gpointer data) {
-          static_cast<PortalInputCapture *>(data)->handleStart(obj, res);
-        },
-        this
+        m_context.cancellable(), // cancellable
+        PortalContext::complete, m_context.callback([this](GObject *obj, GAsyncResult *res) { handleStart(obj, res); })
     );
     break;
   }
@@ -628,11 +657,9 @@ gboolean PortalInputCapture::initSession()
       m_portal,
       nullptr, // parent
       static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
-      nullptr, // cancellable
-      [](GObject *obj, GAsyncResult *res, gpointer data) {
-        static_cast<PortalInputCapture *>(data)->handleInitSession(obj, res);
-      },
-      this
+      m_context.cancellable(), // cancellable
+      PortalContext::complete,
+      m_context.callback([this](GObject *obj, GAsyncResult *res) { handleInitSession(obj, res); })
   );
 #endif
 
@@ -641,41 +668,71 @@ gboolean PortalInputCapture::initSession()
 
 void PortalInputCapture::enable()
 {
-  if (!m_enabled) {
-    LOG_DEBUG("enabling the portal input capture session");
-    xdp_input_capture_session_enable(m_session);
-    m_enabled = true;
-  }
+  m_context.defer([this] {
+    if (!m_enabled && m_session) {
+      LOG_DEBUG("enabling the portal input capture session");
+      xdp_input_capture_session_enable(m_session);
+      m_enabled = true;
+    }
+  });
 }
 
 void PortalInputCapture::disable()
 {
-  if (m_enabled) {
-    LOG_DEBUG("disabling the portal input capture session");
-    xdp_input_capture_session_disable(m_session);
-    m_enabled = false;
-  }
+  m_context.defer([this] {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+    m_selectionRead.cancel();
+#endif
+
+    if (m_retry) {
+      g_source_destroy(m_retry);
+      g_source_unref(m_retry);
+      m_retry = nullptr;
+    }
+
+    if (m_enabled) {
+      LOG_DEBUG("disabling the portal input capture session");
+      xdp_input_capture_session_disable(m_session);
+      m_enabled = false;
+    }
+  });
 }
 
 void PortalInputCapture::release()
 {
-  LOG_DEBUG("releasing input capture session, id=%d", m_activationId);
-  xdp_input_capture_session_release(m_session, m_activationId);
-  m_isActive = false;
+  m_context.defer([this] {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+    m_selectionRead.cancel();
+#endif
+
+    LOG_DEBUG("releasing input capture session, id=%d", m_activationId);
+    xdp_input_capture_session_release(m_session, m_activationId);
+    m_isActive = false;
+  });
 }
 
 void PortalInputCapture::release(double x, double y)
 {
-  const auto [mappedX, mappedY] = mapPortalReleasePosition(x, y);
-  LOG_DEBUG(
-      "releasing input capture session, id=%d x=%.1f y=%.1f mapped=%.1f,%.1f", m_activationId, x, y, mappedX, mappedY
-  );
-  xdp_input_capture_session_release_at(m_session, m_activationId, mappedX, mappedY);
-  m_isActive = false;
+  m_context.defer([this, x, y] {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+    m_selectionRead.cancel();
+#endif
+
+    const auto [mappedX, mappedY] = mapPortalReleasePosition(x, y);
+    LOG_DEBUG(
+        "releasing input capture session, id=%d x=%.1f y=%.1f mapped=%.1f,%.1f", m_activationId, x, y, mappedX, mappedY
+    );
+    xdp_input_capture_session_release_at(m_session, m_activationId, mappedX, mappedY);
+    m_isActive = false;
+  });
 }
 
 void PortalInputCapture::handleDisabled(const XdpInputCaptureSession *, const GVariant *)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
+
   LOG_DEBUG("portal cb disabled");
 
   if (!m_enabled)
@@ -684,18 +741,21 @@ void PortalInputCapture::handleDisabled(const XdpInputCaptureSession *, const GV
   m_enabled = false;
   m_isActive = false;
 
-  // FIXME: need some better heuristics here of when we want to enable again
-  // But we don't know *why* we got disabled (and it's doubtfull we ever
-  // will), so we just assume that the zones will change or something and we
-  // can re-enable again
-  // ... very soon
-  g_timeout_add(
-      1000,
-      [](gpointer data) -> gboolean {
-        static_cast<PortalInputCapture *>(data)->enable();
-        return false;
+  const auto now = g_get_monotonic_time();
+  m_backoffMs =
+      now - m_lastDisabledAt > 5 * G_USEC_PER_SEC ? 0 : (m_backoffMs == 0 ? 250 : std::min(m_backoffMs * 2, 2000u));
+  m_lastDisabledAt = now;
+  if (m_retry) {
+    g_source_destroy(m_retry);
+    g_source_unref(m_retry);
+  }
+  m_retry = m_context.post(
+      [this] {
+        g_source_unref(m_retry);
+        m_retry = nullptr;
+        enable();
       },
-      this
+      m_backoffMs
   );
 }
 
@@ -741,24 +801,9 @@ void PortalInputCapture::handleActivated(
 
 #ifdef HAVE_LIBPORTAL_CLIPBOARD
   if (m_session) {
-    LOG_DEBUG("reading clipboard selection on activation");
-    m_computer->sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
-
-    XdpSession *session = xdp_input_capture_session_get_session(m_session);
-    const char **mimeTypes = xdp_session_get_selection_mime_types(session);
-
-    if (mimeTypes && mimeTypes[0]) {
-      LOG_DEBUG("clipboard current selection mime types: %s", PortalClipboard::formatMimeTypes(mimeTypes).constData());
-      if (!xdp_session_is_selection_owned_by_session(session))
-        readClipboardSelection(session);
-    } else {
-      LOG_DEBUG("no current clipboard selection");
-    }
-
-    claimClipboardOwnership(session);
-    LOG_DEBUG("activation clipboard handling complete");
-  } else {
-    LOG_WARN("input capture activated without a session, skipping clipboard read");
+    auto *selection = xdp_input_capture_session_get_session(m_session);
+    if (!xdp_session_is_selection_owned_by_session(selection))
+      readClipboardSelection(selection);
   }
 #endif
 }
@@ -767,12 +812,21 @@ void PortalInputCapture::handleDeactivated(
     const XdpInputCaptureSession *, const std::uint32_t activationId, const GVariant *
 )
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  m_selectionRead.cancel();
+#endif
+
   LOG_DEBUG("cb deactivated, id=%i", activationId);
   m_isActive = false;
 }
 
 void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, const GVariant *)
 {
+  if (m_barriersPending) {
+    m_barriersDirty = true;
+    return;
+  }
+
   for (auto b : m_barriers)
     g_object_unref(b);
   m_barriers.clear();
@@ -852,31 +906,16 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   }
 
   if (list != nullptr) {
+    m_barriersPending = true;
     xdp_input_capture_session_set_pointer_barriers(
         m_session, list,
-        nullptr, // cancellable
-        [](GObject *obj, GAsyncResult *res, gpointer data) {
-          static_cast<PortalInputCapture *>(data)->handleSetPointerBarriers(obj, res);
-        },
-        this
+        m_context.cancellable(), // cancellable
+        PortalContext::complete,
+        m_context.callback([this](GObject *obj, GAsyncResult *res) { handleSetPointerBarriers(obj, res); })
     );
   } else {
     LOG_WARN("no input capture pointer barriers found");
   }
-}
-
-void PortalInputCapture::glibThread(const void *)
-{
-  auto context = g_main_loop_get_context(m_glibMainLoop);
-
-  LOG_DEBUG("glib thread running");
-
-  while (g_main_loop_is_running(m_glibMainLoop)) {
-    Thread::testCancel();
-    g_main_context_iteration(context, true);
-  }
-
-  LOG_DEBUG("shutting down glib thread");
 }
 
 } // namespace deskflow

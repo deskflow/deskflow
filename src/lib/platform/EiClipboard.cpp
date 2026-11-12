@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2026 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -16,6 +17,32 @@ EiClipboard::EiClipboard(ClipboardID id) : m_id(id)
   close();
 }
 
+uint64_t EiClipboard::revision() const
+{
+  std::scoped_lock lock{m_mutex};
+  return m_revision;
+}
+
+bool EiClipboard::replace(const std::vector<std::pair<Format, std::string>> &values, uint64_t expectedRevision)
+{
+  std::scoped_lock lock{m_mutex};
+  if (m_revision != expectedRevision)
+    return false;
+  ++m_revision;
+  for (int i = 0; i < static_cast<int>(Format::TotalFormats); ++i) {
+    m_added[i] = false;
+    m_data[i].clear();
+  }
+  for (const auto &[format, data] : values) {
+    const auto i = static_cast<int>(format);
+    m_added[i] = true;
+    m_data[i] = data;
+  }
+  m_owner = true;
+  m_timeOwned = m_time;
+  return true;
+}
+
 bool EiClipboard::empty()
 {
   std::scoped_lock lock{m_mutex};
@@ -24,6 +51,7 @@ bool EiClipboard::empty()
     return false;
   }
 
+  ++m_revision;
   // Clear all data
   for (int32_t index = 0; index < static_cast<int>(Format::TotalFormats); ++index) {
     m_data[index] = "";
@@ -52,6 +80,7 @@ void EiClipboard::add(Format format, const std::string &data)
     return;
   }
 
+  ++m_revision;
   const auto formatID = static_cast<int>(format);
   m_data[formatID] = data;
   m_added[formatID] = true;

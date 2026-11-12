@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2026 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -7,6 +8,7 @@
 #pragma once
 
 #include "deskflow/IClipboard.h"
+#include "platform/PortalSelectionRead.h"
 
 #include <QByteArray>
 
@@ -41,7 +43,11 @@ public:
   static const SupportedMime *pickSupportedMime(const char *const *available);
   static QByteArray encodeFormat(IClipboard::Format format, const QByteArray &data);
   static QByteArray decodeFormat(IClipboard::Format format, const QByteArray &bytes);
-  static QByteArray readSelectionBytes(XdpSession *session, const char *mime, qint64 maxBytes);
+
+  static void readSelectionAsync(
+      PortalSelectionRead &reader, EiClipboard *cache, XdpSession *session, const char *const *mimeTypes,
+      qint64 maxBytes, std::function<void()> complete
+  );
 
   /// Advertise the cache's formats to the portal selection.
   static void claimOwnership(EiClipboard *cache, XdpSession *session);
@@ -49,11 +55,6 @@ public:
   /// Respond to a selection-transfer signal by writing the cache's bytes for
   /// \p mime to the portal-provided fd. Always calls write_done.
   static void serveSelectionTransfer(EiClipboard *cache, XdpSession *session, const char *mime, uint32_t serial);
-
-  /// Read every supported format offered by the portal into the cache.
-  /// Returns true if any data was deposited.
-  static bool
-  readSelectionIntoCache(EiClipboard *cache, XdpSession *session, const char *const *mimeTypes, qint64 maxBytes);
 
 private:
   static QByteArray dibToBmp(const QByteArray &dib);

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024, 2026 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2022, 2026 Red Hat, Inc.
@@ -213,9 +214,12 @@ void EiComputer::getCursorPos(int32_t &x, int32_t &y) const
 
 void EiComputer::reconfigure(uint32_t activeSides)
 {
-  const static auto sidesText = sidesMaskToString(activeSides);
+  const auto sidesText = sidesMaskToString(activeSides);
   LOG_DEBUG("active sides: %s (0x%02x)", sidesText.c_str(), activeSides);
+  const auto previousSides = m_activeSides.load();
   m_activeSides = activeSides;
+  if (m_portalInputCapture && previousSides != activeSides)
+    m_portalInputCapture->refreshBarriers();
 }
 
 std::uint32_t EiComputer::activeSides()
@@ -494,7 +498,10 @@ bool EiComputer::setClipboard(ClipboardID id, const IClipboard *clipboard)
     if (!targetClipboard) {
       return false;
     }
-    return IClipboard::copy(targetClipboard, clipboard);
+    const bool copied = IClipboard::copy(targetClipboard, clipboard);
+    if (copied && id == kClipboardClipboard)
+      m_portalInputCapture->claimClipboard();
+    return copied;
   }
 
   // Otherwise use our own clipboard
