@@ -54,6 +54,7 @@ static const KeyModifierMask KeyModifierMeta = 0x0008;
 static const KeyModifierMask KeyModifierSuper = 0x0010;
 static const KeyModifierMask KeyModifierAltGr = 0x0020;
 static const KeyModifierMask KeyModifierLevel5Lock = 0x0040;
+static const KeyModifierMask KeyModifierFn = 0x0080;
 static const KeyModifierMask KeyModifierCapsLock = 0x1000;
 static const KeyModifierMask KeyModifierNumLock = 0x2000;
 static const KeyModifierMask KeyModifierScrollLock = 0x4000;
@@ -69,6 +70,7 @@ static const uint32_t kKeyModifierBitMeta = 3;
 static const uint32_t kKeyModifierBitSuper = 4;
 static const uint32_t kKeyModifierBitAltGr = 5;
 static const uint32_t kKeyModifierBitLevel5Lock = 6;
+static const uint32_t kKeyModifierBitFn = 7;
 static const uint32_t kKeyModifierBitCapsLock = 12;
 static const uint32_t kKeyModifierBitNumLock = 13;
 static const uint32_t kKeyModifierBitScrollLock = 14;
@@ -270,6 +272,7 @@ static const KeyID kKeyBrightnessDown = 0xE0B8;
 static const KeyID kKeyBrightnessUp = 0xE0B9;
 static const KeyID kKeyMissionControl = 0xE0C0;
 static const KeyID kKeyLaunchpad = 0xE0C1;
+static const KeyID kKeyFn = 0xE0C2;
 
 //@}
 
