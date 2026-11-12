@@ -11,7 +11,7 @@
 
 namespace deskflow::gui::TlsUtility {
 
-bool generateCertificate();
+bool generateCertificate(int keyLength = Settings::value(Settings::Security::KeySize).toInt());
 
 /**
  * @brief Checks the settings values Settings::Security::TlsEnabled
