@@ -17,12 +17,136 @@
 #elif defined(Q_OS_MACOS)
 #include <Carbon/Carbon.h>
 #include <platform/OSXAutoTypes.h>
+
+#include <algorithm>
+#include <cassert>
+#include <mutex>
+#include <pthread.h>
+#include <utility>
+#endif
+
+#if defined(Q_OS_MACOS)
+class MacInputSourceCache
+{
+public:
+  MacInputSourceCache() : m_notificationCenter(CFNotificationCenterGetDistributedCenter())
+  {
+    assert(pthread_main_np());
+    refreshKeyboardLayouts();
+    refreshCurrentLanguage();
+    CFNotificationCenterAddObserver(
+        m_notificationCenter, this, &MacInputSourceCache::handleNotification,
+        kTISNotifySelectedKeyboardInputSourceChanged, nullptr, CFNotificationSuspensionBehaviorDeliverImmediately
+    );
+    CFNotificationCenterAddObserver(
+        m_notificationCenter, this, &MacInputSourceCache::handleNotification,
+        kTISNotifyEnabledKeyboardInputSourcesChanged, nullptr, CFNotificationSuspensionBehaviorDeliverImmediately
+    );
+  }
+
+  ~MacInputSourceCache()
+  {
+    CFNotificationCenterRemoveEveryObserver(m_notificationCenter, this);
+  }
+
+  std::vector<std::string> keyboardLayouts() const
+  {
+    std::lock_guard lock(m_mutex);
+    return m_keyboardLayouts;
+  }
+
+  std::string currentLanguage() const
+  {
+    std::lock_guard lock(m_mutex);
+    return m_currentLanguage;
+  }
+
+private:
+  static void
+  handleNotification(CFNotificationCenterRef, void *observer, CFNotificationName name, const void *, CFDictionaryRef)
+  {
+    auto *cache = static_cast<MacInputSourceCache *>(observer);
+    if (!pthread_main_np()) {
+      LOG_WARN("ignoring input source notification delivered outside the main thread");
+      return;
+    }
+
+    if (CFEqual(name, kTISNotifySelectedKeyboardInputSourceChanged)) {
+      cache->refreshCurrentLanguage();
+    } else if (CFEqual(name, kTISNotifyEnabledKeyboardInputSourcesChanged)) {
+      cache->refreshKeyboardLayouts();
+      cache->refreshCurrentLanguage();
+    }
+  }
+
+  void refreshKeyboardLayouts()
+  {
+    assert(pthread_main_np());
+    std::vector<std::string> layouts;
+    CFStringRef keys[] = {kTISPropertyInputSourceCategory};
+    CFStringRef values[] = {kTISCategoryKeyboardInputSource};
+    AutoCFDictionary dict(
+        CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr), CFRelease
+    );
+    AutoCFArray sources(TISCreateInputSourceList(dict.get(), false), CFRelease);
+
+    for (CFIndex i = 0; sources && i < CFArrayGetCount(sources.get()); ++i) {
+      auto source = (TISInputSourceRef)CFArrayGetValueAtIndex(sources.get(), i);
+      auto languages = (CFArrayRef)TISGetInputSourceProperty(source, kTISPropertyInputSourceLanguages);
+      char buffer[128] = {0};
+      for (CFIndex index = 0; languages && index < CFArrayGetCount(languages); ++index) {
+        auto language = (CFStringRef)CFArrayGetValueAtIndex(languages, index);
+        if (!language || !CFStringGetCString(language, buffer, sizeof(buffer), kCFStringEncodingUTF8)) {
+          continue;
+        }
+
+        std::string code(buffer);
+        if (code.size() == 2 && std::find(layouts.begin(), layouts.end(), code) == layouts.end()) {
+          layouts.push_back(std::move(code));
+        }
+        break;
+      }
+    }
+
+    std::lock_guard lock(m_mutex);
+    m_keyboardLayouts = std::move(layouts);
+  }
+
+  void refreshCurrentLanguage()
+  {
+    assert(pthread_main_np());
+    std::string result;
+    AutoTISInputSourceRef source(TISCopyCurrentKeyboardInputSource(), CFRelease);
+    auto languages =
+        source ? (CFArrayRef)TISGetInputSourceProperty(source.get(), kTISPropertyInputSourceLanguages) : nullptr;
+    char buffer[128] = {0};
+    for (CFIndex index = 0; languages && index < CFArrayGetCount(languages); ++index) {
+      auto language = (CFStringRef)CFArrayGetValueAtIndex(languages, index);
+      if (language && CFStringGetCString(language, buffer, sizeof(buffer), kCFStringEncodingUTF8)) {
+        result = buffer;
+        break;
+      }
+    }
+
+    std::lock_guard lock(m_mutex);
+    m_currentLanguage = std::move(result);
+  }
+
+  CFNotificationCenterRef m_notificationCenter;
+  mutable std::mutex m_mutex;
+  std::vector<std::string> m_keyboardLayouts;
+  std::string m_currentLanguage;
+};
 #endif
 
 AppUtilUnix::AppUtilUnix(const IEventQueue *)
 {
-  // do nothing
+#if defined(Q_OS_MACOS)
+  m_inputSourceCache = std::make_unique<MacInputSourceCache>();
+#endif
 }
+
+AppUtilUnix::~AppUtilUnix() = default;
 
 int startStatic()
 {
@@ -42,41 +166,7 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
   layoutLangCodes = XkbLayoutsParser::getXkbLanguageList();
 
 #elif defined(Q_OS_MACOS)
-  CFStringRef keys[] = {kTISPropertyInputSourceCategory};
-  CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(
-      CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr), CFRelease
-  );
-  AutoCFArray kbds(nullptr, CFRelease);
-  {
-    std::lock_guard<std::mutex> lock(g_tisMutex);
-    kbds = AutoCFArray(TISCreateInputSourceList(dict.get(), false), CFRelease);
-  }
-
-  for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {
-    TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(kbds.get(), i);
-    CFArrayRef layoutLanguages = nullptr;
-    {
-      std::lock_guard<std::mutex> lock(g_tisMutex);
-      layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceLanguages);
-    }
-    char temporaryCString[128] = {0};
-    for (CFIndex index = 0; layoutLanguages && index < CFArrayGetCount(layoutLanguages); index++) {
-      auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-      if (!languageCode || !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
-        continue;
-      }
-
-      std::string langCode(temporaryCString);
-      if (langCode.size() == 2 &&
-          std::find(layoutLangCodes.begin(), layoutLangCodes.end(), langCode) == layoutLangCodes.end()) {
-        layoutLangCodes.push_back(langCode);
-      }
-
-      // Save only first language code
-      break;
-    }
-  }
+  layoutLangCodes = m_inputSourceCache->keyboardLayouts();
 #endif
 
   return layoutLangCodes;
@@ -138,24 +228,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   result = XkbLayoutsParser::convertLayoutToISO(result);
 
 #elif defined(Q_OS_MACOS)
-  AutoTISInputSourceRef source(nullptr, CFRelease);
-  CFArrayRef layoutLanguages = nullptr;
-  {
-    std::lock_guard<std::mutex> lock(g_tisMutex);
-    source = AutoTISInputSourceRef(TISCopyCurrentKeyboardInputSource(), CFRelease);
-    if (source)
-      layoutLanguages = (CFArrayRef)TISGetInputSourceProperty(source.get(), kTISPropertyInputSourceLanguages);
-  }
-  char temporaryCString[128] = {0};
-  for (CFIndex index = 0; layoutLanguages && index < CFArrayGetCount(layoutLanguages); index++) {
-    auto languageCode = (CFStringRef)CFArrayGetValueAtIndex(layoutLanguages, index);
-    if (!languageCode || !CFStringGetCString(languageCode, temporaryCString, 128, kCFStringEncodingUTF8)) {
-      continue;
-    }
-
-    result = std::string(temporaryCString);
-    break;
-  }
+  result = m_inputSourceCache->currentLanguage();
 #endif
   return result;
 }
