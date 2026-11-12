@@ -251,6 +251,10 @@ private:
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
   bool m_cursorHidden;
+  CGPoint m_parkedCursor = CGPointZero;
+  int m_warpPendingEvents = 0;
+  int m_rehideAttempts = 0;
+  CGPoint m_warpDelta = CGPointZero;
 
   // keyboard stuff
   OSXKeyState *m_keyState;
@@ -298,6 +302,7 @@ private:
   // global hotkey operating mode
   static bool s_testedForGHOM;
   static bool s_hasGHOM;
+  static constexpr int kWarpPendingEventLimit = 5;
 
   // Quartz input event support
   CFMachPortRef m_eventTapPort;
