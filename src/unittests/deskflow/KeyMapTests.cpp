@@ -201,4 +201,11 @@ void KeyMapTests::parseKey_plusSymbol_parsesAsAsciiKey()
   QCOMPARE(key, static_cast<KeyID>('+'));
 }
 
+void KeyMapTests::getDeadKey_quote_mapsToDeadDiaeresis()
+{
+  QCOMPARE(KeyMap::getDeadKey('\"'), kKeyDeadDiaeresis);
+  QCOMPARE(KeyMap::getDeadKey(0xa8u), kKeyDeadDiaeresis);
+  QCOMPARE(KeyMap::getDeadKey(0x2ddu), kKeyDeadDoubleacute);
+}
+
 QTEST_MAIN(KeyMapTests)
