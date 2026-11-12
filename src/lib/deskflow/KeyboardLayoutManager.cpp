@@ -7,6 +7,8 @@
 #include "KeyboardLayoutManager.h"
 #include "base/Log.h"
 
+#include <QLocale>
+
 #include <algorithm>
 
 namespace {
@@ -26,6 +28,24 @@ std::string vectorToString(const std::vector<std::string> &vector, const std::st
 } // anonymous namespace
 
 namespace deskflow {
+
+std::string KeyboardLayoutManager::languageForISO639_1(std::string_view languageTag)
+{
+  // Platform tags may use BCP 47 hyphens or locale-style underscores. Script,
+  // region and variant subtags do not affect language-level layout matching.
+  const auto primary = languageTag.substr(0, languageTag.find_first_of("-_"));
+  const auto code = QString::fromUtf8(primary.data(), static_cast<qsizetype>(primary.size())).toLower();
+  const auto language = QLocale::codeToLanguage(code);
+  if (language == QLocale::C) {
+    LOG_DEBUG("Unrecognized keyboard language tag: \"%s\"", std::string(languageTag).c_str());
+    return {};
+  }
+  std::string result = QLocale::languageToCode(language, QLocale::ISO639Part1).toStdString();
+  if (result.empty()) {
+    LOG_DEBUG("Keyboard language tag has no ISO 639-1 code: \"%s\"", std::string(languageTag).c_str());
+  }
+  return result;
+}
 
 KeyboardLayoutManager::KeyboardLayoutManager(const std::vector<std::string> &localLayouts)
     : m_localLayouts(localLayouts)

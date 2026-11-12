@@ -17,6 +17,20 @@ class KeyboardLayoutManager
   std::vector<std::string> m_localLayouts;
 
 public:
+  /**
+   * @brief Converts a platform language tag to an ISO 639-1 code for layout matching.
+   *
+   * Extracts the primary language subtag before the first hyphen or underscore
+   * and uses QLocale to convert it to the two-letter code required by the
+   * layout-list protocol. This does not validate the complete language tag.
+   *
+   * @param languageTag Platform language tag or language code, such as zh-Hans,
+   * en_US or eng.
+   * @return Lowercase two-letter ISO 639-1 code, or an empty string if the
+   * language is unknown or has no ISO 639-1 code.
+   */
+  static std::string languageForISO639_1(std::string_view languageTag);
+
   explicit KeyboardLayoutManager(
       const std::vector<std::string> &localLayouts = AppUtil::instance().getKeyboardLayoutList()
   );
