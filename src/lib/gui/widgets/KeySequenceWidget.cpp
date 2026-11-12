@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -14,7 +15,7 @@ KeySequenceWidget::KeySequenceWidget(QWidget *parent, const KeySequence &seq)
       m_KeySequence(seq),
       m_BackupSequence(seq)
 {
-  setFocusPolicy(Qt::NoFocus);
+  setFocusPolicy(Qt::StrongFocus);
   updateOutput();
 }
 
@@ -99,7 +100,7 @@ void KeySequenceWidget::keyPressEvent(QKeyEvent *event)
   event->accept();
 
   if (status() == Stopped)
-    return;
+    startRecording();
 
   if (m_KeySequence.appendKey(event->key(), event->modifiers()))
     stopRecording();
