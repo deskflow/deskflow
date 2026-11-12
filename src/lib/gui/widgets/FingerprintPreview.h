@@ -16,14 +16,18 @@ class FingerprintPreview : public QFrame
   Q_OBJECT
 public:
   explicit FingerprintPreview(
-      QWidget *parent, const Fingerprint &fingerprint = {}, const QString &titleText = {}, bool hashMode = false
+      QWidget *parent, const Fingerprint &fingerprint = {}, const QString &titleText = {}, const QString &peerInfo = {},
+      bool hashMode = false
   );
   ~FingerprintPreview() override = default;
   void toggleMode(bool hashMode);
 
 private:
   QLayout *emptyLayout();
-  QLayout *sha256Layout(const Fingerprint &fingerprint = {}, const QString &titleText = {}, bool hashMode = false);
+  QLayout *sha256Layout(
+      const Fingerprint &fingerprint = {}, const QString &titleText = {}, const QString &peerinfo = {},
+      bool hashMode = false
+  );
   QLabel *m_lblHash = nullptr;
   QLabel *m_lblArt = nullptr;
 };
