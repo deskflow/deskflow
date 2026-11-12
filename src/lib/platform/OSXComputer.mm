@@ -1709,14 +1709,15 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
     computer->onKey(event);
     break;
   case kCGEventTapDisabledByTimeout:
-    // Re-enable our event-tap if we still have accessibility permissions
-    if (computer->checkAXPermissions()) {
-      CGEventTapEnable(computer->m_eventTapPort, true);
-      LOG_INFO("quartz event tap was disabled by timeout, re-enabling");
-    }
-    break;
   case kCGEventTapDisabledByUserInput:
-    LOG_ERR("quartz event tap was disabled by user input");
+    // Re-enable our event-tap if we still have accessibility permissions
+    if (computer->checkAXPermissions() && computer->m_eventTapPort) {
+      CGEventTapEnable(computer->m_eventTapPort, true);
+      LOG_INFO(
+          "quartz event tap was disabled by %s, re-enabling",
+          type == kCGEventTapDisabledByTimeout ? "timeout" : "user input"
+      );
+    }
     break;
   case NX_NULLEVENT:
     break;
