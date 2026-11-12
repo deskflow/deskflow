@@ -161,4 +161,76 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
   QVERIFY(a != b);
 }
 
+void ServerConfigTests::holeLink_addAndGet_roundTrips()
+{
+  Config config(nullptr);
+  QVERIFY(config.addComputer("server"));
+  QVERIFY(config.addComputer("client1"));
+  QVERIFY(config.addComputer("client2"));
+
+  QVERIFY(config.addHoleLink("server", "bottom-left", "client1"));
+  QVERIFY(config.addHoleLink("server", "top-right", "client2"));
+
+  const auto links = config.getHoleLinks("server");
+  QCOMPARE(links.size(), 2);
+  QCOMPARE(links[0].location, "bottom-left");
+  QCOMPARE(links[0].dstName, "client1");
+  QCOMPARE(links[1].location, "top-right");
+  QCOMPARE(links[1].dstName, "client2");
+
+  // a computer with no hole links registered should report none
+  QVERIFY(config.getHoleLinks("client1").empty());
+}
+
+void ServerConfigTests::holeLink_unknownComputer_fails()
+{
+  Config config(nullptr);
+  QVERIFY(config.addComputer("server"));
+
+  QVERIFY(!config.addHoleLink("server", "bottom-left", "noSuchComputer"));
+  QVERIFY(!config.addHoleLink("noSuchComputer", "bottom-left", "server"));
+  QVERIFY(config.getHoleLinks("server").empty());
+}
+
+void ServerConfigTests::holeLink_doesNotCreateNeighbor()
+{
+  Config config(nullptr);
+  QVERIFY(config.addComputer("server"));
+  QVERIFY(config.addComputer("client1"));
+  QVERIFY(config.addHoleLink("server", "bottom-left", "client1"));
+
+  // a hole link is only a pending request -- it must not be usable as a
+  // neighbor until the server resolves it against the hole's real position
+  QVERIFY(!config.hasNeighbor("server", Direction::Left));
+  QVERIFY(!config.hasNeighbor("server", Direction::Bottom));
+}
+
+void ServerConfigTests::equalityCheck_diff_holeLinks()
+{
+  Config a(nullptr);
+  Config b(nullptr);
+  QVERIFY(a.addComputer("computerA"));
+  QVERIFY(a.addComputer("computerB"));
+  QVERIFY(a.addHoleLink("computerA", "bottom-left", "computerB"));
+  QVERIFY(b.addComputer("computerA"));
+  QVERIFY(b.addComputer("computerB"));
+  QVERIFY(a != b);
+
+  QVERIFY(b.addHoleLink("computerA", "bottom-left", "computerB"));
+  QVERIFY(a == b);
+}
+
+void ServerConfigTests::restartServerOnZoneChange_defaultsFalse()
+{
+  // the full "section: options" text-parsing path (Config::read() /
+  // operator>>) isn't exercised anywhere else in this suite: it
+  // unconditionally constructs a NetworkAddress, which asserts unless the
+  // global Arch singleton has been initialized by main() first -- not
+  // something a unit test should bootstrap just for this. The actual
+  // "restartServerOnZoneChange = ..." line parsing added to
+  // readSectionOptions() is exercised manually instead.
+  Config config(nullptr);
+  QVERIFY(!config.restartServerOnZoneChange());
+}
+
 QTEST_MAIN(ServerConfigTests)

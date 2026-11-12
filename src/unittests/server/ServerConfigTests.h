@@ -18,4 +18,9 @@ private Q_SLOTS:
   void equalityCheck_diff_neighbours1();
   void equalityCheck_diff_neighbours2();
   void equalityCheck_diff_neighbours3();
+  void holeLink_addAndGet_roundTrips();
+  void holeLink_unknownComputer_fails();
+  void holeLink_doesNotCreateNeighbor();
+  void equalityCheck_diff_holeLinks();
+  void restartServerOnZoneChange_defaultsFalse();
 };
