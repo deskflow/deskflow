@@ -19,6 +19,7 @@
 
 #include <climits>
 #include <map>
+#include <mutex>
 #include <set>
 #include <vector>
 
@@ -462,9 +463,12 @@ private:
   // which we should send broadcasted keys.
   bool m_keyboardBroadcasting = false;
 
+  // guard multi lock warnings
+  mutable std::mutex m_lockWarningMutex;
+  mutable bool m_shownLockWarning = false;
+
   // computer locking (former scroll lock)
   bool m_lockedToComputer = false;
-
   bool m_defaultLockToComputerState = false;
   bool m_disableLockToComputer = false;
   bool m_enableClipboard = true;
