@@ -337,22 +337,24 @@ std::string Server::getName(const BaseClientProxy *client) const
 
 uint32_t Server::getActivePrimarySides() const
 {
+  if (isLockedToComputerServer()) {
+    return 0;
+  }
+
   using enum DirectionMask;
   using enum Direction;
   uint32_t sides = 0;
-  if (!isLockedToComputerServer()) {
-    if (hasAnyNeighbor(m_primaryClient, Left)) {
-      sides |= static_cast<int>(LeftMask);
-    }
-    if (hasAnyNeighbor(m_primaryClient, Right)) {
-      sides |= static_cast<int>(RightMask);
-    }
-    if (hasAnyNeighbor(m_primaryClient, Top)) {
-      sides |= static_cast<int>(TopMask);
-    }
-    if (hasAnyNeighbor(m_primaryClient, Bottom)) {
-      sides |= static_cast<int>(BottomMask);
-    }
+  if (hasAnyNeighbor(m_primaryClient, Left)) {
+    sides |= static_cast<int>(LeftMask);
+  }
+  if (hasAnyNeighbor(m_primaryClient, Right)) {
+    sides |= static_cast<int>(RightMask);
+  }
+  if (hasAnyNeighbor(m_primaryClient, Top)) {
+    sides |= static_cast<int>(TopMask);
+  }
+  if (hasAnyNeighbor(m_primaryClient, Bottom)) {
+    sides |= static_cast<int>(BottomMask);
   }
   return sides;
 }
