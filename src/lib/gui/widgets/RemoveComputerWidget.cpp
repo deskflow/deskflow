@@ -11,11 +11,11 @@
 #include <QDropEvent>
 #include <QMimeData>
 
-#include "ComputerSetupModel.h"
+#include "ComputerLayoutView.h"
 
 void RemoveComputerWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-  if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType())) {
+  if (event->mimeData()->hasFormat(ComputerLayoutView::mimeType())) {
     event->setDropAction(Qt::MoveAction);
     event->accept();
   } else
@@ -24,7 +24,7 @@ void RemoveComputerWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void RemoveComputerWidget::dropEvent(QDropEvent *event)
 {
-  if (event->mimeData()->hasFormat(ComputerSetupModel::mimeType())) {
+  if (event->mimeData()->hasFormat(ComputerLayoutView::mimeType())) {
     event->acceptProposedAction();
     Q_EMIT computerRemoved();
   } else {
