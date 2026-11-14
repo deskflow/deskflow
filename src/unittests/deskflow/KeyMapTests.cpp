@@ -183,6 +183,22 @@ void KeyMapTests::mapkey()
   QVERIFY(result == nullptr);
 }
 
+void KeyMapTests::mapKey_altRightWithoutKey_usesAltGr()
+{
+  KeyMap keyMap{};
+  KeyMap::KeyItem keyItem;
+  keyItem.m_button = 0x138;
+  keyItem.m_id = kKeyAltGr;
+  keyMap.addKeyEntry(keyItem);
+  keyMap.finish();
+  KeyMap::Keystrokes strokes;
+  KeyMap::ModifierToKeys activeModifiers;
+  KeyModifierMask currentState{};
+  auto result = keyMap.mapKey(strokes, kKeyAlt_R, 0, activeModifiers, currentState, 0, false, "en");
+  QVERIFY(result != nullptr);
+  QCOMPARE(result->m_button, KeyButton(0x138));
+}
+
 void KeyMapTests::parseModifiers_plusKey_keepsPlusAsKey()
 {
   std::string keystroke = "Control+Shift++";

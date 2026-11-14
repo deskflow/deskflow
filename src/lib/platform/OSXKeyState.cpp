@@ -894,24 +894,29 @@ bool OSXKeyState::mapDeskflowHotKeyToMac(
   return true;
 }
 
-void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask)
+void OSXKeyState::handleModifierKeys(
+    void *target, KeyModifierMask oldMask, KeyModifierMask newMask, uint32_t virtualKey
+)
 {
   // compute changed modifiers
   KeyModifierMask changed = (oldMask ^ newMask);
 
-  // synthesize changed modifier keys
-  if ((changed & KeyModifierShift) != 0) {
-    handleModifierKey(target, s_shiftVK, kKeyShift_L, (newMask & KeyModifierShift) != 0, newMask);
-  }
-  if ((changed & KeyModifierControl) != 0) {
-    handleModifierKey(target, s_controlVK, kKeyControl_L, (newMask & KeyModifierControl) != 0, newMask);
-  }
-  if ((changed & KeyModifierAlt) != 0) {
-    handleModifierKey(target, s_altVK, kKeyAlt_L, (newMask & KeyModifierAlt) != 0, newMask);
-  }
-  if ((changed & KeyModifierSuper) != 0) {
-    handleModifierKey(target, s_superVK, kKeySuper_L, (newMask & KeyModifierSuper) != 0, newMask);
-  }
+  // synthesize changed modifier keys, releasing on the side that was pressed
+  auto handleSided = [&](KeyModifierMask mask, uint32_t leftVK, uint32_t rightVK, KeyID leftID, KeyID rightID) {
+    if ((changed & mask) == 0) {
+      return;
+    }
+    const bool down = (newMask & mask) != 0;
+    if (down) {
+      m_rightModifiers = virtualKey == rightVK ? (m_rightModifiers | mask) : (m_rightModifiers & ~mask);
+    }
+    const bool right = (m_rightModifiers & mask) != 0;
+    handleModifierKey(target, right ? rightVK : leftVK, right ? rightID : leftID, down, newMask);
+  };
+  handleSided(KeyModifierShift, s_shiftVK, s_shiftRightVK, kKeyShift_L, kKeyShift_R);
+  handleSided(KeyModifierControl, s_controlVK, s_controlRightVK, kKeyControl_L, kKeyControl_R);
+  handleSided(KeyModifierAlt, s_altVK, s_altRightVK, kKeyAlt_L, kKeyAlt_R);
+  handleSided(KeyModifierSuper, s_superVK, s_superRightVK, kKeySuper_L, kKeySuper_R);
   if ((changed & KeyModifierCapsLock) != 0) {
     handleModifierKey(target, s_capsLockVK, kKeyCapsLock, (newMask & KeyModifierCapsLock) != 0, newMask);
   }

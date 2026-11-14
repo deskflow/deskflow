@@ -38,7 +38,7 @@ public:
   Determines which modifier keys have changed and updates the modifier
   state and sends key events as appropriate.
   */
-  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask);
+  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask, uint32_t virtualKey);
 
   //@}
   //! @name accessors
@@ -168,4 +168,5 @@ private:
   bool m_controlRightPressed;
   bool m_altRightPressed;
   bool m_superRightPressed;
+  KeyModifierMask m_rightModifiers = 0;
 };

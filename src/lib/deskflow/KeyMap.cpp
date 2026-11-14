@@ -243,6 +243,11 @@ const KeyMap::KeyItem *KeyMap::mapKey(
     return nullptr;
   }
 
+  // Windows registers the physical right alt only as AltGr
+  if (id == kKeyAlt_R && m_keyIDMap.count(kKeyAlt_R) == 0) {
+    id = kKeyAltGr;
+  }
+
   const KeyItem *item;
   switch (id) {
   case kKeyShift_L:
