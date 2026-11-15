@@ -1,3 +1,14 @@
+> [!NOTE]
+>
+> **This fork: file and folder drag between computers (unofficial)**
+>
+> The [`file-drag`](https://github.com/snoaper/deskflow/tree/file-drag) branch adds dragging files
+> and folders from one computer to another, both ways, on top of Deskflow 1.27.0.
+> Tested Windows to Windows; the macOS part builds but is not yet tested on a real Mac;
+> Linux is not supported. A one-minute demo video is in
+> [`docs/file-drag/file-drag-for-deskflow.mp4`](docs/file-drag/file-drag-for-deskflow.mp4)
+> on this `file-drag-media` branch. This is not an official Deskflow feature.
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/deskflow/deskflow-artwork/blob/main/logo/deskflow-logo-dark-200px.png?raw=true">
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/deskflow/deskflow-artwork/blob/main/logo/deskflow-logo-light-200px.png?raw=true">
