@@ -151,6 +151,7 @@ void EiComputer::initEi()
 
 void EiComputer::cleanupEi()
 {
+  resetKeyboardCapture();
   for (auto device : m_eiDevices) {
     delete static_cast<ScrollRemainder *>(ei_device_get_user_data(device));
     ei_device_set_user_data(device, nullptr);
@@ -622,6 +623,7 @@ void EiComputer::addDevice(struct ei_device *device)
 
   if (!m_eiKeyboard && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
     m_eiKeyboard = ei_device_ref(device);
+    m_lastPressed = kKeyNone;
 
     if (auto keymap = ei_device_keyboard_get_keymap(device);
         keymap && ei_keymap_get_type(keymap) == EI_KEYMAP_TYPE_XKB) {
@@ -661,6 +663,7 @@ void EiComputer::removeDevice(struct ei_device *device)
     wasTracked = true;
   }
   if (device == m_eiKeyboard) {
+    resetKeyboardCapture();
     m_eiKeyboard = ei_device_unref(m_eiKeyboard);
     wasTracked = true;
   }
@@ -756,6 +759,15 @@ bool EiComputer::onHotkey(KeyID keyid, bool isPressed, KeyModifierMask mask)
     return true;
   }
   return false;
+}
+
+void EiComputer::resetKeyboardCapture()
+{
+  m_lastPressed = kKeyNone;
+  if (m_keyState) {
+    m_keyState->resetCaptureState();
+    m_keyState->updateKeyState();
+  }
 }
 
 void EiComputer::onKeyEvent(ei_event *event)
@@ -1015,6 +1027,11 @@ void EiComputer::handleSystemEvent(const Event &)
       break;
     case EI_EVENT_DEVICE_PAUSED:
       LOG_DEBUG("device %s is paused", ei_device_get_name(device));
+      if (device == m_eiKeyboard) {
+        resetKeyboardCapture();
+      }
+      if (device != m_eiKeyboard && device != m_eiPointer && device != m_eiAbs)
+        break;
       m_isEmulating = false;
       // a paused device is reset to neutral by the EIS side and sends no
       // further events, so the releases for held buttons never arrive
@@ -1023,13 +1040,21 @@ void EiComputer::handleSystemEvent(const Event &)
       break;
     case EI_EVENT_DEVICE_RESUMED:
       LOG_DEBUG("device %s is resumed", ei_device_get_name(device));
-      if (!m_isPrimary && m_isOnComputer) {
+      if (!m_isPrimary && m_isOnComputer && (device == m_eiKeyboard || device == m_eiPointer || device == m_eiAbs)) {
         ensureEmulating();
       }
       break;
     case EI_EVENT_KEYBOARD_MODIFIERS:
-      LOG_VERBOSE("event: keyboard modifiers locked=0x%x", ei_event_keyboard_get_xkb_mods_locked(event));
-      m_keyState->updateLockedModifiers(ei_event_keyboard_get_xkb_mods_locked(event));
+      if (device != m_eiKeyboard)
+        break;
+      if (m_isPrimary) {
+        m_keyState->updateCaptureModifiers(
+            ei_event_keyboard_get_xkb_mods_depressed(event), ei_event_keyboard_get_xkb_mods_latched(event),
+            ei_event_keyboard_get_xkb_mods_locked(event), ei_event_keyboard_get_xkb_group(event)
+        );
+      } else {
+        m_keyState->updateLockedModifiers(ei_event_keyboard_get_xkb_mods_locked(event));
+      }
       break;
 
     // events below are for a receiver context (barriers)
@@ -1037,12 +1062,21 @@ void EiComputer::handleSystemEvent(const Event &)
       break;
     case EI_EVENT_DEVICE_START_EMULATING:
       LOG_DEBUG("device %s started emulating", ei_device_get_name(device));
+      if (device == m_eiKeyboard) {
+        m_lastPressed = kKeyNone;
+        // A fresh snapshot may precede START_EMULATING. Keep it while clearing
+        // fallback transients left by the previous capture.
+        m_keyState->updateKeyState();
+      }
       break;
     case EI_EVENT_DEVICE_STOP_EMULATING:
       LOG_DEBUG("device %s stopped emulating", ei_device_get_name(device));
+      if (device == m_eiKeyboard)
+        resetKeyboardCapture();
       break;
     case EI_EVENT_KEYBOARD_KEY:
-      onKeyEvent(event);
+      if (device == m_eiKeyboard)
+        onKeyEvent(event);
       break;
     case EI_EVENT_BUTTON_BUTTON:
       onButtonEvent(event);

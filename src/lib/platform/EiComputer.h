@@ -28,6 +28,7 @@ struct ei_seat;
 struct ei_device;
 
 class EventQueueTimer;
+class EiCaptureIntegrationTests;
 
 namespace deskflow {
 
@@ -116,10 +117,12 @@ protected:
   void removeDevice(ei_device *device);
 
 private:
+  friend class ::EiCaptureIntegrationTests;
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
   ButtonID mapButtonFromEvdev(ei_event *event) const;
+  void resetKeyboardCapture();
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);
   void sendWheelEvents(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
