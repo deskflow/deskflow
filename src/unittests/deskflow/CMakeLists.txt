@@ -22,6 +22,14 @@ create_test(
 )
 
 create_test(
+  NAME FileDragTests
+  DEPENDS app
+  LIBS arch base io ${extra_libs}
+  SOURCE FileDragTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
   NAME IKeyStateTests
   DEPENDS app
   LIBS arch base ${extra_libs}

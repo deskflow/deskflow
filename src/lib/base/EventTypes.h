@@ -238,5 +238,10 @@ enum class EventTypes : uint32_t
 
   /// Stop libei
   EISessionClosed,
+
+  /** A file drag event from the platform computer (see deskflow/FileDragEvent.h).
+      The data object is a deskflow::filedrag::FileDragEvent.
+  */
+  FileDrag,
 };
 } // namespace deskflow

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "deskflow/ClipboardTypes.h"
+#include "deskflow/FileDragTypes.h"
 #include "deskflow/IComputer.h"
 #include "deskflow/IKeyState.h"
 #include "deskflow/IPrimaryComputer.h"
@@ -134,6 +135,48 @@ public:
   alternative on other platforms
   */
   virtual std::string getSecureInputApp() const = 0;
+
+  //@}
+  //! @name file drag (dragging files and folders between computers)
+  //! The defaults mean "not supported": computers that do not override them (X11
+  //! and Wayland/EI for now) never advertise, start or accept a file drag.
+  //@{
+
+  //! deskflow::filedrag::Capability flags this computer supports right now
+  virtual uint32_t fileDragCapabilities() const
+  {
+    return deskflow::filedrag::kCapNone;
+  }
+
+  //! Watch the screen sides in \p sideMask (DirectionMask) for a file drag carried by a
+  //! held mouse button; 0 stops watching. The server does it for its own edges; a client
+  //! when the server asks (kMsgDFileDragWatch), for the edges that lead to the server.
+  virtual void fileDragWatchEdges(uint32_t /*sideMask*/)
+  {
+    // not supported
+  }
+
+  //! The drag that was offered at the edge continues on the other computer as \p dragId.
+  //! Keep the local drag parked (where the cursor waits while it is away) and start
+  //! sending its items. Called before the cursor leaves.
+  virtual void fileDragHandOff(uint32_t /*dragId*/)
+  {
+    // not supported
+  }
+
+  //! The cursor came back before the drop; give the local drag back to the user.
+  //! Must be done before the cursor is moved back onto this computer.
+  virtual void fileDragTakeBack()
+  {
+    // not supported
+  }
+
+  //! A file drag message from the peer: acks, dropped and finished for drags sent from
+  //! here; items, data and cancels for drags coming here (matched by drag id)
+  virtual void fileDragReceive(const deskflow::filedrag::Message &)
+  {
+    // not supported
+  }
 
   //@}
   //! @name accessors

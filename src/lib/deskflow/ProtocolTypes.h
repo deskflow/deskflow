@@ -45,7 +45,7 @@ static const int16_t kProtocolMajorVersion = 1;
  * @note When incrementing the minor version, the Deskflow application version should also increment
  * @since Protocol version 1.0
  */
-static const int16_t kProtocolMinorVersion = 8;
+static const int16_t kProtocolMinorVersion = 9;
 
 /**
  * @brief Default TCP port for Deskflow connections
@@ -1094,6 +1094,226 @@ extern const char *const kMsgDFileTransfer;
  * @deprecated File drag and drop is no longer implemented.
  */
 extern const char *const kMsgDDragInfo;
+
+/**
+ * @brief File drag capabilities (file and folder drag-and-drop, v1.9+)
+ *
+ * **Message Code**: `"DFDC"`
+ * **Direction**: Secondary → Primary first, then Primary → Secondary in reply
+ * **Format**: `"DFDC%4i"`
+ * **Parameters**:
+ * - `$1`: Capability flags (4 bytes): bit 0 = can send file drags (source),
+ *   bit 1 = can accept file drags (destination), bit 2 = understands the client to server
+ *   messages (kMsgDFileDragWatch, kMsgDFileDragOffer, kMsgDFileDragHandOff)
+ *
+ * The secondary sends this once the handshake is complete; the primary replies with
+ * its own flags. No other kMsgDFileDrag* message is sent to a peer that has not
+ * advertised the matching capability, so peers without file drag support (or that
+ * use protocol 1.9 for something else) never see them.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragCaps;
+
+/**
+ * @brief File drag icon
+ *
+ * **Message Code**: `"DFDI"`
+ * **Direction**: Source → Destination (server → client, or client → server after kMsgDFileDragHandOff)
+ * **Format**: `"DFDI%4i%2i%2i%s"`
+ * **Parameters**:
+ * - `$1`: Drag id (4 bytes)
+ * - `$2`: Width (2 bytes, at most 256)
+ * - `$3`: Height (2 bytes, at most 256)
+ * - `$4`: Pixels (string): width * height RGBA8 pixels, straight alpha, top row first
+ *
+ * Sent before kMsgDFileDragBegin so the drag image is ready when the drag starts.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragIcon;
+
+/**
+ * @brief File drag begin
+ *
+ * **Message Code**: `"DFDB"`
+ * **Direction**: Source → Destination
+ * **Format**: `"DFDB%4i%s"`
+ * **Parameters**:
+ * - `$1`: Drag id (4 bytes)
+ * - `$2`: Item list (string), see deskflow::filedrag::encodeItems(): a 4 byte count, then
+ *   per item a flags byte (bit 0 = folder), an 8 byte size and a 2 byte length-prefixed
+ *   UTF-8 path relative to the drag ("Folder/Sub/file.txt"), parents before children.
+ *
+ * The secondary starts a drag of these items under its cursor. File contents follow
+ * at once with kMsgDFileDragStart, kMsgDFileDragChunk and kMsgDFileDragEnd.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragBegin;
+
+/**
+ * @brief File drag file start
+ *
+ * **Message Code**: `"DFDS"`
+ * **Direction**: Source → Destination
+ * **Format**: `"DFDS%4i%4i%4i%4i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ * - `$2`: Item index
+ * - `$3`: Size, upper 32 bits
+ * - `$4`: Size, lower 32 bits
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragStart;
+
+/**
+ * @brief File drag file chunk
+ *
+ * **Message Code**: `"DFDK"`
+ * **Direction**: Source → Destination
+ * **Format**: `"DFDK%4i%4i%4i%s"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ * - `$2`: Item index
+ * - `$3`: Chunk sequence number (counts from 1 across the whole drag)
+ * - `$4`: Data (at most 64 KB)
+ *
+ * The sender keeps only a few chunks unacknowledged (see kMsgDFileDragAck) so input
+ * events are never queued behind file data.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragChunk;
+
+/**
+ * @brief File drag file end
+ *
+ * **Message Code**: `"DFDE"`
+ * **Direction**: Source → Destination
+ * **Format**: `"DFDE%4i%4i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ * - `$2`: Item index
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragEnd;
+
+/**
+ * @brief File drag acknowledgement (credit)
+ *
+ * **Message Code**: `"DFDA"`
+ * **Direction**: Destination → Source
+ * **Format**: `"DFDA%4i%4i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ * - `$2`: Highest chunk sequence number written to disk (cumulative)
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragAck;
+
+/**
+ * @brief File drag cancel
+ *
+ * **Message Code**: `"DFDX"`
+ * **Direction**: Primary ↔ Secondary
+ * **Format**: `"DFDX%4i%1i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ * - `$2`: Reason, see deskflow::filedrag::CancelReason
+ *
+ * Both sides delete any partial files when a drag is cancelled.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragCancel;
+
+/**
+ * @brief File drag dropped
+ *
+ * **Message Code**: `"DFDP"`
+ * **Direction**: Destination → Source
+ * **Format**: `"DFDP%4i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ *
+ * The user dropped the items on the secondary. The primary must keep sending file
+ * data even if the cursor leaves the secondary.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragDropped;
+
+/**
+ * @brief File drag finished
+ *
+ * **Message Code**: `"DFDF"`
+ * **Direction**: Destination → Source
+ * **Format**: `"DFDF%4i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ *
+ * All items were placed at the drop target.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragFinished;
+
+/**
+ * @brief File drag: watch an edge (client to server drags)
+ *
+ * **Message Code**: `"DFDW"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DFDW%4i"`
+ * **Parameters**:
+ * - `$1`: Sides of the client's screen to watch (DirectionMask); 0 stops watching
+ *
+ * The server sends this while only the left button is held near an edge of the client's
+ * screen that leads to the server. The client puts thin windows on those sides that notice
+ * a drag of files (and nothing else) arriving there. Only sent to a client that advertised
+ * bits 0 and 2 of kMsgDFileDragCaps.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragWatch;
+
+/**
+ * @brief File drag: files at the watched edge (client to server drags)
+ *
+ * **Message Code**: `"DFDO"`
+ * **Direction**: Secondary → Primary
+ * **Format**: `"DFDO%1i"`
+ * **Parameters**:
+ * - `$1`: 1 = a drag of files or folders is on a watched edge, 0 = it left again
+ *
+ * Only after this may the held button take the cursor from the client to the server; a
+ * window drag (Aero Snap), a text selection or any other held-button drag never sends it.
+ * Only sent to a server that advertised bits 1 and 2 of kMsgDFileDragCaps.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragOffer;
+
+/**
+ * @brief File drag: hand-off (client to server drags)
+ *
+ * **Message Code**: `"DFDH"`
+ * **Direction**: Primary → Secondary
+ * **Format**: `"DFDH%4i"`
+ * **Parameters**:
+ * - `$1`: Drag id
+ *
+ * Sent just before the cursor leaves the client with the files. The client parks its own
+ * drag where its cursor waits and sends the items (kMsgDFileDragIcon, kMsgDFileDragBegin)
+ * and their data to the server, which shows the drag under its cursor. A kMsgDFileDragCancel
+ * with reason "cursor returned" gives the drag back to the client.
+ *
+ * @since Protocol version 1.9
+ */
+extern const char *const kMsgDFileDragHandOff;
 
 /** @} */ // end of protocol_files group
 

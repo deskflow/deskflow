@@ -467,4 +467,29 @@ std::string Computer::getSecureInputApp() const
   return m_computer->getSecureInputApp();
 }
 
+uint32_t Computer::fileDragCapabilities() const
+{
+  return m_computer->fileDragCapabilities();
+}
+
+void Computer::fileDragWatchEdges(uint32_t sideMask) const
+{
+  m_computer->fileDragWatchEdges(sideMask);
+}
+
+void Computer::fileDragHandOff(uint32_t dragId) const
+{
+  m_computer->fileDragHandOff(dragId);
+}
+
+void Computer::fileDragTakeBack() const
+{
+  m_computer->fileDragTakeBack();
+}
+
+void Computer::fileDragReceive(const deskflow::filedrag::Message &message) const
+{
+  m_computer->fileDragReceive(message);
+}
+
 } // namespace deskflow

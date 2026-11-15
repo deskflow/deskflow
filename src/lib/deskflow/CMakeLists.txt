@@ -45,6 +45,18 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   DisplayException.cpp
   DisplayException.h
   DisplayInvalidException.h
+  FileDragCodec.cpp
+  FileDragCodec.h
+  FileDragEvent.h
+  FileDragGeometry.h
+  FileDragPolicy.h
+  FileDragProtocol.cpp
+  FileDragProtocol.h
+  FileDragSender.cpp
+  FileDragSender.h
+  FileDragStaging.cpp
+  FileDragStaging.h
+  FileDragTypes.h
   IApp.h
   IClient.h
   IClipboard.cpp

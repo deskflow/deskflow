@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "deskflow/FileDragTypes.h"
+
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IComputer.h"
 #include "deskflow/KeyTypes.h"
@@ -217,6 +219,15 @@ public:
   alternative on other platforms
   */
   std::string getSecureInputApp() const;
+
+  //! @name file drag (see IPlatformComputer)
+  //@{
+  uint32_t fileDragCapabilities() const;
+  void fileDragWatchEdges(uint32_t sideMask) const;
+  void fileDragHandOff(uint32_t dragId) const;
+  void fileDragTakeBack() const;
+  void fileDragReceive(const deskflow::filedrag::Message &message) const;
+  //@}
 
   //@}
   //! @name accessors
