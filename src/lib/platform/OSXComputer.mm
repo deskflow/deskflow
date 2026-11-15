@@ -28,6 +28,7 @@
 #include "mt/Thread.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXEventQueueBuffer.h"
+#include "platform/OSXFileDrag.h"
 #include "platform/OSXKeyState.h"
 #include "platform/OSXMediaKeySupport.h"
 #include "platform/OSXPasteboardPeeker.h"
@@ -60,6 +61,10 @@ enum
 };
 
 static const double kCarbonLoopWaitTimeout = 10.0;
+
+// file drag: marks our own mouse events on the server (kCGEventSourceUserData), which the
+// event tap lets through without reporting them as the user's
+static const int64_t kFileDragEventTag = 0x44464644; // "DFFD"
 
 // Synthetic mouse button and drag events require event numbers on macOS 27 and later.
 static inline bool needsEventNumber()
@@ -182,11 +187,18 @@ OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSyn
 
   // install the platform event queue
   m_events->adoptBuffer(new OSXEventQueueBuffer(m_events));
+
+  // dragging files to and from other computers
+  startFileDrag();
 }
 
 OSXComputer::~OSXComputer()
 {
   disable();
+
+  // the event tap is stopped, so nothing reaches the file drag any more
+  fileDragStopReleaseTimer();
+  m_fileDrag.reset();
 
   m_events->adoptBuffer(nullptr);
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
@@ -582,6 +594,15 @@ void OSXComputer::fakeMouseButton(ButtonID id, bool press)
   CGEventPost(kCGHIDEventTap, event);
 
   CFRelease(event);
+
+  if (id == kButtonLeft && !press) {
+    // the user let go; a file drag started here drops now
+    m_fileDragPressed = false;
+    if (m_fileDragAwaitingPress) {
+      // let go before the drag started under the cursor: it drops as soon as it starts
+      m_fileDragReleasedEarly = true;
+    }
+  }
 }
 
 void OSXComputer::fakeMouseMove(int32_t x, int32_t y)
@@ -798,6 +819,11 @@ void OSXComputer::enter()
     // re-couple the mouse to the cursor, undoing the capture from leave()
     CGAssociateMouseAndMouseCursorPosition(true);
     setZeroSuppressionInterval();
+
+    // nothing of a file drag stays parked once the cursor is back
+    if (m_fileDrag) {
+      m_fileDrag->entered();
+    }
   } else {
     // reset buttons
     m_buttonState.reset();
@@ -1040,6 +1066,13 @@ bool OSXComputer::onMouseButton(bool pressed, uint16_t macButton)
     }
   } else {
     LOG_VERBOSE("event: button release button=%d", button);
+    if (button == kButtonLeft && m_isOnComputer) {
+      // the user let go here: a drag shown here with our press drops now
+      m_fileDragPressed = false;
+      if (m_fileDragAwaitingPress) {
+        m_fileDragReleasedEarly = true;
+      }
+    }
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
       sendEvent(EventTypes::PrimaryComputerButtonUp, ButtonInfo::alloc(button, mask));
@@ -1682,6 +1715,20 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
 
   switch (type) {
   case kCGEventLeftMouseDown:
+  case kCGEventLeftMouseUp:
+  case kCGEventLeftMouseDragged:
+  case kCGEventMouseMoved:
+    if (CGEventGetIntegerValueField(event, kCGEventSourceUserData) == kFileDragEventTag) {
+      // file drag: our own press, release or move for a drag shown here (not the user's)
+      return event;
+    }
+    break;
+  default:
+    break;
+  }
+
+  switch (type) {
+  case kCGEventLeftMouseDown:
   case kCGEventRightMouseDown:
   case kCGEventOtherMouseDown:
     computer->onMouseButton(true, CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber) + 1);
@@ -1739,9 +1786,14 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
 
   if (computer->m_isOnComputer) {
     return event;
-  } else {
-    return nullptr;
   }
+  if (type == kCGEventLeftMouseUp && computer->m_fileDrag && computer->m_fileDrag->takeParkedRelease()) {
+    // file drag: the local drag waiting over the catcher ends with this release. It is
+    // relayed as usual and also reaches this computer once, where the catcher refuses the
+    // drop, so nothing is moved or copied here.
+    return event;
+  }
+  return nullptr;
 }
 
 void OSXComputer::MouseButtonState::set(uint32_t button, EMouseButtonState state)
@@ -1780,6 +1832,219 @@ int8_t OSXComputer::MouseButtonState::getFirstButtonDown() const
     }
   }
   return -1;
+}
+
+//
+// file drag
+//
+
+void OSXComputer::startFileDrag()
+{
+  OSXFileDrag::Hooks hooks;
+  hooks.launcherReady = [this](uint32_t dragId, int32_t x, int32_t y) { onFileDragLauncherReady(dragId, x, y); };
+  hooks.loopEnded = [this](uint32_t dragId, bool dropped) { onFileDragLoopEnded(dragId, dropped); };
+  hooks.releaseAt = [this](int32_t x, int32_t y) { onFileDragReleaseAt(x, y); };
+  hooks.sourceStopped = [this](uint32_t dragId) { onFileDragSourceStopped(dragId); };
+  m_fileDrag = std::make_unique<OSXFileDrag>(m_events, getEventTarget(), m_isPrimary, std::move(hooks));
+}
+
+uint32_t OSXComputer::fileDragCapabilities() const
+{
+  return m_fileDrag ? m_fileDrag->capabilities() : deskflow::filedrag::kCapNone;
+}
+
+void OSXComputer::fileDragWatchEdges(uint32_t sideMask)
+{
+  // the server watches its own edges; a client the edges the server asks for (the ones
+  // that lead to the server)
+  if (m_fileDrag) {
+    m_fileDrag->watchEdges(sideMask, m_x, m_y, m_w, m_h);
+  }
+}
+
+void OSXComputer::fileDragHandOff(uint32_t dragId)
+{
+  if (!m_fileDrag) {
+    return;
+  }
+  // the cursor stays where it crossed while it is on the other computer (on the server
+  // leave() freezes it; a client gets no more moves), so the local drag is parked there
+  int32_t x = 0;
+  int32_t y = 0;
+  getCursorPos(x, y);
+  if (!m_isPrimary) {
+    // a client: the button was pressed by the server, which lets go of it here (see
+    // fileDragReleaseParked()) once the drop on the server is done or cancelled
+    m_fileDragParkedId = dragId;
+  }
+  m_fileDrag->handOff(dragId, x, y);
+}
+
+void OSXComputer::fileDragTakeBack()
+{
+  // a client: the drag carries on here, with the button still held
+  m_fileDragParkedId = 0;
+  if (m_fileDrag) {
+    m_fileDrag->takeBack();
+  }
+}
+
+void OSXComputer::fileDragReceive(const deskflow::filedrag::Message &message)
+{
+  using Type = deskflow::filedrag::Message::Type;
+  using deskflow::filedrag::CancelReason;
+  if (message.type == Type::Begin) {
+    // the button is held on the other computer; the start window asks for the press next.
+    // On the server, flags 1 says the user already let go: the drag drops as soon as it starts
+    m_fileDragAwaitingPress = true;
+    m_fileDragReleasedEarly = m_isPrimary && (message.flags & 1) != 0;
+  }
+  if (!m_isPrimary && m_fileDragParkedId != 0) {
+    // a drag sent from here is over on the server (dropped there, finished or cancelled)
+    const bool ours = message.dragId == m_fileDragParkedId || (message.dragId == 0 && message.type == Type::Cancel &&
+                                                               message.reason == CancelReason::ConnectionLost);
+    const bool over = message.type == Type::Dropped || message.type == Type::Finished ||
+                      (message.type == Type::Cancel && message.reason != CancelReason::CursorReturned);
+    if (ours && over) {
+      fileDragReleaseParked(deskflow::filedrag::messageTypeName(message.type));
+    }
+  }
+  if (m_fileDrag) {
+    m_fileDrag->receive(message);
+  }
+}
+
+void OSXComputer::onFileDragSourceStopped(uint32_t dragId)
+{
+  if (!m_isPrimary && m_fileDragParkedId != 0 && dragId == m_fileDragParkedId) {
+    // sending the files from here failed: nothing more to carry
+    fileDragReleaseParked("sending stopped");
+  }
+}
+
+void OSXComputer::fileDragReleaseParked(const char *why)
+{
+  const uint32_t id = m_fileDragParkedId;
+  m_fileDragParkedId = 0;
+  if (m_buttonState.test(0)) {
+    // the cursor is away, over the catcher, which takes nothing: the drag ends here
+    // without moving or copying anything on this computer
+    LOG_INFO("file drag %u: letting go of the drag parked here (%s)", id, why);
+    fakeMouseButton(kButtonLeft, false);
+  }
+}
+
+void OSXComputer::postFileDragMove(int32_t x, int32_t y, bool dragged)
+{
+  const CGPoint pos = CGPointMake(x, y);
+  CGEventRef event = CGEventCreateMouseEvent(
+      nullptr, dragged ? kCGEventLeftMouseDragged : kCGEventMouseMoved, pos, kCGMouseButtonLeft
+  );
+  if (event == nullptr) {
+    return;
+  }
+  CGEventSetIntegerValueField(event, kCGEventSourceUserData, kFileDragEventTag);
+  CGEventPost(kCGHIDEventTap, event);
+  CFRelease(event);
+}
+
+void OSXComputer::postFileDragButton(bool press, int32_t x, int32_t y)
+{
+  const CGPoint pos = CGPointMake(x, y);
+  CGEventRef event =
+      CGEventCreateMouseEvent(nullptr, press ? kCGEventLeftMouseDown : kCGEventLeftMouseUp, pos, kCGMouseButtonLeft);
+  if (event == nullptr) {
+    return;
+  }
+  CGEventSetIntegerValueField(event, kCGMouseEventClickState, 1);
+  CGEventSetIntegerValueField(event, kCGEventSourceUserData, kFileDragEventTag);
+  CGEventPost(kCGHIDEventTap, event);
+  CFRelease(event);
+}
+
+void OSXComputer::onFileDragLauncherReady(uint32_t dragId, int32_t x, int32_t y)
+{
+  if (!m_isOnComputer) {
+    LOG_WARN("file drag %u: the cursor is no longer here, the drag is not started", dragId);
+    return;
+  }
+  // press the button on the start window, which starts the drag there; the user's own
+  // release (relayed from the server, or on the server itself) drops it
+  LOG_INFO("file drag %u: starting the drag at %d,%d", dragId, x, y);
+  if (m_isPrimary) {
+    // on the server the user holds the button, but no app here saw it go down (it went to
+    // the client); our press must not count as the user's
+    postFileDragButton(true, x, y);
+  } else {
+    fakeMouseMove(x, y);
+    fakeMouseButton(kButtonLeft, true);
+  }
+  m_fileDragPressed = true;
+  m_fileDragAwaitingPress = false;
+  if (m_fileDragReleasedEarly) {
+    // the user already let go: let go here too once the drag runs, so it drops where the
+    // cursor is instead of waiting for a release that already came
+    m_fileDragReleasedEarly = false;
+    LOG_INFO("file drag %u: the button was let go before the drag started, dropping now", dragId);
+    fileDragStopReleaseTimer();
+    m_fileDragReleaseTimer = m_events->newOneShotTimer(0.2, nullptr);
+    m_events->addHandler(EventTypes::Timer, m_fileDragReleaseTimer, [this](const auto &) {
+      fileDragStopReleaseTimer();
+      if (!m_fileDragPressed) {
+        return;
+      }
+      if (m_isPrimary) {
+        int32_t cx = 0;
+        int32_t cy = 0;
+        getCursorPos(cx, cy);
+        m_fileDragPressed = false;
+        postFileDragButton(false, cx, cy);
+      } else {
+        fakeMouseButton(kButtonLeft, false);
+      }
+    });
+  }
+}
+
+void OSXComputer::onFileDragLoopEnded(uint32_t, bool)
+{
+  m_fileDragAwaitingPress = false;
+  m_fileDragReleasedEarly = false;
+  fileDragStopReleaseTimer();
+  if (m_fileDragPressed && !m_isPrimary) {
+    // ended while our press was still held: let go of it
+    fakeMouseButton(kButtonLeft, false);
+  }
+  // on the server the user's own button is still held; its release just ends there
+  m_fileDragPressed = false;
+}
+
+void OSXComputer::onFileDragReleaseAt(int32_t x, int32_t y)
+{
+  // a cancelled drag: move over the refusing window (so the drag sees it) and let go there
+  if (m_isPrimary) {
+    if (m_fileDragPressed) {
+      postFileDragMove(x + 1, y, true);
+      postFileDragMove(x, y, true);
+      m_fileDragPressed = false;
+      postFileDragButton(false, x, y);
+    }
+    return;
+  }
+  fakeMouseMove(x + 1, y);
+  fakeMouseMove(x, y);
+  if (m_buttonState.test(0)) {
+    fakeMouseButton(kButtonLeft, false);
+  }
+}
+
+void OSXComputer::fileDragStopReleaseTimer()
+{
+  if (m_fileDragReleaseTimer != nullptr) {
+    m_events->removeHandler(EventTypes::Timer, m_fileDragReleaseTimer);
+    m_events->deleteTimer(m_fileDragReleaseTimer);
+    m_fileDragReleaseTimer = nullptr;
+  }
 }
 
 char *OSXComputer::CFStringRefToUTF8String(CFStringRef aString)

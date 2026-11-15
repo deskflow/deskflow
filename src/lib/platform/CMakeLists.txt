@@ -91,6 +91,8 @@ elseif(APPLE)
     OSXComputer.mm
     OSXEventQueueBuffer.cpp
     OSXEventQueueBuffer.h
+    OSXFileDrag.h
+    OSXFileDrag.mm
     OSXKeyLayoutResource.cpp
     OSXKeyLayoutResource.h
     OSXKeyState.cpp
@@ -191,7 +193,12 @@ if(UNIX)
 
   if(APPLE)
     find_library(COCOA_LIBRARY Cocoa)
-    target_link_libraries(platform PUBLIC ${COCOA_LIBRARY})
+    # file drag: file promise types (UTType, macOS 11 and later)
+    find_library(UTI_LIBRARY UniformTypeIdentifiers REQUIRED)
+    target_link_libraries(platform PUBLIC ${COCOA_LIBRARY} ${UTI_LIBRARY})
+    # the file drag code manages its Objective-C objects with ARC; the rest of the
+    # platform code does it by hand
+    set_source_files_properties(OSXFileDrag.mm PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
   else()
     if(${LIBXKBCOMMON_VERSION} VERSION_GREATER_EQUAL "1.10")
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)

@@ -19,6 +19,7 @@
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
 
+#include <atomic>
 #include <bitset>
 #include <map>
 #include <memory>
@@ -40,6 +41,7 @@ class OSXKeyState;
 class OSXScreenSaver;
 class IEventQueue;
 class Mutex;
+class OSXFileDrag;
 
 //! Implementation of IPlatformComputer for OS X
 class OSXComputer : public PlatformComputer
@@ -94,6 +96,13 @@ public:
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
   std::string getSecureInputApp() const override;
+
+  // file drag (IPlatformComputer overrides); the AppKit work is in OSXFileDrag
+  uint32_t fileDragCapabilities() const override;
+  void fileDragWatchEdges(uint32_t sideMask) override;
+  void fileDragHandOff(uint32_t dragId) override;
+  void fileDragTakeBack() override;
+  void fileDragReceive(const deskflow::filedrag::Message &message) override;
 
   void waitForCarbonLoop() const;
 
@@ -322,4 +331,30 @@ private:
   OSXPowerManager m_powerManager;
 
   class OSXComputerImpl *m_impl;
+
+  // file drag
+  void startFileDrag();
+  void onFileDragLauncherReady(uint32_t dragId, int32_t x, int32_t y);
+  void onFileDragLoopEnded(uint32_t dragId, bool dropped);
+  void onFileDragReleaseAt(int32_t x, int32_t y);
+  void fileDragStopReleaseTimer();
+  void onFileDragSourceStopped(uint32_t dragId);
+  //! client: lets go of the button the server pressed, ending the parked drag on the catcher
+  void fileDragReleaseParked(const char *why);
+  //! server: posts our own left button event at x,y; the event tap lets it through
+  //! without reporting it, so the server never takes it for the user's button
+  static void postFileDragButton(bool press, int32_t x, int32_t y);
+  //! server: our own move to x,y (same: not reported as the user's)
+  static void postFileDragMove(int32_t x, int32_t y, bool dragged);
+  std::unique_ptr<OSXFileDrag> m_fileDrag;
+  //! we pressed the left button to start a drag shown here and its release has not come yet
+  // (atomic: the server's event tap thread also writes them, see onMouseButton())
+  std::atomic<bool> m_fileDragPressed{false};
+  //! a drag arrived (Begin) and its button press has not been made yet
+  std::atomic<bool> m_fileDragAwaitingPress{false};
+  //! the user let go before that press; the drag drops as soon as it starts
+  std::atomic<bool> m_fileDragReleasedEarly{false};
+  EventQueueTimer *m_fileDragReleaseTimer = nullptr;
+  //! client: a drag sent from here to the server waits parked here (0 = none)
+  uint32_t m_fileDragParkedId = 0;
 };
