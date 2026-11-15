@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "deskflow/FileDragTypes.h"
 #include "deskflow/IClient.h"
 
 namespace deskflow {
@@ -82,6 +83,24 @@ public:
   virtual void secureInputNotification(const std::string &app) const = 0;
   std::string getName() const override;
   virtual deskflow::IStream *getStream() const = 0;
+
+  //! True if this client accepts file drags (protocol 1.9 and it advertised it)
+  virtual bool fileDragAvailable() const
+  {
+    return false;
+  }
+
+  //! True if file drags may come from this client to the server (it advertised it)
+  virtual bool fileDragReverseAvailable() const
+  {
+    return false;
+  }
+
+  //! Sends a file drag message to this client (ignored if not available)
+  virtual void fileDragSend(const deskflow::filedrag::Message &)
+  {
+    // not supported
+  }
 
 private:
   std::string m_name;

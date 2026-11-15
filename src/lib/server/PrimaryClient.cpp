@@ -69,6 +69,31 @@ bool PrimaryClient::isLockedToComputer() const
   return m_computer->isLockedToComputer();
 }
 
+uint32_t PrimaryClient::fileDragCapabilities() const
+{
+  return m_computer->fileDragCapabilities();
+}
+
+void PrimaryClient::fileDragWatchEdges(uint32_t sideMask) const
+{
+  m_computer->fileDragWatchEdges(sideMask);
+}
+
+void PrimaryClient::fileDragHandOff(uint32_t dragId) const
+{
+  m_computer->fileDragHandOff(dragId);
+}
+
+void PrimaryClient::fileDragTakeBack() const
+{
+  m_computer->fileDragTakeBack();
+}
+
+void PrimaryClient::fileDragReceive(const deskflow::filedrag::Message &message) const
+{
+  m_computer->fileDragReceive(message);
+}
+
 void *PrimaryClient::getEventTarget() const
 {
   return m_computer->getEventTarget();

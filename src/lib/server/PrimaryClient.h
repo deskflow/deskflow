@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "deskflow/FileDragTypes.h"
+
 #include "server/BaseClientProxy.h"
 
 namespace deskflow {
@@ -95,6 +97,15 @@ public:
   Returns true if the user is locked to the computer.
   */
   bool isLockedToComputer() const;
+
+  //! @name file drag (see IPlatformComputer)
+  //@{
+  uint32_t fileDragCapabilities() const;
+  void fileDragWatchEdges(uint32_t sideMask) const;
+  void fileDragHandOff(uint32_t dragId) const;
+  void fileDragTakeBack() const;
+  void fileDragReceive(const deskflow::filedrag::Message &message) const;
+  //@}
 
   //@}
 

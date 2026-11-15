@@ -13,6 +13,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "common/Enums.h"
+#include "deskflow/FileDragTypes.h"
 #include "deskflow/IClipboard.h"
 #include "net/NetworkAddress.h"
 
@@ -163,6 +164,16 @@ public:
   }
   size_t getMaximumClipboardReceiveSizeBytes() const;
 
+  //! File drag capabilities of this computer (deskflow::filedrag::Capability)
+  uint32_t fileDragCapabilities() const;
+
+  //@}
+  //! @name file drag
+  //@{
+
+  //! A file drag message from the server, called by the server proxy
+  void fileDragReceive(const deskflow::filedrag::Message &message);
+
   //@}
 
   // IComputer overrides
@@ -218,6 +229,13 @@ private:
   void handleResume();
   void sendClipboardThread(void *);
   void bindNetworkInterface(IDataSocket *socket) const;
+  void handleFileDragEvent(const Event &event);
+  void fileDragCancelLocal(deskflow::filedrag::CancelReason reason);
+  void fileDragConnectionLost();
+  // client to server drags
+  void fileDragWatch(uint32_t sides);
+  void fileDragHandOff(uint32_t dragId);
+  bool fileDragReceiveOutgoing(const deskflow::filedrag::Message &message);
 
 private:
   std::string m_name;
@@ -244,4 +262,16 @@ private:
   int32_t m_relativeRestoreY = 0;
   size_t m_maximumClipboardSize = INT_MAX;
   size_t m_resolvedAddressesCount = 0;
+
+  // file drag: the drag being received (0 = none) and whether its drag loop still runs
+  // (cursor carrying the items, not dropped yet)
+  uint32_t m_fileDragId = 0;
+  bool m_fileDragLooping = false;
+  // input that cancelled a drag is not passed on, nor is its release
+  KeyButton m_fileDragSwallowKey = 0;
+  ButtonID m_fileDragSwallowButton = 0;
+  // client to server: sides of this screen the server asked to watch, and the drag being
+  // sent from here (0 = none) while the cursor is on the server
+  uint32_t m_fileDragWatchSides = 0;
+  uint32_t m_fileDragOutId = 0;
 };

@@ -13,6 +13,8 @@
 #include "common/NetworkProtocol.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
+#include "deskflow/FileDragPolicy.h"
+#include "deskflow/FileDragTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "server/Config.h"
@@ -200,6 +202,16 @@ public:
   void sendConnectedClientsIpc() const;
   size_t getMaximumClipboardSizeBytes() const;
 
+  //! File drag capabilities of the server computer (deskflow::filedrag::Capability)
+  uint32_t fileDragLocalCapabilities() const;
+
+  //@}
+  //! @name file drag
+  //@{
+
+  //! A file drag message from \p client, called by its proxy
+  void onFileDragMessage(BaseClientProxy *client, const deskflow::filedrag::Message &message);
+
   //@}
 
 private:
@@ -359,6 +371,30 @@ private:
   // force the cursor off of \p client
   void forceLeaveClient(const BaseClientProxy *client);
 
+  // file drag: dragging files and folders between the server computer and a client.
+  // Idle -> Offered (a drag is waiting at a watched edge) -> Remote (the destination shows
+  // the drag, the button is still held) -> Released (button let go there) -> Dropped (the
+  // destination took the items, data still flowing) -> Idle on finish or cancel.
+  // Server to client: the server is the source, m_fileDragSource is null. Client to
+  // server: m_fileDragSource is the client the files come from, the target is the server.
+  void handleFileDragEvent(const Event &event);
+  void fileDragUpdateRemoteWatch(int32_t x, int32_t y);
+  void fileDragStopRemoteWatch();
+  void fileDragRemoteOffer(BaseClientProxy *client, bool ready);
+  bool fileDragFromClient(BaseClientProxy *client, const deskflow::filedrag::Message &message);
+  bool fileDragFromLocalToClient(const deskflow::filedrag::Message &message);
+  void handleFileDragTimeout();
+  void fileDragUpdateWatch(int32_t x, int32_t y);
+  void fileDragStopWatch();
+  bool fileDragAllowsSwitch(const BaseClientProxy *dst) const;
+  void fileDragExplainLock(const BaseClientProxy *dst);
+  void fileDragBeforeSwitch(BaseClientProxy *dst);
+  void fileDragClientGone(const BaseClientProxy *client);
+  void fileDragEnd(const char *why);
+  void fileDragStartTimer(double seconds);
+  void fileDragStopTimer();
+  bool isOnlyLeftButtonDown() const;
+
 private:
   class ClipboardInfo
   {
@@ -468,4 +504,28 @@ private:
   bool m_defaultLockToComputerState = false;
   bool m_disableLockToComputer = false;
   bool m_enableClipboard = true;
+
+  // file drag state, see handleFileDragEvent() and deskflow/FileDragPolicy.h
+  using FileDragPhase = deskflow::filedrag::DragPhase;
+  FileDragPhase m_fileDragPhase = FileDragPhase::Idle;
+  BaseClientProxy *m_fileDragTarget = nullptr;
+  uint32_t m_fileDragId = 0;
+  uint32_t m_fileDragNextId = 1;
+  uint32_t m_fileDragWatchedSides = 0;
+  // the "held button keeps the cursor here" reason was logged for this press
+  bool m_fileDragLockExplained = false;
+  EventQueueTimer *m_fileDragTimer = nullptr;
+  // drags dropped on a client whose files are still being copied there (id -> client);
+  // a new drag may start meanwhile
+  std::map<uint32_t, BaseClientProxy *> m_fileDragCopying;
+  // client to server drags: the client the files come from (null: they come from here)
+  BaseClientProxy *m_fileDragSource = nullptr;
+  // the client asked to watch its edges for files (kMsgDFileDragWatch) and the sides sent
+  BaseClientProxy *m_fileDragRemoteWatchClient = nullptr;
+  uint32_t m_fileDragRemoteWatchSides = 0;
+  // client to server drags dropped here whose files are still arriving (id -> client)
+  std::map<uint32_t, BaseClientProxy *> m_fileDragReceiving;
+
+  // physical mouse buttons held on the primary computer (bit per ButtonID)
+  uint32_t m_buttonsDown = 0;
 };

@@ -11,6 +11,7 @@
 #include "common/Enums.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ClipboardTypes.h"
+#include "deskflow/FileDragTypes.h"
 #include "deskflow/KeyTypes.h"
 
 class Client;
@@ -51,6 +52,12 @@ public:
   bool onGrabClipboard(ClipboardID);
   void onClipboardChanged(ClipboardID, const IClipboard *);
 
+  //! Sends a file drag message to the server (only protocol 1.9 and later do anything)
+  virtual void fileDragSend(const deskflow::filedrag::Message &)
+  {
+    // not supported before 1.9
+  }
+
   //@}
 
 protected:
@@ -71,13 +78,19 @@ protected:
     return m_stream;
   }
 
+  Client *getClient() const
+  {
+    return m_client;
+  }
+
+  void resetKeepAliveAlarm();
+
 private:
   // if compressing mouse motion then send the last motion now
   void flushCompressedMouse();
 
   void sendInfo(const ClientInfo &);
 
-  void resetKeepAliveAlarm();
   void setKeepAliveRate(double);
 
   // modifier key translation

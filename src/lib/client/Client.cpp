@@ -14,11 +14,14 @@
 #include "client/ServerProxy.h"
 #include "client/ServerProxy1_7.h"
 #include "client/ServerProxy1_8.h"
+#include "client/ServerProxy1_9.h"
 #include "common/NetworkProtocol.h"
 #include "common/Settings.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/Computer.h"
 #include "deskflow/DeskflowException.h"
+#include "deskflow/FileDragCodec.h"
+#include "deskflow/FileDragEvent.h"
 #include "deskflow/IPlatformComputer.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
@@ -230,6 +233,13 @@ void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, b
 
 bool Client::leave()
 {
+  if (m_fileDragLooping) {
+    // the cursor went back before the drop
+    fileDragCancelLocal(deskflow::filedrag::CancelReason::CursorReturned);
+  }
+  // nothing leaves this computer by its edge windows once the cursor is gone
+  fileDragWatch(0);
+
   if (m_relativeMouseMoves) {
     saveRelativeRestorePosition();
   }
@@ -270,6 +280,12 @@ void Client::setClipboardDirty(ClipboardID, bool)
 
 void Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
+  if (m_fileDragLooping && id == kKeyEscape) {
+    // escape cancels the drag, as it would locally, and goes nowhere else
+    m_fileDragSwallowKey = button;
+    fileDragCancelLocal(deskflow::filedrag::CancelReason::Escape);
+    return;
+  }
   m_computer->keyDown(id, mask, button, lang);
 }
 
@@ -280,16 +296,30 @@ void Client::keyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton 
 
 void Client::keyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
+  if (m_fileDragSwallowKey != 0 && button == m_fileDragSwallowKey) {
+    m_fileDragSwallowKey = 0;
+    return;
+  }
   m_computer->keyUp(id, mask, button);
 }
 
 void Client::mouseDown(ButtonID id)
 {
+  if (m_fileDragLooping && id != kButtonLeft) {
+    // another button (usually right click) cancels the drag
+    m_fileDragSwallowButton = id;
+    fileDragCancelLocal(deskflow::filedrag::CancelReason::User);
+    return;
+  }
   m_computer->mouseDown(id);
 }
 
 void Client::mouseUp(ButtonID id)
 {
+  if (m_fileDragSwallowButton != 0 && id == m_fileDragSwallowButton) {
+    m_fileDragSwallowButton = 0;
+    return;
+  }
   m_computer->mouseUp(id);
 }
 
@@ -483,6 +513,9 @@ bool Client::setupComputer(int16_t protocolMinor)
   case 8:
     m_server = new ServerProxy1_8(this, m_stream, m_events);
     break;
+  case 9:
+    m_server = new ServerProxy1_9(this, m_stream, m_events);
+    break;
   default:
     break;
   }
@@ -494,6 +527,7 @@ bool Client::setupComputer(int16_t protocolMinor)
     m_events->addHandler(EventTypes::ClipboardGrabbed, getEventTarget(), [this](const auto &e) {
       handleClipboardGrabbed(e);
     });
+    m_events->addHandler(EventTypes::FileDrag, getEventTarget(), [this](const auto &e) { handleFileDragEvent(e); });
   }
   return m_server != nullptr;
 }
@@ -539,6 +573,7 @@ void Client::cleanupConnection()
 
 void Client::cleanupComputer()
 {
+  fileDragConnectionLost();
   if (m_server != nullptr) {
     if (m_ready) {
       m_computer->disable();
@@ -546,6 +581,7 @@ void Client::cleanupComputer()
     }
     m_events->removeHandler(EventTypes::ComputerShapeChanged, getEventTarget());
     m_events->removeHandler(EventTypes::ClipboardGrabbed, getEventTarget());
+    m_events->removeHandler(EventTypes::FileDrag, getEventTarget());
     delete m_server;
     m_server = nullptr;
   }
@@ -766,4 +802,243 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
   bindAddress.resolve();
 
   socket->bind(bindAddress);
+}
+
+//
+// file drag
+//
+
+using deskflow::filedrag::CancelReason;
+using deskflow::filedrag::FileDragEvent;
+using deskflow::filedrag::Message;
+
+uint32_t Client::fileDragCapabilities() const
+{
+  using namespace deskflow::filedrag;
+  const uint32_t platform = m_computer->fileDragCapabilities();
+  uint32_t caps = platform & kCapDestination;
+  if ((platform & (kCapSource | kCapReverse)) == (kCapSource | kCapReverse)) {
+    // files can also be dragged from here to the server
+    caps |= kCapSource | kCapReverse;
+  }
+  return caps;
+}
+
+void Client::fileDragWatch(uint32_t sides)
+{
+  if ((fileDragCapabilities() & deskflow::filedrag::kCapSource) == 0) {
+    sides = 0;
+  }
+  if (sides == m_fileDragWatchSides) {
+    return;
+  }
+  m_fileDragWatchSides = sides;
+  if (sides != 0) {
+    LOG_INFO("file drag: the server asks to watch sides 0x%x of this screen for files going to it", sides);
+  } else {
+    LOG_INFO("file drag: stopped watching the edge");
+  }
+  m_computer->fileDragWatchEdges(sides);
+}
+
+void Client::fileDragHandOff(uint32_t dragId)
+{
+  if ((fileDragCapabilities() & deskflow::filedrag::kCapSource) == 0 || !m_active) {
+    LOG_WARN("file drag %u: cannot send files from here now", dragId);
+    m_server->fileDragSend(Message::cancel(dragId, CancelReason::Unsupported));
+    return;
+  }
+  LOG_INFO("file drag %u: the cursor takes the files to the server; parking the drag here and sending them", dragId);
+  m_fileDragOutId = dragId;
+  // parks the local drag where the cursor waits while it is away, then sends the items
+  m_computer->fileDragHandOff(dragId);
+}
+
+bool Client::fileDragReceiveOutgoing(const Message &message)
+{
+  switch (message.type) {
+    using enum Message::Type;
+  case Watch:
+    fileDragWatch(message.flags);
+    return true;
+
+  case HandOff:
+    fileDragHandOff(message.dragId);
+    return true;
+
+  case Ack:
+    m_computer->fileDragReceive(message);
+    return true;
+
+  case Dropped:
+    LOG_INFO("file drag %u: dropped on the server, still sending the files", message.dragId);
+    m_computer->fileDragReceive(message);
+    return true;
+
+  case Finished:
+    LOG_INFO("file drag %u: all files are in place on the server", message.dragId);
+    m_computer->fileDragReceive(message);
+    if (message.dragId == m_fileDragOutId) {
+      m_fileDragOutId = 0;
+    }
+    return true;
+
+  case Cancel:
+    if (message.dragId == 0 || message.dragId != m_fileDragOutId) {
+      return false; // a drag coming here, or an older one still sending (both roles look)
+    }
+    m_fileDragOutId = 0;
+    if (message.reason == CancelReason::CursorReturned) {
+      // must happen before the cursor comes back, which is the server's next message
+      LOG_INFO("file drag %u: the cursor came back before the drop, the drag carries on here", message.dragId);
+      m_computer->fileDragTakeBack();
+    } else {
+      LOG_INFO(
+          "file drag %u: cancelled by the server: %s", message.dragId,
+          deskflow::filedrag::cancelReasonName(message.reason)
+      );
+      m_computer->fileDragReceive(message);
+    }
+    return true;
+
+  default:
+    return false;
+  }
+}
+
+void Client::fileDragReceive(const Message &message)
+{
+  if (m_server == nullptr) {
+    return;
+  }
+
+  if (fileDragReceiveOutgoing(message)) {
+    return;
+  }
+
+  if (message.type == Message::Type::Icon) {
+    // arrives just before its Begin
+    if (!m_fileDragLooping) {
+      m_computer->fileDragReceive(message);
+    }
+    return;
+  }
+
+  if (message.type == Message::Type::Begin) {
+    CancelReason refusal = CancelReason::Unknown;
+    if ((fileDragCapabilities() & deskflow::filedrag::kCapDestination) == 0) {
+      refusal = CancelReason::Unsupported;
+    } else if (m_fileDragLooping) {
+      refusal = CancelReason::Busy;
+    } else if (!m_active) {
+      // the cursor already left again
+      refusal = CancelReason::CursorReturned;
+    }
+    if (refusal != CancelReason::Unknown) {
+      LOG_WARN("refusing file drag %u: %s", message.dragId, deskflow::filedrag::cancelReasonName(refusal));
+      m_server->fileDragSend(Message::cancel(message.dragId, refusal));
+      return;
+    }
+    if (m_fileDragId != 0) {
+      // the previous drag is still copying: it carries on, this one replaces it here
+      LOG_DEBUG("file drag %u starts while %u still copies", message.dragId, m_fileDragId);
+    }
+    LOG_INFO("receiving file drag %u (%zu items)", message.dragId, message.items.size());
+    m_fileDragId = message.dragId;
+    m_fileDragLooping = true;
+    m_computer->fileDragReceive(message);
+    return;
+  }
+
+  // data and cancel messages; the platform matches them to their drag by id
+  if (message.type == Message::Type::Cancel && message.dragId == m_fileDragId) {
+    LOG_INFO(
+        "file drag %u cancelled by server: %s", message.dragId, deskflow::filedrag::cancelReasonName(message.reason)
+    );
+  }
+  m_computer->fileDragReceive(message);
+}
+
+void Client::fileDragCancelLocal(CancelReason reason)
+{
+  if (m_fileDragId == 0) {
+    return;
+  }
+  LOG_INFO("cancelling file drag %u: %s", m_fileDragId, deskflow::filedrag::cancelReasonName(reason));
+  auto cancel = Message::cancel(m_fileDragId, reason);
+  cancel.flags = 1; // local: the platform tells the server
+  m_computer->fileDragReceive(cancel);
+}
+
+void Client::fileDragConnectionLost()
+{
+  fileDragWatch(0);
+  if (m_fileDragId == 0 && !m_fileDragLooping && m_fileDragOutId == 0) {
+    return;
+  }
+  if (m_fileDragOutId != 0) {
+    LOG_INFO("file drag %u stopped sending: connection lost", m_fileDragOutId);
+  }
+  if (m_fileDragId != 0 || m_fileDragLooping) {
+    LOG_INFO("file drag %u stopped: connection lost", m_fileDragId);
+  }
+  // drag id 0: every drag of this connection, both ways, including ones still copying
+  m_computer->fileDragReceive(Message::cancel(0, CancelReason::ConnectionLost));
+  m_fileDragId = 0;
+  m_fileDragLooping = false;
+  m_fileDragOutId = 0;
+}
+
+void Client::handleFileDragEvent(const Event &event)
+{
+  const auto *data = dynamic_cast<const FileDragEvent *>(event.getDataObject());
+  if (data == nullptr) {
+    return;
+  }
+
+  switch (data->kind()) {
+    using enum FileDragEvent::Kind;
+  case Send: {
+    const auto &message = data->message();
+    if (m_server != nullptr) {
+      m_server->fileDragSend(message);
+    }
+    if ((message.type == Message::Type::Finished || message.type == Message::Type::Cancel) &&
+        message.dragId == m_fileDragId) {
+      m_fileDragId = 0;
+      m_fileDragLooping = false;
+    }
+    if (message.type == Message::Type::Begin) {
+      LOG_INFO("file drag %u: sending %zu items to the server", message.dragId, message.items.size());
+    }
+    if (message.type == Message::Type::Cancel && message.dragId != 0 && message.dragId == m_fileDragOutId) {
+      LOG_INFO(
+          "file drag %u: sending stopped here: %s", message.dragId, deskflow::filedrag::cancelReasonName(message.reason)
+      );
+      m_fileDragOutId = 0;
+    }
+    break;
+  }
+
+  case LoopEnded:
+    if (data->message().dragId == m_fileDragId || data->message().dragId == 0) {
+      m_fileDragLooping = false;
+    }
+    break;
+
+  case OfferReady:
+  case OfferLost: {
+    // client to server: a drag of files reached (or left) an edge the server asked to watch
+    const bool ready = data->kind() == OfferReady;
+    if (m_server != nullptr && m_active && (m_fileDragWatchSides != 0 || !ready)) {
+      if (ready) {
+        LOG_INFO("file drag: files are at the edge, telling the server");
+      } else {
+        LOG_INFO("file drag: the files left the edge");
+      }
+      m_server->fileDragSend(Message::offer(ready));
+    }
+    break;
+  }
+  }
 }
