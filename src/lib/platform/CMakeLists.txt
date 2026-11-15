@@ -45,6 +45,10 @@ if(WIN32)
     MSWindowsDesks.h
     MSWindowsEventQueueBuffer.cpp
     MSWindowsEventQueueBuffer.h
+    MSWindowsFileDragBridge.cpp
+    MSWindowsFileDragBridge.h
+    MSWindowsFileDragPipe.cpp
+    MSWindowsFileDragPipe.h
     MSWindowsHook.cpp
     MSWindowsHook.h
     MSWindowsKeyState.cpp

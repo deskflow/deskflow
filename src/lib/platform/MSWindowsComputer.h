@@ -13,6 +13,7 @@
 #include "platform/MSWindowsPowerManager.h"
 
 #include <map>
+#include <memory>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
@@ -24,6 +25,7 @@ class MSWindowsKeyState;
 class MSWindowsScreenSaver;
 class Thread;
 class MSWindowsDropTarget;
+class MSWindowsFileDragBridge;
 
 //! Implementation of IPlatformComputer for Microsoft Windows
 class MSWindowsComputer : public PlatformComputer
@@ -121,6 +123,13 @@ public:
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
   std::string getSecureInputApp() const override;
+
+  // file drag (IPlatformComputer overrides); the OLE work runs in deskflow-filedrag.exe
+  uint32_t fileDragCapabilities() const override;
+  void fileDragWatchEdges(uint32_t sideMask) override;
+  void fileDragHandOff(uint32_t dragId) override;
+  void fileDragTakeBack() override;
+  void fileDragReceive(const deskflow::filedrag::Message &message) override;
 
 protected:
   // IPlatformComputer overrides
@@ -336,4 +345,21 @@ private:
 
   PrimaryKeyDownList m_primaryKeyDownList;
   MSWindowsPowerManager m_powerManager;
+
+  // file drag
+  void startFileDrag();
+  void onFileDragFrame(uint8_t frame, const std::string &payload);
+  std::unique_ptr<MSWindowsFileDragBridge> m_fileDrag;
+  //! secondary: we pressed the left button to start a drag and the release has not come yet
+  bool m_fileDragPressed = false;
+  //! secondary: a drag arrived (Begin) and its button press has not been made yet
+  bool m_fileDragAwaitingPress = false;
+  //! secondary: the user let go before that press; the drag drops as soon as it starts
+  bool m_fileDragReleasedEarly = false;
+  EventQueueTimer *m_fileDragReleaseTimer = nullptr;
+  void fileDragStopReleaseTimer();
+  //! client: a drag sent from here to the server waits parked here (0 = none)
+  uint32_t m_fileDragParkedId = 0;
+  //! client: lets go of the button the server pressed, ending the parked drag on the catcher
+  void fileDragReleaseParked(const char *why);
 };

@@ -68,6 +68,12 @@
       CloseMessage="yes"
       RebootPrompt="no"
       TerminateProcess="10" />
+    <util:CloseApplication
+      Id="CloseDeskflowFileDrag"
+      Target="deskflow-filedrag.exe"
+      CloseMessage="no"
+      RebootPrompt="no"
+      TerminateProcess="10" />
 
     <UI>
        <Publish Dialog="ExitDialog"

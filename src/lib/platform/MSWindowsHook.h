@@ -62,6 +62,20 @@ public:
 
   void setMode(EHookMode mode);
 
+  /**
+   * File drag: while relaying events to another computer, the next left button release
+   * is also passed to this computer once. A local drag that was parked when the cursor
+   * left with the files then ends here, as the user let go.
+   */
+  static void setPassLeftButtonUp(bool pass);
+
+  /**
+   * File drag on the server: the next \p count injected left button events are passed to
+   * the system without being reported. Used for the press Deskflow makes itself to start a
+   * drag of files that came from a client, which must not look like the user's button.
+   */
+  static void ignoreInjectedLeftButtons(int count);
+
   //! Copy the hook's physical key state; false until it has observed an event.
   static bool getPhysicalKeyState(BYTE keys[256]);
 

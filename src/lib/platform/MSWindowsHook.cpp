@@ -10,6 +10,7 @@
 #include "base/Log.h"
 #include "deskflow/DisplayException.h"
 
+#include <atomic>
 #include <cstring>
 #include <mutex>
 
@@ -42,6 +43,11 @@ static std::mutex g_keyStateMutex;
 static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
 static BOOL g_isPrimary = TRUE;
+// file drag: the next left button release while relaying also reaches this computer, so a
+// local drag parked during a file drag ends (on the file drag helper's catcher window)
+static std::atomic<bool> g_passLeftButtonUp{false};
+// file drag: injected left button events (our own) to pass without reporting them
+static std::atomic<int> g_ignoreInjectedLeft{0};
 
 MSWindowsHook::~MSWindowsHook()
 {
@@ -145,6 +151,40 @@ void MSWindowsHook::setMode(EHookMode mode)
     return;
   }
   g_mode = mode;
+}
+
+void MSWindowsHook::setPassLeftButtonUp(bool pass)
+{
+  g_passLeftButtonUp = pass;
+}
+
+void MSWindowsHook::ignoreInjectedLeftButtons(int count)
+{
+  if (count > 0) {
+    g_ignoreInjectedLeft.fetch_add(count);
+  } else {
+    g_ignoreInjectedLeft = 0;
+  }
+}
+
+static bool isLeftButtonMessage(WPARAM wParam)
+{
+  return wParam == WM_LBUTTONDOWN || wParam == WM_LBUTTONUP || wParam == WM_NCLBUTTONDOWN || wParam == WM_NCLBUTTONUP;
+}
+
+//! True (and counts it) if this injected left button event is one of our own (see ignoreInjectedLeftButtons)
+static bool takeIgnoredInjectedLeft(WPARAM wParam)
+{
+  if (!isLeftButtonMessage(wParam)) {
+    return false;
+  }
+  int expected = g_ignoreInjectedLeft.load();
+  while (expected > 0) {
+    if (g_ignoreInjectedLeft.compare_exchange_weak(expected, expected - 1)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 bool MSWindowsHook::getPhysicalKeyState(BYTE keys[256])
@@ -517,6 +557,11 @@ static bool mouseHookHandler(WPARAM wParam, int32_t x, int32_t y, int32_t data)
   case WM_NCXBUTTONUP:
     // always relay the event.  eat it if relaying.
     PostThreadMessage(g_threadID, DESKFLOW_MSG_MOUSE_BUTTON, wParam, data);
+    if (g_mode == kHOOK_RELAY_EVENTS && (wParam == WM_LBUTTONUP || wParam == WM_NCLBUTTONUP) &&
+        g_passLeftButtonUp.exchange(false)) {
+      // file drag: relayed, and also let through once (see setPassLeftButtonUp)
+      return false;
+    }
     return (g_mode == kHOOK_RELAY_EVENTS);
 
   case WM_MOUSEWHEEL:
@@ -601,6 +646,10 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 
     bool const injected = info->flags & LLMHF_INJECTED;
     if (!g_isPrimary && injected) {
+      return CallNextHookEx(g_mouseLL, code, wParam, lParam);
+    }
+    if (injected && takeIgnoredInjectedLeft(wParam)) {
+      // our own press or release for a file drag shown here
       return CallNextHookEx(g_mouseLL, code, wParam, lParam);
     }
 

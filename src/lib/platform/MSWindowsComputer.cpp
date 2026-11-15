@@ -21,10 +21,13 @@
 #include "deskflow/ClientApp.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/DisplayException.h"
+#include "deskflow/FileDragCodec.h"
+#include "deskflow/FileDragEvent.h"
 #include "deskflow/KeyMap.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
+#include "platform/MSWindowsFileDragBridge.h"
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsScreenSaver.h"
 
@@ -136,6 +139,9 @@ MSWindowsComputer::MSWindowsComputer(bool isPrimary, bool useHooks, IEventQueue 
 
   // install the platform event queue
   m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
+
+  // dragging files to and from other computers
+  startFileDrag();
 }
 
 MSWindowsComputer::~MSWindowsComputer()
@@ -145,6 +151,8 @@ MSWindowsComputer::~MSWindowsComputer()
   if (m_isEnabled) {
     disable();
   }
+  fileDragStopReleaseTimer();
+  m_fileDrag.reset();
   m_events->adoptBuffer(nullptr);
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
   delete m_keyState;
@@ -248,6 +256,12 @@ void MSWindowsComputer::enter()
     nextMark();
 
     m_primaryKeyDownList.clear();
+
+    // nothing of a file drag stays parked once the cursor is back
+    MSWindowsHook::setPassLeftButtonUp(false);
+    if (m_fileDrag) {
+      m_fileDrag->send(MSWindowsFileDragBridge::Frame::Entered);
+    }
   } else {
     // Entering a secondary computer. Ensure that no screensaver is active
     // and that the computer is not in powersave mode.
@@ -304,6 +318,14 @@ void MSWindowsComputer::leave()
     m_keyState->saveModifiers();
 
     m_hook.setMode(kHOOK_RELAY_EVENTS);
+
+    if (m_fileDragPressed) {
+      // a file drag from a client was shown here with our own press of the left button;
+      // the user still holds it, so let the release through when it comes
+      LOG_DEBUG("file drag: the cursor leaves with the button held, its release will also reach this computer");
+      MSWindowsHook::setPassLeftButtonUp(true);
+      m_fileDragPressed = false;
+    }
 
     m_primaryKeyDownList.clear();
     for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
@@ -695,6 +717,14 @@ void MSWindowsComputer::fakeMouseButton(ButtonID id, bool press)
 
   if (id == kButtonLeft) {
     m_buttons[kButtonLeft] = press;
+    if (!press) {
+      // the user let go; a file drag started here drops now
+      m_fileDragPressed = false;
+      if (m_fileDragAwaitingPress) {
+        // let go before the drag started under the cursor: it drops as soon as it starts
+        m_fileDragReleasedEarly = true;
+      }
+    }
   }
 }
 
@@ -870,6 +900,12 @@ bool MSWindowsComputer::onPreDispatch(HWND hwnd, UINT message, WPARAM wParam, LP
 
   case DESKFLOW_MSG_DEBUG:
     LOG_VERBOSE("hook: 0x%08x 0x%08x", wParam, lParam);
+    return true;
+
+  case DESKFLOW_MSG_FILEDRAG:
+    if (m_fileDrag) {
+      m_fileDrag->dispatch();
+    }
     return true;
   }
 
@@ -1194,6 +1230,13 @@ bool MSWindowsComputer::onMouseButton(WPARAM wParam, LPARAM lParam)
   // keep our shadow key state up to date
   if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
     m_buttons[button] = pressed;
+  }
+  if (button == kButtonLeft && !pressed) {
+    // the user let go: a press we made for a file drag shown here ends with it
+    m_fileDragPressed = false;
+    if (m_fileDragAwaitingPress) {
+      m_fileDragReleasedEarly = true;
+    }
   }
 
   // ignore message if posted prior to last mark change
@@ -1743,4 +1786,225 @@ bool MSWindowsComputer::isModifierRepeat(KeyModifierMask oldState, KeyModifierMa
   }
 
   return result;
+}
+
+//
+// file drag
+//
+
+using deskflow::filedrag::ByteReader;
+using deskflow::filedrag::ByteWriter;
+using deskflow::filedrag::FileDragEvent;
+using deskflow::filedrag::Message;
+
+void MSWindowsComputer::startFileDrag()
+{
+  m_fileDrag = std::make_unique<MSWindowsFileDragBridge>(m_isPrimary);
+  if (!m_fileDrag->start([this](auto frame, const std::string &payload) {
+        onFileDragFrame(static_cast<uint8_t>(frame), payload);
+      })) {
+    m_fileDrag.reset();
+  }
+}
+
+uint32_t MSWindowsComputer::fileDragCapabilities() const
+{
+  // the helper does both roles: it sends drags from here and shows drags coming here
+  return m_fileDrag ? m_fileDrag->capabilities() : deskflow::filedrag::kCapNone;
+}
+
+void MSWindowsComputer::fileDragWatchEdges(uint32_t sideMask)
+{
+  if (!m_fileDrag) {
+    return;
+  }
+  ByteWriter writer;
+  writer.u32(sideMask);
+  writer.u32(static_cast<uint32_t>(m_x));
+  writer.u32(static_cast<uint32_t>(m_y));
+  writer.u32(static_cast<uint32_t>(m_w));
+  writer.u32(static_cast<uint32_t>(m_h));
+  m_fileDrag->send(MSWindowsFileDragBridge::Frame::WatchEdges, writer.take());
+}
+
+void MSWindowsComputer::fileDragHandOff(uint32_t dragId)
+{
+  if (!m_fileDrag) {
+    return;
+  }
+  // the local drag stays parked at the centre (where the cursor waits while it is on
+  // the other computer) and ends there when the button is let go
+  if (m_isPrimary) {
+    MSWindowsHook::setPassLeftButtonUp(true);
+  } else {
+    // a client: the button was pressed by the server, which lets go of it here (see
+    // fileDragReleaseParked()) once the drop on the server is done or cancelled
+    m_fileDragParkedId = dragId;
+  }
+  ByteWriter writer;
+  writer.u32(dragId);
+  writer.u32(static_cast<uint32_t>(m_xCenter));
+  writer.u32(static_cast<uint32_t>(m_yCenter));
+  m_fileDrag->call(MSWindowsFileDragBridge::Frame::HandOff, writer.str());
+}
+
+void MSWindowsComputer::fileDragTakeBack()
+{
+  if (m_isPrimary) {
+    MSWindowsHook::setPassLeftButtonUp(false);
+  } else {
+    // the drag carries on here, with the button still held
+    m_fileDragParkedId = 0;
+  }
+  if (m_fileDrag) {
+    m_fileDrag->call(MSWindowsFileDragBridge::Frame::TakeBack, {});
+  }
+}
+
+void MSWindowsComputer::fileDragReceive(const Message &message)
+{
+  using Type = Message::Type;
+  if (message.type == Type::Begin) {
+    // the button is held on the server; the helper asks for the press (LauncherReady) next.
+    // On the server, flags 1 says the user already let go: the drag drops as soon as it starts
+    m_fileDragAwaitingPress = true;
+    m_fileDragReleasedEarly = m_isPrimary && (message.flags & 1) != 0;
+  }
+  if (!m_isPrimary && m_fileDragParkedId != 0) {
+    // a drag sent from here is over on the server (dropped there, finished or cancelled)
+    const bool ours =
+        message.dragId == m_fileDragParkedId || (message.dragId == 0 && message.type == Type::Cancel &&
+                                                 message.reason == deskflow::filedrag::CancelReason::ConnectionLost);
+    const bool over =
+        message.type == Type::Dropped || message.type == Type::Finished ||
+        (message.type == Type::Cancel && message.reason != deskflow::filedrag::CancelReason::CursorReturned);
+    if (ours && over) {
+      fileDragReleaseParked(deskflow::filedrag::messageTypeName(message.type));
+    }
+  }
+  if (m_fileDrag) {
+    m_fileDrag->send(MSWindowsFileDragBridge::Frame::Peer, deskflow::filedrag::encodeMessage(message));
+  }
+}
+
+void MSWindowsComputer::onFileDragFrame(uint8_t rawFrame, const std::string &payload)
+{
+  using Frame = MSWindowsFileDragBridge::Frame;
+  auto post = [this](FileDragEvent *data) {
+    m_events->addEvent(Event(EventTypes::FileDrag, getEventTarget(), static_cast<EventData *>(data)));
+  };
+
+  ByteReader reader(payload);
+  switch (static_cast<Frame>(rawFrame)) {
+  case Frame::OfferReady:
+    post(new FileDragEvent(FileDragEvent::Kind::OfferReady));
+    break;
+
+  case Frame::OfferLost:
+    post(new FileDragEvent(FileDragEvent::Kind::OfferLost));
+    break;
+
+  case Frame::Peer: {
+    Message message;
+    std::string error;
+    if (deskflow::filedrag::decodeMessage(payload, message, &error)) {
+      if (!m_isPrimary && m_fileDragParkedId != 0 && message.type == Message::Type::Cancel &&
+          message.dragId == m_fileDragParkedId) {
+        // sending the files from here failed: nothing more to carry
+        fileDragReleaseParked("sending stopped");
+      }
+      post(new FileDragEvent(FileDragEvent::Kind::Send, std::move(message)));
+    } else {
+      LOG_WARN("bad file drag message from the helper: %s", error.c_str());
+    }
+    break;
+  }
+
+  case Frame::LauncherReady: {
+    uint32_t dragId = 0;
+    uint32_t x = 0;
+    uint32_t y = 0;
+    if (m_isOnComputer && reader.u32(dragId) && reader.u32(x) && reader.u32(y)) {
+      // press the button on the helper's launcher window, which starts the drag there;
+      // the user's own release (relayed from the server, or on the server itself) drops it
+      LOG_INFO("file drag %u: starting the drag at %d,%d", dragId, static_cast<int32_t>(x), static_cast<int32_t>(y));
+      if (m_isPrimary) {
+        // on the server the user holds the button, but this computer never saw it go down
+        // (it went to the client); our press must not count as the user's
+        MSWindowsHook::ignoreInjectedLeftButtons(1);
+      } else {
+        m_buttons[kButtonLeft] = true;
+      }
+      m_desks->fakeMouseMove(static_cast<int32_t>(x), static_cast<int32_t>(y));
+      m_desks->fakeMouseButton(kButtonLeft, true);
+      m_fileDragPressed = true;
+      m_fileDragAwaitingPress = false;
+      if (m_fileDragReleasedEarly) {
+        // the user already let go on the server: let go here too once the drag loop runs,
+        // so it drops where the cursor is instead of waiting for a release that already came
+        m_fileDragReleasedEarly = false;
+        LOG_INFO("file drag %u: the button was let go before the drag started, dropping now", dragId);
+        fileDragStopReleaseTimer();
+        m_fileDragReleaseTimer = m_events->newOneShotTimer(0.2, nullptr);
+        m_events->addHandler(EventTypes::Timer, m_fileDragReleaseTimer, [this](const auto &) {
+          fileDragStopReleaseTimer();
+          if (m_fileDragPressed) {
+            if (m_isPrimary) {
+              MSWindowsHook::ignoreInjectedLeftButtons(1);
+            }
+            fakeMouseButton(kButtonLeft, false);
+          }
+        });
+      }
+    }
+    break;
+  }
+
+  case Frame::LoopEnded: {
+    uint32_t dragId = 0;
+    uint8_t dropped = 0;
+    reader.u32(dragId);
+    reader.u8(dropped);
+    m_fileDragAwaitingPress = false;
+    m_fileDragReleasedEarly = false;
+    fileDragStopReleaseTimer();
+    if (m_fileDragPressed && !m_isPrimary) {
+      // cancelled while the button was still held: let go of our press
+      m_desks->fakeMouseButton(kButtonLeft, false);
+      m_buttons[kButtonLeft] = false;
+      m_fileDragPressed = false;
+    }
+    // on the server the user's own button is still held: its release ends our press there
+    // (or, if the cursor goes back to the client first, reaches this computer, see leave())
+    Message message;
+    message.dragId = dragId;
+    post(new FileDragEvent(FileDragEvent::Kind::LoopEnded, std::move(message), dropped != 0));
+    break;
+  }
+
+  default:
+    break;
+  }
+}
+
+void MSWindowsComputer::fileDragReleaseParked(const char *why)
+{
+  const uint32_t id = m_fileDragParkedId;
+  m_fileDragParkedId = 0;
+  if (m_buttons[kButtonLeft]) {
+    // the cursor is away, over the helper's catcher, which takes nothing: the drag ends here
+    // without moving or copying anything on this computer
+    LOG_INFO("file drag %u: letting go of the drag parked here (%s)", id, why);
+    m_desks->fakeMouseButton(kButtonLeft, false);
+    m_buttons[kButtonLeft] = false;
+  }
+}
+
+void MSWindowsComputer::fileDragStopReleaseTimer()
+{
+  if (m_fileDragReleaseTimer != nullptr) {
+    m_events->removeHandler(EventTypes::Timer, m_fileDragReleaseTimer);
+    m_events->deleteTimer(m_fileDragReleaseTimer);
+    m_fileDragReleaseTimer = nullptr;
+  }
 }

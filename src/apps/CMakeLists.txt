@@ -50,3 +50,7 @@ endif()
 add_subdirectory(deskflow-core)
 add_subdirectory(deskflow-daemon) #Only used on windows
 add_subdirectory(deskflow-gui)
+if(WIN32)
+  # helper for dragging files between computers (runs as the signed-in user)
+  add_subdirectory(deskflow-filedrag)
+endif()
