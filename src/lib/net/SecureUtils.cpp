@@ -17,8 +17,15 @@
 
 #include <QFile>
 #include <algorithm>
+#include <cstdio>
 #include <filesystem>
 #include <stdexcept>
+
+#if !defined(Q_OS_WIN)
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 namespace deskflow {
 
@@ -123,9 +130,24 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   const std::filesystem::path fsPath = file.filesystemFileName();
 
 #if defined(Q_OS_WIN)
-  auto fp = _wfopen(fsPath.native().c_str(), L"w");
+  auto *fp = _wfopen(fsPath.native().c_str(), L"w");
 #else
-  auto fp = std::fopen(fsPath.native().c_str(), "w");
+  // The PEM file contains an unencrypted private key.
+  // Restrict permissions before writing any sensitive material.
+  const int fd = open(fsPath.native().c_str(), O_WRONLY | O_CREAT | O_NOFOLLOW, 0600);
+  if (fd < 0) {
+    throw std::runtime_error("could not open certificate output path");
+  }
+
+  if (fchmod(fd, 0600) != 0 || ftruncate(fd, 0) != 0) {
+    close(fd);
+    throw std::runtime_error("could not secure certificate output path");
+  }
+
+  auto *fp = fdopen(fd, "w");
+  if (!fp) {
+    close(fd);
+  }
 #endif
 
   if (!fp) {
@@ -133,8 +155,11 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   }
   auto fileClose = finally([fp]() { std::fclose(fp); });
 
-  PEM_write_PrivateKey(fp, privateKey, nullptr, nullptr, 0, nullptr, nullptr);
-  PEM_write_X509(fp, cert);
+  if (PEM_write_PrivateKey(fp, privateKey, nullptr, nullptr, 0, nullptr, nullptr) != 1 ||
+      PEM_write_X509(fp, cert) != 1 ||
+      std::fflush(fp) != 0) {
+    throw std::runtime_error("could not write certificate or private key");
+  }
 }
 
 QString formatSSLFingerprintColumns(const QByteArray &fingerprint)
