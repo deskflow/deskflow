@@ -39,9 +39,14 @@ target_link_libraries(
   Qt6::Widgets
   ${libs})
 
+set(runtime_dependency_args)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+  list(APPEND runtime_dependency_args RUNTIME_DEPENDENCY_SET coreDeps)
+endif()
+
 install(
   TARGETS ${target}
-  RUNTIME_DEPENDENCY_SET coreDeps
+  ${runtime_dependency_args}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 

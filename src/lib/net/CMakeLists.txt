@@ -11,7 +11,11 @@ if(APPLE)
 endif()
 
 find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Network)
-find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+  find_package(OpenSSL REQUIRED COMPONENTS SSL Crypto)
+else()
+  find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
+endif()
 
 add_library(net STATIC
   Fingerprint.cpp
