@@ -353,7 +353,10 @@ void SecureSocket::initContext(bool server)
   // be vulnerable
   SSL_CTX_set_options(
       m_ssl->m_context,
-      SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1 | SSL_OP_IGNORE_UNEXPECTED_EOF
+      SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1
+#ifdef SSL_OP_IGNORE_UNEXPECTED_EOF
+      | SSL_OP_IGNORE_UNEXPECTED_EOF
+#endif
   );
 
   if (m_ssl->m_context == nullptr) {
