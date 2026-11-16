@@ -20,6 +20,7 @@
 #include "deskflow/StreamChunker.h"
 #include "io/IStream.h"
 
+#include <algorithm>
 #include <cstring>
 
 //
@@ -355,8 +356,21 @@ void ServerProxy::onInfoChanged()
   queryInfo();
 }
 
+namespace {
+/// The server drops clipboard grabs and updates whose sequence number is older
+/// than the one it remembers. A client only learns that number from the
+/// server's `enter` message, which never arrives while the pointer stays on this
+/// computer, so a local copy is sent with a stale number (often zero) and is
+/// silently ignored. Keep the number increasing and start above any value a
+/// server counter can plausibly have reached (it grows once per clipboard
+/// change) so the server's `>=` comparison always accepts a fresh grab.
+constexpr uint32_t kClipboardSeqNumBase = 1u << 30;
+} // namespace
+
 bool ServerProxy::onGrabClipboard(ClipboardID id)
 {
+  m_seqNum = std::max<uint32_t>(m_seqNum + 1, kClipboardSeqNumBase);
+
   LOG_VERBOSE("sending clipboard %d changed", id);
   ProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
   return true;
