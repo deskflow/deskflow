@@ -10,8 +10,8 @@
 #include "base/FinalAction.h"
 
 #include <openssl/evp.h>
-#include <openssl/rsa.h>
 #include <openssl/pem.h>
+#include <openssl/rsa.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
@@ -76,17 +76,15 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   auto expirationDays = 365;
 
 #if defined(LIBRESSL_VERSION_NUMBER)
-  auto *privateKey = [] (int bits) -> EVP_PKEY * {
+  auto *privateKey = [](int bits) -> EVP_PKEY * {
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, nullptr);
     if (!ctx) {
       throw std::runtime_error("Failed to create RSA key context");
     }
 
     EVP_PKEY *key = nullptr;
-    const bool success =
-        EVP_PKEY_keygen_init(ctx) > 0 &&
-        EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, bits) > 0 &&
-        EVP_PKEY_keygen(ctx, &key) > 0;
+    const bool success = EVP_PKEY_keygen_init(ctx) > 0 && EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, bits) > 0 &&
+                         EVP_PKEY_keygen(ctx, &key) > 0;
 
     EVP_PKEY_CTX_free(ctx);
 
@@ -156,8 +154,7 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
   auto fileClose = finally([fp]() { std::fclose(fp); });
 
   if (PEM_write_PrivateKey(fp, privateKey, nullptr, nullptr, 0, nullptr, nullptr) != 1 ||
-      PEM_write_X509(fp, cert) != 1 ||
-      std::fflush(fp) != 0) {
+      PEM_write_X509(fp, cert) != 1 || std::fflush(fp) != 0) {
     throw std::runtime_error("could not write certificate or private key");
   }
 }
