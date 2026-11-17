@@ -36,6 +36,25 @@
 
 namespace deskflow {
 
+static bool isSessionLocked()
+{
+  g_autoptr(GDBusConnection) bus = g_bus_get_sync(G_BUS_TYPE_SYSTEM, nullptr, nullptr);
+  if (!bus)
+    return false;
+
+  g_autoptr(GVariant) reply = g_dbus_connection_call_sync(
+      bus, "org.freedesktop.login1", "/org/freedesktop/login1/session/auto", "org.freedesktop.DBus.Properties", "Get",
+      g_variant_new("(ss)", "org.freedesktop.login1.Session", "LockedHint"), G_VARIANT_TYPE("(v)"),
+      G_DBUS_CALL_FLAGS_NONE, 500, nullptr, nullptr
+  );
+  if (!reply)
+    return false;
+
+  g_autoptr(GVariant) locked = nullptr;
+  g_variant_get(reply, "(v)", &locked);
+  return g_variant_get_boolean(locked);
+}
+
 const char *PortalInputCapture::barrierSideName(BarrierSide side)
 {
   using enum BarrierSide;
@@ -168,7 +187,7 @@ bool PortalInputCapture::getClosestReleaseBarrier(
   return bestDistance != std::numeric_limits<int>::max();
 }
 
-PortalInputCapture::PortalInputCapture(EiComputer *computer, IEventQueue *events)
+PortalInputCapture::PortalInputCapture(EiComputer *computer, IEventQueue *events, bool afterDisconnect)
     : m_computer{computer},
       m_events{events},
       m_portalVersion(0),
@@ -182,6 +201,15 @@ PortalInputCapture::PortalInputCapture(EiComputer *computer, IEventQueue *events
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
   m_glibThread = new Thread(tMethodJob);
 
+  if (afterDisconnect) {
+    // A disconnect is often caused by the session locking, but the lock state
+    // is only reported shortly after, so give it time before checking it.
+    m_unlockPollSource = g_timeout_add(
+        1000, [](gpointer data) { return static_cast<PortalInputCapture *>(data)->waitForUnlock(); }, this
+    );
+    return;
+  }
+
   auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
 
   g_idle_add(captureCallback, this);
@@ -189,6 +217,9 @@ PortalInputCapture::PortalInputCapture(EiComputer *computer, IEventQueue *events
 
 PortalInputCapture::~PortalInputCapture()
 {
+  if (m_unlockPollSource != 0)
+    g_source_remove(m_unlockPollSource);
+
   if (g_main_loop_is_running(m_glibMainLoop))
     g_main_loop_quit(m_glibMainLoop);
 
@@ -563,8 +594,28 @@ void PortalInputCapture::addBarrier(
   m_barrierInfo.push_back({id, side, zoneX, zoneY, zoneWidth, zoneHeight, x1, y1, x2, y2});
 }
 
+gboolean PortalInputCapture::waitForUnlock()
+{
+  if (isSessionLocked())
+    return true;
+
+  m_unlockPollSource = 0;
+  return initSession();
+}
+
 gboolean PortalInputCapture::initSession()
 {
+  // The compositor refuses input capture sessions while the session is locked,
+  // and the portal invalidates the restore token of a session that fails to
+  // start, which makes it ask for permission again after unlocking.
+  if (isSessionLocked()) {
+    LOG_INFO("session is locked, waiting for unlock to set up input capture");
+    m_unlockPollSource = g_timeout_add_seconds(
+        1, [](gpointer data) { return static_cast<PortalInputCapture *>(data)->waitForUnlock(); }, this
+    );
+    return false;
+  }
+
   LOG_DEBUG("setting up input capture session");
   XdpInputCaptureSession *session;
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE_RESTORE
