@@ -281,7 +281,13 @@ bool XWindowsComputer::canLeave()
   XMapRaised(m_display, m_window);
 
   // see if grabbing the mouse and keyboard, if primary, is possible
-  return !(m_isPrimary && !grabMouseAndKeyboard());
+  if (m_isPrimary && !grabMouseAndKeyboard()) {
+    // hide the window again, it covers the desktop with a blank cursor
+    XUnmapWindow(m_display, m_window);
+    return false;
+  }
+
+  return true;
 }
 
 void XWindowsComputer::leave()
