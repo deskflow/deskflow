@@ -368,6 +368,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbMacCapsLockSync">
+            <property name="text">
+             <string>Sync Mac Caps Lock and Chinese/English mode to Windows</string>
+            </property>
+            <property name="toolTip">
+             <string>For updated Windows clients with a Chinese IME. Mac handles Caps Lock locally; physical Caps Lock is not forwarded to any client. Chinese/English mode and capitalization synchronize before the next key is typed. Enable keyboard language synchronization on Windows for Chinese/English mode. Leave disabled for Linux or Mac clients.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbWin32KeepForeground">
             <property name="enabled">
              <bool>true</bool>
