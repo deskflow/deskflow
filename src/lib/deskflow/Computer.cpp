@@ -379,6 +379,22 @@ void Computer::getCursorCenter(int32_t &x, int32_t &y) const
   m_computer->getCursorCenter(x, y);
 }
 
+std::vector<deskflow::ShapeHole> Computer::getShapeHoles() const
+{
+  if (!m_isPrimary) {
+    return {};
+  }
+  return m_computer->getShapeHoles();
+}
+
+void Computer::setRestartServerOnZoneChange(bool enabled)
+{
+  if (!m_isPrimary) {
+    return;
+  }
+  m_computer->setRestartServerOnZoneChange(enabled);
+}
+
 KeyModifierMask Computer::getActiveModifiers() const
 {
   return m_computer->getActiveModifiers();
