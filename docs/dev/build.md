@@ -9,6 +9,9 @@ To build Deskflow you will a minimum of:
 
 > ^ Will be fetched if not found on the host system.
 
+On Linux and BSD, CMake includes the Wayland capture integration test
+(`EiCaptureIntegrationTests`) when tests are enabled and libeis 1.3+ is available.
+
 By default a build of Deskflow will: 
      - The GUI application `deskflow`
      - The Core application `deskflow-core`
