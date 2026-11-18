@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -12,6 +13,8 @@
 
 #include <Carbon/Carbon.h>
 
+#include <array>
+#include <functional>
 #include <map>
 #include <vector>
 
@@ -25,9 +28,15 @@ class OSXKeyState : public KeyState
 {
 public:
   using KeyIDs = std::vector<KeyID>;
+  using InputModeQuery = std::function<bool()>;
 
-  OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled);
-  OSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled);
+  OSXKeyState(
+      IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled, InputModeQuery inputModeQuery = {}
+  );
+  OSXKeyState(
+      IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled,
+      InputModeQuery inputModeQuery = {}
+  );
   ~OSXKeyState() override = default;
 
   //! @name modifiers
@@ -50,6 +59,9 @@ public:
   mask in \p mask.
   */
   KeyModifierMask mapModifiersFromOSX(uint32_t mask) const;
+
+  // Convert the old-style Carbon modifier mask used by UCKeyTranslate.
+  static KeyModifierMask mapModifiersFromCarbon(uint32_t mask);
 
   //! Convert CG flags-style modifier mask to old-style Carbon
   /*!
@@ -78,6 +90,8 @@ public:
   //@}
 
   // IKeyState overrides
+  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override;
+  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override;
   bool fakeCtrlAltDel() override;
   bool fakeMediaKey(KeyID id) override;
   KeyModifierMask pollActiveModifiers() const override;
@@ -90,15 +104,18 @@ protected:
   // KeyState overrides
   void getKeyMap(deskflow::KeyMap &keyMap) override;
   void fakeKey(const Keystroke &keystroke) override;
-
-private:
-  class KeyResource;
-
   // Add hard coded special keys to a deskflow::KeyMap.
   void getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, int32_t group) const;
 
   // Convert keyboard resource to a key map
-  bool getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXKeyResource &r) const;
+  bool getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXKeyResource &r);
+
+private:
+  class KeyResource;
+
+  // Match the fallback layout character without changing the input method's
+  // interpretation of Shift and Caps Lock. Returns kKeyNone when not applicable.
+  KeyID mapZhuyinLetter(KeyID id, KeyModifierMask mask, const std::string &lang) const;
 
   // Get the available keyboard groups
   bool getGroups(AutoCFArray &) const;
@@ -153,6 +170,12 @@ private:
   using GroupMap = std::map<CFDataRef, int32_t>;
   using VirtualKeyMap = std::map<uint32_t, KeyID>;
 
+  using LetterCharacters = std::array<KeyID, 4>;
+  using LetterLayout = std::map<KeyButton, LetterCharacters>;
+
+  InputModeQuery m_inputModeQuery;
+  std::vector<std::string> m_layouts;
+  std::map<int32_t, LetterLayout> m_letterLayouts;
   VirtualKeyMap m_virtualKeyMap;
   mutable uint32_t m_deadKeyState;
   AutoCFArray m_groups{nullptr, CFRelease};
