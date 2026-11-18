@@ -117,6 +117,8 @@ private:
   // xscreensaver's window
   Window m_xscreensaver = None;
 
+  bool m_xscreensaverSearched = false;
+
   // xscreensaver activation state
   bool m_xscreensaverActive = false;
 

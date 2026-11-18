@@ -266,8 +266,10 @@ bool XWindowsScreenSaver::isActive() const
 
 bool XWindowsScreenSaver::findXScreenSaver()
 {
-  // do nothing if we've already got the xscreensaver window
-  if (m_xscreensaver == None) {
+  // do nothing if we've already got the xscreensaver window or already looked for it
+  if (m_xscreensaver == None && !m_xscreensaverSearched) {
+    m_xscreensaverSearched = true;
+
     // find top-level window xscreensaver window
     Window root = DefaultRootWindow(m_display);
     Window rw;
