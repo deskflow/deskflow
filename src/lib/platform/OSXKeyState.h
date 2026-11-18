@@ -36,9 +36,11 @@ public:
   //! Handle modifier key change
   /*!
   Determines which modifier keys have changed and updates the modifier
-  state and sends key events as appropriate.
+  state and sends key events as appropriate. \p virtualKey is the virtual
+  key of the event that changed the modifiers; it selects the left or right
+  variant of the changed modifier.
   */
-  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask);
+  void handleModifierKeys(void *target, KeyModifierMask oldMask, KeyModifierMask newMask, uint32_t virtualKey);
 
   //@}
   //! @name accessors
@@ -168,4 +170,7 @@ private:
   bool m_controlRightPressed;
   bool m_altRightPressed;
   bool m_superRightPressed;
+  // modifiers whose last key down was sent as the right-hand variant, so the
+  // matching key up is sent for the same side.
+  KeyModifierMask m_rightSideModifiers = 0;
 };
