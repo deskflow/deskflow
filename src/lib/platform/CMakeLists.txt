@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Applone <app1oneme@gmail.com>
 # SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
@@ -174,6 +175,8 @@ elseif(UNIX)
         list(APPEND PLATFORM_SOURCES
           PortalClipboard.cpp
           PortalClipboard.h
+          PortalSelectionRead.cpp
+          PortalSelectionRead.h
         )
       endif()
       if(HAVE_LP_SHORTCUTS)
