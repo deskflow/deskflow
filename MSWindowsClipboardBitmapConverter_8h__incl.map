@@ -1,0 +1,17 @@
+<map id="src/lib/platform/MSWindowsClipboardBitmapConverter.h" name="src/lib/platform/MSWindowsClipboardBitmapConverter.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="153,5,338,44"/>
+<area shape="rect" id="Node000002" href="$MSWindowsClipboard_8h.html" title=" " alt="" coords="140,92,352,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,42,248,77,243,75,244,47"/>
+<area shape="rect" id="Node000003" href="$IClipboard_8h.html" title=" " alt="" coords="5,165,153,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="216,119,122,161,119,156,220,115"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="177,165,234,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="241,115,222,153,218,149,237,119"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="259,165,315,189"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="254,115,275,152,270,151,251,120"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="340,165,426,189"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="269,115,349,157,344,158,268,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="9,237,69,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,188,55,225,51,222,70,191"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="94,237,147,262"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="87,188,109,224,103,224,85,192"/>
+</map>

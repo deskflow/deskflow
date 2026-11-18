@@ -1,0 +1,11 @@
+<map id="src/lib/arch/IArchDaemon.h" name="src/lib/arch/IArchDaemon.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="195,5,374,30"/>
+<area shape="rect" id="Node000002" href="$ArchDaemonWindows_8h.html" title=" " alt="" coords="202,78,367,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,44,287,79,282,76,283,48"/>
+<area shape="rect" id="Node000003" href="$ArchDaemonWindows_8cpp.html" title=" " alt="" coords="5,165,185,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,123,138,167,136,162,226,124"/>
+<area shape="rect" id="Node000004" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="209,165,360,203"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="286,131,287,166,282,163,282,135"/>
+<area shape="rect" id="Node000005" href="$MSWindowsEventQueueBuffer_8cpp.html" title=" " alt="" coords="384,165,569,203"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="342,121,437,164,431,164,340,126"/>
+</map>
