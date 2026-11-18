@@ -277,6 +277,7 @@ void TCPSocket::init()
   m_connected = false;
   m_readable = false;
   m_writable = false;
+  m_remotePeerNameOrAddress.clear();
 
   try {
     // turn off Nagle algorithm.  we send lots of very short messages
@@ -551,4 +552,24 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
     return newJob();
 
   return job;
+}
+
+const std::string &TCPSocket::remotePeerNameOrAddress()
+{
+  if (!m_remotePeerNameOrAddress.empty()) {
+    return m_remotePeerNameOrAddress;
+  }
+  ArchNetAddress addr = ARCH->getRemotePeerAddress(m_socket);
+  if (!addr) {
+    return m_remotePeerNameOrAddress;
+  }
+  try {
+    const auto fqdn = ARCH->addrToName(addr);
+    m_remotePeerNameOrAddress = fqdn.substr(0, fqdn.find('.'));
+  } catch (const ArchNetworkException &e) {
+    LOG_DEBUG("error fetching peer name: '%s'", e.what());
+    m_remotePeerNameOrAddress = ARCH->addrToString(addr);
+  }
+  ARCH->closeAddr(addr);
+  return m_remotePeerNameOrAddress;
 }

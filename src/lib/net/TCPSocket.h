@@ -56,6 +56,7 @@ public:
 
   // IDataSocket overrides
   void connect(const NetworkAddress &) override;
+  const std::string &remotePeerNameOrAddress() override;
 
   virtual ISocketMultiplexerJob *newJob();
 
@@ -126,6 +127,7 @@ protected:
 
   StreamBuffer m_inputBuffer;
   StreamBuffer m_outputBuffer;
+  std::string m_remotePeerNameOrAddress;
 
 private:
   void init();

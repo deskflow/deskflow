@@ -696,6 +696,16 @@ bool ArchNetworkBSD::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
   return (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
+ArchNetAddress ArchNetworkBSD::getRemotePeerAddress(ArchSocket s)
+{
+  ArchNetAddress addr = newAnyAddr(IArchNetwork::AddressFamily::INet);
+  if (getpeername(s->m_fd, reinterpret_cast<struct sockaddr *>(addr), &addr->m_len) != 0) {
+    closeAddr(addr);
+    return nullptr;
+  }
+  return addr;
+}
+
 const int *ArchNetworkBSD::getUnblockPipe()
 {
   ArchMultithreadPosix *mt = ArchMultithreadPosix::getInstance();

@@ -16,7 +16,7 @@
 #include <net/SecureUtils.h>
 
 FingerprintPreview::FingerprintPreview(
-    QWidget *parent, const Fingerprint &fingerprint, const QString &titleText, bool hashMode
+    QWidget *parent, const Fingerprint &fingerprint, const QString &titleText, const QString &peerInfo, bool hashMode
 )
     : QFrame(parent)
 {
@@ -24,13 +24,10 @@ FingerprintPreview::FingerprintPreview(
   setFrameStyle(QFrame::Sunken);
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  if (fingerprint.type == QCryptographicHash::Sha256) {
-    setLayout(sha256Layout(fingerprint, titleText, hashMode));
-  } else {
-    qWarning() << "cannot render fingerprint, unsupported type:" << Fingerprint::typeToString(fingerprint.type);
-    setLayout(emptyLayout());
-  }
-
+  setLayout(
+      fingerprint.type == QCryptographicHash::Sha256 ? sha256Layout(fingerprint, titleText, peerInfo, hashMode)
+                                                     : emptyLayout()
+  );
   adjustSize();
 
   if (!m_lblArt) {
@@ -61,7 +58,9 @@ QLayout *FingerprintPreview::emptyLayout()
   return layout;
 }
 
-QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint, const QString &titleText, bool hashMode)
+QLayout *FingerprintPreview::sha256Layout(
+    const Fingerprint &fingerprint, const QString &titleText, const QString &peerInfo, bool hashMode
+)
 {
   auto labelTitle = new QLabel(titleText, this);
   auto f = font();
@@ -71,6 +70,11 @@ QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint, const 
   labelTitle->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
   labelTitle->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
   labelTitle->setVisible(!titleText.isEmpty());
+
+  auto labelPeerInfo = new QLabel(peerInfo, this);
+  labelPeerInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+  labelPeerInfo->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+  labelPeerInfo->setVisible(!peerInfo.isEmpty());
 
   m_lblHash = new QLabel(deskflow::formatSSLFingerprintColumns(fingerprint.data), this);
   m_lblHash->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
@@ -87,8 +91,10 @@ QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint, const 
   auto sha256Layout = new QVBoxLayout();
   sha256Layout->setContentsMargins(0, 0, 0, 0);
   sha256Layout->addWidget(labelTitle);
+  sha256Layout->addWidget(labelPeerInfo);
   sha256Layout->addWidget(m_lblHash);
   sha256Layout->addWidget(m_lblArt);
+  sha256Layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 
   auto frameSha256 = new QFrame(this);
   frameSha256->setFrameShape(QFrame::StyledPanel);
