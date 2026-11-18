@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
@@ -27,6 +28,8 @@ void Computer::loadSettings(QSettingsProxy &settings)
   if (name.isEmpty())
     return;
 
+  setGeometry(Settings::value(Settings::Computer::Geometry.arg(name)).toRect());
+  setLinks(Settings::value(Settings::Computer::Links.arg(name)).toStringList());
   setModifier(Alt, modifierValueFromString(Settings::value(Settings::Computer::ModifierAlt.arg(name)).toString()));
   setModifier(AltGr, modifierValueFromString(Settings::value(Settings::Computer::ModifierAltGr.arg(name)).toString()));
   setModifier(Ctrl, modifierValueFromString(Settings::value(Settings::Computer::ModifierCtrl.arg(name)).toString()));
@@ -63,6 +66,8 @@ void Computer::saveSettings(QSettingsProxy &settings) const
 
   Settings::setValue(Settings::Computer::Name.arg(computerName), computerName);
   Settings::setValue(Settings::Computer::Aliases.arg(computerName), m_Aliases);
+  Settings::setValue(Settings::Computer::Geometry.arg(computerName), m_geometry);
+  Settings::setValue(Settings::Computer::Links.arg(computerName), m_links.isEmpty() ? QVariant() : m_links);
   Settings::setValue(Settings::Computer::HalfDuplexCapsLock.arg(computerName), m_Fixes[static_cast<int>(CapsLock)]);
   Settings::setValue(Settings::Computer::HalfDuplexNumLock.arg(computerName), m_Fixes[static_cast<int>(NumLock)]);
   Settings::setValue(Settings::Computer::HalfDuplexScrollLock.arg(computerName), m_Fixes[static_cast<int>(ScrollLock)]);
@@ -116,5 +121,6 @@ bool Computer::operator==(const Computer &computer) const
 {
   return m_Name == computer.m_Name && m_Aliases == computer.m_Aliases && m_Modifiers == computer.m_Modifiers &&
          m_SwitchCorners == computer.m_SwitchCorners && m_SwitchCornerSize == computer.m_SwitchCornerSize &&
-         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
+         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer &&
+         m_geometry == computer.m_geometry && m_links == computer.m_links;
 }
