@@ -328,6 +328,14 @@ p, li { white-space: pre-wrap; }
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">Il nome del computer non può coincidere con un alias. Rimuovere l&apos;alias o modificare il nome del computer.</translation>
     </message>
+    <message>
+        <source>Caps &amp;Lock</source>
+        <translation>Blocco &amp;Maiuscole</translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation>Blocco Maiuscole</translation>
+    </message>
 </context>
 <context>
     <name>ComputerSetupModel</name>
@@ -912,6 +920,10 @@ Inoltre, verifica di poter %1 il file di configurazione del server: %2</translat
     <message>
         <source>Meta</source>
         <translation type="unfinished">Meta</translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation>Blocco Maiuscole</translation>
     </message>
     <message>
         <source>None</source>

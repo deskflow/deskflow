@@ -11,6 +11,7 @@
 #include "client/Client.h"
 #include "client/ServerProxy.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolTypes.h"
 #include "io/IStream.h"
 
@@ -239,6 +240,10 @@ class TestServerProxy : public ServerProxy
 {
 public:
   using ServerProxy::ServerProxy;
+  using ServerProxy::setCapsLockDown;
+  using ServerProxy::translateKey;
+  using ServerProxy::translateModifierMask;
+  using ServerProxy::updateModifierTranslation;
 
   bool parseHandshakeMessageReturnsDisconnect(const uint8_t *code)
   {
@@ -326,6 +331,67 @@ void ServerProxyTests::parseHandshakeMessage_protocolError_queuesRefusalRequest(
   QVERIFY(request->kind() == Client::DisconnectRequest::Kind::Refuse);
   QVERIFY(request->refusalReason() == deskflow::core::ConnectionRefusal::ProtocolError);
   QCOMPARE(QString::fromUtf8(request->message()), QStringLiteral("server reported a protocol error"));
+}
+
+void ServerProxyTests::capsLockMapping_translatesKeyAndMask()
+{
+  RecordingEventQueue events;
+  FakeStream stream;
+  TestServerProxy proxy(undereferenceableClient(), &stream, &events);
+
+  // No mapping: keep the current behaviour (key is dropped on the client,
+  // only the lock-state bit is used for character mapping).
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyCapsLock));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierCapsLock));
+
+  // Mapped to Ctrl: inject Ctrl while held, and add the Control bit so Caps+A
+  // is delivered as Ctrl+A. The lock-state bit in the mask is a toggle and must
+  // not be used for this: combos would only work on every other press.
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, kKeyModifierIDControl});
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyControl_L));
+
+  proxy.setCapsLockDown(true);
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierControl));
+  QCOMPARE(
+      proxy.translateModifierMask(KeyModifierCapsLock | KeyModifierShift),
+      static_cast<KeyModifierMask>(KeyModifierControl | KeyModifierShift)
+  );
+  // The lock bit being off (toggle back to off) must not matter while held.
+  QCOMPARE(
+      proxy.translateModifierMask(static_cast<KeyModifierMask>(0)), static_cast<KeyModifierMask>(KeyModifierControl)
+  );
+
+  // Released: no modifier is added and the lock bit is dropped.
+  proxy.setCapsLockDown(false);
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(0));
+
+  // Mapped to Super/Meta: held CapsLock adds that modifier's bit.
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, kKeyModifierIDSuper});
+  proxy.setCapsLockDown(true);
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierSuper));
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, kKeyModifierIDMeta});
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierMeta));
+  proxy.setCapsLockDown(false);
+
+  // -1 means "not configured" and must not be clamped to 0 (None).
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, static_cast<uint32_t>(-1)});
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyCapsLock));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierCapsLock));
+
+  // None explicitly swallows the key.
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, kKeyModifierIDNull});
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyNone));
+
+  // Reverse direction: any modifier can be mapped to CapsLock. Alt -> CapsLock
+  // means the Alt key is injected as CapsLock and Alt combos carry the lock bit.
+  proxy.updateModifierTranslation({kOptionModifierMapForAlt, kKeyModifierIDCapsLock});
+  QCOMPARE(proxy.translateKey(kKeyAlt_L), static_cast<KeyID>(kKeyCapsLock));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierAlt), static_cast<KeyModifierMask>(KeyModifierCapsLock));
+
+  // Ctrl -> CapsLock likewise, and the mapping is independent per modifier.
+  proxy.updateModifierTranslation({kOptionModifierMapForControl, kKeyModifierIDCapsLock});
+  QCOMPARE(proxy.translateKey(kKeyControl_L), static_cast<KeyID>(kKeyCapsLock));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierControl), static_cast<KeyModifierMask>(KeyModifierCapsLock));
 }
 
 QTEST_MAIN(ServerProxyTests)

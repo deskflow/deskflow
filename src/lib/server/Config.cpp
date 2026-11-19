@@ -118,6 +118,11 @@ bool Config::addComputer(const std::string &name)
     superModifier = kModifierNameSuper;
   addOption(name, kOptionModifierMapForSuper, modifierIDValueFromString(superModifier));
 
+  auto capsLockModifier = Settings::value(Settings::Computer::ModifierCapsLock.arg(computer)).toString();
+  if (capsLockModifier.isEmpty())
+    capsLockModifier = QString::fromLatin1(kModifierNameCapsLock);
+  addOption(name, kOptionModifierMapForCapsLock, modifierIDValueFromString(capsLockModifier));
+
   return true;
 }
 

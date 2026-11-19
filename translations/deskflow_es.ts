@@ -328,6 +328,14 @@ p, li { white-space: pre-wrap; }
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">El nombre del equipo no puede ser igual a un alias. Elimine el alias o cambie el nombre del equipo.</translation>
     </message>
+    <message>
+        <source>Caps &amp;Lock</source>
+        <translation>Bloqueo de &amp;Mayúsculas</translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation>Bloqueo de Mayúsculas</translation>
+    </message>
 </context>
 <context>
     <name>ComputerSetupModel</name>
@@ -912,6 +920,10 @@ Además, verifique que puede %1 el archivo de configuración del servidor: %2</t
     <message>
         <source>Meta</source>
         <translation type="unfinished">Meta</translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation>Bloqueo de Mayúsculas</translation>
     </message>
     <message>
         <source>None</source>
