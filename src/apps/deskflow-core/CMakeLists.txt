@@ -36,7 +36,7 @@ target_link_libraries(
   platform
   server
   app
-  Qt6::Widgets
+  Qt6::Core
   ${libs})
 
 install(
