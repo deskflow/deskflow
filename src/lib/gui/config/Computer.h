@@ -32,13 +32,14 @@ class Computer : public ComputerConfig
   friend QDataStream &operator<<(QDataStream &outStream, const Computer &computer)
   {
     return outStream << computer.name() << computer.switchCornerSize() << computer.aliases() << computer.modifiers()
-                     << computer.switchCorners() << computer.fixes() << computer.isServer();
+                     << computer.capsLockModifier() << computer.switchCorners() << computer.fixes()
+                     << computer.isServer();
   }
 
   friend QDataStream &operator>>(QDataStream &inStream, Computer &computer)
   {
     return inStream >> computer.m_Name >> computer.m_SwitchCornerSize >> computer.m_Aliases >> computer.m_Modifiers >>
-           computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer;
+           computer.m_CapsLockModifier >> computer.m_SwitchCorners >> computer.m_Fixes >> computer.m_isServer;
   }
 
 public:
@@ -68,6 +69,10 @@ public:
   [[nodiscard]] const QList<int> &modifiers() const
   {
     return m_Modifiers;
+  }
+  [[nodiscard]] int capsLockModifier() const
+  {
+    return m_CapsLockModifier;
   }
   [[nodiscard]] bool switchCorner(int c) const
   {
@@ -127,6 +132,10 @@ protected:
   {
     return m_Modifiers;
   }
+  void setCapsLockModifier(const int modifier)
+  {
+    m_CapsLockModifier = modifier;
+  }
   void addAlias(const QString &alias)
   {
     m_Aliases.append(alias);
@@ -161,6 +170,7 @@ private:
   QString m_Name = {};
   QStringList m_Aliases = {};
   QList<int> m_Modifiers = {0, 1, 2, 3, 4, 5, 6};
+  int m_CapsLockModifier = static_cast<int>(KeyboardModifier::DefaultMod);
   QList<bool> m_SwitchCorners = {false, false, false, false};
   int m_SwitchCornerSize = 0;
   QList<bool> m_Fixes{false, false, false, false};

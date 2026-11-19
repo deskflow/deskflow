@@ -33,6 +33,9 @@ void Computer::loadSettings(QSettingsProxy &settings)
   setModifier(Meta, modifierValueFromString(Settings::value(Settings::Computer::ModifierMeta.arg(name)).toString()));
   setModifier(Shift, modifierValueFromString(Settings::value(Settings::Computer::ModifierShift.arg(name)).toString()));
   setModifier(Super, modifierValueFromString(Settings::value(Settings::Computer::ModifierSuper.arg(name)).toString()));
+  setCapsLockModifier(
+      modifierValueFromString(Settings::value(Settings::Computer::ModifierCapsLock.arg(name)).toString())
+  );
 
   setSwitchCornerSize(Settings::value(Settings::Computer::SwitchCornerSize.arg(name)).toInt());
 
@@ -105,6 +108,12 @@ void Computer::saveSettings(QSettingsProxy &settings) const
       Settings::Computer::ModifierSuper.arg(computerName),
       valueToKeyboardModifierOption(m_Modifiers.at(static_cast<qsizetype>(KeyboardModifier::Super)))
   );
+  Settings::setValue(
+      Settings::Computer::ModifierCapsLock.arg(computerName),
+      m_CapsLockModifier == static_cast<int>(KeyboardModifier::DefaultMod)
+          ? QString::fromLatin1(kModifierNameCapsLock)
+          : valueToKeyboardModifierOption(m_CapsLockModifier)
+  );
 }
 
 QString Computer::screensSection() const
@@ -115,6 +124,7 @@ QString Computer::screensSection() const
 bool Computer::operator==(const Computer &computer) const
 {
   return m_Name == computer.m_Name && m_Aliases == computer.m_Aliases && m_Modifiers == computer.m_Modifiers &&
-         m_SwitchCorners == computer.m_SwitchCorners && m_SwitchCornerSize == computer.m_SwitchCornerSize &&
-         m_Fixes == computer.m_Fixes && m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
+         m_CapsLockModifier == computer.m_CapsLockModifier && m_SwitchCorners == computer.m_SwitchCorners &&
+         m_SwitchCornerSize == computer.m_SwitchCornerSize && m_Fixes == computer.m_Fixes &&
+         m_Swapped == computer.m_Swapped && m_isServer == computer.m_isServer;
 }

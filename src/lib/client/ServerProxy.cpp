@@ -455,6 +455,14 @@ KeyID ServerProxy::translateKey(KeyID id) const
     side = 1;
     break;
 
+  case kKeyCapsLock:
+    // CapsLock is not in the modifier table: it has its own per-computer
+    // setting and keeps its current behaviour unless explicitly mapped.
+    if (m_capsLockModifier < 0) {
+      return id;
+    }
+    return s_translationTable[m_capsLockModifier][0];
+
   default:
     break;
   }
@@ -492,6 +500,12 @@ KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
   if ((mask & KeyModifierSuper) != 0) {
     newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDSuper]];
   }
+
+  // When CapsLock is mapped to a normal modifier it is no longer a lock
+  // key on this screen, so its lock-state bit must not affect key mapping.
+  if (m_capsLockModifier >= 0) {
+    newMask &= ~KeyModifierCapsLock;
+  }
   return newMask;
 }
 
@@ -512,8 +526,12 @@ void ServerProxy::enter()
   m_dyMouse = 0;
   m_seqNum = seqNum;
 
-  // forward
-  m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
+  // forward; a mapped CapsLock carries no lock state for this screen
+  KeyModifierMask newMask = static_cast<KeyModifierMask>(mask);
+  if (m_capsLockModifier >= 0) {
+    newMask &= ~KeyModifierCapsLock;
+  }
+  m_client->enter(x, y, seqNum, newMask, false);
 }
 
 void ServerProxy::leave()
@@ -752,6 +770,7 @@ void ServerProxy::resetOptions()
   for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
     m_modifierTranslationTable[id] = id;
   }
+  m_capsLockModifier = -1;
 }
 
 void ServerProxy::setOptions()
@@ -769,7 +788,11 @@ void ServerProxy::setOptions()
   // forward
   m_client->setOptions(options);
 
-  // update modifier table
+  updateModifierTranslation(options);
+}
+
+void ServerProxy::updateModifierTranslation(const OptionsList &options)
+{
   for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     KeyModifierID id = kKeyModifierIDNull;
     if (options[i] == kOptionModifierMapForShift) {
@@ -784,6 +807,13 @@ void ServerProxy::setOptions()
       id = kKeyModifierIDMeta;
     } else if (options[i] == kOptionModifierMapForSuper) {
       id = kKeyModifierIDSuper;
+    } else if (options[i] == kOptionModifierMapForCapsLock) {
+      // -1 means "not configured"; 0 means map to kKeyNone (swallow the key).
+      // Do not clamp here: -1 would otherwise become 0 and silently disable CapsLock.
+      const auto modifier = static_cast<int32_t>(options[i + 1]);
+      m_capsLockModifier = (modifier >= 0 && modifier < static_cast<int32_t>(kKeyModifierIDLast)) ? modifier : -1;
+      LOG_VERBOSE("caps lock mapped to modifier %d", m_capsLockModifier);
+      continue;
     } else if (options[i] == kOptionHeartbeat) {
       // update keep alive
       setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));

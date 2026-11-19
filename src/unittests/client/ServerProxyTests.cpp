@@ -11,6 +11,7 @@
 #include "client/Client.h"
 #include "client/ServerProxy.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolTypes.h"
 #include "io/IStream.h"
 
@@ -239,6 +240,9 @@ class TestServerProxy : public ServerProxy
 {
 public:
   using ServerProxy::ServerProxy;
+  using ServerProxy::translateKey;
+  using ServerProxy::translateModifierMask;
+  using ServerProxy::updateModifierTranslation;
 
   bool parseHandshakeMessageReturnsDisconnect(const uint8_t *code)
   {
@@ -326,6 +330,36 @@ void ServerProxyTests::parseHandshakeMessage_protocolError_queuesRefusalRequest(
   QVERIFY(request->kind() == Client::DisconnectRequest::Kind::Refuse);
   QVERIFY(request->refusalReason() == deskflow::core::ConnectionRefusal::ProtocolError);
   QCOMPARE(QString::fromUtf8(request->message()), QStringLiteral("server reported a protocol error"));
+}
+
+void ServerProxyTests::capsLockMapping_translatesKeyAndMask()
+{
+  RecordingEventQueue events;
+  FakeStream stream;
+  TestServerProxy proxy(undereferenceableClient(), &stream, &events);
+
+  // No mapping: keep the current behaviour (key is dropped on the client,
+  // only the lock-state bit is used for character mapping).
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyCapsLock));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierCapsLock));
+
+  // Mapped to Ctrl: inject Ctrl instead and drop the CapsLock lock state.
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, kKeyModifierIDControl});
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyControl_L));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(0));
+  QCOMPARE(
+      proxy.translateModifierMask(KeyModifierCapsLock | KeyModifierShift),
+      static_cast<KeyModifierMask>(KeyModifierShift)
+  );
+
+  // -1 means "not configured" and must not be clamped to 0 (None).
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, static_cast<uint32_t>(-1)});
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyCapsLock));
+  QCOMPARE(proxy.translateModifierMask(KeyModifierCapsLock), static_cast<KeyModifierMask>(KeyModifierCapsLock));
+
+  // None explicitly swallows the key.
+  proxy.updateModifierTranslation({kOptionModifierMapForCapsLock, kKeyModifierIDNull});
+  QCOMPARE(proxy.translateKey(kKeyCapsLock), static_cast<KeyID>(kKeyNone));
 }
 
 QTEST_MAIN(ServerProxyTests)

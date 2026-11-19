@@ -13,6 +13,7 @@
 
 inline static const auto kModifierNameAlt = "alt";
 inline static const auto kModifierNameAltGr = "altgr";
+inline static const auto kModifierNameCapsLock = "capslock";
 inline static const auto kModifierNameCtrl = "ctrl";
 inline static const auto kModifierNameMeta = "meta";
 inline static const auto kModifierNameNone = "none";

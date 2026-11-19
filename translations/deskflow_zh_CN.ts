@@ -328,6 +328,14 @@ p, li { white-space: pre-wrap; }
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">计算机名称不能与别名相同。请删除别名或更改计算机名称。</translation>
     </message>
+    <message>
+        <source>Caps &amp;Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ComputerSetupModel</name>

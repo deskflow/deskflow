@@ -170,6 +170,7 @@ Each computer will have a section where its configuration will be stored, if the
 | halfDuplexScrollLock   | `true` or `false` | This computer has a ''Scroll Lock'' key that doesn't report a press and a release event when the user presses it but instead reports a press event when it's turned on and a release event when it's turned off. If ''Scroll Lock'' acts strangely on all computers then you may need to set this option to true on the server. If it acts strangely on one computer then that computer may need the option set to true.|
 | modifierAlt             | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's alt modifer to different key on this computer|
 | modifierAltGr           | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's altgr modifer to different key on this computer|
+| modifierCapsLock        | `capslock` `shift` `ctrl` `alt` `altgr` `meta` `super` or `none` | Map the server's Caps Lock key to a modifier on this computer. `capslock` (default) keeps the existing lock-key behaviour; `none` swallows the key.|
 | modifierCtrl            | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's ctrl modifer to different key on this computer|
 | modifierMeta            | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's meta modifer to different key on this computer|
 | modifierShift           | `shift` `ctrl` `alt` `altgr` `meta` `super` or  `none` | Map the server's shift modifer to different key on this computer|

@@ -133,6 +133,7 @@ public:
     inline static const auto HalfDuplexScrollLock = QStringLiteral("computer_%1/halfDuplexScrollLock");
     inline static const auto ModifierAlt = QStringLiteral("computer_%1/modifierAlt");
     inline static const auto ModifierAltGr = QStringLiteral("computer_%1/modifierAltGr");
+    inline static const auto ModifierCapsLock = QStringLiteral("computer_%1/modifierCapsLock");
     inline static const auto ModifierCtrl = QStringLiteral("computer_%1/modifierCtrl");
     inline static const auto ModifierMeta = QStringLiteral("computer_%1/modifierMeta");
     inline static const auto ModifierShift = QStringLiteral("computer_%1/modifierShift");

@@ -44,6 +44,7 @@ static const OptionID kOptionModifierMapForAlt = OPTION_CODE("MMFA");
 static const OptionID kOptionModifierMapForAltGr = OPTION_CODE("MMFG");
 static const OptionID kOptionModifierMapForMeta = OPTION_CODE("MMFM");
 static const OptionID kOptionModifierMapForSuper = OPTION_CODE("MMFR");
+static const OptionID kOptionModifierMapForCapsLock = OPTION_CODE("MMFL");
 static const OptionID kOptionHeartbeat = OPTION_CODE("HART");
 static const OptionID kOptionComputerSwitchCorners = OPTION_CODE("SSCM");
 static const OptionID kOptionComputerSwitchCornerSize = OPTION_CODE("SSCS");
