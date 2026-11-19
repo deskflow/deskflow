@@ -393,8 +393,9 @@ void ServerProxy::sendInfo(const ClientInfo &info)
 KeyID ServerProxy::translateKey(KeyID id) const
 {
   static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
-      {kKeyNone, kKeyNone},     {kKeyShift_L, kKeyShift_R}, {kKeyControl_L, kKeyControl_R}, {kKeyAlt_L, kKeyAlt_R},
-      {kKeyMeta_L, kKeyMeta_R}, {kKeySuper_L, kKeySuper_R}, {kKeyAltGr, kKeyAltGr}
+      {kKeyNone, kKeyNone},   {kKeyShift_L, kKeyShift_R},  {kKeyControl_L, kKeyControl_R},
+      {kKeyAlt_L, kKeyAlt_R}, {kKeyMeta_L, kKeyMeta_R},    {kKeySuper_L, kKeySuper_R},
+      {kKeyAltGr, kKeyAltGr}, {kKeyCapsLock, kKeyCapsLock}
   };
 
   KeyModifierID id2 = kKeyModifierIDNull;
@@ -455,6 +456,11 @@ KeyID ServerProxy::translateKey(KeyID id) const
     side = 1;
     break;
 
+  case kKeyCapsLock:
+    id2 = kKeyModifierIDCapsLock;
+    side = 0;
+    break;
+
   default:
     break;
   }
@@ -468,12 +474,12 @@ KeyID ServerProxy::translateKey(KeyID id) const
 
 KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
 {
-  static const KeyModifierMask s_masks[kKeyModifierIDLast] = {0x0000,          KeyModifierShift, KeyModifierControl,
-                                                              KeyModifierAlt,  KeyModifierMeta,  KeyModifierSuper,
-                                                              KeyModifierAltGr};
+  static const KeyModifierMask s_masks[kKeyModifierIDLast] = {0x0000,           KeyModifierShift,   KeyModifierControl,
+                                                              KeyModifierAlt,   KeyModifierMeta,    KeyModifierSuper,
+                                                              KeyModifierAltGr, KeyModifierCapsLock};
 
   KeyModifierMask newMask = mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierMeta |
-                                     KeyModifierSuper | KeyModifierAltGr);
+                                     KeyModifierSuper | KeyModifierAltGr | KeyModifierCapsLock);
   if ((mask & KeyModifierShift) != 0) {
     newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
   }
@@ -491,6 +497,20 @@ KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
   }
   if ((mask & KeyModifierSuper) != 0) {
     newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDSuper]];
+  }
+
+  // CapsLock as a source needs special handling: its bit in the mask is a lock
+  // state that toggles on every press, not a physical held state. If CapsLock
+  // is mapped to another modifier, use the tracked down/up state so combos work
+  // on every press (Caps+A becomes Ctrl+A). If it is left unmapped, keep the
+  // original lock bit for character casing. Mapping to None drops the bit.
+  const auto capsTarget = m_modifierTranslationTable[kKeyModifierIDCapsLock];
+  if (capsTarget == kKeyModifierIDCapsLock) {
+    if ((mask & KeyModifierCapsLock) != 0) {
+      newMask |= KeyModifierCapsLock;
+    }
+  } else if (m_capsLockDown && capsTarget != kKeyModifierIDNull) {
+    newMask |= s_masks[capsTarget];
   }
   return newMask;
 }
@@ -512,8 +532,10 @@ void ServerProxy::enter()
   m_dyMouse = 0;
   m_seqNum = seqNum;
 
-  // forward
-  m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
+  // forward; apply the same modifier translation as key events so a mapped
+  // CapsLock is reported as its target modifier instead of a lock state.
+  KeyModifierMask newMask = translateModifierMask(static_cast<KeyModifierMask>(mask));
+  m_client->enter(x, y, seqNum, newMask, false);
 }
 
 void ServerProxy::leave()
@@ -523,6 +545,10 @@ void ServerProxy::leave()
 
   // send last mouse motion
   flushCompressedMouse();
+
+  // A held CapsLock may have its key-up delivered elsewhere; don't let the
+  // mapped modifier stick after leaving the screen.
+  m_capsLockDown = false;
 
   // forward
   m_client->leave();
@@ -578,6 +604,13 @@ void ServerProxy::keyDown(uint16_t id, uint16_t mask, uint16_t button, const std
 {
   flushCompressedMouse();
 
+  // Track physical CapsLock down before translation (translateKey turns it
+  // into the target modifier, so the original id is needed here).
+  if (m_modifierTranslationTable[kKeyModifierIDCapsLock] != kKeyModifierIDCapsLock &&
+      static_cast<KeyID>(id) == kKeyCapsLock) {
+    m_capsLockDown = true;
+  }
+
   KeyID id2 = translateKey(static_cast<KeyID>(id));
   KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
   if (id2 != static_cast<KeyID>(id) || mask2 != static_cast<KeyModifierMask>(mask))
@@ -609,6 +642,12 @@ void ServerProxy::keyUp()
   uint16_t button;
   ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
   LOG_VERBOSE("recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button);
+
+  // Track physical CapsLock up before translation.
+  if (m_modifierTranslationTable[kKeyModifierIDCapsLock] != kKeyModifierIDCapsLock &&
+      static_cast<KeyID>(id) == kKeyCapsLock) {
+    m_capsLockDown = false;
+  }
 
   // translate
   KeyID id2 = translateKey(static_cast<KeyID>(id));
@@ -752,6 +791,7 @@ void ServerProxy::resetOptions()
   for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
     m_modifierTranslationTable[id] = id;
   }
+  m_capsLockDown = false;
 }
 
 void ServerProxy::setOptions()
@@ -769,7 +809,11 @@ void ServerProxy::setOptions()
   // forward
   m_client->setOptions(options);
 
-  // update modifier table
+  updateModifierTranslation(options);
+}
+
+void ServerProxy::updateModifierTranslation(const OptionsList &options)
+{
   for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     KeyModifierID id = kKeyModifierIDNull;
     if (options[i] == kOptionModifierMapForShift) {
@@ -784,6 +828,8 @@ void ServerProxy::setOptions()
       id = kKeyModifierIDMeta;
     } else if (options[i] == kOptionModifierMapForSuper) {
       id = kKeyModifierIDSuper;
+    } else if (options[i] == kOptionModifierMapForCapsLock) {
+      id = kKeyModifierIDCapsLock;
     } else if (options[i] == kOptionHeartbeat) {
       // update keep alive
       setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));

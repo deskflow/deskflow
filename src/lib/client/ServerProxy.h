@@ -12,6 +12,7 @@
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
+#include "deskflow/OptionTypes.h"
 
 class Client;
 class ClientInfo;
@@ -71,6 +72,15 @@ protected:
     return m_stream;
   }
 
+  // exposed to subclasses so the translation can be unit tested
+  void updateModifierTranslation(const OptionsList &options);
+  KeyID translateKey(KeyID) const;
+  KeyModifierMask translateModifierMask(KeyModifierMask) const;
+  void setCapsLockDown(bool down)
+  {
+    m_capsLockDown = down;
+  }
+
 private:
   // if compressing mouse motion then send the last motion now
   void flushCompressedMouse();
@@ -79,10 +89,6 @@ private:
 
   void resetKeepAliveAlarm();
   void setKeepAliveRate(double);
-
-  // modifier key translation
-  KeyID translateKey(KeyID) const;
-  KeyModifierMask translateModifierMask(KeyModifierMask) const;
 
   // event handlers
   void handleData();
@@ -125,7 +131,14 @@ private:
 
   bool m_ignoreMouse = false;
 
+  // Maps each source modifier to its target modifier. CapsLock participates
+  // as kKeyModifierIDCapsLock, so any modifier can be mapped to/from it.
   KeyModifierID m_modifierTranslationTable[kKeyModifierIDLast];
+
+  // Tracks the physical down/up of CapsLock while it is mapped to a modifier.
+  // The lock-state bit in the mask is a toggle and flips every press, so it
+  // cannot tell us whether CapsLock is currently held down.
+  bool m_capsLockDown = false;
 
   double m_keepAliveAlarm = 0.0;
   EventQueueTimer *m_keepAliveAlarmTimer = nullptr;

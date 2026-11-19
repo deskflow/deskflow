@@ -245,6 +245,8 @@ void Settings::upgradeSettings()
       m_settings->setValue(
           Settings::Computer::ModifierAltGr.arg(name), modifierTemp.value(5, valueToKeyboardModifierOption(5))
       );
+    if (!m_settings->contains(Settings::Computer::ModifierCapsLock.arg(name)))
+      m_settings->setValue(Settings::Computer::ModifierCapsLock.arg(name), QString::fromLatin1(kModifierNameCapsLock));
     if (!m_settings->contains(Settings::Computer::Aliases.arg(name))) {
       m_settings->setValue(Settings::Computer::Aliases.arg(name), aliases);
     }
