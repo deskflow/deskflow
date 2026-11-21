@@ -51,6 +51,10 @@ ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *comput
   ui->comboSuper->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::Super)));
   ui->comboAltGr->setCurrentIndex(m_computer->modifier(static_cast<int>(KeyboardModifier::AltGr)));
 
+  // combo item 0 is "Caps Lock" (keep existing behaviour), then KeyboardModifier values from 1.
+  const int capsIndex = m_computer->capsLockModifier() + 1;
+  ui->comboCapsLock->setCurrentIndex(capsIndex >= 0 && capsIndex < ui->comboCapsLock->count() ? capsIndex : 0);
+
   ui->chkDeadTopLeft->setChecked(m_computer->switchCorner(static_cast<int>(TopLeft)));
   ui->chkDeadTopRight->setChecked(m_computer->switchCorner(static_cast<int>(TopRight)));
   ui->chkDeadBottomLeft->setChecked(m_computer->switchCorner(static_cast<int>(BottomLeft)));
@@ -59,7 +63,7 @@ ComputerSettingsDialog::ComputerSettingsDialog(QWidget *parent, Computer *comput
 
   ui->chkWeakX11Focus->setChecked(Settings::value(Settings::Computer::WeakX11Focus.arg(m_computer->name())).toBool());
 
-  ui->chkFixCapsLock->setChecked(m_computer->fix(CapsLock));
+  ui->chkFixCapsLock->setChecked(m_computer->fix(ComputerConfig::Fix::CapsLock));
   ui->chkFixNumLock->setChecked(m_computer->fix(NumLock));
   ui->chkFixScrollLock->setChecked(m_computer->fix(ScrollLock));
   ui->chkFixXTest->setChecked(m_computer->fix(XTest));
@@ -110,6 +114,7 @@ void ComputerSettingsDialog::accept()
   m_computer->setModifier(KeyboardModifier::Meta, ui->comboMeta->currentIndex());
   m_computer->setModifier(KeyboardModifier::Super, ui->comboSuper->currentIndex());
   m_computer->setModifier(KeyboardModifier::AltGr, ui->comboAltGr->currentIndex());
+  m_computer->setCapsLockModifier(ui->comboCapsLock->currentIndex() - 1);
 
   m_computer->setSwitchCorner(TopLeft, ui->chkDeadTopLeft->isChecked());
   m_computer->setSwitchCorner(TopRight, ui->chkDeadTopRight->isChecked());
@@ -117,7 +122,7 @@ void ComputerSettingsDialog::accept()
   m_computer->setSwitchCorner(BottomRight, ui->chkDeadBottomRight->isChecked());
   m_computer->setSwitchCornerSize(ui->sbSwitchCornerSize->value());
 
-  m_computer->setFix(CapsLock, ui->chkFixCapsLock->isChecked());
+  m_computer->setFix(ComputerConfig::Fix::CapsLock, ui->chkFixCapsLock->isChecked());
   m_computer->setFix(NumLock, ui->chkFixNumLock->isChecked());
   m_computer->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
   m_computer->setFix(XTest, ui->chkFixXTest->isChecked());
