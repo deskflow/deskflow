@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -242,8 +242,9 @@ void ClientListener::cleanupListenSocket()
 
 void ClientListener::cleanupClientSockets()
 {
-  for (auto client : m_clientSockets) {
-    delete client;
+  for (auto socket : m_clientSockets) {
+    m_events->removeHandlers(socket->getEventTarget());
+    delete socket;
   }
   m_clientSockets.clear();
 }
