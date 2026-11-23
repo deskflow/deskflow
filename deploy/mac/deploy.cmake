@@ -9,14 +9,17 @@ set(OSX_BUNDLE ${BUILD_OSX_BUNDLE})
 set(OS_STRING "macos-${BUILD_ARCHITECTURE}")
 
 if (OSX_BUNDLE)
-  set(_codesign_identity "-")
-  if (APPLE_CODESIGN_DEV)
-    set(_codesign_identity "${APPLE_CODESIGN_DEV}")
+  # Library validation requires a Team ID for a hardened app and its Qt libraries.
+  set(_codesign_args "-codesign=-")
+  if (APPLE_CODESIGN_DEV AND NOT APPLE_CODESIGN_DEV STREQUAL "-")
+    set(_codesign_args "-hardened-runtime -timestamp \"-codesign=${APPLE_CODESIGN_DEV}\"")
   endif()
   install(CODE "execute_process(COMMAND
     ${DEPLOYQT}
     \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
-    -hardened-runtime -timestamp \"-codesign=${_codesign_identity}\"
+    \"-executable=\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app/Contents/MacOS/${CMAKE_PROJECT_NAME}-core\"
+    ${_codesign_args}
+    COMMAND_ERROR_IS_FATAL ANY
   )")
   set(CPACK_PACKAGE_ICON "${MY_DIR}/dmg-volume.icns")
   set(CPACK_DMG_BACKGROUND_IMAGE "${MY_DIR}/dmg-background.tiff")

@@ -21,7 +21,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QFileInfo>
 #include <QSharedMemory>
 #include <QTextStream>
@@ -73,8 +73,8 @@ int main(int argc, char **argv)
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
-  QCoreApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
-  QCoreApplication app(argc, argv);
+  QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
+  QApplication app(argc, argv);
 
   Arch arch;
   arch.init();
@@ -128,10 +128,10 @@ int main(int argc, char **argv)
   ipcServer->listen();
 
   QThread coreThread;
-  QObject::connect(&coreThread, &QThread::finished, &app, &QCoreApplication::quit);
+  QObject::connect(&coreThread, &QThread::finished, &app, &QApplication::quit);
   coreApp->run(coreThread);
 
-  int exitCode = QCoreApplication::exec();
+  int exitCode = QApplication::exec();
   coreThread.wait();
 
   if (exitCode == s_exitSuccess) {

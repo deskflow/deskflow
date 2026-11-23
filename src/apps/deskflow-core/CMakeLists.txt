@@ -36,8 +36,16 @@ target_link_libraries(
   platform
   server
   app
-  Qt6::Core
+  Qt6::Widgets
   ${libs})
+
+if(APPLE)
+  # Set the core's LaunchServices policy before Qt initializes Cocoa.
+  set(core_plist "${CMAKE_CURRENT_BINARY_DIR}/deskflow-core.plist")
+  configure_file(deskflow-core.plist "${core_plist}" @ONLY)
+  target_link_options(${target} PRIVATE "LINKER:-sectcreate,__TEXT,__info_plist,${core_plist}")
+  set_property(TARGET ${target} APPEND PROPERTY LINK_DEPENDS "${core_plist}")
+endif()
 
 install(
   TARGETS ${target}
