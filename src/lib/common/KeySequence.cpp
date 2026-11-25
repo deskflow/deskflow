@@ -200,8 +200,8 @@ QString KeySequence::keyToString(int key)
     i++;
   }
 
-  // a printable 7 bit character?
-  if (key < 0x80)
+  // a printable 7 bit character? '#' and parentheses are escaped below, the server config reads them as syntax
+  if (key < 0x80 && !QStringLiteral("#()").contains(QChar(key)))
     return QChar(key & 0x7f).toLower();
 
   // a function key?

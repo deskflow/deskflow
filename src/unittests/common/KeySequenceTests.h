@@ -11,4 +11,5 @@ class KeySequenceTests : public QObject
   Q_OBJECT
 private Q_SLOTS:
   void toString_controlShiftPlus_usesNamedPlus();
+  void toString_configSyntaxChars_areEscaped();
 };
