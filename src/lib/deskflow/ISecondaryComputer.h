@@ -65,10 +65,38 @@ public:
    */
   ScrollDelta applyScrollModifier(ScrollDelta delta) const
   {
-    delta.y = static_cast<int32_t>(m_invertYScroll ? delta.y * -m_yScrollScale : delta.y * m_yScrollScale);
-    delta.x = static_cast<int32_t>(m_invertXScroll ? delta.x * -m_xScrollScale : delta.x * m_xScrollScale);
+    // carry the fraction a scale leaves over, so tiny smooth-scroll deltas add up instead of truncating to 0
+    const double y = (m_invertYScroll ? -m_yScrollScale : m_yScrollScale) * delta.y + m_yScaleRemainder;
+    const double x = (m_invertXScroll ? -m_xScrollScale : m_xScrollScale) * delta.x + m_xScaleRemainder;
+    delta.y = static_cast<int32_t>(y);
+    delta.x = static_cast<int32_t>(x);
+    m_yScaleRemainder = y - delta.y;
+    m_xScaleRemainder = x - delta.x;
     return delta;
   }
+
+  /**
+   * @brief For clients that can only scroll in whole notches: holds back the sub-notch part of
+   * smooth-scroll deltas until it adds up to a notch, instead of dropping or rounding it up
+   * @param delta the delta after applyScrollModifier
+   * @return whole multiples of s_scrollDelta
+   */
+  ScrollDelta takeWholeScrollNotches(ScrollDelta delta) const
+  {
+    // a reversed scroll starts fresh rather than first unwinding what was held for the other direction
+    const auto add = [](int32_t &held, int32_t d) { held = (held < 0 && d > 0) || (held > 0 && d < 0) ? d : held + d; };
+    add(m_notchRemainder.x, delta.x);
+    add(m_notchRemainder.y, delta.y);
+    const ScrollDelta notches{
+        m_notchRemainder.x / s_scrollDelta * s_scrollDelta, m_notchRemainder.y / s_scrollDelta * s_scrollDelta
+    };
+    m_notchRemainder.x -= notches.x;
+    m_notchRemainder.y -= notches.y;
+    return notches;
+  }
+
+  // Delta for a "click"
+  static const auto s_scrollDelta = 120;
 
 private:
   /**
@@ -94,5 +122,9 @@ private:
    * It is used in the applyScrollModifier method
    */
   double m_xScrollScale = 1.0;
+
+  mutable double m_yScaleRemainder = 0.0;
+  mutable double m_xScaleRemainder = 0.0;
+  mutable ScrollDelta m_notchRemainder{0, 0};
   //@}
 };

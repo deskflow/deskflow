@@ -117,6 +117,8 @@ public:
     inline static const auto Heartbeat = QStringLiteral("server/heartbeat");
     inline static const auto Protocol = QStringLiteral("server/protocol");
     inline static const auto RelativeMouseMoves = QStringLiteral("server/relativeMouseMoves");
+    inline static const auto SmoothScroll = QStringLiteral("server/smoothScroll");
+    inline static const auto SwipeNavigation = QStringLiteral("server/swipeNavigation");
     inline static const auto SwitchDelay = QStringLiteral("server/switchDelay");
     inline static const auto SwitchDoubleTap = QStringLiteral("server/switchDoubleTap");
     inline static const auto Win32KeepForeground = QStringLiteral("server/win32KeepForeground");
@@ -334,6 +336,8 @@ private:
     , Server::Heartbeat
     , Server::Protocol
     , Server::RelativeMouseMoves
+    , Server::SmoothScroll
+    , Server::SwipeNavigation
     , Server::SwitchDelay
     , Server::SwitchDoubleTap
     , Server::Win32KeepForeground
@@ -364,6 +368,8 @@ private:
     , Server::EnableSwitchDoubleTap
     , Server::ExternalConfig
     , Server::RelativeMouseMoves
+    , Server::SmoothScroll
+    , Server::SwipeNavigation
     , Server::XdpClipboardRetried
   };
 

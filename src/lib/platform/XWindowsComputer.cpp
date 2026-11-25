@@ -790,39 +790,45 @@ void XWindowsComputer::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 
 void XWindowsComputer::fakeMouseWheel(ScrollDelta delta) const
 {
+  // X buttons scroll in whole clicks, so smooth-scroll deltas below a notch must add up first
+  delta = takeWholeScrollNotches(applyScrollModifier(delta));
   if (delta.y == 0 && delta.x == 0) {
     return;
   }
-  delta = applyScrollModifier(delta);
-  bool isYScroll = delta.y != 0;
-  int32_t axisDelta = delta.y == 0 ? delta.x : delta.y;
+  // both axes: a diagonal smooth scroll can complete an X and a Y notch in the same event
+  for (const bool isYScroll : {true, false}) {
+    int32_t axisDelta = isYScroll ? delta.y : delta.x;
+    if (axisDelta == 0) {
+      continue;
+    }
 
-  ButtonID btn = kButtonNone;
-  if (isYScroll) {
-    btn = axisDelta >= 0 ? kX11ScrollWheelUp : kX11ScrollWheelDown;
-  } else {
-    btn = axisDelta >= 0 ? kX11ScrollWheelLeft : kX11ScrollWheelRight;
-  }
-  const unsigned int button = mapButtonToX(btn);
+    ButtonID btn = kButtonNone;
+    if (isYScroll) {
+      btn = axisDelta >= 0 ? kX11ScrollWheelUp : kX11ScrollWheelDown;
+    } else {
+      btn = axisDelta >= 0 ? kX11ScrollWheelLeft : kX11ScrollWheelRight;
+    }
+    const unsigned int button = mapButtonToX(btn);
 
-  // If the XServer does not support the Y scroll send PageUp/PageDown keystrokes instead.
-  if (const KeyCode keycode = XKeysymToKeycode(m_display, delta.y >= 0 ? XK_Page_Up : XK_Page_Down);
-      button == 0 && isYScroll && keycode != 0) {
-    XTestFakeKeyEvent(m_display, keycode, True, CurrentTime);
-    XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
-    return;
-  }
+    // If the XServer does not support the Y scroll send PageUp/PageDown keystrokes instead.
+    if (const KeyCode keycode = XKeysymToKeycode(m_display, delta.y >= 0 ? XK_Page_Up : XK_Page_Down);
+        button == 0 && isYScroll && keycode != 0) {
+      XTestFakeKeyEvent(m_display, keycode, True, CurrentTime);
+      XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
+      continue;
+    }
 
-  // now use absolute value of delta
-  if (axisDelta < 0) {
-    axisDelta = -axisDelta;
-  }
+    // now use absolute value of delta
+    if (axisDelta < 0) {
+      axisDelta = -axisDelta;
+    }
 
-  // send as many clicks as necessary
-  while (axisDelta > 0) {
-    XTestFakeButtonEvent(m_display, button, True, CurrentTime);
-    XTestFakeButtonEvent(m_display, button, False, CurrentTime);
-    axisDelta -= s_scrollDelta;
+    // send as many clicks as necessary
+    while (axisDelta > 0) {
+      XTestFakeButtonEvent(m_display, button, True, CurrentTime);
+      XTestFakeButtonEvent(m_display, button, False, CurrentTime);
+      axisDelta -= s_scrollDelta;
+    }
   }
   XFlush(m_display);
 }

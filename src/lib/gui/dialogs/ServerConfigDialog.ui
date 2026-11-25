@@ -368,6 +368,26 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbSmoothScroll">
+            <property name="toolTip">
+             <string>Send pixel-precise scrolling from a Magic Mouse or trackpad. Linux (X11) and macOS clients need this version or newer.</string>
+            </property>
+            <property name="text">
+             <string>Smooth scrolling from Magic Mouse and trackpads</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cbSwipeNavigation">
+            <property name="toolTip">
+             <string>On other computers, a horizontal swipe on a Magic Mouse or trackpad goes Back/Forward instead of scrolling sideways.</string>
+            </property>
+            <property name="text">
+             <string>Swipe left/right for Back/Forward</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbWin32KeepForeground">
             <property name="enabled">
              <bool>true</bool>
@@ -920,6 +940,8 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>cbHeartbeat</tabstop>
   <tabstop>sbHeartbeat</tabstop>
   <tabstop>cbRelativeMouseMoves</tabstop>
+  <tabstop>cbSmoothScroll</tabstop>
+  <tabstop>cbSwipeNavigation</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>

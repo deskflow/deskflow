@@ -22,6 +22,7 @@
 #include <bitset>
 #include <map>
 #include <memory>
+#include <optional>
 #include <thread>
 #include <vector>
 
@@ -96,6 +97,23 @@ public:
   std::string getSecureInputApp() const override;
 
   void waitForCarbonLoop() const;
+
+  // pixel-precise delta for continuous scroll devices (Magic Mouse, trackpad), nullopt for wheel notches
+  static std::optional<ScrollDelta> continuousScrollDelta(CGEventRef event);
+
+  // turns a horizontal Magic Mouse / trackpad stroke into a page Back/Forward click (Settings::Server::SwipeNavigation)
+  class SwipeNavigation
+  {
+  public:
+    // fingerDx is in points, positive when the finger moves right; returns the mac button (4 Back, 5 Forward)
+    // when a stroke ends as a horizontal swipe
+    std::optional<uint16_t> update(int64_t scrollPhase, int32_t fingerDx, int32_t dy);
+
+  private:
+    bool m_active = false; // began was seen, so the stroke started on this screen
+    int32_t m_dx = 0;
+    int32_t m_dy = 0;
+  };
 
 protected:
   // IPlatformComputer overrides
@@ -322,4 +340,11 @@ private:
   OSXPowerManager m_powerManager;
 
   class OSXComputerImpl *m_impl;
+
+  // forward pixel-precise scroll from continuous devices (Settings::Server::SmoothScroll)
+  bool m_smoothScroll;
+
+  // horizontal strokes become Back/Forward instead of sideways scroll (Settings::Server::SwipeNavigation)
+  bool m_swipeNavigation;
+  SwipeNavigation m_swipe;
 };

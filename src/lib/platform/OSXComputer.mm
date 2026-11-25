@@ -36,6 +36,8 @@
 #include <AppKit/NSEvent.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
+#include <algorithm>
+#include <cmath>
 #include <dispatch/dispatch.h>
 #include <libproc.h>
 #include <mach-o/dyld.h>
@@ -113,7 +115,9 @@ OSXComputer::OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSyn
       m_lastSingleClickXCursor(0),
       m_lastSingleClickYCursor(0),
       m_events(events),
-      m_impl(nullptr)
+      m_impl(nullptr),
+      m_smoothScroll(Settings::value(Settings::Server::SmoothScroll).toBool()),
+      m_swipeNavigation(Settings::value(Settings::Server::SwipeNavigation).toBool())
 {
   m_displayID = CGMainDisplayID();
   if (!updateComputerShape(m_displayID, 0)) {
@@ -624,10 +628,10 @@ void OSXComputer::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 
 void OSXComputer::fakeMouseWheel(ScrollDelta delta) const
 {
+  // posted in whole lines, so smooth-scroll deltas below a notch must add up first
+  delta = takeWholeScrollNotches(applyScrollModifier(delta));
   if (delta.x != 0 || delta.y != 0) {
-    delta = applyScrollModifier(
-        {static_cast<int32_t>(delta.x / s_scrollDelta), static_cast<int32_t>(delta.y / s_scrollDelta)}
-    );
+    delta = {delta.x / s_scrollDelta, delta.y / s_scrollDelta};
     // create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
     // is the right choice here over kCGScrollEventUnitPixel
     CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(nullptr, kCGScrollEventUnitLine, 2, delta.y, delta.x);
@@ -1267,6 +1271,57 @@ int32_t OSXComputer::mapScrollWheelToDeskflow(int32_t x) const
   return static_cast<int32_t>(120.0 * d);
 }
 
+std::optional<ScrollDelta> OSXComputer::continuousScrollDelta(CGEventRef event)
+{
+  if (CGEventGetIntegerValueField(event, kCGScrollWheelEventIsContinuous) == 0) {
+    return std::nullopt;
+  }
+  // Windows browsers scroll 100px per 120 wheel units; 1.2 units per point keeps the Mac's speed.
+  // Point deltas already carry macOS acceleration and momentum, so no extra scaling.
+  const auto toWheelUnits = [event](CGEventField field) {
+    const auto units = std::lround(CGEventGetIntegerValueField(event, field) * 1.2);
+    return static_cast<int32_t>(std::clamp<long>(units, INT16_MIN, INT16_MAX)); // wire format is int16
+  };
+  return ScrollDelta{
+      toWheelUnits(kCGScrollWheelEventPointDeltaAxis2), toWheelUnits(kCGScrollWheelEventPointDeltaAxis1)
+  };
+}
+
+std::optional<uint16_t> OSXComputer::SwipeNavigation::update(int64_t scrollPhase, int32_t fingerDx, int32_t dy)
+{
+  // shortcut: thresholds picked without Magic Mouse hardware, tune from real swipe logs
+  constexpr int32_t kMinSwipePoints = 60;
+
+  switch (scrollPhase) {
+  case kCGScrollPhaseBegan:
+    m_active = true;
+    m_dx = fingerDx;
+    m_dy = dy;
+    return std::nullopt;
+  case kCGScrollPhaseChanged:
+    m_dx += fingerDx;
+    m_dy += dy;
+    return std::nullopt;
+  case kCGScrollPhaseEnded: {
+    const bool isSwipe = m_active && std::abs(m_dx) >= kMinSwipePoints && std::abs(m_dx) > 2 * std::abs(m_dy);
+    const bool isRight = m_dx > 0;
+    m_active = false;
+    m_dx = m_dy = 0;
+    if (!isSwipe) {
+      return std::nullopt;
+    }
+    // finger right goes Back, as in Safari
+    return isRight ? 4 : 5;
+  }
+  case kCGScrollPhaseCancelled:
+    m_active = false;
+    m_dx = m_dy = 0;
+    return std::nullopt;
+  default: // momentum and may-begin events are not part of the stroke
+    return std::nullopt;
+  }
+}
+
 double OSXComputer::getScrollSpeed() const
 {
   double scaling = 0.0;
@@ -1674,6 +1729,17 @@ OSXComputer::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type
 }
 
 // Quartz event tap support
+namespace {
+// horizontal scroll in points, positive when the finger moves right whatever the natural-scrolling setting
+int32_t swipeFingerDx(CGEventRef event)
+{
+  const auto dx = static_cast<int32_t>(CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis2));
+  @autoreleasepool {
+    return [NSEvent eventWithCGEvent:event].isDirectionInvertedFromDevice ? dx : -dx;
+  }
+}
+} // namespace
+
 CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
   OSXComputer *computer = (OSXComputer *)refcon;
@@ -1698,11 +1764,35 @@ CGEventRef OSXComputer::handleCGInputEvent(CGEventTapProxy proxy, CGEventType ty
     computer->onMouseMove(event);
     break;
   case kCGEventScrollWheel:
-    computer->onMouseWheel(
-        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
-        computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1))
-    );
-    break;
+    // shortcut: opt-in because X11 and macOS clients older than this change mishandle sub-notch deltas;
+    // make it default once those versions are no longer supported.
+    {
+      ScrollDelta delta;
+      if (const auto smooth = computer->m_smoothScroll ? continuousScrollDelta(event) : std::nullopt) {
+        delta = *smooth;
+      } else {
+        delta = {
+            computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
+            computer->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1))
+        };
+      }
+      if (computer->m_swipeNavigation && !computer->m_isOnComputer &&
+          CGEventGetIntegerValueField(event, kCGScrollWheelEventIsContinuous) != 0) {
+        delta.x = 0; // horizontal strokes become Back/Forward instead of sideways scroll
+        const auto phase = CGEventGetIntegerValueField(event, kCGScrollWheelEventScrollPhase);
+        const auto dy = static_cast<int32_t>(CGEventGetIntegerValueField(event, kCGScrollWheelEventPointDeltaAxis1));
+        if (const auto button = computer->m_swipe.update(phase, swipeFingerDx(event), dy)) {
+          computer->onMouseButton(true, *button);
+          computer->onMouseButton(false, *button);
+        }
+      } else if (computer->m_swipeNavigation) {
+        computer->m_swipe.update(kCGScrollPhaseCancelled, 0, 0); // a stroke on this screen must not carry over
+      }
+      if (delta.x != 0 || delta.y != 0) { // phase begin/end events carry no movement
+        computer->onMouseWheel(delta.x, delta.y);
+      }
+      break;
+    }
   case kCGEventKeyDown:
   case kCGEventKeyUp:
   case kCGEventFlagsChanged:

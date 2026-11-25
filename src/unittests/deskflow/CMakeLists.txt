@@ -63,3 +63,11 @@ if(BUILD_X11_SUPPORT)
   )
 endif()
 
+
+create_test(
+  NAME ISecondaryComputerTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE ISecondaryComputerTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)

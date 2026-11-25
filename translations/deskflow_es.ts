@@ -1100,6 +1100,22 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Enable lock to computer at startup</source>
         <translation type="unfinished">Activar el bloqueo del ordenador al iniciar</translation>
     </message>
+    <message>
+        <source>Send pixel-precise scrolling from a Magic Mouse or trackpad. Linux (X11) and macOS clients need this version or newer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smooth scrolling from Magic Mouse and trackpads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On other computers, a horizontal swipe on a Magic Mouse or trackpad goes Back/Forward instead of scrolling sideways.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swipe left/right for Back/Forward</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
