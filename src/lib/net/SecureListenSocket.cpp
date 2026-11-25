@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "arch/ArchException.h"
 #include "common/Settings.h"
+#include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 
 //
@@ -52,10 +53,15 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
       setListeningJob();
     }
     return nullptr;
-  } catch (std::exception &ex) {
+  } catch (const SocketCreateException &) {
+    // the accepted socket could not be set up, e.g. the peer reset before accept() (#10068);
+    // drop it and keep listening for other clients
+    setListeningJob();
+    return nullptr;
+  } catch (std::exception &) {
     if (secureSocket) {
       setListeningJob();
     }
-    throw ex;
+    throw;
   }
 }

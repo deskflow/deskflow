@@ -30,3 +30,13 @@ create_test(
 )
 
 
+
+if(NOT WIN32)
+  create_test(
+    NAME TCPListenSocketTests
+    DEPENDS net
+    LIBS base arch mt io ${extra_libs}
+    SOURCE TCPListenSocketTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/net"
+  )
+endif()
