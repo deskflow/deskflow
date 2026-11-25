@@ -183,6 +183,44 @@ void KeyMapTests::mapkey()
   QVERIFY(result == nullptr);
 }
 
+void KeyMapTests::mapKey_altGrWithCtrlAlt_doesNotPressAlt()
+{
+  // Windows servers send AltGr with Ctrl+Alt in the mask (#10259); tapping Alt_L for it opens app menu bars
+  constexpr KeyButton kCtrlKey = 37;
+  constexpr KeyButton kAltKey = 64;
+  constexpr KeyButton kAltGrKey = 92;
+  KeyMap keyMap{};
+  KeyMap::KeyItem item;
+  item.m_button = kCtrlKey;
+  item.m_id = kKeyControl_L;
+  item.m_generates = KeyModifierControl;
+  keyMap.addKeyEntry(item);
+  item.m_button = kAltKey;
+  item.m_id = kKeyAlt_L;
+  item.m_generates = KeyModifierAlt;
+  keyMap.addKeyEntry(item);
+  item.m_button = kAltGrKey;
+  item.m_id = kKeyAltGr;
+  item.m_generates = KeyModifierAltGr;
+  keyMap.addKeyEntry(item);
+  keyMap.finish();
+
+  KeyMap::Keystrokes strokes;
+  KeyMap::ModifierToKeys activeModifiers;
+  KeyModifierMask currentState = 0;
+  const auto *result = keyMap.mapKey(
+      strokes, kKeyAltGr, 0, activeModifiers, currentState, KeyModifierControl | KeyModifierAlt, false, "en"
+  );
+
+  QVERIFY(result != nullptr);
+  QCOMPARE(result->m_button, kAltGrKey);
+  for (const auto &stroke : strokes) {
+    if (stroke.m_type == KeyMap::Keystroke::KeyType::Button) {
+      QVERIFY2(stroke.m_data.m_button.m_button != kAltKey, "Alt_L must not be pressed for AltGr");
+    }
+  }
+}
+
 void KeyMapTests::parseModifiers_plusKey_keepsPlusAsKey()
 {
   std::string keystroke = "Control+Shift++";
