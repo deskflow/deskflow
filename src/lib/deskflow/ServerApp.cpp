@@ -205,7 +205,7 @@ void ServerApp::stopServer()
     m_serverState = Initialized;
   } else if (m_serverState == Starting) {
     stopRetryTimer();
-    m_serverState = Initialized;
+    m_serverState = stateWithoutStart();
   }
   assert(m_server == nullptr);
   assert(m_listener == nullptr);
@@ -284,9 +284,9 @@ void ServerApp::retryHandler()
 
   case Starting:
     LOG_VERBOSE("retry starting server");
-    m_serverState = Initialized;
+    m_serverState = stateWithoutStart();
     if (!startServer()) {
-      getEvents()->addEvent(Event(EventTypes::Quit));
+      scheduleStartRetry();
     }
     break;
   }
@@ -435,9 +435,37 @@ void ServerApp::handleResume()
 {
   if (m_suspended) {
     LOG_INFO("resume");
-    startServer();
     m_suspended = false;
+    m_resumeRetries = 0;
+    if (!startServer()) {
+      scheduleStartRetry();
+    }
   }
+}
+
+ServerState ServerApp::stateWithoutStart() const
+{
+  // a start can fail before initialization finished; then startServer() must initialize again
+  return m_primaryClient != nullptr ? ServerState::Initialized : ServerState::Uninitialized;
+}
+
+void ServerApp::scheduleStartRetry()
+{
+  // after wake the network address can take a few seconds to come back, so binding fails at first.
+  // startup still never retries; this only covers a server that was already running before sleep
+  static constexpr int kMaxRetries = 30;
+  static constexpr double kRetryInterval = 1.0;
+
+  if (m_resumeRetries >= kMaxRetries) {
+    LOG_ERR("could not start the server after resume, giving up after %d retries", kMaxRetries);
+    return;
+  }
+  ++m_resumeRetries;
+  LOG_WARN("could not start the server after resume, retrying (%d/%d)", m_resumeRetries, kMaxRetries);
+
+  m_serverState = ServerState::Starting;
+  m_timer = getEvents()->newOneShotTimer(kRetryInterval, nullptr);
+  getEvents()->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
 }
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)

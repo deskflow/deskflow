@@ -4,12 +4,20 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "arch/Arch.h"
+#include "base/Log.h"
+
 #include <QTest>
 
 class ServerAppTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
-  // Test are run in order top to bottom
-  void section();
+  void initTestCase();
+  void handleResume_startFails_retriesUntilStarted();
+  void handleSuspend_whileRetrying_stopsRetrying();
+
+private:
+  Arch m_arch;
+  Log m_log;
 };
