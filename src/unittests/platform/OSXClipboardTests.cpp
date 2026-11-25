@@ -19,6 +19,14 @@ void OSXClipboardTests::open()
   clipboard.close();
 }
 
+void OSXClipboardTests::toIClipboard_crlf_isOneNewline()
+{
+  // macOS apps can put CRLF text on the pasteboard; reading it as two newlines grew text on every round trip
+  OSXClipboardUTF8Converter converter;
+  QCOMPARE(converter.toIClipboard("AAA\r\nBBB\r\n"), "AAA\nBBB\n");
+  QCOMPARE(converter.toIClipboard("A\rB\nC"), "A\nB\nC");
+}
+
 void OSXClipboardTests::singleFormat()
 {
   using enum IClipboard::Format;

@@ -7,6 +7,8 @@
 
 #include "platform/OSXClipboardAnyTextConverter.h"
 
+#include <QByteArray>
+
 #include <algorithm>
 
 //
@@ -52,7 +54,8 @@ std::string OSXClipboardAnyTextConverter::convertLinefeedToMacOS(const std::stri
 
 std::string OSXClipboardAnyTextConverter::convertLinefeedToUnix(const std::string &src)
 {
-  std::string copy = src;
+  // CRLF is one newline: drop its CR before turning the remaining CRs into LFs
+  std::string copy = QByteArray::fromStdString(src).replace("\r\n", "\n").toStdString();
 
   std::replace_if(copy.begin(), copy.end(), isCR, '\n');
 
