@@ -75,6 +75,32 @@ bool OSXClipboard::synchronize()
   return false;
 }
 
+bool OSXClipboard::hasNewContent()
+{
+  if (!synchronize()) {
+    return false;
+  }
+
+  // clipboard managers rewrite what is already there; sending that again starts a loop between computers
+  std::string content = IClipboard::marshall(this);
+  if (!m_lastContent.empty() && content == m_lastContent) {
+    LOG_DEBUG("clipboard rewritten with the same content, ignoring");
+    return false;
+  }
+  m_lastContent = std::move(content);
+  return true;
+}
+
+void OSXClipboard::rememberContent()
+{
+  m_lastContent = IClipboard::marshall(this);
+}
+
+void OSXClipboard::forgetContent()
+{
+  m_lastContent.clear();
+}
+
 void OSXClipboard::add(Format format, const std::string &data)
 {
   if (m_pboard == nullptr)

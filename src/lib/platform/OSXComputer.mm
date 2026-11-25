@@ -838,6 +838,10 @@ bool OSXComputer::setClipboard(ClipboardID, const IClipboard *src)
   if (src != nullptr) {
     LOG_DEBUG("setting clipboard");
     Clipboard::copy(&m_pasteboard, src);
+    m_pasteboard.rememberContent();
+  } else {
+    // another computer took the clipboard: copying the same text here again is a real copy
+    m_pasteboard.forgetContent();
   }
   return true;
 }
@@ -845,7 +849,7 @@ bool OSXComputer::setClipboard(ClipboardID, const IClipboard *src)
 void OSXComputer::checkClipboards()
 {
   LOG_VERBOSE("checking clipboard");
-  if (m_pasteboard.synchronize()) {
+  if (m_pasteboard.hasNewContent()) {
     LOG_DEBUG("clipboard changed");
     sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
     sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);

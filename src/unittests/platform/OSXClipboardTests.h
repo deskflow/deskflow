@@ -15,6 +15,7 @@ private Q_SLOTS:
   void open();
   void singleFormat();
   void formatConvert_UTF8();
+  void hasNewContent_identicalRewrite_isIgnored();
 
 private:
   Log m_log;
