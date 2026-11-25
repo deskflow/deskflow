@@ -492,6 +492,7 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
   for (int32_t groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
     const auto effectiveGroup = getEffectiveGroup(group, groupOffset);
     const KeyEntryList &entryList = keyGroupTable[effectiveGroup];
+    const KeyItem *firstMatch = nullptr;
     for (const auto &entry : entryList) {
       if (entry.size() != 1) {
         continue;
@@ -506,12 +507,23 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
       KeyModifierMask requiredIgnoreShiftMask = item.m_required & ~KeyModifierShift;
       if ((item.m_required & desiredShiftMask) == (item.m_sensitive & desiredShiftMask) &&
           ((requiredIgnoreShiftMask & desiredMask) == requiredIgnoreShiftMask)) {
-        LOG_VERBOSE("found key in group %d", effectiveGroup);
-        keyItem = &item;
-        break;
+        // prefer a key whose shift level matches too: with AltGr the same KeyID can be on two keys at
+        // different shift levels, and pressing the other one types a different character (#10090)
+        const KeyModifierMask shiftSensitive = item.m_sensitive & KeyModifierShift;
+        if ((item.m_required & shiftSensitive) == (desiredMask & shiftSensitive)) {
+          keyItem = &item;
+          break;
+        }
+        if (!firstMatch) {
+          firstMatch = &item;
+        }
       }
     }
+    if (!keyItem) {
+      keyItem = firstMatch;
+    }
     if (keyItem) {
+      LOG_VERBOSE("found key in group %d", effectiveGroup);
       break;
     }
   }
