@@ -91,6 +91,11 @@ KeyID XDGKeyUtil::mapKeySymToKeyID(KeySym k)
     return static_cast<KeyID>(s_map1008FF.at(k & 0xff));
 
   default: {
+    // Unicode keysym: 0x01000000 | code point
+    if ((k & 0xff000000) == 0x01000000) {
+      return static_cast<KeyID>(k & 0x00ffffff);
+    }
+
     // lookup character in table
     if (const auto i = s_keySymToUCS4.find(k); i != s_keySymToUCS4.end()) {
       return i->second;
