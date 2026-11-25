@@ -1030,6 +1030,8 @@ void KeyState::addKeypadEntries()
     for (size_t i = 0; i < std::size(s_numpadTable); i += 2) {
       m_keyMap.addKeyCombinationEntry(s_numpadTable[i], g, s_numpadTable + i + 1, 1);
     }
+    // numpad-5 with NumLock off: Windows sends Clear, most Linux layouts only have KP_Begin (#9947)
+    m_keyMap.addKeyCombinationEntry(kKeyClear, g, &kKeyKP_Begin, 1);
   }
 }
 
