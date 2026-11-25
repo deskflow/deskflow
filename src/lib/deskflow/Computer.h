@@ -13,6 +13,7 @@
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
 
+#include <bitset>
 #include <string>
 
 class IClipboard;
@@ -302,6 +303,10 @@ private:
 
   // true if the cursor is on this computer
   bool m_entered = false;
+
+  // buttons this secondary computer pressed and has not released, released on leave so a
+  // dropped connection mid-click does not leave them stuck down (#10202)
+  std::bitset<NumButtonIDs> m_buttonsDown;
 
   // note toggle keys that toggles on up/down (false) or on
   // transition (true)

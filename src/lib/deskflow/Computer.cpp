@@ -245,11 +245,17 @@ void Computer::keyUp(KeyID, KeyModifierMask, KeyButton button)
 void Computer::mouseDown(ButtonID button)
 {
   m_computer->fakeMouseButton(button, true);
+  if (button < NumButtonIDs) {
+    m_buttonsDown.set(button);
+  }
 }
 
 void Computer::mouseUp(ButtonID button)
 {
   m_computer->fakeMouseButton(button, false);
+  if (button < NumButtonIDs) {
+    m_buttonsDown.reset(button);
+  }
 }
 
 void Computer::mouseMove(int32_t x, int32_t y)
@@ -460,6 +466,14 @@ void Computer::leaveSecondary()
 {
   // release any keys we think are still down
   m_computer->fakeAllKeysUp();
+
+  // and any mouse buttons
+  for (ButtonID button = 0; button < NumButtonIDs; ++button) {
+    if (m_buttonsDown.test(button)) {
+      m_computer->fakeMouseButton(button, false);
+    }
+  }
+  m_buttonsDown.reset();
 }
 
 std::string Computer::getSecureInputApp() const
