@@ -14,6 +14,7 @@
 #include "platform/XDGKeyUtil.h"
 
 #include <cstddef>
+#include <cstring>
 #include <memory>
 #include <unistd.h>
 
@@ -41,10 +42,7 @@ void EiKeyState::initDefaultKeymap()
   }
   m_xkbKeymap = xkb_keymap_new_from_names(m_xkb, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
 
-  if (m_xkbState) {
-    xkb_state_unref(m_xkbState);
-  }
-  m_xkbState = xkb_state_new(m_xkbKeymap);
+  resetCaptureState();
 }
 
 void EiKeyState::init(int fd, size_t len)
@@ -76,14 +74,12 @@ void EiKeyState::init(int fd, size_t len)
   }
   m_xkbKeymap = keymap;
 
-  if (m_xkbState) {
-    xkb_state_unref(m_xkbState);
-  }
-  m_xkbState = xkb_state_new(m_xkbKeymap);
+  resetCaptureState();
 }
 
 EiKeyState::~EiKeyState()
 {
+  xkb_state_unref(m_captureState);
   xkb_context_unref(m_xkb);
   xkb_keymap_unref(m_xkbKeymap);
   xkb_state_unref(m_xkbState);
@@ -97,14 +93,14 @@ bool EiKeyState::fakeCtrlAltDel()
 
 KeyModifierMask EiKeyState::pollActiveModifiers() const
 {
-  const auto effectiveMask = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_EFFECTIVE);
-  const auto lockedMask = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_LOCKED);
+  const auto effectiveMask = xkb_state_serialize_mods(translationState(), XKB_STATE_MODS_EFFECTIVE);
+  const auto lockedMask = xkb_state_serialize_mods(translationState(), XKB_STATE_MODS_LOCKED);
   return convertModMask(effectiveMask) | convertModMask(lockedMask, true);
 }
 
 std::int32_t EiKeyState::pollActiveGroup() const
 {
-  return xkb_state_serialize_layout(m_xkbState, XKB_STATE_LAYOUT_EFFECTIVE);
+  return xkb_state_serialize_layout(translationState(), XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
 void EiKeyState::pollPressedKeys(KeyButtonSet &) const
@@ -313,29 +309,23 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
   m_computer->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
 }
 
+xkb_state *EiKeyState::translationState() const
+{
+  return m_haveCaptureModifiers ? m_captureState : m_xkbState;
+}
+
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 {
-  // Get the base keysym from level 0, ignoring current modifiers.
-  // We need this because with newer xkeyboard-config, function keys use CTRL+ALT type,
-  // and xkb_state_key_get_one_sym() would return XF86_Switch_VT_* when Ctrl+Alt are
-  // pressed, instead of F1. We want to send F1 + modifiers to the server, not the
-  // VT switch action.
-  const auto shifted = xkb_keymap_num_levels_for_key(m_xkbKeymap, keyval, 0);
-  const xkb_keysym_t *syms;
-  int nsyms = xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keyval, 0, shifted, &syms);
-
-  xkb_keysym_t xkbKeysym;
-  if (nsyms > 0) {
-    xkbKeysym = syms[0];
-  } else {
-    // Fallback to state-based lookup if level 0 has no symbols
-    xkbKeysym = xkb_state_key_get_one_sym(m_xkbState, keyval);
+  auto *state = translationState();
+  const auto sym = xkb_state_key_get_one_sym(state, keyval);
+  if (sym >= XKB_KEY_XF86Switch_VT_1 && sym <= XKB_KEY_XF86Switch_VT_12) {
+    // Never forward VT switching: Ctrl+Alt+Fn can leave the client on a TTY
+    // without remote input, preventing the user from switching back.
+    return kKeyNone;
   }
-
-  auto keysym = static_cast<KeySym>(xkbKeysym);
-  KeyID keyid = XDGKeyUtil::mapKeySymToKeyID(keysym);
+  auto keysym = static_cast<KeySym>(sym);
+  const auto keyid = XDGKeyUtil::mapKeySymToKeyID(keysym);
   LOG_VERBOSE("mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
-
   return keyid;
 }
 
@@ -343,6 +333,30 @@ void EiKeyState::updateXkbState(uint32_t keyval, bool isPressed)
 {
   LOG_VERBOSE("update key state: keyval=%d pressed=%i", keyval, isPressed);
   xkb_state_update_key(m_xkbState, keyval, isPressed ? XKB_KEY_DOWN : XKB_KEY_UP);
+}
+
+void EiKeyState::updateCaptureModifiers(
+    xkb_mod_mask_t depressed, xkb_mod_mask_t latched, xkb_mod_mask_t locked, xkb_layout_index_t group
+)
+{
+  if (group >= xkb_keymap_num_layouts(m_xkbKeymap)) {
+    LOG_WARN("invalid EIS keyboard group %u; using event-derived state", group);
+    m_haveCaptureModifiers = false;
+    return;
+  }
+  // EIS supplies the effective group. Do not add it to another layout component
+  // or apply key actions to this authoritative snapshot.
+  xkb_state_update_mask(m_captureState, depressed, latched, locked, 0, 0, group);
+  m_haveCaptureModifiers = true;
+}
+
+void EiKeyState::resetCaptureState()
+{
+  m_haveCaptureModifiers = false;
+  xkb_state_unref(m_captureState);
+  m_captureState = xkb_state_new(m_xkbKeymap);
+  xkb_state_unref(m_xkbState);
+  m_xkbState = xkb_state_new(m_xkbKeymap);
 }
 
 void EiKeyState::updateLockedModifiers(xkb_mod_mask_t lockedMods)

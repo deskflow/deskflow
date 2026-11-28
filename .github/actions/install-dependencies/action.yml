@@ -93,4 +93,3 @@ runs:
         wix extension add --global WixToolset.Util.wixext/5.0.2
         wix extension add --global WixToolset.Firewall.wixext/5.0.2
       shell: pwsh
-

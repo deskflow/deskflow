@@ -41,6 +41,20 @@ elseif(UNIX)
       SOURCE EiKeyStateTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBEIS QUIET IMPORTED_TARGET "libeis-1.0 >= ${REQUIRED_LIBEI_VERSION}")
+    if(LIBEIS_FOUND)
+      create_test(
+        NAME EiCaptureIntegrationTests
+        DEPENDS platform
+        LIBS base arch PkgConfig::LIBEIS
+        SOURCE EiCaptureIntegrationTests.cpp
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+      )
+    else()
+      message(STATUS "libeis ${REQUIRED_LIBEI_VERSION}+ unavailable, skipping EiCaptureIntegrationTests")
+    endif()
   endif()
 
   if (BUILD_X11_SUPPORT)
