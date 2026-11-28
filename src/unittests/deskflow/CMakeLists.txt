@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
 if(WIN32)
@@ -52,6 +52,16 @@ create_test(
   SOURCE KeyboardLayoutManagerTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
+
+if(APPLE)
+  create_test(
+    NAME AppUtilUnixTests
+    DEPENDS app
+    LIBS arch base
+    SOURCE AppUtilUnixTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+  )
+endif()
 
 if(BUILD_X11_SUPPORT)
   create_test(
