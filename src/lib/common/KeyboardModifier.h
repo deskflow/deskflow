@@ -13,6 +13,7 @@
 
 inline static const auto kModifierNameAlt = "alt";
 inline static const auto kModifierNameAltGr = "altgr";
+inline static const auto kModifierNameCapsLock = "capslock";
 inline static const auto kModifierNameCtrl = "ctrl";
 inline static const auto kModifierNameMeta = "meta";
 inline static const auto kModifierNameNone = "none";
@@ -28,7 +29,8 @@ enum class KeyboardModifier : int8_t
   Meta,
   Super,
   AltGr,
-  None
+  None,
+  CapsLock
 };
 Q_DECLARE_METATYPE(KeyboardModifier);
 
@@ -40,6 +42,8 @@ static QString keyboardModifierToOption(const KeyboardModifier modifier)
     return kModifierNameAlt;
   case AltGr:
     return kModifierNameAltGr;
+  case CapsLock:
+    return kModifierNameCapsLock;
   case Ctrl:
     return kModifierNameCtrl;
   case Meta:
@@ -81,6 +85,9 @@ static KeyboardModifier keyboardModifierFromString(const QString &modifier)
   if (modifier.compare(kModifierNameAltGr, Qt::CaseInsensitive) == 0 ||
       modifier.localeAwareCompare(QObject::tr("AltGr")) == 0)
     return AltGr;
+  if (modifier.compare(kModifierNameCapsLock, Qt::CaseInsensitive) == 0 ||
+      modifier.localeAwareCompare(QObject::tr("Caps Lock")) == 0)
+    return CapsLock;
   if (modifier.compare(kModifierNameNone, Qt::CaseInsensitive) == 0 ||
       modifier.localeAwareCompare(QObject::tr("None")) == 0)
     return None;
@@ -103,6 +110,8 @@ static int32_t modifierIDValueFromString(const QString &modifier)
     return static_cast<int32_t>(kKeyModifierIDAlt);
   if (mod == kModifierNameAltGr)
     return static_cast<int32_t>(kKeyModifierIDAltGr);
+  if (mod == kModifierNameCapsLock)
+    return static_cast<int32_t>(kKeyModifierIDCapsLock);
   if (mod == kModifierNameMeta)
     return static_cast<int32_t>(kKeyModifierIDMeta);
   if (mod == kModifierNameSuper)

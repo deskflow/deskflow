@@ -328,6 +328,14 @@ p, li { white-space: pre-wrap; }
         <source>The computer name cannot be the same as an alias. Please either remove the alias or change the computer name.</source>
         <translation type="unfinished">Имя компьютера не может совпадать с псевдонимом. Удалите псевдоним или измените имя компьютера.</translation>
     </message>
+    <message>
+        <source>Caps &amp;Lock</source>
+        <translation>Caps &amp;Lock</translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation>Caps Lock</translation>
+    </message>
 </context>
 <context>
     <name>ComputerSetupModel</name>
@@ -912,6 +920,10 @@ Additionally, check you are able to %1 the server config file: %2</source>
     <message>
         <source>Meta</source>
         <translation type="unfinished">Meta</translation>
+    </message>
+    <message>
+        <source>Caps Lock</source>
+        <translation>Caps Lock</translation>
     </message>
     <message>
         <source>None</source>

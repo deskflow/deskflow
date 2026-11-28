@@ -29,5 +29,6 @@ static const KeyModifierID kKeyModifierIDAlt = 3;
 static const KeyModifierID kKeyModifierIDMeta = 4;
 static const KeyModifierID kKeyModifierIDSuper = 5;
 static const KeyModifierID kKeyModifierIDAltGr = 6;
-static const KeyModifierID kKeyModifierIDLast = 7;
+static const KeyModifierID kKeyModifierIDCapsLock = 7;
+static const KeyModifierID kKeyModifierIDLast = 8;
 //@}
