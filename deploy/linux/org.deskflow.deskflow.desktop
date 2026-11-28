@@ -20,3 +20,6 @@ Keywords[ru]=Передача;Трансляция;barrier;input-leap;
 Name[ko]=Deskflow
 Comment[ko]=마우스 및 키보드 공유 유틸리티
 Keywords[ko]=키보드;마우스;공유;네트워크;
+Name[pt_BR]=Deskflow
+Comment[pt_BR]=Utilitário de compartilhamento de mouse e teclado
+Keywords[pt_BR]=teclado;mouse;compartilhamento;compartilhar;rede;
