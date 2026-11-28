@@ -17,6 +17,8 @@
 #include <memory>
 #include <unistd.h>
 
+#include <xkbcommon/xkbcommon-keysyms.h>
+
 namespace deskflow {
 
 EiKeyState::EiKeyState(EiComputer *computer, IEventQueue *events)
@@ -86,6 +88,7 @@ EiKeyState::~EiKeyState()
 {
   xkb_context_unref(m_xkb);
   xkb_keymap_unref(m_xkbKeymap);
+  xkb_keymap_unref(m_stockKeymap);
   xkb_state_unref(m_xkbState);
 }
 
@@ -282,6 +285,45 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
         item.m_required = convertModMask(modRequired);
 
         assignGeneratedModifiers(keycode, item);
+
+        // An xkb option may remap a key to compose (Multi_key), but servers never
+        // send kKeyCompose, so register an alias for the keysym the key has without
+        // options; the shared button keeps the injected event working. If remapped
+        // onto a modifier, the alias is not tracked as one (m_generates == 0).
+        if (keysym == XKB_KEY_Multi_key) {
+          if (!m_stockKeymap) {
+            xkb_rule_names names{};
+            names.options = ""; // no options -> no compose remap
+            m_stockKeymap = xkb_keymap_new_from_names(m_xkb, &names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+            if (!m_stockKeymap) {
+              LOG_WARN("failed to compile keymap without options, compose key alias unavailable");
+            }
+          }
+          if (m_stockKeymap) {
+            const xkb_keysym_t *stockSyms;
+            if (xkb_keymap_key_get_syms_by_level(m_stockKeymap, keycode, group, level, &stockSyms) > 0) {
+              const auto stockID = XDGKeyUtil::mapKeySymToKeyID(stockSyms[0]);
+              if (stockID != kKeyNone && stockID != kKeyCompose) {
+                auto alias = item;
+                alias.m_id = stockID;
+                keyMap.addKeyEntry(alias);
+                char stockName[128] = {0};
+                xkb_keysym_get_name(stockSyms[0], stockName, sizeof(stockName));
+                LOG_INFO(
+                    "compose key on keycode %d (group %d level %d): added alias for keysym %s (0x%lx)", keycode, group,
+                    level, stockName, static_cast<unsigned long>(stockSyms[0])
+                );
+              } else {
+                LOG_VERBOSE(
+                    "compose key on keycode %d: stock keysym 0x%lx maps to no usable KeyID", keycode,
+                    static_cast<unsigned long>(stockSyms[0])
+                );
+              }
+            } else {
+              LOG_VERBOSE("compose key on keycode %d: no stock keysym at group %d level %d", keycode, group, level);
+            }
+          }
+        }
 
         // add capslock version of key is sensitive to capslock
         if (item.m_sensitive & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
