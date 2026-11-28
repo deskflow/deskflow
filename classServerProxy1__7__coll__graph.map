@@ -1,0 +1,5 @@
+<map id="ServerProxy1_7" name="ServerProxy1_7">
+<area shape="rect" id="Node000001" title="Proxy for server implementing protocol version 1.7." alt="" coords="5,78,120,103"/>
+<area shape="rect" id="Node000002" href="$classServerProxy.html" title="Proxy for server implementing protocol version 1.6." alt="" coords="16,5,109,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,44,65,78,60,77,61,48"/>
+</map>

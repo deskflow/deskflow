@@ -1,0 +1,25 @@
+<map id="IKeyState" name="IKeyState">
+<area shape="rect" id="Node000001" title="Key state interface." alt="" coords="424,5,502,30"/>
+<area shape="rect" id="Node000002" href="$classIPlatformComputer.html" title="Computer interface." alt="" coords="334,78,466,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="444,40,412,80,409,76,440,43"/>
+<area shape="rect" id="Node000008" href="$classKeyState.html" title="Core key state." alt="" coords="582,78,656,103"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="503,34,596,77,590,78,502,39"/>
+<area shape="rect" id="Node000003" href="$classPlatformComputer.html" title="Base computer implementation." alt="" coords="244,151,372,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="375,111,324,153,322,148,370,114"/>
+<area shape="rect" id="Node000004" href="$classMSWindowsComputer.html" title="Implementation of IPlatformComputer for Microsoft Windows." alt="" coords="5,223,158,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="257,183,120,225,118,220,255,178"/>
+<area shape="rect" id="Node000005" href="$classOSXComputer.html" title="Implementation of IPlatformComputer for OS X." alt="" coords="182,223,288,248"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="288,185,248,225,245,221,283,187"/>
+<area shape="rect" id="Node000006" href="$classXWindowsComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="312,223,454,248"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="332,184,373,224,368,222,330,189"/>
+<area shape="rect" id="Node000007" href="$classdeskflow_1_1EiComputer.html" title="Implementation of IPlatformComputer for X11." alt="" coords="478,223,627,248"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="363,177,514,222,509,223,363,183"/>
+<area shape="rect" id="Node000009" href="$classMSWindowsKeyState.html" title="Microsoft Windows key mapper." alt="" coords="395,151,544,175"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="583,109,495,153,493,148,578,110"/>
+<area shape="rect" id="Node000010" href="$classOSXKeyState.html" title="OS X key state." alt="" coords="568,151,670,175"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="621,117,621,152,617,149,617,120"/>
+<area shape="rect" id="Node000011" href="$classXWindowsKeyState.html" title="X Windows key state." alt="" coords="694,151,832,175"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="657,107,742,150,736,150,656,112"/>
+<area shape="rect" id="Node000012" href="$classdeskflow_1_1EiKeyState.html" title="A key state for Ei." alt="" coords="856,151,1001,175"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="671,101,879,150,874,150,671,106"/>
+</map>
