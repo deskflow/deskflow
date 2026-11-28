@@ -1146,7 +1146,7 @@ extern const char *const kMsgDSecureInputNotification;
  *
  * Server supports English, French, German, Spanish
  * ```
- * "LSYN\x00\x00\x00\x0Ben,fr,de,es"
+ * "LSYN\x00\x00\x00\x08enfrdees"
  * ```
  *
  * Synchronizes keyboard language/layout information between
@@ -1154,8 +1154,8 @@ extern const char *const kMsgDSecureInputNotification;
  * mapping when different keyboard layouts are used.
  *
  * **Language Format**:
- * - Comma-separated list of language codes
- * - Uses standard ISO 639-1 language codes
+ * - Two-letter ISO 639-1 codes concatenated with no separator
+ *   (the secondary splits the string every two characters)
  * - Primary language listed first
  *
  * @since Protocol version 1.8
