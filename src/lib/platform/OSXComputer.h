@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,6 +10,7 @@
 
 #include "deskflow/PlatformComputer.h"
 #include "platform/OSXClipboard.h"
+#include "platform/OSXLocalModifiers.h"
 #include "platform/OSXPowerManager.h"
 
 #include <Carbon/Carbon.h>
@@ -254,6 +255,7 @@ private:
 
   // keyboard stuff
   OSXKeyState *m_keyState;
+  OSXLocalModifiers m_localModifiers;
 
   // clipboards
   OSXClipboard m_pasteboard;
