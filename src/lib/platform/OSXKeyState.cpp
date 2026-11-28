@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Synergy App Ltd
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,6 +11,8 @@
 #include "base/Log.h"
 #include "platform/OSXKeyLayoutResource.h"
 #include "platform/OSXMediaKeySupport.h"
+
+#include <algorithm>
 
 #include <Carbon/Carbon.h>
 #include <IOKit/hidsystem/IOHIDLib.h>
@@ -209,22 +212,41 @@ AutoTISInputSourceRef copyKeyboardLayoutForKeyTranslation()
   return keyboardLayout;
 }
 
+bool queryZhuyinInputMode()
+{
+  std::lock_guard<std::mutex> lock(g_tisMutex);
+  AutoTISInputSourceRef source(TISCopyCurrentKeyboardInputSource(), CFRelease);
+  if (!source || TISGetInputSourceProperty(source.get(), kTISPropertyUnicodeKeyLayoutData)) {
+    return false;
+  }
+
+  auto id = static_cast<CFStringRef>(TISGetInputSourceProperty(source.get(), kTISPropertyInputSourceID));
+  return id && CFEqual(id, CFSTR("com.apple.inputmethod.TCIM.Zhuyin"));
+}
+
 } // namespace
 
 //
 // OSXKeyState
 //
 
-OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled)
-    : KeyState(events, std::move(layouts), isLangSyncEnabled)
+OSXKeyState::OSXKeyState(
+    IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled, InputModeQuery inputModeQuery
+)
+    : KeyState(events, layouts, isLangSyncEnabled),
+      m_inputModeQuery(inputModeQuery ? std::move(inputModeQuery) : queryZhuyinInputMode),
+      m_layouts(std::move(layouts))
 {
   init();
 }
 
 OSXKeyState::OSXKeyState(
-    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled
+    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled,
+    InputModeQuery inputModeQuery
 )
-    : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled)
+    : KeyState(events, keyMap, layouts, isLangSyncEnabled),
+      m_inputModeQuery(inputModeQuery ? std::move(inputModeQuery) : queryZhuyinInputMode),
+      m_layouts(std::move(layouts))
 {
   init();
 }
@@ -273,6 +295,93 @@ KeyModifierMask OSXKeyState::mapModifiersFromOSX(uint32_t mask) const
 
   LOG_VERBOSE("mask=%04x outMask=%04x", mask, outMask);
   return outMask;
+}
+
+KeyModifierMask OSXKeyState::mapModifiersFromCarbon(uint32_t mask)
+{
+  KeyModifierMask outMask = 0;
+  if ((mask & (shiftKey | rightShiftKey)) != 0) {
+    outMask |= KeyModifierShift;
+  }
+  if ((mask & (controlKey | rightControlKey)) != 0) {
+    outMask |= KeyModifierControl;
+  }
+  if ((mask & (optionKey | rightOptionKey)) != 0) {
+    outMask |= KeyModifierAlt;
+  }
+  if ((mask & cmdKey) != 0) {
+    outMask |= KeyModifierSuper;
+  }
+  if ((mask & alphaLock) != 0) {
+    outMask |= KeyModifierCapsLock;
+  }
+  return outMask;
+}
+
+KeyID OSXKeyState::mapZhuyinLetter(KeyID id, KeyModifierMask mask, const std::string &lang) const
+{
+  const bool letter = (id >= 'a' && id <= 'z') || (id >= 'A' && id <= 'Z');
+  constexpr auto LetterModifiers = KeyModifierShift | KeyModifierCapsLock | KeyModifierNumLock | KeyModifierScrollLock;
+  if (!letter || (mask & ~LetterModifiers) != 0) {
+    return kKeyNone;
+  }
+
+  const auto group = pollActiveGroup();
+  const auto language = std::find(m_layouts.begin(), m_layouts.end(), lang);
+  if (language != m_layouts.end() && std::distance(m_layouts.begin(), language) != group) {
+    // Language synchronization can leave the current input method. Let the
+    // normal mapping handle that group change without applying Zhuyin rules.
+    return kKeyNone;
+  }
+  const auto layout = m_letterLayouts.find(group);
+  if (layout == m_letterLayouts.end()) {
+    return kKeyNone;
+  }
+  const auto button = getButton(id, group);
+  const auto characters = layout->second.find(button);
+  if (characters == layout->second.end()) {
+    return kKeyNone;
+  }
+
+  const auto index = ((mask & KeyModifierShift) ? 1u : 0u) | ((mask & KeyModifierCapsLock) ? 2u : 0u);
+  const auto mapped = characters->second[index];
+  const auto lower = [](KeyID key) { return (key >= 'A' && key <= 'Z') ? key + ('a' - 'A') : key; };
+  if (lower(mapped) != lower(id) || getButton(mapped, group) != button) {
+    return kKeyNone;
+  }
+  return mapped;
+}
+
+void OSXKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
+{
+  if (m_inputModeQuery()) {
+    const auto mapped = mapZhuyinLetter(id, mask, lang);
+    if (id == kKeyCapsLock || mapped != kKeyNone) {
+      // macOS locking keys are half duplex. Preserve the input mode between
+      // letters using the source Caps state, rather than a down/up pair.
+      KeyState::fakeKeyDown(
+          (mask & KeyModifierCapsLock) ? kKeySetModifiers : kKeyClearModifiers, KeyModifierCapsLock, 0, lang
+      );
+      if (id == kKeyCapsLock) {
+        return;
+      }
+      id = mapped;
+    }
+  }
+  KeyState::fakeKeyDown(id, mask, button, lang);
+}
+
+bool OSXKeyState::fakeKeyRepeat(
+    KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
+)
+{
+  if (m_inputModeQuery()) {
+    const auto mapped = mapZhuyinLetter(id, mask, lang);
+    if (mapped != kKeyNone) {
+      id = mapped;
+    }
+  }
+  return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
 }
 
 KeyModifierMask OSXKeyState::mapModifiersToCarbon(uint32_t mask) const
@@ -507,6 +616,7 @@ void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 
 void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 {
+  m_letterLayouts.clear();
   // update keyboard groups
   int32_t numGroups{0};
   if (getGroups(m_groups)) {
@@ -747,8 +857,10 @@ void OSXKeyState::getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, int32_t grou
   // anyway.
 }
 
-bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXKeyResource &r) const
+bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXKeyResource &r)
 {
+  auto &letters = m_letterLayouts[group];
+  letters.clear();
   if (!r.isValid()) {
     return false;
   }
@@ -771,6 +883,22 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
     for (uint32_t j = 0; j < r.getNumTables(); ++j) {
       buttonKeys[j].first = r.getKey(j, i);
       buttonKeys[j].second = deskflow::KeyMap::isDeadKey(buttonKeys[j].first);
+    }
+
+    // An input method consumes physical keys, while the fallback layout is
+    // used only to locate those keys. Keep its real Shift/Caps characters so
+    // character matching does not undo modifiers needed by the input method.
+    LetterCharacters characters;
+    for (size_t state = 0; state < characters.size(); ++state) {
+      const auto carbon = ((state & 1u) ? shiftKey : 0u) | ((state & 2u) ? alphaLock : 0u);
+      const auto table = r.getTableForModifier(carbon >> 8);
+      characters[state] = table < buttonKeys.size() ? buttonKeys[table].first : kKeyNone;
+    }
+    const auto lower = [](KeyID id) { return (id >= 'A' && id <= 'Z') ? id + ('a' - 'A') : id; };
+    const auto letter = lower(characters[0]);
+    if (letter >= 'a' && letter <= 'z' &&
+        std::all_of(characters.begin(), characters.end(), [&](KeyID id) { return lower(id) == letter; })) {
+      letters[item.m_button] = characters;
     }
 
     // iterate over each character table
@@ -848,9 +976,9 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
       }
 
       // now add a key entry for each key/required modifier pair.
-      item.m_sensitive = mapModifiersFromOSX(sensitive << 16);
+      item.m_sensitive = mapModifiersFromCarbon(sensitive << 8);
       for (std::set<uint32_t>::iterator k = required.begin(); k != required.end(); ++k) {
-        item.m_required = mapModifiersFromOSX(*k << 16);
+        item.m_required = mapModifiersFromCarbon(*k << 8);
         keyMap.addKeyEntry(item);
       }
     }
