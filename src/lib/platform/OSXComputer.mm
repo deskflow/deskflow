@@ -1313,7 +1313,7 @@ bool OSXComputer::updateComputerShape()
   // get info for each display
   CGDisplayCount displayCount = 0;
 
-  if (CGGetActiveDisplayList(0, nullptr, &displayCount) != CGDisplayNoErr) {
+  if (CGGetOnlineDisplayList(0, nullptr, &displayCount) != CGDisplayNoErr) {
     return false;
   }
 
@@ -1326,7 +1326,7 @@ bool OSXComputer::updateComputerShape()
     return false;
   }
 
-  if (CGGetActiveDisplayList(displayCount, displays, &displayCount) != CGDisplayNoErr) {
+  if (CGGetOnlineDisplayList(displayCount, displays, &displayCount) != CGDisplayNoErr) {
     delete[] displays;
     return false;
   }
