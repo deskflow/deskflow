@@ -222,5 +222,11 @@ private:
   );
   ToUnicodeEx_t m_ToUnicodeEx;
 
+  // KeyButton encoding: scan code in the low byte, extended-key flag in bit 8
+  static constexpr KeyButton kButtonExtendedBit = 0x100u;
+  static constexpr KeyButton kButtonMask = 0x1ffu;
+  static constexpr KeyButton kScanCodeAltPrintScreen = 0x54u;
+  static constexpr KeyButton kScanCodePrintScreen = 0x137u;
+
   static const KeyID s_virtualKey[];
 };
