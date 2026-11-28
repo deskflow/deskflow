@@ -253,4 +253,80 @@ void KeyStateTests::fakeKeyDown_langSyncDisabled_keepsLocalGroup()
   QCOMPARE(keyState.m_faked.front().m_data.m_button.m_button, kSharedButton);
 }
 
+void KeyStateTests::fakeKeyDown_altGrKeyOnTwoKeys_picksMatchingShiftLevel()
+{
+  // Czech layout (#10090): '<' is AltGr+Shift on keycode 52 (AltGr alone gives degree) and AltGr on keycode 59
+  constexpr KeyButton kAltGrKey = 92;
+  constexpr KeyButton kKeyY = 52;
+  constexpr KeyButton kKeyComma = 59;
+  constexpr KeyModifierMask kLevels = KeyModifierShift | KeyModifierAltGr;
+  MockEventQueue eventQueue;
+  deskflow::KeyMap keyMap;
+  deskflow::KeyMap::KeyItem item;
+  const auto add = [&keyMap, &item](KeyButton button, KeyID id, KeyModifierMask required) {
+    item.m_button = button;
+    item.m_id = id;
+    item.m_required = required;
+    item.m_sensitive = kLevels;
+    keyMap.addKeyEntry(item);
+  };
+  item.m_button = kAltGrKey;
+  item.m_id = kKeyAltGr;
+  item.m_generates = KeyModifierAltGr;
+  keyMap.addKeyEntry(item);
+  item.m_generates = 0;
+  add(kKeyY, 'y', 0);
+  add(kKeyY, 'Y', KeyModifierShift);
+  add(kKeyY, 0x00b0, KeyModifierAltGr);
+  add(kKeyY, '<', kLevels);
+  add(kKeyComma, ',', 0);
+  add(kKeyComma, '?', KeyModifierShift);
+  add(kKeyComma, '<', KeyModifierAltGr);
+  keyMap.finish();
+
+  RecordingKeyState keyState(&eventQueue, keyMap, {"en"}, false);
+  keyState.updateKeyMap(&keyMap);
+  keyState.fakeKeyDown(kKeyAltGr, 0, kAltGrKey, "en");
+  keyState.m_faked.clear();
+  keyState.fakeKeyDown('<', KeyModifierAltGr, kKeyComma, "en");
+
+  QVERIFY(!keyState.m_faked.empty());
+  QCOMPARE(keyState.m_faked.back().m_data.m_button.m_button, kKeyComma);
+}
+
+void KeyStateTests::fakeKeyDown_commandKeyOnlyShifted_stillMapsButton()
+{
+  // Ctrl+'?' without Shift: '?' only exists shifted, so the shifted key is still the one to press
+  static constexpr KeyButton kKeySlash = 61;
+  MockEventQueue eventQueue;
+  deskflow::KeyMap keyMap;
+  deskflow::KeyMap::KeyItem item;
+  item.m_button = 37;
+  item.m_id = kKeyControl_L;
+  item.m_generates = KeyModifierControl;
+  keyMap.addKeyEntry(item);
+  item.m_button = 50;
+  item.m_id = kKeyShift_L;
+  item.m_generates = KeyModifierShift;
+  keyMap.addKeyEntry(item);
+  item.m_generates = 0;
+  item.m_button = kKeySlash;
+  item.m_sensitive = KeyModifierShift;
+  item.m_id = '/';
+  keyMap.addKeyEntry(item);
+  item.m_id = '?';
+  item.m_required = KeyModifierShift;
+  keyMap.addKeyEntry(item);
+  keyMap.finish();
+
+  RecordingKeyState keyState(&eventQueue, keyMap, {"en"}, false);
+  keyState.updateKeyMap(&keyMap);
+  keyState.fakeKeyDown('?', KeyModifierControl, kKeySlash, "en");
+
+  QVERIFY(std::any_of(keyState.m_faked.begin(), keyState.m_faked.end(), [](const deskflow::KeyMap::Keystroke &k) {
+    return k.m_type == deskflow::KeyMap::Keystroke::KeyType::Button && k.m_data.m_button.m_button == kKeySlash &&
+           k.m_data.m_button.m_press;
+  }));
+}
+
 QTEST_MAIN(KeyStateTests)

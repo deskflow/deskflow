@@ -31,6 +31,8 @@ private Q_SLOTS:
   void updateKeyState_pollInsertsSingleKey_keyIsDown();
   void fakeKeyDown_langSyncEnabled_switchesToServerGroup();
   void fakeKeyDown_langSyncDisabled_keepsLocalGroup();
+  void fakeKeyDown_altGrKeyOnTwoKeys_picksMatchingShiftLevel();
+  void fakeKeyDown_commandKeyOnlyShifted_stillMapsButton();
 
 private:
   Arch m_arch;
