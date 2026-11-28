@@ -83,6 +83,9 @@ public:
   KeyModifierMask pollActiveModifiers() const override;
   int32_t pollActiveGroup() const override;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
+  void sendKeyEvent(
+      void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, int32_t count, KeyButton button
+  ) override;
 
   CGEventFlags getModifierStateAsOSXFlags() const;
 
