@@ -25,6 +25,14 @@ elseif(APPLE)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(UNIX)
+  create_test(
+    NAME XDGKeyUtilTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE XDGKeyUtilTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
+
   if(LIBEI_FOUND)
     create_test(
       NAME EiHotKeyModifierMatchingTests
