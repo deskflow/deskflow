@@ -7,7 +7,10 @@
 
 #include "ServerConfigTests.h"
 
+#include "arch/Arch.h"
 #include "server/Config.h"
+
+#include <sstream>
 
 class OnlySystemFilter : public InputFilter::Condition
 {
@@ -159,6 +162,18 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
   QVERIFY(b.addComputer("computerC"));
   QVERIFY(b.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerC", 0.5f, 1.0f));
   QVERIFY(a != b);
+}
+
+void ServerConfigTests::read_escapedHotkeyKey_parses()
+{
+  // the GUI writes '#' as \u0023 because '#' starts a comment in the config
+  Arch arch;
+  arch.init();
+  std::istringstream stream("section: options\n  keystroke(Shift+\\u0023) = lockCursorToScreen(toggle)\nend\n");
+  Config config(nullptr);
+
+  QVERIFY_THROWS_NO_EXCEPTION(stream >> config);
+  QCOMPARE(config.getInputFilter()->getNumRules(), 1);
 }
 
 QTEST_MAIN(ServerConfigTests)
