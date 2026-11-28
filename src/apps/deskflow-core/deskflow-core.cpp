@@ -19,6 +19,9 @@
 
 #if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
+#else
+#include <pthread.h>
+#include <signal.h>
 #endif
 
 #include <QApplication>
@@ -71,6 +74,17 @@ int main(int argc, char **argv)
 {
 #if defined(Q_OS_WIN)
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
+#else
+  // Block the signals Arch's signal thread waits for before Qt or any
+  // background threads start, so the main thread and every subsequent
+  // thread inherit the signal mask.
+  sigset_t signals;
+  sigemptyset(&signals);
+  sigaddset(&signals, SIGHUP);
+  sigaddset(&signals, SIGINT);
+  sigaddset(&signals, SIGTERM);
+  sigaddset(&signals, SIGUSR2);
+  pthread_sigmask(SIG_BLOCK, &signals, nullptr);
 #endif
 
   QApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
