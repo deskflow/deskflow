@@ -36,6 +36,15 @@ public:
 
   bool synchronize();
 
+  //! True if the pasteboard changed and its content is not the remembered content
+  bool hasNewContent();
+
+  //! Remember the current content, so an identical rewrite is not reported
+  void rememberContent();
+
+  //! Forget the remembered content, so the next change is reported
+  void forgetContent();
+
 private:
   void clearConverters();
 
@@ -45,6 +54,7 @@ private:
   mutable Time m_time;
   ConverterList m_converters;
   PasteboardRef m_pboard;
+  std::string m_lastContent;
 };
 
 //! Clipboard format converter interface

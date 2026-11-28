@@ -39,4 +39,31 @@ void OSXClipboardTests::formatConvert_UTF8()
   QCOMPARE(converter.toIClipboard("test data\r"), "test data\n");
 }
 
+void OSXClipboardTests::hasNewContent_identicalRewrite_isIgnored()
+{
+  // a clipboard manager rewriting the same content must not count as a copy (#10139)
+  const auto write = [](OSXClipboard &clipboard, const std::string &text) {
+    QVERIFY(clipboard.open(0));
+    clipboard.empty();
+    clipboard.add(IClipboard::Format::Text, text);
+    clipboard.close();
+  };
+  OSXClipboard deskflow;
+  OSXClipboard otherApp;
+
+  write(otherApp, "AAA\nBBB");
+  QVERIFY(deskflow.hasNewContent());
+
+  write(otherApp, "AAA\nBBB");
+  QVERIFY(!deskflow.hasNewContent());
+
+  write(otherApp, "CCC");
+  QVERIFY(deskflow.hasNewContent());
+
+  // after another computer takes the clipboard, copying the same text again is a real copy
+  deskflow.forgetContent();
+  write(otherApp, "CCC");
+  QVERIFY(deskflow.hasNewContent());
+}
+
 QTEST_MAIN(OSXClipboardTests)
