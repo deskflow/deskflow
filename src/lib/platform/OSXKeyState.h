@@ -125,6 +125,14 @@ private:
   // mapVirtualKeyToKeyButton.
   static uint32_t mapKeyButtonToVirtualKey(KeyButton keyButton);
 
+  /**
+   * @brief Check if the JIS Kana key should be sent as the Korean Hangul key
+   * Korean keyboards send the Han/Eng key as kVK_JIS_Kana, the same key code as the JIS Kana key.
+   * @param layouts language codes of the installed keyboard layouts
+   * @return true when a Korean layout is installed and a Japanese one is not
+   */
+  static bool isKanaKeyHangul(const std::vector<std::string> &layouts);
+
   void init();
 
   // Post a key event to HID manager. It posts an event to HID client, a
@@ -168,4 +176,5 @@ private:
   bool m_controlRightPressed;
   bool m_altRightPressed;
   bool m_superRightPressed;
+  bool m_treatKanaAsHangul = false;
 };
