@@ -326,6 +326,11 @@ bool SecureSocket::loadCertificate(const QString &filename)
   return true;
 }
 
+void SecureSocket::setPeerAddress(const std::string &address)
+{
+  m_peerAddress = address;
+}
+
 void SecureSocket::initContext(bool server)
 {
   SSL_library_init();
@@ -590,6 +595,10 @@ void SecureSocket::checkResult(int status, int &retry)
 
   case SSL_ERROR_SSL:
     LOG_ERR("tls error occurred (generic failure)");
+    if (ERR_GET_REASON(ERR_peek_error()) == SSL_R_PEER_DID_NOT_RETURN_A_CERTIFICATE) {
+      LOG_ERR("client presented no tls certificate, client certificates are required: %s", m_peerAddress.c_str());
+      ipcSendToClient("missingClientCertificate", QString::fromStdString(m_peerAddress));
+    }
     isFatal(true);
     break;
 
