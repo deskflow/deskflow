@@ -8,13 +8,17 @@
 
 #include "base/EventQueue.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "platform/EiKeyState.h"
 
 #include <QByteArray>
 #include <QTemporaryFile>
 
+#include <algorithm>
 #include <cstdint>
+#include <map>
+#include <vector>
 
 namespace {
 class TestAppUtil : public AppUtil
@@ -68,6 +72,56 @@ xkb_symbols "test" {
 // XKB keycodes for TestKeymap.
 constexpr std::uint32_t LeftShiftKeycode = 50;
 constexpr std::uint32_t NumLockKeycode = 77;
+
+// Key <AC01> as in the Polish layout: a, A, aogonek, Aogonek.
+const char FourLevelAlphabeticKeymap[] = R"XKB(xkb_keymap {
+xkb_keycodes "test" {
+    minimum = 8;
+    maximum = 255;
+    <AC01> = 38;
+    <LVL3> = 92;
+};
+xkb_types "test" {
+    virtual_modifiers LevelThree;
+    type "ONE_LEVEL" {
+        modifiers = none;
+        level_name[Level1] = "Any";
+    };
+    type "FOUR_LEVEL_ALPHABETIC" {
+        modifiers = Shift + Lock + LevelThree;
+        map[None] = Level1;
+        map[Shift] = Level2;
+        map[Lock] = Level2;
+        map[LevelThree] = Level3;
+        map[Shift+LevelThree] = Level4;
+        map[Lock+LevelThree] = Level4;
+        map[Lock+Shift+LevelThree] = Level3;
+        level_name[Level1] = "Base";
+        level_name[Level2] = "Shift";
+        level_name[Level3] = "Alt Base";
+        level_name[Level4] = "Shift Alt";
+    };
+};
+xkb_compat "test" {
+    virtual_modifiers LevelThree;
+    interpret ISO_Level3_Shift+AnyOfOrNone(all) {
+        virtualModifier = LevelThree;
+        action = SetMods(modifiers=LevelThree);
+    };
+};
+xkb_symbols "test" {
+    key <AC01> { type = "FOUR_LEVEL_ALPHABETIC", [ a, A, aogonek, Aogonek ] };
+    key <LVL3> { [ ISO_Level3_Shift ] };
+    modifier_map Mod5 { <LVL3> };
+};
+};)XKB";
+
+class TestEiKeyState : public deskflow::EiKeyState
+{
+public:
+  using EiKeyState::EiKeyState;
+  using EiKeyState::getKeyMap;
+};
 } // namespace
 
 void EiKeyStateTests::initTestCase()
@@ -132,6 +186,43 @@ void EiKeyStateTests::updateLockedModifiers_compositorLockState_numLockFollowsCo
   // NumLock toggled off locally
   keyState.updateLockedModifiers(0);
   QVERIFY((keyState.pollActiveModifiers() & KeyModifierNumLock) == 0);
+}
+
+void EiKeyStateTests::getKeyMap_fourLevelAlphabetic_altGrLevelDoesNotRequireCapsLock()
+{
+  TestAppUtil appUtil;
+  EventQueue eventQueue;
+  TestEiKeyState keyState(nullptr, &eventQueue);
+
+  QTemporaryFile keymapFile;
+  QVERIFY(keymapFile.open());
+  const QByteArray keymapData =
+      QByteArray::fromRawData(FourLevelAlphabeticKeymap, sizeof(FourLevelAlphabeticKeymap) - 1);
+  QCOMPARE(keymapFile.write(keymapData), keymapData.size());
+  QVERIFY(keymapFile.flush());
+  keyState.init(keymapFile.handle(), keymapFile.size());
+
+  deskflow::KeyMap keyMap;
+  keyState.getKeyMap(keyMap);
+
+  std::map<KeyID, std::vector<KeyModifierMask>> required;
+  keyMap.foreachKey(
+      [](KeyID id, int32_t, deskflow::KeyMap::KeyItem &item, void *userData) {
+        (*static_cast<std::map<KeyID, std::vector<KeyModifierMask>> *>(userData))[id].push_back(item.m_required);
+      },
+      &required
+  );
+
+  constexpr KeyID aogonek = 0x0105;
+  constexpr KeyID Aogonek = 0x0104;
+
+  // Level 3 is reached with AltGr alone; Caps Lock or Shift would give Level 4
+  QCOMPARE(required[aogonek], std::vector<KeyModifierMask>{KeyModifierAltGr});
+
+  // Level 4 is reachable with either Shift or Caps Lock
+  QCOMPARE(required[Aogonek].size(), 2u);
+  QVERIFY(std::ranges::count(required[Aogonek], KeyModifierAltGr | KeyModifierShift) == 1);
+  QVERIFY(std::ranges::count(required[Aogonek], KeyModifierAltGr | KeyModifierCapsLock) == 1);
 }
 
 QTEST_MAIN(EiKeyStateTests)
