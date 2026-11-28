@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleIdentifier</key>
+  <string>@CMAKE_PROJECT_REV_FQDN@</string>
+  <key>CFBundleName</key>
+  <string>@CMAKE_PROJECT_PROPER_NAME@</string>
+  <key>LSBackgroundOnly</key>
+  <true/>
+  <key>NSLocalNetworkUsageDescription</key>
+  <string>This app uses local network permissions for communication between a Deskflow server and clients.</string>
+</dict>
+</plist>
