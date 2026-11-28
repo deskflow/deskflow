@@ -24,13 +24,4 @@ public:
   std::string toIClipboard(const std::string &) const override;
 
   static std::string convertString(const std::string &data, CFStringEncoding fromEncoding, CFStringEncoding toEncoding);
-
-private:
-  static constexpr quint32 kBiBitfields = 3;
-  static constexpr quint32 kBiAlphabitfields = 6;
-  static constexpr quint32 kBmpHeaderDIBPad = 10;
-  static constexpr quint32 kBmpFileHeaderSize = 14;
-  static constexpr quint32 kFallbackPixelOffset = 40;
-
-  static quint32 dibPixelOffset(const quint8 *dib, qsizetype dibSize);
 };
