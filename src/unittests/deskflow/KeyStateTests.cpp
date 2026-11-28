@@ -253,4 +253,50 @@ void KeyStateTests::fakeKeyDown_langSyncDisabled_keepsLocalGroup()
   QCOMPARE(keyState.m_faked.front().m_data.m_button.m_button, kSharedButton);
 }
 
+void KeyStateTests::fakeKeyDown_clearWithoutClearKey_pressesKeypadBegin()
+{
+  // a Windows server sends Clear for numpad-5 with NumLock off; stock Linux layouts only have KP_Begin there (#9947)
+  constexpr KeyButton kKeypad5 = 84;
+  MockEventQueue eventQueue;
+  deskflow::KeyMap keyMap;
+  deskflow::KeyMap::KeyItem item;
+  item.m_button = kKeypad5;
+  item.m_id = kKeyKP_Begin;
+  item.m_group = 0;
+  keyMap.addKeyEntry(item);
+  keyMap.finish();
+
+  RecordingKeyState keyState(&eventQueue, keyMap, {"en"}, false);
+  keyState.updateKeyMap(&keyMap);
+  keyState.fakeKeyDown(kKeyClear, 0, kKeypad5, "en");
+
+  QVERIFY(!keyState.m_faked.empty());
+  QCOMPARE(keyState.m_faked.front().m_data.m_button.m_button, kKeypad5);
+}
+
+void KeyStateTests::fakeKeyDown_clearWithClearKey_pressesClear()
+{
+  // keyboards that do have Clear (macOS keypad) keep using it
+  constexpr KeyButton kKeypadClear = 71;
+  constexpr KeyButton kKeypad5 = 84;
+  MockEventQueue eventQueue;
+  deskflow::KeyMap keyMap;
+  deskflow::KeyMap::KeyItem item;
+  item.m_group = 0;
+  item.m_button = kKeypadClear;
+  item.m_id = kKeyClear;
+  keyMap.addKeyEntry(item);
+  item.m_button = kKeypad5;
+  item.m_id = kKeyKP_Begin;
+  keyMap.addKeyEntry(item);
+  keyMap.finish();
+
+  RecordingKeyState keyState(&eventQueue, keyMap, {"en"}, false);
+  keyState.updateKeyMap(&keyMap);
+  keyState.fakeKeyDown(kKeyClear, 0, kKeypadClear, "en");
+
+  QVERIFY(!keyState.m_faked.empty());
+  QCOMPARE(keyState.m_faked.front().m_data.m_button.m_button, kKeypadClear);
+}
+
 QTEST_MAIN(KeyStateTests)
