@@ -243,6 +243,12 @@ const KeyMap::KeyItem *KeyMap::mapKey(
     return nullptr;
   }
 
+  // Windows servers send AltGr as Ctrl+Alt; faking that Alt taps Alt_L, which opens menu bars in some apps
+  constexpr KeyModifierMask kWindowsAltGr = KeyModifierControl | KeyModifierAlt;
+  if (id == kKeyAltGr && (desiredMask & kWindowsAltGr) == kWindowsAltGr) {
+    desiredMask &= ~KeyModifierAlt;
+  }
+
   const KeyItem *item;
   switch (id) {
   case kKeyShift_L:
