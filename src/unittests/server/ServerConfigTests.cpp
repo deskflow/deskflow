@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2014 - 2016 Synergy App Ltd
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,7 +8,13 @@
 
 #include "ServerConfigTests.h"
 
+#include "common/Settings.h"
 #include "server/Config.h"
+
+#include <QDir>
+#include <QFile>
+
+#include <sstream>
 
 class OnlySystemFilter : public InputFilter::Condition
 {
@@ -29,6 +36,24 @@ public:
 };
 
 using namespace deskflow::server;
+
+namespace {
+
+void placeComputer(const QString &name, const QRect &geometry)
+{
+  Settings::setValue(Settings::Computer::Name.arg(name), name);
+  Settings::setValue(Settings::Computer::Geometry.arg(name), geometry);
+}
+
+} // namespace
+
+void ServerConfigTests::initTestCase()
+{
+  QVERIFY(QDir().mkpath(m_settingsPath));
+  QFile::remove(m_settingsFile);
+  Settings::setSettingsFile(m_settingsFile);
+  Settings::setStateFile(m_stateFile);
+}
 
 void ServerConfigTests::equalityCheck()
 {
@@ -159,6 +184,19 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
   QVERIFY(b.addComputer("computerC"));
   QVERIFY(b.connect("computerA", Direction::Bottom, 0.0f, 0.5f, "computerC", 0.5f, 1.0f));
   QVERIFY(a != b);
+}
+
+void ServerConfigTests::read_touchingGeometry_linked()
+{
+  placeComputer("a", QRect(0, 0, 100, 100));
+  placeComputer("b", QRect(100, 50, 100, 100));
+  Config config(nullptr);
+  std::istringstream empty;
+
+  empty >> config;
+
+  QCOMPARE(config.getNeighbor("a", Direction::Right, 0.75f, nullptr), "b");
+  QCOMPARE(config.getNeighbor("a", Direction::Right, 0.25f, nullptr), "");
 }
 
 QTEST_MAIN(ServerConfigTests)
