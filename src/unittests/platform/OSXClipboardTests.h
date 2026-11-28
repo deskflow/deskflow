@@ -13,6 +13,7 @@ class OSXClipboardTests : public QObject
 private Q_SLOTS:
   // Test are run in order top to bottom
   void open();
+  void toIClipboard_crlf_isOneNewline();
   void singleFormat();
   void formatConvert_UTF8();
 
