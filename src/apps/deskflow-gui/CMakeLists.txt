@@ -49,9 +49,14 @@ target_link_libraries(
   Qt6::Widgets
   Qt6::Network)
 
+set(runtime_dependency_args)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+  list(APPEND runtime_dependency_args RUNTIME_DEPENDENCY_SET guiDeps)
+endif()
+
 install(
   TARGETS ${target}
-  RUNTIME_DEPENDENCY_SET guiDeps
+  ${runtime_dependency_args}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   BUNDLE DESTINATION .
 )
