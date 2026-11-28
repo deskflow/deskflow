@@ -53,6 +53,16 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
+if(NOT WIN32)
+  create_test(
+    NAME ServerAppTests
+    DEPENDS app
+    LIBS arch base server client net platform ${extra_libs}
+    SOURCE ServerAppTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+  )
+endif()
+
 if(BUILD_X11_SUPPORT)
   create_test(
     NAME XkbLayoutParserTests

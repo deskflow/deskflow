@@ -85,7 +85,7 @@ public:
   void handleResume();
   ClientListener *openClientListener(const NetworkAddress &address);
   Server *openServer(ServerConfig &config, PrimaryClient *primaryClient);
-  bool startServer();
+  virtual bool startServer();
   Server *getServerPtr()
   {
     return m_server;
@@ -103,10 +103,13 @@ public:
 
 private:
   void handleComputerSwitched() const;
+  void scheduleStartRetry();
+  ServerState stateWithoutStart() const;
   std::unique_ptr<ISocketFactory> getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 
   bool m_suspended = false;
+  int m_resumeRetries = 0;
   Server *m_server = nullptr;
   ServerState m_serverState = ServerState::Uninitialized;
   deskflow::Computer *m_serverComputer = nullptr;
